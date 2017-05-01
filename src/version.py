@@ -26,7 +26,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-"""
+u"""
 version.py
 Aide à la réalisation de fiches  de séquence pédagogiques
 et à la validation de projets

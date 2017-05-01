@@ -174,7 +174,7 @@ JOURS = [u'Lundi', u'Mardi', u'Mercredi', u'Jeudi', u'Vendredi', u'Samedi', u'Di
 ####################################################################################
    
 def getAnneeScolaire():
-    """ Renvoie la première année de l'année scolaire en cours
+    u""" Renvoie la première année de l'année scolaire en cours
     """
     date = time.localtime()
     if date.tm_mon >= 9:
@@ -359,10 +359,14 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
 
 
 
+
+
 ICONES_TACHES = {}
 liste = os.listdir(DOSSIER_ICONES)
+
 for fich_img in liste:
     try:
+        print os.path.join(DOSSIER_ICONES, fich_img)
         ICONES_TACHES[os.path.splitext(fich_img)[0]] = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
                         wx.BITMAP_TYPE_ANY ).ConvertToImage().Scale(200, 200).ConvertToBitmap()
     except:
@@ -392,6 +396,10 @@ except wx._core.PyNoAppError:
     pass
             
 FICHIER_PROFS = "profs.xml"
+
+
+
+
 
 ####################################################################################
 #
@@ -549,7 +557,6 @@ def trier(l):
                 return sorted(l)
     else:
         return l
-   
 
 #ouvrirConfig()
 #filterUnits="userSpaceOnUse"
@@ -674,6 +681,7 @@ DELTA_DUREE2 = 15
 # La liste complète des établissements scolaires en France !!
 import getEtab
 ETABLISSEMENTS = getEtab.ouvrir()
+
 
 
 JOURS_FERIES = getEtab.ouvrir_jours_feries()
@@ -1090,7 +1098,7 @@ BASE_FICHE_HTML = u"""
 """
 
                             
-xmlVide = """
+xmlVide = u"""
 <?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
@@ -1100,7 +1108,7 @@ xmlVide = """
   </paragraphlayout>
 </richtext>"""
 
-TxtRacineSeance = """
+TxtRacineSeance = u"""
 <?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
@@ -1166,7 +1174,7 @@ TxtRacineSeance = """
 
 """
 
-TxtRacineEleve = """<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineEleve = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">
@@ -1221,7 +1229,7 @@ TxtRacineEleve = """<?xml version="1.0" encoding="UTF-8"?>
 """
 
 
-TxtRacineEquipe = """<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineEquipe = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">
@@ -1280,7 +1288,7 @@ TxtRacineEquipe = """<?xml version="1.0" encoding="UTF-8"?>
 
 """
 
-TxtRacineObjectif = """<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineObjectif = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">
@@ -1314,7 +1322,7 @@ TxtRacineObjectif = """<?xml version="1.0" encoding="UTF-8"?>
 
 """
 
-TxtRacineSysteme = """<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineSysteme = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">
@@ -1369,7 +1377,7 @@ TxtRacineSysteme = """<?xml version="1.0" encoding="UTF-8"?>
 
 """
 
-TxtRacineTache = """<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineTache = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">

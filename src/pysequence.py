@@ -115,7 +115,7 @@ from richtext import XMLtoHTML
 import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
 
-from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
+from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             getBitmapFromImageSurface, img2str, getIconePaste, \
                             PanelPropriete_Progression, \
                             PanelPropriete_CI, PanelPropriete_LienSequence,\
@@ -1216,7 +1216,17 @@ class Classe(ElementBase):
 #        héritiers : Sequence et Projet
 #
 ####################################################################################################
-class BaseDoc(ElementBase, ElementAvecLien):   
+class BaseDoc(ElementBase, ElementAvecLien):
+    u"""Classe de base pour les documents (Séquence, Projet ou Progression)
+    
+        :param app: Fenêtre où s'affiche le document
+        :type app: wx_pysequence.FenetreDocument
+        :param classe: Classe associée au document
+        :type classe: pysequence.Classe
+        :param intitule: Intitulé du document
+        :type intitule: str
+    """
+    
     def __init__(self, app, classe = None, intitule = ""):
         self.app = app  # de type FenentreDocument
         ElementBase.__init__(self)
@@ -1551,6 +1561,17 @@ class BaseDoc(ElementBase, ElementAvecLien):
     
 ####################################################################################################          
 class Sequence(BaseDoc):
+    u"""Document de type Séquence pédagogique
+    
+        :param app: Fenêtre où s'affiche la Séquence
+        :type app: wx.pysequence.FenetreDocument
+        :param ouverture: Indique s'il faut ouvrir la Séquence dans une fenêtre
+        :type ouverture: bool
+        :param classe: Classe associée au document
+        :type classe: pysequence.Classe
+        :param intitule: Intitulé du document
+        :type intitule: str
+    """
     def __init__(self, app, classe = None, intitule = u"",
                  ouverture = False):
         
@@ -2627,6 +2648,12 @@ class Sequence(BaseDoc):
 #
 ####################################################################################################
 class Projet(BaseDoc):
+    u"""Document de type Projet
+        :param classe: Classe associée au document
+        :type classe: pysequence.Classe
+        :param intitule: Intitulé du document
+        :type intitule: str
+    """
     def __init__(self, app, classe = None, intitule = u"", ouverture = False):
         
         self.nom_obj = u"Projet"
@@ -4335,6 +4362,12 @@ class Projet(BaseDoc):
 #
 ####################################################################################################
 class Progression(BaseDoc):
+    u"""Document de type Progression pédagogique
+        :param classe: Classe associée au document
+        :type classe: pysequence.Classe
+        :param intitule: Intitulé du document
+        :type intitule: str
+    """
     def __init__(self, app, classe = None, intitule = u"", ouverture = False):
         
         self.nom_obj = u"Progression"

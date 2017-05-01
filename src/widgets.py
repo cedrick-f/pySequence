@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: ISO-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 #############################################################################
 #############################################################################
@@ -9,7 +9,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2009-2010 Cédrick FAURY
+## Copyright (C) 2009-2010 Cï¿½drick FAURY
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@ def pstdev(data):
 
 
 #
-# Fonction pour vérifier si un point x, y est dans un rectangle (x0, y0, x1, y1)
+# Fonction pour vï¿½rifier si un point x, y est dans un rectangle (x0, y0, x1, y1)
 #
 def dansRectangle(x, y, rect):
     """ Renvoie True si le point x, y est dans un des rectangles de la liste de rectangles r(xr, yr, wr, hr)
@@ -115,11 +115,11 @@ def dansRectangle(x, y, rect):
 
 
 def getAncreFenetre(x, y, w, h, W, H, e = 0):
-    """ Renvoie la meilleure position (maximum de visibilité dans l'écran)
-        x, y : position de référence (pointeur, ...)
-        w, h : dimension de la fenêtre à afficher
-        W, H : dimension de l'écran
-        e : ecart (pour que x, y soit à l'intérieur de la fenêtre
+    u""" Renvoie la meilleure position (maximum de visibilitÃ© dans l'Ã©cran)
+        x, y : position de rÃ©fÃ©rence (pointeur, ...)
+        w, h : dimension de la fenÃªtre Ã  afficher
+        W, H : dimension de l'Ã©cran
+        e : ecart (pour que x, y soit Ã  l'intÃ©rieur de la fenÃªtre
     """
     if w-x < x+w-W:
         X = x-w +e
@@ -164,7 +164,7 @@ NB_CHIFFRES = 4
 EPSILON = 1E-6
 
 #
-# Correcteur de variable (pour contourner un bug de scipy concernant le calcul des réponses)
+# Correcteur de variable (pour contourner un bug de scipy concernant le calcul des rï¿½ponses)
 #
 CORRECTEUR_VARI = 1.0#1.000000001
 
@@ -280,7 +280,7 @@ class Variable:
 #########################################################################################################
 #########################################################################################################
 #
-#  Expression mathématique avec variables
+#  Expression mathï¿½matique avec variables
 #
 #########################################################################################################
 #########################################################################################################  
@@ -293,7 +293,7 @@ safe_list = ['math', 'abs', 'ceil', 'cos', 'cosh', 'degrees', \
              'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot', 'ldexp', 'log', 'log10', 'modf', \
              'pi', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh']
 
-#désactivation de numpy
+#dï¿½sactivation de numpy
 #from numpy import abs, ceil, cos, cosh, degrees, \
 #             exp, fabs, floor, fmod, frexp, hypot, ldexp, log, log10, modf, \
 #             pi, radians, sin, sinh, sqrt, tan, tanh, errstate 
@@ -306,7 +306,7 @@ math_list = safe_list + ['*', '/', '+', '^', '-', '(', ')']
 
 
 class Expression():
-    """ Expression mathématique 
+    u""" Expression mathÃ©matique 
     """
     def __init__(self, expr = ''):
         self.MiseAJour(expr)
@@ -314,12 +314,12 @@ class Expression():
         
     ######################################################################################################
     def MiseAJour(self, expr = ''):
-        # Une chaine apte à subir un 'eval'
-        #    (une expression évaluable par python)
+        # Une chaine apte Ã  subir un 'eval'
+        #    (une expression Ã©valuable par python)
         self.py_expr = expr.replace('^', '**')
         
         
-        # Création d'un dictionnaire de Variables : {'nom' : Variable}
+        # Crï¿½ation d'un dictionnaire de Variables : {'nom' : Variable}
         vari = self.getVariables()
 #        print "vari =",vari
         self.vari = {}
@@ -342,11 +342,11 @@ class Expression():
     
     ######################################################################################################
     def evaluer(self):
-        """ Renvoie une valeur numérique de l'expression
+        u""" Renvoie une valeur numÃ©rique de l'expression
         """
         
-        # On crée un dictionnaire de variables : {'nom' : valeur}
-        #    (nécessaire pour "eval")
+        # On crï¿½e un dictionnaire de variables : {'nom' : valeur}
+        #    (nÃ©cessaire pour "eval")
 
         dict = {}
         for n, v in self.vari.items():
@@ -356,13 +356,13 @@ class Expression():
         global safe_dict
         dict.update(safe_dict)
         
-        # On fait l'évaluation
+        # On fait l'Ã©valuation
         try:
             v = eval(self.py_expr, {"__builtins__": None}, dict)
         except:
             return False
 #        print type (v)
-        # On analyse le résultat
+        # On analyse le rÃ©sultat
         if not type(v) == float  and not type(v) == int:
             return False
         else:
@@ -371,7 +371,7 @@ class Expression():
     
     ######################################################################################################
     def parentheses(self):
-        """ Renvoie l'expression mise entre parenthèses
+        """ Renvoie l'expression mise entre parenthï¿½ses
             si cela se doit !!
         """
         if '+' in self.math or '-' in self.math or '/' in self.math:
@@ -396,7 +396,7 @@ class Expression():
                     continuer = False
                     return expr
                 
-                # Séparation des principaux termes de l'expression
+                # SÃ©paration des principaux termes de l'expression
                 elif expr[i] == '+' or expr[i] == '-':
                     continuer = False
                     a, b, c = expr.partition(expr[i])
@@ -404,7 +404,7 @@ class Expression():
                 
                 
                 
-                # Traitement des sous-expressions entre parenthèses
+                # Traitement des sous-expressions entre parenthÃ¨ses
                 elif expr[i] == '(':
                     p = 1
                     j = i+1
@@ -436,13 +436,13 @@ class Expression():
                         expr = expr[0:i] + '({' + ssex + '})' + expr[j:]
                         i = j+1
         
-                # Séparation des produits
+                # SÃ©paration des produits
                 elif expr[i] == '*':
                     continuer = False
                     a, b, c = expr.partition(expr[i])
                     return a+expr[i]+getMath(c)
                 
-                # Séparation des quotients
+                # SÃ©paration des quotients
                 elif expr[i] == '/':
                     continuer = False
                     a, b, c = expr.partition(expr[i])
@@ -488,7 +488,7 @@ class Expression():
         
         
         
-        # Traitement global de l'expression pour la remdre compatible avec mathtext
+        # Traitement global de l'expression pour la rendre compatible avec mathtext
         ex1 = ex1.replace('(', r"\left(")
         ex1 = ex1.replace(')', r"\right)")
         
@@ -513,17 +513,17 @@ class Expression():
         
     #########################################################################################################
     def getVariables(self):
-        """ Analyse de la chaine (prétendue expression mathématique)
+        u""" Analyse de la chaine (prÃ©tendue expression mathÃ©matique)
             et renvoie un dictionnaire {nom : valeur}
         """
         expr = self.py_expr
 
-        # Découpage le la chaine autour des opérateurs
+        # DÃ©coupage le la chaine autour des opÃ©rateurs
         for i in math_list:
             expr = expr.replace(i,'#')
         expr = expr.split('#')
         
-        # Création du dictionnaire de variables
+        # CrÃ©ation du dictionnaire de variables
         b={}
         for i in expr:
             try:
@@ -577,7 +577,7 @@ class VariableCtrl(wx.Panel):
         else:
             self.coef = coef
         
-        # Une fonction d'activation/désactivation du zoomauto à l'utilisation du slider
+        # Une fonction d'activation/dÃ©sactivation du zoomauto Ã  l'utilisation du slider
         self.fct = fct
         self.etatInit = None
         
@@ -618,7 +618,7 @@ class VariableCtrl(wx.Panel):
 #        self.Bind(wx.EVT_CHAR, self.OnChar, self.text)
         
         #
-        # Contrôle de la variable
+        # ContrÃ´le de la variable
         #
         self.spin = wx.SpinButton(self, -1, size = (15,25), style = wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
         
@@ -633,7 +633,7 @@ class VariableCtrl(wx.Panel):
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)
         
         #
-        # Unité
+        # UnitÃ©
         #
         self.unite = wx.StaticText(self, -1, unite)#,
         
@@ -703,10 +703,10 @@ class VariableCtrl(wx.Panel):
         pos = event.GetPosition()
         if pos != self.lastPos:
             
-            # Quand on commence le Scroll, on "désactive"
+            # Quand on commence le Scroll, on "dÃ©sactive"
             if self.etatInit == None:
                 self.etatInit = self.fct() # Etat d'activation initial
-                self.fct(False) # Désactivation
+                self.fct(False) # DÃ©sactivation
             
             # Effet du Scroll ...
             coef = 10.0 **((pos-self.lastPos) / 100.0)
@@ -715,7 +715,7 @@ class VariableCtrl(wx.Panel):
             self.mofifierValeurs()
             self.lastPos = pos
         
-            # On remet dans l'état d'activation initial (avant Scroll)
+            # On remet dans l'Ã©tat d'activation initial (avant Scroll)
             self.fct(self.etatInit) # Etat d'activation initial
             self.etatInit = None
         
@@ -728,7 +728,7 @@ class VariableCtrl(wx.Panel):
         self.sli.SetValue(0)
         self.lastPos = 0
         
-#        # On remet dans l'état d'activation initial (avant Scroll)
+#        # On remet dans l'ï¿½tat d'activation initial (avant Scroll)
 #        self.fct(self.etatInit) # Etat d'activation initial
 #        self.etatInit = None
         
@@ -879,7 +879,7 @@ class VariableCtrl(wx.Panel):
 #########################################################################################################
 #########################################################################################################
 #
-#  Tootip évolué utilisé dans divers TxtCtrl et dérivés
+#  Tootip Ã©voluÃ© utilisÃ© dans divers TxtCtrl et dÃ©rivÃ©s
 #
 #########################################################################################################
 #########################################################################################################  
@@ -1021,7 +1021,7 @@ class ToolTip():
 #
 ##################################################################################################################################################################
 
-# Une fenêtre d'aide unique
+# Une fenÃªtre d'aide unique
 FenHelp = None
 
 def GetImgHelp():
@@ -1148,7 +1148,7 @@ class PlaceholderTextCtrl(wx.TextCtrl):
         evt.Skip()
 
 
-# Utilisé dans PopupInfo
+# UtilisÃ© dans PopupInfo
 class CheckBoxValue(wx.CheckBox):
     def __init__(self, *args, **kargs):
         value = eval(kargs["value"])
@@ -1160,7 +1160,7 @@ class CheckBoxValue(wx.CheckBox):
 #########################################################################################################
 #########################################################################################################
 #
-#  Un TextCrtl avec bouton d'aide détaiilé apparaissant quand la souris est dans le ctrl
+#  Un TextCrtl avec bouton d'aide dï¿½taiilï¿½ apparaissant quand la souris est dans le ctrl
 #
 #########################################################################################################
 #########################################################################################################  
@@ -1186,7 +1186,7 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         self.Bind(wx.EVT_BUTTON, self.OnButton, self.bouton)
         
         self.bouton.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-        self.bouton.SetToolTipString(u"Obtenir de l'aide supplémentaire")
+        self.bouton.SetToolTipString(u"Obtenir de l'aide supplÃ©mentaire")
         
 #        self.bouton.Bind(wx.EVT_ENTER_WINDOW, self.OnButtonEnter)
         self.bouton.Bind(wx.EVT_LEAVE_WINDOW, self.OnButtonLeave)
@@ -1244,7 +1244,7 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
 #########################################################################################################
 #########################################################################################################
 #
-#  Un slider à deux positions
+#  Un slider Ã  deux positions
 #
 #########################################################################################################
 #########################################################################################################  
@@ -1453,14 +1453,14 @@ def enregistrer_root(root, nomFichier):
     try:
         ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
     except IOError:
-        messageErreur(None, u"Accés refusé", 
-                              u"L'accés au fichier %s a été refusé !\n\n"\
+        messageErreur(None, u"AccÃ¨s refusÃ©", 
+                              u"L'accÃ¨s au fichier %s a Ã©tÃ© refusÃ© !\n\n"\
                               u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
     except UnicodeDecodeError:
         messageErreur(None, u"Erreur d'encodage", 
-                              u"Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
+                              u"Un caractÃ¨re spÃ©cial empÃªche l'enregistrement du fichier !\n\n"\
                               u"Essayer de le localiser et de le supprimer.\n"\
-                              u"Merci de reporter cette erreur au développeur.")
+                              u"Merci de reporter cette erreur au dÃ©veloppeur.")
     fichier.close()
     
 #############################################################################################################
@@ -1567,7 +1567,7 @@ def tronquerDC(texte, taille, wnd, suffix = '...'):
 #     print "   ", ts
 #     print "   >", dc.GetTextExtent(ts)[0]
     
-    # Vérification
+    # Vï¿½rification
     if dc.GetTextExtent(ts)[0] > taille:
 #         print "  __", dc.GetTextExtent(t)[0]
         s = dc.GetTextExtent(suffix)[0]

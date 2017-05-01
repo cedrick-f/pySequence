@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Sequence.py
-Aide à la réalisation de fiches pédagogiques de séquence
-*************
+u"""
 
 Copyright (C) 2011  
 @author: Cedrick FAURY
@@ -16,9 +13,12 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 import os
 import cStringIO
 from constantes import xmlVide
+print 10
 import webbrowser
 import images
+print 11
 from widgets import ToolTip
+print 12
 #from urlparse import urlparse
 #from rfc3987 import parse
 
@@ -173,7 +173,7 @@ class RichTextPanel(wx.Panel):
         self.objet = objet
         
     def Ouvrir(self):
-        """ Rempli la zone de texte avec le contenu de objet.description
+        u""" Rempli la zone de texte avec le contenu de objet.description
         """
         out = cStringIO.StringIO()
         handler = rt.RichTextXMLHandler()
@@ -243,7 +243,7 @@ class RichTextPanel(wx.Panel):
 
 
     def InsertImage(self):
-        wildcard= "Fichier image (bmp, gif, jpeg, png, tiff, tga, pnm, pcx, ico, xpm)|(*.bmp; *.gif; *.jpg; *.jpeg; *.png; *.tif; *.tiff; *.tga; *.xpm ; *.ico ; *.pcx ; *.pnm)"
+        wildcard= u"Fichier image (bmp, gif, jpeg, png, tiff, tga, pnm, pcx, ico, xpm)|(*.bmp; *.gif; *.jpg; *.jpeg; *.png; *.tif; *.tiff; *.tga; *.xpm ; *.ico ; *.pcx ; *.pnm)"
         dlg = wx.FileDialog(self, u"Choisir un fichier image",
                             wildcard=wildcard,
                             style=wx.OPEN)
@@ -519,7 +519,7 @@ class RichTextPanel(wx.Panel):
         try:
             tbar.Realize()
         except wx._core.PyAssertionError:
-            print "Trop de documents ouverts"
+            print u"Trop de documents ouverts"
             return None
         
         return tbar
@@ -611,7 +611,7 @@ except ImportError:
     from bs4 import BeautifulSoup
 
 def XMLtoHTML(texteXML):
-        """ Converti un texte au format RichText (XML)
+        u""" Converti un texte au format RichText (XML)
             en HTML 
         """
         if texteXML is None:

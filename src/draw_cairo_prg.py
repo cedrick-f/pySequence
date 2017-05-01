@@ -521,7 +521,7 @@ def Draw(ctx, prg, mouchard = False):
     # Essai ...
 #     prg.GetOrganisation()
     
-    gabarit() # à virer (pour générer image gabarit
+#     gabarit() # à virer (pour générer image gabarit
     
 #    DefinirCouleurs(prg.GetNbrPeriodes())
 #    print "DefinirCouleurs", IcoulPos
@@ -1834,3 +1834,5 @@ def gabarit():
     
     
     imagesurface.write_to_png('gabarit_prg.png')
+    
+    

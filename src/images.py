@@ -20,8 +20,6 @@ SmallDnArrow = PyEmbeddedImage(
 
 
 
-
-
 #----------------------------------------------------------------------
 Icone_systeme = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABmJLR0QA/wD/AP+gvaeTAAAA"

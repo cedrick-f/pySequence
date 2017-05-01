@@ -58,7 +58,7 @@ def GetFeries():
     try:
         downloadPage = BeautifulSoup(urllib2.urlopen(urlCal, timeout = 10), "html5lib")
     except IOError:
-        print "pas d'accès Internet"
+        print u"pas d'accès Internet"
         return   
     
     list_feries = {}

@@ -57,13 +57,13 @@ print "SYSTEM_ENCODING", SYSTEM_ENCODING
 # quel répertoire  sans que l'utilisation de chemins
 # relatifs ne soit perturbée
 #
-PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
-#PATH = os.path.split(PATH)[0]
-os.chdir(PATH)
-sys.path.append(PATH)
+# PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
+# #PATH = os.path.split(PATH)[0]
+# os.chdir(PATH)
+# sys.path.append(PATH)
 
-
-
+# PATH = os.getcwd()
+PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 if sys.platform == 'win32':
@@ -161,7 +161,7 @@ def samefile(path1, path2):
 
 ######################################################################################  
 def testRel(path, start):
-    """ Renvoie le chemin <path> relatif à <start> 
+    u""" Renvoie le chemin <path> relatif à <start> 
     """
     try:
         return os.path.relpath(path, start)
@@ -201,7 +201,7 @@ def toFileEncoding(path):
     
 ######################################################################################  
 def nomCourt(nomFichier):
-    """ Renvoie le nom du fichier au format court (pour affichage = encodé en SystemEncoding)
+    u""" Renvoie le nom du fichier au format court (pour affichage = encodé en SystemEncoding)
         <nomFichier> encodé en FileEncoding
     """
     return toSystemEncoding(os.path.splitext(os.path.split(nomFichier)[1])[0])
