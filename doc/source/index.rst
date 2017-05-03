@@ -3,20 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+***************************
 Documentation de pySéquence
-======================================
+***************************
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+
    
    Introduction
    Tutoriel
    Développement
 
 
-Indices and tables
-==================
+Index et tables
+===============
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -1,7 +1,10 @@
 ************************
 Introduction
 ************************
-
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   
 **pySequence** est un logiciel libre qui fournit une aide pour :
 
 * élaborer des séquences pédagogiques
@@ -39,15 +42,15 @@ Aide à la validation de projets :
 
 Quelques exemples de fiches de projet
 
-Téléchargement
-==============
-* 'Versions récentes'_
-    .. _ : https://github.com/cedrick-f/pySequence/releases
+Téléchargements
+===============
+* `Versions récentes`_
+* `Anciennes versions`_
 
-* 'Anciennes versions'_
-    .. _Anciennes versions : https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list
+.. _Anciennes versions: https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list
+.. _Versions récentes: https://github.com/cedrick-f/pySequence/releases
 
-**pySequence** existe :
+**pySéquence** existe :
 
 * pour Windows :
         en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)
@@ -60,9 +63,6 @@ Documentation
 * Aide en ligne de pySequence.
 * Quelques exemples sont fournis avec les packs.
 
-Développement
-=============
-pySequence est développé par Cédrick FAURY et Jean-Claude FRICOU
 
-Toutes les bonnes volontés pour le développement de pySequence sont les bienvenues. Pour ceux qui souhaitent intervenir sur le code, voici les prérequis
+
 

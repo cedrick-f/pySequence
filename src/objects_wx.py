@@ -1789,7 +1789,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     def fermer(self):
         self.mgr.UnInit()
         del self.mgr
-#         self.Destroy()
+        try:
+            self.Destroy()
+        except:
+            pass
         return True
         
     #############################################################################
@@ -12943,15 +12946,15 @@ class PanelProblematiques(wx.Panel):
         #
         # Cas des Problématiques personalisées
         #
+        t = getPluriel(ref.nomPb)
         if hasPb:
-            t = getPluriel(ref.nomPb) + u" personnalisées"
-        else:
-            t = getPluriel(ref.nomPb)
+            t += u" personnalisées"
+        
         self.PbPerso = gizmos.EditableListBox(self, -1, t,
                                               size = wx.DefaultSize,
                                               style = gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
         self.PbPerso.SetMinSize((-1, 60))
-        self.PbPerso.SetToolTipString(u"Exprimer ici la(les) %s abordée\n" \
+        self.PbPerso.SetToolTipString(u"Exprimer ici la(les) %s abordée(s)\n" \
                                       u"ou choisir une parmi les %s envisageables." %(getSingulier(ref.nomPb), getPluriel(ref.nomPb)))
 
         self.PbPerso.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.EvtText)

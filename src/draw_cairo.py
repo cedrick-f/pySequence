@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from xlwt.BIFFRecords import ContinueRecord
 
 ##This file is part of pySequence
 #############################################################################

@@ -3,35 +3,27 @@
 *************
 Développement
 *************
+**pySéquence** est développé par *Cédrick FAURY* et *Jean-Claude FRICOU*
 
+Toutes les bonnes volontés pour participer au développement de **pySéquence** sont les bienvenues. 
+* Pour ceux qui souhaitent intervenir sur le code, voici les prérequis
+* Sinon, la documentation mérite également d'être enrichie !
+
+Structure du code
+=================
 Page dédiée aux développeurs de **pySéquence**.
 En cours de réalisation ...
 
-Module pysequence
-=================
-
-Module définissant les objets de base de **pySéquence**.
-
-
-.. automodule:: pysequence
-   :members:
+.. toctree::
+   :maxdepth: 2
    
-
-Module wx_pysequence
-====================
-
-Module définissant la base de l'interface graphique de **pySéquence**.
-
-
-.. automodule:: wx_pysequence
-   :members:
+   m_pysequence.rst
+   m_wx_pysequence.rst
+   m_objects_wx.rst
    
-
-Module objects_wx
-=================
-
-Module définissant l'ensemble des objets de l'interface graphique de **pySéquence**.
-
-
-.. automodule:: objects_wx
-   :members:
+Documentation
+=============
+Cette documentation est propulsée par Sphinx.
+Contacter les auteurs pour y participer.
+`todo`
+   

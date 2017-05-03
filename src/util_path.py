@@ -57,13 +57,13 @@ print "SYSTEM_ENCODING", SYSTEM_ENCODING
 # quel répertoire  sans que l'utilisation de chemins
 # relatifs ne soit perturbée
 #
-# PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
+PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
 # #PATH = os.path.split(PATH)[0]
 # os.chdir(PATH)
-# sys.path.append(PATH)
+sys.path.append(PATH)
 
 # PATH = os.getcwd()
-PATH = os.path.dirname(os.path.abspath(__file__))
+# PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 if sys.platform == 'win32':
