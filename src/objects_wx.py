@@ -574,6 +574,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.Bind(wx.EVT_MENU, self.OnReparer, id=33)
         self.Bind(wx.EVT_MENU, self.OnRecupEtab, id=34)
+        self.Bind(wx.EVT_MENU, self.OnRecupFeries, id=35)
         
         self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
         
@@ -995,6 +996,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.MiseAJourMenu()
         self.menuRep = tool_menu.Append(33, u"Ouvrir et réparer un fichier")
         tool_menu.Append(34, u"Récupérer les noms d'établissement")
+        tool_menu.Append(35, u"Récupérer les jours fériés")
 
         self.tool_menu = tool_menu
         
@@ -1121,7 +1123,44 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             dlg.Destroy()
         
-         
+    #############################################################################
+    def OnRecupFeries(self, event):
+        dlg = wx.MessageDialog(self, u"Récupérer les jours fériés\n\n" \
+                               u"L'opération qui va suivre permet de récupérer sur Internet\n" \
+                               u"la liste officielle des jours fériés.\n\n" \
+                               u"Cette opération ne se justifie qu'une seule fois par an.\n\n" \
+                               u"Il est conseillé de faire une sauvegarde du fichier\n" \
+                               u"\t    JoursFeries.xml\n"\
+                               u"qui sera remplacé par un nouveau.\n\n"\
+                               u"L'opération nécessite une connexion à Internet !!\n\n"\
+                               u"Voulez-vous continuer ?",
+                                 u"Récupérer les jours fériés",
+                                 wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                 )
+        res = dlg.ShowModal()
+        dlg.Destroy() 
+        if res == wx.ID_YES:
+            import getEtab
+            fileName = getEtab.SauvFeries(self, util_path.APP_DATA_PATH)
+            if fileName is not None:
+                dlg = wx.MessageDialog(self, u"Le fichier a bien été enregistré\n\n%s\n\n"\
+                                       u"Voulez-vous l'ouvrir ?" %fileName, 
+                                       u"Fichier enregistré",
+                                       wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
+                res = dlg.ShowModal()
+                if res == wx.ID_YES:
+                    try:
+                        os.startfile(fileName)
+                    except:
+                        messageErreur(None, u"Ouverture impossible",
+                                      u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(fileName))
+            else:
+                dlg = wx.MessageDialog(self, u"Opération annulée\n\n", 
+                                       u"Opération annulée",
+                                       wx.ICON_ERROR | wx.OK)
+                res = dlg.ShowModal()
+            
+            dlg.Destroy()    
                 
     #############################################################################
     def OnRegister(self, event): 

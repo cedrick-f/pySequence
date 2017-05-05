@@ -5,6 +5,8 @@ Introduction
    :maxdepth: 2
    :caption: Contents:
    
+   premiers_pas.rst
+   
 **pySequence** est un logiciel libre qui fournit une aide pour :
 
 * élaborer des séquences pédagogiques
@@ -20,6 +22,7 @@ Introduction
 * Enseignement d'exploration de seconde : SI et CIT
 
 et potentiellement n'importe quel programme d'enseignement.
+
 
 Fonctionnalités
 ===============

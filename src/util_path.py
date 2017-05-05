@@ -63,7 +63,9 @@ PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
 sys.path.append(PATH)
 
 # PATH = os.getcwd()
-# PATH = os.path.dirname(os.path.abspath(__file__))
+
+# A décommenter pour générer la doc Sphinx
+PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 if sys.platform == 'win32':

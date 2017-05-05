@@ -33,6 +33,11 @@ Created on 1 févr. 2015
 '''
 
 
+# A revoir avec
+# http://telechargement.index-education.com/vacances.xml
+# https://www.data.gouv.fr/s/resources/adresse-et-geolocalisation-des-etablissements-denseignement-du-premier-et-second-degres/20160526-143453/DEPP-etab-1D2D.csv
+
+# https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/api/
 
 
 
@@ -42,13 +47,16 @@ import os
 
 
 #############################################################################################
-def GetFeries():
+def GetFeries(win):
     print "GetFeries"
     from bs4 import BeautifulSoup
     import urllib2
+    from objects_wx import myProgressDialog
 
     MOIS = [u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', 
         u'juillet', u'août', u'septembre', u'octobre', u'novembre', u'décembre']
+    
+    message = u"Recherche des jours fériés\n\n"
     
     ETABLISSEMENTS = ouvrir()
     lstAcad = sorted([a[0] for a in ETABLISSEMENTS.values()])
@@ -64,6 +72,8 @@ def GetFeries():
     list_feries = {}
     
     
+    
+    
     annees = {}
     tag_annee = downloadPage.find(id="annee")
     for a in tag_annee.find_all('option'):
@@ -71,8 +81,21 @@ def GetFeries():
         annees[int(a['label'].split("-")[0].split()[-1])] = a['value']
             
     print "  annees:", annees
-
+    
+    
+    dlg = myProgressDialog(u"Recherche des jours fériés",
+                                   message,
+                                   len(annees),
+                                   parent=win
+                                    )
+    
+    count = 1
+    
+    
     for annee, code in annees.items():
+        count += 1
+        message += u"Année : "+ str(annee) + u"\n"
+        dlg.Update(count, message)
         list_crenaux = {"A" : [], "B" : [], "C" : []} # Les créneaux de jours féries
         list_zones = {"A" : [], "B" : [], "C" : []} # Les académies rangées par zone
     
@@ -129,7 +152,13 @@ def GetFeries():
         
         print "   crenaux:",list_crenaux
         list_feries[annee] = [list_zones, list_crenaux]
-    
+        
+        wx.Yield()
+        if dlg.stop:
+            dlg.Destroy()
+            print "STOP"
+            return []
+        
     print list_feries
     return list_feries
 
@@ -141,7 +170,7 @@ def GetEtablissements(win):
     
     from bs4 import BeautifulSoup
     import urllib2
-    from wx_pysequence import myProgressDialog
+    from objects_wx import myProgressDialog
     
     # titre, message, maximum, parent, style = 0, btnAnnul = True, msgAnnul = u"Annuler l'opération"
     message = u"Recherche des établissements\n\n"
@@ -500,19 +529,29 @@ def SauvEtablissements(win, path):
         return nomF
 
 
+
+def SauvFeries(win, path):
+    list_feries = GetFeries(win)
+    if len(list_feries) > 0:
+        nomF = os.path.join(path, "JoursFeries.xml")
+        fichier = file(nomF, 'w')
+        root = getBranche(list_feries)
+        indent(root)
+        ET.ElementTree(root).write(fichier)
+        fichier.close()
+        return nomF
     
     
 if __name__ == '__main__':
+    pass
     
+#     liste_etab = GetEtablissements(None)
     
-    liste_etab = GetEtablissements(None)
-    
-    
+#     
 #     fichier = file("JoursFeries.xml", 'w')
 #     root = ET.Element("Jours_feries")
 #     list_feries = GetFeries()
 #     insert_branche(root, list_feries, "Jours_feries")
-#     
 #     indent(root)
 # #    print ET.tostring(root, encoding='utf8', method='xml')
 #     ET.ElementTree(root).write(fichier)

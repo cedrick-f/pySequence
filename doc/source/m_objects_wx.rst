@@ -11,3 +11,4 @@ Module définissant l'ensemble des objets de l'interface graphique de **pySéque
 
 .. automodule:: objects_wx
    :members:
+   

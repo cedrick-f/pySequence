@@ -680,10 +680,10 @@ DELTA_DUREE2 = 15
 # La liste complète des établissements scolaires en France !!
 import getEtab
 ETABLISSEMENTS = getEtab.ouvrir()
-
-
-
-JOURS_FERIES = getEtab.ouvrir_jours_feries()
+try:
+    JOURS_FERIES = getEtab.ouvrir_jours_feries()
+except:
+    JOURS_FERIES = {}
 # print "JOURS_FERIES", JOURS_FERIES
 
 class Discipline():

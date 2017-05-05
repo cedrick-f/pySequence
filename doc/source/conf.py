@@ -88,6 +88,11 @@ pygments_style = 'sphinx'
 todo_include_todos = True
 
 
+def setup(app):
+	app.add_stylesheet('stylesheets/stylesheet-base.css')
+	app.add_stylesheet('stylesheets/github-light.css')
+
+	
 # -- Options for HTML output ----------------------------------------------
 import alabaster
 
@@ -114,12 +119,11 @@ html_theme_options = {
 	#'show_powered_by': False,
 	#'header_inverse': True,
     #'relbar_inverse': True,
-	'extra_nav_links': {
-        'pySequence@GitHub': 'https://github.com/cedrick-f/pySequence',
-    }
+	# 'extra_nav_links': {
+        # 'pySequence@GitHub': 'https://github.com/cedrick-f/pySequence',
+	#'extra_scripts': ['github.js', "jquery-1.11.3.min.js", "jquery.timeago.js", "jquery.timeago.fr-short.js"]
+
 }
-
-
 
 
 # Custom sidebar templates, maps document names to template names.
@@ -128,6 +132,7 @@ html_sidebars = {
         'about.html',
         'navigation.html',
         'searchbox.html',
+        'github.html',
         #'donate.html',
 		#'windowssidebar.html',
 		#'globaltoc.html',
@@ -152,7 +157,7 @@ html_sidebars = {
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "logo.ico"
+html_favicon = "_static/logo.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
