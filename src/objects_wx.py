@@ -675,83 +675,83 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     ###############################################################################################
     def GetTools(self, typ):
         if typ == 'prj':
-            return {50 : BoutonToolBar(u"Ajouter un élève",
+            return [(50 , BoutonToolBar(u"Ajouter un élève",
                                    scaleImage(images.Icone_ajout_eleve.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'un élève au projet", 
-                                   longHelp = u"Ajout d'un élève au projet"),
+                                   longHelp = u"Ajout d'un élève au projet")),
                     
-                    54 : BoutonToolBar(u"Ajouter un groupe d'élèves",
+                    (54 , BoutonToolBar(u"Ajouter un groupe d'élèves",
                                    scaleImage(images.Icone_ajout_groupe.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'un groupe d'élèves au projet", 
-                                   longHelp = u"Ajout d'un groupe d'élèves au projet"),
+                                   longHelp = u"Ajout d'un groupe d'élèves au projet")),
                 
-                    51 : BoutonToolBar(u"Ajouter un professeur", 
+                    (51 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
-                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
+                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
-                    52 : BoutonToolBar(u"Ajouter une tâche", 
+                    (52 , BoutonToolBar(u"Ajouter une tâche", 
                                        scaleImage(images.Icone_ajout_tache.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp=u"Ajout d'une tâche au projet", 
-                                       longHelp=u"Ajout d'une tâche au projet"),
+                                       longHelp=u"Ajout d'une tâche au projet")),
                     
-                    53 : BoutonToolBar(u"Ajouter une revue", 
+                    (53 , BoutonToolBar(u"Ajouter une revue", 
                                        scaleImage(images.Icone_ajout_revue.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'une revue au projet", 
-                                       longHelp = u"Ajout d'une revue au projet")
-                }
+                                       longHelp = u"Ajout d'une revue au projet"))
+                ]
         
         elif typ == 'seq':
-            return {60 : BoutonToolBar(u"Ajouter une séance", 
+            return [(60 , BoutonToolBar(u"Ajouter une séance", 
                                     scaleImage(images.Icone_ajout_seance.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                     shortHelp=u"Ajout d'une séance dans la séquence", 
-                                    longHelp=u"Ajout d'une séance dans la séquence"),
+                                    longHelp=u"Ajout d'une séance dans la séquence")),
                     
-                    62 : BoutonToolBar(u"Ajouter un professeur", 
+                    (62 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
-                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
+                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
-                    61 : BoutonToolBar(u"Ajouter un système", 
+                    (61 , BoutonToolBar(u"Ajouter un système", 
                                        scaleImage(images.Icone_ajout_systeme.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp=u"Ajout d'un système", 
-                                       longHelp=u"Ajout d'un système")
-                      }
+                                       longHelp=u"Ajout d'un système"))
+                      ]
             
         elif typ == 'prg':
-            return {70 : BoutonToolBar(u"Actualiser la Progression", 
+            return [(70 , BoutonToolBar(u"Actualiser la Progression", 
                                        scaleImage(images.Bouton_Actualiser.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Actualiser la Progression", 
-                                       longHelp = u"Actualiser la Progression"),
+                                       longHelp = u"Actualiser la Progression")),
                     
-                    71 : BoutonToolBar(u"Ajouter un professeur", 
+                    (71 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
-                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
+                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
-                    72 : BoutonToolBar(u"Ajouter une Séquence",
+                    (72 , BoutonToolBar(u"Ajouter une Séquence",
                                    scaleImage(images.Icone_ajout_seq.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'une Séquence à la Progression", 
-                                   longHelp = u"Ajout d'une Séquence à la Progression"),
+                                   longHelp = u"Ajout d'une Séquence à la Progression")),
                     
-                    73 : BoutonToolBar(u"Ajouter un Projet",
+                    (73 , BoutonToolBar(u"Ajouter un Projet",
                                    scaleImage(images.Icone_ajout_prj.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'un Projet à la Progression", 
-                                   longHelp = u"Ajout d'un Projet à la Progression"),
+                                   longHelp = u"Ajout d'un Projet à la Progression")),
                     
-                  }
+                  ]
             
             
             
@@ -842,12 +842,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Outils "Projet" ou  "séquence" ou "progression" ou ...
         #
         #################################################################################################################
-        self.tools = {'prj' : {}, 'seq' : {}, 'prg' : {}}
+        self.tools = {'prj' : [], 'seq' : [], 'prg' : []}
         for typ in ['prj', 'seq', 'prg']:
-            for i, tool in self.GetTools(typ).items():
-                self.tools[typ][i] = self.tb.AddLabelTool(i, tool.label, tool.image, 
+            for i, tool in self.GetTools(typ):
+                self.tools[typ].append(self.tb.AddLabelTool(i, tool.label, tool.image, 
                                                            shortHelp = tool.shortHelp, 
-                                                           longHelp = tool.longHelp)
+                                                           longHelp = tool.longHelp))
 
         
 
@@ -911,7 +911,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.supprimerOutils()
 
         d = 8 # Position à changer selon le nombre d'outils "communs"
-        for tool in self.tools[typ].values():
+        for tool in self.tools[typ]:
             self.tb.InsertToolItem(d,tool)
             d += 1
         

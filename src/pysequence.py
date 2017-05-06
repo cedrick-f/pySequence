@@ -3868,7 +3868,7 @@ class Projet(BaseDoc):
         # Les élèves
         #
         self.brancheElv = arbre.AppendItem(self.branche, Titres[6], data = "Ele",
-                                           image = self.arbre.images["Elv"])
+                                           image = self.arbre.images["Grp"])
         for e in self.eleves:
             e.ConstruireArbre(arbre, self.brancheElv) 
             
