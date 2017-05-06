@@ -16,6 +16,8 @@ En cours de réalisation ...
 
 .. toctree::
    :maxdepth: 2
+
+   _modules/modules.rst
    
    m_pysequence.rst
    m_wx_pysequence.rst

@@ -26,8 +26,11 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-"""
-undo.py
+u"""
+module undo
+***********
+
+Gestion des actions annuler/rétablir
 
 pySéquence : aide à la réalisation de fiches de séquence pédagogiques
 et à la validation de projets

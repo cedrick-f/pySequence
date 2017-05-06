@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2011-2013 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,11 +31,15 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-'''
-Created on 26 oct. 2011
+u"""
+Module constantes
+*****************
 
-@author: Cedrick
-'''
+Principales constantes de **pySéquence**.
+
+"""
+
+
 import wx
 
 # Les icones des branches de l'abre et un curseur perso
@@ -46,52 +54,7 @@ from util_path import DOSSIER_ICONES
 from widgets import rognerImage
 
     
-####################################################################################
-#
-#  Gestion des erreurs
-#
-####################################################################################    
 
-#import traceback
-#
-#def _exceptionhook(typ, value, traceb):
-#    """ On catch une exception """
-#    frame=traceb.tb_frame
-#    print >>sys.stderr,"\n"
-#    traceback.print_tb(traceb)
-#    print >>sys.stderr,"\nType : ",typ,"\n"
-#    print >>sys.stderr,"ValueError : ",value
-#    sys.exit()
-#
-#class RedirectErr:
-#    #
-#    # Redirige la sortie des erreurs pour envoyer l'erreur par mail
-#    #
-#    def __init__(self,stderr):
-#        self.stderr=stderr
-#        self.content=""
-#        self.error_occured=False
-#        self.file_error=None
-#
-#    def write(self,text):
-#        #
-#        # A la premiere erreur, on enregistrer la fonction de sortie
-#        #
-#        if not self.error_occured:
-#            #
-#            # Première erreur
-#            # on ouvre le fichier qui contient les erreurs
-#            self.file_error=open(ERROR_FILE,'w')
-#            self.error_occured=True
-#        if self.file_error is not None:
-#            self.file_error.write(text)
-#            self.file_error.flush()
-#
-#if not PORTABLE:
-#    ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
-#    print "Fichier erreur :",ERROR_FILE
-#    sys.excepthook = _exceptionhook
-#    sys.stderr=RedirectErr(sys.stderr)
 
 ####################################################################################
 #
@@ -108,6 +71,8 @@ TOUTES_REVUES_EVAL = [_R1, _R2, _R3]
 TOUTES_REVUES_SOUT = [_R1, _R2, _R3, _Rev, _S]
 TOUTES_REVUES_EVAL_SOUT = [_R1, _R2, _R3, _S]
 DUREE_REVUES = 0.25 # Durée "factice" : uniquement pour que CalcH renvoie 0
+
+
 
 ####################################################################################
 #
@@ -167,6 +132,9 @@ MOIS = [u'Janvier', u'Février', u'Mars', u'Avril', u'Mai', u'Juin',
         u'Juillet', u'Août', u'Septembre', u'Octobre', u'Novembre', u'Décembre']
 JOURS = [u'Lundi', u'Mardi', u'Mercredi', u'Jeudi', u'Vendredi', u'Samedi', u'Dimanche']
 
+
+
+
 ####################################################################################
 #
 #   Quelques fonctions ...
@@ -187,6 +155,8 @@ def getAnneeScolaireStr():
     annee = getAnneeScolaire()
     return str(annee)+"-"+str(annee+1)
 
+
+
 def getSingulierPluriel(txt, pluriel):
     if pluriel:
         return getPluriel(txt)
@@ -195,7 +165,6 @@ def getSingulierPluriel(txt, pluriel):
 
 def getPluriel(txt):
     return txt.replace("(", "").replace(")", "")
-
 
 def getSingulier(txt):
     return txt.replace("(s)", "").replace("(x)", "")
@@ -231,7 +200,8 @@ def lettreCol(num):
 
 ######################################################################################  
 def supprime_accent(ligne):
-    """ supprime les accents du texte source """
+    u""" Supprime les accents du texte source
+    """
     accents = { u'a': [u'à', u'ã', u'á', u'â'],
                 u'e': [u'é', u'è', u'ê', u'ë'],
                 u'i': [u'î', u'ï'],

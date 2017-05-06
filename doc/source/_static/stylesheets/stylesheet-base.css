@@ -25,7 +25,7 @@ time, mark, audio, video {
   /*margin: 0;*/
   padding: 0;
   border: 0;
-  font: inherit;
+  /*font: inherit;*/
   vertical-align: baseline;
 }
 
@@ -390,7 +390,7 @@ header.inner a:hover{
 }
 
 .release-info {
-  font-size: 12px;
+  font-size: 14px;
   font-style: italic;
 
 }

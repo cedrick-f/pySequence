@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: ISO-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 ##This file is part of pySequence
 #############################################################################
@@ -10,7 +10,11 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2012 Cédrick FAURY
+## Copyright (C) 2012 CÃ©drick FAURY
+##
+## pySÃ©quence : aide Ã  la construction
+## de SÃ©quences et Progressions pÃ©dagogiques
+## et Ã  la validation de Projets
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,29 +31,38 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+u"""
+Module Options
+**************
+
+Gestion des Options de **pySÃ©quence**.
+
+
+"""
+
 import ConfigParser
 import os.path
 import recup_excel
 import io
-import ast
-import wx.combo
+import wx
+
 #from constantes import *
 import constantes#, constantes_SSI
 import util_path
 
 #from constantes_ETT import PositionCibleCI
 from Referentiel import REFERENTIELS
-import xml.etree.ElementTree as ET
+
 
 ##############################################################################
 #      Options     #
 ##############################################################################
 class Options:
-    """ Définit les options de pySequence """
+    """ DÃ©finit les options de pySequence """
     def __init__(self, options = None):
         #
         # Toutes les options ...
-        # Avec leurs valeurs par défaut.
+        # Avec leurs valeurs par dÃ©faut.
         #
         self.optClasse = {}
         self.optFenetre = {}
@@ -62,10 +75,10 @@ class Options:
         if options == None:
             self.defaut()
           
-#        self.listeOptions = [u"Général", u"Affichage", u"Couleurs", u"Impression"] 
+#        self.listeOptions = [u"GÃ©nÃ©ral", u"Affichage", u"Couleurs", u"Impression"] 
          
         self.typesOptions = {u"Classe" : self.optClasse,
-                             #u"Systèmes" : self.optSystemes,
+                             #u"SystÃ¨mes" : self.optSystemes,
                              u"Projet" : self.optProjet,
                              u"Fichiers" : self.optFichiers,
                              u"Fenetre" : self.optFenetre,
@@ -73,7 +86,7 @@ class Options:
                              }
         
         
-        # Le fichier où seront sauvées les options
+        # Le fichier oÃ¹ seront sauvÃ©es les options
         self.fichierOpt = os.path.join(util_path.APP_DATA_PATH, "sequence.cfg")
         
         
@@ -102,7 +115,7 @@ class Options:
     
     #########################################################################################################
     def fichierExiste(self):
-        """ Vérifie si le fichier 'options' existe
+        """ VÃ©rifie si le fichier 'options' existe
         """
 #        PATH=os.path.dirname(os.path.abspath(sys.argv[0]))
 #        os.chdir(globdef.PATH)
@@ -256,7 +269,7 @@ class Options:
 #                        d[n.rsplit(".")[-1].upper()] = eval(config.get(titreUtf, n))
 #                opt = d
 #                
-#            # pour un passage correct de la version 2.5 à 2.6
+#            # pour un passage correct de la version 2.5 Ã  2.6
 #            try:
 #                v = eval(opt)
 #                if type(v) == tuple:
@@ -320,7 +333,7 @@ class Options:
 #                            d[n.rsplit("_")[-1].upper()] = eval(config.get(titreUtf, n))
 #                    opt = d
 #                    
-#                # pour un passage correct de la version 2.5 à 2.6
+#                # pour un passage correct de la version 2.5 Ã  2.6
 #                try:
 #                    v = eval(opt)
 #                    if type(v) == tuple:
@@ -396,7 +409,7 @@ class Options:
         self.optProjet["PosRevues"] = []
         
         #
-        # Fichiers récents
+        # Fichiers rÃ©cents
         #
         self.optFichiers["FichiersRecents"] = []
         
@@ -436,14 +449,14 @@ class Options:
             self.optProjet["PosRevues"] = doc.positionRevues
         
 #        #
-#        # Séquence
+#        # SÃ©quence
 #        #
 #        elif doc.GetType() == 'seq':
 #            self.optSystemes["Systemes"] = [ET.tostring(s.getBranche()) for s in doc.systemes]
 
             
         #
-        # Fichiers récents
+        # Fichiers rÃ©cents
         #
         self.optFichiers["FichiersRecents"] = app.GetFichiersRecents()
         
@@ -479,12 +492,12 @@ class Options:
 
         
 ##############################################################################
-#     Fenêtre Options     #
+#     FenÃªtre Options     #
 ##############################################################################
 class FenOptions(wx.Dialog):
-#   "Fenêtre des options"      
+#   "FenÃªtre des options"      
     def __init__(self, parent, options):
-        wx.Dialog.__init__(self, parent, -1, u"Options de pySequence")#, style = wx.RESIZE_BORDER)
+        wx.Dialog.__init__(self, parent, -1, u"Options de pySÃ©quence")#, style = wx.RESIZE_BORDER)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.options = options
@@ -514,7 +527,7 @@ class FenOptions(wx.Dialog):
             btnsizer.AddButton(btn)
         
         btn = wx.Button(self, wx.ID_OK)
-        help = u"Valider les changements apportés aux options"
+        help = u"Valider les changements apportÃ©s aux options"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         btn.SetDefault()
@@ -527,8 +540,8 @@ class FenOptions(wx.Dialog):
         btnsizer.AddButton(btn)
         btnsizer.Realize()
         
-        btn = wx.Button(self, -1, u"Défaut")
-        help = u"Rétablir les options par défaut"
+        btn = wx.Button(self, -1, u"DÃ©faut")
+        help = u"RÃ©tablir les options par dÃ©faut"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
@@ -593,9 +606,9 @@ class pnlClasse(wx.Panel):
         
         
         #
-        # Centres d'intérêt
+        # Centres d'intÃ©rÃªt
         #
-        sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
+        sb1 = wx.StaticBox(self, -1, u"Centres d'intÃ©rÃªt ET", size = (200,-1))
         sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
         txt = wx.TextCtrl(self, -1, self.opt["CentresInteretET"],
                           style = wx.TE_MULTILINE)
@@ -604,8 +617,8 @@ class pnlClasse(wx.Panel):
         self.txtCi = txt
         if self.opt["TypeEnseignement"] != 'ET' :
             self.txtCi.Enable(False)
-        btn = wx.Button(self, -1, u"Sélectionner")
-        help = u"Sélectionner depuis un fichier Excel"
+        btn = wx.Button(self, -1, u"SÃ©lectionner")
+        help = u"SÃ©lectionner depuis un fichier Excel"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
@@ -624,7 +637,7 @@ class pnlClasse(wx.Panel):
                          typ = VAR_ENTIER_POS, bornes = [1,40])
             varEff.append(v)
             vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
-                              help = u"Nombre d'élèves")
+                              help = u"Nombre d'Ã©lÃ¨ves")
             self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
             sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 2)
         self.ns.Add(sbs3, flag = wx.EXPAND|wx.ALL)
@@ -659,12 +672,12 @@ class pnlClasse(wx.Panel):
     ######################################################################################  
     def SelectCI(self, event = None):
         if recup_excel.ouvrirFichierExcel():
-            dlg = wx.MessageDialog(self.Parent, u"Sélectionner une liste de CI\n" \
+            dlg = wx.MessageDialog(self.Parent, u"SÃ©lectionner une liste de CI\n" \
                                              u"dans le classeur Excel qui vient de s'ouvrir,\n" \
                                              u"puis appuyer sur Ok.\n\n" \
                                              u"Format attendu de la selection :\n" \
                                              u"Liste des CI sur une colonne.",
-                                             u'Sélection de CI',
+                                             u'SÃ©lection de CI',
                                              wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
                                              )
             res = dlg.ShowModal()
@@ -676,67 +689,4 @@ class pnlClasse(wx.Panel):
                 self.opt["CentresInteretET"] = ci
             elif res == wx.ID_NO:
                 print "Rien" 
-
-##########################################################################################################
-#
-#  DirSelectorCombo
-#
-##########################################################################################################
-class DirSelectorCombo(wx.combo.ComboCtrl):
-    def __init__(self, *args, **kw):
-        wx.combo.ComboCtrl.__init__(self, *args, **kw)
-
-        # make a custom bitmap showing "..."
-        bw, bh = 14, 16
-        bmp = wx.EmptyBitmap(bw,bh)
-        dc = wx.MemoryDC(bmp)
-
-        # clear to a specific background colour
-        bgcolor = wx.Colour(255,254,255)
-        dc.SetBackground(wx.Brush(bgcolor))
-        dc.Clear()
-
-        # draw the label onto the bitmap
-        label = "..."
-        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.FONTWEIGHT_BOLD)
-        dc.SetFont(font)
-        tw,th = dc.GetTextExtent(label)
-        dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
-        del dc
-
-        # now apply a mask using the bgcolor
-        bmp.SetMaskColour(bgcolor)
-
-        # and tell the ComboCtrl to use it
-        self.SetButtonBitmaps(bmp, True)
-        
-
-    # Overridden from ComboCtrl, called when the combo button is clicked
-    def OnButtonClick(self):
-        # In this case we include a "New directory" button. 
-#        dlg = wx.FileDialog(self, "Choisir un fichier modèle", path, name,
-#                            "Rich Text Format (*.rtf)|*.rtf", wx.FD_OPEN)
-        dlg = wx.DirDialog(self, _("Choisir un dossier"),
-                           defaultPath = globdef.DOSSIER_EXEMPLES,
-                           style = wx.DD_DEFAULT_STYLE
-                           #| wx.DD_DIR_MUST_EXIST
-                           #| wx.DD_CHANGE_DIR
-                           )
-
-        # If the user selects OK, then we process the dialog's data.
-        # This is done by getting the path data from the dialog - BEFORE
-        # we destroy it. 
-        if dlg.ShowModal() == wx.ID_OK:
-            self.SetValue(dlg.GetPath())
-
-        # Only destroy a dialog after you're done with it.
-        dlg.Destroy()
-        
-        self.SetFocus()
-
-    # Overridden from ComboCtrl to avoid assert since there is no ComboPopup
-    def DoSetPopupControl(self, popup):
-        pass
-
 

@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,14 +30,11 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-"""
-error.py
+u"""
+Module error
+************
 
-pySéquence : aide à la réalisation de fiches  de séquence pédagogiques
-et à la validation de projets
-
-Copyright (C) 2011-2015
-@author: Cedrick FAURY
+Gestion des erreurs
 
 """
 
@@ -48,40 +49,10 @@ import wx
 
 import version
 
-import time
-
-
-def MyExceptionHook1(etype, value, trace):
-    """
-    Handler for all unhandled exceptions.
-  
-    :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);
-    :type `etype`: `Exception`
-    :param string `value`: the exception error message;
-    :param string `trace`: the traceback header, if any (otherwise, it prints the
-     standard Python header: ``Traceback (most recent call last)``.
-    """
-    tmp = traceback.format_exception(etype, value, trace)
-    mes = u"%s %s a rencontré une erreur et doit fermer !\n\n"\
-         u"Merci de copier le message ci-dessous\n" \
-         u"et de l'envoyer à l'équipe de développement :\n"\
-         u"cedrick point faury arobase ac-clermont point fr\n\n" %(version.__appname__, version.__version__)
-    exception = mes + "".join(tmp)
-     
-    try:
-        wx.GetApp().GetTopWindow()
-        messageErreur(None, "Erreur !", exception, wx.ICON_ERROR)
-    except:
-        print exception
-        time.sleep(6)
-    sys.exit()
-
-
-
 
 
 def MyExceptionHook(typ, value, traceb):
-    """
+    u"""
     Handler for all unhandled exceptions.
   
     :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);

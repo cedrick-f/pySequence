@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2011-2016 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,6 +29,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+u"""
+module objects_wx
+*****************
+
+Les principaux éléments du GUI de **pySéquence**.
+
+
+"""
 
 
 
@@ -226,7 +239,7 @@ from constantes import calculerEffectifs, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
-                        revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel, \
+                        getSingulier, getPluriel, getSingulierPluriel, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, WMIN_PROP, HMIN_PROP, \
                         WMIN_STRUC, HMIN_STRUC#, bmp
@@ -249,11 +262,11 @@ except ImportError:
 # Widgets partagés
 # des widgets wx évolués "faits maison"
 # import widgets
-from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
+from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
-                    rallonge, remplaceCode2LF, dansRectangle, isstring, \
-                    StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
-                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl, \
+                    isstring, \
+                    TextCtrl_Help, CloseFenHelp, \
+                    messageInfo, rognerImage, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone
                     #, chronometrer
 
@@ -524,11 +537,23 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.SetIcon(images.getlogoIcon())
         
-        self.tabmgr = self.GetClientWindow().GetAuiManager()
-        self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
+        
+        
+        
+        nb = self.GetNotebook()
+#         self.tabmgr = self.GetClientWindow().GetAuiManager()
+        
+        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
+        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
+        
+#         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
+#         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnDocChanged)
         
         file_drop_target = MyFileDropTarget(self)
-        self.tabmgr.GetManagedWindow().SetDropTarget(file_drop_target)
+        nb.SetDropTarget(file_drop_target)
+#         self.tabmgr.GetManagedWindow().SetDropTarget(file_drop_target)
+        
+        
         
         #############################################################################################
         # Quelques variables ...
@@ -619,7 +644,24 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
         self.Thaw()
         
-    
+#     ###############################################################################################
+#     def GetNotebook(self):
+#         if int(wx.version()[0]) > 2:
+#             return self.GetClientWindow().GetAuiManager().GetManagedWindow()
+#         else:
+#             return self.GetClientWindow().GetAuiManager().GetManagedWindow()
+            
+             
+    ###############################################################################################
+    def GetCurrentPage(self):
+        nb = self.GetNotebook()
+        if int(wx.version()[0]) > 2:
+            return nb.GetCurrentPage()
+        else:
+            return nb.GetPage(nb.GetSelection())
+        
+        
+        ###############################################################################################
     def renommerWindow(self):
         menu_bar = self.GetMenuBar()
 #        menu_bar.SetMenuLabel(3, u"Fenétre")
@@ -914,11 +956,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandePleinEcran(self, event):
+        nb = self.GetNotebook()
         if int(wx.version()[0]) > 2:
-            fenDoc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+            fenDoc = nb.GetCurrentPage()
         else:
-            f = self.GetClientWindow().GetAuiManager().GetManagedWindow()
-            fenDoc = f.GetPage(f.GetSelection())
+            fenDoc = nb.GetPage(nb.GetSelection())
         
         if fenDoc is None:
             return
@@ -1182,7 +1224,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     #############################################################################
     def OnBug(self, event):
-        print a
+        print
         
         
     #############################################################################
@@ -1453,7 +1495,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
             page.exporterDetails(event)
-        
+    
+    
     #############################################################################
     def genererGrilles(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
@@ -1466,14 +1509,24 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
             page.genererGrillesPdf(event)
-            
+    
+    
     #############################################################################
     def genererFicheValidation(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
             page.genererFicheValidation(event)
+    
+    
+    ###############################################################################################
+    def OnDocClosed(self, evt = None):   
+#         print "OnDocClosed"
+
+        if self.GetNotebook().GetPageCount() <= 1:
+            self.supprimerOutils()
+            self.tb.Realize()
             
-        
+            
     ###############################################################################################
     def OnDocChanged(self, evt = None):
         """ Opérations de modification du menu et des barres d'outils 
@@ -1481,16 +1534,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             Et rafraichissement des séquences de la fenêtre de Progression
         """
 #         print "OnDocChanged"
-#        print dir(self.GetClientWindow().GetAuiManager().GetManagedWindow())
-#        print self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
-#        print self.GetClientWindow().GetAuiManager().GetManagedWindow()
-        if int(wx.version()[0]) > 2:
-            fenDoc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
-        else:
-            f = self.GetClientWindow().GetAuiManager().GetManagedWindow()
-            fenDoc = f.GetPage(f.GetSelection())
-
-
+        
+        fenDoc = self.GetCurrentPage()
+        
         if hasattr(fenDoc, 'typ'):
             self.ajouterOutils(fenDoc.typ )
             if fenDoc.typ == "prj":
@@ -1507,7 +1553,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 
             elif fenDoc.typ == "prg":
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.Rafraichir,     id=70)
-                self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,     id=71)
+                self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,    id=71)
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouvelleSequence,     id=72)
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouveauProjet,     id=73)
     
@@ -1527,6 +1573,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                         self.file_menu.Enable(i, False)
                 
             fenDoc.Rafraichir()
+        
+        else:
+            self.supprimerOutils()
+            self.tb.Realize()
             
         self.miseAJourUndo()
 
@@ -1826,6 +1876,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def fermer(self):
+        # Pour mettre à jour la barre d'outils
+        self.parent.OnDocClosed()
+        
         self.mgr.UnInit()
         del self.mgr
         try:
@@ -2220,14 +2273,14 @@ class FenetreSequence(FenetreDocument):
         self.fiche.Redessiner()
 
 
-    ###############################################################################################
-    def ajouterOutils(self):
-        self.parent.supprimerOutils()
-        
-        self.parent.tb.InsertToolItem(5, self.parent.tool_ss)
-        self.parent.tb.InsertToolItem(6, self.parent.tool_sy)
-
-        self.parent.tb.Realize()
+#     ###############################################################################################
+#     def ajouterOutils(self):
+#         self.parent.supprimerOutils()
+#         
+#         self.parent.tb.InsertToolItem(5, self.parent.tool_ss)
+#         self.parent.tb.InsertToolItem(6, self.parent.tool_sy)
+# 
+#         self.parent.tb.Realize()
     
         
         

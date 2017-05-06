@@ -10,7 +10,11 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2014 C�drick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,11 +31,15 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-'''
-Created on 15-06-2014
+u"""
+Module SynthesePeda
+*******************
 
-@author: Cedrick
-'''
+Génération des tableaux de synthèse pédagogique des Progressions : 
+Compétences, Centres d'intérêts , ...
+
+
+"""
 
 import wx
 import sys
@@ -52,7 +60,8 @@ import os, glob
 
 from widgets import messageErreur, getHoraireTxt
 
-import wx_pysequence
+import objects_wx
+import pysequence
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
@@ -91,7 +100,7 @@ class FenetreBilan(wx.Frame):
         #
         titre = wx.StaticBox(panel, -1, u"Type d'enseignement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        te = wx_pysequence.ArbreTypeEnseignement(panel, self)
+        te = objects_wx.ArbreTypeEnseignement(panel, self)
         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
         sb.Add(te, flag = wx.EXPAND)
         self.referentiel = referentiel
@@ -261,7 +270,7 @@ class FenetreBilan(wx.Frame):
                 os.startfile(self.lastPath)
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir la synthèse\n\n%s\n" %constantes.toSystemEncoding(self.lastPath))
+                              u"Impossible d'ouvrir la synthèse\n\n%s\n" %util_path.toSystemEncoding(self.lastPath))
 
     ######################################################################################  
     def definirStyles(self, book):
@@ -1355,8 +1364,8 @@ class FenetreBilan(wx.Frame):
 #        print "dicLigne", dicLigne
         c = 5
 #        print dicLigne.keys()
-        for p, lst in enumerate(self.seqTriees):        # P�riodes
-            for i, seq in enumerate(lst):               # S�quences
+        for p, lst in enumerate(self.seqTriees):        # Périodes
+            for i, seq in enumerate(lst):               # Séquences
                 for sav in seq.obj["S"].savoirs:        
 #                    print "  ", sav
                     if sav[1:] in dicLigne.keys() and (sav[0] == 'S' or (sav[0] == 'B' and self.referentiel.tr_com == [])):
@@ -1724,8 +1733,8 @@ class FenetreBilan(wx.Frame):
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')
 
-        classe = wx_pysequence.Classe(self.Parent)
-        sequence = wx_pysequence.Sequence(self, classe)
+        classe = pysequence.Classe(self.Parent)
+        sequence = pysequence.Sequence(self, classe)
         classe.SetDocument(sequence)
 
         try:

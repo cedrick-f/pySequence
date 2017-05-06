@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 ###############################################################################
 # Name: ed_editv.py                                                           #
 # Purpose: Editor view notebook tab implementation                            #
@@ -22,7 +23,6 @@ __revision__ = "$Revision: 67834 $"
 #--------------------------------------------------------------------------#
 # Imports
 import wx
-import os
 import  wx.stc  as  stc
 import functools
 from widgets import ToolTip

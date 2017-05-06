@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2017 Cédrick FAURY
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,18 +30,16 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Source :
-# Cody Precord : "wxPythyon 2.8 Application Development Cookbook - 2010"
-
 
 u"""
-wx_pysequence.py
+Module wx_pysequence
+********************
 
-pySéquence : aide à la réalisation de fiches de séquence pédagogiques
-et à la validation de projets
+Module de demarrage de **pySéquence**.
 
-Copyright (C) 2011-2016
-@author: Cedrick FAURY
+**pySéquence** : aide à la réalisation de fiches de **Séquence** et **Progression** pédagogiques
+et à la validation de **Projets**.
+
 
 """
 

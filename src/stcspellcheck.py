@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 #-----------------------------------------------------------------------------
 # Name:        stcspellcheck.py
 # Purpose:     Spell checking for the wx.StyledTextControl using pyenchant

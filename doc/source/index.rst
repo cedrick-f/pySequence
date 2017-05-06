@@ -10,10 +10,9 @@ Documentation de pySéquence
 .. toctree::
    :maxdepth: 2
 
-   
-   Introduction
-   Tutoriel
-   Développement
+   introduction.rst
+   tutoriel.rst
+   developpement.rst
 
 
 Index et tables

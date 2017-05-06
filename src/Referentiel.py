@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,11 +31,13 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-'''
-Created on 15-06-2014
+u"""
+Module Referentiel
+******************
 
-@author: Cedrick
-'''
+Gestion des référentiels d'enseignement.
+
+"""
 
 import xlrd
 from xlrd import open_workbook

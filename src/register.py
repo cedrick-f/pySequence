@@ -6,13 +6,15 @@
 #############################################################################
 ##                                                                         ##
 ##                                  register                               ##
-##                     enregistrement de pySequence                        ##
-##                     dans la base de registre de Windows                 ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
 
 ## Copyright (C) 2012 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,14 +31,11 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-"""
-register.py
-Aide à la réalisation de fiches pédagogiques de séquence
-*************
-*   STIDD   *
-*************
-Copyright (C) 2011  
-@author: Cedrick FAURY
+u"""
+Module register
+***************
+
+Enregistrement de pySéquence dans la base de registre (Windows)
 
 """
 

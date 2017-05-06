@@ -1,9 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-u"""
 
-Copyright (C) 2011  
-@author: Cedrick FAURY
+##This file is part of pySequence
+#############################################################################
+#############################################################################
+##                                                                         ##
+##                               richtext                               ##
+##                                                                         ##
+#############################################################################
+#############################################################################
+
+## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
+
+#    pySequence is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+    
+#    pySequence is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with pySequence; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+u"""
+Module richtext
+***************
+
+Editeur de text "riche"
 
 """
 
@@ -18,9 +50,6 @@ import webbrowser
 import images
 
 from widgets import ToolTip
-
-#from urlparse import urlparse
-#from rfc3987 import parse
 
 
 def is_valid_url(url):
@@ -48,7 +77,6 @@ typesImg = {".bmp" : wx.BITMAP_TYPE_BMP,
             ".ico" : wx.BITMAP_TYPE_ICO}
 
 
-#from stcspellcheck import RTCSpellCheck
         
         
 class RichTextCtrl(ToolTip, rt.RichTextCtrl): 

@@ -6,13 +6,15 @@
 #############################################################################
 ##                                                                         ##
 ##                                  rapport                                ##
-##               génération d'un rapport détaillé                          ##
-##               des tâches à effectuer par les élèves lors d'un projet    ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
 
 ## Copyright (C) 2012 Cédrick FAURY
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,10 +29,23 @@
 #    You should have received a copy of the GNU General Public License
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+u"""
+Module rapport
+**************
+
+Génération d'un rapport détaillé des tâches à effectuer par les élèves lors d'un Projet
+
+
+"""
+
 import os, sys
-if sys.platform != "win32":
-    import wxversion
+
+# if sys.platform != "win32":
+#     import wxversion
 #    wxversion.select('2.8')
+
 import wx
 import wx.richtext as rt
 import richtext
@@ -45,7 +60,7 @@ from draw_cairo import getHoraireTxt
 from draw_cairo_prj import ICoulTache, BCoulTache
 from draw_cairo_seq import ICoulSeance#, BCoulSeance
 
-from xml.dom.minidom import parse, parseString
+# from xml.dom.minidom import parse, parseString
 
 #from wx import ImageFromStream, BitmapFromImage, EmptyIcon
 
@@ -275,9 +290,9 @@ class FrameRapport(wx.Frame):
 #                         f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
 #                         f.close()
 #                 elif ext == 'rtf':
-#                     import PyRTFParser
+#                     import PyRTFParser_
 #                     # Use the custom RTF Handler
-#                     handler = PyRTFParser.PyRichTextRTFHandler()
+#                     handler = PyRTFParser_.PyRichTextRTFHandler()
 #                     # Save the file with the custom RTF Handler.
 #                     # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
 #                     handler.SaveFile(self.rtc.GetBuffer(), path)
@@ -1408,9 +1423,9 @@ class RapportRTF(rt.RichTextCtrl):
                     f.close()
                     
             elif ext == 'rtf':
-                import PyRTFParser
+                import PyRTFParser_
                 # Use the custom RTF Handler
-                handler = PyRTFParser.PyRichTextRTFHandler()
+                handler = PyRTFParser_.PyRichTextRTFHandler()
                 # Save the file with the custom RTF Handler.
                 # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
                 handler.SaveFile(self.GetBuffer(), nomFichierDefaut)

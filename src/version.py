@@ -27,7 +27,11 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 u"""
-version.py
+version
+*******
+
+Gestion des numéros de version
+
 Aide à la réalisation de fiches  de séquence pédagogiques
 et à la validation de projets
 
@@ -45,7 +49,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "7.1-beta.7"
+__version__ = "7.1-beta.8"
 print __version__
 
 
