@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2015 Cédrick FAURY - Jean-Claude FRICOU
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -32,11 +36,6 @@ version
 
 Gestion des numéros de version
 
-Aide à la réalisation de fiches  de séquence pédagogiques
-et à la validation de projets
-
-Copyright (C) 2011-2016
-@author: Cedrick FAURY
 
 """
 

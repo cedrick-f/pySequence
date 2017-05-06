@@ -44,7 +44,7 @@ import wx.richtext as rt
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
 import cStringIO
-from constantes import xmlVide
+
 
 import webbrowser
 import images
@@ -203,6 +203,7 @@ class RichTextPanel(wx.Panel):
     def Ouvrir(self):
         u""" Rempli la zone de texte avec le contenu de objet.description
         """
+        from constantes import xmlVide
         out = cStringIO.StringIO()
         handler = rt.RichTextXMLHandler()
         buff = self.rtc.GetBuffer()

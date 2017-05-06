@@ -45,20 +45,30 @@ Gestion des fenêtres d'aide au format Markdown
 #print sys.path
 #sys.path.insert(4,'C:\Python27\Lib\site-packages\Markdown-2.6.5-py2.7.egg-info')
 AS_MD = True
-try:
-    import markdown as md
-except:
-    print "Erreur import markdown"
-    try:
-        import mistune as md
-    except:
-        AS_MD = False
+
+
+
+# try:
+#     import markdown as md
+# except:
+#     print "Erreur import markdown"
+#     try:
+#         import mistune as md
+#     except:
+#         AS_MD = False
         
 import  wx
+
 import  wx.html
 import  wx.lib.wxpTag
 
-
+import markdown as md
+# En cas d'erreur d'import de markdown
+# modifier le fichier inlinepatterns.py (inverser lignes 54 et 56) :
+## try:  # pragma: no cover
+##     import htmlentitydefs as entities
+## except ImportError:  # pragma: no cover
+##     from html import entities
 
 
 

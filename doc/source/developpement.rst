@@ -19,9 +19,7 @@ En cours de réalisation ...
 
    _modules/modules.rst
    
-   m_pysequence.rst
-   m_wx_pysequence.rst
-   m_objects_wx.rst
+
 
    
 Documentation

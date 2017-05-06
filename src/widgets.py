@@ -41,7 +41,7 @@ Différents widgets perso pour wx
 """
 
 import wx
-
+import md_util
 import time, os
 import  wx.lib.scrolledpanel as scrolled
 from wx.lib.wordwrap import wordwrap
@@ -1181,7 +1181,7 @@ class CheckBoxValue(wx.CheckBox):
 #########################################################################################################  
 
 import orthographe
-import md_util
+
 class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
     def __init__(self, parent, titre = u"", md = u""):
         orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)

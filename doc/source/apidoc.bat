@@ -1,0 +1,1 @@
+c:\python27\scripts\sphinx-apidoc -o _modules ..\..\src
