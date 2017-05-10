@@ -42,8 +42,9 @@ Gestion des Options de **pySéquence**.
 
 import ConfigParser
 import os.path
-import recup_excel
 import io
+
+import recup_excel
 import wx
 
 #from constantes import *
@@ -58,7 +59,8 @@ from Referentiel import REFERENTIELS
 #      Options     #
 ##############################################################################
 class Options:
-    """ Définit les options de pySequence """
+    u"""Définit les options de pySequence
+    """
     def __init__(self, options = None):
         #
         # Toutes les options ...

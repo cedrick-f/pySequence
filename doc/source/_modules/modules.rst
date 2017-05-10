@@ -2,7 +2,7 @@ src
 ===
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
    Options
    Referentiel
@@ -20,7 +20,6 @@ src
    md_util
    objects_wx
    orthographe
-   pyXorga
    pysequence
    rapport
    recup_excel

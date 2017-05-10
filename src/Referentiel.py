@@ -1486,9 +1486,9 @@ class Referentiel(XMLelem):
         
     ###########################################################
     def defPeriode(self):
-        """ Définit les periodes
-             (dans le cas ou elles ne sont pas définies dans le référentiel intégré
-              versions < 5.7)
+        """Définit les periodes
+            (dans le cas ou elles ne sont pas définies dans le référentiel intégré
+            versions < 5.7)
         """
 #        print "defPeriode"
         self.periode_prj = []
@@ -2880,11 +2880,13 @@ class Competences(XMLelem):
     
     #########################################################################
     def get2Niveaux(self):
-        """ Renvoie une liste de listes (2 premiers niveaux)
-            format :
-            [['A', ['A1', 'A2', 'A3']],
-             ['B', ['B1', 'B2']],
-             ...]
+        """
+        :return: une liste de listes (2 premiers niveaux)
+        
+        format :
+        [['A', ['A1', 'A2', 'A3']],
+        ['B', ['B1', 'B2']],
+        ...]
         """
         lst0 = []
         for k0, v0 in self.dicCompetences.items():

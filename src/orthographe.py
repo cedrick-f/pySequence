@@ -206,138 +206,129 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
     
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
-    import sys
-    
-    class Frame(wx.Frame):
-        def __init__(self, *args, **kwargs):
-            super(self.__class__, self).__init__(*args, **kwargs)
-
-            self.stc = STC_ortho(self, -1)
-
-            self.CreateStatusBar()
-            menubar = wx.MenuBar()
-            self.SetMenuBar(menubar)  # Adding the MenuBar to the Frame content.
-            menu = wx.Menu()
-            menubar.Append(menu, "File")
-            self.menuAdd(menu, "Open", "Open File", self.OnOpenFile)
-            self.menuAdd(menu, "Quit", "Exit the pragram", self.OnQuit)
-            menu = wx.Menu()
-            menubar.Append(menu, "Edit")
-            self.menuAdd(menu, "Check All", "Spell check the entire document", self.OnCheckAll)
-            self.menuAdd(menu, "Check Current Page", "Spell check the currently visible page", self.OnCheckPage)
-            self.menuAdd(menu, "Check Selection", "Spell check the selected region", self.OnCheckSelection)
-            menu.AppendSeparator()
-            self.menuAdd(menu, "Clear Spelling", "Remove spelling correction indicators", self.OnClearSpelling)
-            menu = wx.Menu()
-            menubar.Append(menu, "Language")
-            langs = self.stc.spell.getAvailableLanguages()
-            self.lang_id = {}
-            for lang in langs:
-                id = wx.NewId()
-                self.lang_id[id] = lang
-                self.menuAdd(menu, lang, "Change dictionary to %s" % lang, self.OnChangeLanguage, id=id)
-
-
-        def loadFile(self, filename):
-            fh = open(filename)
-            self.stc.SetText(fh.read())
-            self.stc.spell.clearDirtyRanges()
-            self.stc.spell.checkCurrentPage()
-        
-        def loadSample(self, paragraphs=10):
-            lorem_ipsum = u"""\
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  Vivamus mattis
-commodo sem.  Phasellus scelerisque tellus id lorem.  Nulla facilisi.
-Suspendisse potenti.  Fusce velit odio, scelerisque vel, consequat nec,
-dapibus sit amet, tortor.  Vivamus eu turpis.  Nam eget dolor.  Integer
-at elit.  Praesent mauris.  Nullam non nulla at nulla tincidunt malesuada.
-Phasellus id ante.  Sed mauris.  Integer volutpat nisi non diam.  Etiam
-elementum.  Pellentesque interdum justo eu risus.  Cum sociis natoque
-penatibus et magnis dis parturient montes, nascetur ridiculus mus.  Nunc
-semper.  In semper enim ut odio.  Nulla varius leo commodo elit.  Quisque
-condimentum, nisl eget elementum laoreet, mauris turpis elementum felis, ut
-accumsan nisl velit et mi.
-
-And some Russian: \u041f\u0438\u0442\u043e\u043d - \u043b\u0443\u0447\u0448\u0438\u0439 \u044f\u0437\u044b\u043a \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f!
-
-"""
-            self.stc.ClearAll()
-            for i in range(paragraphs):
-                self.stc.AppendText(lorem_ipsum)
-            # Call the spell check after the text has had a chance to be
-            # displayed and the window resized to the correct size.
-            self.stc.spell.clearDirtyRanges()
-            wx.CallAfter(self.stc.spell.checkCurrentPage)
-
-        def menuAdd(self, menu, name, desc, fcn, id=-1, kind=wx.ITEM_NORMAL):
-            if id == -1:
-                id = wx.NewId()
-            a = wx.MenuItem(menu, id, name, desc, kind)
-            menu.AppendItem(a)
-            wx.EVT_MENU(self, id, fcn)
-            menu.SetHelpString(id, desc)
-        
-        def OnOpenFile(self, evt):
-            dlg = wx.FileDialog(self, "Choose a text file",
-                               defaultDir = "",
-                               defaultFile = "",
-                               wildcard = "*")
-            if dlg.ShowModal() == wx.ID_OK:
-                print("Opening %s" % dlg.GetPath())
-                self.loadFile(dlg.GetPath())
-            dlg.Destroy()
-        
-        def OnQuit(self, evt):
-            self.Close(True)
-        
-        def OnCheckAll(self, evt):
-            self.stc.spell.checkAll()
-        
-        def OnCheckPage(self, evt):
-            self.stc.spell.checkCurrentPage()
-        
-        def OnCheckSelection(self, evt):
-            self.stc.spell.checkSelection()
-        
-        def OnClearSpelling(self, evt):
-            self.stc.spell.clearAll()
-        
-        def OnChangeLanguage(self, evt):
-            id = evt.GetId()
-            normalized = locale.normalize(self.lang_id[id])
-            try:
-                locale.setlocale(locale.LC_ALL, normalized)
-                print("Changing locale %s, dictionary set to %s" % (normalized, self.lang_id[id]))
-            except locale.Error:
-                print("Can't set python locale to %s; dictionary set to %s" % (normalized, self.lang_id[id]))
-            self.stc.spell.setLanguage(self.lang_id[id])
-            self.stc.spell.clearAll()
-            self.stc.spell.checkCurrentPage()
-
-    app = wx.App(False)
-    frame = Frame(None, size=(600, -1))
-    need_sample = True
-    if len(sys.argv) > 1:
-        if not sys.argv[-1].startswith("-"):
-            frame.loadFile(sys.argv[-1])
-            need_sample = False
-    if need_sample:
-        frame.loadSample()
-    if '-d' in sys.argv:
-        frame.stc.spell._spelling_debug = True
-    frame.Show()
-    app.MainLoop()
+    pass
+#     import sys
+#     
+#     class Frame(wx.Frame):
+#         def __init__(self, *args, **kwargs):
+#             super(self.__class__, self).__init__(*args, **kwargs)
+# 
+#             self.stc = STC_ortho(self, -1)
+# 
+#             self.CreateStatusBar()
+#             menubar = wx.MenuBar()
+#             self.SetMenuBar(menubar)  # Adding the MenuBar to the Frame content.
+#             menu = wx.Menu()
+#             menubar.Append(menu, "File")
+#             self.menuAdd(menu, "Open", "Open File", self.OnOpenFile)
+#             self.menuAdd(menu, "Quit", "Exit the pragram", self.OnQuit)
+#             menu = wx.Menu()
+#             menubar.Append(menu, "Edit")
+#             self.menuAdd(menu, "Check All", "Spell check the entire document", self.OnCheckAll)
+#             self.menuAdd(menu, "Check Current Page", "Spell check the currently visible page", self.OnCheckPage)
+#             self.menuAdd(menu, "Check Selection", "Spell check the selected region", self.OnCheckSelection)
+#             menu.AppendSeparator()
+#             self.menuAdd(menu, "Clear Spelling", "Remove spelling correction indicators", self.OnClearSpelling)
+#             menu = wx.Menu()
+#             menubar.Append(menu, "Language")
+#             langs = self.stc.spell.getAvailableLanguages()
+#             self.lang_id = {}
+#             for lang in langs:
+#                 id = wx.NewId()
+#                 self.lang_id[id] = lang
+#                 self.menuAdd(menu, lang, "Change dictionary to %s" % lang, self.OnChangeLanguage, id=id)
+# 
+# 
+#         def loadFile(self, filename):
+#             fh = open(filename)
+#             self.stc.SetText(fh.read())
+#             self.stc.spell.clearDirtyRanges()
+#             self.stc.spell.checkCurrentPage()
+#         
+#         def loadSample(self, paragraphs=10):
+#             lorem_ipsum = u"""\
+# Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  Vivamus mattis
+# commodo sem.  Phasellus scelerisque tellus id lorem.  Nulla facilisi.
+# Suspendisse potenti.  Fusce velit odio, scelerisque vel, consequat nec,
+# dapibus sit amet, tortor.  Vivamus eu turpis.  Nam eget dolor.  Integer
+# at elit.  Praesent mauris.  Nullam non nulla at nulla tincidunt malesuada.
+# Phasellus id ante.  Sed mauris.  Integer volutpat nisi non diam.  Etiam
+# elementum.  Pellentesque interdum justo eu risus.  Cum sociis natoque
+# penatibus et magnis dis parturient montes, nascetur ridiculus mus.  Nunc
+# semper.  In semper enim ut odio.  Nulla varius leo commodo elit.  Quisque
+# condimentum, nisl eget elementum laoreet, mauris turpis elementum felis, ut
+# accumsan nisl velit et mi.
+# 
+# And some Russian: \u041f\u0438\u0442\u043e\u043d - \u043b\u0443\u0447\u0448\u0438\u0439 \u044f\u0437\u044b\u043a \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f!
+# 
+# """
+#             self.stc.ClearAll()
+#             for i in range(paragraphs):
+#                 self.stc.AppendText(lorem_ipsum)
+#             # Call the spell check after the text has had a chance to be
+#             # displayed and the window resized to the correct size.
+#             self.stc.spell.clearDirtyRanges()
+#             wx.CallAfter(self.stc.spell.checkCurrentPage)
+# 
+#         def menuAdd(self, menu, name, desc, fcn, id=-1, kind=wx.ITEM_NORMAL):
+#             if id == -1:
+#                 id = wx.NewId()
+#             a = wx.MenuItem(menu, id, name, desc, kind)
+#             menu.AppendItem(a)
+#             wx.EVT_MENU(self, id, fcn)
+#             menu.SetHelpString(id, desc)
+#         
+#         def OnOpenFile(self, evt):
+#             dlg = wx.FileDialog(self, "Choose a text file",
+#                                defaultDir = "",
+#                                defaultFile = "",
+#                                wildcard = "*")
+#             if dlg.ShowModal() == wx.ID_OK:
+#                 print("Opening %s" % dlg.GetPath())
+#                 self.loadFile(dlg.GetPath())
+#             dlg.Destroy()
+#         
+#         def OnQuit(self, evt):
+#             self.Close(True)
+#         
+#         def OnCheckAll(self, evt):
+#             self.stc.spell.checkAll()
+#         
+#         def OnCheckPage(self, evt):
+#             self.stc.spell.checkCurrentPage()
+#         
+#         def OnCheckSelection(self, evt):
+#             self.stc.spell.checkSelection()
+#         
+#         def OnClearSpelling(self, evt):
+#             self.stc.spell.clearAll()
+#         
+#         def OnChangeLanguage(self, evt):
+#             id = evt.GetId()
+#             normalized = locale.normalize(self.lang_id[id])
+#             try:
+#                 locale.setlocale(locale.LC_ALL, normalized)
+#                 print("Changing locale %s, dictionary set to %s" % (normalized, self.lang_id[id]))
+#             except locale.Error:
+#                 print("Can't set python locale to %s; dictionary set to %s" % (normalized, self.lang_id[id]))
+#             self.stc.spell.setLanguage(self.lang_id[id])
+#             self.stc.spell.clearAll()
+#             self.stc.spell.checkCurrentPage()
+# 
+#     app = wx.App(False)
+#     frame = Frame(None, size=(600, -1))
+#     need_sample = True
+#     if len(sys.argv) > 1:
+#         if not sys.argv[-1].startswith("-"):
+#             frame.loadFile(sys.argv[-1])
+#             need_sample = False
+#     if need_sample:
+#         frame.loadSample()
+#     if '-d' in sys.argv:
+#         frame.stc.spell._spelling_debug = True
+#     frame.Show()
+#     app.MainLoop()
     
     
  

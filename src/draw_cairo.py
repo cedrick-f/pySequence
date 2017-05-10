@@ -11,6 +11,10 @@
 #############################################################################
 
 ## Copyright (C) 2012 Cédrick FAURY
+##
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,15 +30,19 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-'''
-Created on 26 oct. 2011
+u"""
+Module ``draw_cairo``
+*********************
 
-@author: Cedrick
-'''
+Fonctionnalités avancées de dessin avec cairo
+
+"""
 
 
 import textwrap
 from math import sqrt, pi, cos, sin
+import os
+import tempfile
 import cairo
 import time
 try:
@@ -43,8 +51,7 @@ except:
     pass
 
 ## Pour afficher des images
-import os
-import tempfile
+
 import wx
 
 from widgets import getHoraireTxt
@@ -70,7 +77,7 @@ LargeurTotale = 0.72414 * COEF# Pour faire du A4
 font_family = "sans-serif"#"arial"#"Purisa"#"DejaVu Sans Mono"#
     
 def getPts(lst_rect):
-    """ Renvoie la liste des points Haut-Gauche des rectangles contenus dans <lst_rect>
+    """Renvoie la liste des points Haut-Gauche des rectangles contenus dans <lst_rect>
     """
     lst = []
     for rect in lst_rect:
@@ -557,7 +564,7 @@ def show_lignes(ctx, lignes, x, y, w, h,
                 coulBord = None):
     """ Affiche une série de lignes de texte
         Renvoie la position la plus extrème à droite
-            (pour éventuellement écrire une suite au texte)
+        (pour éventuellement écrire une suite au texte)
         
         x, y, w, h : position et dimensions du rectangle "effectif"
         ha : alignements horizontal ('g', 'c', 'd')
@@ -567,7 +574,7 @@ def show_lignes(ctx, lignes, x, y, w, h,
         La taille de la police doit être définie au préalable.
         
         Renvoie : 
-            Position du rectangle effectif (encadrant le texte au plus juste)
+        Position du rectangle effectif (encadrant le texte au plus juste)
     """
 #     x = x/echelle
 #     y = y/echelle
@@ -1470,16 +1477,18 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
 
 def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = []):
-    """ Dessine un tableau horizontal :
-        ------------------------------------------------------------------
-        |    titre    |    contenu col1    |    contenu col2    |    ...
-        ------------------------------------------------------------------
-        |    titre    |    contenu col1    |    contenu col2    |    ...
-        ------------------------------------------------------------------
-        |     ...     |      ...           |      ...           |    ...
+    """Dessine un tableau horizontal :
+    
+    +-------------+--------------------+--------------------+---------+
+    |    titre    |    contenu col1    |    contenu col2    |    ...  |
+    +-------------+--------------------+--------------------+---------+
+    |    titre    |    contenu col1    |    contenu col2    |    ...  |
+    +-------------+--------------------+--------------------+---------+
+    |     ...     |      ...           |      ...           |    ...  |
+    +-------------+--------------------+--------------------+---------+
         
-        hl : liste des hauteurs de lignes
-        nCol : nombre de colonnes
+        :param hl: liste des hauteurs de lignes
+        :param nCol: nombre de colonnes
     """
 #    hc = h/len(titres)
     _y = y
@@ -1620,68 +1629,67 @@ def boule(ctx, x, y, r,
 
 
 
-def relief(ctx, (x, y, w, h), e,
-          color = (1, 1, 1, 1), bosse = True):
-    
-    if bosse:
-        k = [1.3, 1.5, 0.7, 0.5, 1.0]
-    else:
-        k = [0.5, 0.5, 1.3, 1.5, 1.0]
-    
-    
-    
-    coul = [c*k[0] for c in color[:3]]+[color[3]]
-    ctx.set_source_rgba(*coul)
-    
-    ctx.move_to(x, y)
-    ctx.line_to(x+e, y+e)
-    ctx.line_to(x+e, y+h-e)
-    ctx.line_to(x, y+h)
-    ctx.line_to(x, y)
-    ctx.fill()
-    
-    coul = [c*k[1] for c in color[:3]]+[color[3]]
-    ctx.set_source_rgba(*coul)
-    ctx.move_to(x, y)
-    ctx.line_to(x+e, y+e)
-    ctx.line_to(x+w-e, y+e)
-    ctx.line_to(x+w, y)
-    ctx.line_to(x, y)
-    ctx.fill()
-    
-    coul = [c*k[2] for c in color[:3]]+[color[3]]
-    ctx.set_source_rgba(*coul)
-    ctx.move_to(x+w, y)
-    ctx.line_to(x+w-e, y+e)
-    ctx.line_to(x+w-e, y+h-e)
-    ctx.line_to(x+w, y+h)
-    ctx.line_to(x+w, y)
-    ctx.fill()
-    
-    coul = [c*k[3] for c in color[:3]]+[color[3]]
-    ctx.set_source_rgba(*coul)
-    ctx.move_to(x+w, y+h)
-    ctx.line_to(x+w-e, y+h-e)
-    ctx.line_to(x+e, y+h-e)
-    ctx.line_to(x, y+h)
-    ctx.line_to(x+w, y+h)
-    ctx.fill()
-    
-    coul = [c*k[4] for c in color[:3]]+[color[3]]
-    ctx.set_source_rgba(*coul)
-    ctx.rectangle(x+e, y+e, w-2*e, h-2*e)
-    ctx.fill()
+# def relief(ctx, (x, y, w, h), e, color = (1, 1, 1, 1), bosse = True):
+#     
+#     if bosse:
+#         k = [1.3, 1.5, 0.7, 0.5, 1.0]
+#     else:
+#         k = [0.5, 0.5, 1.3, 1.5, 1.0]
+#     
+#     
+#     
+#     coul = [c*k[0] for c in color[:3]]+[color[3]]
+#     ctx.set_source_rgba(*coul)
+#     
+#     ctx.move_to(x, y)
+#     ctx.line_to(x+e, y+e)
+#     ctx.line_to(x+e, y+h-e)
+#     ctx.line_to(x, y+h)
+#     ctx.line_to(x, y)
+#     ctx.fill()
+#     
+#     coul = [c*k[1] for c in color[:3]]+[color[3]]
+#     ctx.set_source_rgba(*coul)
+#     ctx.move_to(x, y)
+#     ctx.line_to(x+e, y+e)
+#     ctx.line_to(x+w-e, y+e)
+#     ctx.line_to(x+w, y)
+#     ctx.line_to(x, y)
+#     ctx.fill()
+#     
+#     coul = [c*k[2] for c in color[:3]]+[color[3]]
+#     ctx.set_source_rgba(*coul)
+#     ctx.move_to(x+w, y)
+#     ctx.line_to(x+w-e, y+e)
+#     ctx.line_to(x+w-e, y+h-e)
+#     ctx.line_to(x+w, y+h)
+#     ctx.line_to(x+w, y)
+#     ctx.fill()
+#     
+#     coul = [c*k[3] for c in color[:3]]+[color[3]]
+#     ctx.set_source_rgba(*coul)
+#     ctx.move_to(x+w, y+h)
+#     ctx.line_to(x+w-e, y+h-e)
+#     ctx.line_to(x+e, y+h-e)
+#     ctx.line_to(x, y+h)
+#     ctx.line_to(x+w, y+h)
+#     ctx.fill()
+#     
+#     coul = [c*k[4] for c in color[:3]]+[color[3]]
+#     ctx.set_source_rgba(*coul)
+#     ctx.rectangle(x+e, y+e, w-2*e, h-2*e)
+#     ctx.fill()
 
 
 
 
 def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
     """ Dessine une barre horizontale de poucentage/progression
-        x, y : position
-        w : longueur maxi (100%)
-        r : taux
-        e = épaisseur
-        a : acceptable (a==True : coul0  - a==False = coul1)
+        :param x,y: position
+        :param w: longueur maxi (100%)
+        :param r: taux
+        :param e: épaisseur
+        :param a: acceptable (a==True : coul0  - a==False = coul1)
     """
     src = ctx.get_source()
     
@@ -1749,11 +1757,11 @@ def fleche_verticale(ctx, x, y, h, e, coul):
 
 def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
     """ Dessine une flèche
-        x, y = centre
-        r = rayon
-        a0, a1 = angles de départ et d'arrivée (en degrés)
-        e = épaisseur
-        f = taille du bout de flèche
+        :param x, y: centre
+        :param r: rayon
+        :param a0, a1: angles de départ et d'arrivée (en degrés)
+        :param e: épaisseur
+        :param f: taille du bout de flèche
     """
     ctx.set_line_width (e)
     ctx.set_source_rgba (*coul)
@@ -1783,15 +1791,16 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
 def liste_code_texte2(ctx, lstCodes, lstTexte, rect, 
                      dx, gras = None, lstCoul = None, va = 'h'):
     """ Affiche une liste d'élément sous la forme :
-            code
-               texte
-            code 
-               texte
-            ...
-        :dx : décalage horizontal entre le bord et le texte
-        :b : bordure latérale totale (en relatif : 0 à 1)
+        code
+        texte
+        code 
+        texte
+        ...
         
-        >> Renvoie une liste de rectangles
+        :param dx: décalage horizontal entre le bord et le texte
+        :param b: bordure latérale totale (en relatif : 0 à 1)
+        
+        :return: Renvoie une liste de rectangles
     """
     x, y, w, h = rect
     
@@ -1940,12 +1949,12 @@ def liste_code_texte2(ctx, lstCodes, lstTexte, rect,
 def liste_code_texte(ctx, lstCodes, lstTexte, rect, 
                      eh, b = 0.1, gras = None, lstCoul = None, va = 'h'):
     """ Affiche une liste d'élément sous la forme :
-            code texte
-            code texte
-            ...
-        eh : écart horizontal entre le code et le texte
-        b : bordure latérale totale (en relatif : 0 à 1)
-        >> Renvoie une liste de rectangles
+        code texte
+        code texte
+        ...
+        :param eh: écart horizontal entre le code et le texte
+        :param b: bordure latérale totale (en relatif : 0 à 1)
+        :return: Renvoie une liste de rectangles
     """
     x, y, w, h = rect
     

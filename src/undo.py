@@ -32,12 +32,6 @@ module undo
 
 Gestion des actions annuler/rétablir
 
-pySéquence : aide à la réalisation de fiches de séquence pédagogiques
-et à la validation de projets
-
-Copyright (C) 2015
-@author: Cedrick FAURY
-
 """
 
 

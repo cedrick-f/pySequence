@@ -54,8 +54,8 @@ if sys.platform == "win32":
     import win32com.client.dynamic#win32com.client, 
 
 # Autre module (essai en cours)
-import xlwt
-from xlwt import Workbook
+# import xlwt
+# from xlwt import Workbook
 
 
 import os
@@ -154,8 +154,8 @@ def getTableaux(parent, doc):
     """ Ouvre et renvoie les classeurs 
         contenant les grilles d'évaluation : revues + soutenance
     """
-    typ = doc.GetTypeEnseignement()
-    ref = doc.GetReferentiel()
+#     typ = doc.GetTypeEnseignement()
+#     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
     fichiers = prj.grilles
 #    print "grilles :", fichiers

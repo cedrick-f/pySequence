@@ -49,6 +49,8 @@ import wx
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
 __version__ = "7.1-beta.8"
+__urlapi__ = "https://api.github.com/repos/cedrick-f/pySequence"
+__url__ = "https://github.com/cedrick-f/pySequence"
 print __version__
 
 
@@ -115,6 +117,8 @@ def GetAppnameVersion():
 #
 #
 #    return
+
+
 #########################################################################################
 def sup(v1, v2):
     for i, l in enumerate(v1.split('.')):
@@ -140,8 +144,8 @@ def GetNewVersion(win):
     print "  proxies :",proxy_handler.proxies
     
     
-    url1 = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
-    url2 = "https://api.github.com/repos/cedrick-f/pySequence/releases"
+    url1 = __urlapi__ + "/releases/latest"
+    url2 = __urlapi__ + "/releases"
     
     ##########################################################################################
     def getVerNumId(url):
@@ -205,7 +209,7 @@ def GetNewVersion(win):
         retCode = dialog.ShowModal()
         if retCode == wx.ID_YES:
             try:
-                url = "https://github.com/cedrick-f/pySequence/releases/latest"
+                url = __url__ + "/releases/latest"
                 webbrowser.open(url,new=2)
             except:
                 from widgets import messageErreur
@@ -221,7 +225,7 @@ def GetNewVersion(win):
         retCode = dialog.ShowModal()
         if retCode == wx.ID_YES:
             try:
-                url = "https://github.com/cedrick-f/pySequence/releases/tag/v"+last_ver
+                url = __url__ + "/releases/tag/v"+last_ver
                 webbrowser.open(url,new=2)
             except:
                 from widgets import messageErreur
@@ -235,7 +239,8 @@ def GetNewVersion(win):
 def test():
     import json
     import urllib2
-    url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
+    url = __urlapi__ + "/releases/latest"
+    
     req = urllib2.Request(url)
     print req
     print dir(req)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 ##This file is part of pySequence
 #############################################################################
 #############################################################################
@@ -32,8 +33,8 @@
 
 
 u"""
-Module wx_pysequence
-********************
+Module ``wx_pysequence``
+*************************
 
 Module de demarrage de **pySéquence**.
 
@@ -51,6 +52,10 @@ et à la validation de **Projets**.
 ####################################################################################
 # Outils système
 import os, sys
+import threading
+import socket
+import select
+
 import util_path
 
 print sys.version_info
@@ -61,12 +66,9 @@ print sys.version_info
 #    wxversion.select('2.8')
 
 import wx
-    
+
 import version
 
-import threading
-import socket
-import select
 
 
 FILE_ENCODING = sys.getfilesystemencoding()
@@ -82,13 +84,14 @@ class SingleInstApp(wx.App):
         Source d'inspiration :
         Cody Precord : "wxPythyon 2.8 Application Development Cookbook - 2010"
     """
-    PORT = 27115
     
+    PORT = 27115
+
     def OnInit(self):
 
         self.name = u"pySéquence-%s" % wx.GetUserId()
         self.instance = wx.SingleInstanceChecker(self.name)
-    
+
         if self.instance.IsAnotherRunning():
             # Another instance so just send a message to
             # the instance that is already running.
@@ -96,7 +99,7 @@ class SingleInstApp(wx.App):
             if not SendMessage(cmd, port = self.PORT):
                 print u"Failed to send message!"
             return False
-        
+
         else:
             # First instance so start IPC server
             try:
@@ -251,13 +254,26 @@ class SingleInstApp(wx.App):
 ###############################################################################
 #
 ###############################################################################
+# try:
+#     from agw import advancedsplash as AS
+# except ImportError: # if it's not there locally, try the wxPython lib.
+#     import wx.lib.agw.advancedsplash as AS
+    
 class MySplashScreen(wx.SplashScreen):
     def __init__(self):
         bmp = self.GetSplash()
         wx.SplashScreen.__init__(self, bmp,
-                                     wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
-                                     6000, None, -1,
-                                     style = wx.BORDER_NONE | wx.STAY_ON_TOP)
+                                 wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
+                                 6000, None, -1,
+                                 style = wx.BORDER_NONE | wx.STAY_ON_TOP)
+        
+#         AS.AdvancedSplash.__init__(self, None, bitmap=bmp, timeout=6000,
+#                                       agwStyle=AS.AS_TIMEOUT |
+#                                       AS.AS_CENTER_ON_PARENT)# |
+# #                                       AS.AS_SHADOW_BITMAP,
+# #                                       shadowcolour=wx.WHITE)
+        
+        
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.fc = wx.CallLater(2, self.ShowMain)
 
@@ -299,23 +315,25 @@ class MySplashScreen(wx.SplashScreen):
     ######################################################################################  
     def GetSplash(self):
         txt = u"Version : "+version.__version__
-        
+
         bmp = wx.Bitmap(os.path.join(util_path.PATH, "splash.png"), wx.BITMAP_TYPE_PNG)
-        w, h = bmp.GetWidth(), bmp.GetHeight()
-        if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
-            dc = wx.MemoryDC(bmp)
-            bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
-            dcv = wx.MemoryDC(bmpv)
-            dcv.Clear()
-        #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
-            dcv.DrawText(txt, 50, 308)
-            
-        #    dc.DrawBitmap(bmpv, 0,0, False)
-            dc.Blit(0,0,w,h,dcv,0,0) 
-            
-            dc.SelectObject(wx.NullBitmap)
-            dcv.SelectObject(wx.NullBitmap)
         return bmp
+    
+#         w, h = bmp.GetWidth(), bmp.GetHeight()
+#         if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
+#             dc = wx.MemoryDC(bmp)
+#             bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
+#             dcv = wx.MemoryDC(bmpv)
+#             dcv.Clear()
+#         #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
+#             dcv.DrawText(txt, 50, 308)
+#             
+#         #    dc.DrawBitmap(bmpv, 0,0, False)
+#             dc.Blit(0,0,w,h,dcv,0,0) 
+#             
+#             dc.SelectObject(wx.NullBitmap)
+#             dcv.SelectObject(wx.NullBitmap)
+#         return bmp
         
 
 
@@ -343,9 +361,7 @@ def AddRTCHandlers():
     # This is needed for the view as HTML option since we tell it
     # to store the images in the memory file system.
     wx.FileSystem.AddHandler(wx.MemoryFSHandler())
-        
-        
-        
+
         
         
 class IpcServer(threading.Thread):
@@ -395,15 +411,15 @@ class IpcServer(threading.Thread):
             except socket.error, msg:
                 print "TCP error! %s" % msg
                 break
-            
+
         # Shutdown the socket
         try:
             self.socket.shutdown(socket.SHUT_RDWR)
         except:
             pass
         self.socket.close()
-    
-    
+
+
     def Exit(self):
         self.keeprunning = False
 

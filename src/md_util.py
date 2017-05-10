@@ -60,7 +60,6 @@ AS_MD = True
 import  wx
 
 import  wx.html
-import  wx.lib.wxpTag
 
 import markdown as md
 # En cas d'erreur d'import de markdown
@@ -72,40 +71,40 @@ import markdown as md
 
 
 
-texte = u"""
-# Contexte
-La description du contexte doit mettre en évidence les 3 points suivants :
-
- * La situation externe ;
- * L'environnement du projet ;
- * Les insatisfactions et/ou les pistes d'amélioration.
-# Fonctionnalités
-L'ensemble des fonctionnalités se traduit sous la forme d'une ou plusieurs fonctions de service essentielles. En STI2D, les fonctions de service à satisfaire sont majoritairement des fonctions d'usage. L'expression d'une fonction de service doit laisser la plus grande latitude possible au concepteur du produit dans sa recherche de solutions. C'est pourquoi l'expression d'une fonction de service ne contient pas, sauf nécessité ou choix délibéré et bien pesé, de référence à une solution technique particulière.
-# Caractéristiques fonctionnelles
-Les caractéristiques fonctionnelles expriment, pour chacune des fonctions de service précédentes, le (ou les) critère(s) essentiel(s) d'appréciation qui permettront de juger que le service est bien rendu par le produit.
-# Caractéristiques techniques
-Les caractéristiques techniques précisent, dans l'esprit des niveaux caractérisant les critères d'une fonction de service au sens de la norme NF EN16271, les performances nominales attendues par le produit pour le service en question, et la plage d'acceptabilité autour de la valeur nominale.
-
-Extrait de la norme NF EN16271 : "_ une fonction de service est une action demandée à un produit ou réalisée par lui, afin de satisfaire une partie du besoin d'un utilisateur.
-Les fonctions de service sont soit des fonctions d'usage soit des fonctions d'estime. _"
-# Domaine d'étude
-Le domaine d'étude doit porter sur :
- * Compétitivité et développement durable ;
- * Innovation et développement durable ;
- * Eco-conception et développement durable.
-#Thème d'étude
-Le théme d'étude peut porter sur les loisirs, la santé, l'habitat, les transports, etc...
-
-"""
+# texte = u"""
+# # Contexte
+# La description du contexte doit mettre en évidence les 3 points suivants :
+# 
+#  * La situation externe ;
+#  * L'environnement du projet ;
+#  * Les insatisfactions et/ou les pistes d'amélioration.
+# # Fonctionnalités
+# L'ensemble des fonctionnalités se traduit sous la forme d'une ou plusieurs fonctions de service essentielles. En STI2D, les fonctions de service à satisfaire sont majoritairement des fonctions d'usage. L'expression d'une fonction de service doit laisser la plus grande latitude possible au concepteur du produit dans sa recherche de solutions. C'est pourquoi l'expression d'une fonction de service ne contient pas, sauf nécessité ou choix délibéré et bien pesé, de référence à une solution technique particulière.
+# # Caractéristiques fonctionnelles
+# Les caractéristiques fonctionnelles expriment, pour chacune des fonctions de service précédentes, le (ou les) critère(s) essentiel(s) d'appréciation qui permettront de juger que le service est bien rendu par le produit.
+# # Caractéristiques techniques
+# Les caractéristiques techniques précisent, dans l'esprit des niveaux caractérisant les critères d'une fonction de service au sens de la norme NF EN16271, les performances nominales attendues par le produit pour le service en question, et la plage d'acceptabilité autour de la valeur nominale.
+# 
+# Extrait de la norme NF EN16271 : "_ une fonction de service est une action demandée à un produit ou réalisée par lui, afin de satisfaire une partie du besoin d'un utilisateur.
+# Les fonctions de service sont soit des fonctions d'usage soit des fonctions d'estime. _"
+# # Domaine d'étude
+# Le domaine d'étude doit porter sur :
+#  * Compétitivité et développement durable ;
+#  * Innovation et développement durable ;
+#  * Eco-conception et développement durable.
+# #Thème d'étude
+# Le théme d'étude peut porter sur les loisirs, la santé, l'habitat, les transports, etc...
+# 
+# """
 # ...
 
 class SimpleHtmlWindow(wx.html.HtmlWindow):
     def __init__(self, parent, texte = u""):
         wx.html.HtmlWindow.__init__(self, parent, -1, style = wx.NO_FULL_REPAINT_ON_RESIZE)
-        
+
         if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             self.SetStandardFonts()
-        
+
         if AS_MD:
             html = md.markdown(texte)
             self.SetPage(html)
@@ -134,20 +133,20 @@ class MD_editor(wx.Panel):
     def __init__(self, parent, texte = u""):
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        
+
         self.texteMD = wx.TextCtrl(self, -1, texte, style=wx.TE_MULTILINE|wx.TE_PROCESS_ENTER)
         sizer.Add(self.texteMD, 1, flag = wx.EXPAND)
-        
+
         self.texteHTML = SimpleHtmlWindow(self)
         self.titleBase = "aaa"
 #        self.texteHTML.SetRelatedFrame(self, self.titleBase + " -- %s")
         self.texteHTML.SetRelatedStatusBar(0)
         sizer.Add(self.texteHTML, 1, flag = wx.EXPAND)
-        
+
         self.Bind(wx.EVT_TEXT, self.OnText, self.texteMD)
-        
+
         self.OnText()
-        
+
         self.SetSizerAndFit(sizer)
         
     def OnText(self, evt = None):
@@ -156,10 +155,10 @@ class MD_editor(wx.Panel):
             html = md.markdown(self.texteMD.GetValue())
             self.texteHTML.SetPage(html)
 
-class MDFrameEditor(wx.Frame):
-    def __init__(self):
-        wx.Frame.__init__(self, None, -1)
-        self.html = MD_editor(self, texte)
+# class MDFrameEditor(wx.Frame):
+#     def __init__(self):
+#         wx.Frame.__init__(self, None, -1)
+#         self.html = MD_editor(self, texte)
 
 class MDFrame(wx.Frame):
     def __init__(self, parent, titre, texte, pos = wx.DefaultPosition, size = wx.DefaultSize):

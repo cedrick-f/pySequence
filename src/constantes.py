@@ -287,7 +287,8 @@ imagesProjet = {"Prj" : images.Icone_projet,
                 "Spp" : images.Icone_support,
                 "Tac" : images.Icone_Tache,
                 "Cla" : images.Icone_classe,
-                "Grp" : images.Icone_groupe
+                "Grp" : images.Icone_groupe,
+                "Mod" : images.Icone_modele
                 }
 
 imagesProgression = {"Prg" : images.Icone_progression,

@@ -174,7 +174,7 @@ if not "beta" in __version__:
         base = "Win32GUI"
 
 
-name = u"pySequence"
+name = u"pySéquence"
 version = GetVersion_cxFreeze()
 author = u"Cédrick FAURY & Jean-Claude FRICOU"
 author_email = "cedrick.faury@ac-clermont.fr"
@@ -183,53 +183,54 @@ url = "https://github.com/cedrick-f/pySequence"
 long_description = u"aide à la création de séquences pédagogiques et à la validation de projets"
 license = "GPL"
 
-if sys.platform == "win32":
-    from cx_Freeze import setup, Executable
-    cible = Executable( script = "wx_pysequence.py",
-                        targetName="Sequence.exe",
-                        base = base,
-                        compress = True,
-                        icon = os.path.join("", 'logo.ico'),
-                        initScript = None,
-                        copyDependentFiles = True,
-                        appendScriptToExe = False,
-                        appendScriptToLibrary = False
-                        )
-
-
-    setup(  name = name,
-            version = version,
-            author = author,
-            author_email = author_email,
-            url = url,
-            description = description,
-            long_description = long_description,
-            license = license,
-            options = {"build_exe": build_exe_options},
-    #        include-msvcr = True,
-            executables = [cible])
-
-else:
-    from setuptools import setup, find_packages
-    print "PACKAGES", find_packages()
-    setup(  name = name,
-            version = version,
-            author = author,
-            author_email = author_email,
-            url = url,
-            description = description,
-            long_description = long_description,
-            license = license,
-            scripts=["wx_pysequence.py"],
-            package_dir = {'':''},
-            packages = find_packages(),
-            install_requires=['python-wxgtk3.0',
-                              'python-reportlab',
-                              'pyenchant',
-                              'xhtml2pdf',
-                              'xlrd',
-                              'xlwt',
-                              'comtypes',
-                              'pyperclip']
-            )
+if __name__ == '__main__':
+    if sys.platform == "win32":
+        from cx_Freeze import setup, Executable
+        cible = Executable( script = "wx_pysequence.py",
+                            targetName="Sequence.exe",
+                            base = base,
+                            compress = True,
+                            icon = os.path.join("", 'logo.ico'),
+                            initScript = None,
+                            copyDependentFiles = True,
+                            appendScriptToExe = False,
+                            appendScriptToLibrary = False
+                            )
+    
+    
+        setup(  name = name,
+                version = version,
+                author = author,
+                author_email = author_email,
+                url = url,
+                description = description,
+                long_description = long_description,
+                license = license,
+                options = {"build_exe": build_exe_options},
+        #        include-msvcr = True,
+                executables = [cible])
+    
+    else:
+        from setuptools import setup, find_packages
+        print "PACKAGES", find_packages()
+        setup(  name = name,
+                version = version,
+                author = author,
+                author_email = author_email,
+                url = url,
+                description = description,
+                long_description = long_description,
+                license = license,
+                scripts=["wx_pysequence.py"],
+                package_dir = {'':''},
+                packages = find_packages(),
+                install_requires=['python-wxgtk3.0',
+                                  'python-reportlab',
+                                  'pyenchant',
+                                  'xhtml2pdf',
+                                  'xlrd',
+                                  'xlwt',
+                                  'comtypes',
+                                  'pyperclip']
+                )
 

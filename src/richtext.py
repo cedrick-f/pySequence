@@ -45,7 +45,6 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 import os
 import cStringIO
 
-
 import webbrowser
 import images
 

@@ -32,8 +32,8 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 u"""
-Module widgets
-**************
+Module ``widgets``
+******************
 
 Différents widgets perso pour wx
 
@@ -220,23 +220,13 @@ class Variable:
             for n in range(len(self.v)):
                 if self.EstValide(self.v[n] + coef):
                     self.v[n] += coef
-
-        else:
-            for n in range(len(self.v)):
-                v, d = roundN(self.v[n] * coef, nc = 2)
-                if self.EstValide(v):
-                    self.v[n] = v
             
     def Diminuer(self, coef = 1):
         if self.t == VAR_ENTIER or self.t == VAR_ENTIER_POS or not self.modeLog:
             for n in range(len(self.v)):
                 if self.EstValide(self.v[n] - coef):
                     self.v[n] += -coef
-        else:
-            for n in range(len(self.v)):
-                v, d = roundN(self.v[n] / coef, nc = 2)
-                if self.EstValide(v):
-                    self.v[n] = v
+
                 
     #########################################################################################################
     def setValeur(self, val, num = 0):

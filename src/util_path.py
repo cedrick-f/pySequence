@@ -38,11 +38,15 @@ Gestion des dossiers
 
 """
 
+import os, sys
+
+
+
 DEBUG = False
 
 
 #import _winreg
-import os, sys
+
 
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')

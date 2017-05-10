@@ -84,8 +84,8 @@ from undo import UndoStack
 
 # Les constantes partagées
 from constantes import calculerEffectifs, \
-                        strEffectifComplet, getElementFiltre, \
-                        CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
+                        strEffectifComplet, \
+                        getCoulPartie, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel,\
@@ -93,18 +93,17 @@ from constantes import calculerEffectifs, \
                         toList, COUL_COMPETENCES, COUL_DISCIPLINES
 import constantes
 
-from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, testRel
+from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
-from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
+from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, \
-                    StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     getAncreFenetre, tronquer, getHoraireTxt, scaleImage#, chronometrer
                     
-from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
+from Referentiel import REFERENTIELS, ACTIVITES
 import Referentiel
 
 import webbrowser
@@ -125,7 +124,7 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
                             PanelPropriete_Support, PanelPropriete_LienProjet,\
                             PanelPropriete_Personne, getDisplayPosSize, URLDialog, \
-                            PanelPropriete_Groupe
+                            PanelPropriete_Groupe, PanelPropriete_Modele
 
 
 
@@ -3928,6 +3927,9 @@ class Projet(BaseDoc):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), LienSequence):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Modele):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
         elif self.arbre.GetItemText(itemArbre) == Titres[6]: # Eleve
@@ -3949,10 +3951,13 @@ class Projet(BaseDoc):
             self.app.AfficherMenuContextuel(listItems)
             
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, 
+            self.app.AfficherMenuContextuel([[u"Ajouter un Professeur", self.AjouterProf, 
                                               scaleImage(images.Icone_ajout_prof.GetBitmap())]])
                                              
-         
+        elif self.arbre.GetItemText(itemArbre) == Titres[7]: # Support
+            self.app.AfficherMenuContextuel([[u"Ajouter un Modèle", self.support.AjouterModele, 
+                                              scaleImage(images.Icone_ajout_modele.GetBitmap())],
+                                             ]) 
             
     ######################################################################################       
     def GetCompetencesUtil(self):
@@ -3976,8 +3981,8 @@ class Projet(BaseDoc):
     
     ######################################################################################  
     def GetNbrPhases(self):
-        """ Renvoie le nombre de phases dans le projet, y compris les revues
-                 !! les revues intermédiaires coupent parfois une phase en deux !
+        u"""Renvoie le nombre de phases dans le projet, y compris les revues
+            !! les revues intermédiaires coupent parfois une phase en deux !
             (pour tracé de la fiche)
         """
         n = 0
@@ -4215,7 +4220,7 @@ class Projet(BaseDoc):
         """
         pb = []
         prj = self.GetProjetRef()
-        for k, g in prj.parties.items():
+        for k in prj.parties.keys():
             if not os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
                 prjdef = REFERENTIELS[self.GetTypeEnseignement()].getProjetDefaut()
                 if os.path.isfile(grilles.getFullNameGrille(prjdef.grilles[k][0])):
@@ -4458,20 +4463,20 @@ class Progression(BaseDoc):
     
     ######################################################################################  
     def GetRectangles(self):
-        u""" Calcul l'arrangement des rectangles représentant les Séquences et les Projets
+        u"""Calcule l'arrangement des rectangles représentant les Séquences et les Projets
             Renvoie la liste des rectangles x, y, w, h
             Dans une grille : Période-Lignes-Colonnes
-                [
-                [(None, None, None)],      Période 0, Ligne 0
+            [
+            [(None, None, None)],      Période 0, Ligne 0
                 
-                [(0, 0, 0),                Période 1, Ligne 1
-                (1, 1, 2)],                Période 1, Ligne 2
+            [(0, 0, 0),                Période 1, Ligne 1
+            (1, 1, 2)],                Période 1, Ligne 2
                 
-                [(1, 1, 2),                Période 2, Ligne 3
-                (3, 3, 2)],                Période 2, Ligne 4
+            [(1, 1, 2),                Période 2, Ligne 3
+            (3, 3, 2)],                Période 2, Ligne 4
                 
-                [(None, None, 2)],         Période 3, Ligne 5
-                ]
+            [(None, None, 2)],         Période 3, Ligne 5
+            ]
                 
                 
             Renvoie :
@@ -5552,7 +5557,8 @@ class Progression(BaseDoc):
     def GetFichiersProjetsDossier(self, event = None, exclureExistant = False):    
         """ Recherche tous les fichiers Projet compatibles avec la progression
         
-        >> Renvoie une liste [(nomFichier, Projet)]
+            :return: Une liste [(nomFichier, Projet)]
+            :rtype: list
         """   
 #        print "GetSequencesDossier"
         wx.BeginBusyCursor()
@@ -6853,13 +6859,13 @@ class Competences(ElementBase):
             
     ######################################################################################       
     def Etendre(self):
-        """ Etend la liste des compétences :
+        u"""Etend la liste des compétences :
             A1
-                >>>
-                    A1
-                    A1.1
-                    A1.2
-                    A1.3
+            >>>
+            A1
+            A1.1
+            A1.2
+            A1.3
         """
 #         print "Etendre"
 #         print "   ", self.competences
@@ -6884,12 +6890,12 @@ class Competences(ElementBase):
 
     ######################################################################################       
     def Condenser(self):
-        """ Condense la liste des compétences :
+        u"""Condense la liste des compétences :
             A1.1
             A1.2
             A1.3
-                >>>
-                    A1
+            >>>
+            A1
         """
 #         print "Condenser"
 #         print "   ", self.competences
@@ -7098,12 +7104,12 @@ class Savoirs(ElementBase):
     
     ######################################################################################  
     def setBranche(self, branche):
-        """ Interprétation de la branche (lecture fichier .seq)
-             préfixes :
-              - B = enseignement de base (tronc commun)
-              - S = spécialité
-              - M = math
-              - P = physique
+        u"""Interprétation de la branche (lecture fichier .seq)
+            préfixes :
+            - B = enseignement de base (tronc commun)
+            - S = spécialité
+            - M = math
+            - P = physique
         """
 #        print "setBranche Savoirs"
         
@@ -8432,9 +8438,9 @@ class Tache(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetDicIndicateurs(self):
-        """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche
+        u"""Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche
             Dict :  clef = code compétence
-                  valeur = liste [True False ...] des indicateurs à mobiliser
+            valeur = liste [True False ...] des indicateurs à mobiliser
         """
 #        print "GetDicIndicateurs", self, ":", self.indicateursEleve
 #        print self.GetProjetRef()._dicoIndicateurs_simple
@@ -8461,9 +8467,9 @@ class Tache(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def GetDicIndicateursEleve(self, eleve):
-        """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette REVUE
+        u"""Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette REVUE
             Dict :  clef = code type+compétence
-                  valeur = liste [True False ...] des indicateurs à mobiliser
+            valeur = liste [True False ...] des indicateurs à mobiliser
         """
 #        print "GetDicIndicateursEleve", self, eleve.id+1
         indicateurs = {}
@@ -8481,10 +8487,10 @@ class Tache(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def DiffereSuivantEleve(self):
-        """ Renvoie True si cette REVUE est différente selon l'élève
-                --> épaisseur variable selon le nombre d'élèves
+        u"""Renvoie True si cette REVUE est différente selon l'élève
+            --> épaisseur variable selon le nombre d'élèves
             Renvoie False si tous les élèves abordent les mêmes compétences/indicateurs
-                --> épaisseur fixe
+            --> épaisseur fixe
             (utilisé pour tracer la fiche uniquement)
         """
 #        print "DiffereSuivantEleve", self, self.phase
@@ -9467,43 +9473,43 @@ class Systeme(ElementAvecLien, ElementBase):
                
   
 
-####################################################################################
-#
-#   Classe définissant les propriétés d'une seance d'emploi du temps
-#
-####################################################################################
-class Seance_EDT(ElementAvecLien, ElementBase):
-    def __init__(self, parent, nom = u""):
-        
-        self.nom_obj = u"Séance"
-        self.article_c_obj = u"de la"
-        self.article_obj = u"la"
-        
-        self.parent = parent
-        ElementAvecLien.__init__(self)
-        ElementBase.__init__(self)
-        
-        
-        self.jour = 0       # jour de la semaine (lundi = 0)
-        self.groupe = 0     # 0 = classe entière
-        self.debut = 0      # 0 = 8h00 ; 1 = 8h15 ...
-        self.duree = 1      # 1 par 1/4 d'heure
-        
-    
-    ######################################################################################  
-    def getBranche(self):
-        """ Renvoie la branche XML pour enregistrement
-        """
-        root = self.getBranche_TOTAL('intitule','jour','groupe','debut', 'duree')
-        return root
-    
-    ######################################################################################  
-    def setBranche(self, branche):
-        return self.setBranche_TOTAL(branche)
-
-    ######################################################################################  
-    def GetPanelPropriete(self, parent):
-        return PanelPropriete_Seance_EDT(parent, self)
+# ####################################################################################
+# #
+# #   Classe définissant les propriétés d'une seance d'emploi du temps
+# #
+# ####################################################################################
+# class Seance_EDT(ElementAvecLien, ElementBase):
+#     def __init__(self, parent, nom = u""):
+#         
+#         self.nom_obj = u"Séance"
+#         self.article_c_obj = u"de la"
+#         self.article_obj = u"la"
+#         
+#         self.parent = parent
+#         ElementAvecLien.__init__(self)
+#         ElementBase.__init__(self)
+#         
+#         
+#         self.jour = 0       # jour de la semaine (lundi = 0)
+#         self.groupe = 0     # 0 = classe entière
+#         self.debut = 0      # 0 = 8h00 ; 1 = 8h15 ...
+#         self.duree = 1      # 1 par 1/4 d'heure
+#         
+#     
+#     ######################################################################################  
+#     def getBranche(self):
+#         """ Renvoie la branche XML pour enregistrement
+#         """
+#         root = self.getBranche_TOTAL('intitule','jour','groupe','debut', 'duree')
+#         return root
+#     
+#     ######################################################################################  
+#     def setBranche(self, branche):
+#         return self.setBranche_TOTAL(branche)
+# 
+#     ######################################################################################  
+#     def GetPanelPropriete(self, parent):
+#         return PanelPropriete_Seance_EDT(parent, self)
 
 
 
@@ -9674,6 +9680,8 @@ class Support(ElementAvecLien, ElementBase):
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self)
         
+        self.modeles = []
+        
         self.nom = nom
         self.description = None
         
@@ -9708,6 +9716,10 @@ class Support(ElementAvecLien, ElementBase):
         
         self.getBrancheImage(root)
         
+        mo = ET.SubElement(root, "Modeles")
+        for m in self.modeles:
+            mo.append(m.getBranche())
+
         return root
     
     ######################################################################################  
@@ -9720,6 +9732,14 @@ class Support(ElementAvecLien, ElementBase):
 
         Ok = Ok and self.setBrancheImage(branche)
         
+        
+        brancheMod = branche.find("Modeles")
+        self.modeles = []
+        for e in list(brancheMod):
+            m = Modele(self)
+            Ok = Ok and m.setBranche(e)
+            self.modeles.append(m)
+            
         return Ok
     
     ######################################################################################  
@@ -9774,8 +9794,48 @@ class Support(ElementAvecLien, ElementBase):
 #        # Tip
 #        if hasattr(self, 'tip'):
 #            self.tip.SetTexte(u"Nom : "+self.nom, self.tip_nom)
+    
+    
+    ######################################################################################  
+    def AjouterModele(self, event = None): 
+        m =   Modele(self)
+        self.modeles.append(m)
+        
+        m.ConstruireArbre(self.arbre, self.branche)
+        
+        self.OrdonnerModeles()
+        self.arbre.SelectItem(m.branche)
+#             self.AjouterEleveDansPanelTache()
+#         m.MiseAJourCodeBranche()
+        
+        
+        
+        self.GetApp().sendEvent(modif = u"Ajout d'un Modèle")
+        
+        
+    ######################################################################################  
+    def SupprimerModele(self, event = None, item = None):
+        if item is not None:
+            m = self.arbre.GetItemPyData(item)
+            i = m.id
+            del self.modeles[i]
+            self.arbre.Delete(item)
             
+            self.GetApp().sendEvent(modif = u"Suppression d'un Modèle")
+        
 
+    ######################################################################################  
+    def OrdonnerModeles(self):
+#         print "OrdonnerModeles"
+        i = -1
+        for i,m in enumerate(self.modeles):
+            m.id = i
+        
+        for i, m in enumerate(self.modeles):
+            m.SetCode()
+
+        self.arbre.Ordonner(self.branche)
+        
 #    ######################################################################################  
 #    def SetImage(self):
 #        self.tip.SetImage(self.image, self.tip_image)
@@ -9787,7 +9847,11 @@ class Support(ElementAvecLien, ElementBase):
                                         image = self.arbre.images["Spp"])
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
-
+        #
+        # Les modèles
+        #
+        for m in self.modeles:
+            m.ConstruireArbre(arbre, self.branche) 
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -9816,8 +9880,121 @@ class Support(ElementAvecLien, ElementBase):
 
 
 
-
+####################################################################################
+#
+#   Classe définissant les propriétés d'un modèle numérique
+#
+####################################################################################
+class Modele(ElementAvecLien, ElementBase):
+    def __init__(self, support, Id = 0):
+        self.nom_obj = u"Modèle numérique"
+        self.article_c_obj = u"du"
+        self.article_obj = u"le"
+        
+        self.code = "Mod"
+        self.support = support
     
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
+        
+        self.intitule  = u""
+        self.description = None
+        self.image = None
+        self.id = Id
+    
+    
+    ######################################################################################  
+    def GetApp(self):
+        return self.support.GetApp()
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        return self.support.GetDocument()
+    
+    ######################################################################################  
+    def GetPanelPropriete(self, parent):
+        return PanelPropriete_Modele(parent, self)
+    
+    
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML pour enregistrement
+        """
+        root = ET.Element("Modele")
+        
+        root.set("Id", str(self.id))
+        root.set("Intitule", self.intitule)
+        self.lien.getBranche(root)
+        if self.description != None:
+            root.set("Description", self.description)
+        
+        self.getBrancheImage(root)
+
+        return root
+    
+    ######################################################################################  
+    def SetNom(self, nom):
+        self.intitule = nom
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+
+
+    ######################################################################################  
+    def GetNom(self):
+        return self.intitule
+    
+    
+    ######################################################################################  
+    def SetCode(self):
+#        if hasattr(self, 'codeBranche'):
+#            self.codeBranche.SetLabel(self.nom)
+        if self.intitule != "":
+            t = self.intitule
+        else:
+            t = self.nom_obj
+        
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, t)
+            
+            
+    ######################################################################################  
+    def setBranche(self, branche):
+        Ok = True
+        self.id  = eval(branche.get("Id", "0"))
+        self.intitule  = branche.get("Intitule", "")
+        self.description = branche.get("Description", None)
+        
+        Ok = Ok and self.lien.setBranche(branche, self.GetPath())
+
+        Ok = Ok and self.setBrancheImage(branche)
+        
+    
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            listItems = [[u"Supprimer", 
+                          functools.partial(self.support.SupprimerModele, item = itemArbre), 
+                          scaleImage(images.Icone_suppr_modele.GetBitmap())]]
+            self.GetApp().AfficherMenuContextuel(listItems)
+            
+            
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = CodeBranche(self.arbre)
+        
+        image = self.arbre.images[self.code]
+#        else:
+#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+        self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
+                                        image = image)
+        self.codeBranche.SetBranche(self.branche)
+
+        
+        self.SetCode()
+        
+        
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une personne
@@ -10435,10 +10612,10 @@ class Eleve(Personne, ElementBase):
     
     ######################################################################################  
     def GetDicIndicateurs(self, limite = None):
-        """ Renvoie un dictionnaire des indicateurs que l'élève doit mobiliser
-             (pour tracé)
-                  clef = code compétence
-                valeur = liste [True False ...] des indicateurs à mobiliser
+        u"""Renvoie un dictionnaire des indicateurs que l'élève doit mobiliser
+            (pour tracé)
+            clef = code compétence
+            valeur = liste [True False ...] des indicateurs à mobiliser
         """
         indicateurs = {}
 #         print " GetDicIndicateurs", self.id, self.nom
@@ -10462,10 +10639,10 @@ class Eleve(Personne, ElementBase):
         
     ######################################################################################  
     def GetDicIndicateursRevue(self, revue):
-        """ Renvoie un dictionnaire des indicateurs que l'élève doit mobiliser AVANT une revue
-             (pour tracé)
-                  clef = code compétence
-                valeur = liste [True False ...] des indicateurs à mobiliser
+        u"""Renvoie un dictionnaire des indicateurs que l'élève doit mobiliser AVANT une revue
+            (pour tracé)
+            clef = code compétence
+            valeur = liste [True False ...] des indicateurs à mobiliser
         """
         indicateurs = {}
 #        print " GetDicIndicateurs", self.id

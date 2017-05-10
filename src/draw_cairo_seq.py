@@ -1182,7 +1182,7 @@ class Cadre():
 class Bloc():
     """ Ensemble de cadres.
         contenu = [[], [], ...]
-                    lignes
+        lignes
     """
     def __init__(self):
         self.contenu = []
@@ -1216,8 +1216,8 @@ class Bloc():
     
     def DrawCroisement(self, estRotation):
         """ Dessine les différents croisement :
-             - séance/système  : rond avec nbr syst
-             - séance/démarche : boule
+            - séance/système  : rond avec nbr syst
+            - séance/démarche : boule
             et un trait en pointillé ._._.
         """
         

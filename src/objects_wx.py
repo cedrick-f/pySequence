@@ -5,7 +5,7 @@
 #############################################################################
 #############################################################################
 ##                                                                         ##
-##                                objects_wx_                              ##
+##                                objects_wx                               ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
@@ -40,7 +40,6 @@ Les principaux éléments du GUI de **pySéquence**.
 """
 
 
-
 DEBUG = False
 
 ####################################################################################
@@ -59,138 +58,22 @@ print sys.version_info
 #     import wxversion
 #    wxversion.select('2.8')
 
-
-
 import wx
-
 import  wx.gizmos   as  gizmos
 # try:
 #     
 # except:
 #     import wx.adv as gizmos     # à partir de wx 4
     
-    
 import version
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
-
 from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
                         testRel, nomCourt
-
-
-
-
-####################################################################################
-#
-#   Classe définissant l'application
-#    --> récupération des paramétres passés en ligne de commande
-#
-####################################################################################
-
-# class SeqApp(app.SingleInstApp):
-#     def OnInit(self):
-#         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???           
-#         return True
-#         
-#     ######################################################################################  
-#     def GetSplash(self):
-#         txt = u"Version : "+version.__version__
-#         
-#         bmp = wx.Bitmap(os.path.join(util_path.PATH, "splash.png"), wx.BITMAP_TYPE_PNG)
-#         w, h = bmp.GetWidth(), bmp.GetHeight()
-#         if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
-#             dc = wx.MemoryDC(bmp)
-#             bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
-#             dcv = wx.MemoryDC(bmpv)
-#             dcv.Clear()
-#         #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
-#             dcv.DrawText(txt, 50, 308)
-#             
-#         #    dc.DrawBitmap(bmpv, 0,0, False)
-#             dc.Blit(0,0,w,h,dcv,0,0) 
-#             
-#             dc.SelectObject(wx.NullBitmap)
-#             dcv.SelectObject(wx.NullBitmap)
-#         return bmp
-# 
-# 
-# 
-#     ######################################################################################  
-#     def AfterFlash(self):
-#         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
-#         self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
-# 
-# #    def StartApp(self):
-#         fichier = app.GetArgFile()
-#         
-#         self.AddRTCHandlers()
-#         
-#         self.frame = FenetrePrincipale(None, fichier)
-#         self.frame.Show()
-#         
-# #        if server != None:
-# #            server.app = self.frame
-#         
-#         self.SetTopWindow(self.frame)
-#         
-#         self.DestroySplashScreen()
-#             
-#         return True
-#     
-#     
-#     ######################################################################################  
-#     def AddRTCHandlers(self):
-#         # make sure we haven't already added them.
-#         if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
-#             print u"AddRTCHandlers : déja fait"
-#             return
-#         
-#         # This would normally go in your app's OnInit method.  I'm
-#         # not sure why these file handlers are not loaded by
-#         # default by the C++ richtext code, I guess it's so you
-#         # can change the name or extension if you wanted...
-#         rt.RichTextBuffer.AddHandler(rt.RichTextHTMLHandler())
-#         rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler())
-# 
-#         # ...like this
-#         rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler(name="Autre XML",
-#                                                            ext="ox",
-#                                                            type=99))
-# 
-#         # This is needed for the view as HTML option since we tell it
-#         # to store the images in the memory file system.
-#         wx.FileSystem.AddHandler(wx.MemoryFSHandler())
-#         
-#         
-# 
-#     def DoOpenNewWindow(self, arg):
-#         """ Interface for subclass to open new window
-#             on ipc notification.
-#         """
-#         print u"DoOpenNewWindow", arg
-#         self.frame.AppelOuvrir(arg)
-# 
-#     
-# print 1    
-#         
-# if __name__ == '__main__':
-#     appli = SeqApp(False)
-#     if appli.splash is None:
-#         sys.exit()
-# 
-# 
-# 
-# print 2
-####################################################################################
-#
-#   Import des modules nécessaires
-#
-####################################################################################
 
 import richtext
 
 import time
-import webbrowser
 
 # Chargement des images
 import images
@@ -225,6 +108,7 @@ import  wx.lib.colourselect as  csel
 
 import orthographe
 import wx.stc  as  stc
+import wx.richtext as rt
 
 ########################################################################
 try:
@@ -297,6 +181,21 @@ import Referentiel
 if DEBUG:
     import error
 
+
+
+import cStringIO
+import  wx.html as  html
+import wx.html2 as webview
+
+try: 
+    from BeautifulSoup import BeautifulSoup, NavigableString
+except ImportError:
+    from bs4 import BeautifulSoup, NavigableString
+    
+import copy
+import webbrowser
+
+import threading 
 
 # from pysequence import *
 # import pysequence   # déplacé à la fin
@@ -638,7 +537,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
 
         # Récupération de la derniére version
-        import threading 
+        
         a = threading.Thread(None, version.GetNewVersion, None,  (self,) )
         a.start()
 
@@ -693,6 +592,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
+                    (0, None),
+                    
                     (52 , BoutonToolBar(u"Ajouter une tâche", 
                                        scaleImage(images.Icone_ajout_tache.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
@@ -703,7 +604,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                        scaleImage(images.Icone_ajout_revue.GetBitmap(),
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'une revue au projet", 
-                                       longHelp = u"Ajout d'une revue au projet"))
+                                       longHelp = u"Ajout d'une revue au projet")),
+                    
+                    (0, None),
+                    
+                    (55 , BoutonToolBar(u"Ajouter un modèle", 
+                                       scaleImage(images.Icone_ajout_modele.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
+                                       shortHelp = u"Ajout d'un modèle numérique du support", 
+                                       longHelp = u"Ajout d'un modèle numérique du support")),
+                    
                 ]
         
         elif typ == 'seq':
@@ -732,6 +642,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                                   *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Actualiser la Progression", 
                                        longHelp = u"Actualiser la Progression")),
+                    
+                    (0, None),
                     
                     (71 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
@@ -845,9 +757,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tools = {'prj' : [], 'seq' : [], 'prg' : []}
         for typ in ['prj', 'seq', 'prg']:
             for i, tool in self.GetTools(typ):
-                self.tools[typ].append(self.tb.AddLabelTool(i, tool.label, tool.image, 
-                                                           shortHelp = tool.shortHelp, 
-                                                           longHelp = tool.longHelp))
+                if i > 0:
+                    self.tools[typ].append(self.tb.AddLabelTool(i, tool.label, tool.image, 
+                                                               shortHelp = tool.shortHelp, 
+                                                               longHelp = tool.longHelp))
+                else:
+                    self.tb.AddSeparator()
 
         
 
@@ -899,6 +814,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.RemoveTool(52)
         self.tb.RemoveTool(53)
         self.tb.RemoveTool(54)
+        self.tb.RemoveTool(55)
         
         self.tb.RemoveTool(70)
         self.tb.RemoveTool(71)
@@ -1230,7 +1146,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def OnAide(self, event):
         try:
-            webbrowser.open('https://github.com/cedrick-f/pySequence/wiki',new=2)
+            webbrowser.open(version.__url__+'/wiki',new=2)
         except:
             messageErreur(None, u"Ouverture impossible",
                           u"Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
@@ -1545,6 +1461,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.AjouterTache,             id=52)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue,      id=53)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterGroupe,      id=54)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.support.AjouterModele,      id=55)
                 
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
@@ -1755,7 +1672,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.nb = wx.Notebook(self.pnl, -1)
 
 
-        
+    ###############################################################################################
+    def GetDocument(self):
+        return
+
 
     #########################################################################################################
     def HideTip(self, event = None):
@@ -2128,11 +2048,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def enrichirSVG(self, path):
-        """ Enrichissement de l'image SVG <path> avec :
-             - mise en surbrillance des éléments actifs
-             - infobulles sur les éléments actifs
-             - liens 
-             - ...
+        """Enrichissement de l'image SVG <path> avec :
+        - mise en surbrillance des éléments actifs
+        - infobulles sur les éléments actifs
+        - liens 
+        - ...
         """
         epsilon = 0.001
 
@@ -2180,7 +2100,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = r''):
-        """ <nomFichier> encodé en FileEncoding
+        u"""Modification du nom du fichier courant
+            :param nomFichier: encodé en FileEncoding
         """
         self.fichierCourant = nomFichier
         self.GetDocument().SetPath(nomFichier)
@@ -2327,7 +2248,8 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
-        """ <nomFichier> encodé en FileEncoding
+        u"""Enregistrement
+            :param nomFichier: encodé en FileEncoding
         """
         wx.BeginBusyCursor()
         
@@ -2341,7 +2263,7 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def VerifierReparation(self):
-        """ Vérification (et correction) de la compatibilité de la séquence avec la classe
+        """Vérification (et correction) de la compatibilité de la séquence avec la classe
             aprés une ouverture avec réparation
         """
 #        print "VerifierReparation", self.sequence.CI.numCI, self.sequence.GetReferentiel().CentresInterets
@@ -2358,9 +2280,9 @@ class FenetreSequence(FenetreDocument):
 
     ###############################################################################################
     def restaurer(self):
-        """ Restaure l'arbre de construction
-            et redessine la fiche
-            (après undo ou redo)
+        """Restaure l'arbre de construction
+        et redessine la fiche
+        (après undo ou redo)
         """
         
         self.sequence.MiseAJourTypeEnseignement()
@@ -2421,7 +2343,8 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
-        """ <nomFichier> encodé en FileEncoding
+        u"""Ouverture
+            :param nomFichier: encodé en FileEncoding
         """
         print "ouvrir sequence", nomFichier
         if not os.path.isfile(nomFichier):
@@ -2492,7 +2415,8 @@ class FenetreSequence(FenetreDocument):
 
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = r''):
-        """ <nomFichier> encodé en FileEncoding
+        u"""Modification du nom du fichier courant
+            :param nomFichier: encodé en FileEncoding
         """
         self.fichierCourant = nomFichier
         self.sequence.SetPath(nomFichier)
@@ -2600,7 +2524,7 @@ class FenetreProjet(FenetreDocument):
 
     ###############################################################################################
     def ajouterOutils(self):
-        u""" Ajoute à la toolbar les outils spécifiques aux Projets
+        u"""Ajoute à la toolbar les outils spécifiques aux Projets
         """
         self.parent.supprimerOutils()
 
@@ -2661,7 +2585,8 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
-        """ <nomFichier> encodé en FileEncoding
+        u"""Enregistrement
+            :param nomFichier: encodé en FileEncoding
         """
         wx.BeginBusyCursor()
         
@@ -2764,7 +2689,8 @@ class FenetreProjet(FenetreDocument):
     
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
-        """ <nomFichier> encodé en FileEncoding
+        u"""Ouverture
+            :param nomFichier: encodé en FileEncoding
         """
         print "Ouverture projet", nomFichier
         tps1 = time.clock()
@@ -3035,7 +2961,7 @@ class FenetreProjet(FenetreDocument):
     #############################################################################
     def genererGrillesPdf(self, event = None):
         u""" Génération de TOUTES les grilles d'évaluation au format pdf
-             - demande d'un nom de fichier -
+            demande d'un nom de fichier -
         """
         mesFormats = u"PDF (.pdf)|*.pdf"
         nomFichier = getNomFichier("Grilles", self.projet.intitule[:20], u".pdf")
@@ -3429,7 +3355,8 @@ class FenetreProgression(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
-        """ <nomFichier> encodé en FileEncoding
+        u""" Enregistrement
+            :param nomFichier: encodé en FileEncoding
         """
         wx.BeginBusyCursor()
         
@@ -4368,7 +4295,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #   Classe définissant le panel "racine" (ne contenant que des infos HTML)
 #
 ####################################################################################
-import wx.richtext as rt
+
 class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
@@ -5566,7 +5493,7 @@ class PanelOrganisation(wx.Panel):
         
     #############################################################################            
     def OnClick(self, event):
-        """ Déplacement de la revue sélectionnée
+        u""" Déplacement de la revue sélectionnée
             vers le haut ou vers le bas
         """
      
@@ -6057,7 +5984,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def EvtListBoxSyst(self, event = None, num = 0):
-        """ Actions réalisées après avoir cliqué dans la liste de systèmes
+        u""" Actions réalisées après avoir cliqué dans la liste de systèmes
         """
 #        print "EvtListBoxSyst"
         if event != None:
@@ -6075,7 +6002,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def EvtButtonSyst(self, event = None):
-        """ Ajoute un nouveau système à la liste des système de la classe
+        u""" Ajoute un nouveau système à la liste des système de la classe
         """
         #
         # Définition du nouveau nom
@@ -6122,7 +6049,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def EvtButtonSupprSyst(self, event = None):
-        """ Supprime un  système de la liste des système de la classe
+        u""" Supprime un  système de la liste des système de la classe
         """
         num = self.lstSys.GetSelection()
         self.lstSys.Delete(num)
@@ -6157,7 +6084,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def EvtRadioBox(self, event = None, CodeFam = None):
-        """ Sélection d'un type d'enseignement
+        u""" Sélection d'un type d'enseignement
         """
         if event != None:
             radio_selected = event.GetEventObject()
@@ -6391,14 +6318,16 @@ class Editeur(wx.Frame):
 #
 ####################################################################################     
 class PanelEffectifsClasse(wx.Panel):
-    """ Classe définissant le panel de réglage des effectifs
-    
+    u"""Classe définissant le panel de réglage des effectifs
         Rappel :
+        
+        :Example:
+        
         listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
         NbrGroupes = {"G" : 2, # Par classe
-                      "E" : 2, # Par grp Eff réduit
-                      "P" : 4, # Par grp Eff réduit
-                      }
+        "E" : 2, # Par grp Eff réduit
+        "P" : 4, # Par grp Eff réduit
+        }
                       
     """
     def __init__(self, parent, classe):
@@ -6898,9 +6827,9 @@ class PanelPropriete_CI(PanelPropriete):
 
     #############################################################################            
     def GetListeCIActifs(self):
-        """ Renvoie :
-                la liste des indices des boutons "CI" actifs
-                un booléen indiquant si la liste des CI selectionnables est active
+        u""" Renvoie :
+            - la liste des indices des boutons "CI" actifs
+            - un booléen indiquant si la liste des CI selectionnables est active
         """
 #         print "GetListeCIActifs", self.CI.numCI , self.CI.CI_perso
         # Liste des boutons CI à afficher
@@ -6924,8 +6853,8 @@ class PanelPropriete_CI(PanelPropriete):
     
     #############################################################################            
     def GererCases(self, liste, perso, appuyer = False):
-        """ Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
-            <liste> : liste des CI à activer
+        u""" Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
+            :param liste: liste des CI à activer
         """ 
 #         print "GererCases", perso
         for i, b in enumerate(self.group_ctrls):
@@ -7114,7 +7043,7 @@ class Panel_Cible(wx.Panel):
         
     ######################################################################################################
     def OnEraseBackground(self, evt):
-        """
+        u"""
         Add a picture to the background
         """
         # yanked from ColourDB.py
@@ -7154,11 +7083,12 @@ class Panel_Cible(wx.Panel):
         
     #############################################################################            
     def GererBoutons(self, appuyer = False):
-        """ Permet de cacher les boutons des CI au fur et à mesure que l'on selectionne des CI
+        u""" Permet de cacher les boutons des CI au fur et à mesure que l'on selectionne des CI
             Régles :
-             - Maximum 2 CI
-             - CI voisins sur la cible
-            <appuyer> : pour initialisation : si vrai = appuie sur les boutons
+            - Maximum 2 CI
+            - CI voisins sur la cible
+            :param appuyer: pour initialisation : si vrai = appuie sur les boutons
+            :type appuyer: boolean
         """
 #        print "GererBoutons"
         ref = self.CI.GetReferentiel()
@@ -7458,7 +7388,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.intit.SetValue(self.sequence.intitule, False)
 #         SetValue  : voir orthographe.STC_ortho
 #         ChangeValue ?
-        
+
         self.texte.SetValue(toSystemEncoding(self.lien.path))
 
     
@@ -7476,7 +7406,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
                 self.texte.SetBackgroundColour("pink")
                 self.texte.SetToolTipString(u"Le fichier Séquence est introuvable !")
                 return False
-        
+
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
         
@@ -10516,12 +10446,12 @@ class PanelPropriete_Groupe(PanelPropriete):
 #        else:
         self.classe.etablissement = evt.GetString()
 #        self.AfficherAutre(False)
-        
+
         self.sendEvent(modif = u"Modification de l'établissement",
                        obj = self.groupe)
-        
-        
-        
+
+
+
     
     #############################################################################            
     def EvtText(self, event):
@@ -10552,17 +10482,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.sendEvent(modif = u"Modification du type d'enseignement",
                        obj = self.groupe)
         
-        
 
-    #############################################################################            
-    def MiseAJourTypeEnseignement(self):
-        if hasattr(self.personne, 'grille'):
-#            print "MiseAJourTypeEnseignement eleve", self.personne
-            if hasattr(self, 'SelectGrille'):
-                for sg in self.SelectGrille.values():
-                    self.bsizer.Detach(sg)
-                    sg.Destroy()
-            self.ConstruireSelectGrille()
     
     
     
@@ -10871,7 +10791,160 @@ class PanelPropriete_Support(PanelPropriete):
         
         
         
+####################################################################################
+#
+#   Classe définissant le panel de propriété d'un support de projet
+#
+####################################################################################
+class PanelPropriete_Modele(PanelPropriete):
+    def __init__(self, parent, modele):
         
+        self.modele = modele
+        self.parent = parent
+        
+        PanelPropriete.__init__(self, parent, objet = self.modele)
+        
+        #
+        # Nom
+        #
+        box = myStaticBox(self, -1, u"Intitulé du modèle")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        textctrl = TextCtrl_Help(self, u"")
+        textctrl.SetTitre(u"Intitulé du modele")
+        textctrl.SetToolTipString(u"Un modèle numérique peut être\n" \
+                                  u"une maquette numérique\n" \
+                                  u"un modèle multiphysique\n" \
+                                  u"...")
+        self.textctrl = textctrl
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND)
+        self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, textctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, textctrl)
+        
+        
+        #
+        # Lien
+        #
+        lsizer = self.CreateLienSelect(self)
+        self.sizer.Add(lsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        
+        #
+        # Image
+        #
+        isizer = self.CreateImageSelect(self, titre = u"Image du modèle")
+        self.sizer.Add(isizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
+
+        
+        #
+        # Description du modèle
+        #
+        dbox = myStaticBox(self, -1, u"Description du modèle")
+        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+#        bd = wx.Button(self, -1, u"Editer")
+        tc = richtext.RichTextPanel(self, self.modele, toolBar = True)
+        tc.SetTitre(u"Description du modèle")
+        tc.SetToolTipString(u"Description du modèle :\n" \
+                            u" - type de modèle\n" \
+                            u" - logiciel utilisé\n" \
+                            u" - paramètres principaux\n" \
+                            u" - ..."
+                            )
+        tc.SetMaxSize((-1, 150))
+#        dbsizer.Add(bd, flag = wx.EXPAND)
+        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+#        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+        self.sizer.Add(dbsizer, (0,2), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.rtc = tc
+        # Pour indiquer qu'une édition est déja en cours ...
+        self.edition = False  
+        
+        self.MiseAJour()
+        self.sizer.AddGrowableRow(0)
+        self.sizer.AddGrowableCol(2)
+        
+        self.sizer.Layout()
+        
+        
+        
+        self.clip = wx.Clipboard()
+        self.x = wx.BitmapDataObject()
+        
+        
+    ######################################################################################  
+    def SetPathSeq(self, pathSeq):
+        self.selec.SetPathSeq(pathSeq)
+        
+        
+    ######################################################################################  
+    def OnPathModified(self, lien, marquerModifier = True):
+        self.modele.OnPathModified()
+        if marquerModifier:
+            self.modele.GetApp().MarquerFichierCourantModifie()
+#         self.btnlien.Show(self.support.lien.path != "")
+        self.selec.MiseAJour()
+        self.Layout()
+        self.Refresh()
+        
+        
+    #############################################################################            
+    def GetDocument(self):
+        return self.modele.parent
+    
+    
+    #############################################################################            
+    def OnRClickImage(self, event):
+        self.clip.Open()
+        ok = self.clip.GetData(self.x)
+        self.clip.Close()
+        if ok:
+            self.GetFenetreDoc().AfficherMenuContextuel([[u"Coller l'image", self.collerImage, None
+                                              ]
+                                            ])
+            
+
+    #############################################################################            
+    def collerImage(self, sendEvt = False):
+        self.modele.image = self.x.GetBitmap()
+    
+
+    #############################################################################            
+    def EvtText(self, event):
+#         print "EvtText", self.support.nom
+        txt = self.textctrl.GetText()
+        
+        if self.modele.intitule != txt:
+            event.Skip()
+            self.modele.SetNom(txt)
+    #        self.support.parent.MiseAJourNomsSystemes()
+            
+            modif = u"Modification de l'intitulé du Modèle"
+            print modif
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
+        
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+#        print "MiseAJour panelPropriete modele"
+        self.textctrl.ChangeValue(self.modele.intitule)
+        if sendEvt:
+            self.sendEvent()
+        self.MiseAJourLien()
+        self.SetImage()
+        
+        
+        
+    #############################################################################            
+    def MiseAJourLien(self):
+        self.selec.SetPath(toSystemEncoding(self.modele.lien.path), marquerModifier = False)
+#         self.btnlien.Show(len(self.support.lien.path) > 0)
+        self.selec.MiseAJour()
+        self.Layout()
         
         
         
@@ -13851,11 +13924,11 @@ class A_propos(wx.Dialog):
         t = wx.StaticText(descrip, -1,u"",
                           size = (400, -1))#,
 #                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        txt = wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projets,\n"
+        txt = wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences et progressions pédagogiques et à la validation de projets,\n"
                                           u"sous forme de fiches exportables au format PDF ou SVG.\n"
                                           u"Il est élaboré en relation avec les programmes et les documents d'accompagnement\n"
-                                          u"des enseignements des filiéres :\n"
-                                          u" STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde.",500, wx.ClientDC(self))
+                                          u"des enseignements des filières :\n"
+                                          u" STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde.", 500, wx.ClientDC(self))
         if hasattr(t, 'SetLabelMarkup'): # wxpython 3.0
             t.SetLabelMarkup(txt )
         else:
@@ -13864,8 +13937,8 @@ class A_propos(wx.Dialog):
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
         
-        sizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY, u"Informations et téléchargement : https://github.com/cedrick-f/pySequence",
-                                   URL="https://github.com/cedrick-f/pySequence"),  
+        sizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY, u"Informations et téléchargement : %s" %version.__url__,
+                                   URL = version.__url__),  
                   flag = wx.ALIGN_RIGHT|wx.ALL, border = 5)
         sizer.Add(nb)
         
@@ -14119,15 +14192,7 @@ class myProgressDialog(wx.Frame):
 # Information PopUp (format HTML)
 # 
 #############################################################################################################
-import cStringIO
-import  wx.html as  html
-import wx.html2 as webview
-try: 
-    from BeautifulSoup import BeautifulSoup, NavigableString
-except ImportError:
-    from bs4 import BeautifulSoup, NavigableString
-import copy
-import webbrowser
+
 
 class myHtmlWindow(html.HtmlWindow):
     def __init__(self, *arg, **kargs):
@@ -15059,9 +15124,9 @@ import tempfile
 def img2str(img):
     """
     """
-    global app
-    if not wx.GetApp():
-        app = wx.PySimpleApp()
+#     global app
+#     if not wx.GetApp():
+#         app = wx.PySimpleApp()
         
     # convert the image file to a temporary file
     tfname = tempfile.mktemp()

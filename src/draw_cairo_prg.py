@@ -45,7 +45,7 @@ import images
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, DrawCalendrier, COEF, info, Zone, relief, \
+                        DrawPeriodes, DrawCalendrier, COEF, info, Zone, \
                         BcoulPos, IcoulPos, ICoulComp, CoulAltern, ligne, rectangle_plein_biseau, \
                         rectangle_plein_fleche, rectangle_plein_doigt
 
