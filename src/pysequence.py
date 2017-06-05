@@ -1300,7 +1300,10 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def getRangePeriode(self):
         return list(range(self.position[0], self.position[1]+1))
     
-
+    #############################################################################            
+    def getNomEleves(self):
+        return self.GetReferentiel().labels['ELEVES'][0]
+    
     ######################################################################################  
     def estProjet(self):
         return isinstance(self, Projet)
@@ -3717,7 +3720,7 @@ class Projet(BaseDoc):
             
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.GetApp().sendEvent(modif = u"Ajout d'un Elève")
+            self.GetApp().sendEvent(modif = u"Ajout d'un "+ getSingulier(self.getNomEleves()))
             self.OrdonnerEleves()
             self.arbre.SelectItem(e.branche)
             
@@ -3733,7 +3736,7 @@ class Projet(BaseDoc):
             
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.GetApp().sendEvent(modif = u"Ajout d'un Groupe d'élèves")
+            self.GetApp().sendEvent(modif = u"Ajout d'un Groupe d'"+ getPluriel(self.getNomEleves()))
             self.OrdonnerEleves()
             self.arbre.SelectItem(e.branche)
 #             self.AjouterEleveDansPanelTache()
@@ -3761,7 +3764,7 @@ class Projet(BaseDoc):
         for i, e in enumerate(self.eleves):
             e.SetCode()
 
-        self.GetApp().sendEvent(modif = u"Suppression d'un Elève")
+        self.GetApp().sendEvent(modif = u"Suppression d'un "+ getSingulier(self.getNomEleves()))
         
         
     ######################################################################################  
@@ -3783,7 +3786,7 @@ class Projet(BaseDoc):
         for i, e in enumerate(self.groupes):
             e.SetCode()
 
-        self.GetApp().sendEvent(modif = u"Suppression d'un groupe d'élèves")
+        self.GetApp().sendEvent(modif = u"Suppression d'un groupe d'"+ getPluriel(self.getNomEleves()))
     
     ######################################################################################  
     def OrdonnerEleves(self):
@@ -3834,7 +3837,13 @@ class Projet(BaseDoc):
                 break
         return i + len(self.eleves)
     
-        
+    ######################################################################################  
+    def OnModifModeles(self):
+        n = [m.id for m in self.support.modeles]
+        for e in self.eleves:
+            for m in e.modeles:
+                if not m in n:
+                    e.modeles.remove(m)
     
     ######################################################################################  
     def MiseAJourPoidsCompetences(self, code = None):
@@ -3866,7 +3875,7 @@ class Projet(BaseDoc):
         #
         # Les élèves
         #
-        self.brancheElv = arbre.AppendItem(self.branche, Titres[6], data = "Ele",
+        self.brancheElv = arbre.AppendItem(self.branche, getPluriel(self.getNomEleves()).capitalize(), data = "Ele",
                                            image = self.arbre.images["Grp"])
         for e in self.eleves:
             e.ConstruireArbre(arbre, self.brancheElv) 
@@ -3880,7 +3889,8 @@ class Projet(BaseDoc):
         #
         # Les tâches
         #
-        self.brancheTac = arbre.AppendItem(self.branche, Titres[8], data = "Tac")
+        self.brancheTac = arbre.AppendItem(self.branche, Titres[8], data = "Tac",
+                                           image = self.arbre.images["Tac"])
         for t in self.taches:
             t.ConstruireArbre(arbre, self.brancheTac)
         
@@ -3932,9 +3942,14 @@ class Projet(BaseDoc):
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Modele):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[6]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve, 
-                                              scaleImage(images.Icone_ajout_eleve.GetBitmap())]])
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Support):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
+            
+        elif self.arbre.GetItemText(itemArbre) == getPluriel(self.getNomEleves()): # Eleve
+            self.app.AfficherMenuContextuel([[u"Ajouter un "+ getSingulier(self.getNomEleves()), self.AjouterEleve, 
+                                              scaleImage(images.Icone_ajout_eleve.GetBitmap())],
+                                             [u"Ajouter un groupe d'"+ getPluriel(self.getNomEleves()), self.AjouterGroupe, 
+                                              scaleImage(images.Icone_ajout_groupe.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
             listItems = [[u"Ajouter une tâche", self.AjouterTache, 
@@ -3954,10 +3969,7 @@ class Projet(BaseDoc):
             self.app.AfficherMenuContextuel([[u"Ajouter un Professeur", self.AjouterProf, 
                                               scaleImage(images.Icone_ajout_prof.GetBitmap())]])
                                              
-        elif self.arbre.GetItemText(itemArbre) == Titres[7]: # Support
-            self.app.AfficherMenuContextuel([[u"Ajouter un Modèle", self.support.AjouterModele, 
-                                              scaleImage(images.Icone_ajout_modele.GetBitmap())],
-                                             ]) 
+        
             
     ######################################################################################       
     def GetCompetencesUtil(self):
@@ -4144,6 +4156,10 @@ class Projet(BaseDoc):
         self.position = self.GetProjetRef().getPeriodeDefaut()
 #        print "position", self.position
         
+        if hasattr(self, 'brancheElv'):
+            self.brancheElv.SetText(getPluriel(self.getNomEleves()).capitalize())
+            self.arbre.Layout()
+            self.arbre.Refresh()
         
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
@@ -9735,10 +9751,12 @@ class Support(ElementAvecLien, ElementBase):
         
         brancheMod = branche.find("Modeles")
         self.modeles = []
-        for e in list(brancheMod):
-            m = Modele(self)
-            Ok = Ok and m.setBranche(e)
-            self.modeles.append(m)
+#         print list(brancheMod)
+        if brancheMod is not None:
+            for e in list(brancheMod):
+                m = Modele(self)
+                Ok = Ok and m.setBranche(e)
+                self.modeles.append(m)
             
         return Ok
     
@@ -9766,7 +9784,10 @@ class Support(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetNom(self):
-        return self.nom
+        if self.nom != "":
+            return self.nom
+        else:
+            return u"Support"
     
             
     ######################################################################################  
@@ -9780,16 +9801,25 @@ class Support(ElementAvecLien, ElementBase):
 
 
     ######################################################################################  
+    def GetNewModeleId(self):
+        i = 1
+        l = [m.id for m in self.modeles]
+        while i in l:
+            i += 1
+        return i
+
+    ######################################################################################  
+    def GetIntitModeles(self):
+        return [m.GetNom() for m in self.modeles]
+        
+        
+    ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
-        if self.nom != "":
-            t = self.nom
-        else:
-            t = u"Support"
-        
+
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, t)
+            self.arbre.SetItemText(self.branche, self.GetNom())
             
 #        # Tip
 #        if hasattr(self, 'tip'):
@@ -9808,8 +9838,6 @@ class Support(ElementAvecLien, ElementBase):
 #             self.AjouterEleveDansPanelTache()
 #         m.MiseAJourCodeBranche()
         
-        
-        
         self.GetApp().sendEvent(modif = u"Ajout d'un Modèle")
         
         
@@ -9821,20 +9849,23 @@ class Support(ElementAvecLien, ElementBase):
             del self.modeles[i]
             self.arbre.Delete(item)
             
+            self.GetDocument().OnModifModeles()
+            
             self.GetApp().sendEvent(modif = u"Suppression d'un Modèle")
         
 
     ######################################################################################  
     def OrdonnerModeles(self):
 #         print "OrdonnerModeles"
-        i = -1
-        for i,m in enumerate(self.modeles):
-            m.id = i
+#         i = -1
+#         for i,m in enumerate(self.modeles):
+#             m.id = i
         
         for i, m in enumerate(self.modeles):
             m.SetCode()
 
         self.arbre.Ordonner(self.branche)
+
         
 #    ######################################################################################  
 #    def SetImage(self):
@@ -9857,7 +9888,18 @@ class Support(ElementAvecLien, ElementBase):
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien, 
-                                                     scaleImage(images.Icone_lien.GetBitmap())]])
+                                                     scaleImage(images.Icone_lien.GetBitmap())],
+                                                    [u"Ajouter un Modèle", self.AjouterModele, 
+                                                     scaleImage(images.Icone_ajout_modele.GetBitmap())],
+                                                    ])
+            
+            
+#             elif self.arbre.GetItemText(itemArbre) == Titres[7]: # Support
+#             self.app.AfficherMenuContextuel([[u"Ajouter un Modèle", self.support.AjouterModele, 
+#                                               scaleImage(images.Icone_ajout_modele.GetBitmap())],
+#                                              ]) 
+#             
+            
             
     ######################################################################################  
     def GetFicheHTML(self, param = None):
@@ -9886,13 +9928,15 @@ class Support(ElementAvecLien, ElementBase):
 #
 ####################################################################################
 class Modele(ElementAvecLien, ElementBase):
-    def __init__(self, support, Id = 0):
+    def __init__(self, support, Id = None):
         self.nom_obj = u"Modèle numérique"
         self.article_c_obj = u"du"
         self.article_obj = u"le"
         
         self.code = "Mod"
         self.support = support
+        
+        self.logiciels = []
     
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self)
@@ -9900,6 +9944,9 @@ class Modele(ElementAvecLien, ElementBase):
         self.intitule  = u""
         self.description = None
         self.image = None
+        
+        if Id is None:
+            Id = support.GetNewModeleId()
         self.id = Id
     
     
@@ -9926,8 +9973,14 @@ class Modele(ElementAvecLien, ElementBase):
         root.set("Id", str(self.id))
         root.set("Intitule", self.intitule)
         self.lien.getBranche(root)
+        
         if self.description != None:
             root.set("Description", self.description)
+            
+        brancheLog = ET.Element("Logiciels")
+        root.append(brancheLog)
+        for i, m in enumerate(self.logiciels):
+            brancheLog.set("Log"+str(i), m)
         
         self.getBrancheImage(root)
 
@@ -9942,17 +9995,17 @@ class Modele(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetNom(self):
-        return self.intitule
-    
+        if self.intitule != "":
+            t = self.intitule
+        else:
+            t = self.nom_obj + " " + str(self.id)
+        return t
     
     ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
-        if self.intitule != "":
-            t = self.intitule
-        else:
-            t = self.nom_obj
+        t = self.GetNom()
         
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
@@ -9964,11 +10017,18 @@ class Modele(ElementAvecLien, ElementBase):
         self.id  = eval(branche.get("Id", "0"))
         self.intitule  = branche.get("Intitule", "")
         self.description = branche.get("Description", None)
+
+        brancheLog = branche.find("Logiciels")
+        self.logiciels = []
+        if brancheLog is not None:
+            for i, m in enumerate(brancheLog.keys()):
+                self.logiciels.append(brancheLog.get("Log"+str(i)))
+#         print self.id, self.logiciels
         
         Ok = Ok and self.lien.setBranche(branche, self.GetPath())
 
         Ok = Ok and self.setBrancheImage(branche)
-        
+        return Ok
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -10058,6 +10118,13 @@ class Personne(ElementBase):
         if hasattr(self, 'grille'): # Cas des élèves (et pas des profs)
             for k, g in self.grille.items():
                 root.set("Grille"+k, toSystemEncoding(g.path))       
+        
+        if hasattr(self, 'modeles'):
+            brancheMod = ET.Element("Modeles")
+            root.append(brancheMod)
+            for i, m in enumerate(self.modeles):
+                brancheMod.set("Mod"+str(i), str(m))
+            
             
         return root
     
@@ -10089,7 +10156,16 @@ class Personne(ElementBase):
 #        self.GetPanelPropriete().SetImage()
 #        self.GetPanelPropriete().MiseAJourTypeEnseignement()
 #        self.GetPanelPropriete().MiseAJour(marquerModifier = False)
-        
+            
+        if hasattr(self, 'modeles'):    
+            brancheMod = branche.find("Modeles")
+            self.modeles = []
+            if brancheMod is not None:
+                for i, m in enumerate(brancheMod.keys()):
+                    self.modeles.append(eval(brancheMod.get("Mod"+str(i))))
+
+                
+                
         return Ok
 
     ######################################################################################  
@@ -10196,7 +10272,8 @@ class Personne(ElementBase):
 class Eleve(Personne, ElementBase):
     def __init__(self, doc, ident = 0):
         
-        self.titre = u"élève"
+#         self.titre = u"élève"
+        self.titre = getSingulier(doc.getNomEleves())
         self.code = "Elv"
         
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
@@ -10205,7 +10282,8 @@ class Eleve(Personne, ElementBase):
         
         Personne.__init__(self, doc, ident)
  
-    
+        self.modeles = []
+        
             
     ######################################################################################  
     def GetDuree(self, phase = None, total = False):
@@ -10247,23 +10325,23 @@ class Eleve(Personne, ElementBase):
                     d += t.GetDuree()
         return d
     
-#     ######################################################################################  
-#     def OuvrirGrille(self, k):
-#         print "OuvrirGrille", k
-#         self.grille[k].Afficher(self.GetDocument().GetPath())
-# #         try:
-# #             self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])
-# #         except:
-# #             messageErreur(None, u"Ouverture impossible",
-# #                           u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
-#             
-#             
-#     ######################################################################################  
-#     def OuvrirGrilles(self, event):
-#         for k in self.grille.keys():
-#             self.OuvrirGrille(k)
-# #        if self.GetTypeEnseignement(simple = True) == "STI2D":
-# #            self.OuvrirGrille(1)
+    ######################################################################################  
+    def OuvrirGrille(self, k):
+        print "OuvrirGrille", k
+        self.grille[k].Afficher(self.GetDocument().GetPath())
+#         try:
+#             self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])
+#         except:
+#             messageErreur(None, u"Ouverture impossible",
+#                           u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
+             
+             
+    ######################################################################################  
+    def OuvrirGrilles(self, event):
+        for k in self.grille.keys():
+            self.OuvrirGrille(k)
+#        if self.GetTypeEnseignement(simple = True) == "STI2D":
+#            self.OuvrirGrille(1)
         
         
     ######################################################################################  
@@ -10418,20 +10496,7 @@ class Eleve(Personne, ElementBase):
         prj = self.GetProjetRef()
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
-#         print "   dicIndicateurs", dicIndicateurs
-#         print "   _dicoGrpIndicateur", prj._dicoGrpIndicateur
-#        tousIndicateurs = prj._dicIndicateurs
-#        lstGrpIndicateur = {'R' : prj._dicGrpIndicateur['R'],
-#                            'S' : self.GetProjetRef()._dicGrpIndicateur['S']}
-#        print lstGrpIndicateur
-        
-#        r, s = 0, 0
-#        ler, les = {}, {}
-        
-#        rs = [0, 0]
-#        lers = [{}, {}]
-#         print prj._dicoGrpIndicateur
-#         print "   _dicoIndicateurs", prj._dicoIndicateurs
+
         rs = {}
         lers = {}
         for disc, dic in prj._dicoGrpIndicateur.items():
@@ -10477,79 +10542,12 @@ class Eleve(Personne, ElementBase):
                                     lers[disc][ph][grp] = 0
                             
             return
-            
-            
-        
-#         def getPoids(listIndic, comp, poidsGrp):
-#             """ 
-#             """
-# #            print "getPoids", listIndic, comp, poidsGrp
-#             if type(listIndic)
-# 
-#             for disc, dic in prj._dicoGrpIndicateur.items():
-#                 for ph in dic.keys():
-#                     if grp in dic[ph]:
-#                         for i, indic in enumerate(listIndic):
-#                             if disc+comp in dicIndicateurs.keys():
-#                                 if dicIndicateurs[disc+comp][i]:
-#     #                                print "  comp", grp, comp, i, indic.poids, ph
-#                                     poids = indic.poids
-#                                     if ph in poids.keys():
-#                                         p = 1.0*poids[ph]/100
-#                                         rs[disc][ph] += p * poidsGrp[ph]/100
-#                                         if grp in lers[disc][ph].keys():
-#                                             lers[disc][ph][grp] += p
-#                                         else:
-#                                             lers[disc][ph][grp] = p
-#                             else:
-#                                 if not grp in lers[disc][ph].keys():
-#                                     lers[disc][ph][grp] = 0
-#                             
-#             return
         
         for typi, dico in prj._dicoIndicateurs.items():
             for grp, grpComp in dico.items():
 #                 print "  >>> poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)
                 
-                
-                
-                
-                
-#                 titre = grpComp.intitule
-#                 dicComp = grpComp.sousComp
-#                 poidsGrp = grpComp.poids
-#                 
-#                 if type(dicComp) == list:                       # 1 niveau
-#                     getPoids(dicComp, grp, poidsGrp)
-#                 else:
-#                     for comp, lstIndic in dicComp.items():
-#     #                    print "      ", comp
-#                         if type(lstIndic[1]) == list:           # 2 niveaux
-#                             getPoids(lstIndic[1], comp, poidsGrp)    
-#                         else:                                   # 3 niveaux
-#                             for scomp, lstIndic2 in lstIndic.items():
-#                                 getPoids(lstIndic2[1], scomp, poidsGrp)
-                                
-                                                               
-#        r, s = rs
-#        ler, les = lers
-#         print "   eval :", rs, lers
-         
-        # On corrige s'il n'y a qu'une seule grille (cas SSI jusqu'à 2014)
-#        if len(self.GetReferentiel().grilles_prj) == 1: 
-##        if self.GetTypeEnseignement() == "SSI":
-#            r, s = r*2, s*2
-#            for l in ler.keys():
-#                ler[l] = ler[l]*2
-#            for l in les.keys():
-#                les[l] = les[l]*2
-            
-#        if "O8s" in les.keys():
-#            les["O8"] = les["O8s"]
-#            del les["O8s"]
-            
-#        print r, s, ler, les
         
         #
         # Seuils d'évaluabilité
@@ -10585,10 +10583,15 @@ class Eleve(Personne, ElementBase):
                     ev_tot[disc][part][1] = ev_tot[disc][part][1] and ev[disc][part][grp][1]
         
 #        print "   ", ev, ev_tot, seuil
+        
+        
+        
         if compil:
             ev = ev["S"]
             ev_tot = ev_tot["S"]
             seuil = seuil["S"]
+            
+            
         return ev, ev_tot, seuil
         
         

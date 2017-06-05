@@ -1854,6 +1854,7 @@
     </l_ST>
   </d_horsClasse>
   <d_labels>
+    <l_ELEVES S_00="Etudiant(s)" S_01="Etudiants" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
   </d_labels>
   <l_listCompetences S_00="S" />
@@ -1874,7 +1875,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_CCF1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="CCF1">
+    <Projet_CCF1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="CCF1">
       <d_attributs>
         <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
@@ -1941,7 +1942,7 @@
       </d_posRevues>
       <d_taches />
     </Projet_CCF1>
-    <Projet_CCF2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
+    <Projet_CCF2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
       <d_attributs>
         <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
@@ -2014,7 +2015,7 @@
       </d_posRevues>
       <d_taches />
     </Projet_CCF2>
-    <Projet_PRJ B_tachesOnce="True" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_projet_E6.html" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="True" I_duree="50" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_projet_E6.html" S_intitule="Projet de fin d'année">
       <d_attributs>
         <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="Inventaire des matériels" S_01="Désignation" S_02="" S_03="" />

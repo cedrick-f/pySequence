@@ -391,7 +391,7 @@
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
-    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Connaissances">
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Savoir(s)">
       <d_dicSavoirs>
         <l_1 S_00="Projet technologique">
           <d_01>
@@ -503,6 +503,7 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <d_labels>
+    <l_ELEVES S_00="Elève(s)" S_01="Elèves" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
   </d_labels>
   <l_listCompetences S_00="S" />
@@ -523,7 +524,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
       <d_attributs>
         <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />

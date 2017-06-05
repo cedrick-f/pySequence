@@ -726,6 +726,39 @@ def getLstDisciplines():
     return lst
 
 
+# Logiciels de modélisation
+LOGICIELS = [(u".Solidworks", [u".Motion",
+                             u".Meca3D",
+                             u"xFlowSim",
+                             u"xSimulation"],
+              ),
+             (u".CATIA", []),
+             (u".Inventor", []),
+             (u".AutoCAD", []),
+             (u".Top Solid", []),
+             (u".Solidedge", []),
+             (u".Pro Engineer", []),
+             (u".FreeCAD", []),
+             (u".Sketchup", []),
+             
+             (u".MATLAB", [u"xSimulink",
+                         u"xStateflow",
+                         u"xSimscape",
+                         u"xSimElectronics",
+                         u"xSimPowerSystems",
+                         u"xSimMechanics"]),
+             (u".SciLAB", [u"xXcos"]),
+             (u".LabView", []),
+             ]
+
+IMG_LOGICIELS = {u"Solidworks" : images.Logiciel_SW,
+                 u"MATLAB" : images.Logiciel_MATLAB,
+                 u"LabView" : images.Logiciel_LV,
+                 u"CATIA" : images.Logiciel_CATIA,
+                 u"AutoCAD" : images.Logiciel_Autocad,
+                 u"Python" : images.Logiciel_Python}
+
+
 # Nombre de créneaux dans les Progressions
 NBR_CRENEAUX_DEFAUT = 3
 
@@ -763,9 +796,17 @@ TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
 BASE_FICHE_HTML_ELEVE = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
-    <p id="nom">Nom-Prénom</p>
-    <img id="av" src="" alt=" ">
-    <table border="0">
+    
+    <table border="1" width = "100%">
+        <tbody>
+            <tr>
+            <td><p id="nom"></p></td>
+            <td align="right"><img id="av" src="" alt=" "></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table border="0" width = "100%">
         <tbody>
             <tr id = "ld" align="right" valign="middle">
             <td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
@@ -1034,11 +1075,13 @@ BASE_FICHE_HTML_PRJ = u"""
 BASE_FICHE_HTML_PROF = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
-    <table border="0" width="300">
+
+
+    <table border="1" width="100%">
         <tbody>
         <tr align="right" valign="top">
-            <td width="200"><p id="nom">Nom Prénom</p></td>
-            <td rowspan=2><img id="av" src=" " alt=" "></td>
+            <td width="200"><p id="nom"></p></td>
+            <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
         </tr>
         <tr align="right" valign="top">
             <td><p id="spe"> </p></td>

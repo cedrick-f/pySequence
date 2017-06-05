@@ -1,8 +1,9 @@
 <Referentiel B_CI_BO="False" B_CI_cible="False" I_maxCI="1" S_AnneeDebut="Sec2" S_Code="Cy4-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Non" S_nomCI="Thème(s) de Séquence" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s) proposée(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
   <l_BO_URL>
-    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94717" />
+    <l_01 S_00="Document d'accompagnement" S_01="http://cache.media.eduscol.education.fr/file/Techno/97/1/RA16_C4_TECH_0_Guide_peda_didac_tech_550971.pdf" />
   </l_BO_URL>
-  <l_BO_dossier S_00="collège" />
+  <l_BO_dossier S_00="Collège/Cycle 4" />
   <l_CentresInterets S_00="Aménager un espace" S_01="Assurer le confort dans une habitation" S_02="Identifier les particularités d'un ouvrage d'art" S_03="Rendre une construction robuste et stable" S_04="Produire, distribuer et convertir une énergie" S_05="Préserver les ressources (économiser l'énergie et préserver l'environnement)" S_06="Programmer un objet" S_07="Acquérir et transmettre des informations ou des données" S_08="Préserver la santé et assister l'homme" S_09="Identifier l'évolution des objets" S_10="Se déplacer sur terre, air, mer" />
   <l_Enseignement S_00="Cy4-ST" S_01="Cycle 4 - Sciences et technologie" S_02="ST - Collège" S_03="Sciences et Technologie - Collège" />
   <d_aColNon />
@@ -486,7 +487,7 @@
         </Competence_IP.2>
       </d_dicCompetences>
     </Competences_A>
-    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="???" S_codeDiscipline="Tra" S_nomDiscipline="???" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte S_00="O" />
       <l_asso_type>
         <Competences_00 B_obj="True" B_pre="True" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
@@ -1492,6 +1493,7 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <d_labels>
+    <l_ELEVES S_00="Elève(s)" S_01="Elèves" />
     <l_SEQINT S_00="Problématiques proposées" S_01="Problématiques proposées" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="C" S_02="A" />

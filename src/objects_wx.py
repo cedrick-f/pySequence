@@ -126,7 +126,7 @@ from constantes import calculerEffectifs, \
                         getSingulier, getPluriel, getSingulierPluriel, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, WMIN_PROP, HMIN_PROP, \
-                        WMIN_STRUC, HMIN_STRUC#, bmp
+                        WMIN_STRUC, HMIN_STRUC, LOGICIELS, IMG_LOGICIELS#, bmp
 import constantes
 
 import couleur
@@ -1455,6 +1455,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if hasattr(fenDoc, 'typ'):
             self.ajouterOutils(fenDoc.typ )
+            
             if fenDoc.typ == "prj":
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterEleve,      id=50)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterProf,       id=51)
@@ -1462,6 +1463,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue,      id=53)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterGroupe,      id=54)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.support.AjouterModele,      id=55)
+                
+                for tool in self.tools[fenDoc.typ]:
+                    if tool.GetId() == 50:
+                        tool.SetLabel(u"Ajouter un %s" %getSingulier(fenDoc.projet.getNomEleves()))
+                        tool.SetShortHelp(u"Ajout d'un %s au projet" %getSingulier(fenDoc.projet.getNomEleves()))
+                        tool.SetLongHelp(u"Ajout d'un %s au projet" %getSingulier(fenDoc.projet.getNomEleves()))
+                    elif tool.GetId() == 54:
+                        tool.SetLabel(u"Ajouter un groupe d'%s" %getPluriel(fenDoc.projet.getNomEleves()))
+                        tool.SetShortHelp(u"Ajout d'un groupe d'%s au projet" %getPluriel(fenDoc.projet.getNomEleves()))
+                        tool.SetLongHelp(u"Ajout d'un groupe d'%s au projet" %getPluriel(fenDoc.projet.getNomEleves()))
                 
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
@@ -4255,7 +4266,6 @@ class PanelPropriete(scrolled.ScrolledPanel):
         pnl.SetSizer(ims)
         pnl.SetupScrolling()
         
- 
 #             ims.SetSize((100,-1))
         self.icones = []
         for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
@@ -9962,6 +9972,27 @@ class PanelPropriete_Personne(PanelPropriete):
             self.sizer.Add(self.bsizer, (1,0), (1,2), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
             self.ConstruireSelectGrille()
             
+        #
+        # Modèles
+        #
+        if hasattr(self.personne, 'modeles'):
+            box = myStaticBox(self, -1, u"Modèles numériques")
+            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+            pnl = scrolled.ScrolledPanel(self, -1, style = wx.VSCROLL)
+            s = wx.BoxSizer(wx.HORIZONTAL)
+            pnl.SetSizer(s)
+            pnl.SetupScrolling()
+            lb = wx.CheckListBox(pnl, -1)
+            s.Add(lb, 0)
+#             self.Bind(wx.EVT_LISTBOX, self.EvtListBox, lb)
+            self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, lb)
+#             lb.SetSelection(0)
+            self.lb = lb
+            bsizer.Add(pnl, 1, flag = wx.EXPAND|wx.ALL, border = 3)
+            self.sizer.Add(bsizer, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+            
+            pnl.FitInside()
+        
             
         #
         # Portrait
@@ -10208,7 +10239,13 @@ class PanelPropriete_Personne(PanelPropriete):
         self.personne.GetDocument().SetReferent(self.personne, event.IsChecked())
         self.sendEvent(modif = u"Changement de status (référent) du professeur")
 
-
+    #############################################################################            
+    def EvtCheckListBox(self, event):
+        index = event.GetSelection()
+#         label = self.lb.GetString(index)
+        self.personne.modeles.append(self.personne.GetDocument().support.modeles[index].id)
+        self.sendEvent(modif = u"Modification des modèles associés à l'%s" %getSingulier(self.personne.GetDocument().getNomEleves()))
+        
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
         if hasattr(self.personne, 'grille'):
@@ -10233,6 +10270,14 @@ class PanelPropriete_Personne(PanelPropriete):
             for k, select in self.SelectGrille.items():
                 select.SetPath(toSystemEncoding(self.personne.grille[k].path), marquerModifier = marquerModifier)
 #            self.OnPathModified()
+
+        if hasattr(self, 'lb'):
+            self.lb.Set(self.personne.GetDocument().support.GetIntitModeles())
+            for i, m in enumerate(self.personne.GetDocument().support.modeles):
+                if m.id in self.personne.modeles:
+                    self.lb.Check(i)
+            self.lb.Refresh()
+
         if sendEvt:
             self.sendEvent()
 
@@ -10822,18 +10867,40 @@ class PanelPropriete_Modele(PanelPropriete):
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, textctrl)
         
         
+        
+        #
+        # Logiciel ArbreLogiciels
+        #
+        titre = myStaticBox(self, -1, u"Logiciel utilisé")
+        titre.SetMinSize((180, 100))
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        te = ArbreLogiciels(self, self)
+        
+        sb.Add(te, 1, flag = wx.EXPAND)
+        
+#         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
+ 
+#         te.SetStringSelection(self.modele)
+
+        self.sizer.Add(sb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        self.cb_type = te
+        
+        
+        
         #
         # Lien
         #
         lsizer = self.CreateLienSelect(self)
-        self.sizer.Add(lsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(lsizer, (1,0), (1,2), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        
         
         
         #
         # Image
         #
         isizer = self.CreateImageSelect(self, titre = u"Image du modèle")
-        self.sizer.Add(isizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(isizer, (0,2), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
 
         
         #
@@ -10854,7 +10921,7 @@ class PanelPropriete_Modele(PanelPropriete):
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        self.sizer.Add(dbsizer, (0,2), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(dbsizer, (0,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
@@ -10889,7 +10956,7 @@ class PanelPropriete_Modele(PanelPropriete):
         
     #############################################################################            
     def GetDocument(self):
-        return self.modele.parent
+        return self.modele.GetDocument()
     
     
     #############################################################################            
@@ -10932,6 +10999,9 @@ class PanelPropriete_Modele(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
 #        print "MiseAJour panelPropriete modele"
         self.textctrl.ChangeValue(self.modele.intitule)
+        self.cb_type.CheckItems(self.modele.logiciels)
+        
+        
         if sendEvt:
             self.sendEvent()
         self.MiseAJourLien()
@@ -10945,8 +11015,14 @@ class PanelPropriete_Modele(PanelPropriete):
 #         self.btnlien.Show(len(self.support.lien.path) > 0)
         self.selec.MiseAJour()
         self.Layout()
+    
+    
+    ######################################################################################  
+    def OnCheckModele(self):
+        self.modele.logiciels = self.cb_type.GetAllChecked()
         
-        
+        self.sendEvent(modif = u"Modification du logiciel du Modèle",
+                       obj = self.modele)
         
 
 ####################################################################################
@@ -12954,7 +13030,6 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
 #   Classe définissant l'arbre de sélection du type d'enseignement
 #
 ####################################################################################*
-
 class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def __init__(self, parent, panelParent, 
                  pos = wx.DefaultPosition,
@@ -12989,7 +13064,7 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
         """ Construction de l'arbre
         """
 #        print "Construire ArbreTypeEnseignement"
-#        print ARBRE_REF
+#         print ARBRE_REF
         self.branche = []
 #        self.ExpandAll()
         for t, st in ARBRE_REF:
@@ -13051,6 +13126,211 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     ######################################################################################              
     def OnClick(self, event = None, item = None):
 #        print "OnClick"
+        if item == None:
+            item = event.GetItem()
+        else:
+            self.SelectItem(item)
+            
+        if item.GetParent()== self.root:
+            self.Freeze()
+            self.CollapseAll()
+            self.Expand(item)
+            self.AdjustMyScrollbars()
+            self.ScrollLines(1)
+            self.ScrollLines(-1)
+            self.Thaw()
+#            self.Scroll()
+
+
+    ######################################################################################              
+    def CollapseAll(self):
+#        print "CollapseAll"
+        child = self.GetFirstChild(self.root)[0]
+        while child:
+            self.Collapse(child)
+#            self.CalculatePositions()
+            child = self.GetNextSibling(child)
+        self.RefreshSubtree(self.root)
+#        self.GetMainWindow().AdjustMyScrollbars()
+#        self.GetMainWindow().Layout()
+
+
+
+####################################################################################
+#
+#   Classe définissant l'arbre de sélection du logiciel d'un Modèle
+#
+####################################################################################*
+class ArbreLogiciels(CT.CustomTreeCtrl):
+    def __init__(self, parent, panelParent, 
+                 pos = wx.DefaultPosition,
+                 size = wx.DefaultSize,
+                 style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
+
+#        wx.Panel.__init__(self, parent, -1, pos, size)
+        
+        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150, -1), style, 
+                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
+                                   |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
+                                   |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
+        
+        self.dic_img = {}
+        il = wx.ImageList(16, 16)
+        for i, (n, img) in enumerate(IMG_LOGICIELS.items()):
+            il.Add(scaleImage(img.GetBitmap(), 16,16))
+            self.dic_img[n] = i
+        self.AssignImageList(il)
+        
+        
+        self.Unbind(wx.EVT_KEY_DOWN)
+        self.panelParent = panelParent
+#        self.SetBackgroundColour(wx.WHITE)
+        self.SetToolTip(wx.ToolTip(u"Choisir le logiciel"))
+        
+        self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnCheck)
+        
+#         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnClick)
+        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+#        self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsed)
+        
+#        self.AddColumn(u"")
+#        self.SetMainColumn(0)
+        self.root = self.AddRoot("r")
+        self.Construire(self.root)
+        
+        
+    ######################################################################################  
+    def Construire(self, racine):
+        """ Construction de l'arbre
+        """
+#         print "Construire ArbreLogiciel"
+    
+        def appendBranche(branche, t):
+            if t[0] == ".":
+                ct = 2
+            elif t[0] == "x":
+                ct = 1
+            t = t[1:]
+            
+            
+            b = self.AppendItem(branche, t, ct_type=ct)
+         
+            if t in self.dic_img.keys():
+                self.SetItemImage(b, self.dic_img[t])
+                
+                
+#             self.branche.append(b)
+            return b
+            
+            
+        self.branche = []
+#        self.ExpandAll()
+        for t, st in LOGICIELS:
+#             print "   ", t, st
+            
+            if t[0] == "_":
+                branche = self.AppendItem(racine, t)
+            else:
+                branche = appendBranche(racine, t)
+#                 branche = self.AppendItem(racine, t, ct_type=ct, image = self.arbre.images["Seq"])
+# #                 rb = wx.RadioButton(self, -1, t)
+# #                 self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
+# #                 self.SetItemWindow(branche, rb)
+# #                 rb.SetToolTipString(t)
+#                 self.branche.append(branche)
+                
+            for sst in st:
+                appendBranche(branche, sst)
+#                 sbranche = self.AppendItem(branche, u"")#, ct_type=2)
+#                 rb = wx.RadioButton(self, -1, sst)
+#                 self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
+#                 self.SetItemWindow(sbranche, rb)
+#                 rb.SetToolTipString(sst)
+#                 self.branche.append(sbranche)
+        
+        self.ExpandAll()
+        self.CollapseAll()
+        
+    
+    ######################################################################################              
+    def GetAllChecked(self, itemParent=None, checkedItems=None):
+        """
+            source : https://stackoverflow.com/questions/26466551/how-to-get-the-checked-items-of-customtreectrl-in-wxpython
+        """ 
+        if itemParent is None:
+            itemParent = self.GetRootItem()
+
+        if checkedItems is None:
+            checkedItems = []
+
+        child, cookie = self.GetFirstChild(itemParent)
+
+        while child:
+
+            if self.IsItemChecked(child):
+                checkedItems.append(child.GetText())
+
+                checkedItems = self.GetAllChecked(child, checkedItems)
+            child, cookie = self.GetNextChild(itemParent, cookie)
+
+        return checkedItems
+    
+    
+    ######################################################################################              
+    def CheckItems(self, listItems, itemParent=None):
+        """
+        """ 
+#         print "CheckItems", listItems
+        if itemParent is None:
+            itemParent = self.GetRootItem()
+        else:
+            itemParent.Enable()
+            
+        child, cookie = self.GetFirstChild(itemParent)
+
+        while child:
+            if child.GetText() in listItems:
+                child.Check()
+                child.Expand()
+            self.CheckItems(listItems, child)
+            child, cookie = self.GetNextChild(itemParent, cookie)
+
+
+    
+    ######################################################################################              
+    def EvtRadioBox(self, event):
+        wnd = event.GetEventObject()
+        self.panelParent.EvtRadioBox(wnd.GetLabel())
+        
+        
+#     ######################################################################################              
+#     def SetStringSelection(self, label):
+#         for rb in self.branche:
+#             if isinstance(rb.GetWindow(), wx.RadioButton) and label == rb.GetWindow().GetLabel():
+#                 rb.GetWindow().SetValue(True)
+          
+    
+    ######################################################################################              
+    def OnToolTip(self, event = None, item = None):
+        node = event.GetItem()
+        data = self.GetPyData(node)
+        if isstring(data):
+            event.SetToolTip(wx.ToolTip(data))
+        else:
+            event.Skip()
+    
+    ######################################################################################              
+    def OnCheck(self, event = None):
+        
+#         item = event.GetItem()
+#         self.log.write("Item " + self.GetItemText(item) + " Has Been Checked!\n")
+        event.Skip()
+        wx.CallAfter(self.panelParent.OnCheckModele)
+        
+        
+    ######################################################################################              
+    def OnClick(self, event = None, item = None):
+        print "OnClick"
         if item == None:
             item = event.GetItem()
         else:
@@ -13826,7 +14106,8 @@ class URLSelectorCombo(wx.Panel):
 
         self.MiseAJour()
         
-        self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
+        if hasattr(self.Parent, 'GetPanelRacine'):
+            self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
         
         
     ##########################################################################################

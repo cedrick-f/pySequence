@@ -644,7 +644,7 @@
         </l_T>
       </d_dicSavoirs>
     </Savoirs_P>
-    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="ETT" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ETT" S_nomGenerique="Connaissances">
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="ETT" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ETT" S_nomGenerique="Savoir(s)">
       <d_dicSavoirs>
         <l_1 S_00="Principes de conception des systèmes de développement durable">
           <d_01>
@@ -898,6 +898,7 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <d_labels>
+    <l_ELEVES S_00="Elève(s)" S_01="Elèves" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
   </d_labels>
   <l_listCompetences S_00="S" />
