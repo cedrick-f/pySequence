@@ -12219,8 +12219,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         if dic == None:
             dic = self.competences.dicCompetences
 
-        clefs = dic.keys()
-        clefs.sort()
+        clefs = constantes.trier(dic.keys())
         for k in clefs:
             b = None
             if dic[k].sousComp != {}:
