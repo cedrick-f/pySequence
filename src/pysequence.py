@@ -10481,8 +10481,23 @@ class Eleve(Personne, ElementBase):
         
 #         self.GetPanelPropriete().MiseAJour()
         return log
-        
-        
+    
+    
+    ######################################################################################  
+    def HasModele(self):
+        return len(self.modeles) > 0
+    
+    
+    ######################################################################################  
+    def AjouterEnleverModele(self, num):
+        idmodel = self.GetDocument().support.modeles[num].id
+        if idmodel in self.modeles:
+            self.modeles.remove(idmodel)
+        else:
+            self.modeles.append(idmodel)
+        self.MiseAJourCodeBranche()
+    
+    
     ######################################################################################  
     def GetEvaluabilite(self, complet = False, compil = False):
         """ Renvoie l'évaluabilité de l'élève
@@ -10734,6 +10749,7 @@ class Eleve(Personne, ElementBase):
     def MiseAJourCodeBranche(self):
         """ Met à jour les tags de durée de projet
             et d'évaluabilité
+            et icône de modèle éventuellement
         """
 #        print "MiseAJourCodeBranche", self
 
@@ -10813,6 +10829,14 @@ class Eleve(Personne, ElementBase):
                 st.SetBackgroundColour(coul)
                 st.SetToolTipString(t)
 
+        #
+        # Icône
+        #
+        if self.HasModele():
+            self.codeBranche.SetImg(constantes.imagesProjet['Mod'].GetBitmap())
+        else:
+            self.codeBranche.DelImg()
+            
         self.codeBranche.LayoutFit()
 
 
@@ -10948,6 +10972,12 @@ class Eleve(Personne, ElementBase):
             for part in dic.keys():
                 self.codeBranche.Add(disc+part)
         
+        self.codeBranche.AddImg()
+        if self.HasModele():
+            self.codeBranche.SetImg(constantes.imagesProjet['Mod'].GetBitmap())
+        else:
+            self.codeBranche.DelImg()
+            
 #        if self.image == None or self.image == wx.NullBitmap:
         image = self.arbre.images[self.code]
 #        else:

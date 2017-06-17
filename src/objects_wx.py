@@ -761,8 +761,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     self.tools[typ].append(self.tb.AddLabelTool(i, tool.label, tool.image, 
                                                                shortHelp = tool.shortHelp, 
                                                                longHelp = tool.longHelp))
-                else:
-                    self.tb.AddSeparator()
+#                 else:
+#                     self.tb.AddSeparator()
 
         
 
@@ -10243,7 +10243,8 @@ class PanelPropriete_Personne(PanelPropriete):
     def EvtCheckListBox(self, event):
         index = event.GetSelection()
 #         label = self.lb.GetString(index)
-        self.personne.modeles.append(self.personne.GetDocument().support.modeles[index].id)
+        self.personne.AjouterEnleverModele(index)
+        
         self.sendEvent(modif = u"Modification des modèles associés à l'%s" %getSingulier(self.personne.GetDocument().getNomEleves()))
         
     #############################################################################            
@@ -10986,7 +10987,7 @@ class PanelPropriete_Modele(PanelPropriete):
     #        self.support.parent.MiseAJourNomsSystemes()
             
             modif = u"Modification de l'intitulé du Modèle"
-            print modif
+            
             if self.onUndoRedo():
                 self.sendEvent(modif = modif)
             else:
@@ -15255,6 +15256,7 @@ class CodeBranche(wx.Panel):
         wx.Panel.__init__(self, arbre, -1)
         sz = wx.BoxSizer(wx.HORIZONTAL)
         self.code = wx.StaticText(self, -1, code)
+        self.img = wx.StaticBitmap(self, -1, wx.NullBitmap)
         sz.Add(self.code)
         self.SetSizerAndFit(sz)
         self.comp = {}
@@ -15283,8 +15285,20 @@ class CodeBranche(wx.Panel):
         self.comp[clef] = wx.StaticText(self, -1, "")
         self.GetSizer().Add(self.comp[clef])
         
+    def AddImg(self):
+        self.GetSizer().Add(self.img)
+
     def SetLabel(self, text):
         self.code.SetLabel(text)
+        self.LayoutFit()
+    
+    def SetImg(self, bmp):
+        bmp = scaleImage(bmp, *constantes.IMG_SIZE_TREE)
+        self.img.SetBitmap(bmp)
+        self.LayoutFit()
+        
+    def DelImg(self):
+        self.img.SetBitmap(wx.NullBitmap)
         self.LayoutFit()
         
     def SetBackgroundColour(self, color):

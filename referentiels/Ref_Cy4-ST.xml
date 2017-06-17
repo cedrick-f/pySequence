@@ -1,0 +1,1580 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" I_maxCI="1" S_AnneeDebut="Sec2" S_Code="Cy4-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Non" S_nomCI="Thème(s) de Séquence" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s) proposée(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94717" />
+    <l_01 S_00="Document d'accompagnement" S_01="http://cache.media.eduscol.education.fr/file/Techno/97/1/RA16_C4_TECH_0_Guide_peda_didac_tech_550971.pdf" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="Collège/Cycle 4" />
+  <l_CentresInterets S_00="Aménager un espace" S_01="Assurer le confort dans une habitation" S_02="Identifier les particularités d'un ouvrage d'art" S_03="Rendre une construction robuste et stable" S_04="Produire, distribuer et convertir une énergie" S_05="Préserver les ressources (économiser l'énergie et préserver l'environnement)" S_06="Programmer un objet" S_07="Acquérir et transmettre des informations ou des données" S_08="Préserver la santé et assister l'homme" S_09="Identifier l'évolution des objets" S_10="Se déplacer sur terre, air, mer" />
+  <l_Enseignement S_00="Cy4-ST" S_01="Cycle 4 - Sciences et technologie" S_02="ST - Collège" S_03="Sciences et Technologie - Collège" />
+  <d_aColNon />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_EPI S_00="EPI" S_01="Enseignement Pratique Interdisciplinaire" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_EPI>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" S_02="EF" S_03="ES" S_04="AE" S_05="EC" />
+    <l_EPI S_00="I" S_01="R" S_02="P" S_03="EF" S_04="ES" S_05="AE" S_06="EC" />
+    <l_P S_00="I" S_01="R" S_02="P" S_03="EF" S_04="ES" S_05="AE" S_06="EC" />
+    <l_AP S_00="I" S_01="R" S_02="EF" S_03="ES" S_04="AE" S_05="EC" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_AE S_00="Auto-éval." S_01="Auto-évaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AE>
+    <l_I S_00="Investigation" S_01="Investigation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_EF S_00="Eval. Form." S_01="Evaluation formative" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_EF>
+    <l_EC S_00="Eval. Conf." S_01="Evaluation par contrat de confiance" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_EC>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_ES S_00="Eval. Som." S_01="Evaluation sommative" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ES>
+  </d_demarches>
+  <d_dicFonctions />
+  <d_dicoCompetences>
+    <Competences_A B_obj="True" B_pre="True" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicCompetences>
+        <Competence_MSOST.2 S_intitule="Utiliser une modélisation et simuler le comportement d’un objet">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MSOST.2.1 S_intitule="Utiliser une modélisation pour comprendre, formaliser, partager, construire, investiguer, prouver.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Outils de description d’un fonctionnement, d’une structure et d’un comportement. " />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.2.1>
+            <Competence_MSOST.2.2 S_intitule="Simuler numériquement la structure et/ou le comportement d’un objet. Interpréter le comportement de l’objet technique et le communiquer en argumentant.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Notions d’écarts entre les attentes fixées par le cahier des charges et les résultats de la simulation." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.2.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MSOST.2>
+        <Competence_MSOST.1 S_intitule="Analyser le fonctionnement et la structure d’un objet">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MSOST.1.6 S_intitule="Mesurer des grandeurs de manière directe ou indirecte. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Instruments de mesure usuels. " S_01="Principe de fonctionnement d’un capteur, d’un codeur, d’un détecteur. " S_02="Nature du signal : analogique ou numérique. " S_03="Nature d’une information : logique ou analogique." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.6>
+            <Competence_MSOST.1.7 S_intitule="Interpréter des résultats expérimentaux, en tirer une conclusion et la communiquer en argumentant.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Notions d’écarts entre les attentes fixées par le cahier des charges et les résultats de l’expérimentation." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.7>
+            <Competence_MSOST.1.4 S_intitule="Identifier le(s) matériau(x), les flux d’énergie et d’information sur un objet et décrire les transformations qui s’opèrent.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Familles de matériaux avec leurs principales caractéristiques. " S_01="Sources d’énergies. " S_02="Chaîne d’énergie. " S_03="Chaîne d’information." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.4>
+            <Competence_MSOST.1.5 S_intitule="Décrire, en utilisant les outils et langages de descriptions adaptés, le fonctionnement, la structure et le comportement des objets.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Outils de description d’un fonctionnement, d’une structure et d’un comportement." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.5>
+            <Competence_MSOST.1.2 S_intitule="Associer des solutions techniques à des fonctions.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Analyse fonctionnelle systémique." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.2>
+            <Competence_MSOST.1.3 S_intitule="Analyser le fonctionnement et la structure d’un objet, identifier les entrées et sorties.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Représentation fonctionnelle des systèmes. " S_01="Structure des systèmes. " S_02="Chaîne d’énergie." S_03="Chaîne d’information." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.3>
+            <Competence_MSOST.1.1 S_intitule="Respecter une procédure de travail garantissant un résultat en respectant les règles de sécurité et d’utilisation des outils mis à disposition.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Procédures, protocoles. " S_01="Ergonomie." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MSOST.1.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MSOST.1>
+        <Competence_DIC.2 S_intitule="Réaliser, de manière collaborative, le prototype d’un objet communicant">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_DIC.2.1 S_intitule="Réaliser, de manière collaborative, le prototype d’un objet pour valider une solution.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Prototypage rapide de structures et de circuits de commande à partir de cartes standard." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.2.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_DIC.2>
+        <Competence_DIC.1 S_intitule="Imaginer des solutions en réponse aux besoins, matérialiser une idée en intégrant une dimension design">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_DIC.1.6 S_intitule="Organiser, structurer et stocker des ressources numériques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Arborescence." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.6>
+            <Competence_DIC.1.7 S_intitule="Présenter à l’oral et à l’aide de supports numériques multimédia des solutions techniques au moment des revues de projet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Outils numériques de présentation." S_01="Charte graphique." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.7>
+            <Competence_DIC.1.4 S_intitule="Participer à l’organisation de projets, la définition des rôles, la planification (se projeter et anticiper) et aux revues de projet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Organisation d’un groupe de projet, rôle des participants, planning, revue de projets." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.4>
+            <Competence_DIC.1.5 S_intitule="Imaginer des solutions pour produire des objets et des éléments de programmes informatiques en réponse au besoin.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Design. " S_01="Innovation et créativité. " S_02="Veille. " S_03="Représentation de solutions (croquis, schémas, algorithmes). " S_04="Réalité augmentée. " S_05="Objets connectés." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.5>
+            <Competence_DIC.1.2 S_intitule="Identifier les conditions, contraintes (normes et règlements) et ressources correspondantes, qualifier et quantifier simplement les performances d’un objet technique existant ou à créer.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Principaux éléments d’un cahier des charges. " />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.2>
+            <Competence_DIC.1.3 S_intitule="Imaginer, synthétiser et formaliser une procédure, un protocole. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Outils numériques de présentation. " S_01="Charte graphique." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.3>
+            <Competence_DIC.1.1 S_intitule="Identifier un besoin (biens matériels ou services) et énoncer un problème technique.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Besoin, contraintes, normalisation. " />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_DIC.1.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_DIC.1>
+        <Competence_OTSCIS.1 S_intitule="Comparer et commenter les évolutions des objets et systèmes">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_OTSCIS.1.4 S_intitule="Élaborer un document qui synthétise ces comparaisons et ces commentaires.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Outils numériques de présentation. " S_01="Charte graphique." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_OTSCIS.1.4>
+            <Competence_OTSCIS.1.1 S_intitule="Regrouper des objets en familles et lignées.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="L’évolution des objets. " S_01="Impacts sociétaux et environnementaux dus aux objets. " S_02="Cycle de vie. " S_03="Les règles d’un usage raisonné des objets communicants respectant la propriété intellectuelle et l’intégrité d’autrui." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_OTSCIS.1.1>
+            <Competence_OTSCIS.1.2 S_intitule="Relier les évolutions technologiques aux inventions et innovations qui marquent des ruptures dans les solutions techniques. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_OTSCIS.1.2>
+            <Competence_OTSCIS.1.3 S_intitule="Comparer et commenter les évolutions des objets en articulant différents points de vue : fonctionnel, structurel, environnemental, technique, scientifique, social, historique, économique.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_OTSCIS.1.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_OTSCIS.1>
+        <Competence_OTSCIS.2 S_intitule="Exprimer sa pensée à l’aide d’outils de description adaptés">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_OTSCIS.2.2 S_intitule="Lire, utiliser et produire, à l’aide d’outils de représentation numérique, des choix de solutions sous forme de dessins ou de schémas.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Outils numériques de description des objets techniques." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_OTSCIS.2.2>
+            <Competence_OTSCIS.2.1 S_intitule="Exprimer sa pensée à l’aide d’outils de description adaptés : croquis, schémas, graphes, diagrammes, tableaux. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Croquis à main levée. " S_01="Différents schémas. " S_02="Carte heuristique. " S_03="Notion d’algorithme." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_OTSCIS.2.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_OTSCIS.2>
+        <Competence_IP.1 S_intitule="Comprendre le fonctionnement d’un réseau informatique">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_IP.1.1 S_intitule="Comprendre le fonctionnement d'un réseau informatique">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Composants d'un réseau, architecture d'un réseau local, moyens de connexion d’un moyen informatique. " S_01="Notion de protocole, d'organisation de protocoles en couche, d'algorithme de routage, Internet." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_IP.1.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_IP.1>
+        <Competence_IP.2 S_intitule="Écrire, mettre au point et exécuter un programme">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_IP.2.3 S_intitule="Écrire un programme dans lequel des actions sont déclenchées par des événements extérieurs.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Notions d’algorithme et de programme. " S_01="Notion de variable informatique. " S_02="Déclenchement d'une action par un événement, séquences d'instructions, boucles, instructions conditionnelles. " S_03="Systèmes embarqués. " S_04="Forme et transmission du signal. " S_05="Capteur, actionneur, interface." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_IP.2.3>
+            <Competence_IP.2.2 S_intitule="Écrire, mettre au point (tester, corriger) et exécuter un programme commandant un système réel et vérifier le comportement attendu.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_IP.2.2>
+            <Competence_IP.2.1 S_intitule="Analyser le comportement attendu d’un système réel et décomposer le problème posé en sous-problèmes afin de structurer un programme de commande.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_IP.2.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_IP.2>
+      </d_dicCompetences>
+    </Competences_A>
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte S_00="O" />
+      <l_asso_type>
+        <Competences_00 B_obj="True" B_pre="True" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
+          <l_asso_contexte />
+          <l_asso_type />
+          <d_dicCompetences>
+            <Competence_MSOST.2 S_intitule="Utiliser une modélisation et simuler le comportement d’un objet">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_MSOST.2.1 S_intitule="Utiliser une modélisation pour comprendre, formaliser, partager, construire, investiguer, prouver.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Outils de description d’un fonctionnement, d’une structure et d’un comportement. " />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.2.1>
+                <Competence_MSOST.2.2 S_intitule="Simuler numériquement la structure et/ou le comportement d’un objet. Interpréter le comportement de l’objet technique et le communiquer en argumentant.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Notions d’écarts entre les attentes fixées par le cahier des charges et les résultats de la simulation." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.2.2>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_MSOST.2>
+            <Competence_MSOST.1 S_intitule="Analyser le fonctionnement et la structure d’un objet">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_MSOST.1.6 S_intitule="Mesurer des grandeurs de manière directe ou indirecte. ">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Instruments de mesure usuels. " S_01="Principe de fonctionnement d’un capteur, d’un codeur, d’un détecteur. " S_02="Nature du signal : analogique ou numérique. " S_03="Nature d’une information : logique ou analogique." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.6>
+                <Competence_MSOST.1.7 S_intitule="Interpréter des résultats expérimentaux, en tirer une conclusion et la communiquer en argumentant.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Notions d’écarts entre les attentes fixées par le cahier des charges et les résultats de l’expérimentation." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.7>
+                <Competence_MSOST.1.4 S_intitule="Identifier le(s) matériau(x), les flux d’énergie et d’information sur un objet et décrire les transformations qui s’opèrent.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Familles de matériaux avec leurs principales caractéristiques. " S_01="Sources d’énergies. " S_02="Chaîne d’énergie. " S_03="Chaîne d’information." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.4>
+                <Competence_MSOST.1.5 S_intitule="Décrire, en utilisant les outils et langages de descriptions adaptés, le fonctionnement, la structure et le comportement des objets.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Outils de description d’un fonctionnement, d’une structure et d’un comportement." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.5>
+                <Competence_MSOST.1.2 S_intitule="Associer des solutions techniques à des fonctions.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Analyse fonctionnelle systémique." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.2>
+                <Competence_MSOST.1.3 S_intitule="Analyser le fonctionnement et la structure d’un objet, identifier les entrées et sorties.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Représentation fonctionnelle des systèmes. " S_01="Structure des systèmes. " S_02="Chaîne d’énergie." S_03="Chaîne d’information." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.3>
+                <Competence_MSOST.1.1 S_intitule="Respecter une procédure de travail garantissant un résultat en respectant les règles de sécurité et d’utilisation des outils mis à disposition.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Procédures, protocoles. " S_01="Ergonomie." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_MSOST.1.1>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_MSOST.1>
+            <Competence_DIC.2 S_intitule="Réaliser, de manière collaborative, le prototype d’un objet communicant">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_DIC.2.1 S_intitule="Réaliser, de manière collaborative, le prototype d’un objet pour valider une solution.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Prototypage rapide de structures et de circuits de commande à partir de cartes standard." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.2.1>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_DIC.2>
+            <Competence_DIC.1 S_intitule="Imaginer des solutions en réponse aux besoins, matérialiser une idée en intégrant une dimension design">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_DIC.1.6 S_intitule="Organiser, structurer et stocker des ressources numériques.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Arborescence." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.6>
+                <Competence_DIC.1.7 S_intitule="Présenter à l’oral et à l’aide de supports numériques multimédia des solutions techniques au moment des revues de projet.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Outils numériques de présentation." S_01="Charte graphique." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.7>
+                <Competence_DIC.1.4 S_intitule="Participer à l’organisation de projets, la définition des rôles, la planification (se projeter et anticiper) et aux revues de projet.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Organisation d’un groupe de projet, rôle des participants, planning, revue de projets." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.4>
+                <Competence_DIC.1.5 S_intitule="Imaginer des solutions pour produire des objets et des éléments de programmes informatiques en réponse au besoin.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Design. " S_01="Innovation et créativité. " S_02="Veille. " S_03="Représentation de solutions (croquis, schémas, algorithmes). " S_04="Réalité augmentée. " S_05="Objets connectés." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.5>
+                <Competence_DIC.1.2 S_intitule="Identifier les conditions, contraintes (normes et règlements) et ressources correspondantes, qualifier et quantifier simplement les performances d’un objet technique existant ou à créer.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Principaux éléments d’un cahier des charges. " />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.2>
+                <Competence_DIC.1.3 S_intitule="Imaginer, synthétiser et formaliser une procédure, un protocole. ">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Outils numériques de présentation. " S_01="Charte graphique." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.3>
+                <Competence_DIC.1.1 S_intitule="Identifier un besoin (biens matériels ou services) et énoncer un problème technique.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Besoin, contraintes, normalisation. " />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_DIC.1.1>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_DIC.1>
+            <Competence_OTSCIS.1 S_intitule="Comparer et commenter les évolutions des objets et systèmes">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_OTSCIS.1.4 S_intitule="Élaborer un document qui synthétise ces comparaisons et ces commentaires.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Outils numériques de présentation. " S_01="Charte graphique." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_OTSCIS.1.4>
+                <Competence_OTSCIS.1.1 S_intitule="Regrouper des objets en familles et lignées.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="L’évolution des objets. " S_01="Impacts sociétaux et environnementaux dus aux objets. " S_02="Cycle de vie. " S_03="Les règles d’un usage raisonné des objets communicants respectant la propriété intellectuelle et l’intégrité d’autrui." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_OTSCIS.1.1>
+                <Competence_OTSCIS.1.2 S_intitule="Relier les évolutions technologiques aux inventions et innovations qui marquent des ruptures dans les solutions techniques. ">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_OTSCIS.1.2>
+                <Competence_OTSCIS.1.3 S_intitule="Comparer et commenter les évolutions des objets en articulant différents points de vue : fonctionnel, structurel, environnemental, technique, scientifique, social, historique, économique.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_OTSCIS.1.3>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_OTSCIS.1>
+            <Competence_OTSCIS.2 S_intitule="Exprimer sa pensée à l’aide d’outils de description adaptés">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_OTSCIS.2.2 S_intitule="Lire, utiliser et produire, à l’aide d’outils de représentation numérique, des choix de solutions sous forme de dessins ou de schémas.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Outils numériques de description des objets techniques." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_OTSCIS.2.2>
+                <Competence_OTSCIS.2.1 S_intitule="Exprimer sa pensée à l’aide d’outils de description adaptés : croquis, schémas, graphes, diagrammes, tableaux. ">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Croquis à main levée. " S_01="Différents schémas. " S_02="Carte heuristique. " S_03="Notion d’algorithme." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_OTSCIS.2.1>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_OTSCIS.2>
+            <Competence_IP.1 S_intitule="Comprendre le fonctionnement d’un réseau informatique">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_IP.1.1 S_intitule="Comprendre le fonctionnement d'un réseau informatique">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Composants d'un réseau, architecture d'un réseau local, moyens de connexion d’un moyen informatique. " S_01="Notion de protocole, d'organisation de protocoles en couche, d'algorithme de routage, Internet." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_IP.1.1>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_IP.1>
+            <Competence_IP.2 S_intitule="Écrire, mettre au point et exécuter un programme">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp>
+                <Competence_IP.2.3 S_intitule="Écrire un programme dans lequel des actions sont déclenchées par des événements extérieurs.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos S_00="Notions d’algorithme et de programme. " S_01="Notion de variable informatique. " S_02="Déclenchement d'une action par un événement, séquences d'instructions, boucles, instructions conditionnelles. " S_03="Systèmes embarqués. " S_04="Forme et transmission du signal. " S_05="Capteur, actionneur, interface." />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_IP.2.3>
+                <Competence_IP.2.2 S_intitule="Écrire, mettre au point (tester, corriger) et exécuter un programme commandant un système réel et vérifier le comportement attendu.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_IP.2.2>
+                <Competence_IP.2.1 S_intitule="Analyser le comportement attendu d’un système réel et décomposer le problème posé en sous-problèmes afin de structurer un programme de commande.">
+                  <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_indicateurs />
+                  <l_infos />
+                  <d_poids />
+                  <d_sousComp />
+                  <l_thematiques />
+                </Competence_IP.2.1>
+              </d_sousComp>
+              <l_thematiques />
+            </Competence_IP.2>
+          </d_dicCompetences>
+        </Competences_00>
+      </l_asso_type>
+      <d_dicCompetences>
+        <Competence_CT4 S_intitule="Pratiquer des langages">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT4.1 S_intitule="Décrire, en utilisant les outils et langages de descriptions adaptés, la structure et le comportement des objets.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.4" S_01="MSOST.1.5" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT4.1>
+            <Competence_CT4.2 S_intitule="Appliquer les principes élémentaires de l’algorithmique et du codage à la résolution d’un problème simple.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="IP.2.3" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT4.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT4>
+        <Competence_CT5 S_intitule="Mobiliser des outils numériques">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT5.5 S_intitule="Modifier ou paramétrer le fonctionnement d’un objet communicant.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="IP.2.3" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.5>
+            <Competence_CT5.4 S_intitule="Piloter un système connecté localement ou à distance.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="IP.2.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.4>
+            <Competence_CT5.1 S_intitule="Simuler numériquement la structure et/ou le comportement d’un objet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="MSOST.2.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.1>
+            <Competence_CT5.3 S_intitule="Lire, utiliser et produire des représentations numériques d’objets.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.2.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.3>
+            <Competence_CT5.2 S_intitule="Organiser, structurer et stocker des ressources numériques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.6" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT5>
+        <Competence_CT6 S_intitule="Adopter un comportement éthique et responsable">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT6.2 S_intitule="Analyser l’impact environnemental d’un objet et de ses constituants.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT6.2>
+            <Competence_CT6.3 S_intitule="Analyser le cycle de vie d’un objet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT6.3>
+            <Competence_CT6.1 S_intitule="Développer les bonnes pratiques de l’usage des objets communicants.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.3" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT6.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT6>
+        <Competence_CT7 S_intitule="Se situer dans l’espace et dans le temps">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT7.2 S_intitule="Relier les évolutions technologiques aux inventions et innovations qui marquent des ruptures dans les solutions techniques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT7.2>
+            <Competence_CT7.1 S_intitule="Regrouper des objets en familles et lignées.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT7.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT7>
+        <Competence_CT1 S_intitule="Pratiquer des démarches scientifiques et technologiques">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT1.1 S_intitule="Imaginer, synthétiser, formaliser et respecter une procédure, un protocole. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.3" S_01="MSOST.1.1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT1.1>
+            <Competence_CT1.3 S_intitule="Rechercher des solutions techniques à un problème posé, expliciter ses choix et les communiquer en argumentant. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.5" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT1.3>
+            <Competence_CT1.2 S_intitule="Mesurer des grandeurs de manière directe ou indirecte. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="MSOST.1.6" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT1.2>
+            <Competence_CT1.4 S_intitule="Participer à l’organisation et au déroulement de projets.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.4" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT1.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT1>
+        <Competence_CT2 S_intitule="Concevoir, créer, réaliser">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT2.6 S_intitule="Réaliser, de manière collaborative, le prototype de tout ou partie d’un objet pour valider une solution.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.2.1" S_01="MSOST.1.1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.6>
+            <Competence_CT2.7 S_intitule="Imaginer, concevoir et programmer des applications informatiques nomades.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.5" S_01="IP.2.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.7>
+            <Competence_CT2.4 S_intitule="Associer des solutions techniques à des fonctions.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="MSOST.1.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.4>
+            <Competence_CT2.5 S_intitule="Imaginer des solutions en réponse au besoin.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.5" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.5>
+            <Competence_CT2.2 S_intitule="Identifier le(s) matériau(x), les flux d’énergie et d’information dans le cadre d’une production technique sur un objet et décrire les transformations qui s’opèrent.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="MSOST.1.4" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.2>
+            <Competence_CT2.3 S_intitule="S’approprier un cahier des charges.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.3>
+            <Competence_CT2.1 S_intitule="Identifier un besoin et énoncer un problème technique, identifier les conditions, contraintes (normes et règlements) et ressources correspondantes.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.1" S_01="DIC.1.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT2>
+        <Competence_CT3 S_intitule="S'approprier des outils et des méthodes">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT3.3 S_intitule="Présenter à l’oral et à l’aide de supports numériques multimédia des solutions techniques au moment des revues de projet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.7" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.3>
+            <Competence_CT3.2 S_intitule="Traduire, à l’aide d’outils de représentation numérique, des choix de solutions sous forme de croquis, de dessins ou de schémas.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.5" S_01="OTSCIS.2.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.2>
+            <Competence_CT3.1 S_intitule="Exprimer sa pensée à l’aide d’outils de description adaptés : croquis, schémas, graphes, diagrammes, tableaux (représentations non normées).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.2.1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT3>
+      </d_dicCompetences>
+    </Competences_S>
+    <Competences_C B_obj="False" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) spécifique(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicCompetences>
+        <Competence_CS5 S_intitule="">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CS5.6 S_intitule="Comprendre le fonctionnement d’un réseau informatique.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CS5.6>
+            <Competence_CS5.7 S_intitule="Analyser le comportement attendu d’un système réel et décomposer le problème posé en sous-problèmes afin de structurer un programme de commande.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CS5.7>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CS5>
+        <Competence_CS1 S_intitule="">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CS1.5 S_intitule="Respecter une procédure de travail garantissant un résultat en respectant les règles de sécurité et d’utilisation des outils mis à disposition.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CS1.5>
+            <Competence_CS1.6 S_intitule="Analyser le fonctionnement et la structure d’un objet, identifier les entrées et sorties.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CS1.6>
+            <Competence_CS1.7 S_intitule="Interpréter des résultats expérimentaux, en tirer une conclusion et la communiquer en argumentant.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CS1.7>
+            <Competence_CS1.8 S_intitule="Utiliser une modélisation pour comprendre, formaliser, partager, construire, investiguer, prouver.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CS1.8>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CS1>
+      </d_dicCompetences>
+    </Competences_C>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
+    <Savoirs_S B_obj="False" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Connaissances &amp; Capacités">
+      <d_dicSavoirs />
+    </Savoirs_S>
+  </d_dicoSavoirs>
+  <d_domaines>
+    <l_S S_00="Systèmes" S_01="Les systèmes naturels et les systèmes techniques" S_02="">
+      <l_03 I_00="153" I_01="51" I_02="0" />
+    </l_S>
+    <l_R S_00="Représentations" S_01="Les représentations du monde et l'activité humaine" S_02="">
+      <l_03 I_00="255" I_01="102" I_02="0" />
+    </l_R>
+    <l_L S_00="Languages" S_01="Les langages pour penser et communiquer" S_02="">
+      <l_03 I_00="0" I_01="128" I_02="0" />
+    </l_L>
+    <l_O S_00="Méthodes" S_01="Les méthodes et outils pour apprendre" S_02="">
+      <l_03 I_00="255" I_01="0" I_02="0" />
+    </l_O>
+    <l_F S_00="Formation" S_01="La formation de la personne et du citoyen" S_02="">
+      <l_03 I_00="0" I_01="102" I_02="204" />
+    </l_F>
+  </d_domaines>
+  <d_effectifs>
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_D>
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_G>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_S />
+    <l_R />
+    <l_EPI S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_SA S_00="C" S_01="G" />
+  </d_effectifsSeance>
+  <d_horsClasse />
+  <d_labels>
+    <l_ELEVES S_00="élève(s)" S_01="élèves" />
+    <l_SEQINT S_00="Problématiques proposées" S_01="Problématiques proposées" />
+  </d_labels>
+  <l_listCompetences S_00="S" S_01="C" S_02="A" />
+  <l_listProblematiques>
+    <l_00 S_00="Comment aménager une salle de spectacle accueillant tout public et en toute sécurité ?" S_01="Comment aménager un terrain de camping avec des mobilhomes ?" S_02="Comment aménager un stade ?" S_03="Comment aménager un espace urbain ?" S_04="Comment raccorder une route secondaire à une voie rapide ?" S_05="Comment intégrer un ouvrage bruyant en milieu urbain ?" />
+    <l_01 S_00="Comment programmer un éclairage automatique ?" S_01="Comment assurer la régulation d'une température ?" S_02="Comment contrôler un habitat à distance, gérer l’énergie et assurer la sécurité ?" S_03="Comment assurer la protection d'un bien par un système anti-intrusion ?" S_04="Comment assurer la sécurité incendie dans une habitation ?" />
+    <l_02 S_00="Quelles sont les particularités de l'habitat régional ?" S_01="Quelles sont les particularités d'un éco-quartier ?" S_02="Comment concevoir une ligne ferroviaire ?" S_03="Quels sont les ouvrages qui permettent de capter, traiter et distribuer l'eau ?" S_04="Comment fonctionne une écluse ?" S_05="Comment réaliser un mur de soutainement ?" S_06="Comment assurer la stabilité d'un voute ?" S_07="Pourquoi concevoir une structure en treillis ?" S_08="Comment rendre robuste et stable un pont ?" S_09="Comment intégrer un ouvrage virtuel dans son environnement réel ?" S_10="Comment produire et stocker de l'énergie électrique ?" S_11="Comment transformer la ressource solaire en énergie électrique ou thermique ?" S_12="Quel est le cheminement de l'énergie dans un système ?" S_13="Comment est alimenté le TGV ?" S_14="Comment une voiture hybride fonctionne-t-elle ?" S_15="Comment prélever et utiliser l'énergie géothermique ?" S_16="Comment le choix d'un matériau permet-il de réduire l'impact environnemental ?" S_17="Comment limiter l'impact  des eaux usées sur l'environnement ?" S_18="Comment traiter et utiliser les eaux pluviales ?" S_19="Comment optimiser l'apport solaire dans l'architecture d'une maison ?" S_20="Par quoi et comment programmer un objet technique ?" S_21="Comment travailler dans un milieu hostile à la place de l'homme ?" S_22="Comment rendre automatique le fonctionnement d'un système ?" S_23="Comment piloter un objet technique avec un smartphone ?" S_24="Comment créer un réseau de données ?" S_25="Comment les objets techniques communiquent-ils sur Internet ?" S_26="Comment calculer les temps d'une course sportive ?" S_27="Comment la reconnaissance gestuelle assiste-t-elle l'homme ?" S_28="Quelles fonctions supplémentaires apporte un textile intelligent ?" S_29="Comment la technologie facilite t'elle notre alimentation ?" S_30="Comment le contexte historique et géographique influe-t-il sur la conception ?" S_31="De quelle façon les objets techniques évoluent dans le temps ?" S_32="Comment le confort et la sécurité font évoluer les objets techniques ?" S_33="Comment la sustentation d'un avion est-elle réalisée ?" S_34="Comment un objet technique permet d'augmenter notre vitesse de déplacement ?" S_35="Comment se développent les transports maritimes et fluviaux ?" />
+    <l_03 />
+    <l_04 />
+    <l_05 />
+    <l_06 />
+    <l_07 />
+    <l_08 />
+    <l_09 />
+    <l_10 />
+  </l_listProblematiques>
+  <l_listSavoirs S_00="S" />
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" S_03="EF" S_04="ES" S_05="AE" S_06="EC" />
+  <l_listeDomaines S_00="L" S_01="O" S_02="F" S_03="S" S_04="R" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeThematiques S_00="DIC" S_01="OTSCIS" S_02="MSOST" S_03="IP" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="EPI" />
+  <l_listeTypeHorsClasse />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="EPI" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" S_09="R" S_10="S" />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="3" S_00="5_ème" />
+    <l_01 I_01="3" S_00="4_ème" />
+    <l_02 I_01="3" S_00="3_ème" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets />
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_EPI S_00="EPI" S_01="Enseignement Pratique Interdisciplinaire" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_EPI>
+    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_TD>
+    <l_SA S_00="Bilan" S_01="Bilan d'Activité ou de Séance" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SA>
+  </d_seances>
+  <d_thematiques>
+    <l_IP S_00="Informatique et Programmation" S_01="L'informatique et la programmation" S_02="">
+      <l_03 I_00="0" I_01="255" I_02="0" />
+    </l_IP>
+    <l_MSOST S_00="Modélisation et Simulation" S_01="La modélisation et la simulation des objets et systèmes techniques" S_02="">
+      <l_03 I_00="255" I_01="128" I_02="128" />
+    </l_MSOST>
+    <l_OTSCIS S_00="Objets techniques et Services" S_01="Les objets techniques, les services et les changements induits dans la société" S_02="">
+      <l_03 I_00="153" I_01="204" I_02="255" />
+    </l_OTSCIS>
+    <l_DIC S_00="Design, innovation et créativité" S_01="Design, innovation et créativité" S_02="">
+      <l_03 I_00="255" I_01="255" I_02="0" />
+    </l_DIC>
+  </d_thematiques>
+  <l_tr_com />
+</Referentiel>
