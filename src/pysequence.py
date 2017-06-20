@@ -9949,6 +9949,9 @@ class Modele(ElementAvecLien, ElementBase):
             Id = support.GetNewModeleId()
         self.id = Id
     
+    ######################################################################################  
+    def __repr__(self):
+        return self.intitule
     
     ######################################################################################  
     def GetApp(self):
@@ -9962,6 +9965,10 @@ class Modele(ElementAvecLien, ElementBase):
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Modele(parent, self)
     
+    
+    ######################################################################################  
+    def GetLogosLogiciels(self):
+        return {l : constantes.IMG_LOGICIELS[l].GetBitmap() for l in self.logiciels if l in constantes.IMG_LOGICIELS.keys()}
     
     
     ######################################################################################  
@@ -10489,8 +10496,19 @@ class Eleve(Personne, ElementBase):
     
     
     ######################################################################################  
+    def GetModele(self, num):
+#         print "GetModele", num
+#         print "   ",self.GetDocument().support.modeles[num-1]
+        return self.GetDocument().support.modeles[num]
+    
+    ######################################################################################  
+    def GetModeles(self):
+#         print "GetModeles", self.modeles
+        return [self.GetModele(num-1) for num in self.modeles]
+    
+    ######################################################################################  
     def AjouterEnleverModele(self, num):
-        idmodel = self.GetDocument().support.modeles[num].id
+        idmodel = self.GetModele(num).id
         if idmodel in self.modeles:
             self.modeles.remove(idmodel)
         else:
@@ -10959,7 +10977,17 @@ class Eleve(Personne, ElementBase):
             for disc in prj._dicoIndicateurs.keys():
                 for t in keys[disc]:
                     self.tip.AjouterCol("le", t, size = 2) 
-
+            
+            for i, m in enumerate(self.GetModeles()):
+                print "mod", m
+                for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
+                    h = u"<p>" + l + u"</p>"
+                    idx = "log"+str(i)+"."+str(j)
+                    h +=u'<img id="%s" src="" alt="">' %idx
+                    print "   ", h
+                    self.tip.AjouterHTML('mod', h)
+                    self.tip.AjouterImg(idx, bmp)
+            
             self.tip.SetPage()
             
 

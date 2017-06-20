@@ -819,6 +819,7 @@ BASE_FICHE_HTML_ELEVE = u"""
             {{tableau}}
         </tbody>
     </table>
+    <div id="mod">Modèles :</div>
 </HTML>
 """
 

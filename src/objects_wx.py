@@ -15256,7 +15256,7 @@ class CodeBranche(wx.Panel):
         wx.Panel.__init__(self, arbre, -1)
         sz = wx.BoxSizer(wx.HORIZONTAL)
         self.code = wx.StaticText(self, -1, code)
-        self.img = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        
         sz.Add(self.code)
         self.SetSizerAndFit(sz)
         self.comp = {}
@@ -15286,6 +15286,7 @@ class CodeBranche(wx.Panel):
         self.GetSizer().Add(self.comp[clef])
         
     def AddImg(self):
+        self.img = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.GetSizer().Add(self.img)
 
     def SetLabel(self, text):

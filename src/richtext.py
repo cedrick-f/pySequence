@@ -76,19 +76,28 @@ typesImg = {".bmp" : wx.BITMAP_TYPE_BMP,
             ".ico" : wx.BITMAP_TYPE_ICO}
 
 
-        
+bulletNames = ["standard/circle",
+               "standard/square",
+               "standard/diamond",
+               "standard/triangle"]
+    
         
 class RichTextCtrl(ToolTip, rt.RichTextCtrl): 
     def __init__(self, *args, **kargs):
         rt.RichTextCtrl.__init__(self, *args, **kargs)
         self.initToolTip()
-        
+
+
 class RichTextPanel(wx.Panel):
     def __init__(self, parent, objet, toolBar = False, size = wx.DefaultSize):
         wx.Panel.__init__(self, parent, -1, style = wx.BORDER_SUNKEN)
         
         self.objet = objet
         
+        # Constantes
+        self.indent = 50
+        self.subindent = 30
+        self.bullet = u"\u25CF" 
         
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         
@@ -198,6 +207,22 @@ class RichTextPanel(wx.Panel):
         
     def setObjet(self, objet):
         self.objet = objet
+        
+    
+    def SetTexteXML(self, text = None):
+        from constantes import xmlVide
+        out = cStringIO.StringIO()
+        handler = rt.RichTextXMLHandler()
+        buff = self.rtc.GetBuffer()
+    
+        if text == None:
+            out.write(xmlVide)
+        else:
+            out.write(text)
+        
+        out.seek(0)
+        handler.LoadStream(buff, out)
+        self.rtc.Refresh()
         
     def Ouvrir(self):
         u""" Rempli la zone de texte avec le contenu de objet.description
@@ -313,8 +338,16 @@ class RichTextPanel(wx.Panel):
             if self.rtc.HasSelection():
                 r = self.rtc.GetSelectionRange()
 
-            attr.SetLeftIndent(attr.GetLeftIndent() + 100)
-            attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
+            if self.estListPuce():
+                si = self.subindent
+                
+            else:
+                si = 0
+                
+            i = (self.GetActualLeftIndent(attr)+1)*self.indent
+            attr.SetLeftIndent(i, si)
+            attr.SetFlags(attr.GetFlags() |wx.TEXT_ATTR_LEFT_INDENT)
+            attr.SetBulletName(self.GetActualBulletName(attr))
             self.rtc.SetStyle(r, attr)
        
         
@@ -327,11 +360,279 @@ class RichTextPanel(wx.Panel):
             if self.rtc.HasSelection():
                 r = self.rtc.GetSelectionRange()
 
-        if attr.GetLeftIndent() >= 100:
-            attr.SetLeftIndent(attr.GetLeftIndent() - 100)
-            attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
-            self.rtc.SetStyle(r, attr)
+            if self.estListPuce():
+                si = self.subindent
+                
+            else:
+                si = 0
             
+            i = max(0, (self.GetActualLeftIndent(attr)-1)*self.indent)
+            
+            attr.SetLeftIndent(i, si)
+            attr.SetFlags(attr.GetFlags() |wx.TEXT_ATTR_LEFT_INDENT)
+            attr.SetBulletName(self.GetActualBulletName(attr))
+            self.rtc.SetStyle(r, attr)
+    
+    
+    def estListPuce(self):
+        attr = rt.RichTextAttr()
+        ip = self.rtc.GetInsertionPoint()
+        if self.rtc.GetStyle(ip, attr):
+            return attr.GetBulletStyle() != wx.TEXT_ATTR_BULLET_STYLE_NONE
+        return False
+    
+    
+#     def GetParagraphs(self):
+#         if self.rtc.HasSelection():
+#             ds = self.rtc.GetSelectionRange()[0]
+#         else:
+#             ds = self.rtc.GetInsertionPoint()
+#         
+#         self.rtc.MoveToParagraphEnd()
+#         f = self.rtc.GetCaretPosition()
+#         
+#         self.rtc.MoveCaret(ds-1)
+#         self.rtc.MoveToParagraphStart()
+#         d = self.rtc.GetCaretPosition()
+#         
+#         print "GetParagraphs", d, f 
+#         return d, f
+# #         return rt.RichTextRange(d, f)
+#     
+#     def GetParagraphsStarts(self):
+#         d, f = self.GetParagraphs()
+#         l = []
+#         n = d
+#         while n < f:
+#             l.append(n)
+#             print "   ", n,
+#             self.rtc.MoveToParagraphEnd()
+#             n = self.rtc.GetCaretPosition()+1
+#             self.rtc.MoveCaret(n)
+#             print ">>>", n
+#         if l == []:
+#             l.append(d)
+#         print "GetParagraphsStarts", l
+#         return l
+#     
+#     
+#     def GetParagraphsEnds(self):
+#         d, f = self.GetParagraphs()
+#         l = []
+#         n = d
+#         while n < f:
+#             print "   ", n,
+#             self.rtc.MoveToParagraphEnd()
+#             n = self.rtc.GetCaretPosition()+1
+#             self.rtc.MoveCaret(n)
+#             l.append(n)
+#             print ">>>", n
+#         if l == []:
+#             l.append(d)
+#         print "GetParagraphsEnds", l
+#         return l
+#     
+#     
+#     def CutParagraphsTexts(self):
+#         l = self.GetParagraphsStarts()
+#         t = []
+#         for d in l:
+#             self.rtc.MoveCaret(d)
+#             self.rtc.MoveToParagraphEnd()
+#             f = self.rtc.GetCaretPosition()
+#             r = rt.RichTextRange(d+1, f+1)
+#             self.rtc.SetSelectionRange(r)
+#             t.append(self.rtc.GetStringSelection())
+#         print t
+#         r = rt.RichTextRange(l[0], f+1)
+#         self.rtc.SetSelectionRange(r)
+#         self.rtc.Delete(r)
+#         
+#         return t
+#     
+#     def ListPuce2(self):
+#         ip = self.rtc.GetInsertionPoint()
+#         attr = rt.RichTextAttr()
+#         if self.rtc.GetStyle(ip, attr) and attr.BulletStyle > 0: #Ignoring the possibility of numbered lists on purpose (I don't use them in my app)!
+#             # Takes out the list style
+#             self.rtc.MoveToParagraphStart()
+#             start = self.rtc.GetInsertionPoint()
+#             self.rtc.MoveToParagraphEnd()
+#             end = self.rtc.GetInsertionPoint()
+#             r = rt.RichTextRange(start, end)
+#             attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE | wx.TEXT_ATTR_BULLET_NUMBER | wx.TEXT_ATTR_BULLET_TEXT | wx.TEXT_ATTR_BULLET_NAME)
+#             attr.BulletStyle = 0
+#             attr.BulletNumber = 0
+#             attr.BulletText = u''
+#             attr.BulletName = u''
+#             attr.BulletFont = u''
+#             
+#             attr.SetLeftIndent(attr.GetLeftIndent() - self.indent)
+#             attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
+#             
+#             
+#             self.rtc.SetStyle(r, attr)
+#         else:
+#             # Transforms the current paragraph in a bulleted list item
+#             self.rtc.MoveToParagraphStart()
+#             self.rtc.MoveLeft()
+#             start = self.rtc.GetInsertionPoint()
+#             self.rtc.SetSelection(start, start+1)
+#             self.rtc.DeleteSelection()
+#             self.rtc.BeginSymbolBullet(unichr(9679), 100, 60)
+#             self.rtc.Newline()
+#             self.rtc.MoveToParagraphEnd()
+#             self.rtc.EndSymbolBullet()
+#         # Set the insertion point where it was
+#         self.rtc.MoveCaret(ip)
+#         return
+
+
+    def GetActualLeftIndent(self, attr):
+        return attr.GetLeftIndent() // self.indent
+            
+    def GetActualBulletName(self, attr):
+        i = self.GetActualLeftIndent(attr)
+        return bulletNames[i % len(bulletNames)]
+    
+    def ListPuce(self):
+        attr = rt.RichTextAttr()
+#         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
+        ip = self.rtc.GetInsertionPoint()
+#         print "ListPuce", ip
+        
+        if self.rtc.GetStyle(ip, attr):
+            r = rt.RichTextRange(ip, ip)
+            if self.rtc.HasSelection():
+                r = self.rtc.GetSelectionRange()
+            
+            if attr.GetBulletStyle() == wx.TEXT_ATTR_BULLET_STYLE_NONE:
+#                 print " AJOUTER"
+                attr.SetFlags(attr.GetFlags() |wx.TEXT_ATTR_BULLET_STYLE |
+                              wx.TEXT_ATTR_LEFT_INDENT | wx.TEXT_ATTR_PARAGRAPH)
+                attr.SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
+#                                 wx.TEXT_ATTR_BULLET_STYLE_ARABIC |wx.TEXT_ATTR_BULLET_STYLE_ALIGN_LEFT | 
+#                                 wx.TEXT_ATTR_BULLET_STYLE_PERIOD|
+#                                 wx.TEXT_ATTR_BULLET_STYLE_SYMBOL)
+                attr.SetLeftIndent((self.GetActualLeftIndent(attr)+1)*self.indent, self.subindent)
+#                 attr.SetBulletText(self.bullet)
+                attr.SetBulletName(self.GetActualBulletName(attr))
+                self.rtc.SetStyle(r, attr)
+                
+            else:
+#                 print " ENLEVER"
+                attr.SetFlags(attr.GetFlags() |wx.TEXT_ATTR_LEFT_INDENT |
+                              wx.TEXT_ATTR_PARAGRAPH | wx.TEXT_ATTR_BULLET_STYLE)
+                attr.SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_NONE)
+                attr.SetLeftIndent((self.GetActualLeftIndent(attr)-1)*self.indent,0)
+                self.rtc.SetStyle(r, attr)
+
+            
+            return
+
+#             
+#     def ListPuce3(self):
+#         attr = rt.RichTextAttr()
+# #         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
+#         ip = self.rtc.GetInsertionPoint()
+#         print "ListPuce", ip
+#         
+#         if self.rtc.GetStyle(ip, attr):
+# #             r = self.GetParagraphs()
+# #             l = self.GetParagraphsStarts()
+#             
+#             
+#             if not attr.HasBulletStyle():
+#                 print " AJOUTER"
+#                 e = self.GetParagraphsEnds()
+# #                 self.rtc.MoveCaretBack(1)
+#                 self.rtc.BeginSymbolBullet(self.bullet, self.indent, self.subindent)
+#                 for l in e:
+#                     self.rtc.MoveCaret(l-2)
+#                     self.rtc.Newline()
+# #                     ip = self.rtc.GetCaretPosition()
+# # #                     self.rtc.SetInsertionPoint(ip-1)
+# #                     self.rtc.MoveCaretBack(1)
+#                     self.rtc.Delete(rt.RichTextRange(l-1, l))
+#                 self.rtc.EndSymbolBullet()
+#                 
+#             else:
+#                 print " ENLEVER"
+#                 #Takes out the list style
+#                 self.rtc.MoveToParagraphStart()
+#                 start = self.rtc.GetInsertionPoint()
+#                 self.rtc.MoveToParagraphEnd()
+#                 end = self.rtc.GetInsertionPoint()
+#                 r = rt.RichTextRange(start, end)
+#                 
+#                 a = rt.RichTextAttr()
+#                 a.SetFlags(wx.TEXT_ATTR_BULLET_STYLE | wx.TEXT_ATTR_BULLET_NUMBER | wx.TEXT_ATTR_BULLET_TEXT | wx.TEXT_ATTR_BULLET_NAME)
+#                 a.BulletStyle = 0
+#                 a.BulletNumber = 0
+#                 a.BulletText = u''
+#                 a.BulletName = u''
+#                 a.BulletFont = u''
+#                 
+#                 attr.RemoveStyle(a)
+#                 attr.SetLeftIndent(attr.GetLeftIndent() - self.indent)
+#                 attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
+#                 
+#                 attr.RemoveFlag(wx.TEXT_ATTR_BULLET_STYLE | wx.TEXT_ATTR_BULLET_NUMBER | wx.TEXT_ATTR_BULLET_TEXT | wx.TEXT_ATTR_BULLET_NAME)
+#                 self.rtc.SetStyle(r, attr)
+# #                 a = rt.RichTextAttr()
+# #                 a.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
+# #                 attr.SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_NONE)
+# #                 attr.RemoveStyle(a)
+# #                 print attr.GetFlags()
+# #                 e = self.GetParagraphsEnds()
+# #                 s = self.GetParagraphsStarts()
+# #                 attr = rt.RichTextAttr()
+# #                 for d in s:
+# #                     r = rt.RichTextRange(d+2, d+1)
+# #                     self.rtc.SetStyle(r, attr)
+# #                     self.rtc.SetInsertionPoint(l)
+# #                     self.rtc.EndSymbolBullet()
+# #                     self.rtc.Newline()
+# #                     self.rtc.Delete(rt.RichTextRange(l-2, l))
+# #                     self.rtc.Newline()
+# #                     
+# #                     
+#                     
+# #                     self.rtc.Paste()
+#             
+#             
+#             
+#             return
+#             self.rtc.SetSelectionRange(r)
+#             txt = self.rtc.GetStringSelection()
+#             self.rtc.DeleteSelection()
+#             print " >>", txt
+#             
+#             self.rtc.MoveCaret(r.GetStart())
+#             
+#             if not attr.HasBulletStyle():
+#                 self.rtc.BeginSymbolBullet(self.bullet, self.indent, self.subindent)
+# #                 self.rtc.Newline()
+# #                 self.rtc.MoveCaretBack(1)
+#                 for l in txt.split(u"\n"):
+#                     self.rtc.WriteText(l)
+#                     self.rtc.Newline()
+#                 ip = self.rtc.GetInsertionPoint()
+#                 self.rtc.Delete(rt.RichTextRange(ip, ip+1))
+#                 self.rtc.EndSymbolBullet()
+#                 
+#             else:
+#                 for l in txt.split(u"\n"):
+#                     self.rtc.MoveCaretBack(1)
+#                     ip = self.rtc.GetInsertionPoint()
+#                     self.rtc.Delete(rt.RichTextRange(ip, ip+1))
+#                     self.rtc.Newline()
+#                     self.rtc.WriteText(l)
+# #                     self.rtc.Paste()        
+#     
+    
+    
+    
     def ParagraphSpacingMore(self):
         attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
@@ -528,6 +829,11 @@ class RichTextPanel(wx.Panel):
         doBind( tbar.AddTool(-1, _rt_alignright.GetBitmap(), isToggle=True,
                             shortHelpString=u"Aligner à droite"), self.OnAlignRight, self.OnUpdateAlignRight)
         tbar.AddSeparator()
+        doBind( tbar.AddTool(-1, _rt_list.GetBitmap(), isToggle=True,
+                            shortHelpString=u"Liste à puce"), self.OnListPuce, self.OnUpdateListPuce)
+#         doBind( tbar.AddTool(-1, _rt_list.GetBitmap(),
+#                             shortHelpString=u""), self.OnListPuce)
+        tbar.AddSeparator()
         doBind( tbar.AddTool(-1, _rt_indentless.GetBitmap(),
                             shortHelpString=u"Diminuer le retrait"), self.OnIndentLess)
         doBind( tbar.AddTool(-1, _rt_indentmore.GetBitmap(),
@@ -585,6 +891,9 @@ class RichTextPanel(wx.Panel):
     def OnIndentLess(self, evt):
         self.IndentLess()
         
+    def OnListPuce(self, evt):
+        self.ListPuce()
+        
     def OnParagraphSpacingMore(self, evt):
         self.ParagraphSpacingMore()
         
@@ -624,6 +933,9 @@ class RichTextPanel(wx.Panel):
     def OnUpdateAlignRight(self, evt):
         evt.Check(self.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_RIGHT))
         
+    def OnUpdateListPuce(self, evt):
+        evt.Check(self.estListPuce())   
+         
     def OnImage(self, evt):
         self.InsertImage()
         
@@ -665,12 +977,6 @@ def XMLtoHTML(texteXML):
         soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
 
         return soup.html.body.prettify()
-
-
-
-
-
-
 
 
 
@@ -837,15 +1143,11 @@ _rt_save = PyEmbeddedImage(
     "P7cp9rvcAAAAAElFTkSuQmCC")
 
 #----------------------------------------------------------------------
-_rt_smiley = PyEmbeddedImage(
-    "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAATpJ"
-    "REFUWIXtV9EWwiAIRdeH7dP3Y0UPxiIHXjR31kO8VIPuvQNFTCkvdKXdRv7EjzvXz1Je0qkC"
-    "NCkf6IlSevt7xCRUAiG2SH3QuJCMyJn7yIlKPLNdqtrMDIy8tU/w+nSy4WZgBrngtLJxECBp"
-    "tyyBiiI/FIDImX0S5Pey0FyENbgA1STI3xKxC/DeXoNrIPQ7Wg6YAQ3eswaiizhUgjMtE7UX"
-    "nzYUE8XQ6+A3MvAXgKy3w/XEZ6JyUES22LQYdTCFB5JNARDZ/UFi1ihoVIB0ts0QoomFvG94"
-    "UfMA6gciwrMI+XAJiD57vBayKn8PeXlWTUTRrtjb9y1yImMbRnaEkI7Mi1DALmRoyrdxvLcv"
-    "/sZYHi1HkxyM5s1OKOUY6YQR8hIbvBvim5H6PvNmhMSMkH4tYKZdfhw/Ad89rp/htXYGAAAA"
-    "AElFTkSuQmCC")
+_rt_list = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuMTZEaa/1AAAARklEQVQ4T2MYVMAdiL0hTPLAeyD+BGEyNADxfwIYA4Bs94cwhyrY"
+    "B8SHIUwGByAGhQM+jAEOAfEJCJM8AwYejCYksgADAwAT4CKWi4BBuAAAAABJRU5ErkJggg==")
 
 #----------------------------------------------------------------------
 _rt_underline = PyEmbeddedImage(
@@ -886,3 +1188,167 @@ _rt_images = PyEmbeddedImage(
     "3JaGpFnkCw7fTcFaaz+PvPQ+luUgCiLx5Ipxy5nufO4js71e58LZD3HSs7iwWTO91O0/zNNH"
     "TiB6PGiqjccl4pIkT+XpiF5IHy/p68dKSgFFUSiXQZJdVNcGKZsGhq5jOw6SKLG8ki38DbMJ"
     "XHT2R43dAAAAAElFTkSuQmCC")
+
+
+
+class MyFrame(wx.Frame):
+    demo = u"""<?xml version="1.0" encoding="UTF-8"?>
+<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
+  <paragraphlayout textcolor="#000000" fontpointsize="9" fontfamily="70" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Segoe UI" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10" margin-left="5,4098" margin-right="5,4098" margin-top="5,4098" margin-bottom="5,4098">
+    <paragraph fontweight="92" alignment="2" parspacingafter="20" parspacingbefore="0">
+      <text fontpointsize="14" fontweight="92">Welcome to wxRichTextCtrl, a wxWidgets control for editing and presenting styled text and images</text>
+    </paragraph>
+    <paragraph alignment="2" parspacingafter="20" parspacingbefore="0">
+      <text fontstyle="93" fontweight="92">by Julian Smart</text>
+    </paragraph>
+    
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text></text>
+    </paragraph>
+    <paragraph leftindent="60" leftsubindent="0" parspacingafter="20" parspacingbefore="0">
+      <text>"What can you do with this thing? "</text>
+      <image imagetype="15">
+        <data>89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7AF40000000473424954080808087C08648800000119494441545885ED974D12C32008859F991E2C47CFCDE822430753909F98B18BB26BD4F73E9512D21AD6C6ABB28800BA3E6B40692F2DBA4A9AD2977D2F94817101D85833F54423204300022863AC897B102A4065D79E8105B2590B6798B30E919EB82AC0E8D8BD840967B405E09913D926DEB8750AE61568E22C7435F1C647101F006BF7525C0A79BFA3D7E19E8014CFE44034894357F064B486FB05A762CA7561F909FC01C275201399F91B702644E42F366D8E7831853BA24308007A7DE0397B54340AC095ED5040A4319B579A97D3C8A9070C6145C4BC7C05405FE325C82EC633E6FCAC370956C56CDDB7DA33B3259B5D9A2D00B30E54BA1BD378D09CFE66577C8500167D17682016CC635F461E4CC5F436C0CC58FE3A7E033CF37891C02ADD2E0000000049454E44AE426082</data>
+
+      </image>
+      <text>" Well, you can change text "</text>
+      <text textcolor="#FF0000">colour, like this red bit.</text>
+      <text textcolor="#0000FF">" And this blue bit."</text>
+      <text>" Naturally you can make things "</text>
+      <text fontweight="92">"bold "</text>
+      <text fontstyle="93">"or italic "</text>
+      <text fontunderlined="1">or underlined.</text>
+      <text fontpointsize="14">" Different font sizes on the same line is allowed, too."</text>
+      <text>" Next we'll show an indented paragraph."</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>It was in January, the most down-trodden month of an Edinburgh winter. An attractive woman came into the cafe, which is nothing remarkable.</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="-40" parspacingafter="20" parspacingbefore="0">
+      <text>Next, we'll show a first-line indent, achieved using BeginLeftIndent(100, -40).</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>It was in January, the most down-trodden month of an Edinburgh winter. An attractive woman came into the cafe, which is nothing remarkable.</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="257" bulletnumber="1">
+      <text>Numbered bullets are possible, again using sub-indents:</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="257" bulletnumber="2">
+      <text>This is my first item. Note that wxRichTextCtrl doesn't automatically do numbering, but this will be added later.</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>This is my second item.</text>
+    </paragraph>
+    <paragraph rightindent="200" parspacingafter="20" parspacingbefore="0">
+      <text>The following paragraph is right-indented:</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>It was in January, the most down-trodden month of an Edinburgh winter. An attractive woman came into the cafe, which is nothing remarkable.</text>
+    </paragraph>
+    <paragraph alignment="3" parspacingafter="20" parspacingbefore="0" linespacing="15">
+      <text>The following paragraph is right-aligned with 1.5 line spacing:</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>It was in January, the most down-trodden month of an Edinburgh winter. An attractive woman came into the cafe, which is nothing remarkable.</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>Other notable features of wxRichTextCtrl include:</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>Compatibility with wxTextCtrl API</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>Easy stack-based BeginXXX()...EndXXX() style setting in addition to SetStyle()</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>XML loading and saving</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>Undo/Redo, with batching option and Undo suppressing</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>Clipboard copy and paste</text>
+    </paragraph>
+    <paragraph leftindent="100" leftsubindent="60" parspacingafter="20" parspacingbefore="0" bulletstyle="32" bulletsymbol="42" bulletfont="">
+      <text>wxRichTextStyleSheet with named character and paragraph styles, and control for applying named styles</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>A design that can easily be extended to other content types, ultimately with text boxes, tables, controls, and so on</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>Note: this sample content was generated programmatically from within the MyFrame constructor in the demo. The images were loaded from inline XPMs. Enjoy wxRichTextCtrl!</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text></text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text fontpointsize="12" fontweight="92">Additional comments by David Woods:</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>I find some of the RichTextCtrl method names, as used above, to be misleading.  Some character styles are stacked in the RichTextCtrl, and they are removed in the reverse order from how they are added, regardless of the method called.  Allow me to demonstrate what I mean.</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>"Start with plain text. "</text>
+      <text fontweight="92">"BeginBold() makes it bold. "</text>
+      <text fontstyle="93" fontweight="92">"BeginItalic() makes it bold-italic. "</text>
+      <text fontweight="92">"EndBold() should make it italic but instead makes it bold. "</text>
+      <text>"EndItalic() takes us back to plain text. "</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>"Start with plain text. "</text>
+      <text fontweight="92">"BeginBold() makes it bold. "</text>
+      <text fontweight="92" fontunderlined="1">"BeginUnderline() makes it bold-underline. "</text>
+      <text fontweight="92">"EndBold() should make it underline but instead makes it bold. "</text>
+      <text>"EndUnderline() takes us back to plain text. "</text>
+    </paragraph>
+    <paragraph parspacingafter="20" parspacingbefore="0">
+      <text>"According to Julian, this functions "</text>
+      <symbol>34</symbol>
+      <text>as expected</text>
+      <symbol>34</symbol>
+      <text>" because of the way the RichTextCtrl is written.  I wrote the SetFontStyle() method here to demonstrate a way to work with overlapping styles that solves this problem."</text>
+    </paragraph>
+    <paragraph textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Times New Roman">
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Times New Roman">"Start with plain text. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="92" fontunderlined="0" fontface="Times New Roman">"Bold. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="93" fontweight="92" fontunderlined="0" fontface="Times New Roman">"Bold-italic. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="93" fontweight="90" fontunderlined="0" fontface="Times New Roman">"Italic. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Times New Roman">"Back to plain text. "</text>
+    </paragraph>
+    <paragraph textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Times New Roman">
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Times New Roman">"Start with plain text. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="92" fontunderlined="0" fontface="Times New Roman">"Bold. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="92" fontunderlined="1" fontface="Times New Roman">"Bold-Underline. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="1" fontface="Times New Roman">"Underline. "</text>
+      <text textcolor="#000000" bgcolor="#FFFFFF" fontpointsize="10" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Times New Roman">"Back to plain text. "</text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+  </paragraphlayout>
+</richtext>
+"""
+
+    def __init__(self, parent, title):
+        wx.Frame.__init__(self, parent, title=title, size=(200,100))
+        rtp = RichTextPanel(self, [self.demo], toolBar=True, size = (1000, 600))
+        self.SetSize((1000, 600))
+        rtp.SetTitre(u"Test")
+        rtp.SetToolTipString(u"")
+        self.Show(True)
+   
+
+if __name__ == '__main__':
+    
+    app = wx.App(False)
+    frame = MyFrame(None, "Hello World") # A Frame is a top-level window.
+    
+#     rtp.SetTexteXML(demo)
+    frame.Show(True)     # Show the frame.
+    app.MainLoop()
+
+
+
+
+
+
