@@ -1511,22 +1511,23 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnKey(self, evt):
+        print "OnKey2"
         keycode = evt.GetKeyCode()
 #         print "!!", keycode
         if keycode == wx.WXK_ESCAPE and self.pleinEcran:
             self.commandePleinEcran(evt)
-              
+               
         elif evt.ControlDown() and keycode == 90: # Ctrl-Z
             self.commandeUndo(evt)
-  
+   
         elif evt.ControlDown() and keycode == 89: # Ctrl-Y
             self.commandeRedo(evt)
-              
+               
         elif keycode == 46: # Suppr
             self.commandeDelete(evt)
-              
+               
         evt.Skip()
-    
+#     
                 
     #############################################################################
     def GetChild(self, nomFichier):
@@ -4309,7 +4310,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
-        
+        return
         self.Hide() # Sans ça cela provoque des problèmes d'affichage
         
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
@@ -11095,7 +11096,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         self.Bind(CT.EVT_TREE_END_DRAG, self.OnEndDrag)
         self.Bind(wx.EVT_MOTION, self.OnMove)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+#         self.Bind(wx.EVT_TREE_KEY_DOWN, self.OnKey)
         self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
 #        self.Bind(wx.EVT_CHAR, self.OnChar)
         
@@ -11103,6 +11104,11 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         
+        
+#     def OnSetFocus(self, event):
+#         print "OnSetFocus"
+#         event.Skip()
+            
     ######################################################################################################
     def GetApp(self):
         return self.doc.GetApp()
@@ -11110,12 +11116,16 @@ class ArbreDoc(CT.CustomTreeCtrl):
     
     ######################################################################################################
     def OnEnter(self, event):
-        self.SetFocus()
+        self.SetFocusIgnoringChildren()
         event.Skip()
-        
+    
+#     ###############################################################################################
+#     def OnKey(self, evt):
+#         print "OnKey"
     
     ###############################################################################################
-    def OnKey(self, evt):
+    def OnKeyDown(self, evt):
+        print "OnKeyDown"
         keycode = evt.GetKeyCode()
         item = self.GetSelection()
 #         print keycode
@@ -11134,7 +11144,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
     ####################################################################################
     def OnRightDown(self, event):
-#        print "OnRightDown", self.doc
+        print "OnRightDown", self.doc
         item = event.GetItem()
         self.doc.AfficherMenuContextuel(item)
         
@@ -11214,7 +11224,9 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         if event is not None:
             event.Skip()
-
+        
+#         wx.CallAfter(self.SetFocus)
+#         wx.CallAfter(self.Raise)
 
     ####################################################################################
     def OnBeginDrag(self, event):
@@ -11332,6 +11344,9 @@ class ArbreSequence(ArbreDoc):
 
     ####################################################################################
     def OnMove(self, event):
+        if not self.HasFocus():
+            self.SetFocusIgnoringChildren()
+            
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             
@@ -11645,6 +11660,9 @@ class ArbreProjet(ArbreDoc):
 
     ####################################################################################
     def OnMove(self, event):
+        if not self.HasFocus():
+            self.SetFocusIgnoringChildren()
+
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             if item != None:
@@ -11788,7 +11806,9 @@ class ArbreProgression(ArbreDoc):
 
     ####################################################################################
     def OnMove(self, event):
-        event.Skip()
+        
+        if not self.HasFocus():
+            self.SetFocusIgnoringChildren()
         
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
@@ -12153,7 +12173,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ######################################################################################################
     def OnEnter(self, event):
-#        print "OnEnter PanelPropriete"
+#         print "OnEnter ArbreCompetences"
         self.SetFocus()
         event.Skip()
         
@@ -13198,7 +13218,7 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         self.root = self.AddRoot("r")
         self.Construire(self.root)
         
-        
+    
     ######################################################################################  
     def Construire(self, racine):
         """ Construction de l'arbre

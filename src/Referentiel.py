@@ -2815,6 +2815,7 @@ class Competences(XMLelem):
         self.dicCompetences = getArbreComp(feuille, range(4, feuille.nrows), 0, 
                                            prems = True, debug = debug)
 
+        
         if debug: 
             print self.dicCompetences
             for typi, dico in self.dicCompetences.items():

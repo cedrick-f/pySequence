@@ -3672,7 +3672,9 @@ class Projet(BaseDoc):
     
     ######################################################################################  
     def SupprimerItem(self, item):
+        print "SupprimerItem", item
         data = self.arbre.GetItemPyData(item)
+        
         if isinstance(data, Tache) and data.phase not in TOUTES_REVUES_EVAL_SOUT:
             self.SupprimerTache(item = item)
             
@@ -3681,6 +3683,9 @@ class Projet(BaseDoc):
         
         elif isinstance(data, Prof):
             self.SupprimerProf(item = item)
+            
+        elif isinstance(data, Modele):
+            self.support.SupprimerModele(item = item)
             
 #        elif isinstance(data, LienSequence):
 #            self.SupprimerLienSequence(item = item)           
@@ -9843,10 +9848,11 @@ class Support(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def SupprimerModele(self, event = None, item = None):
+        print "SupprimerModele", item
         if item is not None:
             m = self.arbre.GetItemPyData(item)
             i = m.id
-            del self.modeles[i]
+            del self.modeles[i-1]
             self.arbre.Delete(item)
             
             self.GetDocument().OnModifModeles()
