@@ -172,7 +172,7 @@ def GetNewVersion(win):
     latest, id1 = getVerNumId(url1)
     last_ver, id2 = getVerNumId(url2)
     
-    if latest == None:
+    if latest is None or last_ver is None:
         return
     
     # Version actuelle
@@ -197,7 +197,7 @@ def GetNewVersion(win):
 #         print latest
 #     else:
 #         print
-
+    
     new = sup(latest, a)
     newbeta = sup(last_ver, a)
     

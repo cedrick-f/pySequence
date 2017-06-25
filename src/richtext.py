@@ -80,7 +80,30 @@ bulletNames = ["standard/circle",
                "standard/square",
                "standard/diamond",
                "standard/triangle"]
-    
+
+# Styles de titre :
+
+
+# wx.FONTSTYLE_NORMAL     The font is drawn without slant.
+# wx.FONTSTYLE_ITALIC     The font is slanted in an italic style.
+# wx.FONTSTYLE_SLANT     The font is slanted, but in a roman style.
+# wx.FONTSTYLE_MAX      
+
+# wx.FONTWEIGHT_NORMAL     Normal font.
+# wx.FONTWEIGHT_LIGHT     Light font.
+# wx.FONTWEIGHT_BOLD     Bold font.
+# wx.FONTWEIGHT_MAX
+
+
+
+# SetFontWeight, SetFontStyle, SetFontSize, SetFontUnderlined
+headerStyles = [(wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 9, False),
+                (wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 10, True),
+                (wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 11, True),
+                (wx.FONTWEIGHT_BOLD, wx.FONTSTYLE_NORMAL, 12, False),
+                (wx.FONTWEIGHT_BOLD, wx.FONTSTYLE_ITALIC, 13, False),
+                (wx.FONTWEIGHT_BOLD, wx.FONTSTYLE_NORMAL, 14, False),
+                ]
         
 class RichTextCtrl(ToolTip, rt.RichTextCtrl): 
     def __init__(self, *args, **kargs):
@@ -340,7 +363,6 @@ class RichTextPanel(wx.Panel):
 
             if self.estListPuce():
                 si = self.subindent
-                
             else:
                 si = 0
                 
@@ -495,6 +517,8 @@ class RichTextPanel(wx.Panel):
         i = self.GetActualLeftIndent(attr)
         return bulletNames[i % len(bulletNames)]
     
+    
+        
     def ListPuce(self):
         attr = rt.RichTextAttr()
 #         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
@@ -527,8 +551,73 @@ class RichTextPanel(wx.Panel):
                 attr.SetLeftIndent((self.GetActualLeftIndent(attr)-1)*self.indent,0)
                 self.rtc.SetStyle(r, attr)
 
-            
+
+
+
+    def GetActualHeader(self, attr):
+        try:
+            h = eval(attr.GetParagraphStyleName())
+            if 0<=h<=5:
+                return h
+        except:
             return
+        
+    def SetHeader(self, attr, num):
+        attr.SetFontWeight(headerStyles[num][0])
+        attr.SetFontStyle(headerStyles[num][1])
+        attr.SetFontSize(headerStyles[num][2])
+        attr.SetFontUnderlined(headerStyles[num][3])
+        
+        
+    def HeaderLess(self):
+
+        attr = rt.RichTextAttr()
+#         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
+        ip = self.rtc.GetInsertionPoint()
+#         print "ListPuce", ip
+        
+        if self.rtc.GetStyle(ip, attr):
+            r = rt.RichTextRange(ip, ip)
+            if self.rtc.HasSelection():
+                r = self.rtc.GetSelectionRange()
+            
+            h = self.GetActualHeader(attr)
+            
+            if h is not None and h > 0:
+                h -= 1
+                self.rtc.MoveToParagraphStart()
+                ip = self.rtc.GetInsertionPoint()+1
+                r = rt.RichTextRange(ip, ip)
+                self.SetHeader(attr, h)
+                attr.SetParagraphStyleName(str(h))
+                self.rtc.SetStyle(r, attr)
+
+            
+        
+    def HeaderMore(self):
+        attr = rt.RichTextAttr()
+#         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
+        ip = self.rtc.GetInsertionPoint()
+#         print "ListPuce", ip
+        
+        if self.rtc.GetStyle(ip, attr):
+            r = rt.RichTextRange(ip, ip)
+            if self.rtc.HasSelection():
+                r = self.rtc.GetSelectionRange()
+            
+            h = self.GetActualHeader(attr)
+
+            if h is None:
+                h = 0
+            if h < 5:
+                h += 1
+                self.rtc.MoveToParagraphStart()
+                ip = self.rtc.GetInsertionPoint()+1
+                r = rt.RichTextRange(ip, ip)
+                self.SetHeader(attr, h)
+                attr.SetParagraphStyleName(str(h))
+                self.rtc.SetStyle(r, attr)
+
 
 #             
 #     def ListPuce3(self):
@@ -838,6 +927,14 @@ class RichTextPanel(wx.Panel):
                             shortHelpString=u"Diminuer le retrait"), self.OnIndentLess)
         doBind( tbar.AddTool(-1, _rt_indentmore.GetBitmap(),
                             shortHelpString=u"Augmenter le retrait"), self.OnIndentMore)
+        
+        tbar.AddSeparator()
+        doBind( tbar.AddTool(-1, _rt_hless.GetBitmap(),
+                            shortHelpString=u"Diminuer le niveau hierarchique"), self.OnHeaderLess)
+        doBind( tbar.AddTool(-1, _rt_hmore.GetBitmap(),
+                            shortHelpString=u"Augmenter le niveau hierarchique"), self.OnHeaderMore)
+        
+        
         tbar.AddSeparator()
         doBind( tbar.AddTool(-1, _rt_font.GetBitmap(),
                             shortHelpString=u"Police de caractères"), self.OnFont)
@@ -893,6 +990,12 @@ class RichTextPanel(wx.Panel):
         
     def OnListPuce(self, evt):
         self.ListPuce()
+        
+    def OnHeaderLess(self, evt):
+        self.HeaderLess()
+        
+    def OnHeaderMore(self, evt):
+        self.HeaderMore()
         
     def OnParagraphSpacingMore(self, evt):
         self.ParagraphSpacingMore()
@@ -1148,6 +1251,27 @@ _rt_list = PyEmbeddedImage(
     "AACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
     "dCA0LjAuMTZEaa/1AAAARklEQVQ4T2MYVMAdiL0hTPLAeyD+BGEyNADxfwIYA4Bs94cwhyrY"
     "B8SHIUwGByAGhQM+jAEOAfEJCJM8AwYejCYksgADAwAT4CKWi4BBuAAAAABJRU5ErkJggg==")
+
+#----------------------------------------------------------------------
+_rt_hless = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuMTZEaa/1AAAA5ElEQVQ4T2MYBkBCQsKLm5t7u5CQ0DIXFxc5kJi8vHwESExERGSp"
+    "jY2NKFghPsDHx/eUi4urAsoFAzY2tmfs7OxZUC5BcERQULAMyoaBG0CcBGESBkd4eHgoMwDo"
+    "hVMCAgJzYZiRkfEDUJx4A4CBWNXb28sJw0ADbgLFwQYAA9NQTExsBTo2MTExBcmDAKEwUADi"
+    "fHSsoqKiDKQZGJiYmI4LCwuTFwZaWlpsvLy8n4Dx3gUVYnB1deUGGvqGn5+/ASqEGwA1OgGp"
+    "QhC2srKSAokBA9EbxAcaUujr6ysOEhu2gIEBABe4MyMwJO/yAAAAAElFTkSuQmCC")
+
+#----------------------------------------------------------------------
+_rt_hmore = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuMTZEaa/1AAAA+klEQVQ4T2MYBkBCQsKLm5t7u5CQ0DIXFxc5kJi8vHwESExERGSp"
+    "jY2NKFghPsDHx/eUi4urAsoFAzY2tmfs7OxZUC5BcERQULAMyoaBG0CcBGEigIKCQpyMjIwK"
+    "lAsHR3h4eIgyAAg2ArELhIkAR4BeOCUgIDAXhhkZGT8AxYk3ABiIVb29vZwwDDTgJlAcZoAa"
+    "kP8NhIHsP0D6J5S/GSJNXBgwQjHMBTA+AwMTE9NxYWFh8sJAS0uLjZeX9xMw3rugQgyurq7c"
+    "QEPf8PPzN0CFkEEYECtCmEAA1OgEpApB2MrKSgokBgxEbxAfaEihr6+vOEhs2AIGBgAcQzW9"
+    "yBeC9QAAAABJRU5ErkJggg==")
 
 #----------------------------------------------------------------------
 _rt_underline = PyEmbeddedImage(

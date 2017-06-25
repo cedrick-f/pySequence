@@ -9096,6 +9096,21 @@ getIcone_TDBitmap = Icone_TD.GetBitmap
 getIcone_TDIcon = Icone_TD.GetIcon
 
 #----------------------------------------------------------------------
+_rt_hmore = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuMTZEaa/1AAAA+klEQVQ4T2MYBkBCQsKLm5t7u5CQ0DIXFxc5kJi8vHwESExERGSp"
+    "jY2NKFghPsDHx/eUi4urAsoFAzY2tmfs7OxZUC5BcERQULAMyoaBG0CcBGEigIKCQpyMjIwK"
+    "lAsHR3h4eIgyAAg2ArELhIkAR4BeOCUgIDAXhhkZGT8AxYk3ABiIVb29vZwwDDTgJlAcZoAa"
+    "kP8NhIHsP0D6J5S/GSJNXBgwQjHMBTA+AwMTE9NxYWFh8sJAS0uLjZeX9xMw3rugQgyurq7c"
+    "QEPf8PPzN0CFkEEYECtCmEAA1OgEpApB2MrKSgokBgxEbxAfaEihr6+vOEhs2AIGBgAcQzW9"
+    "yBeC9QAAAABJRU5ErkJggg==")
+get_rt_hmoreData = _rt_hmore.GetData
+get_rt_hmoreImage = _rt_hmore.GetImage
+get_rt_hmoreBitmap = _rt_hmore.GetBitmap
+get_rt_hmoreIcon = _rt_hmore.GetIcon
+
+#----------------------------------------------------------------------
 Icone_suppr_prj = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABmJLR0QA/wD/AP+gvaeTAAAg"
     "AElEQVR42u29e7Rc1X3n+dnnVe/Xfd+rq8fV1VsCJARISOJl42AwYMfExIY4dmc64+VMTyZr"
@@ -22057,6 +22072,20 @@ getCI_16Data = CI_16.GetData
 getCI_16Image = CI_16.GetImage
 getCI_16Bitmap = CI_16.GetBitmap
 getCI_16Icon = CI_16.GetIcon
+
+#----------------------------------------------------------------------
+_rt_hless = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuMTZEaa/1AAAA5ElEQVQ4T2MYBkBCQsKLm5t7u5CQ0DIXFxc5kJi8vHwESExERGSp"
+    "jY2NKFghPsDHx/eUi4urAsoFAzY2tmfs7OxZUC5BcERQULAMyoaBG0CcBGESBkd4eHgoMwDo"
+    "hVMCAgJzYZiRkfEDUJx4A4CBWNXb28sJw0ADbgLFwQYAA9NQTExsBTo2MTExBcmDAKEwUADi"
+    "fHSsoqKiDKQZGJiYmI4LCwuTFwZaWlpsvLy8n4Dx3gUVYnB1deUGGvqGn5+/ASqEGwA1OgGp"
+    "QhC2srKSAokBA9EbxAcaUujr6ysOEhu2gIEBABe4MyMwJO/yAAAAAElFTkSuQmCC")
+get_rt_hlessData = _rt_hless.GetData
+get_rt_hlessImage = _rt_hless.GetImage
+get_rt_hlessBitmap = _rt_hless.GetBitmap
+get_rt_hlessIcon = _rt_hless.GetIcon
 
 #----------------------------------------------------------------------
 Icone_restitution = PyEmbeddedImage(
