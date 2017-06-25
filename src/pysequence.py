@@ -3672,7 +3672,7 @@ class Projet(BaseDoc):
     
     ######################################################################################  
     def SupprimerItem(self, item):
-        print "SupprimerItem", item
+#         print "SupprimerItem", item
         data = self.arbre.GetItemPyData(item)
         
         if isinstance(data, Tache) and data.phase not in TOUTES_REVUES_EVAL_SOUT:
@@ -9848,7 +9848,7 @@ class Support(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def SupprimerModele(self, event = None, item = None):
-        print "SupprimerModele", item
+#         print "SupprimerModele", item
         if item is not None:
             m = self.arbre.GetItemPyData(item)
             i = m.id

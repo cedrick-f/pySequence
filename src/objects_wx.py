@@ -505,7 +505,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         # Interception des frappes clavier
-#         self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
         
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -1511,11 +1511,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnKey(self, evt):
-        print "OnKey2"
+#         print "OnKey2"
         keycode = evt.GetKeyCode()
 #         print "!!", keycode
-        if keycode == wx.WXK_ESCAPE and self.pleinEcran:
-            self.commandePleinEcran(evt)
+        if keycode == wx.WXK_ESCAPE:
+            if self.pleinEcran:
+                self.commandePleinEcran(evt)
+            try:
+                wx.EndBusyCursor()
+            except:
+                pass
                
         elif evt.ControlDown() and keycode == 90: # Ctrl-Z
             self.commandeUndo(evt)
@@ -2630,7 +2635,7 @@ class FenetreProjet(FenetreDocument):
 
         self.projet.OrdonnerTaches()
 
-        self.projet.PubDescription()
+#         self.projet.PubDescription()
   
         self.projet.MiseAJourDureeEleves()
 
@@ -4188,21 +4193,37 @@ class PanelPropriete(scrolled.ScrolledPanel):
         return self.GetDocument().app
 
     #########################################################################################################
-    def CreateImageSelect(self, parent, titre = u"Image", defaut = wx.NullBitmap):
-        box = myStaticBox(parent, -1, titre)
+    def CreateImageSelect(self, parent, titre = u"image", prefixe = u"l'", defaut = wx.NullBitmap):
+        box = myStaticBox(parent, -1, titre.capitalize())
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(parent, -1, defaut)
         self.image = image
         self.SetImage()
         bsizer.Add(image, 1)#, flag = wx.EXPAND)
         
-        bt = wx.Button(parent, -1, u"Changer l'image")
-        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-        bsizer.Add(bt, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        hsizer = wx.BoxSizer(wx.HORIZONTAL)
+        bt = wx.Button(parent, -1, u"Changer")
+        bt.SetToolTipString(u"Sélectionner un fichier image pour %s" %prefixe+titre)
+        hsizer.Add(bt, 1, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnClickImage, bt)
         self.btImg = bt
         
+        bt = wx.BitmapButton(parent, -1, scaleImage(images.Icone_supprimer.GetBitmap(), 20, 20))
+        bt.SetToolTipString(u"Supprimer %s" %prefixe+titre)
+        hsizer.Add(bt, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.OnSupprImage, bt)
+        self.btImg = bt
+        
+        bsizer.Add(hsizer, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
         return bsizer
+        
+    
+    
+    #############################################################################            
+    def OnSupprImage(self, event):
+        self.objet.image = None
+        self.SetImage(True)
+        
         
     #############################################################################            
     def OnClickImage(self, event):
@@ -5309,7 +5330,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Image
         #
-        isizer = self.CreateImageSelect(pageGen, titre = u"Image")
+        isizer = self.CreateImageSelect(pageGen)
         pageGen.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
 
@@ -8290,7 +8311,7 @@ class PanelPropriete_Seance(PanelPropriete):
         # Image
         #
         isizer = self.CreateImageSelect(pageAff, 
-                                        titre = u"Illustration "+self.seance.article_c_obj+u" "+self.seance.nom_obj)
+                                        titre = u"illustration "+self.seance.article_c_obj+u" "+self.seance.nom_obj)
         pageAff.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
@@ -9615,7 +9636,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Image
         #
-        isizer = self.CreateImageSelect(self, titre = u"Image du système")
+        isizer = self.CreateImageSelect(self, titre = u"image du système")
         self.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
@@ -9998,7 +10019,7 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         # Portrait
         #
-        isizer = self.CreateImageSelect(self, titre = u"Portrait", defaut = constantes.AVATAR_DEFAUT)
+        isizer = self.CreateImageSelect(self, titre = u"portrait", prefixe = u"le ", defaut = constantes.AVATAR_DEFAUT)
         self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
@@ -10405,7 +10426,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         #
         # Portrait
         #
-        isizer = self.CreateImageSelect(self, titre = u"Portrait", defaut = constantes.AVATAR_DEFAUT)
+        isizer = self.CreateImageSelect(self, titre = u"portrait", prefixe = u"le ", defaut = constantes.AVATAR_DEFAUT)
         self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
                       
         self.MiseAJour()
@@ -10650,7 +10671,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Image
         #
-        isizer = self.CreateImageSelect(self, titre = u"Image du support")
+        isizer = self.CreateImageSelect(self, titre = u"image du support")
         self.sizer.Add(isizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
 #         
 #         box = myStaticBox(self, -1, u"Image du support")
@@ -10901,7 +10922,7 @@ class PanelPropriete_Modele(PanelPropriete):
         #
         # Image
         #
-        isizer = self.CreateImageSelect(self, titre = u"Image du modèle")
+        isizer = self.CreateImageSelect(self, titre = u"image du modèle")
         self.sizer.Add(isizer, (0,2), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
 
         
@@ -11125,7 +11146,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
     
     ###############################################################################################
     def OnKeyDown(self, evt):
-        print "OnKeyDown"
+#         print "OnKeyDown"
         keycode = evt.GetKeyCode()
         item = self.GetSelection()
 #         print keycode
