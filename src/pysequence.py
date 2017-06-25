@@ -195,7 +195,16 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
     
 
     
-    
+if sys.platform == 'darwin':
+    def openFolder(path):
+        subprocess.check_call(['open', '--', path])
+elif sys.platform == 'linux2':
+    def openFolder(path):
+        subprocess.check_call(['xdg-open', '--', path])
+elif sys.platform == 'win32':
+    def openFolder(path):
+#         subprocess.Popen(["explorer", path], shell=True)
+        subprocess.call(['explorer', path.encode(sys.getfilesystemencoding())], shell=True)
     
     
 ####################################################################################
@@ -234,31 +243,47 @@ class Lien():
         """ Lance l'affichage du contenu du lien
             <pathseq> = chemin de l'application pour déterminer le chemin absolu
         """
-        print "Afficher", self.type, self.path
+#         print "Afficher", self.type, self.path
         path = self.GetAbsPath(pathseq)
 #         print "   ", path
+#         print "   ", path.decode("unicode-escape")
+#         print "   ", path.encode(sys.getfilesystemencoding())
         
         if self.type == "f":
-            try:
-                os.startfile(path)
-            except:
-                messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(path))
+            if os.path.exists(path):
+                try:
+                    os.startfile(path)
+                except:
+                    messageErreur(None, u"Ouverture impossible",
+                                  u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(path))
+            else:
+                messageErreur(None, u"Chemin non trouvé",
+                                  u"Le fichiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))        
+            
                 
         elif self.type == 'd':
-            try:
-                subprocess.Popen(["explorer", path])
-            except:
-                messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'accéder au dossier\n\n%s\n" %toSystemEncoding(path))
-            
+            if os.path.isdir(path):
+                openFolder(path)
+#                 try:
+# #                     subprocess.Popen(["explorer", path])
+#                     
+#                 except:
+#                     messageErreur(None, u"Ouverture impossible",
+#                                   u"Impossible d'accéder au dossier\n\n%s\n" %toSystemEncoding(path))
+            else:
+                messageErreur(None, u"Chemin non trouvé",
+                                  u"Le dossiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))
+
+
         elif self.type == 'u':
             try:
                 webbrowser.open(self.path)
             except:
                 messageErreur(None, u"Ouverture impossible",
                               u"Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
-        
+            
+                
+                
         elif self.type == 's':
             if os.path.isfile(path):
 #                self.Show(False)
