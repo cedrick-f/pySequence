@@ -727,6 +727,9 @@ def getLstDisciplines():
 
 
 # Logiciels de modélisation
+# Caractère de préfixe :
+#   . = bouton radio
+#   x = case à cocher
 LOGICIELS = [(u".Solidworks", [u".Motion",
                              u".Meca3D",
                              u"xFlowSim",
@@ -756,7 +759,13 @@ IMG_LOGICIELS = {u"Solidworks" : images.Logiciel_SW,
                  u"LabView" : images.Logiciel_LV,
                  u"CATIA" : images.Logiciel_CATIA,
                  u"AutoCAD" : images.Logiciel_Autocad,
-                 u"Python" : images.Logiciel_Python}
+                 u"Python" : images.Logiciel_Python,
+                 u"Solidedge" : images.Logiciel_SEdge,
+                 u"Inventor" : images.Logiciel_Inventor,
+                 u"Top Solid" : images.Logiciel_Topsolid,
+                 u"FreeCAD" : images.Logiciel_FreeCAD,
+                 u"Sketchup" : images.Logiciel_Sketchup
+                 }
 
 
 # Nombre de créneaux dans les Progressions
