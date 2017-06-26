@@ -11012,12 +11012,12 @@ class Eleve(Personne, ElementBase):
                     self.tip.AjouterCol("le", t, size = 2) 
             
             for i, m in enumerate(self.GetModeles()):
-                print "mod", m
+#                 print "mod", m
                 for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
                     h = u"<p>" + l + u"</p>"
                     idx = "log"+str(i)+"."+str(j)
                     h +=u'<img id="%s" src="" alt="">' %idx
-                    print "   ", h
+#                     print "   ", h
                     self.tip.AjouterHTML('mod', h)
                     self.tip.AjouterImg(idx, bmp)
             

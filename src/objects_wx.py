@@ -10820,7 +10820,7 @@ class PanelPropriete_Support(PanelPropriete):
     #        self.support.parent.MiseAJourNomsSystemes()
             
             modif = u"Modification de l'intitulé du Support"
-            print modif
+            
             if self.onUndoRedo():
                 self.sendEvent(modif = modif)
             else:
