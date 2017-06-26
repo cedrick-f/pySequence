@@ -9873,11 +9873,13 @@ class Support(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def SupprimerModele(self, event = None, item = None):
-#         print "SupprimerModele", item
+        print "SupprimerModele", item
         if item is not None:
             m = self.arbre.GetItemPyData(item)
-            i = m.id
-            del self.modeles[i-1]
+#             i = m.id
+#             print "   ", i
+#             del self.modeles[i-1]
+            self.modeles.remove(m)
             self.arbre.Delete(item)
             
             self.GetDocument().OnModifModeles()
