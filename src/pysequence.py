@@ -3940,6 +3940,8 @@ class Projet(BaseDoc):
         """ Affiche le menu contextuel associé é la séquence
             ... ou bien celui de itemArbre concerné ...
         """
+#         print "AfficherMenuContextuel"
+#         print self.arbre.GetItemText(itemArbre), getPluriel(self.getNomEleves())
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer,
                                               getIconeFileSave()],
@@ -3975,7 +3977,7 @@ class Projet(BaseDoc):
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Support):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
-        elif self.arbre.GetItemText(itemArbre) == getPluriel(self.getNomEleves()): # Eleve
+        elif self.arbre.GetItemText(itemArbre) == getPluriel(self.getNomEleves()).capitalize(): # Eleve
             self.app.AfficherMenuContextuel([[u"Ajouter un "+ getSingulier(self.getNomEleves()), self.AjouterEleve, 
                                               scaleImage(images.Icone_ajout_eleve.GetBitmap())],
                                              [u"Ajouter un groupe d'"+ getPluriel(self.getNomEleves()), self.AjouterGroupe, 

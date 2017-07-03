@@ -96,13 +96,13 @@ bulletNames = ["standard/circle",
 
 
 
-# SetFontWeight, SetFontStyle, SetFontSize, SetFontUnderlined
-headerStyles = [(wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 9, False),
-                (wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 10, True),
-                (wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 11, True),
-                (wx.FONTWEIGHT_BOLD, wx.FONTSTYLE_NORMAL, 12, False),
-                (wx.FONTWEIGHT_BOLD, wx.FONTSTYLE_ITALIC, 13, False),
-                (wx.FONTWEIGHT_BOLD, wx.FONTSTYLE_NORMAL, 14, False),
+# SetFontWeight, SetFontStyle, SetFontSize, SetFontUnderlined, SetTextColour
+headerStyles = [(wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 8 , False, wx.Colour(0,0,0)),
+                (wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 9 , True , wx.Colour(0,0,70)),
+                (wx.FONTWEIGHT_NORMAL, wx.FONTSTYLE_NORMAL, 10, True , wx.Colour(0,10,60)),
+                (wx.FONTWEIGHT_BOLD  , wx.FONTSTYLE_NORMAL, 11, False, wx.Colour(0,20,50)),
+                (wx.FONTWEIGHT_BOLD  , wx.FONTSTYLE_ITALIC, 12, False, wx.Colour(0,20,60)),
+                (wx.FONTWEIGHT_BOLD  , wx.FONTSTYLE_NORMAL, 14, False, wx.Colour(0,30,70)),
                 ]
         
 class RichTextCtrl(ToolTip, rt.RichTextCtrl): 
@@ -567,6 +567,7 @@ class RichTextPanel(wx.Panel):
         attr.SetFontStyle(headerStyles[num][1])
         attr.SetFontSize(headerStyles[num][2])
         attr.SetFontUnderlined(headerStyles[num][3])
+        attr.SetTextColour(headerStyles[num][4])
         
         
     def HeaderLess(self):
