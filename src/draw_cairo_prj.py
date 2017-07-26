@@ -1309,3 +1309,9 @@ def gabarit():
     
     imagesurface.write_to_png('gabarit_prj.png')
        
+
+
+if __name__ == "__main__":
+    gabarit()
+
+

@@ -1260,7 +1260,7 @@ def curve_rect_titre(ctx, titre, rect,
     fheight = ctx.font_extents()[2]
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(titre)
       
-    c = curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, 
+    c = curve_rect_coin(ctx, x0, y0, rect_width, rect_height, rayon, 
                ouverture = min(width + fheight, rect_width-2*rayon))
     
     ctx.set_source_rgba(*coul_int)
@@ -1268,7 +1268,7 @@ def curve_rect_titre(ctx, titre, rect,
     ctx.set_source_rgba(*coul_bord)
     ctx.stroke()
     
-    xc = x0 + rayon
+    xc = x0# + rayon
     mask = cairo.LinearGradient(xc, y0, xc, y0 - height)
     mask.add_color_stop_rgba(1, 1, 1, 1, 0)
     mask.add_color_stop_rgba(0, coul_int[0], coul_int[1], coul_int[2], coul_int[3])
@@ -1276,7 +1276,7 @@ def curve_rect_titre(ctx, titre, rect,
     ctx.set_source(mask) 
     ctx.fill()
     
-    xc = x0 + rayon + fheight/2
+    xc = x0 + fheight/2# + rayon
     yc = y0 + ybearing - fheight/3#height
     
     ctx.move_to(xc, yc)
@@ -1287,6 +1287,62 @@ def curve_rect_titre(ctx, titre, rect,
                        taille_font, 1, ha = "g")
     
     return c
+
+
+##################################################################################
+def curve_rect_coin(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
+    """    Dessine une zone de texte aux bords arrondis
+            avec un coin "carré" (en haut à gauche)
+            >> Renvoie le point caractéristique (svg)
+    """
+    x1=x0+rect_width
+    y1=y0+rect_height
+    #if (!rect_width || !rect_height)
+    #    return
+    if rect_width/2<radius:
+        if rect_height/2<radius:
+            ctx.move_to  (x0, (y0 + y1)/2)
+            ctx.line_to (x0 ,y0)
+            ctx.line_to ((x0 + x1)/2, y0)
+            ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
+            ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1)
+            ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
+        else:
+            ctx.move_to  (x0, y0 + radius)
+            ctx.line_to (x0 ,y0)
+            ctx.line_to ((x0 + x1)/2 ,y0)
+            ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
+            ctx.line_to (x1 , y1 - radius)
+            ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1)
+            ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
+    
+    else:
+        if rect_height/2<radius:
+            ctx.move_to  (x0, (y0 + y1)/2)
+            ctx.line_to (x0 ,y0)
+            ctx.move_to  (x0 + ouverture, y0)
+            
+            ctx.line_to (x1 - radius, y0)
+            ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
+            ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
+            ctx.line_to (x0 + radius, y1)
+            ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
+#             ctx.line_to  (x0, (y0 + y1)/2)
+#             ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+            
+        else:
+            ctx.move_to  (x0 + ouverture, y0)
+            ctx.line_to (x1 - radius, y0)
+            ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
+            ctx.line_to (x1 , y1 - radius)
+            ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
+            ctx.line_to (x0 + radius, y1)
+            ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
+            ctx.line_to (x0, y0)
+    
+    # Renvoie les coordonnées du 1er point = caractéristique du path SVG
+    return x0 + ouverture, y0 
+
 
 
 ##################################################################################
@@ -1336,7 +1392,8 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
             ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
     
     # Renvoie les coordonnées du 1er point = caractéristique du path SVG
-    return x0 + radius + ouverture, y0 
+    return x0 + radius  + ouverture, y0 
+
 
 
 def image(ctx, x, y, w, h, bmp, marge = 0):
