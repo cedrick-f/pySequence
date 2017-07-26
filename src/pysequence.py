@@ -3874,6 +3874,7 @@ class Projet(BaseDoc):
             for m in e.modeles:
                 if not m in n:
                     e.modeles.remove(m)
+            e.MiseAJourCodeBranche()
     
     ######################################################################################  
     def MiseAJourPoidsCompetences(self, code = None):
@@ -9875,7 +9876,7 @@ class Support(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def SupprimerModele(self, event = None, item = None):
-        print "SupprimerModele", item
+#         print "SupprimerModele", item
         if item is not None:
             m = self.arbre.GetItemPyData(item)
 #             i = m.id
@@ -10348,7 +10349,13 @@ class Eleve(Personne, ElementBase):
 #        print "   >>>", d
         return d
 
-
+    ######################################################################################  
+    def GetAvatar(self):
+        if self.image is None:
+            return images.Icone_eleve.GetBitmap()
+        else:
+            return self.image
+        
     ######################################################################################  
     def GetDureeJusqua(self, tache, depuis = None):
         d = 0
@@ -11082,7 +11089,13 @@ class Groupe(ElementBase, Eleve):
         
 #         print self.academie, self.ville, self.etablissement
         
-
+    ######################################################################################  
+    def GetAvatar(self):
+        if self.image is None:
+            return images.Icone_groupe.GetBitmap()
+        else:
+            return self.image
+        
     ######################################################################################  
     def GetNom(self):
         return self.nom
@@ -11789,6 +11802,12 @@ class Prof(Personne):
         
         Personne.__init__(self, doc, ident)
         
+    ######################################################################################  
+    def GetAvatar(self):
+        if self.image is None:
+            return images.Icone_prof.GetBitmap()
+        else:
+            return self.image
         
     ######################################################################################  
     def GetFicheHTML(self, param = None):

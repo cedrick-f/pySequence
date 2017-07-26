@@ -59,12 +59,17 @@ print sys.version_info
 #    wxversion.select('2.8')
 
 import wx
-import  wx.gizmos   as  gizmos
-# try:
-#     
-# except:
-#     import wx.adv as gizmos     # à partir de wx 4
-    
+
+try:
+    import  wx.gizmos as adv
+except:
+    pass
+
+try:
+    import wx.adv as adv     # à partir de wx 4
+except:
+    pass
+   
 import version
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
@@ -98,7 +103,11 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 import wx.aui as aui
 
 from wx.lib.wordwrap import wordwrap
-import wx.lib.hyperlink as hl
+try:
+    import wx.lib.hyperlink as hl
+except:
+    import wx.lib.agw.hyperlink as hl # à partir de wx 4
+    
 import  wx.lib.scrolledpanel as scrolled
 import wx.combo
 import wx.lib.platebtn as platebtn
@@ -1830,6 +1839,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def MarquerFichierCourantModifie(self, modif = True):
+        print a
         self.fichierCourantModifie = modif
         self.SetTitre(modif)
 
@@ -6689,10 +6699,10 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Cas des CI personnalisés
         #
-        self.elb = gizmos.EditableListBox(panelCI, -1, 
+        self.elb = adv.EditableListBox(panelCI, -1, 
                                           getSingulierPluriel(ref.nomCI + u" personnalisé(s)", self.CI.maxCI != 1),
                                           size = wx.DefaultSize,
-                                          style = gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
+                                          style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
         self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
         self.elb.SetMinSize((-1, 60))
         self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
@@ -10050,7 +10060,7 @@ class PanelPropriete_Personne(PanelPropriete):
             bt_sizer.Add(bt_s)
             self.sizer.Add(bt_sizer, (1,0), (1,2), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
             
-        self.MiseAJour()
+        self.MiseAJour(marquerModifier = False)
         
         self.sizer.AddGrowableRow(0)
         self.sizer.AddGrowableCol(1)
@@ -11165,7 +11175,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
     ####################################################################################
     def OnRightDown(self, event):
-        print "OnRightDown", self.doc
+#         print "OnRightDown", self.doc
         item = event.GetItem()
         self.doc.AfficherMenuContextuel(item)
         
@@ -13436,9 +13446,9 @@ class PanelProblematiques(wx.Panel):
         if hasPb:
             t += u" personnalisées"
         
-        self.PbPerso = gizmos.EditableListBox(self, -1, t,
+        self.PbPerso = adv.EditableListBox(self, -1, t,
                                               size = wx.DefaultSize,
-                                              style = gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
+                                              style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
         self.PbPerso.SetMinSize((-1, 60))
         self.PbPerso.SetToolTipString(u"Exprimer ici la(les) %s abordée(s)\n" \
                                       u"ou choisir une parmi les %s envisageables." %(getSingulier(ref.nomPb), getPluriel(ref.nomPb)))
