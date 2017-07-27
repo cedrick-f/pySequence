@@ -730,10 +730,13 @@ def getLstDisciplines():
 # Caractère de préfixe :
 #   . = bouton radio
 #   x = case à cocher
+#   _ = texte libre (avec case à cocher)
+#   
 LOGICIELS = [(u".Solidworks", [u".Motion",
                              u".Meca3D",
                              u"xFlowSim",
-                             u"xSimulation"],
+                             u"xSimulation",
+                             u"_"],
               ),
              (u".CATIA", []),
              (u".Inventor", []),
@@ -749,9 +752,11 @@ LOGICIELS = [(u".Solidworks", [u".Motion",
                          u"xSimscape",
                          u"xSimElectronics",
                          u"xSimPowerSystems",
-                         u"xSimMechanics"]),
+                         u"xSimMechanics",
+                         u"_"]),
              (u".SciLAB", [u"xXcos"]),
              (u".LabView", []),
+             (u"_", [])
              ]
 
 IMG_LOGICIELS = {u"Solidworks" : images.Logiciel_SW,

@@ -1318,17 +1318,13 @@ def curve_rect_coin(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0)
     
     else:
         if rect_height/2<radius:
-            ctx.move_to  (x0, (y0 + y1)/2)
-            ctx.line_to (x0 ,y0)
             ctx.move_to  (x0 + ouverture, y0)
-            
             ctx.line_to (x1 - radius, y0)
             ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
             ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
             ctx.line_to (x0 + radius, y1)
             ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
-#             ctx.line_to  (x0, (y0 + y1)/2)
-#             ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+            ctx.line_to (x0 ,y0)
             
         else:
             ctx.move_to  (x0 + ouverture, y0)

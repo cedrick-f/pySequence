@@ -143,14 +143,14 @@ import couleur
 from xml.dom.minidom import parse
 
 # Graphiques vectoriels
-import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
+
 try:
     import wx.lib.wxcairo
     import cairo
     haveCairo = True
 except ImportError:
     haveCairo = False
-
+import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
@@ -1839,7 +1839,6 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def MarquerFichierCourantModifie(self, modif = True):
-        print a
         self.fichierCourantModifie = modif
         self.SetTitre(modif)
 
@@ -10918,7 +10917,8 @@ class PanelPropriete_Modele(PanelPropriete):
         self.sizer.Add(sb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = te
         
-        
+        self.cb_type.Layout()
+        self.cb_type.CalculatePositions()
         
         #
         # Lien
@@ -11052,8 +11052,9 @@ class PanelPropriete_Modele(PanelPropriete):
     
     ######################################################################################  
     def OnCheckModele(self):
+#         print "OnCheckModele"
         self.modele.logiciels = self.cb_type.GetAllChecked()
-        
+#         print self.modele.logiciels
         self.sendEvent(modif = u"Modification du logiciel du Modèle",
                        obj = self.modele)
         
@@ -13256,15 +13257,26 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         """
 #         print "Construire ArbreLogiciel"
     
+        self.lstItems = []
+        
         def appendBranche(branche, t):
             if t[0] == ".":
                 ct = 2
+                wnd = None
             elif t[0] == "x":
                 ct = 1
+                wnd = None
+            elif t[0] == "_":
+                ct = 1
+                wnd = wx.TextCtrl(self, -1, u"", name = str(len(self.lstItems)))
+                wnd.Enable(False)
+                self.Bind(wx.EVT_TEXT, self.OnText, wnd)
+#                 self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, wnd)
             t = t[1:]
             
             
-            b = self.AppendItem(branche, t, ct_type=ct)
+            b = self.AppendItem(branche, t, ct_type=ct, wnd = wnd)
+            self.lstItems.append(b)
          
             if t in self.dic_img.keys():
                 self.SetItemImage(b, self.dic_img[t])
@@ -13279,10 +13291,10 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         for t, st in LOGICIELS:
 #             print "   ", t, st
             
-            if t[0] == "_":
-                branche = self.AppendItem(racine, t)
-            else:
-                branche = appendBranche(racine, t)
+#             if t[0] == "_":
+#                 branche = self.AppendItem(racine, t)
+#             else:
+            branche = appendBranche(racine, t)
 #                 branche = self.AppendItem(racine, t, ct_type=ct, image = self.arbre.images["Seq"])
 # #                 rb = wx.RadioButton(self, -1, t)
 # #                 self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
@@ -13301,8 +13313,45 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         
         self.ExpandAll()
         self.CollapseAll()
+#         self.Layout()
+#         self.CalculatePositions()
         
+    ######################################################################################              
+    def GetLogName(self, item):
+        if item.GetWindow() is None:
+            return item.GetText()
+        else:
+            wnd = item.GetWindow()
+            return u"_".join([wnd.GetName(), wnd.GetValue()])
     
+    
+    ######################################################################################              
+    def Match(self, item, listItem):
+        if item.GetWindow() is None:
+            if item.GetText() in listItem:
+                return item.GetText()
+        else:
+            wnd = item.GetWindow()
+            for i, n in enumerate(listItem):
+                n = n.split(u"_", 1)
+                if len(n) == 1:
+                    continue
+                n = n[0]
+                if wnd.GetName() == n:
+                    return listItem[i]
+        
+        
+        
+    ######################################################################################              
+    def SetLogName(self, item, name):
+        if item.GetWindow() is not None:
+#             print "SetLogName", name
+            wnd = item.GetWindow()
+            txt = name.split(u"_", 1)[1]
+#             print ">>", txt
+            wnd.SetValue(txt)
+        
+        
     ######################################################################################              
     def GetAllChecked(self, itemParent=None, checkedItems=None):
         """
@@ -13319,7 +13368,7 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         while child:
 
             if self.IsItemChecked(child):
-                checkedItems.append(child.GetText())
+                checkedItems.append(self.GetLogName(child))
 
                 checkedItems = self.GetAllChecked(child, checkedItems)
             child, cookie = self.GetNextChild(itemParent, cookie)
@@ -13329,20 +13378,33 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
     
     ######################################################################################              
     def CheckItems(self, listItems, itemParent=None):
-        """
+        """ Coche tous les logiciels de listItems
+            (fonction récursive)
         """ 
 #         print "CheckItems", listItems
+        
+        
+        
         if itemParent is None:
             itemParent = self.GetRootItem()
         else:
             itemParent.Enable()
-            
+        
+        if len(listItems) == 0:
+            return
+        
         child, cookie = self.GetFirstChild(itemParent)
 
         while child:
-            if child.GetText() in listItems:
+            name = self.Match(child, listItems)
+            if name is not None:
+                listItems.remove(name)
                 child.Check()
                 child.Expand()
+                if child.GetWindow() is not None:
+                    self.SetLogName(child, name)
+                    child.GetWindow().Enable()
+                
             self.CheckItems(listItems, child)
             child, cookie = self.GetNextChild(itemParent, cookie)
 
@@ -13370,10 +13432,29 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         else:
             event.Skip()
     
+    
+    ######################################################################################              
+    def OnText(self, event = None):
+        wnd = event.GetEventObject()
+        event.Skip()
+        wx.CallAfter(self.panelParent.OnCheckModele)
+#         print wnd
+#         print self.GetItemWindow(self.lstItems[int(wnd.GetName())])
+        
+#     ######################################################################################              
+#     def OnUpdateUI(self, event = None):
+#         print "OnUpdateUI"
+#         wnd = event.GetEventObject()
+#         print wnd
+#         print self.GetItemWindow(self.lstItems[int(wnd.GetName())])
+        
     ######################################################################################              
     def OnCheck(self, event = None):
         
-#         item = event.GetItem()
+        item = event.GetItem()
+        wnd = self.GetItemWindow(item)
+        if wnd is not None:
+            wnd.Enable(item.IsChecked())
 #         self.log.write("Item " + self.GetItemText(item) + " Has Been Checked!\n")
         event.Skip()
         wx.CallAfter(self.panelParent.OnCheckModele)
@@ -13381,7 +13462,7 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         
     ######################################################################################              
     def OnClick(self, event = None, item = None):
-        print "OnClick"
+#         print "OnClick"
         if item == None:
             item = event.GetItem()
         else:
