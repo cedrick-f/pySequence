@@ -779,33 +779,33 @@ class ElementBase():
     ######################################################################################  
     def GetFicheHTML(self, param = None):
         if param is None:
-            return constantes.BASE_FICHE_HTML
+            return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
         else:
             if param == "CAL":
-                return constantes.BASE_FICHE_HTML_CALENDRIER
+                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CALENDRIER)
             
             elif param == "PB":
-                return constantes.BASE_FICHE_HTML_PROB
+                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROB)
                 
             elif param == "ANN":
                 pass
             
             elif param == "DOM":
-                return constantes.BASE_FICHE_HTML_DOM
+                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_DOM)
                 
             elif param[:3] == "POS":
-                return constantes.BASE_FICHE_HTML_PERIODES
+                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PERIODES)
                 
             elif param[:3] == "EQU":
                 pass
             
             elif param[:2] == "CI":
-                return constantes.BASE_FICHE_HTML_CI
+                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CI)
                 
             else:
                 pass
             
-        return constantes.BASE_FICHE_HTML
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
 
         
         
@@ -1945,7 +1945,7 @@ class Sequence(BaseDoc):
         """
         
         if param is None:   # la Séquence elle-même
-            self.tip.SetHTML(constantes.BASE_FICHE_HTML_SEQ)
+            self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ))
             self.tip.SetWholeText("int", self.intitule)
         
         else:               # Un autre élément de la Séquence
@@ -3325,7 +3325,7 @@ class Projet(BaseDoc):
         """
         
         if param is None:   # le Projet lui-même
-            self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROJET)
+            self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROJET))
             self.tip.SetWholeText("int", self.intitule, size = 4)
             self.tip.SetWholeText("ori", self.origine)
             self.tip.SetWholeText("con", self.contraintes)
@@ -3360,7 +3360,7 @@ class Projet(BaseDoc):
                 competence = prj.getCompetence(param[0], param[1:])
                 if competence is not None:
 #                     print "TIP", param, competence.indicateurs, competence.sousComp
-                    self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
+                    self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
                     
                     k = param[1:].split(u"\n")
                     titre = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
@@ -5695,7 +5695,7 @@ class Progression(BaseDoc):
         """
         
         if param is None:   # la Progression elle-même
-            self.tip.SetHTML(constantes.BASE_FICHE_HTML)
+            self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML))
             
         
         else:               # Un autre élément de la Progression
@@ -5740,7 +5740,7 @@ class Progression(BaseDoc):
                 groupe, competence = competences[0], competences[-1]
                 
                 if len(competences) > 0:
-                    self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
+                    self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
                     k = param[3:]
                     code, groupe = competences[0]
                     nc = getSingulier(ref.dicoCompetences["S"].nomGenerique)
@@ -6047,7 +6047,7 @@ class LienSequence(ElementBase, ElementProgression):
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SEQ
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ)
 
 
     ######################################################################################  
@@ -6191,7 +6191,7 @@ class LienProjet(ElementBase, ElementProgression):
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_PRJ
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PRJ)
 
 
     ######################################################################################  
@@ -6480,7 +6480,7 @@ class CentreInteret(ElementBase):
     
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_CI
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CI)
     
     
     ######################################################################################  
@@ -7093,7 +7093,7 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_COMP
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP)
 
     
     ######################################################################################  
@@ -7279,7 +7279,7 @@ class Savoirs(ElementBase):
     
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SAV
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SAV)
 
     
     ######################################################################################  
@@ -8309,7 +8309,7 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SEANCE
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEANCE)
 
     
     ######################################################################################  
@@ -9252,7 +9252,7 @@ class Tache(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_TACHE
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_TACHE)
     
 
     ######################################################################################  
@@ -9503,7 +9503,7 @@ class Systeme(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SYSTEME
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SYSTEME)
     
     
     ######################################################################################  
@@ -9939,7 +9939,7 @@ class Support(ElementAvecLien, ElementBase):
             
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SUPPORT
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SUPPORT)
 
     
     ######################################################################################  
@@ -9952,6 +9952,11 @@ class Support(ElementAvecLien, ElementBase):
             self.tip.AjouterImg("img", self.image, width = 300)
         else:
             self.tip.Supprime('img')
+            
+        for m in self.modeles:
+            m.SetTip()
+            self.tip.InsererSoup("mod", m.tip.soup)
+        
         self.tip.SetPage()
     
 
@@ -10000,6 +10005,25 @@ class Modele(ElementAvecLien, ElementBase):
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Modele(parent, self)
+    
+    ######################################################################################  
+    def GetArbreLogiciels(self):
+        arbre = []
+        
+        def branche(br, lst):
+            for log in lst:
+                if type(log) == tuple:
+                    if log[0][1:] in self.logiciels:
+                        sbr = []
+                        br.append((log[0], branche(sbr, log[1])))
+                    
+                else:
+                    if log[1:] in self.logiciels:
+                        br.append(log)
+            return br
+         
+        branche(arbre, constantes.LOGICIELS)
+        return arbre
     
     
     ######################################################################################  
@@ -10096,6 +10120,31 @@ class Modele(ElementAvecLien, ElementBase):
 
         
         self.SetCode()
+        
+    
+    ######################################################################################  
+    def GetFicheHTML(self, param = None):
+        return constantes.BASE_FICHE_HTML_MODELE
+
+    
+    ######################################################################################  
+    def SetTip(self):
+#         print "SetTip", self
+        self.tip.SetHTML(self.GetFicheHTML(), "html.parser")
+        
+        
+        
+        self.tip.SetWholeText("int", self.intitule, size=4)
+        self.tip.AjouterHTML("des", XMLtoHTML(self.description))      
+        if self.image is not None:
+            self.tip.AjouterImg("img", self.image, width = 200)
+        else:
+            self.tip.Supprime('img')
+            
+        self.tip.AjouterListe("log", self.GetArbreLogiciels())
+        
+        self.tip.SetPage()
+        
         
         
 ####################################################################################
@@ -10926,14 +10975,14 @@ class Eleve(Personne, ElementBase):
 <td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
 </tr>""" %dic)
 
-        ficheHTML = constantes.BASE_FICHE_HTML_ELEVE
+        ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_ELEVE)
         
         
         t = u""
         for l in ligne:
             t += l+"\n"
 
-        ficheHTML = ficheHTML.replace('{{tableau}}', t)
+        ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
         
         return ficheHTML
 
@@ -11020,15 +11069,19 @@ class Eleve(Personne, ElementBase):
                 for t in keys[disc]:
                     self.tip.AjouterCol("le", t, size = 2) 
             
-            for i, m in enumerate(self.GetModeles()):
-#                 print "mod", m
-                for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
-                    h = u"<p>" + l + u"</p>"
-                    idx = "log"+str(i)+"."+str(j)
-                    h +=u'<img id="%s" src="" alt="">' %idx
-#                     print "   ", h
-                    self.tip.AjouterHTML('mod', h)
-                    self.tip.AjouterImg(idx, bmp)
+            for m in self.GetModeles():
+                m.SetTip()
+                self.tip.InsererSoup("mod", m.tip.soup)
+                
+#             for i, m in enumerate(self.GetModeles()):
+# #                 print "mod", m
+#                 for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
+#                     h = u"<p>" + l + u"</p>"
+#                     idx = "log"+str(i)+"."+str(j)
+#                     h +=u'<img id="%s" src="" alt="">' %idx
+# #                     print "   ", h
+#                     self.tip.AjouterHTML('mod', h)
+#                     self.tip.AjouterImg(idx, bmp)
             
             self.tip.SetPage()
             
@@ -11720,14 +11773,14 @@ class Groupe(ElementBase, Eleve):
 <td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
 </tr>""" %dic)
 
-        ficheHTML = constantes.BASE_FICHE_HTML_GROUPE
+        ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_GROUPE)
         
         
         t = u""
         for l in ligne:
             t += l+"\n"
 
-        ficheHTML = ficheHTML.replace('{{tableau}}', t)
+        ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
         
         return ficheHTML
 
@@ -11811,7 +11864,7 @@ class Prof(Personne):
         
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_PROF
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROF)
         
         
     ######################################################################################  

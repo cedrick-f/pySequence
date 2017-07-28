@@ -11192,24 +11192,24 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
     ######################################################################################  
     def GetPanelPropriete(self, parent, code):
-        if code == "Sea":
-            return PanelPropriete_Racine(parent, constantes.TxtRacineSeance)
-        elif code == "Obj":
-            return PanelPropriete_Racine(parent, constantes.TxtRacineObjectif)
-        elif code == "Pre":
-            return PanelPropriete_Racine(parent, constantes.TxtRacinePrerequis)
-        elif code == "Sys":
-            return PanelPropriete_Racine(parent, constantes.TxtRacineSysteme)
-        elif code == "Equ":
-            return PanelPropriete_Racine(parent, constantes.TxtRacineEquipe)
-        elif code == "Tac":
-            return PanelPropriete_Racine(parent, constantes.TxtRacineTache)
-        elif code == "Ele":
-            return PanelPropriete_Racine(parent, constantes.TxtRacineEleve)
-        elif code == "Seq":
-            return PanelPropriete_Racine(parent, constantes.xmlVide)
-        
-        return 
+#         if code == "Sea":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacineSeance)
+#         elif code == "Obj":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacineObjectif)
+#         elif code == "Pre":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacinePrerequis)
+#         elif code == "Sys":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacineSysteme)
+#         elif code == "Equ":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacineEquipe)
+#         elif code == "Tac":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacineTache)
+#         elif code == "Ele":
+#             return PanelPropriete_Racine(parent, constantes.TxtRacineEleve)
+#         elif code == "Seq":
+        return PanelPropriete_Racine(parent, constantes.xmlVide)
+#         
+#         return 
     
     
     ####################################################################################
@@ -13382,9 +13382,6 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
             (fonction récursive)
         """ 
 #         print "CheckItems", listItems
-        
-        
-        
         if itemParent is None:
             itemParent = self.GetRootItem()
         else:
@@ -14666,8 +14663,12 @@ class PopupInfo(wx.PopupWindow):
 #        self.branche = branche
 
     #####################################################################################
-    def SetHTML(self, ficheHTML):
-        self.soup = BeautifulSoup(ficheHTML, "html5lib")#.decode('utf-8')
+    def SetHTML(self, ficheHTML, parser = "html5lib"):
+#         print ficheHTML
+        self.soup = BeautifulSoup(ficheHTML, parser)#.decode('utf-8')
+#         print " >>>>>>"
+#         print self.soup.prettify()
+        
 #.encode('utf-8', errors="ignore"), from_encoding="utf-8"
 
 
@@ -14689,8 +14690,16 @@ class PopupInfo(wx.PopupWindow):
         for c in t.contents:
             tag.append(c)
         
-        
-        
+    
+    #####################################################################################
+    def InsererSoup(self, Id, soup):
+        """ Insere un texte au format soup
+        """
+#         print "AjouterHTML", text
+        tag = self.soup.find(id=Id)
+        tag.append(soup)
+    
+    
     #####################################################################################
     def SetWholeText(self, Id, text, bcoul = None, fcoul = "black", 
                      bold = False, italic = False, size = 0):
@@ -14702,6 +14711,8 @@ class PopupInfo(wx.PopupWindow):
         
 #         text = text.replace("\n", "<br/>")
         tag = self.soup.find(id=Id)
+        if tag is None:
+            return
         
         li = text.split("\n")
         for i, t in enumerate(li):
@@ -14819,6 +14830,26 @@ class PopupInfo(wx.PopupWindow):
 #            td.setAttribute("src", self.tfname)
 
 
+    #####################################################################################
+    def AjouterListe(self, idListe, lst_log):
+        liste = self.soup.find(id = idListe)
+        
+        def Liste(l, l_log):
+            ul = self.soup.new_tag("ul")
+            l.append(ul)
+            
+            for log in l_log:
+                li = self.soup.new_tag("li")
+                if type(log) == tuple:
+                    li.append(log[0][1:])
+                    Liste(li, log[1])
+                else:
+                    li.append(log[1:])    
+                ul.append(li)
+
+        Liste(liste, lst_log)
+        
+        
     #####################################################################################
     def AjouterElemListeUL(self, idListe, li):
         liste = self.soup.find(id = idListe)
