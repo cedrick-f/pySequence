@@ -50,6 +50,8 @@ DEBUG = False
 # Outils système
 import os, sys
 import util_path
+import zipfile
+import shutil
 
 print sys.version_info
 
@@ -490,6 +492,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.Bind(wx.EVT_MENU, self.genererGrillesPdf, id=20)
             
         self.Bind(wx.EVT_MENU, self.genererFicheValidation, id=19)
+        
+        self.Bind(wx.EVT_MENU, self.genererZip, id=25)
         
 #        if sys.platform == "win32":
 #            self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
@@ -944,7 +948,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         file_menu.Append(19, u"&Générer le dossier de validation projet\tAlt+V")
         
-        
+        file_menu.Append(25, u"Générer le dossier complet (archive &Zip)\tAlt+Z")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
@@ -1421,7 +1425,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if page != None:
             page.exporterDetails(event)
     
-    
+    #############################################################################
+    def genererZip(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.genererZip(event)
+            
     #############################################################################
     def genererGrilles(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
@@ -1951,6 +1960,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def exporterFichePDF(self, nomFichier, pourDossierValidation = False):
+        """ Exporte la fiche au format PDF
+        
+            pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
+        """
         # Le décodage/réencodage est obligatoire sous peine de crash !!
         try:
             PDFsurface = cairo.PDFSurface(nomFichier.decode(SYSTEM_ENCODING).encode(FILE_ENCODING), 595, 842)
@@ -1969,7 +1982,35 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             draw_cairo_prg.Draw(ctx, self.progression)
         
         PDFsurface.finish()
+    
+    
+    #############################################################################
+    def exporterFicheSVG(self, nomFichier, pourDossierValidation = False):
+        """ Exporte la fiche au format PDF
         
+            pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
+        """
+        try:
+            SVGsurface = cairo.SVGSurface(nomFichier, 595, 842)
+        except IOError:
+            Dialog_ErreurAccesFichier(nomFichier)
+            wx.EndBusyCursor()
+            return
+        
+        ctx = cairo.Context (SVGsurface)
+        ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
+        if self.typ == 'seq':
+            draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+        elif self.typ == 'prj':
+            draw_cairo_prj.Draw(ctx, self.projet)
+        elif self.typ == 'prg':
+            draw_cairo_prg.Draw(ctx, self.progression)
+            
+        SVGsurface.finish()
+        self.enrichirSVG(nomFichier)
+    
+    
+    
     
     #############################################################################
     def exporterFiche(self, event = None):
@@ -1993,22 +2034,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 self.DossierSauvegarde = os.path.split(path)[0]
                 os.startfile(path)
             elif ext == ".svg":
-                try:
-                    SVGsurface = cairo.SVGSurface(path, 595, 842)
-                except IOError:
-                    Dialog_ErreurAccesFichier(path)
-                    wx.EndBusyCursor()
-                    return
-                
-                ctx = cairo.Context (SVGsurface)
-                ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
-                if self.typ == 'seq':
-                    draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
-                elif self.typ == 'prj':
-                    draw_cairo_prj.Draw(ctx, self.projet)
+                self.exporterFicheSVG(path)
                 self.DossierSauvegarde = os.path.split(path)[0]
-                SVGsurface.finish()
-                self.enrichirSVG(path)
+                os.startfile(path)
+                
             wx.EndBusyCursor()
 
 #                os.startfile(path)
@@ -2037,6 +2066,69 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             win.Show()
 #            win.Destroy()
 
+
+    #############################################################################
+    def genererZip(self, event = None):
+        print "exporterZip"
+        mesFormats = "zip (.zip)|*.zip"
+
+        dlg = wx.FileDialog(
+            self, message=u"Enregistrer l'archive sous ...", 
+            defaultDir=toSystemEncoding(self.DossierSauvegarde) , 
+            defaultFile = os.path.splitext(self.fichierCourant)[0]+".zip", 
+            wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+            )
+        dlg.SetFilterIndex(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()#.encode(FILE_ENCODING)
+            dir, ext = os.path.splitext(path)
+            nomGen = os.path.join(dir, os.path.splitext(os.path.split(path)[1])[0])
+#             print "  path :", path
+#             print "  dir :", dir
+#             print "  nomGen :", nomGen
+            
+            
+            dlg.Destroy()
+        
+            wx.BeginBusyCursor()
+
+            os.mkdir(dir)
+            
+            self.exporterFichePDF(nomGen+".pdf")
+            self.exporterFicheSVG(nomGen+".svg")
+            
+    
+            shutil.copy2(self.fichierCourant, dir)
+
+            if self.typ == 'prj':
+                dirGrilles = os.path.join(dir, "Grilles")
+                os.mkdir(dirGrilles)
+                for e in self.projet.eleves:
+                    for g in e.grille.values():
+                        ng = g.GetAbsPath(dir)
+                        if os.path.isfile(ng):
+                            shutil.copy2(ng, dirGrilles)
+                
+            
+            shutil.make_archive(dir, 'zip', dir)
+            
+            
+                
+#             zipf = zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED)
+#             for root, dirs, files in os.walk(dir):
+#                 for file in files:
+#                     zipf.write(os.path.join(root, file), arcname = file)
+#             zipf.close()
+            
+            shutil.rmtree(dir)
+                
+            wx.EndBusyCursor()
+
+        else:
+            dlg.Destroy()
+        return
+        
+        
     #############################################################################
     def genererGrilles(self, event = None):
         return
@@ -10290,7 +10382,8 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-#        print "MiseAJour panelPropriete Personne"
+        print "MiseAJour panelPropriete Personne", self.personne
+        print self.personne.grille
         self.textctrln.ChangeValue(self.personne.nom)
         self.textctrlp.ChangeValue(self.personne.prenom)
         if hasattr(self, 'cbPhas'):
@@ -13219,8 +13312,6 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
                  size = wx.DefaultSize,
                  style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
 
-#        wx.Panel.__init__(self, parent, -1, pos, size)
-        
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150, -1), style, 
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
                                    |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
@@ -13395,7 +13486,7 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         while child:
             name = self.Match(child, listItems)
             if name is not None:
-                listItems.remove(name)
+#                 listItems.remove(name)
                 child.Check()
                 child.Expand()
                 if child.GetWindow() is not None:
@@ -14832,22 +14923,25 @@ class PopupInfo(wx.PopupWindow):
 
     #####################################################################################
     def AjouterListe(self, idListe, lst_log):
+        t = ['disc', 'square', 'circle']
+
         liste = self.soup.find(id = idListe)
         
-        def Liste(l, l_log):
+        def Liste(l, l_log, i):
             ul = self.soup.new_tag("ul")
             l.append(ul)
-            
+            ul['type'] = t[i]
             for log in l_log:
                 li = self.soup.new_tag("li")
+                
                 if type(log) == tuple:
                     li.append(log[0][1:])
-                    Liste(li, log[1])
+                    Liste(li, log[1], (i+1) % 3)
                 else:
                     li.append(log[1:])    
                 ul.append(li)
 
-        Liste(liste, lst_log)
+        Liste(liste, lst_log, 0)
         
         
     #####################################################################################

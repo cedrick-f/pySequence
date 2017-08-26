@@ -10492,6 +10492,7 @@ class Eleve(Personne, ElementBase):
         
         prj = self.GetDocument().GetProjetRef()
         
+        wx.BeginBusyCursor()
         #
         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
         #
@@ -10522,6 +10523,7 @@ class Eleve(Personne, ElementBase):
                                   u" - que le dossier choisi n'est pas protégé en écriture"%f)
 
         if tableaux == None:
+            wx.EndBusyCursor()
             return []
         
         #
@@ -10556,6 +10558,8 @@ class Eleve(Personne, ElementBase):
             self.grille[k] = Lien(typ = 'f')
             self.grille[k].path = toFileEncoding(nomFichiers[k])
         
+#         self.GetDocument().GetApp().MarquerFichierCourantModifie()
+        self.GetDocument().GetApp().panelProp.panel.MiseAJour(False, True)
         
         #
         # Message de fin
@@ -10568,7 +10572,7 @@ class Eleve(Personne, ElementBase):
                 t += u"de la grille"
             t += u"\n\n"
             t += u"\n".join(nomFichiers.values())
-            t += u"terminée avec "
+            t += u"\n\nterminée avec "
             if len(log) == 0:
                 t += u"succès !"
             else:
@@ -10576,7 +10580,7 @@ class Eleve(Personne, ElementBase):
                 t += u"\n".join(log)
             messageInfo(self.GetDocument().GetApp(), u"Génération terminée", t)
             
-        
+        wx.EndBusyCursor()
 #         self.GetPanelPropriete().MiseAJour()
         return log
     
