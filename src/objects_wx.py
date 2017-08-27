@@ -2070,6 +2070,22 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def genererZip(self, event = None):
         print "exporterZip"
+        
+        message = u""
+        
+        def ecrire(fct, *args, **kargs):
+            message = dlg.GetMessage()
+            message += os.path.split(args[0])[1]
+            try:
+                fct(*args, **kargs)
+                message += u"  ... OK\n"
+                
+            except:
+                message += u"  ... ERREUR\n"
+            dlg.Update(dlg.count+1, message)
+            
+        
+        
         mesFormats = "zip (.zip)|*.zip"
 
         dlg = wx.FileDialog(
@@ -2081,24 +2097,51 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()#.encode(FILE_ENCODING)
+            dlg.Destroy()
+            
             dir, ext = os.path.splitext(path)
+            if os.path.exists(dir):
+                dlg = wx.MessageDialog(self, u"Le dossier suivant existe déja :\n\n%s\n\n"\
+                                             u"Si vous continuez, il sera effacé !\n\n"\
+                                             u"Voulez-vous continuer ?" %dir,
+                                             u"Dossier existant",
+                                             wx.ICON_WARNING | wx.YES_NO
+                                             )
+                retCode = dlg.ShowModal()
+                if retCode == wx.ID_NO:
+                    return 
+                     
+            
             nomGen = os.path.join(dir, os.path.splitext(os.path.split(path)[1])[0])
 #             print "  path :", path
 #             print "  dir :", dir
 #             print "  nomGen :", nomGen
             
-            
-            dlg.Destroy()
-        
             wx.BeginBusyCursor()
-
-            os.mkdir(dir)
             
-            self.exporterFichePDF(nomGen+".pdf")
-            self.exporterFicheSVG(nomGen+".svg")
+            if self.typ == 'prj':
+                maxCount = 4 + 2 * len(self.projet.eleves)
+            else:
+                maxCount = 3
+            
+            dlg = myProgressDialog(u"Création dune archive",
+                                   u"Fichiers enregistrés dans l'archive :\n\n",
+                                   maxCount,
+                                   wx.GetTopLevelParent(self))
+
+            try:
+                os.mkdir(dir)
+            except:
+                pass
+            
+            
+            ecrire(self.exporterFichePDF, nomGen+".pdf")
+            ecrire(self.exporterFicheSVG, nomGen+".svg")
+            
+#             self.exporterFicheSVG(nomGen+".svg")
             
     
-            shutil.copy2(self.fichierCourant, dir)
+            ecrire(shutil.copy2,self.fichierCourant, dir)
 
             if self.typ == 'prj':
                 dirGrilles = os.path.join(dir, "Grilles")
@@ -2107,20 +2150,15 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                     for g in e.grille.values():
                         ng = g.GetAbsPath(dir)
                         if os.path.isfile(ng):
-                            shutil.copy2(ng, dirGrilles)
+                            ecrire(shutil.copy2,ng, dirGrilles)
+                
+                ecrire(genpdf.genererDossierValidation,nomGen+u"_Dossier_Validation.pdf", self.projet, self)
                 
             
             shutil.make_archive(dir, 'zip', dir)
             
-            
-                
-#             zipf = zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED)
-#             for root, dirs, files in os.walk(dir):
-#                 for file in files:
-#                     zipf.write(os.path.join(root, file), arcname = file)
-#             zipf.close()
-            
-            shutil.rmtree(dir)
+            dlg.Update(maxCount, dlg.GetMessage()+u"Terminé !")
+#             shutil.rmtree(dir)
                 
             wx.EndBusyCursor()
 
@@ -14663,7 +14701,10 @@ class myProgressDialog(wx.Frame):
 #         self.Refresh()
         
         
-
+    def GetMessage(self):
+        return self.titre.GetLabel()+u"\n\n"+self.message.GetValue()
+    
+    
     def SetMessage(self, message):
         m = message.split(u"\n\n")
         if len(m) > 1:
