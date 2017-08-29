@@ -3703,8 +3703,11 @@ class Projet(BaseDoc):
         if isinstance(data, Tache) and data.phase not in TOUTES_REVUES_EVAL_SOUT:
             self.SupprimerTache(item = item)
             
+        elif isinstance(data, Groupe):
+            self.SupprimerGroupe(item = item)
+            
         elif isinstance(data, Eleve):
-            self.SupprimerEleve(item = item)
+            self.SupprimerEleve(item = item)    
         
         elif isinstance(data, Prof):
             self.SupprimerProf(item = item)
@@ -10153,12 +10156,12 @@ class Modele(ElementAvecLien, ElementBase):
 #
 ####################################################################################
 class Personne(ElementBase):
-    def __init__(self, doc, Id = 0):
+    def __init__(self, doc, Id = 0, nom = u"", prenom = u""):
         self.doc = doc
         ElementBase.__init__(self)
 
-        self.nom = u""
-        self.prenom = u""
+        self.nom = nom
+        self.prenom = prenom
         self.image = None
         self.id = Id # Un identifiant unique = nombre > 0
 
@@ -10362,7 +10365,7 @@ class Personne(ElementBase):
 #
 ####################################################################################
 class Eleve(Personne, ElementBase):
-    def __init__(self, doc, ident = 0):
+    def __init__(self, doc, ident = 0, nom = u"", prenom = u""):
         
 #         self.titre = u"élève"
         self.titre = getSingulier(doc.getNomEleves())
@@ -10372,7 +10375,7 @@ class Eleve(Personne, ElementBase):
         for k in doc.GetProjetRef().parties.keys():
             self.grille[k] = Lien(typ = 'f')
         
-        Personne.__init__(self, doc, ident)
+        Personne.__init__(self, doc, ident, nom = nom, prenom = prenom)
  
         self.modeles = []
         
@@ -11136,6 +11139,8 @@ class Groupe(ElementBase, Eleve):
         self.titre = u"groupe"
         self.code = "Grp"
         
+        self.eleves = []
+        
         self.image = None
         
         self.typeEnseignement = self.GetReferentiel().Enseignement[0]
@@ -11162,7 +11167,25 @@ class Groupe(ElementBase, Eleve):
         self.nom = nom
         if hasattr(self, 'arbre'):
             self.SetCode()
-            
+    
+     
+    ######################################################################################  
+    def GetListEleves(self):
+        l = []
+        for e in self.eleves:
+            l.append((e.GetNom(), e.GetPrenom()))
+        return l
+    
+    
+    ######################################################################################  
+    def SetListEleves(self, lst):
+        self.eleves = []
+        for n, p in lst:
+            eleve = Eleve(self.GetDocument(), nom = n, prenom = p)
+            self.eleves.append(eleve)
+    
+    
+    
     ######################################################################################  
     def GetDuree(self, phase = None, total = False):
 #        print "GetDuree", phase
@@ -11664,6 +11687,10 @@ class Groupe(ElementBase, Eleve):
         
         self.getBrancheImage(groupe, "Avatar")
         
+        eleves = ET.SubElement(groupe, "Eleves")
+        for e in self.eleves:
+            eleves.append(e.getBranche())
+            
         groupe.set("Etab", self.etablissement)
         groupe.set("Ville", self.ville)
         groupe.set("Acad", self.academie)
@@ -11680,6 +11707,14 @@ class Groupe(ElementBase, Eleve):
         
         self.setBrancheImage(branche, "Avatar")
         
+        brancheEle = branche.find("Eleves")
+        self.eleves = []
+        for e in list(brancheEle):
+            eleve = Eleve(self.GetDocument())
+            eleve.setBranche(e)
+            self.eleves.append(eleve)
+            
+            
         #
         # Etablissement
         #

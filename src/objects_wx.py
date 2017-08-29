@@ -159,7 +159,7 @@ import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 # import widgets
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
-                    isstring, \
+                    isstring, EditableListCtrl, \
                     TextCtrl_Help, CloseFenHelp, \
                     messageInfo, rognerImage, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone
@@ -2124,7 +2124,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             else:
                 maxCount = 3
             
-            dlg = myProgressDialog(u"Création dune archive",
+            dlg = myProgressDialog(u"Création d'une archive",
                                    u"Fichiers enregistrés dans l'archive :\n\n",
                                    maxCount,
                                    wx.GetTopLevelParent(self))
@@ -10563,12 +10563,41 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.sizer.Add(sb, (1,1), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
+        
         #
         # Portrait
         #
         isizer = self.CreateImageSelect(self, titre = u"portrait", prefixe = u"le ", defaut = constantes.AVATAR_DEFAUT)
         self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
-                      
+                    
+                    
+                    
+        #
+        # Elèves
+        #
+        ref = groupe.GetReferentiel()
+        n = getPluriel(ref.labels["ELEVES"][0]).capitalize()
+        titre = myStaticBox(self, -1, u"%s du groupe" %n)
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        
+
+        self.list_ctrl = EditableListCtrl(self, -1,
+                                         img = (images.Icone_ajout_eleve.GetBitmap(),
+                                                images.Icone_suppr_eleve.GetBitmap()),
+                                          hlp = (u"Ajouter un %s au groupe" %getSingulier(ref.labels["ELEVES"][0]), 
+                                                 u"Supprimer la selection"))
+        self.list_ctrl.InsertColumn(0, u'Nom')
+        self.list_ctrl.InsertColumn(1, u'Prénom')
+#         self.list_ctrl.Bind(wx.EVT_TOOL, self.OnClick)
+        self.list_ctrl.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnClick)
+        self.list_ctrl.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnClick)
+        self.list_ctrl.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnClick)
+        
+        sb.Add(self.list_ctrl, flag = wx.EXPAND)
+        
+        
+        self.sizer.Add(sb, (0,3), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+        
         self.MiseAJour()
         
         self.sizer.AddGrowableRow(0)
@@ -10578,10 +10607,24 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         self.Layout()
         
-        
     
-            
-            
+    
+    #############################################################################            
+    def OnClick(self, event):
+        print "OnClick"
+        event.Skip()
+        wx.CallAfter(self.SetList)
+    
+    
+    #############################################################################            
+    def SetList(self):
+        l = []
+        for n, p in self.list_ctrl.GetListItem():
+            l.append((n, p))
+        self.groupe.SetListEleves(l)
+        ref = self.groupe.GetReferentiel()
+        wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de la liste des %s d groupe." %getPluriel(ref.labels["ELEVES"][0]))
+    
     #############################################################################            
     def GetDocument(self):
         return self.groupe.GetDocument()
@@ -10707,6 +10750,8 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.cbv.SetValue(self.groupe.ville)
         self.EvtComboVille(modif = False)
         self.cbe.SetValue(self.groupe.etablissement)
+        
+        self.list_ctrl.SetListItem(self.groupe.GetListEleves())
         
         if sendEvt:
             self.sendEvent()
@@ -12568,7 +12613,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             self.SetColumnWidth(i+1, 0)
         
         self.colEleves = len(prj.parties.keys())+1
-        self.AddColumn(u"Eleves")
+        self.AddColumn(getPluriel(tache.projet.GetReferentiel().labels["ELEVES"][0]))#(u"Eleves")
         self.SetColumnWidth(self.colEleves, 0)
         
         
