@@ -137,7 +137,8 @@ from constantes import calculerEffectifs, \
                         getSingulier, getPluriel, getSingulierPluriel, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, WMIN_PROP, HMIN_PROP, \
-                        WMIN_STRUC, HMIN_STRUC, LOGICIELS, IMG_LOGICIELS#, bmp
+                        WMIN_STRUC, HMIN_STRUC, LOGICIELS, IMG_LOGICIELS, \
+                        IMG_SIZE_TB, IMG_SIZE_TREE#, bmp
 import constantes
 
 import couleur
@@ -210,6 +211,8 @@ import threading
 
 # from pysequence import *
 # import pysequence   # déplacé à la fin
+
+SSCALE = 1.0 # Facteur d'échelle à appliquer à toutes les dimensions des widgets
 
 
 ####################################################################################
@@ -369,11 +372,14 @@ class BoutonToolBar():
 #
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
-    def __init__(self, parent, fichier):
+    def __init__(self, parent, fichier, echelle):
+        global SSCALE
         aui.AuiMDIParentFrame.__init__(self, parent, -1, 
                                        version.GetAppnameVersion(), 
                                        style=wx.DEFAULT_FRAME_STYLE)
         
+        SSCALE = echelle
+        print "SSCALE", SSCALE
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
 
@@ -425,6 +431,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #print wx.GetDisplaySize()
         
         pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
+        
+#         self.WMIN_STRUC*SSCALE = self.options.optFenetre["Larg_pnl_Arbre"]
+#         self.HMIN_PROP*SSCALE = self.options.optFenetre["Haut_pnt_Prop"]
+        
         
 #         print pos, siz
 #         print len(pos), len(siz)
@@ -586,22 +596,23 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def GetTools(self, typ):
+        ts = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         if typ == 'prj':
             return [(50 , BoutonToolBar(u"Ajouter un élève",
                                    scaleImage(images.Icone_ajout_eleve.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                    shortHelp = u"Ajout d'un élève au projet", 
                                    longHelp = u"Ajout d'un élève au projet")),
                     
                     (54 , BoutonToolBar(u"Ajouter un groupe d'élèves",
                                    scaleImage(images.Icone_ajout_groupe.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                    shortHelp = u"Ajout d'un groupe d'élèves au projet", 
                                    longHelp = u"Ajout d'un groupe d'élèves au projet")),
                 
                     (51 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
@@ -609,13 +620,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     
                     (52 , BoutonToolBar(u"Ajouter une tâche", 
                                        scaleImage(images.Icone_ajout_tache.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp=u"Ajout d'une tâche au projet", 
                                        longHelp=u"Ajout d'une tâche au projet")),
                     
                     (53 , BoutonToolBar(u"Ajouter une revue", 
                                        scaleImage(images.Icone_ajout_revue.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp = u"Ajout d'une revue au projet", 
                                        longHelp = u"Ajout d'une revue au projet")),
                     
@@ -623,7 +634,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     
                     (55 , BoutonToolBar(u"Ajouter un modèle", 
                                        scaleImage(images.Icone_ajout_modele.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp = u"Ajout d'un modèle numérique du support", 
                                        longHelp = u"Ajout d'un modèle numérique du support")),
                     
@@ -632,19 +643,19 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         elif typ == 'seq':
             return [(60 , BoutonToolBar(u"Ajouter une séance", 
                                     scaleImage(images.Icone_ajout_seance.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                     shortHelp=u"Ajout d'une séance dans la séquence", 
                                     longHelp=u"Ajout d'une séance dans la séquence")),
                     
                     (62 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
                     (61 , BoutonToolBar(u"Ajouter un système", 
                                        scaleImage(images.Icone_ajout_systeme.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp=u"Ajout d'un système", 
                                        longHelp=u"Ajout d'un système"))
                       ]
@@ -652,7 +663,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         elif typ == 'prg':
             return [(70 , BoutonToolBar(u"Actualiser la Progression", 
                                        scaleImage(images.Bouton_Actualiser.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp = u"Actualiser la Progression", 
                                        longHelp = u"Actualiser la Progression")),
                     
@@ -660,19 +671,19 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     
                     (71 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique")),
                     
                     (72 , BoutonToolBar(u"Ajouter une Séquence",
                                    scaleImage(images.Icone_ajout_seq.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                    shortHelp = u"Ajout d'une Séquence à la Progression", 
                                    longHelp = u"Ajout d'une Séquence à la Progression")),
                     
                     (73 , BoutonToolBar(u"Ajouter un Projet",
                                    scaleImage(images.Icone_ajout_prj.GetBitmap(),
-                                                  *constantes.IMG_SIZE_TB), 
+                                                  *ts), 
                                    shortHelp = u"Ajout d'un Projet à la Progression", 
                                    longHelp = u"Ajout d'un Projet à la Progression")),
                     
@@ -692,7 +703,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         
         
-        tsize = constantes.IMG_SIZE_TB
+        tsize = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         
         new_bmp =  scaleImage(images.Icone_new.GetBitmap(), *tsize)
         open_bmp = scaleImage(images.Icone_open.GetBitmap(), *tsize)
@@ -1605,6 +1616,35 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         return prog
     
     
+    
+#     #########################################################################################################
+#     def GetLargPnlArbre(self):
+#         w = []
+#         for m in self.GetChildren():
+#             if isinstance(m, aui.AuiMDIClientWindow):
+#                 for k in m.GetChildren():
+#                     if isinstance(k, FenetreDocument):
+#                         w.append(k.GetLargPnlArbre())
+#         if len(w) > 0:
+#             return max(w)
+#         else:
+#             return WMIN_STRUC*SSCALE
+#          
+#      
+#     #########################################################################################################
+#     def GetHautPnlProp(self):
+#         h = []
+#         for m in self.GetChildren():
+#             if isinstance(m, aui.AuiMDIClientWindow):
+#                 for k in m.GetChildren():
+#                     if isinstance(k, FenetreDocument):
+#                         h.append(k.GetHautPnlProp())
+#         if len(h) > 0:
+#             return max(h)
+#         else:
+#             return HMIN_PROP*SSCALE
+    
+    
     #############################################################################
     def OnClose(self, evt):
 #        print "OnClose"
@@ -1615,6 +1655,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "   Erreur enregistrement options...",
             
+        #
+        # Récupération des dimensions des fenêtres
+        #
+           
+        
         try:
             self.options.definir()
             self.options.valider(self)
@@ -1716,6 +1761,16 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     def HideTip(self, event = None):
         print "HideTip document"
         self.GetDocument().HideTip()
+    
+    
+#     #########################################################################################################
+#     def GetLargPnlArbre(self):
+#         return self.arbre.GetSize()[0]
+#         
+#     
+#     #########################################################################################################
+#     def GetHautPnlProp(self):
+#         return self.panelProp.GetSize()[1]
         
         
     #########################################################################################################
@@ -1773,8 +1828,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #                         Name(u"Structure").
                          Left().Layer(1).
 #                         Floatable(False).
-                         BestSize((WMIN_STRUC, HMIN_STRUC)).
-                         MinSize((WMIN_STRUC, -1)).
+                         BestSize((WMIN_STRUC*SSCALE, HMIN_STRUC*SSCALE)).
+                         MinSize((WMIN_STRUC*SSCALE, -1)).
                          Dockable(True).
 #                         DockFixed().
 #                         Gripper(False).
@@ -1796,8 +1851,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          Bottom().
                          Layer(1).
 #                         Floatable(False).
-                         BestSize((WMIN_PROP, HMIN_PROP)).
-                         MinSize((WMIN_PROP, HMIN_PROP)).
+                         BestSize((WMIN_PROP*SSCALE, HMIN_PROP*SSCALE)).
+                         MinSize((WMIN_PROP*SSCALE, HMIN_PROP*SSCALE)).
                          MinimizeButton(True).
                          Resizable(True).
 
@@ -4347,7 +4402,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.Bind(wx.EVT_BUTTON, self.OnClickImage, bt)
         self.btImg = bt
         
-        bt = wx.BitmapButton(parent, -1, scaleImage(images.Icone_supprimer.GetBitmap(), 20, 20))
+        bt = wx.BitmapButton(parent, -1, scaleImage(images.Icone_supprimer.GetBitmap(), 20*SSCALE, 20*SSCALE))
         bt.SetToolTipString(u"Supprimer %s" %prefixe+titre)
         hsizer.Add(bt, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnSupprImage, bt)
@@ -4392,7 +4447,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
     #############################################################################            
     def SetImage(self, sendEvt = False):
         if self.objet.image != None:
-            self.image.SetBitmap(rognerImage(self.objet.image, 200, HMIN_PROP-80))
+            self.image.SetBitmap(rognerImage(self.objet.image, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
         else:
             self.image.SetBitmap(wx.NullBitmap)
         self.sizer.Layout()
@@ -4430,7 +4485,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #             ims.SetSize((100,-1))
         self.icones = []
         for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
-            ico = img.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+            ico = img.ConvertToImage().Scale(20*SSCALE, 20*SSCALE).ConvertToBitmap()
             btn = wx.BitmapButton(pnl, 100+i, ico)
             btn.SetToolTipString(nom)
             self.icones.append(nom)
@@ -4829,9 +4884,9 @@ class PanelPropriete_Projet(PanelPropriete):
         self.annee = Variable(u"Année scolaire", lstVal = self.projet.annee, 
                                    typ = VAR_ENTIER_POS, bornes = [2012,2100])
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
-                                      help = u"Années scolaires", sizeh = 40, 
+                                      help = u"Années scolaires", sizeh = 40*SSCALE, 
                                       unite = str(self.projet.annee+1),
-                                      sliderAGauche = True)
+                                      sliderAGauche = True, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
         
@@ -5048,7 +5103,7 @@ class PanelPropriete_Projet(PanelPropriete):
                                            lstVal = self.projet.nbrParties, 
                                            typ = VAR_ENTIER_POS, bornes = [1,5])
                 self.ctrlNbrParties = VariableCtrl(self.pages['DEC'], self.nbrParties, coef = 1, signeEgal = False,
-                                        help = u"Nombre de sous parties", sizeh = 30)
+                                        help = u"Nombre de sous parties", sizeh = 30*SSCALE, scale = SSCALE)
                 self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrParties)
                 self.pages['DEC'].sizer.Add(self.ctrlNbrParties, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
                 
@@ -5102,7 +5157,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.nb.AddPage(self.pages['TYP'], ref.attributs['TYP'][0])
                 
                 liste = ref.attributs['TYP'][2].split(u"\n")
-                self.lb = wx.CheckListBox(self.pages['TYP'], -1, (80, 50), wx.DefaultSize, liste)
+                self.lb = wx.CheckListBox(self.pages['TYP'], -1, (80*SSCALE, 50*SSCALE), wx.DefaultSize, liste)
                 self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.lb)
                 
                 self.pages['TYP'].sizer.Add(self.lb, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -5434,9 +5489,9 @@ class PanelPropriete_Progression(PanelPropriete):
         self.annee = Variable(u"Année scolaire", lstVal = self.GetDocument().calendrier.annee, 
                                    typ = VAR_ENTIER_POS, bornes = [2012,2100])
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
-                                      help = u"Année scolaire", sizeh = 40, 
+                                      help = u"Année scolaire", sizeh = 40*SSCALE, 
                                       unite = str(self.GetDocument().calendrier.GetAnneeFin()),
-                                      sliderAGauche = True)
+                                      sliderAGauche = True, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
         pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
@@ -5451,8 +5506,8 @@ class PanelPropriete_Progression(PanelPropriete):
         self.nbrCreneaux = Variable(u"Nombre de créneaux", lstVal = self.GetDocument().nbrCreneaux, 
                                    typ = VAR_ENTIER_POS, bornes = [1,5])
         self.ctrlCreneaux = VariableCtrl(pageGen, self.nbrCreneaux, coef = 1, signeEgal = False,
-                                      help = u"Nombre de créneaux horaire", sizeh = 40, 
-                                      sliderAGauche = True)
+                                      help = u"Nombre de créneaux horaire", sizeh = 40*SSCALE, 
+                                      sliderAGauche = True, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlCreneaux)
         sb.Add(self.ctrlCreneaux)
         pageGen.sizer.Add(sb, (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
@@ -5609,6 +5664,7 @@ class PanelOrganisation(wx.Panel):
         self.objet = objet
         self.parent = panel
         
+        bsize = (20*SSCALE, 20*SSCALE)
         sizer = wx.BoxSizer()
         gbsizer = wx.GridBagSizer()
         titre = myStaticBox(self, -1, u"Organisation")
@@ -5618,7 +5674,7 @@ class PanelOrganisation(wx.Panel):
                                    lstVal = self.objet.nbrRevues, 
                                    typ = VAR_ENTIER_POS, bornes = [2,3])
         self.ctrlNbrRevues = VariableCtrl(self, self.nbrRevues, coef = 1, signeEgal = False,
-                                help = u"Nombre de revues de projet (avec évaluation)", sizeh = 30)
+                                help = u"Nombre de revues de projet (avec évaluation)", sizeh = 30*SSCALE, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrRevues)
         gbsizer.Add(self.ctrlNbrRevues, (0,0), (1,2), flag = wx.EXPAND)
         
@@ -5628,13 +5684,13 @@ class PanelOrganisation(wx.Panel):
         self.liste = liste
         self.Bind(wx.EVT_LISTBOX, self.EvtListBox, self.liste)
         
-        buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = (20,20))
+        buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = bsize)
         gbsizer.Add(buttonUp, (1,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonUp)
         buttonUp.SetToolTipString(u"Monter la revue")
         self.buttonUp = buttonUp
         
-        buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = (20,20))
+        buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = bsize)
         gbsizer.Add(buttonDown, (2,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonDown)
         buttonDown.SetToolTipString(u"Descendre la revue")
@@ -5784,7 +5840,7 @@ class PanelPropriete_Classe(PanelPropriete):
         elif typedoc == 'prj':
             t += u" - nombre de revues et positions\n"
     
-        tsize = constantes.IMG_SIZE_TB
+        tsize = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         open_bmp = scaleImage(images.Icone_open.GetBitmap(), *tsize)
         save_bmp =  scaleImage(images.Icone_save.GetBitmap(), *tsize)
         pref_bmp = scaleImage(images.Icone_defaut_pref.GetBitmap(), *tsize)
@@ -5809,7 +5865,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         self.pourProjet = self.GetDocument().estProjet()
         titre = myStaticBox(pageGen, -1, u"Type d'enseignement")
-        titre.SetMinSize((180, 100))
+        titre.SetMinSize((180*SSCALE, 100*SSCALE))
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreTypeEnseignement(pageGen, self)
         self.st_type = wx.StaticText(pageGen, -1, "")
@@ -6532,7 +6588,8 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,40])
         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = u"Nombre d'élèves dans la classe entiére", sizeh = 30, color = coulClasse)
+                                help = u"Nombre d'élèves dans la classe entiére", sizeh = 30*SSCALE, 
+                                color = coulClasse, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
         
@@ -6541,7 +6598,8 @@ class PanelEffectifsClasse(wx.Panel):
                                 lstVal = classe.nbrGroupes['G'], 
                                 typ = VAR_ENTIER_POS, bornes = [1,4])
         self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
-                                    help = u"Nombre de groupes à effectif réduit dans la classe", sizeh = 20, color = self.coulEffRed)
+                                    help = u"Nombre de groupes à effectif réduit dans la classe", sizeh = 20*SSCALE, 
+                                    color = self.coulEffRed, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
         sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
         
@@ -6565,7 +6623,8 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.nbrGroupes['E'], 
                             typ = VAR_ENTIER_POS, bornes = [1,10])
         self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
-                                help = u"Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20, color = self.coulEP)
+                                help = u"Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20*SSCALE, 
+                                color = self.coulEP, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
         self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
@@ -6580,7 +6639,8 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.nbrGroupes['P'], 
                             typ = VAR_ENTIER_POS, bornes = [2,20])
         self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
-                                help = u"Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20, color = self.coulAP)
+                                help = u"Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20*SSCALE, 
+                                color = self.coulAP, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
         self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
@@ -6591,8 +6651,8 @@ class PanelEffectifsClasse(wx.Panel):
 #        self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
         
         
-        # Illistration de la répartition
-        self.bmp = StaticBitmapZoom(self, -1, size = (320, 46))
+        # Illustration de la répartition
+        self.bmp = StaticBitmapZoom(self, -1, size = (320*SSCALE, 46*SSCALE))
         bsizerClasse.Add(self.bmp, flag = wx.EXPAND)
         
         self.lstBoxEffRed = []
@@ -6789,7 +6849,7 @@ class PanelPropriete_CI(PanelPropriete):
                 p = wx.TextCtrl(panelCI, -1, u"1")
                 p.SetToolTipString(u"Poids horaire relatif du "+ getSingulier(ref.nomCI))
                 p.Show(False)
-                p.SetMinSize((30, -1))
+                p.SetMinSize((30*SSCALE, -1))
 #                 hs.Add( p, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)
                 self.grid1.Add( p, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 2 )
                 self.group_ctrls.append((r, t, p))
@@ -6813,7 +6873,7 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Séléction du nombre maxi de CI
         #
-        self.nCI = wx.SpinCtrl(panelCI, -1, u"Nombre maximum de %s" %ref.nomCI, size = (35, -1))
+        self.nCI = wx.SpinCtrl(panelCI, -1, u"Nombre maximum de %s" %ref.nomCI, size = (35*SSCALE, -1))
         self.nCI.SetToolTipString(u"Fixe un nombre maximum de %s sélectionnables.\n" \
                                   u"0 = pas de limite" %ref.nomCI)
         self.nCI.SetRange(0,9)
@@ -6833,7 +6893,7 @@ class PanelPropriete_CI(PanelPropriete):
                                           size = wx.DefaultSize,
                                           style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
         self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
-        self.elb.SetMinSize((-1, 60))
+        self.elb.SetMinSize((-1, 60*SSCALE))
         self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
         self.grid1.Add(self.elb, flag = wx.EXPAND)    
         
@@ -6851,7 +6911,7 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Les Problématiques
         #
-        sbpb = myStaticBox(self, -1, getPluriel(ref.nomPb), size = (200,-1))
+        sbpb = myStaticBox(self, -1, getPluriel(ref.nomPb), size = (200*SSCALE,-1))
         sbspb = wx.StaticBoxSizer(sbpb,wx.HORIZONTAL)
 
         self.panelPb = PanelProblematiques(self, self.CI)
@@ -7113,12 +7173,12 @@ class Panel_Cible(wx.Panel):
         
 #        rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
 #        angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
-        centre = [96, 88]
+        centre = [96*SSCALE, 88*SSCALE]
         
-        rayons = {"F" : 60, 
-                  "S" : 40, 
-                  "C" : 20,
-                  "_" : 90}
+        rayons = {"F" : 60*SSCALE, 
+                  "S" : 40*SSCALE, 
+                  "C" : 20*SSCALE,
+                  "_" : 90*SSCALE}
         angles = {"M" : 0,
                   "E" : 120,
                   "I" : -120,
@@ -7318,7 +7378,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.lien = lien
         PanelPropriete.__init__(self, parent, objet = self.lien)
         
-        self.maxX = 800 # Largeur de l'image "aperçu" zoomée
+        self.maxX = 800*SSCALE # Largeur de l'image "aperçu" zoomée
         self.sequence = self.lien.sequence
         self.classe = None
         self.construire()
@@ -7339,7 +7399,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Intitulé de la séquence
         #
-        sbi = myStaticBox(self, -1, u"Intitulé de la Séquence", size = (200,-1))
+        sbi = myStaticBox(self, -1, u"Intitulé de la Séquence", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
         self.intit.SetTitre(u"Intitulé de la Séquence", self.sequence.getIcone())
@@ -7352,9 +7412,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Sélection du fichier de séquence
         #
-        sb0 = myStaticBox(self, -1, u"Fichier de la Séquence", size = (200,-1))
+        sb0 = myStaticBox(self, -1, u"Fichier de la Séquence", size = (200*SSCALE,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250, -1),
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250*SSCALE, -1),
                                  style = wx.TE_PROCESS_ENTER)
         bt2 = wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
         bt2.SetToolTipString(u"Sélectionner un fichier")
@@ -7370,7 +7430,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300))
+        self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300*SSCALE))
         self.position = PositionCtrl(self, self.sequence.position, 
                                      ref.periodes)
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
@@ -7384,7 +7444,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Aperçu de la séquence
         #
-        size = (141,200) # Rapport A4
+        size = (141*SSCALE,200*SSCALE) # Rapport A4
         sb1 = myStaticBox(self, -1, u"Aperçu de la Séquence", size = size)
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize(size)
@@ -7418,7 +7478,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200,-1))
+        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200*SSCALE,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         
         self.panelPb = PanelProblematiques(self, self.sequence.CI)
@@ -7625,7 +7685,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.lien = lien
         PanelPropriete.__init__(self, parent, objet = self.lien)
         
-        self.maxX = 800 # Largeur de l'image "aperçu" zoomée
+        self.maxX = 800*SSCALE # Largeur de l'image "aperçu" zoomée
         self.projet = self.lien.projet
         self.classe = None
         self.construire()
@@ -7645,7 +7705,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         # Intitulé du Projet
         #
-        sbi = myStaticBox(self, -1, u"Intitulé du Projet", size = (200,-1))
+        sbi = myStaticBox(self, -1, u"Intitulé du Projet", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
         self.intit.SetTitre(u"Intitulé du Projet", self.projet.getIcone())
@@ -7659,9 +7719,9 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         # Sélection du fichier de Projet
         #
-        sb0 = myStaticBox(self, -1, u"Fichier du Projet", size = (200,-1))
+        sb0 = myStaticBox(self, -1, u"Fichier du Projet", size = (200*SSCALE,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250, -1),
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250*SSCALE, -1),
                                  style = wx.TE_PROCESS_ENTER)
         bt2 = wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
         bt2.SetToolTipString(u"Sélectionner un fichier")
@@ -7677,7 +7737,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        self.bmp = wx.StaticBitmap(self, -1, self.projet.getBitmapPeriode(300))
+        self.bmp = wx.StaticBitmap(self, -1, self.projet.getBitmapPeriode(300*SSCALE))
         self.position = PositionCtrl(self, self.projet.position, 
                                      self.projet.GetReferentiel().periodes)
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
@@ -7715,7 +7775,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200,-1))
+        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200*SSCALE,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         self.panelPb = TextCtrl_Help(self, u"")
         self.panelPb.SetTitre(ref.nomPb)
@@ -8312,10 +8372,10 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         titre = wx.StaticText(pageGen, -1, u"Type de %s :" %self.seance.nom_obj)
         listType = self.seance.GetListeTypes()
-        listTypeS = [(ref.seances[t][1], scaleImage(constantes.imagesSeance[t].GetBitmap())) for t in listType] 
+        listTypeS = [(ref.seances[t][1], scaleImage(constantes.imagesSeance[t].GetBitmap(), 24*SSCALE, 24*SSCALE)) for t in listType] 
         tsizer = wx.BoxSizer(wx.VERTICAL)
         cbType = wx.combo.BitmapComboBox(pageGen, -1, u"Choisir un type de %s" %self.seance.nom_obj,
-                             choices = [], size = (-1,25),
+                             choices = [],# size = (-1,25),
                              style = wx.CB_DROPDOWN
                              | wx.TE_PROCESS_ENTER
                              | wx.CB_READONLY
@@ -8360,8 +8420,8 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Systèmes
         #
-        self.box = myStaticBox(pageGen, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
-        self.box.SetMinSize((200,200))
+        self.box = myStaticBox(pageGen, -1, u"Systèmes ou matériels nécessaires", size = (200*SSCALE,200*SSCALE))
+        self.box.SetMinSize((200*SSCALE,200*SSCALE))
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
@@ -8413,7 +8473,7 @@ class PanelPropriete_Seance(PanelPropriete):
         box2 = myStaticBox(pageAff, -1, u"Affichage de l'intitulé")
         bsizer3 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         
-        b = csel.ColourSelect(pageAff, -1, u"Couleur du texte", couleur.GetCouleurWx(self.seance.couleur), size = (200,-1))
+        b = csel.ColourSelect(pageAff, -1, u"Couleur du texte", couleur.GetCouleurWx(self.seance.couleur), size = (200*SSCALE,-1))
         
         bsizer3.Add(b, flag = wx.ALL, border = 2)
         
@@ -8426,8 +8486,8 @@ class PanelPropriete_Seance(PanelPropriete):
         cb.SetValue(self.seance.intituleDansDeroul)
         bsizer3.Add(cb, flag = wx.EXPAND|wx.ALL, border = 2)
         
-        vcTaille = VariableCtrl(pageAff, seance.taille, signeEgal = True, slider = False, sizeh = 40,
-                                help = u"Taille des caractères", unite = u"%")
+        vcTaille = VariableCtrl(pageAff, seance.taille, signeEgal = True, slider = False, sizeh = 40*SSCALE,
+                                help = u"Taille des caractères", unite = u"%", scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcTaille)
         bsizer3.Add(vcTaille, flag = wx.EXPAND|wx.ALL, border = 2)
         self.vcTaille = vcTaille
@@ -8499,7 +8559,7 @@ class PanelPropriete_Seance(PanelPropriete):
         if not self.seance.typeSeance in ["R", "S"]:
             vcDuree = VariableCtrl(self.pageGen, self.seance.duree, coef = 0.25, 
                                    signeEgal = True, slider = False, sizeh = 30,
-                                   help = u"Durée de la séance en heures", unite = u"h")
+                                   help = u"Durée de la séance en heures", unite = u"h", scale = SSCALE)
             self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
             self.bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.LEFT|wx.BOTTOM, border = 2)
@@ -8557,7 +8617,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 
         if self.seance.typeSeance in ref.listeTypeActivite:
             vcNombre = VariableCtrl(self.pageGen, self.seance.nombre, signeEgal = True, slider = False, sizeh = 30,
-                                    help = u"Nombre de groupes réalisant simultanément la même séance")
+                                    help = u"Nombre de groupes réalisant simultanément la même séance", scale = SSCALE)
             self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
             self.vcNombre = vcNombre
             self.bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
@@ -8578,7 +8638,7 @@ class PanelPropriete_Seance(PanelPropriete):
             
         if self.seance.typeSeance == "R":
             vcNombreRot = VariableCtrl(self.pageGen, self.seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
-                                    help = u"Nombre de rotations successives")
+                                    help = u"Nombre de rotations successives", scale = SSCALE)
             self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
             self.vcNombreRot = vcNombreRot
             self.bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
@@ -8666,7 +8726,7 @@ class PanelPropriete_Seance(PanelPropriete):
             for s in self.seance.systemes:
 #                print "   ", type(s), "---", s
                 v = VariableCtrl(self.pageGen, s, signeEgal = False, 
-                                 slider = False, fct = None, help = "", sizeh = 30)
+                                 slider = False, fct = None, help = "", sizeh = 30*SSCALE, scale = SSCALE)
                 self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
                 self.systemeCtrl.append(v)
@@ -8683,7 +8743,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.systemeCtrl = []
             self.box.Hide()
             
-        self.box.SetMinSize((200,200))
+        self.box.SetMinSize((200*SSCALE,200*SSCALE))
         self.Layout()
         self.Thaw()
     
@@ -8959,15 +9019,16 @@ class PanelPropriete_Tache(PanelPropriete):
             
         else:
             cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Sélectionner la phase",
-                                 choices = lstPhases,
-                                 style = wx.CB_DROPDOWN
-                                 | wx.TE_PROCESS_ENTER
-                                 | wx.CB_READONLY
+                                 choices = lstPhases, #size = (-1, 24*SSCALE),
+                                 style = wx.CB_READONLY
+                                        |wx.CB_DROPDOWN
+#                                  | wx.TE_PROCESS_ENTER
+#                                 | 
                                  #| wx.CB_SORT
                                  )
-
+            
             for i, k in enumerate(sorted([k for k in prj.phases.keys() if not k in prj.listPhasesEval])):#ref.listPhases_prj):
-                cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap()))
+                cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap(), 24*SSCALE, 24*SSCALE))
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
             
@@ -9141,6 +9202,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #        wx.CallAfter(self.PostSizeEvent)
 #         self.Show()
         self.Refresh()
+    
 #        wx.CallAfter(self.Layout)
         
 #    ####################################################################################
@@ -9767,7 +9829,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         # Nombre de systèmes disponibles en paralléle
         #
         vcNombre = VariableCtrl(self, systeme.nbrDispo, signeEgal = True, slider = False, 
-                                help = u"Nombre de d'exemplaires de ce système disponibles simultanément.")
+                                help = u"Nombre de d'exemplaires de ce système disponibles simultanément.", scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVar, vcNombre)
         self.vcNombre = vcNombre
         self.sizer.Add(vcNombre, (2,0), (1, 2), flag = wx.TOP|wx.BOTTOM, border = 3)
@@ -10061,7 +10123,7 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         box = myStaticBox(self, -1, u"Identité")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        bsizer.SetMinSize((300,-1))
+        bsizer.SetMinSize((300*SSCALE,-1))
         titre = wx.StaticText(self, -1, u"Nom : ")
         textctrl = wx.TextCtrl(self, 1)
         self.textctrln = textctrl
@@ -10107,8 +10169,8 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         if hasattr(self.personne, 'discipline'):
             titre = wx.StaticText(self, -1, u"Discipline :")
-            cbPhas = wx.combo.BitmapComboBox(self, -1, constantes.NOM_DISCIPLINES[self.personne.discipline],
-                                 choices = constantes.getLstDisciplines(),
+            cbPhas = wx.ComboBox(self, -1, constantes.NOM_DISCIPLINES[self.personne.discipline],
+                                 choices = constantes.getLstDisciplines(), size = (-1, 50*SSCALE),
                                  style = wx.CB_DROPDOWN
                                  | wx.TE_PROCESS_ENTER
                                  | wx.CB_READONLY
@@ -10420,8 +10482,8 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-        print "MiseAJour panelPropriete Personne", self.personne
-        print self.personne.grille
+#         print "MiseAJour panelPropriete Personne", self.personne
+#         print self.personne.grille
         self.textctrln.ChangeValue(self.personne.nom)
         self.textctrlp.ChangeValue(self.personne.prenom)
         if hasattr(self, 'cbPhas'):
@@ -10473,7 +10535,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         #
         self.pourProjet = self.GetDocument().estProjet()
         titre = myStaticBox(self, -1, u"Type d'enseignement")
-        titre.SetMinSize((180, 100))
+        titre.SetMinSize((180*SSCALE, 100*SSCALE))
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreTypeEnseignement(self, self)
         self.st_type = wx.StaticText(self, -1, "")
@@ -10611,7 +10673,7 @@ class PanelPropriete_Groupe(PanelPropriete):
     
     #############################################################################            
     def OnClick(self, event):
-        print "OnClick"
+#         print "OnClick"
         event.Skip()
         wx.CallAfter(self.SetList)
     
@@ -10623,7 +10685,8 @@ class PanelPropriete_Groupe(PanelPropriete):
             l.append((n, p))
         self.groupe.SetListEleves(l)
         ref = self.groupe.GetReferentiel()
-        wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de la liste des %s d groupe." %getPluriel(ref.labels["ELEVES"][0]))
+        self.sendEvent(modif = u"Modification de la liste des %s d groupe." %getPluriel(ref.labels["ELEVES"][0]),
+                           obj = self.groupe)
     
     #############################################################################            
     def GetDocument(self):
@@ -11080,7 +11143,7 @@ class PanelPropriete_Modele(PanelPropriete):
         # Logiciel ArbreLogiciels
         #
         titre = myStaticBox(self, -1, u"Logiciel utilisé")
-        titre.SetMinSize((180, 100))
+        titre.SetMinSize((180*SSCALE, 100*SSCALE))
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreLogiciels(self, self)
         
@@ -11126,7 +11189,7 @@ class PanelPropriete_Modele(PanelPropriete):
                             u" - paramètres principaux\n" \
                             u" - ..."
                             )
-        tc.SetMaxSize((-1, 150))
+        tc.SetMaxSize((-1, 150*SSCALE))
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
@@ -11270,12 +11333,13 @@ class ArbreDoc(CT.CustomTreeCtrl):
         # Les icones des branches
         #
         self.images = {}
-        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+        s = (IMG_SIZE_TREE[0]*SSCALE, IMG_SIZE_TREE[1]*SSCALE)
+        il = wx.ImageList(*s)
         for k, i in imglst:
 #             print k, i.GetBitmap().GetWidth(), i.GetBitmap().GetHeight()
 #             self.images[k] = il.Add(i.GetBitmap())
             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
-                                               *constantes.IMG_SIZE_TREE))
+                                               *s))
         self.AssignImageList(il)
         
         
@@ -11485,12 +11549,12 @@ class ArbreSequence(ArbreDoc):
 #         # Les icones des branches
 #         #
 #         self.images = {}
-#         il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+#         il = wx.ImageList(*constantes.IMG_SIZE_TREE*SSCALE)
 #         for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
 # #             print k, i.GetBitmap().GetWidth(), i.GetBitmap().GetHeight()
 # #             self.images[k] = il.Add(i.GetBitmap())
 #             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
-#                                                *constantes.IMG_SIZE_TREE))
+#                                                *constantes.IMG_SIZE_TREE*SSCALE))
 #         self.AssignImageList(il)
         
         
@@ -11793,11 +11857,11 @@ class ArbreProjet(ArbreDoc):
 #         # Les icones des branches
 #         #
 #         self.images = {}
-#         il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+#         il = wx.ImageList(*constantes.IMG_SIZE_TREE*SSCALE)
 #         for k, i in constantes.imagesProjet.items() + constantes.imagesTaches.items():
 # #             self.images[k] = il.Add(i.GetBitmap())
 #             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
-#                                                *constantes.IMG_SIZE_TREE))
+#                                                *constantes.IMG_SIZE_TREE*SSCALE))
 #             
 #         self.AssignImageList(il)
 
@@ -11956,11 +12020,11 @@ class ArbreProgression(ArbreDoc):
 #         # Les icones des branches
 #         #
 #         self.images = {}
-#         il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+#         il = wx.ImageList(*constantes.IMG_SIZE_TREE*SSCALE)
 #         for k, i in constantes.imagesProgression.items():
 # #             self.images[k] = il.Add(i.GetBitmap())
 #             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
-#                                                *constantes.IMG_SIZE_TREE))
+#                                                *constantes.IMG_SIZE_TREE*SSCALE))
 #         self.AssignImageList(il)
 #         
         #
@@ -12412,7 +12476,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         ww = 0
         for c in range(1, self.GetColumnCount()):
             ww += self.GetColumnWidth(c)
-        w = self.GetClientSize()[0]-20-ww
+        w = self.GetClientSize()[0]-20*SSCALE-ww
         if w != self.GetColumnWidth(0):
             self.SetColumnWidth(0, w)
             if self.IsShown():
@@ -12434,9 +12498,9 @@ class ArbreCompetences(HTL.HyperTreeList):
                 # Coefficient pour le texte en gras (plus large)
                 # Et position en X du texte
                 if item._type == 0:
-                    W = w*0.93 - 5
+                    W = w*0.93 - 5*SSCALE
                 else:
-                    W = w - 35
+                    W = w - 35*SSCALE
                     
                 text = self.GetItemText(item, 0).replace("\n", "")
                 text = wordwrap(text, W, wx.ClientDC(self))
@@ -12589,7 +12653,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         for i, part in enumerate(prj.parties.keys()):
             self.SetColumnText(i+1, u"Poids "+part)
-            self.SetColumnWidth(i+1, 60)
+            self.SetColumnWidth(i+1, 60*SSCALE)
         
         if eleves:
             self.SetColumnWidth(i+2, 0)
@@ -12636,7 +12700,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 affcol = cases
         
         if affcol is not None:
-            self.SetColumnWidth(self.colEleves, max(60, affcol.GetSize()[0]))
+            self.SetColumnWidth(self.colEleves, max(60*SSCALE, affcol.GetSize()[0]))
         self.Layout()
         self.OnSize2()
         
@@ -12888,13 +12952,13 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def MiseAJourCaseEleve(self, codeIndic, etat, eleve, propag = True):
         """ Mise à jour
         """
-        print "MiseAJourCaseEleve", codeIndic, etat, eleve, propag
+#         print "MiseAJourCaseEleve", codeIndic, etat, eleve, propag
         casesEleves = self.GetCasesEleves(codeIndic[1:])
         if casesEleves.EstCocheEleve(eleve) != etat:
             return
         
         estToutCoche = casesEleves.EstToutCoche()
-        print "  estToutCoche =", estToutCoche
+#         print "  estToutCoche =", estToutCoche
         
         comp = codeIndic.split("_")[0]
         
@@ -12988,7 +13052,7 @@ class ArbreFonctionsPrj(ArbreCompetences):
             self.AddColumn(u"")
             self.SetColumnText(i+1, c)
             self.SetColumnAlignment(i+1, wx.ALIGN_CENTER)
-            self.SetColumnWidth(i+1, 30)
+            self.SetColumnWidth(i+1, 30*SSCALE)
             
 #        tache = self.pptache.tache
             
@@ -13147,7 +13211,7 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
         ms = self.GetMaxSize2(self.root)
 #        print "   **", ms
 #        print self.RecurseOnChildren(self.root, 1000, False)
-        self.SetMinSize((ms[0]+5, ms[1]+16))
+        self.SetMinSize((ms[0]+5*SSCALE, ms[1]+16*SSCALE))
 
 
     def GetMaxSize2(self, item, level = 2, maxwidth=0, lastheight = 0):
@@ -13162,9 +13226,9 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
 #            print "  txt =",self.GetItemText(child)
             W, H, lH = dc.GetMultiLineTextExtent(self.GetItemText(child))
 #            print "  W,H, lH =",W,H, lH, self.GetIndent()
-            width = W + self.GetIndent()*level + 10
+            width = W + self.GetIndent()*level + 10*SSCALE
             maxwidth = max(maxwidth, width)
-            lastheight += H + 6
+            lastheight += H + 6*SSCALE
             
             maxwidth, lastheight = self.GetMaxSize2(child, level+1, 
                                                     maxwidth, lastheight)
@@ -13266,7 +13330,7 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
 
 #        wx.Panel.__init__(self, parent, -1, pos, size)
         
-        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150, -1), style, 
+        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150*SSCALE, -1), style, 
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
                                    |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
                                    |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
@@ -13395,15 +13459,15 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
                  size = wx.DefaultSize,
                  style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
 
-        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150, -1), style, 
+        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150*SSCALE, -1), style, 
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
                                    |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
                                    |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
         
         self.dic_img = {}
-        il = wx.ImageList(16, 16)
+        il = wx.ImageList(16*SSCALE, 16*SSCALE)
         for i, (n, img) in enumerate(IMG_LOGICIELS.items()):
-            il.Add(scaleImage(img.GetBitmap(), 16,16))
+            il.Add(scaleImage(img.GetBitmap(), 16*SSCALE,16*SSCALE))
             self.dic_img[n] = i
         self.AssignImageList(il)
         
@@ -13606,7 +13670,7 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
     
     ######################################################################################              
     def OnText(self, event = None):
-        wnd = event.GetEventObject()
+#         wnd = event.GetEventObject()
         event.Skip()
         wx.CallAfter(self.panelParent.OnCheckModele)
 #         print wnd
@@ -13701,7 +13765,7 @@ class PanelProblematiques(wx.Panel):
         self.PbPerso = adv.EditableListBox(self, -1, t,
                                               size = wx.DefaultSize,
                                               style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
-        self.PbPerso.SetMinSize((-1, 60))
+        self.PbPerso.SetMinSize((-1, 60*SSCALE))
         self.PbPerso.SetToolTipString(u"Exprimer ici la(les) %s abordée(s)\n" \
                                       u"ou choisir une parmi les %s envisageables." %(getSingulier(ref.nomPb), getPluriel(ref.nomPb)))
 
@@ -13852,7 +13916,7 @@ class TreeCtrlComboBook(wx.Panel):
         self.texte = wx.StaticText(self, -1, u"", style = wx.ST_NO_AUTORESIZE|wx.ST_ELLIPSIZE_END)#|wx.BORDER_SIMPLE)
 #        self.texte.FitInside()
 #        sizer.Add(self.Bouton, flag = wx.EXPAND)
-        sizer.Add(self.texte, 1, flag = wx.EXPAND|wx.RIGHT, border = 10)
+        sizer.Add(self.texte, 1, flag = wx.EXPAND|wx.RIGHT, border = 10*SSCALE)
         
         self.SetSizerAndFit(sizer)
 
@@ -13865,7 +13929,7 @@ class TreeCtrlComboBook(wx.Panel):
         self.texte.SetSize(self.GetSize())
         w = self.GetSize()[0]
         x, y = self.GetPositionTuple()
-        self.Bouton.Move((x+w-10, y-20))
+        self.Bouton.Move((x+w-10*SSCALE, y-20*SSCALE))
         self.Refresh()
         
     def OnClick(self, evt):
@@ -13877,7 +13941,7 @@ class TreeCtrlComboBook(wx.Panel):
 
         btn = evt.GetEventObject()
         pos = btn.ClientToScreen( (0,0) )
-        win.Position(pos, (600,400))
+        win.Position(pos, (600*SSCALE,400*SSCALE))
         win.Popup()
     
     
@@ -13924,7 +13988,7 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
                                 |wx.TR_LINES_AT_ROOT,
 #                                |wx.SIMPLE_BORDER,
                                 agwStyle = CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT)
-        self.tree.SetMinSize((600,400))
+        self.tree.SetMinSize((600*SSCALE,400*SSCALE))
         ph = None
         for ct in prj.listTaches:
             if ph != prj.taches[ct][0]:
@@ -13983,7 +14047,7 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
 
 
     def GetAdjustedSize(self, minWidth, prefHeight, maxHeight):
-        return wx.Size(minWidth, min(200, maxHeight))
+        return wx.Size(minWidth, min(200*SSCALE, maxHeight))
                        
 
     # helpers
@@ -14012,15 +14076,15 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
     def OnSize(self, evt = None, parentItem = None):
         if parentItem == None:
             parentItem = self.tree.GetRootItem()
-            margin = 15
+            margin = 15*SSCALE
         else:
-            margin = 30
+            margin = 30*SSCALE
             
         w = self.tree.GetSize()[0]
         item, cookie = self.tree.GetFirstChild(parentItem)
         while item:
             text = self.tree.GetItemText(item).replace(u"\n", u"")
-            self.tree.SetItemText(item, wordwrap(text, w-margin-4, wx.ClientDC(self.tree), breakLongWords=False))
+            self.tree.SetItemText(item, wordwrap(text, w-margin-4*SSCALE, wx.ClientDC(self.tree), breakLongWords=False))
             if self.tree.ItemHasChildren(item):
                 item = self.OnSize(parentItem = item)
             item, cookie = self.tree.GetNextChild(parentItem, cookie)
@@ -14283,7 +14347,7 @@ class URLDialog(wx.Dialog):
 class URLSelectorCombo(wx.Panel):
     def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
         wx.Panel.__init__(self, parent, -1)
-        self.SetMaxSize((-1,22))
+        self.SetMaxSize((-1,22*SSCALE))
         
         self.ext = ext
         self.dossier = dossier
@@ -14302,15 +14366,16 @@ class URLSelectorCombo(wx.Panel):
     def CreateSelector(self):
         
         sizer = wx.BoxSizer(wx.HORIZONTAL)
+        bsize = (16*SSCALE, 16*SSCALE)
         
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, 16))
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
         self.texte.SetToolTipString(u"Saisir un nom de fichier/dossier\nou faire glisser un fichier")
         if self.dossier:
-            bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
+            bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
             bt1.SetToolTipString(u"Sélectionner un dossier")
             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
             sizer.Add(bt1)
-        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16, 16)))
+        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
         bt2.SetToolTipString(u"Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
@@ -14318,7 +14383,7 @@ class URLSelectorCombo(wx.Panel):
         sizer.Add(bt2)
         sizer.Add(self.texte,1,flag = wx.EXPAND)
         
-        self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider_GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, (16, 16)))
+        self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider_GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
         self.btnlien.SetToolTipString(u"Ouvrir le lien externe")
         self.btnlien.Show(self.lien.path != "")
         self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
@@ -14496,7 +14561,7 @@ class A_propos(wx.Dialog):
                           lictext)
             
             
-        tl = wx.TextCtrl(licence, -1, lictext, size = (400, -1), 
+        tl = wx.TextCtrl(licence, -1, lictext, size = (400*SSCALE, -1), 
                     style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE )
         s = wx.BoxSizer()
         s.Add(tl, flag = wx.EXPAND)
@@ -14634,7 +14699,7 @@ class myProgressDialog(wx.Frame):
     def __init__(self, titre, message, maximum, parent, style = 0, 
                  btnAnnul = True, msgAnnul = u"Annuler l'opération"):
 
-        wx.Frame.__init__(self, parent, -1, titre, size = (400, 200),
+        wx.Frame.__init__(self, parent, -1, titre, size = (400*SSCALE, 200*SSCALE),
                           style = wx.FRAME_FLOAT_ON_PARENT| wx.CAPTION | wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP)
 #         pre = wx.PreDialog()
 #         pre.Create(parent, -1, titre)
@@ -14656,9 +14721,9 @@ class myProgressDialog(wx.Frame):
 #         self.titre.SetLabelMarkup(u"<big><span fgcolor='blue'>%s</span></big>" %t)
         self.titre.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         self.titre.SetForegroundColour((50,50,200))
-        sizer.Add(self.titre, 0, wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, 20)
+        sizer.Add(self.titre, 0, wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, 20*SSCALE)
 
-        self.message = wx.TextCtrl(panel, -1, size = (-1, 200), 
+        self.message = wx.TextCtrl(panel, -1, size = (-1, 200*SSCALE), 
                                    style = wx.TE_MULTILINE|wx.TE_READONLY|wx.VSCROLL|wx.TE_NOHIDESEL)
         sizer.Add(self.message, 1, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.EXPAND, 15)
         
@@ -14694,7 +14759,7 @@ class myProgressDialog(wx.Frame):
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
         self.CenterOnParent()
-        self.SetMinSize((400, -1))
+        self.SetMinSize((400*SSCALE, -1))
         self.GetParent().Enable(False)
         wx.Frame.Show(self)
         
@@ -14800,7 +14865,7 @@ class myHtmlWindow(html.HtmlWindow):
 
 
 class PopupInfo(wx.PopupWindow):
-    def __init__(self, parent, page, mode = "H", size=(400, 300)):
+    def __init__(self, parent, page, mode = "H", size=(400*SSCALE, 300*SSCALE)):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -15318,7 +15383,7 @@ class DialogChoixDoc(wx.Dialog):
                  ):
 
         wx.Dialog.__init__(self, parent, -1, u"Créer ...", style = style, size = wx.DefaultSize)
-        self.SetMinSize((200,100))
+        self.SetMinSize((200*SSCALE,100*SSCALE))
         sizer = wx.BoxSizer(wx.VERTICAL)
         
         button = wx.Button(self, -1, u"Nouvelle Séquence")
@@ -15499,7 +15564,7 @@ class Panel_Details(wx.Panel):
         self.tb = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                                    wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         
-        tsize = constantes.IMG_SIZE_TB
+        tsize = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         
         edit_bmp = scaleImage(images.document_edit.GetBitmap(),*tsize)
         save_bmp =  scaleImage(images.Icone_save.GetBitmap(),*tsize)
@@ -15637,7 +15702,7 @@ class CodeBranche(wx.Panel):
         self.LayoutFit()
     
     def SetImg(self, bmp):
-        bmp = scaleImage(bmp, *constantes.IMG_SIZE_TREE)
+        bmp = scaleImage(bmp, IMG_SIZE_TREE[0]*SSCALE, IMG_SIZE_TREE[1]*SSCALE)
         self.img.SetBitmap(bmp)
         self.LayoutFit()
         
@@ -15677,7 +15742,7 @@ class SlimSelector(wx.ComboBox):
             height = self.GetSize()[1]
             dc = wx.ClientDC (self)
             tsize = max ( (dc.GetTextExtent (c)[0] for c in choices) )
-            self.SetMinSize ( (tsize+25, height) )     
+            self.SetMinSize ( (tsize+25*SSCALE, height) )     
         
     
         
@@ -15692,7 +15757,7 @@ class DirSelectorCombo(wx.combo.ComboCtrl):
         wx.combo.ComboCtrl.__init__(self, *args, **kw)
 
         # make a custom bitmap showing "..."
-        bw, bh = 14, 16
+        bw, bh = 14*SSCALE, 16*SSCALE
         bmp = wx.EmptyBitmap(bw,bh)
         dc = wx.MemoryDC(bmp)
 
@@ -15814,17 +15879,4 @@ class MessageAideCI(GMD.GenericMessageDialog):
 import pysequence
 
 
-
-
-
-
-
-
-# if __name__ == '__main__':
-#     
-# #    if appli.splash != None:
-#     appli.AfterFlash() # Ouverture de la fenêtre principale
-#     appli.MainLoop()
-# #    else:
-# #        sys.exit()
 

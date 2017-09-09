@@ -402,7 +402,9 @@ class Options:
         #
         self.optFenetre["Position"] = []
         self.optFenetre["Taille"] = []
-
+#         self.optFenetre["Larg_pnl_Arbre"] = constantes.WMIN_STRUC
+#         self.optFenetre["Haut_pnt_Prop"] = constantes.HMIN_PROP
+        
         
         #
         # Projet
@@ -468,7 +470,9 @@ class Options:
         #
         self.optFenetre["Position"] = list(app.GetPosition())
         self.optFenetre["Taille"] = list(app.GetSize())
-        
+#         self.optFenetre["Larg_pnl_Arbre"] = app.GetLargPnlArbre()
+#         self.optFenetre["Haut_pnt_Prop"] = app.GetHautPnlProp()
+#         print "W, H", self.optFenetre["Larg_pnl_Arbre"], self.optFenetre["Haut_pnt_Prop"]
 
 
 

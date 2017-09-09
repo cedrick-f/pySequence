@@ -71,6 +71,67 @@ import version
 
 
 
+# Sources :
+# https://stackoverflow.com/questions/12471772/what-is-better-way-of-getting-windows-version-in-python
+# https://stackoverflow.com/questions/44398075/can-dpi-scaling-be-enabled-disabled-programmatically-on-a-per-session-basis
+
+def get_winver():
+    wv = sys.getwindowsversion()
+    if hasattr(wv, 'service_pack_major'):  # python >= 2.7
+        sp = wv.service_pack_major or 0
+    else:
+        import re
+        r = re.search("\s\d$", wv.service_pack)
+        sp = int(r.group(0)) if r else 0
+    return (wv.major, wv.minor, sp)
+
+
+SSCALE = 1.0
+if 'win' in sys.platform:
+    import ctypes
+#     import platform
+#     print "platform", platform.platform()
+    # Query DPI Awareness (Windows 10 and 8)
+    awareness = ctypes.c_int()
+    errorCode = ctypes.windll.shcore.GetProcessDpiAwareness(0, ctypes.addressof(awareness))
+    print "awareness", awareness.value
+    user32 = ctypes.windll.user32
+    screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+#     print "screensize", screensize
+    
+    WIN_8 = (6, 2, 0)
+    WIN_7 = (6, 1, 0)
+    WIN_SERVER_2008 = (6, 0, 1)
+    WIN_VISTA_SP1 = (6, 0, 1)
+    WIN_VISTA = (6, 0, 0)
+    WIN_SERVER_2003_SP2 = (5, 2, 2)
+    WIN_SERVER_2003_SP1 = (5, 2, 1)
+    WIN_SERVER_2003 = (5, 2, 0)
+    WIN_XP_SP3 = (5, 1, 3)
+    WIN_XP_SP2 = (5, 1, 2)
+    WIN_XP_SP1 = (5, 1, 1)
+    WIN_XP = (5, 1, 0)
+    
+#     print "windows", get_winver()
+    
+    if get_winver() >= WIN_8:
+        # Set DPI Awareness  (Windows 10 and 8)
+        errorCode = ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        # the argument is the awareness level, which can be 0, 1 or 2:
+        # for 1-to-1 pixel control I seem to need it to be non-zero (I'm using level 2)
+    elif get_winver() >= WIN_VISTA:
+        # Set DPI Awareness  (Windows 7 and Vista)
+        success = ctypes.windll.user32.SetProcessDPIAware()
+        # behaviour on later OSes is undefined, although when I run it on my Windows 10 machine, it seems to work with effects identical to SetProcessDpiAwareness(1)
+
+    screensize2 = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+#     print "screensize2", screensize2
+    
+    SSCALE = 1.0*screensize2[0]/screensize[0]
+    print "Facteur d'echelle :", SSCALE
+    
+
+
 FILE_ENCODING = sys.getfilesystemencoding()
 
 
@@ -302,7 +363,7 @@ class MySplashScreen(wx.SplashScreen):
 
         fichier = GetArgFile()
 
-        self.frame = objects_wx.FenetrePrincipale(None, fichier)
+        self.frame = objects_wx.FenetrePrincipale(None, fichier, SSCALE)
         self.frame.Show()
         
 #        self.SetTopWindow(self.frame)
@@ -440,6 +501,32 @@ def GetArgFile():
             fichier = fichier.encode('utf-8')
           
     return fichier
+
+
+# # https://stackoverflow.com/questions/41315873/attempting-to-resolve-blurred-tkinter-text-scaling-on-windows-10-high-dpi-disp
+# def Get_HWND_DPI(window_handle):
+#     #To detect high DPI displays and avoid need to set Windows compatibility flags
+#     import os
+#     if os.name == "nt":
+#         from ctypes import windll, pointer, wintypes
+#         try:
+#             windll.shcore.SetProcessDpiAwareness(1)
+#         except Exception:
+#             pass  # this will fail on Windows Server and maybe early Windows
+#         DPI100pc = 96  # DPI 96 is 100% scaling
+#         DPI_type = 0  # MDT_EFFECTIVE_DPI = 0, MDT_ANGULAR_DPI = 1, MDT_RAW_DPI = 2
+#         winH = wintypes.HWND(window_handle)
+#         monitorhandle = windll.user32.MonitorFromWindow(winH, wintypes.DWORD(2))  # MONITOR_DEFAULTTONEAREST = 2
+#         X = wintypes.UINT()
+#         Y = wintypes.UINT()
+#         try:
+#             windll.shcore.GetDpiForMonitor(monitorhandle, DPI_type, pointer(X), pointer(Y))
+#             return X.value, Y.value, (X.value + Y.value) / (2 * DPI100pc)
+#         except Exception:
+#             return 96, 96, 1  # Assume standard Windows DPI & scaling
+#     else:
+#         return None, None, 1  # What to do for other OSs?
+
 
 
 

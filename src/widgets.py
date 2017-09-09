@@ -570,7 +570,7 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, signeEgal = True, 
-                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = u"", sliderAGauche = False):
+                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = u"", sliderAGauche = False, scale = 1.0):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
@@ -625,7 +625,8 @@ class VariableCtrl(wx.Panel):
         #
         # Contrôle de la variable
         #
-        self.spin = wx.SpinButton(self, -1, size = (15,25), style = wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
+        h = self.text.GetSize()[1]*1.1
+        self.spin = wx.SpinButton(self, -1, size = (2*h/3, h), style = wx.SP_VERTICAL | wx.SP_ARROW_KEYS)#
         
         self.spin.SetRange(-100, 100)
         self.spin.SetValue(0)
@@ -1681,11 +1682,11 @@ class EditableListCtrl(wx.Panel):
         
         
     def OnToolClick(self, event):
-        print "OnToolClick", self.listCtrl.GetItemCount()
+#         print "OnToolClick", self.listCtrl.GetItemCount()
         if event.GetId() == self.IDajout:
             n = self.listCtrl.GetItemCount()
             newindex = self.listCtrl.InsertStringItem(n, self.listCtrl.GetColumn(0).GetText() + str(n))
-            print "  ", newindex
+            
             for col in range(self.listCtrl.GetColumnCount()-1):
                 self.listCtrl.SetStringItem(newindex, col + 1, self.listCtrl.GetColumn(col+1).GetText() + str(n))
     
@@ -1834,7 +1835,7 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
 
 #############################################################################################################
 def scaleImage(image, wf = 24 , hf = 24): 
-    return image.ConvertToImage().Scale(wf, hf, quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
+    return image.ConvertToImage().Scale(int(wf), int(hf), quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
 
 
 #############################################################################################################
