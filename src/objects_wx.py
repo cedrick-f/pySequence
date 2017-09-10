@@ -8859,7 +8859,7 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.seance.typeSeance in ACTIVITES:
             if not deja:
                 for sy in self.seance.GetDocument().systemes:
-                    self.seance.AjouterSysteme(nom = sy.nom, construire = False)
+                    self.seance.AjouterSysteme(sy, construire = False)
         else:
             self.seance.systemes = []
             
