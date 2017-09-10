@@ -1747,8 +1747,10 @@ class EditableListCtrl(wx.Panel):
 #         event.Skip()
 
     
-
-
+import wx.combo
+class CustomComboBox(wx.combo.BitmapComboBox):
+    def __init__(self, *args, **kargs):
+        wx.combo.BitmapComboBox.__init__(self, *args, **kargs)
 
 
 

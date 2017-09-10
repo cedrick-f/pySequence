@@ -50,7 +50,6 @@ DEBUG = False
 # Outils système
 import os, sys
 import util_path
-import zipfile
 import shutil
 
 print sys.version_info
@@ -162,7 +161,7 @@ from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, \
                     TextCtrl_Help, CloseFenHelp, \
-                    messageInfo, rognerImage, \
+                    messageInfo, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone
                     #, chronometrer
 
@@ -3552,7 +3551,7 @@ class FenetreProgression(FenetreDocument):
             root.append(bdoc)
             root.append(bclasse)
             constantes.indent(root)
-            pysequence.enregistrer_root(root, nomFichier)
+            enregistrer_root(root, nomFichier)
             
             wx.EndBusyCursor()
             return 0, path
@@ -10294,11 +10293,17 @@ class PanelPropriete_Personne(PanelPropriete):
 
     #############################################################################            
     def GetListProfs(self):
+        u""" Lit le fichier profs.xml
+            et renvoie la liste des Professeurs
+            qui y sont enregistrés
+        
+        """
         nomFichier = os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS)
         
         if not os.path.exists(nomFichier):
-            return [], ET.Element("Professeurs")
+            return []
         
+        # Lecture du fichier
         fichier = open(nomFichier,'r')
         try:
             root = ET.parse(fichier).getroot()
@@ -10306,29 +10311,29 @@ class PanelPropriete_Personne(PanelPropriete):
             messageErreur(wx.GetTopLevelParent(self), u"Fichier corrompu", 
                               u"Le fichier %s est corrompu !!\n\n"\
                               u"Réparez-le ou supprimez-le pour continuer à utiliser cette fonctionnalité" %nomFichier)
+            return []
+        finally:
             fichier.close()
-            return
         
         list_p = []
 
+        # Conversion des ET.Element en Professeur
         for b in root:
             p = pysequence.Prof(self.personne.GetDocument())
             p.setBranche(b)
-            list_p.append((p, b))
+            list_p.append(p)
         
+        # Tri par ordre alphabétique
+        list_p.sort(key = lambda prof : prof.nom)
         
-        list_p.sort(key = lambda prof : prof[0].nom)
-        
-        fichier.close()
-        
-        list_p, root = zip(*list_p)
-        return list_p, list(root)
+#         list_p, root = zip(*list_p)
+        return list_p
 
 
     #############################################################################            
     def OnCharge(self, event):
         
-        list_p, root = self.GetListProfs()
+        list_p= self.GetListProfs()
       
         if len(list_p)>0:
             dlg = wx.SingleChoiceDialog(
@@ -10340,7 +10345,7 @@ class PanelPropriete_Personne(PanelPropriete):
     
             if dlg.ShowModal() == wx.ID_OK:
                 referent = self.personne.referent
-                self.personne.setBranche(root[dlg.GetSelection()])
+                self.personne.setBranche(list_p[dlg.GetSelection()].getBranche())
                 self.personne.referent = referent # Ca évite des conflits ...
                 modif = u"Chargement d'un Professeur"
                 self.MiseAJour()
@@ -10360,30 +10365,37 @@ class PanelPropriete_Personne(PanelPropriete):
     def OnSauv(self, event):
         """ 
         """
-#         print "OnSauv", self.GetListProfs()
+        print "OnSauv", self.GetListProfs()
         
-        list_p, root = self.GetListProfs()
+        # Construction de la structure XML
+        root = ET.Element("Professeurs")
+        
+        list_p = self.GetListProfs()
         
         if self.personne in list_p:
             dlg = wx.MessageDialog(self, u"Le professeur %s existe déja dans la liste\n\n" \
                                            u"Voulez-vous le remplacer ?" %(self.personne.GetNomPrenom()),
                                              u"Professeur existant",
-                                             wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                             wx.ICON_INFORMATION | wx.YES_NO
                                              )
             res = dlg.ShowModal()
             dlg.Destroy()
-            if res == wx.ID_YES:
-                for child in root:
-                    p = pysequence.Prof(self.personne.GetDocument())
-                    p.setBranche(child)
-                    if p == self.personne:
-                        root.remove(child)
-            else:
+            if res != wx.ID_YES:
                 return
-            
-        root.append(self.personne.getBranche())
+        
+        list_p.append(self.personne)
+        
+        # Tri par ordre alphabétique
+        list_p.sort(key = lambda prof : prof.nom)
+        
+        
+        for p in list_p:
+            root.append(p.getBranche())
         constantes.indent(root)
-        pysequence.enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS))
+        
+        
+        # Enregistrement en XML
+        enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS))
         messageInfo(self, u"Enregistrement réussi", 
                     u"Le professeur %s a bien été ajouté." %self.personne.GetNomPrenom())
 
