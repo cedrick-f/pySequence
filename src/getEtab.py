@@ -44,6 +44,7 @@ Created on 1 févr. 2015
 import xml.etree.ElementTree as ET
 import util_path
 import os
+import time
 
 
 #############################################################################################
@@ -177,7 +178,7 @@ def GetEtablissements(win):
     
     errmsg = u""
     
-    
+    tentatives = 0
     
     
 #    def getEtabVille(page):
@@ -291,7 +292,18 @@ def GetEtablissements(win):
         continuer = True
         n = 0
         while continuer:
-            page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5), "html5lib")
+            try:
+                page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5), "html5lib")
+                tentatives = 0
+            except urllib2.HTTPError:
+                time.sleep(1)
+                tentatives += 1
+                message += u"+"
+                dlg.Update(count, message)
+                if tentatives > 10:
+                    break
+                else:
+                    continue
 #            print page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href']
             if "select[]="+str(num) in page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href'] \
                 or n>10:
@@ -336,7 +348,18 @@ def GetEtablissements(win):
         continuer = True
         n = 0
         while continuer:
-            page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5), "html5lib")
+            try:
+                page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5), "html5lib")
+                tentatives = 0
+            except urllib2.HTTPError:
+                time.sleep(1)
+                tentatives += 1
+                message += u"+"
+                dlg.Update(count, message)
+                if tentatives > 10:
+                    break
+                else:
+                    continue
 #            print page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href']
             if "select[]="+str(num) in page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href'] \
                 or n>10:

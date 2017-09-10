@@ -657,7 +657,12 @@ DELTA_DUREE2 = 15
 
 # La liste complète des établissements scolaires en France !!
 import getEtab
-ETABLISSEMENTS = getEtab.ouvrir()
+try:
+    ETABLISSEMENTS = getEtab.ouvrir()
+except:
+    print "Manque fichier etablissements.xml"
+    ETABLISSEMENTS = {}
+    
 try:
     JOURS_FERIES = getEtab.ouvrir_jours_feries()
 except:

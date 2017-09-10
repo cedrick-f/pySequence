@@ -1090,6 +1090,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                        u"Fichier enregistré",
                                        wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
                 res = dlg.ShowModal()
+                constantes.ETABLISSEMENTS = getEtab.ouvrir()
                 if res == wx.ID_YES:
                     try:
                         os.startfile(fileName)
