@@ -1073,18 +1073,26 @@ class RapportRTF(rt.RichTextCtrl):
         self.Newline()
         self.EndLeftIndent()
         
-        if seance.description != None and hasattr(seance, 'panelPropriete'):
-#            self.BeginUnderline()
-#            self.WriteText(u"Description :")
-#            self.EndUnderline()
-#            self.Newline()
-#            self.BeginLeftIndent(60*indent)
-            seance.panelPropriete.rtc.rtc.SelectAll()
-            seance.panelPropriete.rtc.rtc.Copy()
-            self.Paste()
-            
+        if seance.description != None:
             self.Newline()
-            self.EndLeftIndent()
+            rtc = richtext.RichTextPanel(self.parent, seance, toolBar = False)
+            rtc.Show(False)
+            self.AddDescription(rtc.rtc)
+            rtc.Destroy()
+            self.EndStyle()
+        
+#         if seance.description != None and hasattr(seance, 'panelPropriete'):
+# #            self.BeginUnderline()
+# #            self.WriteText(u"Description :")
+# #            self.EndUnderline()
+# #            self.Newline()
+# #            self.BeginLeftIndent(60*indent)
+#             seance.panelPropriete.rtc.rtc.SelectAll()
+#             seance.panelPropriete.rtc.rtc.Copy()
+#             self.Paste()
+#             
+#             self.Newline()
+#             self.EndLeftIndent()
         
         self.EndStyle()
         
