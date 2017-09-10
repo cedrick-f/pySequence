@@ -245,7 +245,7 @@ class Lien():
         """ Lance l'affichage du contenu du lien
             <pathseq> = chemin de l'application pour déterminer le chemin absolu
         """
-#         print "Afficher", self.type, self.path
+        print "Afficher", self.type, self.path
         path = self.GetAbsPath(pathseq)
 #         print "   ", path
 #         print "   ", path.decode("unicode-escape")
@@ -315,7 +315,7 @@ class Lien():
             et change self.path (FILE_ENCODING)
             <pathseq> doit être en FILE_ENCODING
         """
-#         print "EvalLien", path, pathseq, os.path.exists(pathseq)
+        print "EvalLien", path, pathseq, os.path.exists(pathseq)
 #         print " >", chardet.detect(bytes(path))
 #         print " >", chardet.detect(bytes(pathseq))
         
@@ -348,20 +348,26 @@ class Lien():
             self.type = 'u'
             self.path = path
         
-#         print " >>", self
+        print " >>>", self
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
         """ Renvoie le chemin absolu du lien
             grace au chemin du document <pathseq>
         """
-#         print "GetAbsPath", path
+        print "GetAbsPath", path
         if path == None:
             path = self.path
+            
+        if path == ".":
+            return pathseq
         
-#         print os.path.exists(path)
-#         print os.path.exists(os.path.abspath(path))
-#         print os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING))
+        cwd = os.getcwd()
+        os.chdir(pathseq)
+        
+        print os.path.exists(path)
+        print os.path.exists(os.path.abspath(path))
+        print os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING))
         
         # Immonde bricolage !!
         if os.path.exists(os.path.abspath(path)) and os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING)):
@@ -382,6 +388,9 @@ class Lien():
             except UnicodeDecodeError:
                 pathseq = toFileEncoding(pathseq)
                 path = os.path.join(pathseq, path)
+        
+        
+        os.chdir(cwd)
         return path
     
     

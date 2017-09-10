@@ -14361,7 +14361,7 @@ class URLDialog(wx.Dialog):
 
 class URLSelectorCombo(wx.Panel):
     def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
-        print "init URLSelectorCombo", pathseq
+#         print "init URLSelectorCombo", pathseq
         
         
         wx.Panel.__init__(self, parent, -1)
