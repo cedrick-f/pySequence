@@ -177,6 +177,7 @@ def testRel(path, start):
     try:
         return os.path.relpath(path, start)
     except:
+#         print "echec relpath"
         return path
     
     

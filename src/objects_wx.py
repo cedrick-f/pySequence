@@ -1340,8 +1340,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                 )
 
             if dlg.ShowModal() == wx.ID_OK:
-                paths = dlg.GetPaths()
-                nomFichier = paths[0]
+#                 paths = dlg.GetPaths()
+#                 nomFichier = paths[0]
+                nomFichier = dlg.GetPath()#.decode(FILE_ENCODING)
 
             else:
                 nomFichier = r''
@@ -1934,7 +1935,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
+            path = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             self.enregistrer(path)
             self.DossierSauvegarde = os.path.split(path)[0]
@@ -2079,7 +2080,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()#.encode(FILE_ENCODING)
+            path = dlg.GetPath()#.decode(FILE_ENCODING)
             ext = os.path.splitext(path)[1]
             dlg.Destroy()
             wx.BeginBusyCursor()
@@ -2150,7 +2151,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()#.encode(FILE_ENCODING)
+            path = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             
             dir, ext = os.path.splitext(path)
@@ -3185,7 +3186,7 @@ class FenetreProjet(FenetreDocument):
                             )
 
         if dlg.ShowModal() == wx.ID_OK:
-            nomFichier = dlg.GetPath()
+            nomFichier = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             dlgb = myProgressDialog(u"Génération des grilles",
                                         u"",
@@ -3314,7 +3315,7 @@ class FenetreProjet(FenetreDocument):
 #        dlg.SetFilterIndex(0)
 
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
+            path = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             nomFichier = path
 #            nomFichier = getNomFichier("FicheValidation", self.projet)
@@ -4435,7 +4436,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         # process the data.
         if dlg.ShowModal() == wx.ID_OK:
             # This returns a Python list of files that were selected.
-            paths = dlg.GetPaths()
+            paths = dlg.GetPaths()#.decode(FILE_ENCODING)
             nomFichier = paths[0]
             self.objet.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
             self.SetImage(True)
@@ -6040,7 +6041,7 @@ class PanelPropriete_Classe(PanelPropriete):
                                 )
 
             if dlg.ShowModal() == wx.ID_OK:
-                paths = dlg.GetPaths()
+                paths = dlg.GetPaths()#.decode(FILE_ENCODING)
                 nomFichier = paths[0]
             else:
                 nomFichier = ''
@@ -6092,7 +6093,7 @@ class PanelPropriete_Classe(PanelPropriete):
                             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
+            path = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             self.enregistrer(path)
             self.DossierSauvegarde = os.path.split(path)[0]
@@ -14355,9 +14356,14 @@ class URLDialog(wx.Dialog):
 
 
 
-    
+
+
+
 class URLSelectorCombo(wx.Panel):
     def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
+        print "init URLSelectorCombo", pathseq
+        
+        
         wx.Panel.__init__(self, parent, -1)
         self.SetMaxSize((-1,22*SSCALE))
         
@@ -14476,12 +14482,14 @@ class URLSelectorCombo(wx.Panel):
         """ lien doit étre de type 'String' encodé en SYSTEM_ENCODING
             
         """
-#         print t
+#         print "SetPath", self.lien.path
         self.lien.EvalLien(lien, self.pathseq)
-        
+#         print ">>", self.lien.path
         try:
             self.texte.ChangeValue(self.lien.path)
-        except:
+        except: # Ca ne devrait pas arriver ... et pourtant ça arrive !
+            self.lien.path = self.lien.path.decode(FILE_ENCODING)
+#             self.lien.path = self.lien.path.encode(SYSTEM_ENCODING)
             self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
 
         self.MiseAJour()

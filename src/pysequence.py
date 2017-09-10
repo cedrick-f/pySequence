@@ -206,7 +206,9 @@ elif sys.platform == 'win32':
 #         subprocess.Popen(["explorer", path], shell=True)
         subprocess.call(['explorer', path.encode(sys.getfilesystemencoding())], shell=True)
     
-    
+
+# import chardet
+import util_path
 ####################################################################################
 #
 #   Objet lien vers un fichier, un dossier ou bien un site web
@@ -313,20 +315,25 @@ class Lien():
             et change self.path (FILE_ENCODING)
             <pathseq> doit être en FILE_ENCODING
         """
-#         print "EvalLien", path, pathseq
+#         print "EvalLien", path, pathseq, os.path.exists(pathseq)
+#         print " >", chardet.detect(bytes(path))
+#         print " >", chardet.detect(bytes(pathseq))
+        
         
         if path == "" or path.split() == []:
             self.path = r""
             self.type = ""
             return
         
-        path = toFileEncoding(path)
+#         path = toFileEncoding(path)
 #        pathseq = toFileEncoding(pathseq)
         abspath = self.GetAbsPath(pathseq, path)
-#         print "   ", abspath
+#         print "   abs :", abspath
         
-        relpath = testRel(abspath, pathseq)
-#         print "   ", relpath
+        
+        relpath = os.path.relpath(abspath, pathseq)
+#         relpath = testRel(abspath, pathseq)
+#         print "   rel :", relpath
 #         
 #         print "   ", os.getcwd()
 #         print "   ", os.curdir
@@ -348,8 +355,46 @@ class Lien():
         """ Renvoie le chemin absolu du lien
             grace au chemin du document <pathseq>
         """
+#         print "GetAbsPath", path
         if path == None:
             path = self.path
+        
+#         print os.path.exists(path)
+#         print os.path.exists(os.path.abspath(path))
+#         print os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING))
+        
+        # Immonde bricolage !!
+        if os.path.exists(os.path.abspath(path)) and os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING)):
+            path = path.decode(util_path.FILE_ENCODING)
+        
+        path = os.path.abspath(path)#.decode(util_path.FILE_ENCODING)
+        
+        
+        
+        
+#         print "  abs >", path
+        if os.path.exists(path):
+            path = path
+        else:
+#             print " n'existe pas !"
+            try:
+                path = os.path.join(pathseq, path)
+            except UnicodeDecodeError:
+                pathseq = toFileEncoding(pathseq)
+                path = os.path.join(pathseq, path)
+        return path
+    
+    
+    ######################################################################################  
+    def GetRelPath(self, pathseq, path = None):
+        """ Renvoie le chemin relatif du lien
+            grace au chemin du document <pathseq>
+        """
+        if path == None:
+            path = self.path
+            
+        if self.type != 'f' and self.type != 'd':
+            return path
         
 #        path = self.GetEncode(path)
         if os.path.exists(path):
@@ -362,8 +407,6 @@ class Lien():
                 path = os.path.join(pathseq, path)
         return path
     
-    
-   
     
     ######################################################################################  
     def getBranche(self, branche):
