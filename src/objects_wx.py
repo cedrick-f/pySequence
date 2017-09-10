@@ -4854,7 +4854,7 @@ class PanelPropriete_Projet(PanelPropriete):
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
         pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
         
-
+        
         
         #
         # Problématique (PB)
@@ -8390,7 +8390,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         tsizer.Add(titre, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
         tsizer.Add(cbType, flag = wx.EXPAND|wx.LEFT, border = 2)
-        pageGen.sizer.Add(tsizer, (3,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(tsizer, (3,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
        
         
        
@@ -8400,7 +8400,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         box2 = myStaticBox(pageGen, -1, u"Organisation")
         self.bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
-        pageGen.sizer.Add(self.bsizer2, (0,1), (2,1), flag =wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(self.bsizer2, (0,1), (3,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
         # reste déplacé dans AdapterAuType()
 
@@ -8431,7 +8431,7 @@ class PanelPropriete_Seance(PanelPropriete):
         # Lien
         #
         lsizer = self.CreateLienSelect(pageGen)
-        pageGen.sizer.Add(lsizer, (2,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(lsizer, (3,3), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         
@@ -8448,7 +8448,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        pageGen.sizer.Add(dbsizer, (0,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(dbsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
@@ -8784,12 +8784,12 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def EvtTextIntitule(self, event):
-        
+        print "EvtTextIntitule Seance"
         txt = self.textctrl.GetValue()
         
         if self.seance.intitule != txt:
             self.seance.SetIntitule(txt)
-            event.Skip()
+            
     #         print "EvtTextIntitule", self.textctrl.GetValue()
             modif = u"Modification de l'intitulé de la Séance"
             if self.onUndoRedo():
@@ -8798,7 +8798,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 if not self.eventAttente:
                     wx.CallLater(DELAY, self.sendEvent, modif = modif)
                     self.eventAttente = True
-            
+        event.Skip()    
     
     #############################################################################            
     def EvtText(self, event):
@@ -9577,7 +9577,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def EvtTextIntitule(self, event):
-#         print "EvtTextIntitule"
+        print "EvtTextIntitule Tache"
         txt = self.textctrl.GetValue()
         
         if self.tache.intitule != txt:
