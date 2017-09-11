@@ -1,4 +1,4 @@
-#![](Logo.png)pySéquence
+![](Logo.png)pySéquence
 _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui fournit une aide pour :
   * élaborer des séquences pédagogiques
   * décrire et valider des projets
@@ -49,6 +49,11 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 
 ## Téléchargement ##
+
+----|-------------
+[pySequence_7.1-beta9.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1-beta.9/pySequence_7.1-beta9.zip)|Dernière version "beta"
+[pySequence_7.0-beta11.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.0-beta.11/pySequence_7.0-beta11.zip)|Dernière version "stable"
+
  * Versions récentes : [https://github.com/cedrick-f/pySequence/releases](https://github.com/cedrick-f/pySequence/releases)
 
  * Anciennes versions : [https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list](https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list)
