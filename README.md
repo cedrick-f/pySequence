@@ -50,9 +50,13 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 ## Téléchargement ##
 
-----|-------------
-[pySequence_7.1-beta9.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1-beta.9/pySequence_7.1-beta9.zip)|Dernière version "beta"
-[pySequence_7.0-beta11.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.0-beta.11/pySequence_7.0-beta11.zip)|Dernière version "stable"
+
+|Lien |Remarque|
+|---|---|
+|[pySequence_7.1-beta9.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1-beta.9/pySequence_7.1-beta9.zip)|Dernière version beta|
+|[pySequence_7.0-beta11.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.0-beta.11/pySequence_7.0-beta11.zip)   |Dernière version stable|
+
+
 
  * Versions récentes : [https://github.com/cedrick-f/pySequence/releases](https://github.com/cedrick-f/pySequence/releases)
 
