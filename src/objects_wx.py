@@ -1584,7 +1584,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def HideTip(self, event = None):
         print "HideTip principal"
-        self.GetDocActif().HideTip()
+        d = self.GetDocActif()
+        if d is not None:
+            d.HideTip()
         event.Skip()
         
         
@@ -4887,16 +4889,16 @@ class PanelPropriete_Projet(PanelPropriete):
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
                                       help = u"Années scolaires", sizeh = 40*SSCALE, 
                                       unite = str(self.projet.annee+1),
-                                      sliderAGauche = True, scale = SSCALE)
+                                      sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
         
-        self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250))
+        self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250*SSCALE))
         
         ref = self.projet.GetReferentiel()
         self.position = PositionCtrl(pageGen, self.projet.position, ref.periodes, ref.projets)#wx.SL_AUTOTICKS |
-        sb.Add(self.bmp)
-        sb.Add(self.position, flag = wx.EXPAND)
+        sb.Add(self.bmp, flag = wx.EXPAND|wx.TOP, border = 3)
+        sb.Add(self.position, 1, flag = wx.EXPAND|wx.TOP, border = 3)
         
         pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
@@ -4935,7 +4937,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        self.bmp.SetBitmap(self.getBitmapPeriode(250*SSCALE))
 #        if bougerSlider != None:
         self.position.SetValue(self.projet.position)
 
@@ -5210,7 +5212,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def MiseAJourPosition(self, sendEvt = False):
-        self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        self.bmp.SetBitmap(self.getBitmapPeriode(250*SSCALE))
 ##        self.position.SetRange(0, self.projet.GetLastPosition())
         self.position.SetValue(self.projet.position)
     
@@ -5320,7 +5322,7 @@ class PositionCtrl(wx.Panel):
         self.position = position
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
         projets = [[x-1 for x in p.periode] for p in projets.values()]
-        self.sel = RangeSlider(self, position, 0, sum(p[1] for p in periodes)-1, projets)
+        self.sel = RangeSlider(self, position, 0, sum(p[1] for p in periodes)-1, projets, h = 18*SSCALE)
         self.sizer.Add(self.sel, 1, flag = wx.ALIGN_RIGHT|wx.EXPAND)
         self.SetSizer(self.sizer)
         self.Bind(wx.EVT_SLIDER, self.OnSlide)

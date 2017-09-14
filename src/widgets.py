@@ -80,7 +80,17 @@ def pourCent2(v, ajuster = False):
 
 ######################################################################################  
 def remplaceLF2Code(txt):
-    return txt.replace("\n", "##13##")#.replace("\n", "##13##")#&#13")
+    d = {u"##13##" : [u"\n",
+                      u"\u000A", #LF
+                      u"\u000D", #CR
+                      u"\u000B", #VT
+                      u"\u000C", #FF
+                      u"\u2028", #LS
+                      u"\u2029", #LS
+                      ]}
+    for k, v in d.items():
+        txt = txt.replace(v, k)
+    return txt
     
     
 ######################################################################################  
@@ -1338,7 +1348,7 @@ class RangeSlider2(wx.Slider):
 
 
 class RangeSlider(wx.Panel):
-    def __init__ (self, parent, pos, minPos, maxPos, zones = []):
+    def __init__ (self, parent, pos, minPos, maxPos, zones = [], h = 18):
         super(RangeSlider, self).__init__(parent, wx.ID_ANY)
 
         self.minPos = minPos
@@ -1348,12 +1358,13 @@ class RangeSlider(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         
         self.sldMax = wx.Slider(self, value=pos[1], minValue=minPos, maxValue=maxPos,
-                                size = (-1, 18), 
+                                size = (-1, h), 
                                 style=wx.SL_HORIZONTAL | wx.SL_TOP )
         self.sldMin = wx.Slider(self, value=pos[0], minValue=minPos, maxValue=maxPos,
-                                size = (-1, 18),
+                                size = (-1, h),
                                 style =wx.SL_HORIZONTAL )
-
+        self.sldMax.SetMaxSize((-1, h))
+        self.sldMin.SetMaxSize((-1, h))
         self.sldMax.Bind(wx.EVT_SCROLL, self.OnSliderScrollMax)
         self.sldMin.Bind(wx.EVT_SCROLL, self.OnSliderScrollMin)
         

@@ -1044,7 +1044,7 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
     
     w, h = 0.04*prop * COEF, 0.04 * COEF
 #    print w, h
-    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  int(larg), int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     ctx.scale(larg/w, larg/w) 
     DrawPeriodes(ctx, (0,0,w,h), position, periodes, projets)
