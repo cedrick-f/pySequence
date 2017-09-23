@@ -4274,9 +4274,11 @@ class Projet(BaseDoc):
 
     
     ######################################################################################  
-    def TesterExistanceGrilles(self, nomFichiers):
+    def TesterExistanceGrilles(self, nomFichiers, dirpath, win = None):
 #        print "TesterExistanceGrilles", nomFichiers
-
+        
+        if win is None:
+            win = self.GetApp()
         existe = []
         for fe in nomFichiers.values():
             for f in fe.values():
@@ -4284,6 +4286,8 @@ class Projet(BaseDoc):
                     existe.append(f)
         
         if len(existe) > 0:
+            
+            nf = [os.path.relpath(path, dirpath) for path in existe]
             if len(existe) == 1:
                 m = u"La grille d'évaluation existe déja !\n\n" \
                     u"\t%s\n\n" \
@@ -4291,13 +4295,20 @@ class Projet(BaseDoc):
             else:
                 m = u"Les grilles d'évaluation existent déja !\n\n" \
                     u"\t%s\n\n" \
-                    u"Voulez-vous les remplacer ?" %u"\n".join(existe)
-            
-            
-                                            
-            return messageYesNo(self.GetApp(),
-                                      u"Fichier existant", 
+                    u"dans le dossier :\n" \
+                    u"\t%s\n\n" \
+                    u"Voulez-vous les remplacer ?" %(u"\n".join(nf), dirpath)
+        
+            res = messageYesNo(win, u"Fichier existant", 
                                       m, wx.ICON_WARNING)
+            
+            if res:
+                for nf in existe:
+                    try:
+                        os.remove(nf)
+                    except:
+                        pass
+            return res
             
         return True
     
@@ -10507,8 +10518,16 @@ class Eleve(Personne, ElementBase):
 
         
     ######################################################################################  
-    def GetNomGrilles(self, path = None):
-        """ Renvoie les noms des fichiers grilles à générer
+    def GetNomGrilles(self, dirpath = None):
+        u""" Renvoie les noms des fichiers grilles à générer
+        
+        
+            :param dirpath: chemin du dossier où doivent se trouver les grilles
+            :type dirpath: string
+            
+            :return: Les noms des grilles sous la forme :
+                        {partie_du_projet : chemin_absolu_du_fichier_grille}
+            :rtype: dict
         """
 #        print "GetNomGrilles"
         prj = self.GetDocument().GetProjetRef()
@@ -10518,8 +10537,8 @@ class Eleve(Personne, ElementBase):
         # Création des noms des fichiers grilles
         #
         # Par défaut = chemin du fichier .prj
-        if path == None:
-            path = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
+        if dirpath == None:
+            dirpath = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
             
         nomFichiers = {} 
         for part, g in prj.parties.items():
@@ -10531,25 +10550,48 @@ class Eleve(Personne, ElementBase):
                 extention = grilles.EXT_EXCEL
                 
                 if gr[1] == 'C': # fichier "Collectif"
-                    nomFichiers[part] = os.path.join(path, self.GetDocument().getNomFichierDefaut(prefixe)) + extention
+                    nomFichiers[part] = os.path.join(dirpath, self.GetDocument().getNomFichierDefaut(prefixe)) + extention
                 else:
-                    nomFichiers[part] = os.path.join(path, self.getNomFichierDefaut(prefixe)) + extention
+                    nomFichiers[part] = os.path.join(dirpath, self.getNomFichierDefaut(prefixe)) + extention
 #        print "   >", nomFichiers
         return nomFichiers
 
 
     ######################################################################################  
-    def GenererGrille(self, event = None, path = None, nomFichiers = None, messageFin = True):
-#        print "GenererGrille élève", self
-#        print "  ", nomFichiers
+    def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, messageFin = True, win = None):
+        u""" Génération des grilles d'évaluation de l'élève
+        
+            :param nomFichiers: noms des fichiers des grilles (voir méthode .GetNomGrilles())
+            :type nomFichiers: dict
+            
+            :param dirpath: chemin du dossier où doivent se trouver les grilles
+            :type dirpath: string
+            
+            :param messageFin: True pour afficher un message à la fin de la génération
+            :type messageFin: bool
+            
+            :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant la génération
+            :type win: wx.Window
+            
+            :return: Un log des erreurs rencontrées
+            :rtype: list
+        
+        """
+        print "GenererGrille élève", self
+        print "  ", nomFichiers
+        
         if nomFichiers == None:
-            nomFichiers = self.GetNomGrilles(path)
-            if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}):
+            nomFichiers = self.GetNomGrilles(dirpath)
+            if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
                 return []
             
 #        print "  Fichiers :", nomFichiers
         
         prj = self.GetDocument().GetProjetRef()
+        app = self.GetDocument().GetApp()
+        if win is None:
+            win = app
+        
         
         wx.BeginBusyCursor()
         #
@@ -10558,15 +10600,15 @@ class Eleve(Personne, ElementBase):
         tableaux = {}
         for k, f in nomFichiers.items():
             if os.path.isfile(f):
-                tableaux[k] = grilles.getTableau(self.GetDocument().GetApp(), f)
+                tableaux[k] = grilles.getTableau(win, f)
             else:
                 if os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
-                    tableaux[k] = grilles.getTableau(self.GetDocument().GetApp(),
+                    tableaux[k] = grilles.getTableau(win,
                                                      prj.grilles[k][0])
                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
                     prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
                     tableaux[k] = None
-                    messageErreur(self.GetDocument().GetApp(), u"Fichier non trouvé !",
+                    messageErreur(win, u"Fichier non trouvé !",
                                   u"Le fichier original de la grille,\n    " + prjdef.grilles[k][0] + u"\n" \
                                   u"n'a pas été trouvé ! \n")
                         
@@ -10576,7 +10618,7 @@ class Eleve(Personne, ElementBase):
                 try:
                     tableaux[k].save(f, ConflictResolution = 2)
                 except:
-                    messageErreur(self.GetDocument().GetApp(), u"Erreur !",
+                    messageErreur(win, u"Erreur !",
                                   u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
                                   u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                                   u" - que le dossier choisi n'est pas protégé en écriture"%f)
@@ -10595,7 +10637,7 @@ class Eleve(Personne, ElementBase):
             try:
                 log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
             except:
-                messageErreur(self.GetDocument().GetApp(), u"Erreur !",
+                messageErreur(win, u"Erreur !",
                               u"Impossible de modifier les grilles !") 
 
 
@@ -10606,7 +10648,7 @@ class Eleve(Personne, ElementBase):
             try:
                 t.save()
             except:
-                messageErreur(self.GetDocument().GetApp(), u"Erreur !",
+                messageErreur(win, u"Erreur !",
                               u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                               u" - que le dossier choisi n'est pas protégé en écriture" %f)
@@ -10619,7 +10661,7 @@ class Eleve(Personne, ElementBase):
         
 #         self.GetDocument().GetApp().MarquerFichierCourantModifie()
         # Mise à our du panel de Propriétés courant
-        panelProp = self.GetDocument().GetApp().GetPanelProp()
+        panelProp = app.GetPanelProp()
         if hasattr(panelProp, 'MiseAJour'):
             panelProp.MiseAJour(sendEvt = False, marquerModifier = True)
         
@@ -10640,7 +10682,7 @@ class Eleve(Personne, ElementBase):
             else:
                 t += u"des erreurs :\n"
                 t += u"\n".join(log)
-            messageInfo(self.GetDocument().GetApp(), u"Génération terminée", t)
+            messageInfo(win, u"Génération terminée", t)
             
         wx.EndBusyCursor()
 #         self.GetPanelPropriete().MiseAJour()

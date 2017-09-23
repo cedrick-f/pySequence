@@ -67,8 +67,16 @@ def getFullNameGrille(fichier):
 
 
 def ouvrirXLS(fichier):
-    """ Ouvre la grille XLS nommée <fichier>
+    u""" Ouvre la grille XLS nommée <fichier>
         renvoie le classeur PyExcel
+        :return: classeur PyExcel
+        :rtype: class PyExcel
+        :return: code d'erreur ()
+        :rtype: int
+        :return: liste des fichiers Excel
+        :rtype: list
+        
+        
     """
     fichierPB = []      # Liste des fichiers dont l'ouverture aura échoué
     fichier = getFullNameGrille(fichier)
@@ -88,10 +96,20 @@ def ouvrirXLS(fichier):
     
 
 
-def getTableau(parent, nomFichier):
-    """ Ouvre et renvoie le classeur
-        contenant la grille d'évaluation
+def getTableau(win, nomFichier):
+    u""" Ouvre et renvoie les classeurs 
+        contenant les grilles d'évaluation : revues + soutenance
+        
+        :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant le processus
+        :type win: wx.Window
+            
+        :return: la liste des codes d'erreur
+        :rtype: list
+            
+            
     """
+    print "getTableau", nomFichier
+    
 
     tableau, err, fichierPB = ouvrirXLS(nomFichier)
                                       
@@ -102,7 +120,7 @@ def getTableau(parent, nomFichier):
         return tableau
     
     elif err&1 != 0:
-        messageErreur(parent, u"Lancement d'Excel impossible !",
+        messageErreur(win, u"Lancement d'Excel impossible !",
                       u"L'application Excel ne semble pas installée !")
         
 #    elif err&2 != 0:
@@ -149,16 +167,25 @@ except:
     EXT_EXCEL = None # ya pas Excel !
 
 
-
-def getTableaux(parent, doc):
-    """ Ouvre et renvoie les classeurs 
+######################################################################################################
+def getTableaux(win, doc):
+    u""" Ouvre et renvoie les classeurs 
         contenant les grilles d'évaluation : revues + soutenance
+        
+        :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant le processus
+        :type win: wx.Window
+            
+        :return: la liste des codes d'erreur
+        :rtype: list
+            
+            
     """
+    print "getTableaux", doc
 #     typ = doc.GetTypeEnseignement()
 #     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
     fichiers = prj.grilles
-#    print "grilles :", fichiers
+    print "   toutes les grilles :", fichiers
     fichierPB = []
     
     def ouvrir(fichier):
@@ -203,16 +230,17 @@ def getTableaux(parent, doc):
     if err == 0:
         return tableaux
     elif err&1 != 0:
-        messageErreur(parent, u"Lancement d'Excel impossible !",
+        messageErreur(win, u"Lancement d'Excel impossible !",
                       u"L'application Excel ne semble pas installée !")
     elif err&2 != 0:
-        messageErreur(parent, u"Fichier non trouvé !",
+        messageErreur(win, u"Fichier non trouvé !",
                               u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
                               u"n'a pas été trouvé ! \n")
     else:
         print "Erreur", err
 
 
+###################################################################################################
 def modifierGrille(doc, tableaux, eleve):
 #    print "modifierGrille", eleve
     

@@ -3117,12 +3117,12 @@ class FenetreProjet(FenetreDocument):
 #        dlg.SetFilterIndex(0)
 
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
+            dirpath = dlg.GetPath()
             dlg.Destroy()
-            dlgb = wx.ProgressDialog   (u"Génération des grilles",
+            dlgb = myProgressDialog   (u"Génération des grilles",
                                         u"",
-                                        maximum = len(self.projet.eleves),
-                                        parent=self,
+                                        maximum = len(self.projet.eleves) + 1,
+                                        parent = self,
                                         style = 0
                                         | wx.PD_APP_MODAL
                                         | wx.PD_CAN_ABORT
@@ -3136,22 +3136,26 @@ class FenetreProjet(FenetreDocument):
             
             count = 0
             
+            dlgb.Update(count, u"Vérification des noms de fichier\n\n")
+            
+                
             nomFichiers = {}
             for e in self.projet.eleves:
-                nomFichiers[e.id] = e.GetNomGrilles(path = path)
+                nomFichiers[e.id] = e.GetNomGrilles(dirpath)
 #            print "nomFichiers", nomFichiers
             
-            if not self.projet.TesterExistanceGrilles(nomFichiers):
+            if not self.projet.TesterExistanceGrilles(nomFichiers, dirpath, dlgb):
                 dlgb.Destroy()
                 return
-            
+            count += 1
             
             for e in self.projet.eleves:
-                log.extend(e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False))
                 dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
-                dlgb.Refresh()
+                log.extend(e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False, win = dlgb))
+                
+#                 dlgb.Refresh()
                 count += 1
-                dlgb.Refresh()
+#                 dlgb.Refresh()
            
             t = u"Génération des grilles terminée "
             if len(log) == 0:
@@ -3160,9 +3164,9 @@ class FenetreProjet(FenetreDocument):
                 t += u"avec des erreurs :\n\n"
                 t += u"\n".join(log)
             
-            t += "\n\nDossier des grilles :\n" + path
+            t += u"\n\nDossier des grilles :\n" + dirpath
             dlgb.Update(count, t)
-            dlgb.Destroy() 
+#             dlgb.Destroy() 
                 
                 
         else:
@@ -3211,22 +3215,22 @@ class FenetreProjet(FenetreDocument):
             
             pathprj = self.projet.GetPath()
 #            print "pathprj", pathprj
-            
+            dirpath = os.path.split(nomFichier)[0]
             #
             # Détermination des fichiers grille à créer
             #
             nomFichiers = {}
             for e in self.projet.eleves:
                 if len(e.grille) == 0: # Pas de fichier grille connu pour cet élève
-                    nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
+                    nomFichiers[e.id] = e.GetNomGrilles(dirpath)
                 else:
                     for g in e.grille.values():
                         if not os.path.exists(g.path): # Le fichier grille pour cet élève n'a pas été trouvé
-                            nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
+                            nomFichiers[e.id] = e.GetNomGrilles(dirpath)
 #            print "nomFichiers grille", nomFichiers
             
             # Si des fichiers existent avec le méme nom, on demande si on peut les écraser
-            if not self.projet.TesterExistanceGrilles(nomFichiers):
+            if not self.projet.TesterExistanceGrilles(nomFichiers, dirpath, dlgb):
                 dlgb.Destroy()
                 return
             
@@ -3246,7 +3250,7 @@ class FenetreProjet(FenetreDocument):
 #                 dlgb.Refresh()
                     
                 if e.id in nomFichiers.keys():
-                    e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
+                    e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False, win = dlgb)
 
                 for k, g in e.grille.items():
 #                    grille = os.path.join(toFileEncoding(pathprj), toFileEncoding(g.path))
@@ -14653,70 +14657,6 @@ class myStaticBox(wx.StaticBox):
 # ProgressDialog personnalisé
 # 
 #############################################################################################################
-# if sys.platform == "win32":
-#     import win32gui
-# #    import win32con
-# class myProgressDialog2(wx.ProgressDialog):
-#     def __init__(self, titre, message, maximum, parent, style = 0):
-#         wx.ProgressDialog.__init__(self, titre,
-#                                    message,
-#                                    maximum = maximum,
-#                                    parent = parent,
-#                                    style = style
-#                                     | wx.PD_APP_MODAL
-#                                     | wx.STAY_ON_TOP
-#                                     | wx.FRAME_FLOAT_ON_PARENT
-#                                     #| wx.PD_CAN_ABORT
-#                                     #| wx.PD_CAN_SKIP
-#                                     #| wx.PD_ELAPSED_TIME
-#                                     | wx.PD_ESTIMATED_TIME
-#                                     | wx.PD_REMAINING_TIME
-#                                     #| wx.PD_AUTO_HIDE
-#                                     )
-# 
-# #        hwnd = self.GetHandle()
-# #        exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
-# #        theStyle = win32con.HWND_TOPMOST
-# #        win32gui.SetWindowPos(hwnd, theStyle, 0, 0, 0, 0, win32con.SWP_NOSIZE|win32con.SWP_NOMOVE)
-#         
-#         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdate)
-#         self.Bind(wx.EVT_CLOSE, self.OnClose)
-#         
-#         wx.CallAfter(self.top)
-#         
-#     def OnUpdate(self,evt):
-#         self.top()
-#         evt.Skip()
-#         
-#         
-#     def top(self):
-#         if sys.platform == "win32":
-#             try:
-#                 win32gui.SetForegroundWindow(self.GetHandle())
-#             except:
-#                 pass
-#         else:
-#             self.RequestUserAttention()
-#             self.Iconize(False)
-#             self.Raise()
-#         return
-#         
-#         
-# #        return
-# #        if sys.platform != "win32":
-# #            return
-# #        hwnd = self.GetHandle()
-# #        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
-# #                              win32con.SWP_NOSIZE | win32con.SWP_NOMOVE
-# #                              ) 
-#         
-#     def OnClose(self, event):
-# #        print "Close dlg"
-#         self.Destroy()        
-
-
-
-
 
 class myProgressDialog(wx.Frame):
     def __init__(self, titre, message, maximum, parent, style = 0, 
