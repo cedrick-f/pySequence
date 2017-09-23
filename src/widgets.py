@@ -88,8 +88,9 @@ def remplaceLF2Code(txt):
                       u"\u2028", #LS
                       u"\u2029", #LS
                       ]}
-    for k, v in d.items():
-        txt = txt.replace(v, k)
+    for k, lv in d.items():
+        for v in lv:
+            txt = txt.replace(v, k)
     return txt
     
     

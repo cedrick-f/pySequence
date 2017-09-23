@@ -355,7 +355,7 @@ class Lien():
         """ Renvoie le chemin absolu du lien
             grace au chemin du document <pathseq>
         """
-#         print "GetAbsPath", path
+#         print "GetAbsPath", path, pathseq
         if path == None:
             path = self.path
             
@@ -363,7 +363,11 @@ class Lien():
             return pathseq
         
         cwd = os.getcwd()
-        os.chdir(pathseq)
+        if pathseq != u"":
+            try:
+                os.chdir(pathseq)
+            except:
+                pass
         
 #         print os.path.exists(path)
 #         print os.path.exists(os.path.abspath(path))
@@ -10614,7 +10618,10 @@ class Eleve(Personne, ElementBase):
             self.grille[k].path = toFileEncoding(nomFichiers[k])
         
 #         self.GetDocument().GetApp().MarquerFichierCourantModifie()
-        self.GetDocument().GetApp().panelProp.panel.MiseAJour(False, True)
+        # Mise à our du panel de Propriétés courant
+        panelProp = self.GetDocument().GetApp().GetPanelProp()
+        if hasattr(panelProp, 'MiseAJour'):
+            panelProp.MiseAJour(sendEvt = False, marquerModifier = True)
         
         #
         # Message de fin

@@ -5218,7 +5218,7 @@ class PanelPropriete_Projet(PanelPropriete):
     
 
     #############################################################################            
-    def MiseAJour(self, sendEvt = False):
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #        print "MiseAJour Projet", sendEvt
 
         ref = self.projet.GetProjetRef()
@@ -6366,7 +6366,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
         
     ######################################################################################  
-    def MiseAJour(self):
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #         print "MiseAJour panelPropriete Classe"
 #        self.MiseAJourType()
         
@@ -9709,7 +9709,7 @@ class PanelPropriete_Tache(PanelPropriete):
                   
             
     #############################################################################            
-    def MiseAJour(self, sendEvt = False):
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #        print "MiseAJour panelPropriete Tache"
 #        print "MiseAJour", self.tache.phase, self.tache.intitule
         
@@ -11102,7 +11102,7 @@ class PanelPropriete_Support(PanelPropriete):
 #            self.win.SetFocus()
         
     #############################################################################            
-    def MiseAJour(self, sendEvt = False):
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #        print "MiseAJour panelPropriete Support"
         self.textctrl.ChangeValue(self.support.nom)
         if sendEvt:
@@ -11284,7 +11284,7 @@ class PanelPropriete_Modele(PanelPropriete):
         
         
     #############################################################################            
-    def MiseAJour(self, sendEvt = False):
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #        print "MiseAJour panelPropriete modele"
         self.textctrl.ChangeValue(self.modele.intitule)
         self.cb_type.CheckItems(self.modele.logiciels)
