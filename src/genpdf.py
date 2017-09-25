@@ -327,6 +327,12 @@ def genererFicheValidation(nomFichier, projet):
                    u"Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
                    u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
         
+    else:
+        messageErreur(self, u"Erreur !",
+                            u"Impossible de trouver le fichier HTML")
+        return False
+        
+        
     for l in en_tete:
         story.append(Paragraph(l, entete_style))
         story.append(Spacer(1, 1*mm))
