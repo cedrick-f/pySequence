@@ -8958,7 +8958,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.seance.lien.path), 
+        self.selec.SetPath(toSystemEncoding(self.seance.lien.path), self.seance.lien.type,
                            marquerModifier = False)
 #         self.btnlien.Show(self.seance.lien.path != "")
         self.sizer.Layout()
@@ -10095,7 +10095,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path),
+        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path), self.systeme.lien.type,
                            marquerModifier = False)
 #         self.btnlien.Show(len(self.systeme.lien.path) > 0)
         self.Layout()
@@ -10513,7 +10513,8 @@ class PanelPropriete_Personne(PanelPropriete):
             self.personne.GetDocument().SetReferent(self.personne, self.cbInt.IsChecked())
         if hasattr(self, 'SelectGrille'):
             for k, select in self.SelectGrille.items():
-                select.SetPath(toSystemEncoding(self.personne.grille[k].path), marquerModifier = marquerModifier)
+                select.SetPath(toSystemEncoding(self.personne.grille[k].path),
+                               marquerModifier)
 #            self.OnPathModified()
 
         if hasattr(self, 'lb'):
@@ -10878,7 +10879,7 @@ class PanelSelectionGrille(wx.Panel):
                 
     #############################################################################            
     def SetPath(self, path, marquerModifier):  
-        self.SelectGrille.SetPath(path, marquerModifier = marquerModifier)          
+        self.SelectGrille.SetPath(path, 'f', marquerModifier = marquerModifier)          
                 
                 
     ######################################################################################  
@@ -11118,7 +11119,8 @@ class PanelPropriete_Support(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.support.lien.path), marquerModifier = False)
+        self.selec.SetPath(toSystemEncoding(self.support.lien.path), self.support.lien.type,
+                           marquerModifier = False)
 #         self.btnlien.Show(len(self.support.lien.path) > 0)
         self.selec.MiseAJour()
         self.Layout()
@@ -11303,7 +11305,8 @@ class PanelPropriete_Modele(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.modele.lien.path), marquerModifier = False)
+        self.selec.SetPath(toSystemEncoding(self.modele.lien.path), self.modele.lien.type,
+                           marquerModifier = False)
 #         self.btnlien.Show(len(self.support.lien.path) > 0)
         self.selec.MiseAJour()
         self.Layout()
@@ -14439,7 +14442,7 @@ class URLSelectorCombo(wx.Panel):
                            #| wx.DD_CHANGE_DIR
                            )
             if dlg.ShowModal() == wx.ID_OK:
-                self.SetPath(dlg.GetPath())
+                self.SetPath(dlg.GetPath(), 'd')
     
             dlg.Destroy()
             
@@ -14454,7 +14457,7 @@ class URLSelectorCombo(wx.Panel):
                                )
     
             if dlg.ShowModal() == wx.ID_OK:
-                self.SetPath(dlg.GetPath())
+                self.SetPath(dlg.GetPath(), 'f')
     
             dlg.Destroy()
         
@@ -14471,12 +14474,15 @@ class URLSelectorCombo(wx.Panel):
     ###############################################################################################
     def dropFiles(self, file_list):
         for path in file_list:
-            self.SetPath(path)
+            self.SetPath(path, 'f')
             return
             
     ##########################################################################################
     def EvtText(self, event):
-        self.SetPath(event.GetString())
+        self.lien.EvalLien(event.GetString(), self.pathseq)
+        if not self.lien.ok:
+            self.lien.EvalTypeLien(self.pathseq)
+        self.SetPath()
 
 
     ##########################################################################################
@@ -14485,13 +14491,21 @@ class URLSelectorCombo(wx.Panel):
     
     
     ##########################################################################################
-    def SetPath(self, lien, marquerModifier = True):
-        """ lien doit étre de type 'String' encodé en SYSTEM_ENCODING
+    def SetPath(self, lien = None, typ = None, marquerModifier = True):
+        """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
             
         """
-#         print "SetPath", self.lien.path
-        self.lien.EvalLien(lien, self.pathseq)
-#         print ">>", self.lien.path
+#         print "SetPath", self.lien
+#         print "   ", lien, typ
+        if lien is not None:
+#             self.lien.path = lien
+            self.lien.EvalLien(lien, self.pathseq)
+        if typ is not None:
+            self.lien.type = typ
+        else:
+            self.lien.EvalTypeLien(self.pathseq)
+#         print ">>", self.lien
+        
         try:
             self.texte.ChangeValue(self.lien.path)
         except: # Ca ne devrait pas arriver ... et pourtant ça arrive !

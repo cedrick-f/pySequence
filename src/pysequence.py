@@ -218,6 +218,7 @@ class Lien():
     def __init__(self, path = u"", typ = ""):
         self.path = path # Impérativement toujours encodé en FILE_ENCODING !!
         self.type = typ
+        self.ok = False  # Etat du lien (False = lien rompu)
         
     ######################################################################################  
     def __repr__(self):
@@ -311,9 +312,11 @@ class Lien():
                 
     ######################################################################################  
     def EvalLien(self, path, pathseq):
-        """ Teste la validité du chemin <path> (SYSTEM_ENCODING)
-            et change self.path (FILE_ENCODING)
-            <pathseq> doit être en FILE_ENCODING
+        u""" Teste la validité du chemin <path> (SYSTEM_ENCODING)
+             par rapport au dossier de référence <pathseq> (FILE_ENCODING)
+             
+             et change self.path (FILE_ENCODING)
+             
         """
 #         print "EvalLien", path, pathseq, os.path.exists(pathseq)
 #         print " >", chardet.detect(bytes(path))
@@ -337,16 +340,21 @@ class Lien():
 #         
 #         print "   ", os.getcwd()
 #         print "   ", os.curdir
+        self.ok = False
         if os.path.exists(abspath):
             if os.path.isfile(abspath):
                 self.type = 'f'
                 self.path = relpath
+                self.ok = True
             elif os.path.isdir(abspath):
                 self.type = 'd'
                 self.path = relpath
-        else:
-            self.type = 'u'
-            self.path = path
+                self.ok = True
+        
+            
+#         else:
+#             self.type = 'u'
+#             self.path = path
         
 #         print " >>>", self
               
@@ -10280,6 +10288,9 @@ class Personne(ElementBase):
         if hasattr(self, 'grille'): # Cas des élèves (et pas des profs)
             for k, g in self.grille.items():
                 root.set("Grille"+k, toSystemEncoding(g.path))       
+#                 brancheGri = ET.Element("Grille"+k)
+#                 root.append(brancheGri)
+#                 g.getBranche(brancheGri)
         
         if hasattr(self, 'modeles'):
             brancheMod = ET.Element("Modeles")

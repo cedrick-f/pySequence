@@ -92,9 +92,9 @@ if 'win' in sys.platform:
 #     import platform
 #     print "platform", platform.platform()
     # Query DPI Awareness (Windows 10 and 8)
-    awareness = ctypes.c_int()
-    errorCode = ctypes.windll.shcore.GetProcessDpiAwareness(0, ctypes.addressof(awareness))
-    print "awareness", awareness.value
+#     awareness = ctypes.c_int()
+#     errorCode = ctypes.windll.shcore.GetProcessDpiAwareness(0, ctypes.addressof(awareness))
+#     print "awareness", awareness.value
     user32 = ctypes.windll.user32
     screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 #     print "screensize", screensize
