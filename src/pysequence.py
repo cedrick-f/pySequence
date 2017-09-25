@@ -330,8 +330,8 @@ class Lien():
         abspath = self.GetAbsPath(pathseq, path)
 #         print "   abs :", abspath
         
-        
-        relpath = os.path.relpath(abspath, pathseq)
+        relpath = testRel(abspath, pathseq)
+
 #         relpath = testRel(abspath, pathseq)
 #         print "   rel :", relpath
 #         
@@ -4287,7 +4287,7 @@ class Projet(BaseDoc):
         
         if len(existe) > 0:
             
-            nf = [os.path.relpath(path, dirpath) for path in existe]
+            nf = [testRel(path, dirpath) for path in existe]
             if len(existe) == 1:
                 m = u"La grille d'évaluation existe déja !\n\n" \
                     u"\t%s\n\n" \
@@ -5122,7 +5122,7 @@ class Progression(BaseDoc):
                     if res == wx.ID_YES:
                         fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
                         fichiers, sequences = zip(*fichiers_sequences)
-                        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+                        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
                         
                         dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n"\
                                                                    u"celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
@@ -5178,7 +5178,7 @@ class Progression(BaseDoc):
                     if res == wx.ID_YES:
                         fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
                         fichiers, projets = zip(*fichiers_projets)
-                        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+                        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
                         
                         dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n"\
                                                                    u"celui qui doit remplacer %s." %toSystemEncoding(lienPrj.path), 
@@ -5294,7 +5294,7 @@ class Progression(BaseDoc):
             return
         
         fichiers, sequences = zip(*fichiers_sequences)
-        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
         
         dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n", 
                                     u"Fichiers Séquences disponibles",
@@ -5326,7 +5326,7 @@ class Progression(BaseDoc):
             return
         
         fichiers, projets = zip(*fichiers_projets)
-        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
         
         dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n", 
                                     u"Fichiers Projets disponibles",
@@ -5592,13 +5592,13 @@ class Progression(BaseDoc):
         for fichier, sequence in listeFichiersSequences:
 #             print 
 #             print fichier
-            path = os.path.relpath(fichier, self.GetPath())
+            path = testRel(fichier, self.GetPath())
 #             print path
 #             path = os.path.join(path, os.path.split(fichier)[1])
 #             print path
             lienSequence = LienSequence(self,  path)
 #             print "seq", self.GetPath(), fichier
-#             print "   ", os.path.relpath(self.GetPath(), fichier)
+#             print "   ", testRel(self.GetPath(), fichier)
             lienSequence.sequence = sequence
             sequences.append(lienSequence)
         
@@ -5659,7 +5659,7 @@ class Progression(BaseDoc):
             classe, sequence = self.OuvrirFichierSeq(f)
 #                print classe.typeEnseignement ,  self.referentiel.Code
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
-#                lienSequence = LienSequence(self,  os.path.relpath(f, self.GetPath()))
+#                lienSequence = LienSequence(self,  testRel(f, self.GetPath()))
 #                lienSequence.sequence = sequence
                 fichiers_sequences.append((f, sequence))
             count += 1
@@ -10577,8 +10577,8 @@ class Eleve(Personne, ElementBase):
             :rtype: list
         
         """
-        print "GenererGrille élève", self
-        print "  ", nomFichiers
+#         print "GenererGrille élève", self
+#         print "  ", nomFichiers
         
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(dirpath)

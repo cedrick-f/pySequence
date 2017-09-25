@@ -139,6 +139,9 @@ build_exe_options = {'build_exe': 'build/bin',
                      "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
                      "optimize" : 0,
+#                      'compressed': True,
+#                      'append_script_to_exe':False,
+#                      'copy_dependent_files':True,
 #                     "path" : ["../packages/html5lib"],#, "../packages/xhtml2pdf",  "../packages/xhtml2pdf/w3c"],
 #                     "zip_includes": [("../packages/html5lib/", "html5lib"),
 #                                      ("../packages/xhtml2pdf/w3c/css.py", "xhtml2pdf/w3c/css.py")],
@@ -194,7 +197,7 @@ if __name__ == '__main__':
                             initScript = None,
                             copyDependentFiles = True,
                             appendScriptToExe = False,
-                            appendScriptToLibrary = False
+                            appendScriptToLibrary = False # disparu à partir de cx_freeze 5 !
                             )
     
     
@@ -206,7 +209,10 @@ if __name__ == '__main__':
                 description = description,
                 long_description = long_description,
                 license = license,
-                options = {"build_exe": build_exe_options},
+                options = {"build_exe": build_exe_options,
+                           "build": {'build_exe': 'build'},
+                           "install" : {'install_exe': 'build'},
+                           },
         #        include-msvcr = True,
                 executables = [cible])
     

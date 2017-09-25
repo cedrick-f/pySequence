@@ -108,7 +108,7 @@ def getTableau(win, nomFichier):
             
             
     """
-    print "getTableau", nomFichier
+#     print "getTableau", nomFichier
     
 
     tableau, err, fichierPB = ouvrirXLS(nomFichier)
@@ -180,12 +180,12 @@ def getTableaux(win, doc):
             
             
     """
-    print "getTableaux", doc
+#     print "getTableaux", doc
 #     typ = doc.GetTypeEnseignement()
 #     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
     fichiers = prj.grilles
-    print "   toutes les grilles :", fichiers
+#     print "   toutes les grilles :", fichiers
     fichierPB = []
     
     def ouvrir(fichier):
