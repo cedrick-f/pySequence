@@ -598,7 +598,7 @@ class RichTextPanel(wx.Panel):
             
         
     def HeaderMore(self):
-        print "HeaderMore"
+#         print "HeaderMore"
         attr = rt.RichTextAttr()
 #         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
         ip = self.rtc.GetInsertionPoint()
@@ -617,12 +617,12 @@ class RichTextPanel(wx.Panel):
                 h += 1
                 self.rtc.MoveToParagraphStart()
                 st = self.rtc.GetInsertionPoint()#+1
-                print "  ",st
+#                 print "  ",st
                 self.rtc.MoveToParagraphEnd()
                 nd = self.rtc.GetInsertionPoint()#+1
-                print "  ",nd
+#                 print "  ",nd
                 r = rt.RichTextRange(st, nd)
-                print "  ",r
+#                 print "  ",r
                 self.SetHeader(attr, h)
                 attr.SetParagraphStyleName(str(h))
                 self.rtc.SetStyle(r, attr)

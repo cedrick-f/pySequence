@@ -2654,6 +2654,10 @@ class Competence(XMLelem):
         self.infos = []                 # des informations supplémentaires (str)
 
     def __repr__(self):
+#         print "Competence : " + self.intitule[:10] + "...\n   ",
+#         print self.indicateurs
+#         print self.sousComp
+#         return ""
         return "Competence : " + self.intitule[:10] + "...\n   " #+ "\n   ".join(self.thematiques)
     
     def copie(self):

@@ -4072,6 +4072,7 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def Draw(self, ctx):
+#         print "Draw", self
         self.GetDoc().DefinirCouleurs()
         self.GetDoc().draw.Draw(ctx, self.GetDoc())
         
@@ -15356,12 +15357,10 @@ class PopupInfo(wx.PopupWindow):
 #        self.Fit()
 
         if self.mode == "H":
-            print self.soup.prettify()
+#             print self.soup.prettify()
             self.html.SetPage(self.soup.prettify())
             ir = self.html.GetInternalRepresentation()
-    
             self.SetClientSize((ir.GetWidth(), ir.GetHeight()))
-    
             self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
         else:
             self.html.SetPage(self.soup.prettify(), "")

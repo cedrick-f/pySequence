@@ -213,7 +213,7 @@ def DefinirZones(prj, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches, wColComp
+    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches, wColComp, xComp
     
     #
     # Zone du tableau des compétences - X
@@ -223,6 +223,7 @@ def DefinirZones(prj, ctx):
     competences = regrouperLst(prj.GetProjetRef(), prj.GetCompetencesUtil())
     tailleZComp[0] = wColComp * len(competences)
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
+    xComp = {}
     for i, s in enumerate(competences):
         xComp[s] = posZComp[0] + (i+0.5) * wColComp
     
@@ -1029,8 +1030,11 @@ def regrouperDic(obj, dicIndicateurs):
         dic = {}
         typ = {}
         for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+#             print "   ", disc, tousIndicateurs
             for k0, competence in tousIndicateurs.items():
+#                 print "      ",k0,  competence
                 for k1, sousComp in competence.sousComp.items():
+#                     print "         ", k1, sousComp
                     dic[disc+k1] = []
                     typ[disc+k1] = []
                     lk2 = sousComp.sousComp.keys()
@@ -1051,8 +1055,8 @@ def regrouperDic(obj, dicIndicateurs):
                         del dic[disc+k1]
                         del typ[disc+k1]
                     
-#         print "  >>", dic
-#         print "    ", typ
+#         print "  >>>", dic
+#         print "     ", typ
         return dic, typ
     else:
         dic = {}
