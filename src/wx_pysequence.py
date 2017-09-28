@@ -121,7 +121,7 @@ if 'win' in sys.platform:
         # for 1-to-1 pixel control I seem to need it to be non-zero (I'm using level 2)
     elif get_winver() >= WIN_VISTA:
         # Set DPI Awareness  (Windows 7 and Vista)
-        success = ctypes.windll.user32.SetProcessDPIAware()
+        success = user32.SetProcessDPIAware()
         # behaviour on later OSes is undefined, although when I run it on my Windows 10 machine, it seems to work with effects identical to SetProcessDpiAwareness(1)
 
     screensize2 = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
@@ -159,6 +159,7 @@ class SingleInstApp(wx.App):
             cmd = u"OpenWindow.%s.%s" % (self.name, GetArgFile())
             if not SendMessage(cmd, port = self.PORT):
                 print u"Failed to send message!"
+            wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
             return False
 
         else:
@@ -168,6 +169,7 @@ class SingleInstApp(wx.App):
                 self._ipc.start()
             except socket.error:
                 print u"Erreur création serveur"
+            except:
                 pass
         
             self.splash = MySplashScreen()

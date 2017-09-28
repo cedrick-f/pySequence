@@ -587,8 +587,10 @@ class RichTextPanel(wx.Panel):
             if h is not None and h > 0:
                 h -= 1
                 self.rtc.MoveToParagraphStart()
-                ip = self.rtc.GetInsertionPoint()+1
-                r = rt.RichTextRange(ip, ip)
+                st = self.rtc.GetInsertionPoint()#+1
+                self.rtc.MoveToParagraphEnd()
+                nd = self.rtc.GetInsertionPoint()#+1
+                r = rt.RichTextRange(st, nd)
                 self.SetHeader(attr, h)
                 attr.SetParagraphStyleName(str(h))
                 self.rtc.SetStyle(r, attr)
@@ -596,6 +598,7 @@ class RichTextPanel(wx.Panel):
             
         
     def HeaderMore(self):
+        print "HeaderMore"
         attr = rt.RichTextAttr()
 #         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
         ip = self.rtc.GetInsertionPoint()
@@ -613,116 +616,19 @@ class RichTextPanel(wx.Panel):
             if h < 5:
                 h += 1
                 self.rtc.MoveToParagraphStart()
-                ip = self.rtc.GetInsertionPoint()+1
-                r = rt.RichTextRange(ip, ip)
+                st = self.rtc.GetInsertionPoint()#+1
+                print "  ",st
+                self.rtc.MoveToParagraphEnd()
+                nd = self.rtc.GetInsertionPoint()#+1
+                print "  ",nd
+                r = rt.RichTextRange(st, nd)
+                print "  ",r
                 self.SetHeader(attr, h)
                 attr.SetParagraphStyleName(str(h))
                 self.rtc.SetStyle(r, attr)
 
 
-#             
-#     def ListPuce3(self):
-#         attr = rt.RichTextAttr()
-# #         attr.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
-#         ip = self.rtc.GetInsertionPoint()
-#         print "ListPuce", ip
-#         
-#         if self.rtc.GetStyle(ip, attr):
-# #             r = self.GetParagraphs()
-# #             l = self.GetParagraphsStarts()
-#             
-#             
-#             if not attr.HasBulletStyle():
-#                 print " AJOUTER"
-#                 e = self.GetParagraphsEnds()
-# #                 self.rtc.MoveCaretBack(1)
-#                 self.rtc.BeginSymbolBullet(self.bullet, self.indent, self.subindent)
-#                 for l in e:
-#                     self.rtc.MoveCaret(l-2)
-#                     self.rtc.Newline()
-# #                     ip = self.rtc.GetCaretPosition()
-# # #                     self.rtc.SetInsertionPoint(ip-1)
-# #                     self.rtc.MoveCaretBack(1)
-#                     self.rtc.Delete(rt.RichTextRange(l-1, l))
-#                 self.rtc.EndSymbolBullet()
-#                 
-#             else:
-#                 print " ENLEVER"
-#                 #Takes out the list style
-#                 self.rtc.MoveToParagraphStart()
-#                 start = self.rtc.GetInsertionPoint()
-#                 self.rtc.MoveToParagraphEnd()
-#                 end = self.rtc.GetInsertionPoint()
-#                 r = rt.RichTextRange(start, end)
-#                 
-#                 a = rt.RichTextAttr()
-#                 a.SetFlags(wx.TEXT_ATTR_BULLET_STYLE | wx.TEXT_ATTR_BULLET_NUMBER | wx.TEXT_ATTR_BULLET_TEXT | wx.TEXT_ATTR_BULLET_NAME)
-#                 a.BulletStyle = 0
-#                 a.BulletNumber = 0
-#                 a.BulletText = u''
-#                 a.BulletName = u''
-#                 a.BulletFont = u''
-#                 
-#                 attr.RemoveStyle(a)
-#                 attr.SetLeftIndent(attr.GetLeftIndent() - self.indent)
-#                 attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
-#                 
-#                 attr.RemoveFlag(wx.TEXT_ATTR_BULLET_STYLE | wx.TEXT_ATTR_BULLET_NUMBER | wx.TEXT_ATTR_BULLET_TEXT | wx.TEXT_ATTR_BULLET_NAME)
-#                 self.rtc.SetStyle(r, attr)
-# #                 a = rt.RichTextAttr()
-# #                 a.SetFlags(wx.TEXT_ATTR_BULLET_STYLE_STANDARD)
-# #                 attr.SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_NONE)
-# #                 attr.RemoveStyle(a)
-# #                 print attr.GetFlags()
-# #                 e = self.GetParagraphsEnds()
-# #                 s = self.GetParagraphsStarts()
-# #                 attr = rt.RichTextAttr()
-# #                 for d in s:
-# #                     r = rt.RichTextRange(d+2, d+1)
-# #                     self.rtc.SetStyle(r, attr)
-# #                     self.rtc.SetInsertionPoint(l)
-# #                     self.rtc.EndSymbolBullet()
-# #                     self.rtc.Newline()
-# #                     self.rtc.Delete(rt.RichTextRange(l-2, l))
-# #                     self.rtc.Newline()
-# #                     
-# #                     
-#                     
-# #                     self.rtc.Paste()
-#             
-#             
-#             
-#             return
-#             self.rtc.SetSelectionRange(r)
-#             txt = self.rtc.GetStringSelection()
-#             self.rtc.DeleteSelection()
-#             print " >>", txt
-#             
-#             self.rtc.MoveCaret(r.GetStart())
-#             
-#             if not attr.HasBulletStyle():
-#                 self.rtc.BeginSymbolBullet(self.bullet, self.indent, self.subindent)
-# #                 self.rtc.Newline()
-# #                 self.rtc.MoveCaretBack(1)
-#                 for l in txt.split(u"\n"):
-#                     self.rtc.WriteText(l)
-#                     self.rtc.Newline()
-#                 ip = self.rtc.GetInsertionPoint()
-#                 self.rtc.Delete(rt.RichTextRange(ip, ip+1))
-#                 self.rtc.EndSymbolBullet()
-#                 
-#             else:
-#                 for l in txt.split(u"\n"):
-#                     self.rtc.MoveCaretBack(1)
-#                     ip = self.rtc.GetInsertionPoint()
-#                     self.rtc.Delete(rt.RichTextRange(ip, ip+1))
-#                     self.rtc.Newline()
-#                     self.rtc.WriteText(l)
-# #                     self.rtc.Paste()        
-#     
-    
-    
-    
+
     def ParagraphSpacingMore(self):
         attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)

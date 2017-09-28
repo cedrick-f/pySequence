@@ -645,6 +645,8 @@ class PdfPanel(wx.Panel):
                                 wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         else:
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+            self.pdf.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
+#             self.Bind(wx.EVT_DESTROY, self.OnClose)
         
 #        if ADOBE_VERSION == None:
 #            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
@@ -671,13 +673,23 @@ class PdfPanel(wx.Panel):
         self.SetAutoLayout(True)
     
         self.pdf.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+#         self.Bind(wx.EVT_CLOSE, self.OnClose)
+#         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
 
-
+#     ######################################################################################################
+#     def OnDestroyWindow(self, event):
+#         print "OnDestroy pdf"
+#         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+#         self.pdf.FreeDlls()
+#         print "...FAIT"
+# 
     ######################################################################################################
     def OnClose(self, evt):
         print "OnClose pdf"
-#         self.pdf Unbind(wx.EVT_ENTER_WINDOW)
-        self.pdf.Destroy()
+        self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+        self.pdf.FreeDlls()
+# #         self.pdf.Close()
+#         self.pdf.Destroy()
         evt.Skip()
 
     ######################################################################################################
@@ -820,3 +832,5 @@ class PdfPanel(wx.Panel):
 #                    ('ALIGN',(3,2),(3,2),'LEFT'),
 #                    ])
 #t._argW[3]=1.5*inch
+
+

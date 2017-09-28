@@ -1583,7 +1583,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def HideTip(self, event = None):
-        print "HideTip principal"
+#         print "HideTip principal"
         d = self.GetDocActif()
         if d is not None:
             d.HideTip()
@@ -1813,7 +1813,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         #############################################################################################
         self.mgr.AddPane(self.nb, 
                          aui.AuiPaneInfo().
-                         CenterPane()
+                         CenterPane().
+                         DestroyOnClose(True)
 #                         Caption(u"Bode").
 #                         PaneBorder(False).
 #                         Floatable(False).
@@ -1841,7 +1842,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          Caption(u"Structure").
                          CaptionVisible(True).
 #                         PaneBorder(False).
-                         CloseButton(False)
+                         CloseButton(False).
+                         DestroyOnClose(True)
 #                         Show()
                          )
         
@@ -1866,7 +1868,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          Caption(u"Propriétés").
                          CaptionVisible(True).
 #                         PaneBorder(False).
-                         CloseButton(False)
+                         CloseButton(False).
+                         DestroyOnClose(True)
 #                         Show()
                          )
         
@@ -1889,16 +1892,43 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def fermer(self):
+        print "Fermer", self
         # Pour mettre à jour la barre d'outils
         self.parent.OnDocClosed()
         
+#         for w in self.nb.GetChildren():
+#             if isinstance(w, genpdf.PdfPanel):
+#                 w.Close()
+#             else:
+#                 print w
+#                 for x in w.GetChildren():
+#                     if isinstance(x, genpdf.PdfPanel):
+#                         x.Close()
+#                     else:
+#                         print "   ", x
+#                         for y in x.GetChildren():
+#                             if isinstance(y, genpdf.PdfPanel):
+#                                 y.Close()
+#                             else:
+#                                 print "      ", y
+#         nbpanes = self.mgr.GetAllPanes()
+#         for pane in nbpanes:
+#             pane.DestroyOnClose()
+#             self.mgr.ClosePane(pane)
+            
+            
+            
         self.mgr.UnInit()
-        del self.mgr
+ 
+#         del self.mgr
+        self.mgr.Destroy()
+         
         try:
             self.Destroy()
         except:
             pass
-        return True
+        
+        return
         
     #############################################################################
     def getNomFichierCourantCourt(self):
@@ -2257,7 +2287,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         else:            
             if event is not None: event.Skip()
-            return self.fermer()
+            self.fermer()
+            return True
+            
 
 
     #############################################################################
@@ -3020,7 +3052,7 @@ class FenetreProjet(FenetreDocument):
         
         ################################################################################################
         if "beta" in version.__version__:
-            print "beta"
+#             print "beta"
             root, message, count, Ok, Annuler = ouvre(fichier, message)
             err = []
         else:
@@ -8792,7 +8824,7 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def EvtTextIntitule(self, event):
-        print "EvtTextIntitule Seance"
+#         print "EvtTextIntitule Seance"
         txt = self.textctrl.GetValue()
         
         if self.seance.intitule != txt:
@@ -9585,7 +9617,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def EvtTextIntitule(self, event):
-        print "EvtTextIntitule Tache"
+#         print "EvtTextIntitule Tache"
         txt = self.textctrl.GetValue()
         
         if self.tache.intitule != txt:
@@ -15324,7 +15356,7 @@ class PopupInfo(wx.PopupWindow):
 #        self.Fit()
 
         if self.mode == "H":
-#             print self.soup.prettify()
+            print self.soup.prettify()
             self.html.SetPage(self.soup.prettify())
             ir = self.html.GetInternalRepresentation()
     
@@ -15334,6 +15366,7 @@ class PopupInfo(wx.PopupWindow):
         else:
             self.html.SetPage(self.soup.prettify(), "")
 
+            
  
     ##########################################################################################
     def OnLeave(self, event):

@@ -124,7 +124,7 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
                             PanelPropriete_Support, PanelPropriete_LienProjet,\
                             PanelPropriete_Personne, getDisplayPosSize, URLDialog, \
-                            PanelPropriete_Groupe, PanelPropriete_Modele
+                            PanelPropriete_Groupe, PanelPropriete_Modele, SSCALE
 
 
 
@@ -8469,7 +8469,7 @@ class Tache(ElementAvecLien, ElementBase):
         self.projet = projet
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self)
-
+        self.tip.SetSize((500*SSCALE, -1))
         
         
         # Les données sauvegardées
