@@ -4072,9 +4072,11 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def Draw(self, ctx):
-#         print "Draw", self
+        tps1 = time.clock()
         self.GetDoc().DefinirCouleurs()
         self.GetDoc().draw.Draw(ctx, self.GetDoc())
+        tps2 = time.clock() 
+        print "Draw :", tps2 - tps1
         
         
         
@@ -11513,6 +11515,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         """ Fonction appelée lorsque la selection a été changée dans l'arbre
             ---> affichage du panel de Propriétés associé
         """
+        tps1 = time.clock()
+        
         #
         # On ferme l'éventuelle fenêtre d'aide ...
         #
@@ -11552,6 +11556,9 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         if event is not None:
             event.Skip()
+        
+        tps2 = time.clock() 
+        print "AffichePanel :", tps2 - tps1
         
 #         wx.CallAfter(self.SetFocus)
 #         wx.CallAfter(self.Raise)
@@ -11899,7 +11906,7 @@ class ArbreProjet(ArbreDoc):
     def __init__(self, parent, projet, classe, panelProp):
 
         ArbreDoc.__init__(self, parent, classe, panelProp,
-                          imglst = constantes.imagesProjet.items() + constantes.imagesTaches.items())
+                          imglst = constantes.imagesProjet.items() + constantes.imagesTaches.items() + constantes.IMG_LOGICIELS.items())
         
         self.parent = parent
         

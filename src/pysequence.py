@@ -10189,7 +10189,21 @@ class Modele(ElementAvecLien, ElementBase):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
         
-        image = self.arbre.images[self.code]
+#         image = self.arbre.images[self.code]
+#         print image
+#         
+#         print constantes.IMG_LOGICIELS
+#         print self.logiciels
+#         image = scaleImage(constantes.IMG_LOGICIELS[self.logiciels[0]].GetBitmap())
+#         print image
+        if self.logiciels[0] in self.arbre.images.keys():
+            image = self.arbre.images[self.logiciels[0]]
+        else:
+            image = self.arbre.images[self.code]
+#         try:
+#             image = constantes.IMG_LOGICIELS[self.logiciel[0]].GetBitmap()
+#         except:
+#             image = self.arbre.images[self.code]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
