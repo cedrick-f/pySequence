@@ -7,8 +7,9 @@ _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Ind
   * **STI2D** (_enseignements technologiques transversaux_ et de _spécialité_)
   * **S-SI** (_Sciences de l'ingénieur_ du bac S)
   * **Technologie collège** (nouveau programme en travaux)
-  * **STS Electrotechnique** et **STS Systèmes Numériques** (en travaux !)
+  * **STS : Electrotechnique** et **Systèmes Numériques** , **Maintenance de véhicule** ,  **Technique Services Materiels Agricoles**
   * **MPSI** (en travaux) 
+  * **ISN** (en travaux)
   * .......
 
 et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme).
@@ -53,8 +54,9 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 |Lien |Remarque|
 |---|---|
+|[pySequence_7.1.11.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1.11/pySequence_7.1.11.zip)   |Dernière version stable|
 |[pySequence_7.1-beta9.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1-beta.9/pySequence_7.1-beta9.zip)|Dernière version beta|
-|[pySequence_7.0-beta11.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.0-beta.11/pySequence_7.0-beta11.zip)   |Dernière version stable|
+
 
 
 
