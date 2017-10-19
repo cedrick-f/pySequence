@@ -4151,6 +4151,9 @@ class BaseFiche(wx.ScrolledWindow):
     
     ######################################################################################################
     def OnMove(self, evt):
+        if not hasattr(self, 'ctx'):
+            evt.Skip()
+            return
         self.GetDoc().HideTip()
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
@@ -4181,6 +4184,9 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def OnClick(self, evt):
+        if not hasattr(self, 'ctx'):
+            evt.Skip()
+            return
         self.GetDoc().HideTip()
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
@@ -4221,46 +4227,10 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
-        print "Redessiner :",
-        tps1 = time.clock()
-        def redess():
-            wx.BeginBusyCursor()
-
-    #        tps1 = time.clock() 
-
-    #        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
-    #        ctx.set_font_face(face)
-            
-            cdc = wx.ClientDC(self)
-            self.PrepareDC(cdc) 
-            dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
-            dc.SetBackground(wx.Brush('white'))
-            dc.Clear()
-            ctx = wx.lib.wxcairo.ContextFromDC(dc)
-            dc.BeginDrawing()
-            self.normalize(ctx)
-            self.Draw(ctx)
-#            ctx.show_page()
-    #        b = Thread(None, self.Draw, None, (ctx,))
-    #        b.start()
-            
-            dc.EndDrawing()
-            self.ctx = ctx
-            self.Refresh()
-    
-    #        tps2 = time.clock() 
-    #        print "Tracé :"#, tps2 - tps1
-            
-            wx.EndBusyCursor()
-            
-#         self.t = threading.Thread(target=redess)
-#         self.t.start()
-
-#         redess()    
-        
+#         print "Redessiner :",
         self.OnResize()    
-        tps2 = time.clock() 
-        print tps2 - tps1
+#         tps2 = time.clock() 
+#         print tps2 - tps1
 
 
 
@@ -4284,18 +4254,12 @@ class BaseFiche(wx.ScrolledWindow):
     def Draw(self, ctx):
         self.GetDoc().DefinirCouleurs()
         self.GetDoc().draw.Draw(ctx, self.GetDoc())
-        
-
-#     #-------------------------------------------------------------------------
-#     def OnPaint(self, event):
-#         # Just draw prepared bitmap
-#         wx.BufferedPaintDC(self, self.buffer)
 
 
     #############################################################################            
     def OnPaint(self, evt):
 #        print "OnPaint"
-        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+        wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
 #         dc = wx.PaintDC(self)
 #         self.PrepareDC(dc)
 #         dc.DrawBitmap(self.buffer, 0,0) 
@@ -4308,10 +4272,10 @@ class BaseFiche(wx.ScrolledWindow):
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
         self.w, self.h = self.GetVirtualSize()
-#         self.buffer = wx.EmptyBitmap(self.w, self.h)
+
         if self.w >0 and self.h>0:
             self.buffer = self.buffer.ConvertToImage().Scale(self.w, self.h,
-                                           quality = wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
+                                           quality = wx.IMAGE_QUALITY_NORMAL).ConvertToBitmap()
         else:
             self.buffer = wx.EmptyBitmap(self.w, self.h)
         self.Refresh()
