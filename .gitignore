@@ -229,3 +229,5 @@ pip-log.txt
 Installation de pySéquence sous Ubuntu 14.04.docx
 Installation de pySéquence sous Ubuntu 14.04.docx
 src/profs.xml
+src/profs.xml
+test_threadwx.py

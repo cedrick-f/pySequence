@@ -120,10 +120,14 @@ def remplaceCR(txt):
     return txt.replace(u"\n", "<br>")
 
     
-def splitParagraph(text, style):
+def splitParagraph(text, style, Italic = False, Bold = False):
     pp = []
     for l in text.split("\n"):
 #        pp.append(KeepTogether(Paragraph(l, style)))
+        if Italic:
+            l = italic(l)
+        if Bold:
+            l = gras(l)
         pp.append(Paragraph(l, style))
     return pp
 
@@ -294,6 +298,12 @@ def genererFicheValidation(nomFichier, projet):
                                  alignment=TA_LEFT,
                                  )
     
+    info_style = ParagraphStyle(name="InfoStyle",
+                                 fontName="Helvetica",
+                                 textColor = colors.gray,
+                                 fontSize=8,
+                                 alignment=TA_LEFT,
+                                 )
     
     # To make a SimpleDocTemplate, just supply a file name for your PDF, and the
     # page margins. You can optionally supply non-flowing elements such as headers
@@ -375,17 +385,17 @@ def genererFicheValidation(nomFichier, projet):
     ppo = Paragraph(gras(u'Origine de la proposition'),normal_style)
     
     ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
-    ppb.append(splitParagraph(prj.attributs['PB'][1], entete_style))
+    ppb.append(splitParagraph(prj.attributs['PB'][1], info_style, Italic = True))
 
     pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
-    pco.append(splitParagraph(prj.attributs['CCF'][1], entete_style))
+    pco.append(splitParagraph(prj.attributs['CCF'][1], info_style, Italic = True))
 
     ppig = Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style)
     
     ppbg = Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style)
     
     ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
-    ppr.append(splitParagraph(prj.attributs['OBJ'][1], entete_style))
+    ppr.append(splitParagraph(prj.attributs['OBJ'][1], info_style, Italic = True))
     
     
     # Colonne de droite
@@ -429,9 +439,9 @@ def genererFicheValidation(nomFichier, projet):
     #
     story.append(Spacer(1, 5*mm))
     V1 = [Paragraph(u"Visa du chef d’établissement", normal_style),
-          Paragraph(u"(Nom, prénom, date et signature)", entete_style)]
+          Paragraph(u"(Nom, prénom, date et signature)", info_style)]
     V2 = [Paragraph(u"Visa du ou des IA-IPR", normal_style),
-          Paragraph(u"(Noms, prénoms, qualités, dates et signatures)", entete_style)]
+          Paragraph(u"(Noms, prénoms, qualités, dates et signatures)", info_style)]
     data= [[V1, V2]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     story.append(t)

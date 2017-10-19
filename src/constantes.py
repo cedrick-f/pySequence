@@ -679,7 +679,7 @@ class Discipline():
 
 
 # Disciplines "Prof"
-DISCIPLINES = ['SII', 'Tch', 'ISN', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']#, 'GE', 'CM', 'SA']
+DISCIPLINES = ['SII', 'Tch', 'ISN', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Eco', 'Aut']#, 'GE', 'CM', 'SA']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
                    'SII' : u"Sciences Industrielles de l'Ingénieur",
                    'ISN' : u"Informatique et Sciences du Numérique ",
@@ -690,6 +690,7 @@ NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur",
                    'Phi' : u"Philosophie", 
                    'LV1' : u"Langue vivante",
                    'Spo' : u"Education physique et sportive",
+                   'Eco' : u"Economie-Gestion",
                    'Aut' : u"Autre discipline",
                    'GE'  : u"Génie Électrique", 
                    'CM'  : u"Construction Mécanique",
@@ -706,6 +707,7 @@ CODE_DISCIPLINES = {'Tec' : u"SII",
                    'Phi' : u"Phi", 
                    'LV1' : u"LV",
                    'Spo' : u"EP",
+                   'Eco' : u"Eco",
                    'Aut' : u"Autre discipline",
                    'GE'  : u"GE", 
                    'CM'  : u"CM",
@@ -722,6 +724,7 @@ COUL_DISCIPLINES = {'Tec' : (.1, .1, .1),
                     'Phi' : (0.3, 0, 0.9), 
                     'LV1' : (0.45, 0.45, 0),
                     'Spo' : (0, 0.45, 0.45),
+                    'Eco' : (0, 0.45, 0.45),
                     'Aut' : (0.5, 0, 0.5),
                     'GE' : (0, 0, 0), 
                     'CM' : (0, 0, 0),
@@ -1009,7 +1012,7 @@ BASE_FICHE_HTML_MODELE = u"""
 
 
 BASE_FICHE_HTML_PROB = u"""
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Problématique</h1></b></font>
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
 
 <p id="txt"> </p>
 <p id="int"> </p>

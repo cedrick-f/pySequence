@@ -3826,7 +3826,7 @@ class Projet(BaseDoc):
 
     ######################################################################################  
     def AjouterGroupe(self, event = None):
-#        print "AjouterGroupe", self.GetProjetRef().maxEleves
+        print "AjouterGroupe", self.GetProjetRef().maxGroupes
         if len(self.groupes) < self.GetProjetRef().maxGroupes:
             e = Groupe(self, self.GetNewIdGroupe())
             self.groupes.append(e)
@@ -10196,7 +10196,7 @@ class Modele(ElementAvecLien, ElementBase):
 #         print self.logiciels
 #         image = scaleImage(constantes.IMG_LOGICIELS[self.logiciels[0]].GetBitmap())
 #         print image
-        if self.logiciels[0] in self.arbre.images.keys():
+        if len(self.logiciels) > 0 and self.logiciels[0] in self.arbre.images.keys():
             image = self.arbre.images[self.logiciels[0]]
         else:
             image = self.arbre.images[self.code]

@@ -1115,7 +1115,7 @@ def regrouperLst(prjRef, lstCompetences):
 #    print "regrouperLst", lstCompetences
 #    print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences["S"]
     lstCompetences.sort()
-    if prjRef._niveau == 3:
+    if prjRef is not None and prjRef._niveau == 3:
         lstGrpCompetences = []
         for disc, tousIndicateurs in prjRef._dicoCompetences.items():
             dic = []

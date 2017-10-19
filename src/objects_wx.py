@@ -971,7 +971,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #            tool_menu.Append(18, u"&Générer une Synthése pédagogique\tCtrl+B")
 #            tool_menu.AppendSeparator()
         
-        if sys.platform == "win32" and util_path.INSTALL_PATH != None:
+        if sys.platform == "win32":# and util_path.INSTALL_PATH != None:
     #        tool_menu.Append(31, u"Options")
             self.menuReg = tool_menu.Append(32, u"a")
             self.MiseAJourMenu()
@@ -2458,6 +2458,7 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def OnPageChanged(self, event):
+#         print "OnPageChanged"
         new = event.GetSelection()
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
@@ -2759,7 +2760,8 @@ class FenetreProjet(FenetreDocument):
         self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
         
         self.miseEnPlace()
-        self.fiche.Redessiner()
+#         print "__init__ FenetreProjet"
+#         self.fiche.Redessiner() #!!!
         
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
@@ -2792,6 +2794,7 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def OnPageChanged(self, event):
+#         print "OnPageChanged"
         new = event.GetSelection()
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
@@ -3108,7 +3111,7 @@ class FenetreProjet(FenetreDocument):
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
 
-        self.fiche.Redessiner()
+#         self.fiche.Redessiner() #!!!
 
         if Ok:
             
@@ -3406,6 +3409,31 @@ class FenetreProjet(FenetreDocument):
 #        self.fiche.Redessiner()
 #        Thread.__init__(self)
 #        self.fiche.enCours = False
+
+
+class ThreadDraw(threading.Thread):
+    def __init__(self):
+        super(ThreadDraw, self).__init__()
+        self._stop_event = threading.Event()
+        self.ctx = None
+        self.doc = None
+
+    def set_param(self,  ctx, doc):
+        self.ctx = ctx
+        self.doc = doc
+        
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+        
+    def run(self):
+        if self.doc is not None:
+            self.doc.DefinirCouleurs()
+            self.doc.draw.Draw(self.ctx, self.doc)
+        
+threadDraw = ThreadDraw()
 
 ########################################################################################
 #
@@ -3822,7 +3850,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -3850,9 +3878,9 @@ class BaseFiche(wx.ScrolledWindow):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
-#        self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
 
-#        self.Redessiner()
+
+
 
      
     ######################################################################################################
@@ -3870,6 +3898,7 @@ class BaseFiche(wx.ScrolledWindow):
         
     #############################################################################            
     def OnResize(self, evt):
+        print "OnResize"
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 
@@ -3900,50 +3929,7 @@ class BaseFiche(wx.ScrolledWindow):
             self.GetDoc().Move(zone, x, y)
         else:
             self.GetDoc().HideTip()
-#            elem = branche.GetData()
-#            if hasattr(elem, 'tip'):
-#                x, y = self.ClientToScreen((x, y))
-#                elem.tip.Position((x+1,y+1), (0,0))
-#                self.call = wx.CallLater(500, elem.tip.Show, True)
-#                self.tip = elem.tip
-#                evt.Skip()
-#                return    
-        
-        #
-        # Cas particulier des compétences
-        #
-#        kCompObj = self.GetDoc().HitTestCompetence(xx, yy)
-#        if kCompObj != None:
-#            kComp, obj = kCompObj
-#            if hasattr(self, 'popup'):
-##                for tip in self.tip_indic:
-##                    tip.Destroy()
-##                self.tip_indic = []
-#                x, y = self.ClientToScreen((x, y))
-##                type_ens = self.projet.classe.typeEnseignement
-#         
-#                competence = self.GetDoc().GetReferentiel().getCompetence(kComp)
-#                        
-#                intituleComp = competence[0]
-#                
-#                k = kComp.split(u"\n")
-#                if len(k) > 1:
-#                    titre = u"Compétences\n"+u"\n".join(k)
-#                else:
-#                    titre = u"Compétence\n"+k[0]
-#                self.popup.SetTitre(titre)
-#             
-#                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-#             
-#                self.popup.SetTexte(intituleComp, self.tip_comp)
-#                
-#         
-#                
-#                self.popup.Fit()
-#
-#                self.popup.Position((x,y), (0,0))
-#                self.call = wx.CallLater(500, self.popup.Show, True)
-#                self.tip = self.popup
+
             
         evt.Skip()
 
@@ -4020,7 +4006,8 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
-#        print "Redessiner"
+        print "Redessiner :",
+        tps1 = time.clock()
         def redess():
             wx.BeginBusyCursor()
 
@@ -4051,7 +4038,13 @@ class BaseFiche(wx.ScrolledWindow):
             
             wx.EndBusyCursor()
             
-        redess()
+#         self.t = threading.Thread(target=redess)
+#         self.t.start()
+
+        redess()        
+        tps2 = time.clock() 
+        print tps2 - tps1
+
 
 
     
@@ -4072,11 +4065,342 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def Draw(self, ctx):
-        tps1 = time.clock()
+#         global threadDraw
+#         tps1 = time.clock()
+        
         self.GetDoc().DefinirCouleurs()
         self.GetDoc().draw.Draw(ctx, self.GetDoc())
+
+
+
+#         if threadDraw.isAlive():
+#             threadDraw.join()
+#         
+#         threadDraw = ThreadDraw()
+#         threadDraw.set_param(ctx, self.GetDoc())
+#         threadDraw.start()
+#         
+#         wx.CallAfter(threadDraw.join)
+
+
+
+
+#         tps2 = time.clock() 
+#         print "Draw :", tps2 - tps1
+        
+####################################################################################
+from wx.lib.delayedresult import startWorker
+class BaseFiche(wx.ScrolledWindow):
+    def __init__(self, parent):
+#        wx.Panel.__init__(self, parent, -1)
+        wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
+        
+        self.EnableScrolling(False, True)
+        self.SetScrollbars(20, 20, 50, 50);
+        
+        self.t = None
+        self.w, self.h = self.GetVirtualSize()
+        self.buffer = wx.EmptyBitmap(self.w, self.h)
+        
+        
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+
+#         self.InitBuffer()
+        
+        self.Bind(wx.EVT_SIZE, self.OnResize)
+        
+        
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
+
+        self.SizeUpdate()
+        
+        
+        wx.CallAfter(self.connect)
+
+
+    ######################################################################################################
+    def connect(self):
+        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.Bind(wx.EVT_MOTION, self.OnMove)
+
+     
+    ######################################################################################################
+    def OnLeave(self, evt = None):
+        x, y = evt.GetPosition()
+        x, y = self.ClientToScreen((x, y))
+        self.GetDoc().HideTip((x, y))
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
+        
+
+    #############################################################################            
+    def OnScroll(self, evt):
+        self.Refresh()
+
+    
+    ######################################################################################################
+    def OnMove(self, evt):
+        self.GetDoc().HideTip()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+        
+        #
+        # Cas général
+        #
+        zone = self.GetDoc().HitTest(xx, yy)
+#         print zone
+        if zone is not None:
+            x, y = self.ClientToScreen((x, y))
+            self.GetDoc().Move(zone, x, y)
+        else:
+            self.GetDoc().HideTip()
+
+            
+        evt.Skip()
+
+
+    #############################################################################            
+    def CentrerSur(self, obj):
+        if hasattr(obj, 'rect'):
+            y = (obj.rect[0][1])*self.GetVirtualSizeTuple()[1]
+            self.Scroll(0, y/20/draw_cairo.COEF)
+            self.Refresh()
+    
+    
+    #############################################################################            
+    def OnClick(self, evt):
+        self.GetDoc().HideTip()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+        
+        #
+        # Cas général
+        #
+        zone = self.GetDoc().HitTest(xx, yy)
+        if zone is not None:
+            x, y = self.ClientToScreen((x, y))
+            self.GetDoc().Click(zone, x, y)
+        else:
+            self.GetDoc().HideTip()
+            
+        evt.Skip()
+    
+    
+    #############################################################################            
+    def OnDClick(self, evt):
+        item = self.OnClick(evt)
+        if item != None:
+            self.GetDoc().AfficherLien(item)
+            
+            
+    #############################################################################            
+    def OnRClick(self, evt):
+        item = self.OnClick(evt)
+        if item != None:
+            self.GetDoc().AfficherMenuContextuel(item)
+            
+            
+#     #############################################################################            
+#     def InitBuffer(self):
+#         w,h = self.GetVirtualSize()
+#         self.buffer = wx.EmptyBitmap(w,h)
+
+
+    #############################################################################            
+    def Redessiner(self, event = None):  
+        print "Redessiner :",
+        tps1 = time.clock()
+        def redess():
+            wx.BeginBusyCursor()
+
+    #        tps1 = time.clock() 
+
+    #        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
+    #        ctx.set_font_face(face)
+            
+            cdc = wx.ClientDC(self)
+            self.PrepareDC(cdc) 
+            dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+            dc.SetBackground(wx.Brush('white'))
+            dc.Clear()
+            ctx = wx.lib.wxcairo.ContextFromDC(dc)
+            dc.BeginDrawing()
+            self.normalize(ctx)
+            self.Draw(ctx)
+#            ctx.show_page()
+    #        b = Thread(None, self.Draw, None, (ctx,))
+    #        b.start()
+            
+            dc.EndDrawing()
+            self.ctx = ctx
+            self.Refresh()
+    
+    #        tps2 = time.clock() 
+    #        print "Tracé :"#, tps2 - tps1
+            
+            wx.EndBusyCursor()
+            
+#         self.t = threading.Thread(target=redess)
+#         self.t.start()
+
+#         redess()    
+        
+        self.OnResize()    
         tps2 = time.clock() 
-        print "Draw :", tps2 - tps1
+        print tps2 - tps1
+
+
+
+    
+    #############################################################################            
+    def normalize(self, cr):
+        h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
+        if h <= 0:
+            h = 1.0
+        cr.scale(h, h) 
+        
+#         h = float(self.GetVirtualSize()[1])
+#         if h <= 0:
+#             h = float(100)
+# #        print h
+#         cr.scale(h / draw_cairo.COEF, h / draw_cairo.COEF) 
+        
+        
+    
+    #############################################################################            
+    def Draw(self, ctx):
+        self.GetDoc().DefinirCouleurs()
+        self.GetDoc().draw.Draw(ctx, self.GetDoc())
+        
+
+#     #-------------------------------------------------------------------------
+#     def OnPaint(self, event):
+#         # Just draw prepared bitmap
+#         wx.BufferedPaintDC(self, self.buffer)
+
+
+    #############################################################################            
+    def OnPaint(self, evt):
+#        print "OnPaint"
+        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+#         dc = wx.PaintDC(self)
+#         self.PrepareDC(dc)
+#         dc.DrawBitmap(self.buffer, 0,0) 
+
+
+
+    #-------------------------------------------------------------------------
+    def OnResize(self, event = None):
+#         print "OnResize"
+        w = self.GetClientSize()[0]
+        self.SetVirtualSize((w,w*29/21)) # Mise au format A4
+        self.w, self.h = self.GetVirtualSize()
+#         self.buffer = wx.EmptyBitmap(self.w, self.h)
+        if self.w >0 and self.h>0:
+            self.buffer = self.buffer.ConvertToImage().Scale(self.w, self.h,
+                                           quality = wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
+        else:
+            self.buffer = wx.EmptyBitmap(self.w, self.h)
+        self.Refresh()
+        self.Update()
+        # After drawing empty bitmap start update
+        self.SizeUpdate()
+
+#     #############################################################################            
+#     def OnResize(self, evt):
+#         print "OnResize"
+#         w = self.GetClientSize()[0]
+#         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
+# 
+#         self.InitBuffer()
+#         if w > 0 and self.IsShown():
+#             self.Redessiner()
+
+#     #############################################################################            
+#     def InitBuffer(self):
+#         w,h = self.GetVirtualSize()
+#         self.buffer = wx.EmptyBitmap(w,h)
+
+
+    #-------------------------------------------------------------------------
+    def OnEraseBackground(self, event):
+        pass # Or None
+
+    #-------------------------------------------------------------------------
+    def OnTimer(self, event):
+        # Start another thread which will update the bitmap
+        # But only if another is not still running!
+        if self.t is None:
+            self.timer.Stop()
+            self.t = startWorker(self.ComputationDone, self.Compute)
+
+    #-------------------------------------------------------------------------
+    def SizeUpdate(self):
+        # The timer is used to wait for last thread to finish
+        self.timer.Stop()
+        self.timer.Start(100)
+
+    #-------------------------------------------------------------------------
+    def Compute(self):
+    #    print w, h
+        
+        imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+        self.ctx = cairo.Context(imagesurface)
+        self.normalize(self.ctx)
+        self.ctx.set_source_rgba(1,1,1,1)
+        self.ctx.paint()
+        self.Draw(self.ctx)
+        self.buffer = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+        
+        return 
+#     
+#         cdc = wx.ClientDC(self)
+#         self.PrepareDC(cdc) 
+#         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+#         dc.BeginDrawing()
+#         dc.SetBackground(wx.Brush('white'))
+#         dc.Clear()
+#         ctx = wx.lib.wxcairo.ContextFromDC(dc)
+#         
+#         self.normalize(ctx)
+#         
+#         self.Draw(ctx)
+#         self.ctx = ctx
+# #            ctx.show_page()
+# #        b = Thread(None, self.Draw, None, (ctx,))
+# #        b.start()
+#         
+#         dc.EndDrawing()
+#         
+# #         temp_buffer = wx.BitmapFromBuffer(self.w, self.h, self.buffer)
+#         return self.buffer
+
+
+    #-------------------------------------------------------------------------
+    def ComputationDone(self, r):
+        # When done, take bitmap and place it to the drawing buffer
+        # Invalidate panel, so it is redrawn
+        # But not if the later thread is waiting!
+#         temp = r.get()
+        if not self.timer.IsRunning():
+#             self.buffer = temp
+            self.Refresh()
+            self.Update()
+        self.t = None
+        
         
         
         
@@ -9205,35 +9529,6 @@ class PanelPropriete_Tache(PanelPropriete):
         self.ConstruireCompetences()
         self.ConstruireCasesEleve()
         self.MiseAJour()
-        
-            
-##        print ">>>", tache.phase, tache.projet.getCodeLastRevue()
-#        if not tache.phase in [tache.projet.getCodeLastRevue(), _S] \
-#           and not (tache.phase in TOUTES_REVUES_EVAL and (True in ref.compImposees.values())): #tache.GetReferentiel().compImposees['C']):
-#            nb.AddPage(pageGen, u"Propriétés générales")
-#
-#            #
-#            # Les pages "Compétences"
-#            #
-#            self.arbres = {}
-#            self.pagesComp = []
-#            
-#            for code, dicComp in prj._dicoCompetences.items():
-#                self.pagesComp.append(wx.Panel(nb, -1))
-#                comp = ref.dicoCompetences[code]
-#                pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
-#                
-#                self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, dicComp, comp, self,
-#                                                 revue = self.tache.phase in TOUTES_REVUES_SOUT, 
-#                                                 eleves = (self.tache.phase in TOUTES_REVUES_EVAL_SOUT \
-#                                                           or self.tache.estPredeterminee()))
-#                
-#                pageComsizer.Add(self.arbres[code], 1, flag = wx.EXPAND)
-#                self.pagesComp[-1].SetSizer(pageComsizer)
-#                nb.AddPage(self.pagesComp[-1], comp.nomGenerique + u" à mobiliser :" + comp.abrDiscipline) 
-#                
-#                self.pageComsizer = pageComsizer
-#            
 
         
         #
@@ -11541,12 +11836,13 @@ class ArbreDoc(CT.CustomTreeCtrl):
             print "err : ", data
         
         if panelPropriete:
+            tps2 = time.clock() 
 #             print "> panelPropriete", panelPropriete
             self.panelProp.AfficherPanel(panelPropriete)
             self.parent.Refresh()
         else:
             print "rien", panelPropriete
-        
+        tps3 = time.clock() 
         #
         # On centre la fiche sur l'objet
         #
@@ -11557,8 +11853,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         if event is not None:
             event.Skip()
         
-        tps2 = time.clock() 
-        print "AffichePanel :", tps2 - tps1
+        tps4 = time.clock() 
+        print "AffichePanel :", tps2 - tps1,  tps3 - tps2, tps4 - tps3
         
 #         wx.CallAfter(self.SetFocus)
 #         wx.CallAfter(self.Raise)

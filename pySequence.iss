@@ -1,7 +1,7 @@
 
 ;This file is part of pySequence
 ;
-; Copyright (C) 2012-2016 Cédrick FAURY
+; Copyright (C) 2012-2017 Cédrick FAURY
 ;
 ;pySequence is free software; you can redistribute it and/or modify
 ;it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
 [ISPP]
 #define AppName "pySequence"
-#define AppVersion "7.0"
-#define AppVersionInfo "7.0.2"
+#define AppVersion "7.1"
+#define AppVersionInfo "7.1.11"
 #define AppVersionBase "7"
 
 #define AppURL "https://github.com/cedrick-f/pySequence"
@@ -33,7 +33,7 @@ AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 
 AppPublisher=Cédrick Faury
-AppCopyright=Copyright © 2011-2016 Cédrick Faury
+AppCopyright=Copyright © 2011-2017 Cédrick Faury
 VersionInfoVersion = {#AppVersionInfo}
 
 ;Répertoire de base contenant les fichiers
@@ -173,7 +173,7 @@ Procedure URLLabelOnClick(Sender: TObject);
 var
   ErrorCode: Integer;
 begin
-  ShellExec('open', 'http://fauryc.free.fr/spip.php?rubrique7', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', 'https://github.com/cedrick-f/pySequence', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 {*** INITIALISATION ***}
@@ -182,7 +182,7 @@ var
   URLLabel: TNewStaticText;
 begin
   URLLabel := TNewStaticText.Create(WizardForm);
-  URLLabel.Caption := 'http://fauryc.free.fr';
+  URLLabel.Caption := 'https://github.com/cedrick-f/pySequence';
   URLLabel.Cursor := crHand;
   URLLabel.OnClick := @URLLabelOnClick;
   URLLabel.Parent := WizardForm;
