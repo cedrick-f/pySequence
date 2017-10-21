@@ -463,7 +463,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         self.tabmgr = self.GetClientWindow().GetAuiManager()
         
         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
-        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
+#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
+        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnCloseDoc)
         
 #         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
 #         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnDocChanged)
@@ -1466,12 +1467,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     ###############################################################################################
     def OnDocClosed(self, evt = None):   
-#         print "OnDocClosed"
+        print "OnDocClosed", evt
 
         if self.GetNotebook().GetPageCount() <= 1:
             self.supprimerOutils()
             self.tb.Realize()
-            
+        
+        if evt is not None:
+            evt.Skip()
             
     ###############################################################################################
     def OnDocChanged(self, evt = None):
@@ -1647,10 +1650,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         else:
 #             return HMIN_PROP*SSCALE
     
+    #############################################################################
+    def OnCloseDoc(self, evt):
+        print "OnClose doc"
+        fenDoc = self.GetNotebook().GetPage(evt.GetSelection())
+        fenDoc.quitter()
+        
     
     #############################################################################
     def OnClose(self, evt):
-#        print "OnClose"
+        print "OnClose app"
 #        try:
 #            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
 #        except IOError:
@@ -1754,6 +1763,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         #
         self.nb = wx.Notebook(self.pnl, -1)
 
+
+#     ######################################################################################################
+#     def OnClose(self, evt):
+#         print "OnClose doc"
+#         
 
     ###############################################################################################
     def GetDocument(self):
@@ -1885,7 +1899,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.Layout()
         
         self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
-        self.Bind(wx.EVT_CLOSE, self.quitter)
+#         self.Bind(wx.EVT_CLOSE, self.quitter)
+#         self.Bind(wx.EVT_WINDOW_DESTROY, self.quitter)
         for c in self.GetChildren():
             c.Bind(wx.EVT_LEAVE_WINDOW, self.HideTip)
         
@@ -1898,7 +1913,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
 #         for w in self.nb.GetChildren():
 #             if isinstance(w, genpdf.PdfPanel):
-#                 w.Close()
+#                 print "  close", w
+#                 w.Destroy()
+#                 time.sleep(4)
 #             else:
 #                 print w
 #                 for x in w.GetChildren():
@@ -1915,9 +1932,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #         for pane in nbpanes:
 #             pane.DestroyOnClose()
 #             self.mgr.ClosePane(pane)
-            
-            
-            
+#         self.nb.Destroy()
+        
+        
         self.mgr.UnInit()
  
 #         del self.mgr
@@ -1928,7 +1945,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         except:
             pass
         
-        return
+        return True
         
     #############################################################################
     def getNomFichierCourantCourt(self):
@@ -2265,6 +2282,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def quitter(self, event = None):
+        print "quitter", event
+#         if event is not None:
+#             event.Skip()
         if self.fichierCourantModifie:
             texte = constantes.MESSAGE_FERMER[self.typ] % self.fichierCourant
 #            if self.fichierCourant != '':
@@ -2286,8 +2306,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 return False
         
         else:            
-            if event is not None: event.Skip()
             self.fermer()
+            if event is not None: event.Skip()
             return True
             
 
@@ -4359,10 +4379,13 @@ class BaseFiche(wx.ScrolledWindow):
         # Invalidate panel, so it is redrawn
         # But not if the later thread is waiting!
 #         temp = r.get()
-        if not self.timer.IsRunning():
-#             self.buffer = temp
-            self.Refresh()
-            self.Update()
+        try:
+            if not self.timer.IsRunning():
+    #             self.buffer = temp
+                self.Refresh()
+                self.Update()
+        except:
+            pass
         self.t = None
         
         

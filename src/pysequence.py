@@ -1463,11 +1463,12 @@ class BaseDoc(ElementBase, ElementAvecLien):
         """ >> Renvoie la Zone sensible sous le point x, y
         """
 #        print "HitTest"
-        for z in self.zones_sens:
-            if z.dansRectangle(x, y):
-#                print "   xxx", z
-                return z
-        return
+        if hasattr(self, 'zones_sens'):
+            for z in self.zones_sens:
+                if z.dansRectangle(x, y):
+    #                print "   xxx", z
+                    return z
+            return
 
 
     ######################################################################################  

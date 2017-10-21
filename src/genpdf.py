@@ -655,7 +655,8 @@ class PdfPanel(wx.Panel):
                                 wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         else:
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
-            self.pdf.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
+#             self.Bind(wx.EVT_CLOSE, self.OnClose)
+#             self.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
 #             self.Bind(wx.EVT_DESTROY, self.OnClose)
         
 #        if ADOBE_VERSION == None:
@@ -696,9 +697,14 @@ class PdfPanel(wx.Panel):
     ######################################################################################################
     def OnClose(self, evt):
         print "OnClose pdf"
-        self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+#         self.sizer.Detach(self.pdf)
+#         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
         self.pdf.FreeDlls()
-# #         self.pdf.Close()
+#         self.sizer.Remove(self.pdf)
+#         self.pdf.Destroy()
+#         time.sleep(3)
+#         wx.CallAfter(self.Destroy)
+#         self.Destroy()
 #         self.pdf.Destroy()
         evt.Skip()
 
@@ -709,6 +715,7 @@ class PdfPanel(wx.Panel):
         event.Skip()
         
         
+    ######################################################################################################
     def MiseAJour(self, projet, fenDoc):
         if isinstance(self.pdf, wx.StaticText):
 #        if get_min_adobe_version() == None:
