@@ -1165,7 +1165,35 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     #############################################################################
     def OnBug(self, event):
-        print
+        import platform
+        recipient = version.__mail__.replace("#", "@")
+        subject = u"Rapport de Bug pySéquence"
+        body = u"Bonjour,\n\n J'ai (ou je crois avoir) constaté un bug !\n\n"
+        body += u"Version %s : %s\n" %(version.__appname__, version.__version__)
+        body += u"Système : %s\n" %platform.platform()
+        body += u"Description du bug : \n   ... décrire ici ce qui se produit d'anormal ... ne pas hésiter à joindre des images ...\n\n"
+        body += u"Moyen de le reproduire : \n   ... décrire ici un moyen de reproduire le problème constaté ... joindre si besoin un fichier .seq, .prj ou .prg ...\n\n"
+        body += u"Merci d'avance !"
+        
+        body = body.replace(' ', '%20')
+        body = body.replace('\n', '%0D%0A')
+        
+#         bodyh = u"""<html>
+#         <head>
+#     
+#         <meta http-equiv="content-type" content="text/html; charset=utf-8">
+#         <title>Rapport de Bug pySéquence</title>
+#       </head>
+#       <body>
+#         %s
+#       </body>
+#     </html>""" %body
+     
+        try:
+            webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+        except:
+            messageErreur(None, u"Envoi impossible",
+                          u"Impossible d'envoyer le rapport")
         
         
     #############################################################################
@@ -14950,6 +14978,10 @@ class A_propos(wx.Dialog):
         nb.AddPage(descrip, u"Description")
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
+        
+        sizer.Add(wx.StaticText(self, wx.ID_ANY, u"Informations et téléchargement :"),  
+                  flag = wx.ALIGN_RIGHT|wx.ALL, border = 5)
+        
         
         sizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY, u"Informations et téléchargement : %s" %version.__url__,
                                    URL = version.__url__),  
