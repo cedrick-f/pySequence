@@ -1179,6 +1179,9 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
             color0 = CoulAltern[i][0]
             color1 = CoulAltern[i][1]
 
+        if i > len(xEleves)-1:
+            break
+        
         _x = xEleves[i]
         boule(ctx, _x, y, r, 
               color0 = color0, color1 = color1,

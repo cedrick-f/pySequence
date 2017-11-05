@@ -8761,8 +8761,10 @@ class Tache(ElementAvecLien, ElementBase):
         
         brancheElv = branche.find("Eleves")
         self.eleves = []
+        prj = self.GetDocument()
         for i, e in enumerate(brancheElv.keys()):
-            self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
+            if i < len(prj.eleves) + len(prj.groupes):
+                self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
         
         # Initialisation des Indicateurs par elève
         self.indicateursEleve = self.IndicateursEleveDefaut() 

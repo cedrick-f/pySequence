@@ -3918,7 +3918,7 @@ class BaseFiche2(wx.ScrolledWindow):
         
     #############################################################################            
     def OnResize(self, evt):
-        print "OnResize"
+#         print "OnResize"
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 
@@ -6717,7 +6717,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-#         print "MiseAJour panelPropriete Classe"
+#         print "MiseAJour panelPropriete Classe", self.classe.referentiel.Enseignement[0]
 #        self.MiseAJourType()
         
         
@@ -11140,9 +11140,10 @@ class PanelPropriete_Groupe(PanelPropriete):
     
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-#        print "MiseAJour panelPropriete Personne"
+#         print "MiseAJour panelPropriete Groupe", self.groupe.typeEnseignement
 
-        self.cb_type.SetStringSelection(self.groupe.typeEnseignement)
+#         self.cb_type.SetStringSelection(self.groupe.typeEnseignement)
+        self.cb_type.SetStringSelection(REFERENTIELS[self.groupe.typeEnseignement].Enseignement[0])
         
         self.textctrln.ChangeValue(self.groupe.nom)
 
