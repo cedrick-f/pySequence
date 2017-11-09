@@ -2473,7 +2473,8 @@ class FenetreSequence(FenetreDocument):
         #
         # Détails
         #
-        self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
+#         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
+        self.pageDetails = RapportRTF(self.nb, self.sequence)
         self.nb.AddPage(self.pageDetails, u"Détails des séances")
         
         #

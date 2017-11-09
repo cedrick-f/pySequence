@@ -50,6 +50,8 @@ import wx
 import wx.richtext as rt
 import richtext
 
+import PyRTFParser
+
 from widgets import messageErreur
 from util_path import toSystemEncoding
 
@@ -708,17 +710,11 @@ class FrameRapport(wx.Frame):
         handler.DeleteTemporaryImages()
 
 
-
-
-
-class RapportRTF(rt.RichTextCtrl): 
-    def __init__(self, parent, style = 0):
+class RapportRTF2(richtext.RichTextPanel): 
+    def __init__(self, parent, objet, toolbar = True):
 #        print "RapportRTF"
-        rt.RichTextCtrl.__init__(self, parent, style = rt.RE_MULTILINE | wx.WANTS_CHARS |style)
+        richtext.RichTextPanel.__init__(self, parent, objet, toolbar)
 
-        self.style = style
-        self.parent = parent   
-         
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
 
@@ -1431,9 +1427,787 @@ class RapportRTF(rt.RichTextCtrl):
                     f.close()
                     
             elif ext == 'rtf':
-                import PyRTFParser_
                 # Use the custom RTF Handler
-                handler = PyRTFParser_.PyRichTextRTFHandler()
+                handler = PyRTFParser.PyRichTextRTFHandler()
+                # Save the file with the custom RTF Handler.
+                # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
+                handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
+        
+
+        dlg = wx.MessageDialog(self, u"Le fichier a bien été enregistré\n\n%s\n\n"\
+                                   u"Voulez-vous l'ouvrir ?" %self.GetFilename(), 
+                                   u"Fichier enregistré",
+                                   wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
+        res = dlg.ShowModal()
+        if res == wx.ID_YES:
+            try:
+                os.startfile(self.GetFilename())
+            except:
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
+        dlg.Destroy()
+
+
+
+    ######################################################################################################
+    def Ecraser(self, nomFichier):
+        if os.path.exists(nomFichier):
+            dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n%s\n\n"\
+                                   u"Voulez-vous l'écraser ?" %nomFichier, 
+                                   u"Fichier existant",
+                                   wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
+            res = dlg.ShowModal()
+            dlg.Destroy()
+            return res == wx.ID_YES
+        return True
+        
+        
+        
+        
+    ######################################################################################################
+    def EnregistrerSous(self, titre, nomFichierDefaut = u""):
+        wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
+                    u"Format HTML (.html)|*.html|" \
+                    u"Fichier texte (.txt)|*.txt"
+        types = [0, 3, 2]
+        dlg = wx.FileDialog(self, titre,
+                            wildcard=wildcard,
+                            defaultFile = nomFichierDefaut,
+                            style=wx.SAVE)
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+
+            self.Enregistrer(titre, path)
+
+        dlg.Destroy()
+        
+        
+   
+
+
+class RapportRTF(rt.RichTextCtrl): 
+    def __init__(self, parent, style = 0):
+#        print "RapportRTF"
+        rt.RichTextCtrl.__init__(self, parent, style = rt.RE_MULTILINE | wx.WANTS_CHARS |style)
+
+        self.style = style
+        self.parent = parent   
+         
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
+        
+        
+    ######################################################################################################
+    def Remplir(self, fichierCourant, doc, typ, eleve = None):
+        isEditable = self.IsEditable()
+        self.SetEditable(True)
+        
+        self.MoveEnd()
+        self.Clear()
+            
+        #
+        # On rempli le rapport
+        #
+        phase = ''
+        if typ == 'prj':
+#             for e in doc.eleves:
+            self.AddTitreProjet(eleve, doc.GetProjetRef().attributs["FIC"][0])
+            for t in doc.OrdonnerListeTaches(eleve.GetTaches(revues = True)):
+                if t.phase != phase and t.phase != '':
+                    phase = t.phase
+                    self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
+                self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
+            
+            self.eleve = eleve
+            self.projet = doc
+
+        else:
+            self.AddTitreSeance(doc)
+    
+            for s in doc.seances:
+                self.AddSeance(s)
+            
+        self.AddPieds(fichierCourant)
+        
+        self.SetEditable(isEditable)
+        self.ScrollIntoView(0, wx.WXK_HOME)
+        
+    
+    ######################################################################################################
+    def AddPieds(self, fichierCourant):
+        self.Newline()
+        self.BeginFontSize(8)
+        self.BeginItalic()
+        self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
+        self.EndItalic()
+        self.EndFontSize()
+       
+        self.Newline()
+        self.EndAlignment()
+        
+        
+    ######################################################################################################
+    def AddTitreProjet(self, eleve, titre):
+#        print self.GetCaretPosition()
+        if self.GetCaretPosition() == -1:
+            Styles["Titre"].SetPageBreak(pageBreak=False)
+        else:
+            Styles["Titre"].SetPageBreak(pageBreak=True)
+#        
+        parag = self.AddParagraph(titre + u"\n")
+        self.MoveEnd()
+        self.Newline()
+        
+        self.BeginBold()
+        self.BeginFontSize(14)
+        self.WriteText(eleve.GetNomPrenom())
+        self.EndFontSize()
+        self.EndBold()
+        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
+        
+        self.Newline()
+        self.SetStyle(parag, Styles["Titre"])
+        self.EndAlignment()
+    
+    
+    ######################################################################################################
+    def AddTitreSeance(self, doc):
+        
+        parag = self.AddParagraph(u"Détail des séances\n")
+        self.MoveEnd()
+        self.Newline()
+        
+        self.BeginBold()
+        self.BeginFontSize(14)
+        self.BeginItalic()
+        self.WriteText(doc.intitule)
+        self.EndItalic()
+        self.EndFontSize()
+        self.EndBold()
+        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
+        
+        self.Newline()
+        self.SetStyle(parag, Styles["Titre"])
+        self.EndAlignment()
+
+        
+    ######################################################################################################
+    def AddPhase(self, tache, typ):
+        if tache.phase != '':
+            r,v,b,a = ICoulTache[tache.phase]
+        else:
+            r,v,b, a = 1,1,1,1
+        bgCoul = wx.Colour(r*255,v*255,b*255)
+        
+        if tache.phase != '':
+            r,v,b = BCoulTache[tache.phase]
+        else:
+            r,v,b, a = 0,0,0,1
+        fgCoul = wx.Colour(r*255,v*255,b*255)
+
+        Styles["Titre 1"].SetBackgroundColour(bgCoul)
+        Styles["Titre 1"].SetTextColour(fgCoul)  
+        self.BeginStyle(Styles["Titre 1"])
+        
+        phase = tache.GetProjetRef().phases[tache.phase][1]
+        self.WriteText(phase)
+        self.EndStyle()
+#        self.EndAlignment()
+        
+        self.Newline()
+#        self.EndLeftIndent()
+#        self.EndStyle()
+         
+    ######################################################################################################
+    def AddTache(self, tache, revue = False):
+        if tache.phase != '':
+            r,v,b, a = ICoulTache[tache.phase]
+        else:
+            r,v,b, a = 1,1,1,1
+        bgCoul = wx.Colour(r*255,v*255,b*255)
+        
+        if tache.phase != '':
+            r,v,b = BCoulTache[tache.phase]
+        else:
+            r,v,b, a = 0,0,0,1
+        fgCoul = wx.Colour(r*255,v*255,b*255)
+            
+        if not revue:
+            Styles["Titre 2"].SetBackgroundColour(bgCoul)  
+            self.BeginStyle(Styles["Titre 2"])
+            self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
+            self.EndStyle()
+            self.Newline()
+            self.EndAlignment()
+            
+            self.BeginStyle(Styles["Message"])
+#            self.BeginLeftIndent(60)
+            self.BeginUnderline()
+            self.WriteText(u"Intitulé :")
+            self.EndUnderline()
+            self.WriteText(u" " + tache.intitule)
+            self.EndStyle()
+#            self.Newline()
+        
+        if tache.description != None:
+#            self.BeginUnderline()
+#            self.WriteText(u"Description :")
+#            self.BeginLeftIndent(60)
+#            self.EndUnderline()
+            self.Newline()
+            rtc = richtext.RichTextPanel(self.parent, tache, toolBar = False)
+            rtc.Show(False)
+            self.AddDescription(rtc.rtc)
+            rtc.Destroy()
+            self.EndStyle()
+
+##            self.BeginLeftIndent(60)
+#            self.Newline()
+#            self.EndStyle()
+#            self.MoveEnd()
+            
+#            tache.panelPropriete.rtc.rtc.SelectAll()
+#            
+#            if sys.platform == "win32":
+#                #
+#                # Procédure pour vérifier que le clipboard est disponible
+#                # (source http://teachthe.net/?cat=56&paged=2)
+#                #
+#                cbOpened = False
+#                n = 0
+#                while not cbOpened and n < 10:
+#                    n += 1
+#                    try:
+#                        win32clipboard.OpenClipboard(0)
+#                        cbOpened = True
+#                        win32clipboard.CloseClipboard()
+#                    except Exception, err:
+##                        print "error", err
+#                        # If access is denied, that means that the clipboard is in use.
+#                        # Keep trying until it's available.
+#                        if err[0] == 5:  #Access Denied
+#                            pass
+#                            print 'waiting on clipboard...'
+#                            # wait on clipboard because something else has it. we're waiting a
+#                            # random amount of time before we try again so we don't collide again
+#                            time.sleep( random.random()/50 )
+#                        elif err[0] == 1418:  #doesn't have board open
+#                            pass
+#                        elif err[0] == 0:  #open failure
+#                            pass
+#                        else:
+#                            print 'ERROR in Clipboard section of readcomments: %s' %err
+#                            pass
+#
+#            tache.panelPropriete.rtc.rtc.Copy()
+#            self.Paste()
+            
+        self.Newline()
+#        self.EndLeftIndent()
+        self.EndAlignment()
+#        self.BeginUnderline()
+#        self.WriteText(u"Volume horaire :")
+#        self.EndUnderline()
+#        self.WriteText(u" " + getHoraireTxt(tache.GetDuree()))
+        
+        self.EndStyle()
+        
+        
+        
+    def AddDescription(self, rtc):
+        """ Ajoute une description contenue dans un RichTextCtrl
+        """
+#         print "AddDescription"
+#        par = rtc.GetFocusObject()
+#        par = rtc.GetSelectionAnchorObject()
+        par = rtc.GetBuffer()
+        pos = self.GetInsertionPoint()
+#         print "   ", rtc.GetBuffer()
+#         print "   ", pos
+        
+        self.GetBuffer().InsertParagraphsWithUndo(pos, par, self)
+        
+        self.MoveEnd()
+#        self.Newline()
+#        return
+#        pos = self.GetLastPosition()
+#        
+#        self.
+        
+#        
+#        
+#        
+#        
+#        
+#        
+#        bufS = cStringIO.StringIO()
+#        handlerS = rt.RichTextXMLHandler()
+#        handlerS.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+#        handlerS.SaveStream(rtc.GetBuffer(), bufS)
+##        print "   ", bufS.getvalue()
+#        domS = parseString(bufS.getvalue())
+#        
+#        
+#        bufT  = cStringIO.StringIO()
+#        handlerT = rt.RichTextXMLHandler()
+#        handlerT.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+#        handlerT.SaveStream(self.GetBuffer(), bufT)
+##        print "   ", bufT.getvalue()
+#        domT = parseString(bufT.getvalue())
+#        
+#        parS = domS.getElementsByTagName("paragraphlayout")[0]
+#        parT = domT.getElementsByTagName("paragraphlayout")[0]
+#        
+#        for c in parS.childNodes:
+##            print ">>>>   ", c.toxml()
+#            parT.appendChild(domT.importNode(c, True))
+##        print "    T : ", parT.toxml()
+#        
+#        print "resultat :"
+##        print domT.toxml()
+        
+#        bufT  = cStringIO.StringIO()
+#        bufT.write(domT.toxml())
+#        bufT.seek(0)
+#        
+#        try:
+#            for line in bufT:
+#                print line,
+#        finally:
+#            pass
+#        
+#        bufT.seek(0)
+##        print " >>", bufT.getvalue()
+#        
+##        rt_buffer = self.GetBuffer()
+##        rt_buffer.AddHandler(handlerT)
+#
+##        handlerT.LoadStream(self.GetBuffer(),  bufT)  
+#    
+#        # add the handler (where you create the control)
+#        self.GetBuffer().AddHandler(rt.RichTextXMLHandler())
+#        
+#        # you have to specify the type of data to load and the control
+#        # must already have an instance of the handler to parse it
+#        self.GetBuffer().LoadStream(bufT, rt.RICHTEXT_TYPE_XML)
+#        bufT.close()
+#        
+##        self.MoveToParagraphEnd()
+#        self.MoveEnd()
+#        self.Newline()
+#        self.MoveEnd()
+#        
+#        self.EndStyle()
+#        self.EndLeftIndent()
+#        self.EndAlignment()
+#        self.Newline()
+        
+        
+#        self.Refresh()
+    
+    
+    ######################################################################################################
+    def AddSeance(self, seance, indent = 1):
+#        print "Add", seance
+        if seance.typeSeance == '':
+            return
+        
+        r,v,b = ICoulSeance[seance.typeSeance]
+        bgCoul = wx.Colour(r*255,v*255,b*255)
+        
+#        self.Newline()
+        
+#        if not isinstance(fgCoul, wx.Colour):
+#            fgCoul = wx.NamedColour(fgCoul)
+#        self.BeginTextColour(fgCoul)
+            
+        if not isinstance(bgCoul, wx.Colour):
+            bgCoul = wx.NamedColour(bgCoul)
+        Styles["Titre 1"].SetBackgroundColour(bgCoul)
+        
+        self.BeginStyle(Styles["Titre 1"])
+        self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
+        self.EndStyle()
+#        self.BeginLeftIndent(60*(indent-1))
+        self.Newline()
+        self.EndLeftIndent()
+        
+        self.BeginStyle(Styles["Message"])
+        self.BeginUnderline()
+        self.WriteText(u"Intitulé :")
+        self.EndUnderline()
+        self.WriteText(u" " + seance.intitule)
+#        self.EndStyle()
+#        self.BeginLeftIndent(60*indent)
+        self.Newline()
+        self.EndLeftIndent()
+        
+        if seance.description != None:
+            self.Newline()
+            rtc = richtext.RichTextPanel(self.parent, seance, toolBar = False)
+            rtc.Show(False)
+            self.AddDescription(rtc.rtc)
+            rtc.Destroy()
+            self.EndStyle()
+        
+#         if seance.description != None and hasattr(seance, 'panelPropriete'):
+# #            self.BeginUnderline()
+# #            self.WriteText(u"Description :")
+# #            self.EndUnderline()
+# #            self.Newline()
+# #            self.BeginLeftIndent(60*indent)
+#             seance.panelPropriete.rtc.rtc.SelectAll()
+#             seance.panelPropriete.rtc.rtc.Copy()
+#             self.Paste()
+#             
+#             self.Newline()
+#             self.EndLeftIndent()
+        
+        self.EndStyle()
+        
+        if seance.typeSeance in ["R", "S"]:
+            for sseance in seance.seances:
+                self.AddSeance(sseance, indent + 1)
+            self.Newline()
+        
+        
+    
+        
+#    ######################################################################################################
+#    # Analyse   
+#    ######################################################################################################
+#    def AddTitreAnImmob(self):
+#        self.AddParagraphStyled(u"Structure du Montage :", "Titre 1")
+#        
+#    def AddAnImmob(self, analyse, zoneMtg):
+#        self.AddParagraphStyled(u"Mise en position axiale :", "Titre 2")
+#        
+#        # Message principal
+#        self.AddParagraphStyled(analyse.messageImmobilisation.mess, "Message", analyse.messageImmobilisation.coul)
+#        self.AppendText("\n")
+#        
+#        # Message par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            self.BeginStyle(Styles["MessSens"])
+#            self.BeginTextColour(Couleur[analyse.resultatImmobilisation[s][0].coul])
+#            mess = self.AppendText(analyse.resultatImmobilisation[s][0].mess)
+#            if s == 1: self.WriteText("\t")
+#        self.AppendText("\n")
+#        
+#        # Image par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            if analyse.resultatImmobilisation[s][0].clef == 'ArretArbreSens':
+#                img = self.GetImageArret(s, analyse, zoneMtg)
+#            elif analyse.resultatImmobilisation[s][0].clef == 'ImmobCorrect':
+#                img = self.GetImageChaine(s, analyse, zoneMtg)
+#            self.WriteImage(img)
+#            self.WriteText("\t")
+#        self.AppendText("\n")
+#            
+#    def AddAnStruc(self, analyse, zoneMtg):
+#        titre = self.AddParagraph(u"Sch�ma de Structure :")
+#        self.SetStyle(titre, Styles["Titre 2"])
+#        img = analyse.schemaStructure.bitmap().ConvertToImage()
+#        self.AddImage(img)
+#        self.AppendText("\n")
+#        
+#    ######################################################################################################
+#    def AddTitreAnCharg(self):
+#        self.AddParagraphStyled(u"R�sistance aux charges :", "Titre 1")
+#    
+#    def AddAnResistMtg(self, analyse, zoneMtg):
+#        self.AddParagraphStyled(u"R�sistance axiale du montage :", "Titre 2")
+#              
+#        # Message principal
+#        self.AddParagraphStyled(analyse.messageResistanceAxiale.mess, "Message", analyse.messageResistanceAxiale.coul)
+#        self.AppendText("\n")
+#        
+#        # Message par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            self.BeginStyle(Styles["MessSens"])
+#            self.BeginTextColour(Couleur[analyse.resultatEffortAxialMtg[s][0].coul])
+#            mess = self.AppendText(analyse.resultatEffortAxialMtg[s][0].mess)
+#            if s == 1: self.WriteText("\t")
+#        self.AppendText("\n")
+#
+#        # Image par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            if analyse.resultatEffortAxialMtg[s][0].clef == 'ElemResistPas':
+#                img = self.GetImageChaineSurbrill(s, analyse, zoneMtg)
+#            elif analyse.resultatEffortAxialMtg[s][0].clef == 'ChargeAxOk':
+#                img = self.GetImageChaine(s, analyse, zoneMtg)
+#            elif analyse.resultatEffortAxialMtg[s][0].clef == 'ArretArbreSens':
+#                img = self.GetImageArret(s, analyse, zoneMtg)
+#            self.WriteImage(img)
+#            if s == 1: self.WriteText("\t")
+#        self.AppendText("\n")
+#    
+#    
+#    def AddAnResistRlt(self, analyse, zoneMtg, panelResist):
+#        self.AddParagraphStyled(u"R�sistance des roulements :", "Titre 2")
+#        
+#        # Message principal
+#        self.AddParagraphStyled(analyse.messageResistanceAxiale.mess, "Message", analyse.messageResistanceAxiale.coul)
+#        self.AppendText("\n")
+#        
+#        # Sch�ma de structure
+#        img = analyse.imageSchemaCharges.ConvertToImage()
+#        self.AddImage(img)
+#        
+#        # Tableau
+#        self.AddGrid(panelResist.tableResist)
+#        
+#        self.AppendText("\n")
+#        
+#        
+#    ######################################################################################################
+#    def AddTitreAnMontab(self, analyse):
+#        self.AddParagraphStyled(u"Montabilit� :", "Titre 1")
+#        
+#        self.AddParagraphStyled(analyse.resultatMontabilite.mess, "Message", analyse.resultatMontabilite.coul)
+#        
+#    def AddAnMontabEns(self, analyse, zoneMtg):
+#        if analyse.cdcf.bagueTournante == "I": ens = u"""arbre"""
+#        else: ens = u"""al�sage"""
+#        self.AddParagraphStyled(u"Montabilit� de l'ensemble "+ens+" :", "Titre 2")
+#        self.AppendText("")
+#        
+#        # Images pour "Montabilit�"
+#        imagMontabiliteEns = self.GetImagesDemontageEns(analyse, zoneMtg)
+#        for img in imagMontabiliteEns:
+#            self.WriteImage(img)
+#            self.WriteText("\t")
+#        
+#    def AddAnMontabRlt(self, analyse, zoneMtg):
+#        self.AddParagraphStyled(u"Montabilit� des Roulements :", "Titre 2")
+#        self.AppendText("")
+#        
+#        # Images pour "Montabilit�"
+#        imagMontabiliteRlt = self.GetImagesDemontageRlt(analyse, zoneMtg)
+#        for img in imagMontabiliteRlt:
+#            self.WriteImage(img)
+#            self.WriteText("\t")
+#            
+#            
+#    ######################################################################################################
+#    def AddAnEtanch(self, analyse, panelEtanch, CdCF):
+#        self.AddParagraphStyled(u"Etanch�it� :", "Titre 1")
+#        
+#        #
+#        # Etanch�it� statique
+#        #
+#        self.AddParagraphStyled(u"Etanch�it� Statique :", "Titre 2")
+#        
+#        # CdCF
+#        self.AddCdCFEtanchStat(CdCF)
+#        
+#        # Resultat principal
+#        message = analyse.resultatEtancheite["SB"]
+#        self.AddParagraphStyled(message.mess, "Message", message.coul)
+#        
+#        # D�tails 
+#        if "SB+" in analyse.resultatEtancheite.keys():
+#            for mess in analyse.resultatEtancheite["SB+"]:
+#                self.AddParagraphStyled(mess.mess, "MessSens", mess.coul)
+#
+#        self.AppendText("\n")
+#        self.AddGrid(panelEtanch.tableStat)
+#        
+#        #
+#        # Etanch�it� Dynamique
+#        #
+#        if "DB" in analyse.resultatEtancheite:
+#            self.AddParagraphStyled(u"Etanch�it� Dynamique :", "Titre 2")
+#            
+#            # CdCF
+#            self.AddCdCFEtanchDyn(CdCF)
+#            
+#            mess = analyse.resultatEtancheite["DB"]
+#            self.AddParagraphStyled(mess.mess, "Message", mess.coul)
+#            
+#            if "DB+" in analyse.resultatEtancheite.keys():
+#                for mess in analyse.resultatEtancheite["DB+"]:
+#                    self.AddParagraphStyled(mess.mess, "MessSens", mess.coul)
+#
+#            self.AppendText("\n")
+#            self.AddGrid(panelEtanch.tableDyn)
+#        
+#        #
+#        # Compatibilit� lubrifiant
+#        #
+#        self.AddParagraphStyled(u"Compatibilit� lubrifiant :", "Titre 2")
+#        
+#        # CdCF
+#        self.AddCdCFEtanchLub(CdCF)
+#        
+#        mess = analyse.resultatEtancheite["C"]
+#        self.AddParagraphStyled(mess.mess, "Message", mess.coul)
+#        
+#        self.AppendText("\n")
+#                    
+#                    
+#                    
+#    ######################################################################################################
+#    def AddAnCout(self, analyse, panelDevis, CdCF):
+#        self.AddParagraphStyled(u"Devis (co�t indicatif) :", "Titre 1")
+#        
+#        # CdCF
+#        self.AddCdCFCoutMax(CdCF)
+#        
+#        # Devis
+#        self.AppendText("\n")
+#        self.AddGrid(panelDevis.devis)
+#
+#
+#    def AddGrid(self, grid):
+#        
+#        debut = self.GetInsertionPoint()
+#    
+#        def SsRc(s):
+#            return s.replace("\n", " ")
+#
+#        # Définition des tabs
+#        coef = 5
+#        tabs = [max(coef*grid.GetRowLabelSize(), 30)]
+#        for c in range(grid.GetNumberCols()):
+#            tabs.append(tabs[-1:][0]+coef*grid.GetColSize(c))
+#        Styles["Tableau"].SetTabs(tabs)
+#        
+#        # Affichage du contenu
+#        for l in range(1+grid.GetNumberRows()):
+#            ll = l-1
+#            for c in range(1+grid.GetNumberCols()):
+#                # Titres colonnes
+#                cc = c-1
+#                if l == 0 and c > 0:
+#                     self.BeginTextColour(wx.BLACK)
+#                     self.AppendText(SsRc(grid.GetColLabelValue(cc)))
+#                     
+#                # Titres lignes
+#                elif c == 0 and l > 0:
+#                    self.BeginTextColour(wx.BLACK)
+#                    self.AppendText(SsRc(grid.GetRowLabelValue(ll)))
+#                
+#                elif c == 0 and l == 0:
+#                    pass
+#                
+#                # Valeurs
+#                else:
+#                    self.BeginTextColour(grid.GetCellTextColour(ll,cc))
+#                    self.AppendText(SsRc(grid.GetCellValue(ll,cc)))
+#                
+#                self.AppendText("\t")
+#            self.AppendText("\n")
+#            
+#        fin = self.GetInsertionPoint()
+#        tout = self.GetRange(debut, fin)
+#        
+#        self.SetStyle((debut, fin), Styles["Tableau"])
+#        
+#        self.EndTextColour()
+        
+    def AddParagraphStyled(self, texte, style, couleur = None, bgCoul = "WHITE", souligne = False):
+        
+#        if style == "MessSens":
+#            print  Styles[style].GetTextColour(), texte.encode('cp437','replace')
+        
+        if couleur is not None:
+            if isinstance(couleur, wx.Colour):
+                c = couleur
+            else:
+                c = wx.Colour(0,0,0)#Couleur[couleur]
+#            cs = Styles[style].GetTextColour()
+#            Styles[style].SetTextColour(c)
+            self.BeginTextColour(c)
+            
+        if not isinstance(bgCoul, wx.Colour):
+            bgCoul = wx.NamedColour(bgCoul)
+                
+        if souligne:
+            self.BeginUnderline()
+#        Styles[style].SetFlags(wx.TEXT_ATTR_BACKGROUND_COLOUR)
+        Styles[style].SetBackgroundColour(bgCoul)
+        parag = self.AddParagraph(texte)
+        self.SetStyle(parag, Styles[style])
+        
+        self.EndTextColour()
+        self.EndUnderline()
+        self.EndParagraphStyle()
+        
+    def AddTextStyled(self, texte, style, 
+                      fgCoul = "BLACK", bgCoul = "WHITE", souligne = False):
+        
+#        if style == "MessSens":
+#            print  Styles[style].GetTextColour(), texte.encode('cp437','replace')
+        
+        if not isinstance(fgCoul, wx.Colour):
+            fgCoul = wx.NamedColour(fgCoul)
+        self.BeginTextColour(fgCoul)
+            
+        if not isinstance(bgCoul, wx.Colour):
+            bgCoul = wx.NamedColour(bgCoul)
+        Styles[style].SetBackgroundColour(bgCoul)     
+                
+        if souligne:
+            self.BeginUnderline()
+        
+        self.BeginStyle(Styles[style])
+        
+        self.AppendText(texte)
+        
+        self.EndStyle()
+        self.EndUnderline()
+        self.EndTextColour()
+        
+        
+#        if couleur is not None:
+#            Styles[style].SetTextColour(cs)
+    
+    ######################################################################################################
+    def getNomFichierDefaut(self):
+        f = u"Tâches détaillées _ " + self.eleve.GetNomPrenom() + u".rtf"
+        return os.path.join(self.projet.GetPath(), f)
+    
+    ######################################################################################################
+    def Enregistrer(self, titre, nomFichierDefaut = u""): 
+        if not self.GetFilename():
+            if self.Ecraser(nomFichierDefaut):
+                self.SetFilename(nomFichierDefaut)
+#                 self.SaveFile()
+            else:
+                return
+#         else:
+#             self.SaveFile()
+           
+        if nomFichierDefaut:
+            ext = os.path.splitext(nomFichierDefaut)[1].lstrip('.')
+            if ext == 'txt':
+                wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+                fileType = 1
+                ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
+                if not nomFichierDefaut.endswith(ext):
+                    nomFichierDefaut += '.' + ext
+                self.SaveFile(nomFichierDefaut, 1)
+                
+            elif ext == 'html':
+                handler = rt.RichTextHTMLHandler()
+                handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+                handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+                stream = cStringIO.StringIO()
+                if handler.SaveStream(self.GetBuffer(), stream):
+                    f = open(nomFichierDefaut, 'w')
+                    f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
+                    f.close()
+                    
+            elif ext == 'rtf':
+                # Use the custom RTF Handler
+                handler = PyRTFParser.PyRichTextRTFHandler()
                 # Save the file with the custom RTF Handler.
                 # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
                 handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
