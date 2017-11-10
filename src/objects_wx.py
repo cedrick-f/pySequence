@@ -4143,7 +4143,7 @@ class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
-        self.Freeze()
+#         self.Freeze()
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
         
@@ -4165,7 +4165,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
 
         self.SizeUpdate()
-        self.Thaw()
+#         self.Thaw()
         
         wx.CallAfter(self.connect)
 
@@ -4319,6 +4319,8 @@ class BaseFiche(wx.ScrolledWindow):
     #-------------------------------------------------------------------------
     def OnResize(self, event = None):
 #         print "OnResize"
+        if not self.IsShownOnScreen():
+            return
         
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
