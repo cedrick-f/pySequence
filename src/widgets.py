@@ -81,6 +81,7 @@ def pourCent2(v, ajuster = False):
 ######################################################################################  
 def remplaceLF2Code(txt):
     d = {u"##13##" : [u"\n",
+                      u"\u000D\u000A", #CRLF
                       u"\u000A", #LF
                       u"\u000D", #CR
                       u"\u000B", #VT

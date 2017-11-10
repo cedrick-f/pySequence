@@ -614,6 +614,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
 from wx.lib.pdfwin import get_min_adobe_version
 NOT_USE_ADOBE = ADOBE_VERSION is None or ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8) or get_min_adobe_version() is None
 # NOT_USE_ADOBE = True
+
 HAS_PDFVIEWER = True
 if NOT_USE_ADOBE:
     try:
@@ -648,11 +649,12 @@ class PdfPanel(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         
         if NOT_USE_ADOBE:
-            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
-            self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
-            from wx.lib.pdfviewer import pdfViewer
-            self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
-                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
+            if HAS_PDFVIEWER:
+                self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
+                                    wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
+            else:
+                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
+                self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
         else:
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
 #             self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -767,6 +769,7 @@ class PdfPanel(wx.Panel):
             except:
                 print "ERREUR pdfViewer", self.pdf
         else:
+#             self.pdf.LoadFile(nomFichier)
             try:
                 self.pdf.LoadFile(nomFichier)
             except:

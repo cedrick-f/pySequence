@@ -38,7 +38,7 @@ Module ``wx_pysequence``
 
 Module de demarrage de **pySéquence**.
 
-**pySéquence** : aide à la réalisation de fiches de **Séquence** et **Progression** pédagogiques
+**pySéquence** : aide à la réalisation de fiches de **Séquences** et **Progressions** pédagogiques
 et à la validation de **Projets**.
 
 

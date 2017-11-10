@@ -1495,7 +1495,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     ###############################################################################################
     def OnDocClosed(self, evt = None):   
-        print "OnDocClosed", evt
+#         print "OnDocClosed", evt
 
         if self.GetNotebook().GetPageCount() <= 1:
             self.supprimerOutils()
@@ -1680,14 +1680,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnCloseDoc(self, evt):
-        print "OnClose doc"
+#         print "OnClose doc"
         fenDoc = self.GetNotebook().GetPage(evt.GetSelection())
         fenDoc.quitter()
         
     
     #############################################################################
     def OnClose(self, evt):
-        print "OnClose app"
+#         print "OnClose app"
 #        try:
 #            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
 #        except IOError:
@@ -1935,7 +1935,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def fermer(self):
-        print "Fermer", self
+#         print "Fermer", self
         # Pour mettre à jour la barre d'outils
         self.parent.OnDocClosed()
         
@@ -2310,7 +2310,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def quitter(self, event = None):
-        print "quitter", event
+#         print "quitter", event
 #         if event is not None:
 #             event.Skip()
         if self.fichierCourantModifie:
@@ -4143,7 +4143,7 @@ class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
-        
+        self.Freeze()
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
         
@@ -4165,7 +4165,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
 
         self.SizeUpdate()
-        
+        self.Thaw()
         
         wx.CallAfter(self.connect)
 
@@ -4276,6 +4276,7 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
+        
 #         print "Redessiner :",
         self.OnResize()    
 #         tps2 = time.clock() 
@@ -4318,6 +4319,7 @@ class BaseFiche(wx.ScrolledWindow):
     #-------------------------------------------------------------------------
     def OnResize(self, event = None):
 #         print "OnResize"
+        
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
         self.w, self.h = self.GetVirtualSize()
@@ -4331,6 +4333,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.Update()
         # After drawing empty bitmap start update
         self.SizeUpdate()
+        
 
 #     #############################################################################            
 #     def OnResize(self, evt):
@@ -11827,7 +11830,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         """ Fonction appelée lorsque la selection a été changée dans l'arbre
             ---> affichage du panel de Propriétés associé
         """
-        tps1 = time.clock()
+#         tps1 = time.clock()
         
         #
         # On ferme l'éventuelle fenêtre d'aide ...
@@ -11853,13 +11856,13 @@ class ArbreDoc(CT.CustomTreeCtrl):
             print "err : ", data
         
         if panelPropriete:
-            tps2 = time.clock() 
+#             tps2 = time.clock() 
 #             print "> panelPropriete", panelPropriete
             self.panelProp.AfficherPanel(panelPropriete)
             self.parent.Refresh()
         else:
             print "rien", panelPropriete
-        tps3 = time.clock() 
+#         tps3 = time.clock() 
         #
         # On centre la fiche sur l'objet
         #
@@ -11870,8 +11873,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         if event is not None:
             event.Skip()
         
-        tps4 = time.clock() 
-        print "AffichePanel :", tps2 - tps1,  tps3 - tps2, tps4 - tps3
+
+#         print "AffichePanel :", tps2 - tps1,  tps3 - tps2
         
 #         wx.CallAfter(self.SetFocus)
 #         wx.CallAfter(self.Raise)
