@@ -15237,8 +15237,45 @@ class PopupInfo(wx.PopupWindow):
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
         self.Bind(wx.EVT_BUTTON, self.OnClick)
+        
+        # Pour gérér le déplacement de la fenêtre
+        self._dragPos = None
+        self.html.Bind(wx.EVT_MOTION, self.OnMotion)
 
-
+    
+    ##########################################################################################
+    def OnMotion(self, event):
+        if not event.Dragging():
+            self._dragPos = None
+            if self.html.HasCapture():
+                self.html.ReleaseMouse()
+            return
+        if not self.html.HasCapture():
+            self.html.CaptureMouse()
+        if not self._dragPos:
+            self._dragPos = event.GetPosition()
+#             print "Drag :", self._dragPos
+        else:
+            pos = event.GetPosition()
+            displacement = self._dragPos - pos
+#             print "   ...", pos, displacement
+            self.SetPosition( self.GetPosition() - displacement )
+#             self.Parent.Refresh()
+            
+            
+    ##########################################################################################
+    def OnLeave(self, event):
+#         print "Leave Tip"
+        x, y = event.GetPosition()
+        w, h = self.GetSize()
+#         print y, h
+        if not ( x > 0 and y > 0 and x < w-2 and y < h-2):
+            self.Show(False)
+            if self.html.HasCapture():
+                self.html.ReleaseMouse()
+        event.Skip()
+        
+        
 #    ##########################################################################################
 #    def SetBranche(self, branche):
 #        self.branche = branche
@@ -15696,17 +15733,9 @@ class PopupInfo(wx.PopupWindow):
 
             
  
-    ##########################################################################################
-    def OnLeave(self, event):
-#         print "Leave Tip",
-        x, y = event.GetPosition()
-        w, h = self.GetSize()
-#         print y, h
-        if not ( x > 0 and y > 0 and x < w-2 and y < h-2):
-            self.Show(False)
-        event.Skip()
+    
         
-
+        
     
 
 
