@@ -10607,14 +10607,14 @@ class Eleve(Personne, ElementBase):
             :rtype: list
         
         """
-        print "GenererGrille élève", self
-        print "  ", nomFichiers
+#         print "GenererGrille élève", self
+#         print "  ", nomFichiers
         
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(dirpath)
             if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
                 return []
-            print "  >>> Fichiers :", nomFichiers
+#             print "  >>> Fichiers :", nomFichiers
         
         
         prj = self.GetDocument().GetProjetRef()
@@ -10629,14 +10629,12 @@ class Eleve(Personne, ElementBase):
         #
         tableaux = {}
         for k, f in nomFichiers.items():
-            print f
-            print f.encode(FILE_ENCODING)
             if os.path.isfile(f):  # Fichier grille élève déja existant
-                print "   exist :", f
+#                 print "   exist :", f
                 tableaux[k] = grilles.getTableau(win, f)
                 
             else:  # fichier original vierge de la grille
-                print "   new :",
+#                 print "   new :",
                 fo = grilles.getFullNameGrille(prj.grilles[k][0])
                 if os.path.isfile(fo):
                     # Copie du fichier original
