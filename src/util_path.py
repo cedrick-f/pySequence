@@ -196,17 +196,17 @@ def toSystemEncoding(path):
 #        try:
 #     path = path.decode(FILE_ENCODING)
     return path
-    path = path.encode(SYSTEM_ENCODING)
-    return path  
+#     path = path.encode(SYSTEM_ENCODING)
+#     return path  
 #        except:
 #            return self.path    
     
 ######################################################################################  
 def toFileEncoding(path):
     return path
-#    try:
-    path = path.decode(SYSTEM_ENCODING)
-    return path.encode(FILE_ENCODING)
+# #    try:
+#     path = path.decode(SYSTEM_ENCODING)
+#     return path.encode(FILE_ENCODING)
 #    except:
 #        return path
     

@@ -63,16 +63,21 @@ from widgets import messageErreur
 
 
 def getFullNameGrille(fichier):
+    u""" Renvoie le chemin du fichier Grille nommé <fichier>
+    """
     return os.path.join(TABLE_PATH, toFileEncoding(fichier))
 
 
 def ouvrirXLS(fichier):
     u""" Ouvre la grille XLS nommée <fichier>
         renvoie le classeur PyExcel
+        
         :return: classeur PyExcel
         :rtype: class PyExcel
+        
         :return: code d'erreur ()
         :rtype: int
+        
         :return: liste des fichiers Excel
         :rtype: list
         
@@ -105,7 +110,7 @@ def getTableau(win, nomFichier):
             
         :return: la liste des codes d'erreur
         :rtype: list
-            
+        
             
     """
 #     print "getTableau", nomFichier
@@ -167,77 +172,77 @@ except:
     EXT_EXCEL = None # ya pas Excel !
 
 
-######################################################################################################
-def getTableaux(win, doc):
-    u""" Ouvre et renvoie les classeurs 
-        contenant les grilles d'évaluation : revues + soutenance
-        
-        :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant le processus
-        :type win: wx.Window
-            
-        :return: la liste des codes d'erreur
-        :rtype: list
-            
-            
-    """
-#     print "getTableaux", doc
-#     typ = doc.GetTypeEnseignement()
-#     ref = doc.GetReferentiel()
-    prj = doc.GetProjetRef()
-    fichiers = prj.grilles
-#     print "   toutes les grilles :", fichiers
-    fichierPB = []
-    
-    def ouvrir(fichier):
-        fichier = os.path.join(TABLE_PATH, toFileEncoding(fichier))
-        tableau = None
-        err = 0
-        
-        if os.path.isfile(fichier):
-            try:
-                tableau = PyExcel(fichier)
-            except:
-                err = 1
-        else:
-            err = 2
-            fichierPB.append(fichier)
-            
-        return err, tableau
-    
-    tableaux = {}
-    ff = r""
-    for k, f in fichiers.items():
-        nomFichier = f[0]
-        if nomFichier != ff:
-            if EXT_EXCEL != os.path.splitext(nomFichier)[1]:
-                nomFichier = os.path.splitext(nomFichier)[0] + EXT_EXCEL
-            err, tableaux[k] = [ouvrir(nomFichier), f[1]]
-    
-#    if typ == 'SSI':
-#        err, tableau = ouvrir(fichiers[0])
-#        if err != 0:
-#            err, tableau = ouvrir(fichiers[1])
-#    else:
-#        errR, tableauR = ouvrir(fichiersR[0])
-#        if errR != 0:
-#            errR, tableauR = ouvrir(fichiersR[1])
-#        errS, tableauS = ouvrir(fichiersS[0])
-#        if errS != 0:
-#            errS, tableauS = ouvrir(fichiersS[1])
-#        err = errR + errR
-#        tableau = [tableauR, tableauS]
-        
-    if err == 0:
-        return tableaux
-    elif err&1 != 0:
-        messageErreur(win, u"Lancement d'Excel impossible !",
-                      u"L'application Excel ne semble pas installée !")
-    elif err&2 != 0:
-        messageErreur(win, u"Fichier non trouvé !",
-                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
-                              u"n'a pas été trouvé ! \n")
-    else:
-        print "Erreur", err
+# ######################################################################################################
+# def getTableaux(win, doc):
+#     u""" Ouvre et renvoie les classeurs 
+#         contenant les grilles d'évaluation : revues + soutenance
+#         
+#         :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant le processus
+#         :type win: wx.Window
+#             
+#         :return: la liste des codes d'erreur
+#         :rtype: list
+#             
+#             
+#     """
+# #     print "getTableaux", doc
+# #     typ = doc.GetTypeEnseignement()
+# #     ref = doc.GetReferentiel()
+#     prj = doc.GetProjetRef()
+#     fichiers = prj.grilles
+# #     print "   toutes les grilles :", fichiers
+#     fichierPB = []
+#     
+#     def ouvrir(fichier):
+#         fichier = os.path.join(TABLE_PATH, toFileEncoding(fichier))
+#         tableau = None
+#         err = 0
+#         
+#         if os.path.isfile(fichier):
+#             try:
+#                 tableau = PyExcel(fichier)
+#             except:
+#                 err = 1
+#         else:
+#             err = 2
+#             fichierPB.append(fichier)
+#             
+#         return err, tableau
+#     
+#     tableaux = {}
+#     ff = r""
+#     for k, f in fichiers.items():
+#         nomFichier = f[0]
+#         if nomFichier != ff:
+#             if EXT_EXCEL != os.path.splitext(nomFichier)[1]:
+#                 nomFichier = os.path.splitext(nomFichier)[0] + EXT_EXCEL
+#             err, tableaux[k] = [ouvrir(nomFichier), f[1]]
+#     
+# #    if typ == 'SSI':
+# #        err, tableau = ouvrir(fichiers[0])
+# #        if err != 0:
+# #            err, tableau = ouvrir(fichiers[1])
+# #    else:
+# #        errR, tableauR = ouvrir(fichiersR[0])
+# #        if errR != 0:
+# #            errR, tableauR = ouvrir(fichiersR[1])
+# #        errS, tableauS = ouvrir(fichiersS[0])
+# #        if errS != 0:
+# #            errS, tableauS = ouvrir(fichiersS[1])
+# #        err = errR + errR
+# #        tableau = [tableauR, tableauS]
+#         
+#     if err == 0:
+#         return tableaux
+#     elif err&1 != 0:
+#         messageErreur(win, u"Lancement d'Excel impossible !",
+#                       u"L'application Excel ne semble pas installée !")
+#     elif err&2 != 0:
+#         messageErreur(win, u"Fichier non trouvé !",
+#                               u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+#                               u"n'a pas été trouvé ! \n")
+#     else:
+#         print "Erreur", err
 
 
 ###################################################################################################

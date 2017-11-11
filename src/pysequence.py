@@ -209,6 +209,8 @@ elif sys.platform == 'win32':
 
 # import chardet
 import util_path
+import shutil
+
 ####################################################################################
 #
 #   Objet lien vers un fichier, un dossier ou bien un site web
@@ -10605,15 +10607,15 @@ class Eleve(Personne, ElementBase):
             :rtype: list
         
         """
-#         print "GenererGrille élève", self
-#         print "  ", nomFichiers
+        print "GenererGrille élève", self
+        print "  ", nomFichiers
         
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(dirpath)
             if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
                 return []
-            
-#        print "  Fichiers :", nomFichiers
+            print "  >>> Fichiers :", nomFichiers
+        
         
         prj = self.GetDocument().GetProjetRef()
         app = self.GetDocument().GetApp()
@@ -10627,12 +10629,21 @@ class Eleve(Personne, ElementBase):
         #
         tableaux = {}
         for k, f in nomFichiers.items():
-            if os.path.isfile(f):
+            print f
+            print f.encode(FILE_ENCODING)
+            if os.path.isfile(f):  # Fichier grille élève déja existant
+                print "   exist :", f
                 tableaux[k] = grilles.getTableau(win, f)
-            else:
-                if os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
-                    tableaux[k] = grilles.getTableau(win,
-                                                     prj.grilles[k][0])
+                
+            else:  # fichier original vierge de la grille
+                print "   new :",
+                fo = grilles.getFullNameGrille(prj.grilles[k][0])
+                if os.path.isfile(fo):
+                    # Copie du fichier original
+#                     print "copy", fo, f
+                    shutil.copy(fo, f)
+                    tableaux[k] = grilles.getTableau(win, f)
+                
                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
                     prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
                     tableaux[k] = None

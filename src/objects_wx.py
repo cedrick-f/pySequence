@@ -3196,6 +3196,7 @@ class FenetreProjet(FenetreDocument):
         log = []
         
         dlg = wx.DirDialog(self, message = u"Emplacement des grilles", 
+                           defaultPath = u"",
                             style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
                             )
 #        dlg.SetFilterIndex(0)
