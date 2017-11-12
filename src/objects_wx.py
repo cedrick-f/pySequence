@@ -378,7 +378,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                        style=wx.DEFAULT_FRAME_STYLE)
         
         SSCALE = echelle
-        print "SSCALE", SSCALE
+#         print "SSCALE", SSCALE
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
 
@@ -487,7 +487,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         # !!! cette ligne pose problème à la fermeture : mystère
-        self.renommerWindow()
+#         self.renommerWindow()
         
         self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
         self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
@@ -928,12 +928,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def CreateMenuBar(self):
         # create menu
         
-        window_menu = self.GetWindowMenu()
-        window_menu.SetLabel(4001, u"Fermer")
-        window_menu.SetLabel(4002, u"Fermer tout")
-        window_menu.SetLabel(4003, u"Suivante")
-        window_menu.SetLabel(4004, u"Précédente")
-        
+#         window_menu = self.GetWindowMenu()
+#         window_menu.SetLabel(4001, u"Fermer")
+#         window_menu.SetLabel(4002, u"Fermer tout")
+#         window_menu.SetLabel(4003, u"Suivante")
+#         window_menu.SetLabel(4004, u"Précédente")
+#         
         mb = wx.MenuBar()
 
         file_menu = wx.Menu()
@@ -963,7 +963,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
-
+        
         self.file_menu = file_menu
         
         tool_menu = wx.Menu()
@@ -3054,6 +3054,10 @@ class FenetreProjet(FenetreDocument):
                                   u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
                                   u"Les indicateurs de compétence ne seront pas chargés.")
                 
+                
+                    
+                    
+                    
                 # Le projet
                 message += u"Construction de la structure du projet...\t"
 #                dlg.top()
@@ -3067,6 +3071,17 @@ class FenetreProjet(FenetreDocument):
                 if self.projet.GetProjetRef() == None:
                     print u"Pas bon référentiel"
                     self.classe.setBranche(classe, reparer = True)
+                
+                
+                # Correction du bug des CO7.ee3 et 4 manquante pour les Projets enregistrés avant v7.1.12
+                if version.sup("7.1.12", self.classe.GetVersion().split('.')):
+                    if self.classe.GetReferentiel().Code == "EE":
+                        print "Correction bug des CO7.eex", self.classe.GetVersion(), ">>", version.__version__
+#                         print self.projet.GetProjetRef()._dicoCompetences['S']['O7'].sousComp.items()
+                        self.projet.GetProjetRef().normaliserPoidsComp(self.projet.GetProjetRef()._dicoCompetences['S']['O7'], reset = True)
+#                         print self.projet.GetProjetRef()._dicoCompetences['S']['O7'].sousComp.items()
+                
+                
                 
                 err = self.projet.setBranche(projet)
                 
@@ -3087,7 +3102,7 @@ class FenetreProjet(FenetreDocument):
                 message += u"\n   L'erreur concerne :"
                 message += get_err_message(err)
             fichier.close()
-            self.Close()
+            self.fermer()
             count = nbr_etapes
 #            dlg.UpdateWindowUI()
 ##            wx.GetTopLevelParent(self).SetFocus()
@@ -3095,7 +3110,8 @@ class FenetreProjet(FenetreDocument):
             dlg.Update(count, message)
             
 #            dlg.Raise()
-            wx.CallAfter(dlg.Destroy)
+#             wx.CallAfter(dlg.Destroy)
+
 #            wx.CallAfter(self.fiche.Show)
 #            wx.CallAfter(self.fiche.Redessiner)
             return

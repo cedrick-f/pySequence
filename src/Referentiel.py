@@ -353,42 +353,80 @@ class XMLelem():
                         return False
         return True
 
-
+    
+    ###########################################################
+    def normaliserPoidsComp(self, competence, debug = False, reset = False):
+        if competence.poids != {}:
+#                    print self.parties.keys()
+            tot = {}
+            for p in self.parties.keys():
+                tot[p] = 0
+                
+            if competence.sousComp != {} :
+                lstindic = []
+                for v1 in competence.sousComp.values():
+                    for ii in v1.indicateurs:
+                        lstindic.append(ii)
+            else:
+                lstindic = competence.indicateurs
+                
+            if debug: print "   ", lstindic
+            
+            for indic in lstindic:
+                for part, poids in indic.poids.items():
+                    if reset: poids = 1
+                    if part in tot.keys():
+                        tot[part] = tot[part] + poids
+            if debug: print "  tot", tot
+            
+            coef = {}
+            for p in self.parties.keys():
+                coef[p] = 1.0*tot[p]/100
+            if debug: print "  coef", coef
+            
+            for indic in lstindic:
+                for part, poids in indic.poids.items():
+                    if reset: poids = 1
+                    if part in coef.keys() and coef[part] != 0:
+#                         indic.poids[part] = round(indic.poids[part] / coef[part], 6)
+                        indic.poids[part] = round(poids / coef[part], 6)
 
     ###########################################################
     def normaliserPoids(self, dic, debug = False):
         for k0, competence in dic.items():
-            if competence.poids != {}:
-    #                    print self.parties.keys()
-                tot = {}
-                for p in self.parties.keys():
-                    tot[p] = 0
-                    
-                if competence.sousComp != {} :
-                    lstindic = []
-                    for v1 in competence.sousComp.values():
-                        for ii in v1.indicateurs:
-                            lstindic.append(ii)
-                else:
-                    lstindic = competence.indicateurs
-                    
-                if debug: print "   ", lstindic
-                
-                for indic in lstindic:
-                    for part, poids in indic.poids.items():
-                        if part in tot.keys():
-                            tot[part] = tot[part] + poids
-                if debug: print "  tot", tot
-                
-                coef = {}
-                for p in self.parties.keys():
-                    coef[p] = 1.0*tot[p]/100
-                if debug: print "  coef", coef
-                
-                for indic in lstindic:
-                    for part, poids in indic.poids.items():
-                        if part in coef.keys() and coef[part] != 0:
-                            indic.poids[part] = round(indic.poids[part] / coef[part], 6)
+            self.normaliserPoidsComp(competence, debug = debug)
+#             if competence.poids != {}:
+#     #                    print self.parties.keys()
+#                 tot = {}
+#                 for p in self.parties.keys():
+#                     tot[p] = 0
+#                     
+#                 if competence.sousComp != {} :
+#                     lstindic = []
+#                     for v1 in competence.sousComp.values():
+#                         for ii in v1.indicateurs:
+#                             lstindic.append(ii)
+#                 else:
+#                     lstindic = competence.indicateurs
+#                     
+#                 if debug: print "   ", lstindic
+#                 
+#                 for indic in lstindic:
+#                     for part, poids in indic.poids.items():
+#                         if reset: poids = 1
+#                         if part in tot.keys():
+#                             tot[part] = tot[part] + poids
+#                 if debug: print "  tot", tot
+#                 
+#                 coef = {}
+#                 for p in self.parties.keys():
+#                     coef[p] = 1.0*tot[p]/100
+#                 if debug: print "  coef", coef
+#                 
+#                 for indic in lstindic:
+#                     for part, poids in indic.poids.items():
+#                         if part in coef.keys() and coef[part] != 0:
+#                             indic.poids[part] = round(indic.poids[part] / coef[part], 6)
 
 
     ###########################################################
@@ -2081,7 +2119,7 @@ class Projet(XMLelem):
         if not "FIC" in self.attributs.keys():
             self.attributs["FIC"] = [u"", u"", u"", u""]
         
-
+        
 
     #########################################################################
     def getNbrRevuesDefaut(self):

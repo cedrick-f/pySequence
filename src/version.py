@@ -122,7 +122,9 @@ def GetAppnameVersion():
 
 #########################################################################################
 def sup(v1, v2):
+#     print "sup", v1, v2
     for i, l in enumerate(v1.split('.')):
+#         print "  ", l
         nl = int(l.rstrip("-beta"))
         na = int(v2[i].rstrip("-beta"))
 
