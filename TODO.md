@@ -9,6 +9,7 @@
 # Fonctionnalités à apporter ou à améliorer
  * Sortir les BO au format PDF de la distribution, et permettre leur téléchargement pui intégration aux données de l'application (Appdata)
  * Ajouter Logos de classe/établissement/enseignement
+ * Autosave
 
 
 # Optimisation du code
