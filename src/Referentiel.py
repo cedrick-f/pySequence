@@ -1357,7 +1357,7 @@ class Referentiel(XMLelem):
         # On fini l'importation après la création de tous les objets Competences
         # car références croisées
         for sh_co, code in lst_feuilles_codes:
-            self.dicoCompetences[code].importer(sh_co, self, debug = debug)
+            self.dicoCompetences[code].importer(sh_co, self, debug = False)#self.Code == "EE")
 
                 
                     
@@ -2272,7 +2272,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-        debug = False #ref.Code == "EE-CIT-SI-DIT"
+        debug = False#ref.Code == "EE"
 #        if self._parent.Code == "EE-SI":
         if debug: print "postTraiter",  ref, self, self.parties
         
@@ -2381,28 +2381,31 @@ class Projet(XMLelem):
                 
                 
             if debug: 
-                print "   >", self._dicoCompetences[code]
+                print "  >>", self._dicoCompetences[code]
                 
     #        print ">> _dicCompetences prj", self._dicCompetences
             
             # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
             lst_codeindic = chercherIndicIdem(self._dicoCompetences[code], debug = False)
             if type(lst_codeindic) == tuple:
+#                 print "Regroupement Compétences", ref.Code
                 if debug: print "    lst_codeindic", lst_codeindic
                 
                 dic = chercherDicIndic(self._dicoCompetences[code], lst_codeindic[2])
-                
-                newCompetence = dic[lst_codeindic[2]].copie()
+                if debug: print "      ", dic
+                newCompetence = dic[lst_codeindic[1]].copie()
                 newCompetence.intitule = dic[lst_codeindic[1]].intitule+"\n"+dic[lst_codeindic[2]].intitule
-                newCompetence.sousComp = dic[lst_codeindic[2]].sousComp
+                newCompetence.sousComp = dic[lst_codeindic[1]].sousComp
                 
     #            print "   >>", dic
-#                 new_code = lst_codeindic[1]+"\n"+lst_codeindic[2]
+                new_code = lst_codeindic[1]+"\n"+lst_codeindic[2]
+                dic[new_code] = newCompetence
+                
 #                 dic[new_code] = [dic[lst_codeindic[1]].intitule+"\n"+dic[lst_codeindic[2]].intitule, dic[lst_codeindic[1]][1]]
                 
                 del dic[lst_codeindic[2]]
                 del dic[lst_codeindic[1]]
-    
+                if debug: print "      ", dic
             
             self._dicoIndicateurs[code] = ref.getPremierEtDernierNiveauArbre(self._dicoCompetences[code])
             

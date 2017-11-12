@@ -59,12 +59,12 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les caractéristiques comportementales de la solution retenue répondent au cahier des charges">
                   <d_ligne I_C="10" />
-                  <d_poids F_C="16.666667" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les choix sont explicités et la solution justifiée en intégrant les conséquences sur le triptyque MEI">
                   <d_ligne I_C="11" />
-                  <d_poids F_C="16.666667" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
@@ -82,27 +82,27 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les croquis et schémas à main levée sont utilisés à bon escient">
                   <d_ligne I_C="12" />
-                  <d_poids I_C="1" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les moyens numériques de description sont correctement utilisés">
                   <d_ligne I_C="13" />
-                  <d_poids I_C="1" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="La solution choisie pour la gestion de l'énergie est pertinente et adaptée aux exigences">
                   <d_ligne I_C="14" />
-                  <d_poids I_C="1" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente">
                   <d_ligne I_C="15" />
-                  <d_poids I_C="1" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_03>
                 <Indicateur_04 S_intitule="La structure proposée et le choix des composants respectent les exigences">
                   <d_ligne I_C="16" />
-                  <d_poids I_C="1" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_04>
               </l_indicateurs>
@@ -120,22 +120,22 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions sont identifiés et justifiés">
                   <d_ligne I_C="6" />
-                  <d_poids F_C="16.666667" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les critères du cahier des charges sont décodés et les principaux points de vigilance relatifs au projet sont identifiés">
                   <d_ligne I_C="7" />
-                  <d_poids F_C="16.666667" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Les contraintes de normes, propriété industrielle, brevets sont identifiées">
                   <d_ligne I_C="8" />
-                  <d_poids F_C="16.666667" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="La démarche d'analyse du problème est pertinente ">
                   <d_ligne I_C="9" />
-                  <d_poids F_C="16.666667" />
+                  <d_poids F_C="9.090909" />
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
@@ -503,7 +503,7 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <d_labels>
-    <l_ELEVES S_00="Elève(s)" S_01="Elèves" />
+    <l_ELEVES S_00="élève(s)" S_01="élèves" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
   </d_labels>
   <l_listCompetences S_00="S" />
