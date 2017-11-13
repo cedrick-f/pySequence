@@ -70,7 +70,6 @@ import wx
 import version
 
 
-
 # Sources :
 # https://stackoverflow.com/questions/12471772/what-is-better-way-of-getting-windows-version-in-python
 # https://stackoverflow.com/questions/44398075/can-dpi-scaling-be-enabled-disabled-programmatically-on-a-per-session-basis
@@ -149,14 +148,16 @@ class SingleInstApp(wx.App):
     PORT = 27115
 
     def OnInit(self):
-
+        self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
+        
         self.name = u"pySéquence-%s" % wx.GetUserId()
         self.instance = wx.SingleInstanceChecker(self.name)
 
         if self.instance.IsAnotherRunning():
             # Another instance so just send a message to
             # the instance that is already running.
-            cmd = u"OpenWindow.%s.%s" % (self.name, GetArgFile())
+            options, fichier = GetArgs()
+            cmd = u"OpenWindow.%s.%s" % (self.name, fichier)
             if not SendMessage(cmd, port = self.PORT):
                 print u"Failed to send message!"
             wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
@@ -363,9 +364,9 @@ class MySplashScreen(wx.SplashScreen):
 #        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
         self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
 
-        fichier = GetArgFile()
+        options, fichier = GetArgs()
 
-        self.frame = objects_wx.FenetrePrincipale(None, fichier, SSCALE)
+        self.frame = objects_wx.FenetrePrincipale(None, fichier, SSCALE, options)
         self.frame.Show()
         
 #        self.SetTopWindow(self.frame)
@@ -488,21 +489,25 @@ class IpcServer(threading.Thread):
 
 
 
-def GetArgFile():
+def GetArgs():
     u""" Vérifie si un fichier a été passé comme 1er argument
         au lancement du programme
         Et renvoi son nom
     """
     fichier = u""
-    if len(sys.argv)>1: # un param�tre a �t� pass�
-        parametre = sys.argv[1]
+    options = []
+    if len(sys.argv)>1: # un paramètre a été passé
+        for parametre in sys.argv[1:]:
 
-#           # on verifie que le fichier pass� en param�tre existe
-        if os.path.isfile(parametre):
-            fichier = parametre.decode(FILE_ENCODING)
-            fichier = fichier.encode('utf-8')
+            if parametre[0] == "-" and len(parametre) > 1: # Il y a une option
+                options.extend(list(parametre[1:]))
+            
+            # on verifie que le fichier passé en paramètre existe
+            if os.path.isfile(parametre):
+                fichier = parametre.decode(FILE_ENCODING)
+                fichier = fichier.encode('utf-8')
           
-    return fichier
+    return options, fichier
 
 
 # # https://stackoverflow.com/questions/41315873/attempting-to-resolve-blurred-tkinter-text-scaling-on-windows-10-high-dpi-disp

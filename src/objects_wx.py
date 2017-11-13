@@ -40,7 +40,6 @@ Les principaux éléments du GUI de **pySéquence**.
 """
 
 
-DEBUG = False
 
 ####################################################################################
 #
@@ -188,15 +187,12 @@ from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 
 import Referentiel
 
-# Gestion des messages d'erreur
-if DEBUG:
-    import error
 
 
 
 import cStringIO
 import  wx.html as  html
-import wx.html2 as webview
+# import wx.html2 as webview
 
 try: 
     from BeautifulSoup import BeautifulSoup, NavigableString
@@ -212,6 +208,13 @@ import threading
 # import pysequence   # déplacé à la fin
 
 SSCALE = 1.0 # Facteur d'échelle à appliquer à toutes les dimensions des widgets
+DEBUG = "beta" in version.__version__
+
+
+# Gestion des messages d'erreur
+if DEBUG:
+    import error
+
 
 
 ####################################################################################
@@ -371,13 +374,15 @@ class BoutonToolBar():
 #
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
-    def __init__(self, parent, fichier, echelle):
-        global SSCALE
+    def __init__(self, parent, fichier, echelle, options = []):
+        global SSCALE, DEBUG
         aui.AuiMDIParentFrame.__init__(self, parent, -1, 
                                        version.GetAppnameVersion(), 
                                        style=wx.DEFAULT_FRAME_STYLE)
         
         SSCALE = echelle
+        DEBUG = DEBUG or "d" in options
+        
 #         print "SSCALE", SSCALE
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
@@ -2676,7 +2681,7 @@ class FenetreSequence(FenetreDocument):
         ###############################################################################################################
         
         
-        if "beta" in version.__version__:
+        if DEBUG:
             ouvre()
         else:
             try:
@@ -2962,7 +2967,7 @@ class FenetreProjet(FenetreDocument):
             if dlg is not None:
                 dlg.Update(count, message)
             count += 1
-            if "beta" in version.__version__:
+            if DEBUG:
                 fct(*arg, **karg)
                 message += u"Ok\n"
             
@@ -3119,7 +3124,7 @@ class FenetreProjet(FenetreDocument):
         
         
         ################################################################################################
-        if "beta" in version.__version__:
+        if DEBUG:
 #             print "beta"
             root, message, count, Ok, Annuler = ouvre(fichier, message)
             err = []
@@ -3142,7 +3147,7 @@ class FenetreProjet(FenetreDocument):
         
         fichier.close()
         
-        if "beta" in version.__version__:
+        if DEBUG:
             message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
         else:
             try:
@@ -3794,7 +3799,7 @@ class FenetreProgression(FenetreDocument):
 
 
         ################################################################################################
-        if "beta" in version.__version__:
+        if DEBUG:
 #            print "beta"
             root, message, count, Ok, Annuler = ouvre(fichier, message)
             err = []
@@ -3859,7 +3864,7 @@ class FenetreProgression(FenetreDocument):
             dlg.Update(count, message)
 #            dlg.top()
             count += 1
-            if "beta" in version.__version__:
+            if DEBUG:
                 fct(*arg, **karg)
                 message += u"Ok\n"
             else:

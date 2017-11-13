@@ -48,7 +48,7 @@ else:
     sys.setdefaultencoding('utf-8')
 print sys.getdefaultencoding()
 
-from version import __version__, GetVersion_cxFreeze    
+from version import __version__, GetVersion_cxFreeze, __mail__    
     
     
 ## Remove the build folder, a bit slower but ensures that build contains the latest
@@ -180,7 +180,7 @@ if not "beta" in __version__:
 name = u"pySéquence"
 version = GetVersion_cxFreeze()
 author = u"Cédrick FAURY & Jean-Claude FRICOU"
-author_email = "cedrick.faury@ac-clermont.fr"
+author_email = __mail__.replace("#", '@')
 description = u"pySéquence"
 url = "https://github.com/cedrick-f/pySequence"
 long_description = u"aide à la création de séquences pédagogiques et à la validation de projets"
