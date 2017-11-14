@@ -149,6 +149,7 @@ class SingleInstApp(wx.App):
 
     def OnInit(self):
         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
+        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
         
         self.name = u"pySéquence-%s" % wx.GetUserId()
         self.instance = wx.SingleInstanceChecker(self.name)
@@ -157,10 +158,14 @@ class SingleInstApp(wx.App):
             # Another instance so just send a message to
             # the instance that is already running.
             options, fichier = GetArgs()
-            cmd = u"OpenWindow.%s.%s" % (self.name, fichier)
-            if not SendMessage(cmd, port = self.PORT):
-                print u"Failed to send message!"
-            wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
+            
+            if os.path.isfile(fichier):
+                cmd = u"OpenWindow.%s.%s" % (self.name, fichier)
+                if not SendMessage(cmd, port = self.PORT):
+                    print u"Failed to send message!"
+            else:
+                wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
+                
             return False
 
         else:
@@ -173,8 +178,9 @@ class SingleInstApp(wx.App):
             except:
                 pass
         
-            self.splash = MySplashScreen()
+            self.splash = MySplashScreen(self)
             self.splash.Show()
+           
             
             AddRTCHandlers()
             
@@ -204,6 +210,7 @@ class SingleInstApp(wx.App):
             
     def Cleanup(self):
         print "Cleanup"
+        
         # Need to cleanup instance checker on exit
         if hasattr(self, '_checker'):
             del self._checker
@@ -324,7 +331,7 @@ class SingleInstApp(wx.App):
 #     import wx.lib.agw.advancedsplash as AS
     
 class MySplashScreen(wx.SplashScreen):
-    def __init__(self):
+    def __init__(self, parent):
         bmp = self.GetSplash()
         wx.SplashScreen.__init__(self, bmp,
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
@@ -337,7 +344,7 @@ class MySplashScreen(wx.SplashScreen):
 # #                                       AS.AS_SHADOW_BITMAP,
 # #                                       shadowcolour=wx.WHITE)
         
-        
+        self.parent = parent
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.fc = wx.CallLater(2, self.ShowMain)
 
@@ -362,12 +369,13 @@ class MySplashScreen(wx.SplashScreen):
             self.Raise()
 
 #        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
-        self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
+#         self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
 
         options, fichier = GetArgs()
 
         self.frame = objects_wx.FenetrePrincipale(None, fichier, SSCALE, options)
         self.frame.Show()
+        self.parent.frame = self.frame
         
 #        self.SetTopWindow(self.frame)
 #        
@@ -585,6 +593,10 @@ def SendMessage(message, port):
 #         self.doPrint( *args, **kwargs )
 #         
 if __name__ == '__main__':
-    app = SingleInstApp(False)
+    try:
+        app = SingleInstApp(False)
 #     wx.Log.SetActiveTarget( LogPrintStackStderr() )
-    app.MainLoop()
+        app.MainLoop()
+    except SystemExit:
+        sys.exit(0)
+    
