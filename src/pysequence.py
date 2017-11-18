@@ -11281,7 +11281,7 @@ class Groupe(ElementBase, Eleve):
         
         self.image = None
         
-        self.typeEnseignement = self.GetReferentiel().Enseignement[0]
+        self.typeEnseignement = self.GetReferentiel().Code
 
         self.academie = self.GetDocument().classe.academie
         self.ville = self.GetDocument().classe.ville
@@ -11838,7 +11838,8 @@ class Groupe(ElementBase, Eleve):
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
 #         print "setBranche groupe"
-        self.typeEnseignement = branche.get("Type", self.GetReferentiel().Enseignement[0])
+        self.typeEnseignement = branche.get("Type", self.GetReferentiel().Code)
+        # Bug probable !!! à vérifier
         
         self.id  = eval(branche.get("Id", "0"))
         self.nom  = branche.get("Nom", "")
@@ -11918,7 +11919,7 @@ class Groupe(ElementBase, Eleve):
     ######################################################################################  
     def GetNomPrenom(self, disc = False):
         if self.GetDocument().classe.typeEnseignement != self.typeEnseignement:
-            d = u' (' + self.typeEnseignement + u')'
+            d = u' (' + REFERENTIELS[self.typeEnseignement].Enseignement[0] + u')'
         else:
             d = u""
             

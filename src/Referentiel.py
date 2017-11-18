@@ -47,7 +47,7 @@ import os
  
 import wx   # Juste pour la fonction GetBitmap()
 
-from version import __version__, sup
+# from version import __version__, sup
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET

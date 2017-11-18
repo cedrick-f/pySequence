@@ -212,7 +212,7 @@ DEBUG = "beta" in version.__version__
 
 
 # Gestion des messages d'erreur
-if DEBUG:
+if not DEBUG:
     import error
 
 
@@ -11180,7 +11180,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         if event != None:
             radio_selected = event.GetEventObject()
             CodeFam = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
-
+#         print "EvtRadioBox", self.groupe.typeEnseignement, ">>>", CodeFam
         self.groupe.typeEnseignement = CodeFam[0]
         
         self.Refresh()
@@ -11197,7 +11197,7 @@ class PanelPropriete_Groupe(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #         print "MiseAJour panelPropriete Groupe", self.groupe.typeEnseignement
-
+#         print "  ", REFERENTIELS.keys()
 #         self.cb_type.SetStringSelection(self.groupe.typeEnseignement)
         self.cb_type.SetStringSelection(REFERENTIELS[self.groupe.typeEnseignement].Enseignement[0])
         
