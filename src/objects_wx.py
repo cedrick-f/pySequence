@@ -603,17 +603,19 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def GetTools(self, typ):
         ts = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         if typ == 'prj':
-            return [(50 , BoutonToolBar(u"Ajouter un élève",
+            el = u"élève" #getSingulier(self.support.GetReferentiel().labels["ELEVES"][0])
+            els = u"élèves" #getPluriel(self.support.GetReferentiel().labels["ELEVES"][0])
+            return [(50 , BoutonToolBar(u"Ajouter un %s" %el,
                                    scaleImage(images.Icone_ajout_eleve.GetBitmap(),
                                                   *ts), 
-                                   shortHelp = u"Ajout d'un élève au projet", 
-                                   longHelp = u"Ajout d'un élève au projet")),
+                                   shortHelp = u"Ajout d'un %s au projet" %el, 
+                                   longHelp = u"Ajout d'un %s au projet" %el)),
                     
-                    (54 , BoutonToolBar(u"Ajouter un groupe d'élèves",
+                    (54 , BoutonToolBar(u"Ajouter un groupe d'%s" %els,
                                    scaleImage(images.Icone_ajout_groupe.GetBitmap(),
                                                   *ts), 
-                                   shortHelp = u"Ajout d'un groupe d'élèves au projet", 
-                                   longHelp = u"Ajout d'un groupe d'élèves au projet")),
+                                   shortHelp = u"Ajout d'un groupe d'%s au projet" %els, 
+                                   longHelp = u"Ajout d'un groupe d'%s au projet" %els)),
                 
                     (51 , BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
@@ -2406,7 +2408,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.GetDocument().SetPath(nomFichier)
         self.SetTitre()
 
-
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):
+        
+        return
 
  
 def Dialog_ErreurAccesFichier(nomFichier):
@@ -2799,7 +2804,7 @@ class FenetreProjet(FenetreDocument):
         #
 #         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
         self.pageDetails = Panel_Details(self.nb)
-        self.nb.AddPage(self.pageDetails, u"Tâches élèves détaillées")
+        self.nb.AddPage(self.pageDetails, u"Tâches %s détaillées" %getPluriel(self.projet.GetReferentiel().labels["ELEVES"][0]))
         
         #
         # Dossier de validation
@@ -3468,7 +3473,12 @@ class FenetreProjet(FenetreDocument):
     #############################################################################
     def AppliquerOptions(self):
         self.projet.AppliquerOptions() 
-    
+        
+        
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):
+        self.nb.SetPageText(1, u"Tâches %s détaillées" %getPluriel(self.projet.GetReferentiel().labels["ELEVES"][0]))
+        self.parent.OnDocChanged()
     
 #class ThreadRedess(Thread):
 #    def __init__(self, fiche):
@@ -5522,8 +5532,8 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.intctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][1])#, u"", style=wx.TE_MULTILINE)
                 self.intctrl.SetTitre(u"Intitulés des différentes parties")
                 self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
-                                              u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
-                                              u"et leur effectif est indiqué.")
+                                              u"Les groupes d'%s sont désignés par des lettres (A, B, C, ...)\n" \
+                                              u"et leur effectif est indiqué." %getPluriel(ref.labels["ELEVES"][0]))
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
 #                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intctrl)
                 self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intctrl)
@@ -6748,7 +6758,12 @@ class PanelPropriete_Classe(PanelPropriete):
 #            self.list.Peupler()
 
         self.st_type.SetLabel(self.classe.referentiel.Enseignement[0])
+        
+        # Modification des liens vers le BO
         self.SetLienBO()
+        
+        # Modification des onglet du classeur
+        self.GetFenetreDoc().MiseAJourTypeEnseignement()
         
         self.Refresh()
         
@@ -6993,11 +7008,12 @@ class PanelEffectifsClasse(wx.Panel):
         bsizerClasse.Add(sizerClasse_b)
         
         # Effectif de la classe
-        self.vEffClas = Variable(u"Nombre d'élèves",  
+        self.vEffClas = Variable(u"Nombre d'%s" %getPluriel(self.classe.GetReferentiel().labels["ELEVES"][0]),  
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,40])
         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = u"Nombre d'élèves dans la classe entiére", sizeh = 30*SSCALE, 
+                                help = u"Nombre d'%s dans la classe entiére" %getPluriel(self.classe.GetReferentiel().labels["ELEVES"][0]), 
+                                sizeh = 30*SSCALE, 
                                 color = coulClasse, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
@@ -9525,7 +9541,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Elèves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, u"Elèves impliqués")
+            self.box = myStaticBox(pageGen, -1, u"%s impliqués" %getPluriel(self.tache.GetReferentiel().labels["ELEVES"][0]).Capitalize())
 #            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
@@ -9547,8 +9563,8 @@ class PanelPropriete_Tache(PanelPropriete):
                             u" - ce qui est fourni\n" \
                             u" - les résultats attendus\n" \
                             u" - les différentes étapes\n" \
-                            u" - la répartition du travail entre les élèves\n"\
-                            u" - ...")
+                            u" - la répartition du travail entre les %s\n"\
+                            u" - ..." %getPluriel(self.tache.GetReferentiel().labels["ELEVES"][0]))
         tc.SetTitre(u"Description détaillée de la tâche")
      
 
@@ -9829,7 +9845,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     ############################################################################            
     def ConstruireListeEleves(self):
-        """ Ajout des cases "élève" :
+        u""" Ajout des cases "élève" :
              - sur la page "Proprietes générale"
              - sur les pages "Compétences" : cas des revues (sauf dernière(s)) et des compétences prédéterminées
         """
@@ -9953,7 +9969,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.GetDocument().MiseAJourTachesEleves()
         
         self.ConstruireCasesEleve()
-        self.sendEvent(modif = u"Changement d'élève concerné par la tâche")    
+        self.sendEvent(modif = u"Changement d'%s concerné par la tâche" %getSingulier(self.tache.GetReferentiel().labels["ELEVES"][0]))    
 
 
     #############################################################################            
@@ -11285,8 +11301,8 @@ class PanelPropriete_Support(PanelPropriete):
         textctrl = TextCtrl_Help(self, u"")
         textctrl.SetTitre(u"Nom du support")
         textctrl.SetToolTipString(u"Le support est le matériel ou logiciel\n" \
-                                  u"sur lequel les élèves réalisent\n" \
-                                  u"les modélisations et expérimentations.")
+                                  u"sur lequel les %s réalisent\n" \
+                                  u"les modélisations et expérimentations." %getPluriel(self.support.GetReferentiel().labels["ELEVES"][0]).capitalize())
         self.textctrl = textctrl
         bsizer.Add(textctrl, 1, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -14554,7 +14570,7 @@ class ChoixCompetenceEleve(wx.Panel):
 
     #############################################################################
     def MiseAJour(self):
-        """ Active/désactive les cases à cocher
+        u""" Active/désactive les cases à cocher
             selon que les élèves ont à mobiliser cette compétence/indicateur
         """
 #         print "MiseAJour ChoixCompetenceEleve", self.tache, self.indic
@@ -14575,7 +14591,7 @@ class ChoixCompetenceEleve(wx.Panel):
         
     #############################################################################
     def Actualiser(self):
-        """ Coche/décoche les cases à cocher
+        u""" Coche/décoche les cases à cocher
             
         """
 #        print "Actualiser", self.tache

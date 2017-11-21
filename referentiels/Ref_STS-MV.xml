@@ -1,8 +1,8 @@
 <Referentiel B_CI_BO="False" B_CI_cible="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_MV" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomDom="Domaine(s) du socle" S_nomFonctions="Activités professionnelles" S_nomPb="Problématique(s)" S_nomTaches="Compétences associées" S_nomTh="Thématique(s)">
   <l_BO_URL>
-    <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-techniques-et-services-en-materiels-agricoles/6666-bts-techiques-services-materiels-agricoles.pdf" />
+    <l_00 S_00="Programme" S_01="https://www.sup.adc.education.fr/btslst/referentiel/bts_maintenancevehiculesoptabc.pdf" />
   </l_BO_URL>
-  <l_BO_dossier S_00="STS/TSMA" />
+  <l_BO_dossier S_00="STS/MV" />
   <l_CentresInterets S_00="Mise en service d’un système d’un ouvrage ou d’un équipement" S_01="La distribution de l’énergie électrique" S_02="Comportement des charges mécaniques" S_03="Les différents procédés de transformation de l’énergie" S_04="La réversibilité énergétique" S_05="Dimensionnement énergétique dans les systèmes autonomes et embarqués" S_06="La qualité de l’énergie électrique" S_07="La gestion des coûts" S_08="Asservissement et régulation" S_09="Les équipements communicants" />
   <l_Enseignement S_00="STS-MV" S_01="BTS - Maintenance de véhicules" S_02="STS" S_03="Section de Technicien Supérieur" />
   <d_aColNon B_C="True" />
@@ -194,7 +194,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C="50" />
+          <d_poids I_C="60" />
           <d_sousComp>
             <Competence_C23.4 S_intitule="Evaluer les performances d'un système à partir des valeurs mesurées">
               <l_domaines />
@@ -203,10 +203,10 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les valeurs mesurées permette d'évaluer les performances">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="8.333333" />
-                  <d_revue I_C="2" />
+                <Indicateur_00 S_intitule="Les valeurs relevées permettent d'évaluer les performances">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -222,33 +222,33 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les procédures de contrôle du constructeur--sont identifiées.">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="8.333333" />
+                  <d_ligne I_C="7" />
+                  <d_poids F_C="14.285714" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le choix des mesures et des tests est pertinent--et permet de valider la fonction testée tout en--respectant les procédures de sécurité.">
-                  <d_ligne I_C="7" />
-                  <d_poids F_C="8.333333" />
+                  <d_ligne I_C="8" />
+                  <d_poids F_C="14.285714" />
                   <d_revue I_C="2" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="La chronologie proposée est pertinente">
-                  <d_ligne I_C="8" />
-                  <d_poids F_C="8.333333" />
+                  <d_ligne I_C="9" />
+                  <d_poids F_C="9.52381" />
                   <d_revue I_C="2" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="Les conditions de mesures ou de tests--à mettre en oeuvre sont identifiées.">
-                  <d_ligne I_C="8" />
-                  <d_poids F_C="8.333333" />
+                  <d_ligne I_C="10" />
+                  <d_poids F_C="23.809524" />
                   <d_revue I_C="2" />
                 </Indicateur_03>
                 <Indicateur_04 S_intitule="Les tests et mesures définis respectent les--biens, les personnes et l’environnement.">
-                  <d_ligne I_C="8" />
-                  <d_poids F_C="8.333333" />
+                  <d_ligne I_C="11" />
+                  <d_poids F_C="4.761905" />
                   <d_revue I_C="2" />
                 </Indicateur_04>
                 <Indicateur_05 S_intitule="Les outillages et moyens nécessaires sont--identifiés.">
-                  <d_ligne I_C="8" />
-                  <d_poids F_C="8.333333" />
+                  <d_ligne I_C="12" />
+                  <d_poids F_C="9.52381" />
                   <d_revue I_C="2" />
                 </Indicateur_05>
               </l_indicateurs>
@@ -265,19 +265,19 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les conditions de mesures sont respectées">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="8.333333" />
-                  <d_revue I_C="2" />
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="La mise en œuvre des appareils de mesure permet d'obtenir des valeurs exploitables et en relation avec les hypothèses">
-                  <d_ligne I_C="7" />
-                  <d_poids F_C="8.333333" />
-                  <d_revue I_C="2" />
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Les valeurs sont correctement exprimées (unités)">
-                  <d_ligne I_C="8" />
-                  <d_poids F_C="8.333333" />
-                  <d_revue I_C="2" />
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_02>
               </l_indicateurs>
               <l_infos />
@@ -285,22 +285,22 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_C23.3>
-            <Competence_C23.2 S_intitule="Exploiter les outils">
+            <Competence_C23.2 S_intitule="Exploiter les outils de diagnostic">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les procédures de contrôle du constructeur--sont identifiées.">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="8.333333" />
+                <Indicateur_00 S_intitule="Les procédures d'utilisation des outils de diagnostic sont maîtrisées.">
+                  <d_ligne I_C="13" />
+                  <d_poids F_C="23.809524" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
-                <Indicateur_01 S_intitule="Le choix des mesures et des tests est pertinent--et permet de valider la fonction testée tout en--respectant les procédures de sécurité.">
-                  <d_ligne I_C="7" />
-                  <d_poids F_C="8.333333" />
-                  <d_revue I_C="2" />
+                <Indicateur_01 S_intitule="Les informations fournies par les outils de diagnostic sont analysées (lecture des défauts, des paramètres, des tests actionneurs)">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -319,7 +319,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C="50" />
+          <d_poids I_C="40" />
           <d_sousComp>
             <Competence_C43.3 S_intitule="Consulter l'historique du véhicule">
               <l_domaines />
@@ -329,8 +329,8 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les supports existants sont consultés (base de données, outil de diagnostic, carnet de bord, factures)">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
+                  <d_ligne I_C="24" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -347,13 +347,13 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le questionnement est adapté au symptôme">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
+                  <d_ligne I_C="22" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les termes utilisés par le client sont traduits et reformulés dans un langage technique">
-                  <d_ligne I_C="7" />
-                  <d_poids F_C="11.111111" />
+                  <d_ligne I_C="23" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_01>
               </l_indicateurs>
@@ -370,13 +370,13 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les informations collectées permettent de compléter les documents administratifs">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
+                  <d_ligne I_C="20" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="La procédure de réception est respectée">
-                  <d_ligne I_C="7" />
-                  <d_poids F_C="11.111111" />
+                  <d_ligne I_C="21" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_01>
               </l_indicateurs>
@@ -385,16 +385,16 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_C43.1>
-            <Competence_C43.7 S_intitule="Dialoguer avec les systèmes embarqués">
+            <Competence_C43.7 S_intitule="Consulter les notices des nouveaux équipements">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les informations liées à l'outil de diagnostic sont bien exploitées">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
+                <Indicateur_00 S_intitule="La lecture des notices permet l'utilisation des matériels">
+                  <d_ligne I_C="28" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -411,9 +411,9 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les informations liées à l'outil de diagnostic sont bien exploitées">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
-                  <d_revue I_C="2" />
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -429,8 +429,8 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les supports fournis par le constructeur (documentation en ligne) sont bien utilisés">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
+                  <d_ligne I_C="26" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -446,9 +446,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="LA marque, le type et la version des éléments (calculateurs et logiciels) sont identifiés">
-                  <d_ligne I_C="6" />
-                  <d_poids F_C="11.111111" />
+                <Indicateur_00 S_intitule="La marque, le type et la version des éléments (calculateurs et logiciels) sont identifiés">
+                  <d_ligne I_C="25" />
+                  <d_poids F_C="10.0" />
                   <d_revue I_C="2" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -457,6 +457,29 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_C43.4>
+            <Competence_C43.8 S_intitule="Collecter les données nécessaires au calcul des indicateurs de performance atelier">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les données nécessaires au calcul des ratios de performance de l'atelier (productivité, etc.) sont bien identifiées et collectées">
+                  <d_ligne I_C="29" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les données nécessaires au calcul des indices de satisfaction &quot;clientèle&quot; sont bien identifiées et collectées">
+                  <d_ligne I_C="30" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.8>
           </d_sousComp>
           <l_thematiques />
         </Competence_C43>
@@ -1576,12 +1599,12 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="40" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="False" I_duree="40" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-MV_projet.html" S_intitule="Projet de fin d'année">
       <d_attributs>
         <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Activités du groupe" S_01="" S_02="" S_03="" />
         <l_OBJ S_00="Objectifs" S_01="" S_02="" S_03="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
@@ -1589,93 +1612,78 @@
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Mise en situation / Expression du besoin" S_01="" S_02="" S_03="" />
-        <l_TYP S_00="Activités du groupe" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Option" S_01="" S_02="Véhicules particuliers--Véhicules de transport routier--Motocycles" S_03="" />
         <l_PRX S_00="Moyens à mettre en œuvre" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
-          <l_Tit>
-            <l_00 S_00="U65" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_00>
-            <l_01 S_00="U66" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_01>
-            <l_02 S_00="U67" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_02>
-          </l_Tit>
-          <l_Prof>
-            <l_00 S_00="U62" S_02="">
-              <l_01 I_00="7" I_01="8" I_02="1" />
-            </l_00>
-            <l_01 S_00="U63" S_02="">
-              <l_01 I_00="7" I_01="8" I_02="1" />
-            </l_01>
-            <l_02 S_00="U64" S_02="">
-              <l_01 I_00="7" I_01="8" I_02="1" />
-            </l_02>
-          </l_Prof>
           <l_Pre>
-            <l_00 S_00="U69" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
             </l_00>
-            <l_01 S_00="U72" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
-            </l_01>
-            <l_02 S_00="U75" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
-            </l_02>
           </l_Pre>
-          <l_Etab>
-            <l_00 S_00="U70" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
-            </l_00>
-            <l_01 S_00="U73" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
-            </l_01>
-            <l_02 S_00="U76" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
-            </l_02>
-          </l_Etab>
           <l_Nom>
-            <l_00 S_00="U68" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
             </l_00>
-            <l_01 S_00="U71" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
-            </l_01>
-            <l_02 S_00="U74" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
-            </l_02>
           </l_Nom>
+          <l_NON>
+            <l_00 S_00="Evaluation etablissement" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="4" I_01="5" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="21" I_01="2" I_02="0" />
+            </l_00>
+          </l_Prof>
         </d_C>
         <d_S>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Evaluation commission" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
           <l_Tit>
-            <l_00 S_00="Présentation" S_02="">
+            <l_00 S_00="Identification" S_02="">
               <l_01 I_00="4" I_01="5" I_02="0" />
             </l_00>
           </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_Pre>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
-            </l_00>
-          </l_Pre>
           <l_Etab>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="21" I_01="2" I_02="0" />
+            </l_00>
+          </l_Prof>
         </d_S>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="Grille_BTS_TSMA_U62.xlsx" S_01="I" />
-        <l_S S_00="Grille_BTS_TSMA_U62.xlsx" S_01="I" />
+        <l_C S_00="Grille BTS MV U62-2018 .xls" S_01="I" />
+        <l_S S_00="Grille BTS MV U62-2018 .xls" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />

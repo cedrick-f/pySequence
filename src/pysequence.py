@@ -1551,12 +1551,17 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.HideTip()
             
         tip = None 
-        if zone.obj is not None and zone.param is None and type(zone.obj) != list:
+        if zone.obj is not None and zone.param is None:
 #             print "    elem :", zone.obj
-            if hasattr(zone.obj, 'tip'):
-                zone.obj.SetTip()
-                tip = zone.obj.tip
+            if type(zone.obj) != list:
             
+                if hasattr(zone.obj, 'tip'):
+                    zone.obj.SetTip()
+                    tip = zone.obj.tip
+            else:
+                if hasattr(zone.obj[0], 'tip'):
+                    zone.obj[0].SetTip()
+                    tip = zone.obj[0].tip 
 #            if hasattr(zone.obj, "branche"):
 #                elem = zone.obj.branche.GetData()
 #                
@@ -3391,14 +3396,18 @@ class Projet(BaseDoc):
         """ Mise à jour du TIP (popup)
         """
         
-        if param is None:   # le Projet lui-même
-            self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROJET))
-            self.tip.SetWholeText("int", self.intitule, size = 4)
-            self.tip.SetWholeText("ori", self.origine)
-            self.tip.SetWholeText("con", self.contraintes)
-            self.tip.SetWholeText("pro", self.production)
-            self.tip.SetWholeText("dec", self.intituleParties)
-            self.tip.SetWholeText("par", self.besoinParties)
+        if param is None:   
+            if obj is None:
+                # le Projet lui-même
+                self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROJET))
+                self.tip.SetWholeText("int", self.intitule, size = 4)
+                self.tip.SetWholeText("ori", self.origine)
+                self.tip.SetWholeText("con", self.contraintes)
+                self.tip.SetWholeText("pro", self.production)
+                self.tip.SetWholeText("dec", self.intituleParties)
+                self.tip.SetWholeText("par", self.besoinParties)
+            else:
+                pass
             
         
         else:               # Un autre élément du Projet
@@ -4293,8 +4302,8 @@ class Projet(BaseDoc):
         existe = []
         for fe in nomFichiers.values():
             for f in fe.values():
-                if os.path.isfile(f):
-                    existe.append(f)
+                if os.path.isfile(f[1]):
+                    existe.append(f[1])
         
         if len(existe) > 0:
             
@@ -10547,8 +10556,47 @@ class Eleve(Personne, ElementBase):
         return getNomFichier(prefixe, self.GetNomPrenom()+"_"+self.GetDocument().intitule[:20])
 
         
+#     ######################################################################################  
+#     def GetNomGrilles2(self, dirpath = None, ):
+#         u""" Renvoie les noms des fichiers grilles à générer
+#         
+#         
+#             :param dirpath: chemin du dossier où doivent se trouver les grilles
+#             :type dirpath: string
+#             
+#             :return: Les noms des grilles sous la forme :
+#                         {partie_du_projet : chemin_absolu_du_fichier_grille}
+#             :rtype: dict
+#         """
+# #        print "GetNomGrilles"
+#         prj = self.GetDocument().GetProjetRef()
+# #        print prj
+# #        print prj.grilles
+#         #
+#         # Création des noms des fichiers grilles
+#         #
+#         # Par défaut = chemin du fichier .prj
+#         if dirpath == None:
+#             dirpath = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
+#             
+#         nomFichiers = {} 
+#         for part, g in prj.parties.items():
+#             prefixe = "Grille_"+g
+#             gr = prj.grilles[part]
+# #            print gr
+#             if grilles.EXT_EXCEL != None: 
+#                 if gr[1] == 'C': # fichier "Collectif"
+#                     nomFichiers[part] = os.path.join(dirpath, self.GetDocument().getNomFichierDefaut(prefixe))
+#                 else:
+#                     nomFichiers[part] = os.path.join(dirpath, self.getNomFichierDefaut(prefixe))
+#                 nomFichiers[part] += grilles.EXT_EXCEL
+#                 
+# #        print "   >", nomFichiers
+#         return nomFichiers
+
+    
     ######################################################################################  
-    def GetNomGrilles(self, dirpath = None):
+    def GetNomGrilles(self, dirpath = None, ):
         u""" Renvoie les noms des fichiers grilles à générer
         
         
@@ -10556,7 +10604,7 @@ class Eleve(Personne, ElementBase):
             :type dirpath: string
             
             :return: Les noms des grilles sous la forme :
-                        {partie_du_projet : chemin_absolu_du_fichier_grille}
+                        {chemin_absolu_du_fichier_grille_original : ([partie(s)_du_projet] , chemin_absolu_du_fichier_grille)}
             :rtype: dict
         """
 #        print "GetNomGrilles"
@@ -10569,27 +10617,38 @@ class Eleve(Personne, ElementBase):
         # Par défaut = chemin du fichier .prj
         if dirpath == None:
             dirpath = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
+        
+        prefixes = {}
+        for part, g in prj.parties.items():
+            fo = prj.grilles[part][0]
+            if not fo in prefixes.keys():
+                prefixes[fo] = [part]
+            else:
+                prefixes[fo].append(part)
             
         nomFichiers = {} 
-        for part, g in prj.parties.items():
-            prefixe = "Grille_"+g
-            gr = prj.grilles[part]
-#            print gr
-            if grilles.EXT_EXCEL != None:
-#                extention = os.path.splitext(ref.grilles_prj[k][0])[1]
-                extention = grilles.EXT_EXCEL
-                
+        for fo, parts in prefixes.items():
+            prefixe = "_".join(["Grille"]+[prj.parties[part] for part in parts])
+            gr = prj.grilles[parts[0]]
+            if grilles.EXT_EXCEL != None: 
                 if gr[1] == 'C': # fichier "Collectif"
-                    nomFichiers[part] = os.path.join(dirpath, self.GetDocument().getNomFichierDefaut(prefixe)) + extention
+                    nomFichiers[fo] = os.path.join(dirpath, self.GetDocument().getNomFichierDefaut(prefixe))
                 else:
-                    nomFichiers[part] = os.path.join(dirpath, self.getNomFichierDefaut(prefixe)) + extention
+                    nomFichiers[fo] = os.path.join(dirpath, self.getNomFichierDefaut(prefixe))
+                nomFichiers[fo] += grilles.EXT_EXCEL
+                nomFichiers[fo] = (part, nomFichiers[fo])
+                
 #        print "   >", nomFichiers
         return nomFichiers
+    
 
 
     ######################################################################################  
     def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, messageFin = True, win = None):
         u""" Génération des grilles d'évaluation de l'élève
+        
+            Génère un dictionnaire "tableaux" :
+                {chemin_du_fichier_Excel_de_la_grille : (liste_des_parties_concernées, objet_tableau_Excel_ouvert)}
         
             :param nomFichiers: noms des fichiers des grilles (voir méthode .GetNomGrilles())
             :type nomFichiers: dict
@@ -10628,39 +10687,39 @@ class Eleve(Personne, ElementBase):
         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
         #
         tableaux = {}
-        for k, f in nomFichiers.items():
+        for fo, v in nomFichiers.items():
+            parts, f = v
             if os.path.isfile(f):  # Fichier grille élève déja existant
 #                 print "   exist :", f
-                tableaux[k] = grilles.getTableau(win, f)
+                tableaux[f] = (parts, grilles.getTableau(win, f))
                 
             else:  # fichier original vierge de la grille
 #                 print "   new :",
-                fo = grilles.getFullNameGrille(prj.grilles[k][0])
+                fo = grilles.getFullNameGrille(fo)
                 if os.path.isfile(fo):
                     # Copie du fichier original
 #                     print "copy", fo, f
-                    shutil.copy(fo, f)
-                    tableaux[k] = grilles.getTableau(win, f)
+                    try:
+                        shutil.copy(fo, f)
+                    except IOError :
+                        messageErreur(win, u"Erreur !",
+                                      u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
+                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                      u" - que le dossier choisi n'est pas protégé en écriture" %f)
+                    else:
+                        tableaux[f] = (parts, grilles.getTableau(win, f))
                 
                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
-                    prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
-                    tableaux[k] = None
+#                     prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
+#                     tableaux[part] = None
                     messageErreur(win, u"Fichier non trouvé !",
-                                  u"Le fichier original de la grille,\n    " + prjdef.grilles[k][0] + u"\n" \
+                                  u"Le fichier original de la grille,\n    " + fo + u"\n" \
                                   u"n'a pas été trouvé ! \n")
                         
-            
-            if tableaux[k] != None: # and tableaux[k].filename !=f:
-#                print "      créé :", f
-                try:
-                    tableaux[k].save(f, ConflictResolution = 2)
-                except:
-                    messageErreur(win, u"Erreur !",
-                                  u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-                                  u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                                  u" - que le dossier choisi n'est pas protégé en écriture"%f)
+    
+                    
 
-        if tableaux == None:
+        if tableaux == {}:
             wx.EndBusyCursor()
             return []
         
@@ -10681,7 +10740,8 @@ class Eleve(Personne, ElementBase):
         #
         # Enregistrement final des grilles
         #
-        for k, t in tableaux.items():
+        for f, v in tableaux.items():
+            parts, t = v
             try:
                 t.save()
             except:
@@ -10693,8 +10753,9 @@ class Eleve(Personne, ElementBase):
                 t.close()
             except:
                 pass
-            self.grille[k] = Lien(typ = 'f')
-            self.grille[k].path = toFileEncoding(nomFichiers[k])
+            for part in parts:
+                self.grille[part] = Lien(typ = 'f')
+                self.grille[part].path = toFileEncoding(f)
         
 #         self.GetDocument().GetApp().MarquerFichierCourantModifie()
         # Mise à our du panel de Propriétés courant
@@ -10724,6 +10785,152 @@ class Eleve(Personne, ElementBase):
         wx.EndBusyCursor()
 #         self.GetPanelPropriete().MiseAJour()
         return log
+     
+    
+#     ######################################################################################  
+#     def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, messageFin = True, win = None):
+#         u""" Génération des grilles d'évaluation de l'élève
+#         
+#             :param nomFichiers: noms des fichiers des grilles (voir méthode .GetNomGrilles())
+#             :type nomFichiers: dict
+#             
+#             :param dirpath: chemin du dossier où doivent se trouver les grilles
+#             :type dirpath: string
+#             
+#             :param messageFin: True pour afficher un message à la fin de la génération
+#             :type messageFin: bool
+#             
+#             :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant la génération
+#             :type win: wx.Window
+#             
+#             :return: Un log des erreurs rencontrées
+#             :rtype: list
+#         
+#         """
+# #         print "GenererGrille élève", self
+# #         print "  ", nomFichiers
+#         
+#         if nomFichiers == None:
+#             nomFichiers = self.GetNomGrilles(dirpath)
+#             if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
+#                 return []
+# #             print "  >>> Fichiers :", nomFichiers
+#         
+#         
+#         prj = self.GetDocument().GetProjetRef()
+#         app = self.GetDocument().GetApp()
+#         if win is None:
+#             win = app
+#         
+#         
+#         wx.BeginBusyCursor()
+#         #
+#         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
+#         #
+#         tableaux = {}
+#         for part, f in nomFichiers.items():
+#             if os.path.isfile(f):  # Fichier grille élève déja existant
+# #                 print "   exist :", f
+#                 tableaux[part] = grilles.getTableau(win, f)
+#                 
+#             else:  # fichier original vierge de la grille
+# #                 print "   new :",
+#                 fo = grilles.getFullNameGrille(prj.grilles[part][0])
+#                 if os.path.isfile(fo):
+#                     # Copie du fichier original
+# #                     print "copy", fo, f
+#                     try:
+#                         shutil.copy(fo, f)
+#                     except IOError :
+#                         messageErreur(win, u"Erreur !",
+#                                       u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
+#                                       u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+#                                       u" - que le dossier choisi n'est pas protégé en écriture" %f)
+#                     else:
+#                         tableaux[part] = grilles.getTableau(win, f)
+#                 
+#                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
+#                     prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
+# #                     tableaux[part] = None
+#                     messageErreur(win, u"Fichier non trouvé !",
+#                                   u"Le fichier original de la grille,\n    " + prjdef.grilles[part][0] + u"\n" \
+#                                   u"n'a pas été trouvé ! \n")
+#                         
+#     
+#                     
+# 
+#         if tableaux == {}:
+#             wx.EndBusyCursor()
+#             return []
+#         
+#         #
+#         # Remplissage des grilles
+#         #
+#         log = []
+#         if "beta" in version.__version__:
+#             log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
+#         else:
+#             try:
+#                 log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
+#             except:
+#                 messageErreur(win, u"Erreur !",
+#                               u"Impossible de modifier les grilles !") 
+# 
+# 
+#         #
+#         # Enregistrement final des grilles
+#         #
+#         for part, t in tableaux.items():
+#             try:
+#                 t.save()
+#             except:
+#                 messageErreur(win, u"Erreur !",
+#                               u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
+#                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+#                               u" - que le dossier choisi n'est pas protégé en écriture" %f)
+#             try:
+#                 t.close()
+#             except:
+#                 pass
+#             self.grille[part] = Lien(typ = 'f')
+#             self.grille[part].path = toFileEncoding(nomFichiers[part])
+#         
+# #         self.GetDocument().GetApp().MarquerFichierCourantModifie()
+#         # Mise à our du panel de Propriétés courant
+#         panelProp = app.GetPanelProp()
+#         if hasattr(panelProp, 'MiseAJour'):
+#             panelProp.MiseAJour(sendEvt = False, marquerModifier = True)
+#         
+#         #
+#         # Message de fin
+#         #
+#         if messageFin:
+#             t = u"Génération "
+#             if len(tableaux)>1:
+#                 t += u"des grilles"
+#             else:
+#                 t += u"de la grille"
+#             t += u"\n\n"
+#             t += u"\n".join(nomFichiers.values())
+#             t += u"\n\nterminée avec "
+#             if len(log) == 0:
+#                 t += u"succès !"
+#             else:
+#                 t += u"des erreurs :\n"
+#                 t += u"\n".join(log)
+#             messageInfo(win, u"Génération terminée", t)
+#             
+#         wx.EndBusyCursor()
+# #         self.GetPanelPropriete().MiseAJour()
+#         return log
+#     
+    
+    ######################################################################################  
+    def GrillesGenerees(self):
+        b = True
+        for g in self.grille.values():
+            b = b and len(g.path) > 0
+        return b
     
     
     ######################################################################################  
@@ -10952,12 +11159,7 @@ class Eleve(Personne, ElementBase):
             
         return lst
         
-    ######################################################################################  
-    def GrillesGenerees(self):
-        b = True
-        for g in self.grille.values():
-            b = b and len(g.path) > 0
-        return b
+    
     
     
     ######################################################################################  

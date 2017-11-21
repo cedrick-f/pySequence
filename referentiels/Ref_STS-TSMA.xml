@@ -5,7 +5,7 @@
   <l_BO_dossier S_00="STS/TSMA" />
   <l_CentresInterets S_00="Mise en service d’un système d’un ouvrage ou d’un équipement" S_01="La distribution de l’énergie électrique" S_02="Comportement des charges mécaniques" S_03="Les différents procédés de transformation de l’énergie" S_04="La réversibilité énergétique" S_05="Dimensionnement énergétique dans les systèmes autonomes et embarqués" S_06="La qualité de l’énergie électrique" S_07="La gestion des coûts" S_08="Asservissement et régulation" S_09="Les équipements communicants" />
   <l_Enseignement S_00="STS-TSMA" S_01="BTS - Techniques Services Matériels Agricoles" S_02="STS" S_03="Section de Technicien Supérieur" />
-  <d_aColNon B_C="True" />
+  <d_aColNon B_C="True" B_S="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
@@ -17,7 +17,7 @@
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
   </d_activites>
-  <d_compImposees B_C="True" B_S="False" />
+  <d_compImposees B_C="False" B_S="True" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
     <l_P S_00="I" S_01="R" S_02="P" />
@@ -216,17 +216,17 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les informations pertinentes sur la situation commerciale, technique et financière du client sont identifiées et exploitées dans un ordre logique">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="6" />
                   <d_poids F_S="33.333333" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le risque client est évalué">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="7" />
                   <d_poids F_S="33.333333" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Une solution respectant les attentes du client, en conformité avec les stratégies commerciales et contraintes de l'entreprise, est proposée sous une forme contractuelle">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="8" />
                   <d_poids F_S="33.333333" />
                   <d_revue I_S="0" />
                 </Indicateur_02>
@@ -269,19 +269,19 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les solutions proposées sont cohérentes, renseignées et répondent au cahier des charges">
-                  <d_ligne I_C="6" />
+                  <d_ligne I_C="10" />
                   <d_poids F_C="33.333333" />
-                  <d_revue I_C="2" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Elles prennent en compte la démarche de développement durable">
-                  <d_ligne I_C="7" />
+                  <d_ligne I_C="11" />
                   <d_poids F_C="33.333333" />
-                  <d_revue I_C="2" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Les solutions tiennent compte des équipements nécessaires et disponibles. Elles sont claires et adaptées à l'intervenant. Elles prennent en compte la fidélisation du client.">
-                  <d_ligne I_C="8" />
+                  <d_ligne I_C="12" />
                   <d_poids F_C="33.333333" />
-                  <d_revue I_C="2" />
+                  <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
               <l_infos />
@@ -297,24 +297,24 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les propositions sont clairement présentées et classées">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="14" />
                   <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
+                  <d_revue I_S="2" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="La comparaison des différentes propositions comporte les critères judicieux, laquelle est argumentée">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="15" />
                   <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
+                  <d_revue I_S="2" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="L'argumentaire est utilisé de façon raisonnée, construite, claire et adaptée. Il met en relation la proposition avec le cahier des charges">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="16" />
                   <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
+                  <d_revue I_S="2" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="La solution proposée est acceptée">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="17" />
                   <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
+                  <d_revue I_S="2" />
                 </Indicateur_03>
               </l_indicateurs>
               <l_infos />
@@ -355,27 +355,27 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les éléments sont listés précisément et en adéquation avec l'attente">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="19" />
                   <d_poids F_S="20.0" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les normes et règlements sont pris en compte">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="20" />
                   <d_poids F_S="20.0" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="L'ordonnancement des opérations est clair logique et cohérent">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="21" />
                   <d_poids F_S="20.0" />
                   <d_revue I_S="0" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="Le choix du support de communication est pertinent">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="22" />
                   <d_poids F_S="20.0" />
                   <d_revue I_S="0" />
                 </Indicateur_03>
                 <Indicateur_04 S_intitule="Le choix des éléments est pertinent et adapté, présenté et transcrit conformément à l'attente du public visé">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="23" />
                   <d_poids F_S="20.0" />
                   <d_revue I_S="0" />
                 </Indicateur_04>
@@ -406,17 +406,17 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La politique de l'entreprise est connue et appliquée">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="25" />
                   <d_poids F_S="33.333333" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les procédures et les moyens sont correctement mis en œuvre">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="26" />
                   <d_poids F_S="33.333333" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="L'évaluation, les propositions sont pertinentes">
-                  <d_ligne I_S="0" />
+                  <d_ligne I_S="27" />
                   <d_poids F_S="33.333333" />
                   <d_revue I_S="0" />
                 </Indicateur_02>
@@ -1464,6 +1464,7 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <d_labels>
+    <l_ELEVES S_00="étudiant(s)" S_01="étudiants" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
   </d_labels>
   <l_listCompetences S_00="S" />
@@ -1484,7 +1485,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="120" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-TSMA _ Dossier projet.html" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="False" I_duree="120" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-TSMA_projet.html" S_intitule="Projet de fin d'année">
       <d_attributs>
         <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
@@ -1497,93 +1498,53 @@
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Cahier des charges" S_01="Exigences, contraintes, cahier des charges techniques et économiques du client" S_02="" S_03="" />
-        <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Tâches à réaliser" S_01="Tâches prévisionnelles" S_02="1T5 : Présenter, expliquer l'intervention et les éléments de la facturation au client.--1T6 : Remettre le matériel commandé par le client.--3T1 : Organiser l'intervention.--3T2 : Organiser la préparation du matériel.--3T3 : Conseiller et assister les techniciens.--4T4 : Mettre en oeuvre une démarche qualité.--5T1 : Animer et encadrer une équipe de techniciens d'atelier.--6T1 : Analyser le besoin et rédiger le cahier des charges----6T2 : Rechercher, choisir et proposer une solution adaptée au besoin du client.--7T1 : Proposer un équipement relatif à une production phytotechnique ou zootechnique.--7T3 : Proposer des solutions pour réduire les coûts de production dans une démarche de développement durable.--8T1 : Participer à l'élaboration d'outils d'aide à la vente additionnelle.--8T2 : Déterminer le(s) besoin(s).--8T3 : Rechercher une solution de service ou de vente.--8T4 : Proposer en argumentant la solution de service ou de vente." S_03="" />
         <l_PRX S_00="Montant estimé du projet" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
-          <l_Tit>
-            <l_00 S_00="U65" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_00>
-            <l_01 S_00="U66" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_01>
-            <l_02 S_00="U67" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_02>
-          </l_Tit>
-          <l_Prof>
-            <l_00 S_00="U62" S_02="">
-              <l_01 I_00="7" I_01="8" I_02="1" />
-            </l_00>
-            <l_01 S_00="U63" S_02="">
-              <l_01 I_00="7" I_01="8" I_02="1" />
-            </l_01>
-            <l_02 S_00="U64" S_02="">
-              <l_01 I_00="7" I_01="8" I_02="1" />
-            </l_02>
-          </l_Prof>
           <l_Pre>
-            <l_00 S_00="U69" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
+            <l_00 S_00="U61" S_02="">
+              <l_01 I_00="2" I_01="2" I_02="0" />
             </l_00>
-            <l_01 S_00="U72" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
-            </l_01>
-            <l_02 S_00="U75" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
-            </l_02>
           </l_Pre>
-          <l_Etab>
-            <l_00 S_00="U70" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
-            </l_00>
-            <l_01 S_00="U73" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
-            </l_01>
-            <l_02 S_00="U76" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
-            </l_02>
-          </l_Etab>
           <l_Nom>
-            <l_00 S_00="U68" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
+            <l_00 S_00="U61" S_02="">
+              <l_01 I_00="1" I_01="2" I_02="0" />
             </l_00>
-            <l_01 S_00="U71" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
-            </l_01>
-            <l_02 S_00="U74" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
-            </l_02>
           </l_Nom>
+          <l_NON>
+            <l_00 S_00="U62" S_02="">
+              <l_01 I_00="6" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
         </d_C>
         <d_S>
-          <l_Tit>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="4" I_01="5" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="2" I_01="9" I_02="0" />
-            </l_00>
-          </l_Nom>
           <l_Pre>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="3" I_01="9" I_02="0" />
+            <l_00 S_00="U61" S_02="">
+              <l_01 I_00="2" I_01="2" I_02="0" />
             </l_00>
           </l_Pre>
-          <l_Etab>
-            <l_00 S_00="Présentation" S_02="">
-              <l_01 I_00="4" I_01="2" I_02="0" />
+          <l_Nom>
+            <l_00 S_00="U61" S_02="">
+              <l_01 I_00="1" I_01="2" I_02="0" />
             </l_00>
-          </l_Etab>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="U62" S_02="">
+              <l_01 I_00="6" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_ >
+            <l_00 S_00="" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_ >
         </d_S>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="Grille_BTS_TSMA_U62.xlsx" S_01="I" />
-        <l_S S_00="Grille_BTS_TSMA_U62.xlsx" S_01="I" />
+        <l_C S_00="Grille_BTS_TSMA.xlsx" S_01="I" />
+        <l_S S_00="Grille_BTS_TSMA.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />

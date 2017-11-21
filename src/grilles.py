@@ -247,6 +247,15 @@ except:
 
 ###################################################################################################
 def modifierGrille(doc, tableaux, eleve):
+    u""" Remplissage automatique des grilles d'évaluation
+        
+        :param tableaux: dictionnaire de la forme :
+            {chemin_du_fichier_Excel_de_la_grille : (liste_des_parties_concernées, objet_tableau_Excel_ouvert)}
+        :type tableaux: dict
+        
+        :param eleve: Elève concerné par la grille à modifier
+        :type eleve: pysequence.Eleve
+    """
 #    print "modifierGrille", eleve
     
     log = []
@@ -259,6 +268,9 @@ def modifierGrille(doc, tableaux, eleve):
     for part, grille in prj.grilles.items():
         dicInfo = prj.cellulesInfo[part]
         if part in ref.aColNon.keys() and ref.aColNon[part]:
+            if not "NON" in dicInfo.keys():
+                log.append(u"Manque info \"NON\" pour %s" %prj.parties[part])
+                continue
             feuilNON = dicInfo["NON"][0][0]
             dicIndic = eleve.GetDicIndicateurs()
             dicNon = doc.GetProjetRef()._dicoIndicateurs_simple['S']
@@ -282,15 +294,17 @@ def modifierGrille(doc, tableaux, eleve):
                         indic = dicIndic['S'+i][j]
                     else:
                         indic = False
-                    if part in tableaux.keys() and tableaux[part] != None:
-                        if feuille in tableaux[part].getSheets():
-                            nf = tableaux[part].getSheetNum(feuille)
-                            if not indic: # indicateur pas évalué --> on coche NON !
-                                tableaux[part].setCell(nf, ligne, colNON, COCHE)
+                    
+                    for parts, t in tableaux.values():
+                        if part in parts and t != None:
+                            if feuille in t.getSheets():
+                                nf = t.getSheetNum(feuille)
+                                if not indic: # indicateur pas évalué --> on coche NON !
+                                    t.setCell(nf, ligne, colNON, COCHE)
+                                else:
+                                    t.setCell(nf, ligne, colNON, '')
                             else:
-                                tableaux[part].setCell(nf, ligne, colNON, '')
-                        else:
-                            log.append(u"Feuille " + feuille + u" non trouvée")
+                                log.append(u"Feuille \"" + feuille + u"\" non trouvée")
                             
     
 
@@ -306,78 +320,227 @@ def modifierGrille(doc, tableaux, eleve):
              "Sess": str(doc.annee+1)
              }
 
-    
-    for ct, t in tableaux.items():
-        dicInfo = prj.cellulesInfo[ct]
-#        print "  ", dicInfo
-#        print "  ", ct, t
-        for k, v in schem.items():
-            if k in dicInfo.keys() and t != None:
-#                print "    ", k
-                for d in dicInfo[k]:
-                    f = d[0]   # Feuille
-                    if f in t.getSheets():
-                        nf = t.getSheetNum(f)
-                        l, c, p = d[1] # ligne , colonne
-                        pre = d[2]
-                        if p > 0: # Période - pour classeurs collectifs
-                            l += eleve.id * p
-                        t.setCell(nf, l, c, pre+v)
-                    else:
-                        log.append(u"Feuille " + f + u" non trouvée")
+    for parts, t in tableaux.values():
+        for part in parts:
+            dicInfo = prj.cellulesInfo[part]
+    #        print "  ", dicInfo
+    #        print "  ", ct, t
+            for k, v in schem.items():
+                if k in dicInfo.keys() and t != None:
+    #                print "    ", k
+                    for d in dicInfo[k]:
+                        f = d[0]   # Feuille
+                        if f in t.getSheets():
+                            nf = t.getSheetNum(f)
+                            l, c, p = d[1] # ligne , colonne
+                            pre = d[2]
+                            if p > 0: # Période - pour classeurs collectifs
+                                l += eleve.id * p
+                            t.setCell(nf, l, c, pre+v)
+                        else:
+                            log.append(u"Feuille \"" + f + u"\" non trouvée")
     
     #
     # On rajoute les noms des professeurs
     #
     for part, grille in prj.grilles.items():
         dicInfo = prj.cellulesInfo[part]
-        if "Prof" in dicInfo.keys() and part in tableaux.keys() and tableaux[part] != None:
-            f, lcp , pre = dicInfo["Prof"][0] 
-            l, c, p = lcp # ligne, colonne, période
-            if grille[1] == 'C': # fichier "Collectif"
-                f = f+str(eleve.id+1)
-            if f in tableaux[part].getSheets():
-                nf = tableaux[part].getSheetNum(f)
-                profs = [pr.GetNomPrenom() for pr in doc.equipe]
-                for i in range(5):
-                    try:
-                        if i < len(profs):
-                            tableaux[part].setCell(nf, l, c, profs[i])
-                        else:
-                            tableaux[part].setCell(nf, l, c, '')
-                    except:
-                        pass
-#                        log.append(u"Impossible d'écrire dans la cellule "\
-#                                   + part + str(nf) + " " + str(l) + " " + str(c))
-                    l += p
-            else:
-                log.append(u"Feuille " + f + u" non trouvée")
+        ts = [t for parts, t in tableaux.values() if part in parts]
+        if "Prof" in dicInfo.keys():
+            for t in ts:
+                f, lcp , pre = dicInfo["Prof"][0] 
+                l, c, p = lcp # ligne, colonne, période
+                if grille[1] == 'C': # fichier "Collectif"
+                    f = f+str(eleve.id+1)
+                if f in t.getSheets():
+                    nf = t.getSheetNum(f)
+                    profs = [pr.GetNomPrenom() for pr in doc.equipe]
+                    for i in range(5):
+                        try:
+                            if i < len(profs):
+                                t.setCell(nf, l, c, profs[i])
+                            else:
+                                t.setCell(nf, l, c, '')
+                        except:
+                            pass
+    #                        log.append(u"Impossible d'écrire dans la cellule "\
+    #                                   + part + str(nf) + " " + str(l) + " " + str(c))
+                        l += p
+                else:
+                    log.append(u"Feuille \"" + f + u"\" non trouvée")
         
-        if "EtabPrf" in dicInfo.keys() and part in tableaux.keys() and tableaux[part] != None:
-            f, lcp , pre = dicInfo["EtabPrf"][0] 
-            l, c, p = lcp # ligne, colonne, période
-            if grille[1] == 'C': # fichier "Collectif"
-                f = f+str(eleve.id+1)
-            if f in tableaux[part].getSheets():
-                nf = tableaux[part].getSheetNum(f)
-                profs = [doc.classe.etablissement for pr in doc.equipe]
-                for i in range(5):
-                    try:
-                        if i < len(profs):
-                            tableaux[part].setCell(nf, l, c, profs[i])
-                        else:
-                            tableaux[part].setCell(nf, l, c, '')
-                    except:
-                        pass
-#                        log.append(u"Impossible d'écrire dans la cellule "\
-#                                   + part + str(nf) + " " + str(l) + " " + str(c))
-                    l += p
-            else:
-                log.append(u"Feuille " + f + u" non trouvée")
+        if "EtabPrf" in dicInfo.keys():
+            for t in ts:
+                f, lcp , pre = dicInfo["EtabPrf"][0] 
+                l, c, p = lcp # ligne, colonne, période
+                if grille[1] == 'C': # fichier "Collectif"
+                    f = f+str(eleve.id+1)
+                if f in t.getSheets():
+                    nf = t.getSheetNum(f)
+                    profs = [doc.classe.etablissement for pr in doc.equipe]
+                    for i in range(5):
+                        try:
+                            if i < len(profs):
+                                t.setCell(nf, l, c, profs[i])
+                            else:
+                                t.setCell(nf, l, c, '')
+                        except:
+                            pass
+    #                        log.append(u"Impossible d'écrire dans la cellule "\
+    #                                   + part + str(nf) + " " + str(l) + " " + str(c))
+                        l += p
+                else:
+                    log.append(u"Feuille \"" + f + u"\" non trouvée")
                 
 #    print "log",log
     return list(set(log))
     
+    
+# ###################################################################################################
+# def modifierGrille(doc, tableaux, eleve):
+#     u""" Remplissage automatique des grilles d'évaluation
+#         
+#         :param tableaux: dictionnaire de la forme :
+#             {chemin_du_fichier_Excel_de_la_grille : (liste_des_parties_concernées, objet_tableau_Excel_ouvert)}
+#         :type tableaux: dict
+#         
+#         :param eleve: Elève concerné par la grille à modifier
+#         :type eleve: pysequence.Eleve
+#     """
+# #    print "modifierGrille", eleve
+#     
+#     log = []
+#     ref = doc.GetReferentiel()
+#     prj = doc.GetProjetRef()
+#     
+#     #
+#     # On coche les cellules "non" (uniquement grilles "Revues" STI2D)
+#     #     
+#     for part, grille in prj.grilles.items():
+#         dicInfo = prj.cellulesInfo[part]
+#         if not "NON" in dicInfo.keys():
+#             log.append(u"Manque info \"NON\" pour %s" %prj.parties[part])
+#             continue
+#         if part in ref.aColNon.keys() and ref.aColNon[part]:
+#             feuilNON = dicInfo["NON"][0][0]
+#             dicIndic = eleve.GetDicIndicateurs()
+#             dicNon = doc.GetProjetRef()._dicoIndicateurs_simple['S']
+# #            print dicInfo["NON"]
+#             colNON = dicInfo["NON"][0][1][1]
+#             
+#             # On rajoute la feuille du cadidat si elle n'existe pas encore
+#             if grille[1] == 'C': # fichier "Collectif"
+#                 feuille = feuilNON+str(eleve.id+1)
+#             else:
+#                 feuille = feuilNON
+#             
+#             for i, indics in dicNon.items():
+# #                print "   ", indics
+#                 lignes = [ind.ligne[part] for ind in indics if part in ind.ligne.keys() and ind.ligne[part] != 0]
+# #                 print "keys", part, dicIndic.keys() 
+#                 for j, ligne in enumerate(lignes):
+# #                     print "    ", i
+#                     # indic = l'indicateur "i" doit être évalué
+#                     if 'S'+i in dicIndic.keys():
+#                         indic = dicIndic['S'+i][j]
+#                     else:
+#                         indic = False
+#                     if part in tableaux.keys() and tableaux[part] != None:
+#                         if feuille in tableaux[part].getSheets():
+#                             nf = tableaux[part].getSheetNum(feuille)
+#                             if not indic: # indicateur pas évalué --> on coche NON !
+#                                 tableaux[part].setCell(nf, ligne, colNON, COCHE)
+#                             else:
+#                                 tableaux[part].setCell(nf, ligne, colNON, '')
+#                         else:
+#                             log.append(u"Feuille \"" + feuille + u"\" non trouvée")
+#                             
+#     
+# 
+#     #
+#     # On rajoute quelques informations
+#     #
+#     schem = {"Tit" : doc.intitule,
+#              "Des" : doc.intitule + "\n" + doc.problematique,
+#              "Nom" : eleve.GetNom(),
+#              "Pre" : eleve.GetPrenom(),
+#              "Etab": doc.classe.etablissement,
+#              "N-P" : eleve.GetNomPrenom(),
+#              "Sess": str(doc.annee+1)
+#              }
+# 
+#     
+#     for ct, t in tableaux.items():
+#         dicInfo = prj.cellulesInfo[ct]
+# #        print "  ", dicInfo
+# #        print "  ", ct, t
+#         for k, v in schem.items():
+#             if k in dicInfo.keys() and t != None:
+# #                print "    ", k
+#                 for d in dicInfo[k]:
+#                     f = d[0]   # Feuille
+#                     if f in t.getSheets():
+#                         nf = t.getSheetNum(f)
+#                         l, c, p = d[1] # ligne , colonne
+#                         pre = d[2]
+#                         if p > 0: # Période - pour classeurs collectifs
+#                             l += eleve.id * p
+#                         t.setCell(nf, l, c, pre+v)
+#                     else:
+#                         log.append(u"Feuille \"" + f + u"\" non trouvée")
+#     
+#     #
+#     # On rajoute les noms des professeurs
+#     #
+#     for part, grille in prj.grilles.items():
+#         dicInfo = prj.cellulesInfo[part]
+#         if "Prof" in dicInfo.keys() and part in tableaux.keys() and tableaux[part] != None:
+#             f, lcp , pre = dicInfo["Prof"][0] 
+#             l, c, p = lcp # ligne, colonne, période
+#             if grille[1] == 'C': # fichier "Collectif"
+#                 f = f+str(eleve.id+1)
+#             if f in tableaux[part].getSheets():
+#                 nf = tableaux[part].getSheetNum(f)
+#                 profs = [pr.GetNomPrenom() for pr in doc.equipe]
+#                 for i in range(5):
+#                     try:
+#                         if i < len(profs):
+#                             tableaux[part].setCell(nf, l, c, profs[i])
+#                         else:
+#                             tableaux[part].setCell(nf, l, c, '')
+#                     except:
+#                         pass
+# #                        log.append(u"Impossible d'écrire dans la cellule "\
+# #                                   + part + str(nf) + " " + str(l) + " " + str(c))
+#                     l += p
+#             else:
+#                 log.append(u"Feuille \"" + f + u"\" non trouvée")
+#         
+#         if "EtabPrf" in dicInfo.keys() and part in tableaux.keys() and tableaux[part] != None:
+#             f, lcp , pre = dicInfo["EtabPrf"][0] 
+#             l, c, p = lcp # ligne, colonne, période
+#             if grille[1] == 'C': # fichier "Collectif"
+#                 f = f+str(eleve.id+1)
+#             if f in tableaux[part].getSheets():
+#                 nf = tableaux[part].getSheetNum(f)
+#                 profs = [doc.classe.etablissement for pr in doc.equipe]
+#                 for i in range(5):
+#                     try:
+#                         if i < len(profs):
+#                             tableaux[part].setCell(nf, l, c, profs[i])
+#                         else:
+#                             tableaux[part].setCell(nf, l, c, '')
+#                     except:
+#                         pass
+# #                        log.append(u"Impossible d'écrire dans la cellule "\
+# #                                   + part + str(nf) + " " + str(l) + " " + str(c))
+#                     l += p
+#             else:
+#                 log.append(u"Feuille \"" + f + u"\" non trouvée")
+#                 
+# #    print "log",log
+#     return list(set(log))
+#     
     
     
 
