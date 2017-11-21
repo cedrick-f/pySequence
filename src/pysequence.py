@@ -836,6 +836,9 @@ class ElementBase():
         except:
             return REFERENTIELS[self.GetTypeEnseignement()]
 
+    ######################################################################################  
+    def GetLabelEleve(self):
+        return self.GetReferentiel().labels["ELEVES"][0]
 
     ######################################################################################  
     def GetProjetRef(self):
@@ -1391,9 +1394,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def getRangePeriode(self):
         return list(range(self.position[0], self.position[1]+1))
     
-    #############################################################################            
-    def getNomEleves(self):
-        return self.GetReferentiel().labels['ELEVES'][0]
+#     #############################################################################            
+#     def getNomEleves(self):
+#         return self.GetReferentiel().labels['ELEVES'][0]
     
     ######################################################################################  
     def estProjet(self):
@@ -3829,7 +3832,7 @@ class Projet(BaseDoc):
             
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.GetApp().sendEvent(modif = u"Ajout d'un "+ getSingulier(self.getNomEleves()))
+            self.GetApp().sendEvent(modif = u"Ajout d'un "+ getSingulier(self.GetLabelEleve()))
             self.OrdonnerEleves()
             self.arbre.SelectItem(e.branche)
             
@@ -3845,7 +3848,7 @@ class Projet(BaseDoc):
             
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.GetApp().sendEvent(modif = u"Ajout d'un Groupe d'"+ getPluriel(self.getNomEleves()))
+            self.GetApp().sendEvent(modif = u"Ajout d'un Groupe d'"+ getPluriel(self.GetLabelEleve()))
             self.OrdonnerEleves()
             self.arbre.SelectItem(e.branche)
 #             self.AjouterEleveDansPanelTache()
@@ -3873,7 +3876,7 @@ class Projet(BaseDoc):
         for i, e in enumerate(self.eleves):
             e.SetCode()
 
-        self.GetApp().sendEvent(modif = u"Suppression d'un "+ getSingulier(self.getNomEleves()))
+        self.GetApp().sendEvent(modif = u"Suppression d'un "+ getSingulier(self.GetLabelEleve()))
         
         
     ######################################################################################  
@@ -3895,7 +3898,7 @@ class Projet(BaseDoc):
         for i, e in enumerate(self.groupes):
             e.SetCode()
 
-        self.GetApp().sendEvent(modif = u"Suppression d'un groupe d'"+ getPluriel(self.getNomEleves()))
+        self.GetApp().sendEvent(modif = u"Suppression d'un groupe d'"+ getPluriel(self.GetLabelEleve()))
     
     ######################################################################################  
     def OrdonnerEleves(self):
@@ -3985,7 +3988,7 @@ class Projet(BaseDoc):
         #
         # Les élèves
         #
-        self.brancheElv = arbre.AppendItem(self.branche, getPluriel(self.getNomEleves()).capitalize(), data = "Ele",
+        self.brancheElv = arbre.AppendItem(self.branche, getPluriel(self.GetLabelEleve()).capitalize(), data = "Ele",
                                            image = self.arbre.images["Grp"])
         for e in self.eleves:
             e.ConstruireArbre(arbre, self.brancheElv) 
@@ -4021,7 +4024,7 @@ class Projet(BaseDoc):
             ... ou bien celui de itemArbre concerné ...
         """
 #         print "AfficherMenuContextuel"
-#         print self.arbre.GetItemText(itemArbre), getPluriel(self.getNomEleves())
+#         print self.arbre.GetItemText(itemArbre), getPluriel(self.GetLabelEleve())
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer,
                                               getIconeFileSave()],
@@ -4057,10 +4060,10 @@ class Projet(BaseDoc):
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Support):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
-        elif self.arbre.GetItemText(itemArbre) == getPluriel(self.getNomEleves()).capitalize(): # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un "+ getSingulier(self.getNomEleves()), self.AjouterEleve, 
+        elif self.arbre.GetItemText(itemArbre) == getPluriel(self.GetLabelEleve()).capitalize(): # Eleve
+            self.app.AfficherMenuContextuel([[u"Ajouter un "+ getSingulier(self.GetLabelEleve()), self.AjouterEleve, 
                                               scaleImage(images.Icone_ajout_eleve.GetBitmap())],
-                                             [u"Ajouter un groupe d'"+ getPluriel(self.getNomEleves()), self.AjouterGroupe, 
+                                             [u"Ajouter un groupe d'"+ getPluriel(self.GetLabelEleve()), self.AjouterGroupe, 
                                               scaleImage(images.Icone_ajout_groupe.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
@@ -4269,7 +4272,7 @@ class Projet(BaseDoc):
 #        print "position", self.position
         
         if hasattr(self, 'brancheElv'):
-            self.brancheElv.SetText(getPluriel(self.getNomEleves()).capitalize())
+            self.brancheElv.SetText(getPluriel(self.GetLabelEleve()).capitalize())
             self.arbre.Layout()
             self.arbre.Refresh()
         
@@ -10439,6 +10442,8 @@ class Personne(ElementBase):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("tit", getSingulier(self.GetLabelEleve()).capitalize(), bold = True, size=6)
+        
         if hasattr(self, 'referent'):
             bold = self.referent
         else:
@@ -10474,7 +10479,7 @@ class Eleve(Personne, ElementBase):
     def __init__(self, doc, ident = 0, nom = u"", prenom = u""):
         
 #         self.titre = u"élève"
-        self.titre = getSingulier(doc.getNomEleves())
+        self.titre = getSingulier(doc.GetLabelEleve())
         self.code = "Elv"
         
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]

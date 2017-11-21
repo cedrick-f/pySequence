@@ -152,6 +152,29 @@ def table_taches(taches, eleves, projet):
             
     return h
 
+def case_a_cocher(labels, etats):
+    u"""
+    :param labels: chaine de caractères comportant l'ensemble des libellé des cases
+                    colonnes séparées par "\n\n"
+                    libélés séparés par "\n"
+    :type labels: string
+    
+    :param etats: 
+    :type etats: list
+    
+    """
+    colonnes = labels.split(u"\n\n")
+    html = u""
+    e = 0
+    for c in colonnes:
+        typo = c.split(u"\n")
+        hc = []
+        for i, t in enumerate(typo):
+            hc.append(checkbox(e in etats) + t)
+            e += 1
+        html += encap("<br>".join(hc), "td")
+    
+    return encap(encap(html, "tr"), "table")
 
 #######################################################################################################################
 #
@@ -219,10 +242,10 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
         le.append(np)
     NE = liste(le) 
     
-    # Typologie
-    typo = projet.GetProjetRef().attributs['TYP'][2].split(u"\n")
-    TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
-
+    # Typologie (cases à cocher)
+#     typo = projet.GetProjetRef().attributs['TYP'][2].split(u"\n")
+#     TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
+    TY = case_a_cocher(projet.GetProjetRef().attributs['TYP'][2], projet.typologie)
     
     etab = projet.classe.etablissement+"<br>("+italic(projet.classe.ville)+u")"
     

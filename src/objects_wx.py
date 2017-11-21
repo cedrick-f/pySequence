@@ -603,8 +603,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def GetTools(self, typ):
         ts = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         if typ == 'prj':
-            el = u"élève" #getSingulier(self.support.GetReferentiel().labels["ELEVES"][0])
-            els = u"élèves" #getPluriel(self.support.GetReferentiel().labels["ELEVES"][0])
+            el = u"élève" #getSingulier(self.support.GetLabelEleve())
+            els = u"élèves" #getPluriel(self.support.GetLabelEleve())
             return [(50 , BoutonToolBar(u"Ajouter un %s" %el,
                                    scaleImage(images.Icone_ajout_eleve.GetBitmap(),
                                                   *ts), 
@@ -1534,13 +1534,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 
                 for tool in self.tools[fenDoc.typ]:
                     if tool.GetId() == 50:
-                        tool.SetLabel(u"Ajouter un %s" %getSingulier(fenDoc.projet.getNomEleves()))
-                        tool.SetShortHelp(u"Ajout d'un %s au projet" %getSingulier(fenDoc.projet.getNomEleves()))
-                        tool.SetLongHelp(u"Ajout d'un %s au projet" %getSingulier(fenDoc.projet.getNomEleves()))
+                        tool.SetLabel(u"Ajouter un %s" %getSingulier(fenDoc.projet.GetLabelEleve()))
+                        tool.SetShortHelp(u"Ajout d'un %s au projet" %getSingulier(fenDoc.projet.GetLabelEleve()))
+                        tool.SetLongHelp(u"Ajout d'un %s au projet" %getSingulier(fenDoc.projet.GetLabelEleve()))
                     elif tool.GetId() == 54:
-                        tool.SetLabel(u"Ajouter un groupe d'%s" %getPluriel(fenDoc.projet.getNomEleves()))
-                        tool.SetShortHelp(u"Ajout d'un groupe d'%s au projet" %getPluriel(fenDoc.projet.getNomEleves()))
-                        tool.SetLongHelp(u"Ajout d'un groupe d'%s au projet" %getPluriel(fenDoc.projet.getNomEleves()))
+                        tool.SetLabel(u"Ajouter un groupe d'%s" %getPluriel(fenDoc.projet.GetLabelEleve()))
+                        tool.SetShortHelp(u"Ajout d'un groupe d'%s au projet" %getPluriel(fenDoc.projet.GetLabelEleve()))
+                        tool.SetLongHelp(u"Ajout d'un groupe d'%s au projet" %getPluriel(fenDoc.projet.GetLabelEleve()))
                 
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
@@ -2804,7 +2804,7 @@ class FenetreProjet(FenetreDocument):
         #
 #         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
         self.pageDetails = Panel_Details(self.nb)
-        self.nb.AddPage(self.pageDetails, u"Tâches %s détaillées" %getPluriel(self.projet.GetReferentiel().labels["ELEVES"][0]))
+        self.nb.AddPage(self.pageDetails, u"Tâches %s détaillées" %getPluriel(self.projet.GetLabelEleve()))
         
         #
         # Dossier de validation
@@ -3477,7 +3477,7 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.nb.SetPageText(1, u"Tâches %s détaillées" %getPluriel(self.projet.GetReferentiel().labels["ELEVES"][0]))
+        self.nb.SetPageText(1, u"Tâches %s détaillées" %getPluriel(self.projet.GetLabelEleve()))
         self.parent.OnDocChanged()
     
 #class ThreadRedess(Thread):
@@ -5575,7 +5575,8 @@ class PanelPropriete_Projet(PanelPropriete):
                 
                 self.nb.AddPage(self.pages['TYP'], ref.attributs['TYP'][0])
                 
-                liste = ref.attributs['TYP'][2].split(u"\n")
+                lab = ref.attributs['TYP'][2].replace(u"\n\n", u"\n")
+                liste = lab.split(u"\n")
                 self.lb = wx.CheckListBox(self.pages['TYP'], -1, (80*SSCALE, 50*SSCALE), wx.DefaultSize, liste)
                 self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.lb)
                 
@@ -7008,11 +7009,11 @@ class PanelEffectifsClasse(wx.Panel):
         bsizerClasse.Add(sizerClasse_b)
         
         # Effectif de la classe
-        self.vEffClas = Variable(u"Nombre d'%s" %getPluriel(self.classe.GetReferentiel().labels["ELEVES"][0]),  
+        self.vEffClas = Variable(u"Nombre d'%s" %getPluriel(self.classe.GetLabelEleve()),  
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,40])
         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = u"Nombre d'%s dans la classe entiére" %getPluriel(self.classe.GetReferentiel().labels["ELEVES"][0]), 
+                                help = u"Nombre d'%s dans la classe entiére" %getPluriel(self.classe.GetLabelEleve()), 
                                 sizeh = 30*SSCALE, 
                                 color = coulClasse, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
@@ -9541,7 +9542,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Elèves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, u"%s impliqués" %getPluriel(self.tache.GetReferentiel().labels["ELEVES"][0]).Capitalize())
+            self.box = myStaticBox(pageGen, -1, u"%s impliqués" %getPluriel(self.tache.GetLabelEleve()).capitalize())
 #            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
@@ -9564,7 +9565,7 @@ class PanelPropriete_Tache(PanelPropriete):
                             u" - les résultats attendus\n" \
                             u" - les différentes étapes\n" \
                             u" - la répartition du travail entre les %s\n"\
-                            u" - ..." %getPluriel(self.tache.GetReferentiel().labels["ELEVES"][0]))
+                            u" - ..." %getPluriel(self.tache.GetLabelEleve()))
         tc.SetTitre(u"Description détaillée de la tâche")
      
 
@@ -9969,7 +9970,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.GetDocument().MiseAJourTachesEleves()
         
         self.ConstruireCasesEleve()
-        self.sendEvent(modif = u"Changement d'%s concerné par la tâche" %getSingulier(self.tache.GetReferentiel().labels["ELEVES"][0]))    
+        self.sendEvent(modif = u"Changement d'%s concerné par la tâche" %getSingulier(self.tache.GetLabelEleve()))    
 
 
     #############################################################################            
@@ -10877,7 +10878,7 @@ class PanelPropriete_Personne(PanelPropriete):
 #         label = self.lb.GetString(index)
         self.personne.AjouterEnleverModele(index)
         
-        self.sendEvent(modif = u"Modification des modèles associés à l'%s" %getSingulier(self.personne.GetDocument().getNomEleves()))
+        self.sendEvent(modif = u"Modification des modèles associés à l'%s" %getSingulier(self.personne.GetLabelEleve()))
         
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
@@ -11302,7 +11303,7 @@ class PanelPropriete_Support(PanelPropriete):
         textctrl.SetTitre(u"Nom du support")
         textctrl.SetToolTipString(u"Le support est le matériel ou logiciel\n" \
                                   u"sur lequel les %s réalisent\n" \
-                                  u"les modélisations et expérimentations." %getPluriel(self.support.GetReferentiel().labels["ELEVES"][0]).capitalize())
+                                  u"les modélisations et expérimentations." %getPluriel(self.support.GetLabelEleve()).capitalize())
         self.textctrl = textctrl
         bsizer.Add(textctrl, 1, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -13096,7 +13097,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             self.SetColumnWidth(i+1, 0)
         
         self.colEleves = len(prj.parties.keys())+1
-        self.AddColumn(getPluriel(tache.projet.GetReferentiel().labels["ELEVES"][0]))#(u"Eleves")
+        self.AddColumn(getPluriel(tache.projet.GetLabelEleve()))#(u"Eleves")
         self.SetColumnWidth(self.colEleves, 0)
         
         

@@ -828,7 +828,7 @@ def encap_HTML(s):
 
 
 BASE_FICHE_HTML_ELEVE = u"""
-    <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
+    <p id = "tit" style="text-align: center;"><font size="12"><b></b></font></p>
     
     <table border="0" width = "100%">
         <tbody>
