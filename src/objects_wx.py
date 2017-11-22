@@ -5533,7 +5533,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.intctrl.SetTitre(u"Intitulés des différentes parties")
                 self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               u"Les groupes d'%s sont désignés par des lettres (A, B, C, ...)\n" \
-                                              u"et leur effectif est indiqué." %getPluriel(ref.labels["ELEVES"][0]))
+                                              u"et leur effectif est indiqué." %getPluriel(self.projet.GetLabelEleve()))
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
 #                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intctrl)
                 self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intctrl)

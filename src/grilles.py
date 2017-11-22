@@ -87,7 +87,7 @@ def ouvrirXLS(fichier):
     fichier = getFullNameGrille(fichier)
     tableau = None
     err = 0
-    
+#     print "ouvrirXLS", fichier
     if os.path.isfile(fichier):
         try:
             tableau = PyExcel(fichier)
@@ -126,7 +126,10 @@ def getTableau(win, nomFichier):
     
     elif err&1 != 0:
         messageErreur(win, u"Lancement d'Excel impossible !",
-                      u"L'application Excel ne semble pas installée !")
+                      u"L'erreur peut avoir une des causes suivantes :\n" \
+                      u" - L'application Excel n'est pas installée.\n" \
+                      u" - Le fichier original de la grille n'a pas la bonne extention.\n"
+                      )
         
 #    elif err&2 != 0:
 #        messageErreur(parent, u"Fichier non trouvé !",
@@ -319,12 +322,13 @@ def modifierGrille(doc, tableaux, eleve):
              "N-P" : eleve.GetNomPrenom(),
              "Sess": str(doc.annee+1)
              }
-
+#     print schem
     for parts, t in tableaux.values():
         for part in parts:
+#             print ">>>", part
             dicInfo = prj.cellulesInfo[part]
-    #        print "  ", dicInfo
-    #        print "  ", ct, t
+#             print "  ", dicInfo
+#             print "  ", t
             for k, v in schem.items():
                 if k in dicInfo.keys() and t != None:
     #                print "    ", k

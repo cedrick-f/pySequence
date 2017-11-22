@@ -10397,7 +10397,7 @@ class Personne(ElementBase):
     ######################################################################################  
     def GetNomPrenom(self, disc = False):
         if disc and hasattr(self, 'discipline') and constantes.CODE_DISCIPLINES[self.discipline] != u"":
-            d = u' ('+constantes.CODE_DISCIPLINES[self.discipline]+')'
+            d = u' ('+constantes.CODE_DISCIPLINES[self.discipline]+u')'
         else:
             d = u""
         if self.nom == "" and self.prenom == "":
