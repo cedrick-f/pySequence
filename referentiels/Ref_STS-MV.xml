@@ -1,0 +1,1750 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_MV" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomDom="Domaine(s) du socle" S_nomFonctions="Activités professionnelles" S_nomPb="Problématique(s)" S_nomTaches="Compétences associées" S_nomTh="Thématique(s)">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="https://www.sup.adc.education.fr/btslst/referentiel/bts_maintenancevehiculesoptabc.pdf" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="STS/MV" />
+  <l_CentresInterets S_00="Mise en service d’un système d’un ouvrage ou d’un équipement" S_01="La distribution de l’énergie électrique" S_02="Comportement des charges mécaniques" S_03="Les différents procédés de transformation de l’énergie" S_04="La réversibilité énergétique" S_05="Dimensionnement énergétique dans les systèmes autonomes et embarqués" S_06="La qualité de l’énergie électrique" S_07="La gestion des coûts" S_08="Asservissement et régulation" S_09="Les équipements communicants" />
+  <l_Enseignement S_00="STS-MV" S_01="BTS - Maintenance de Véhicules" S_02="STS" S_03="Section de Technicien Supérieur" />
+  <d_aColNon B_C="True" B_S="True" />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+  </d_activites>
+  <d_compImposees B_C="True" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
+  </d_demarcheSeance>
+  <d_demarches />
+  <d_dicFonctions>
+    <l_F1 S_00="Étude technique et économique">
+      <d_01>
+        <l_T1.8 S_00="Répondre à un besoin de formation">
+          <l_01 S_00="C01" S_01="C04" S_02="C16" />
+        </l_T1.8>
+        <l_T1.7 S_00="Contribuer à la conception de la procédure de test, à la définition des moyens et à l’interprétation des résultats">
+          <l_01 S_00="P" />
+        </l_T1.7>
+        <l_T1.6 S_00="Analyser les causes d’un dysfonctionnement et faire évoluer les solutions techniques">
+          <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C07" S_04="C08" S_05="C09" S_06="C11" S_07="C14" S_08="C15" />
+        </l_T1.6>
+        <l_T1.5 S_00="Élaborer une offre adaptée (chiffrage et devis) au cahier des charges en déterminant les moyens d’exécution prévisionnels">
+          <l_01 S_00="C04" S_01="C05" S_02="C09" S_03="C11" />
+        </l_T1.5>
+        <l_T1.4 S_00="Réaliser les dossiers techniques de fabrication et d’exécution de chantier">
+          <l_01 S_00="C09" S_01="C10" S_02="C11" S_03="C12" S_04="C13" />
+        </l_T1.4>
+        <l_T1.3 S_00="Concevoir des solutions techniques et des processus de fabrication dans le respect du cahier des charges et des contraintes imposées par le procédé">
+          <l_01 S_00="C02" S_01="C03" S_02="C07" S_03="C08" />
+        </l_T1.3>
+        <l_T1.2 S_00="Contribuer à l’analyse fonctionnelle">
+          <l_01 S_00="P" />
+        </l_T1.2>
+        <l_T1.1 S_00="Analyser les cahiers des charges et les appels d’offre">
+          <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C04" S_04="C05" S_05="C06" />
+        </l_T1.1>
+      </d_01>
+      <l_02 />
+    </l_F1>
+    <l_F2 S_00="Réalisation - exécution - industrialisation">
+      <d_01>
+        <l_T2.1 S_00="Contribuer au développement des produits en intégrant les contraintes de fabrication">
+          <l_01 S_00="P" />
+        </l_T2.1>
+        <l_T2.2 S_00="Adapter des solutions techniques y compris dans le cadre d’une prestation de service">
+          <l_01 S_00="C01" S_01="C02" S_02="C07" S_03="C09" S_04="C11" />
+        </l_T2.2>
+        <l_T2.3 S_00="Pour la partie électrique, régler les paramètres des procédés et mettre au point le processus de fabrication">
+          <l_01 S_00="C04" S_01="C06" S_02="C17" S_03="C18" S_04="C19" S_05="C20" />
+        </l_T2.3>
+        <l_T2.4 S_00="Proposer des améliorations de procédé et d’organisation">
+          <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C07" S_04="C14" />
+        </l_T2.4>
+        <l_T2.5 S_00="Réaliser un ouvrage, un équipement ou un produit en suivant un dossier de fabrication ou d’exécution de chantier">
+          <l_01 S_00="C01" S_01="C06" S_02="C21" />
+        </l_T2.5>
+        <l_T2.6 S_00="Appliquer les textes administratifs et réglementaires">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C17" S_04="C18" />
+        </l_T2.6>
+      </d_01>
+      <l_02 />
+    </l_F2>
+    <l_F3 S_00="Planification, suivi technique et maîtrise des coûts">
+      <d_01>
+        <l_T3.5 S_00="Suivre les coûts, les délais et la qualité de réalisation, dans le cadre d’une gestion de projet">
+          <l_01 S_00="C01" S_01="C04" S_02="C11" S_03="C24" S_04="C25" S_05="C26" />
+        </l_T3.5>
+        <l_T3.4 S_00="Préparer, planifier l’intervention sur un chantier, une installation ou un équipement">
+          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C23" S_04="C25" />
+        </l_T3.4>
+        <l_T3.7 S_00="Fournir un appui technique aux opérateurs de fabrication">
+          <l_01 S_00="C01" S_01="C03" S_02="C04" S_03="C16" S_04="C28" />
+        </l_T3.7>
+        <l_T3.6 S_00="Rechercher et décider du recours à la sous-traitance">
+          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C11" S_04="C25" />
+        </l_T3.6>
+        <l_T3.1 S_00="Programmer et assurer le suivi de la réalisation des prototypes et des essais">
+          <l_01 S_00="C01" S_01="C05" S_02="C15" S_03="C22" S_04="C23" S_05="C24" />
+        </l_T3.1>
+        <l_T3.3 S_00="Organiser l’ordonnancement, la logistique et la gestion des flux de matière d’oeuvre, à partir des prévisions de commande et des moyens matériels disponibles">
+          <l_01 S_00="C04" S_01="C05" S_02="C23" S_03="C27" />
+        </l_T3.3>
+        <l_T3.2 S_00="Assurer le suivi de l’ensemble du cycle d’achat depuis la prescription">
+          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C24" S_04="C25" S_05="C26" />
+        </l_T3.2>
+      </d_01>
+      <l_02 />
+    </l_F3>
+    <l_F4 S_00="Animation et coordination d'équipes">
+      <d_01>
+        <l_T4.6 S_00="Participer à l’animation du réseau de distributeurs, d’installateurs et de bureaux d’études">
+          <l_01 S_00="P" />
+        </l_T4.6>
+        <l_T4.4 S_00="Accueillir les intervenants sur le chantier en appliquant les règles d’hygiène et de sécurité">
+          <l_01 S_00="C01" S_01="C13" S_02="C28" />
+        </l_T4.4>
+        <l_T4.5 S_00="Coordonner des actions de formation ou d’information technique client">
+          <l_01 S_00="P" />
+        </l_T4.5>
+        <l_T4.2 S_00="Assurer une gestion des ressources humaines dans le cadre de la responsabilité hiérarchique">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C28" />
+        </l_T4.2>
+        <l_T4.3 S_00="Animer des groupes de travail dans le cadre d’une procédure « qualité »">
+          <l_01 S_00="C01" S_01="C14" S_02="C28" />
+        </l_T4.3>
+        <l_T4.1 S_00="Assurer une responsabilité hiérarchique dans le cadre d’un projet ou d’une réalisation">
+          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C23" S_04="C24" S_05="C28" S_06="C29" />
+        </l_T4.1>
+      </d_01>
+      <l_02 />
+    </l_F4>
+    <l_F5 S_00="Essais - mise en service - contrôles">
+      <d_01>
+        <l_T5.3 S_00="Réaliser les essais et les mesures nécessaires à la qualification d’un ouvrage, d’un équipement, d'un produit ou d'un moyen de production">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C13" S_04="C17" S_05="C18" S_06="C20" />
+        </l_T5.3>
+        <l_T5.2 S_00="Suivre les indicateurs d’assurance « qualité » d’un approvisionnement de composants ou de constituants de base">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C17" S_04="C18" />
+        </l_T5.2>
+        <l_T5.1 S_00="Contrôler la conformité d’un produit ou d’un travail réalisé et Contrôler la conformité d’un produit ou d’un travail réalisé et mettre en place des actions correctives">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C13" S_04="C14" S_05="C17" S_06="C18" S_07="C19" S_08="C20" />
+        </l_T5.1>
+        <l_T5.5 S_00="Procéder à la réception avec le client">
+          <l_01 S_00="C01" S_01="C06" S_02="C17" S_03="C18" S_04="C28" />
+        </l_T5.5>
+        <l_T5.4 S_00="Effectuer la mise en service dans le respect des règles de sécurité">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C10" S_04="C13" S_05="C14" S_06="C17" S_07="C18" S_08="C20" />
+        </l_T5.4>
+      </d_01>
+      <l_02 />
+    </l_F5>
+    <l_F6 S_00="Maintenance - service après vente">
+      <d_01>
+        <l_T6.1 S_00="Organiser des interventions de maintenance, locales ou à distance.">
+          <l_01 S_00="C01" S_01="C06" S_02="C12" S_03="C15" S_04="C18" S_05="C23" S_06="C30" />
+        </l_T6.1>
+        <l_T6.2 S_00="Réaliser les réglages, corrections, expertises et dépannages sur une installation.">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C11" S_04="C14" S_05="C15" S_06="C19" S_07="C20" S_08="C31" />
+        </l_T6.2>
+      </d_01>
+      <l_02 />
+    </l_F6>
+    <l_F7 S_00="Relations clients - fournisseurs">
+      <d_01>
+        <l_T7.1 S_00="Conseiller techniquement le client ou l'orienter vers l’interlocuteur approprié">
+          <l_01 S_00="C01" S_01="C06" S_02="C07" S_03="C28" S_04="C32" />
+        </l_T7.1>
+        <l_T7.3 S_00="Participer aux négociations avec les fournisseurs et le client">
+          <l_01 S_00="P" />
+        </l_T7.3>
+        <l_T7.2 S_00="Collaborer avec les fournisseurs pour la conception en soutenant la solution retenue">
+          <l_01 S_00="P" />
+        </l_T7.2>
+        <l_T7.5 S_00="Former le client à la prise en main et au dépannage de premier niveau de son installation">
+          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C07" S_04="C16" S_05="C28" />
+        </l_T7.5>
+        <l_T7.4 S_00="Informer le client sur l'état d’avancement des travaux">
+          <l_01 S_00="C01" S_01="C06" S_02="C25" S_03="C28" />
+        </l_T7.4>
+        <l_T7.6 S_00="Animer des réunions ou intervenir dans des conférences techniques">
+          <l_01 />
+        </l_T7.6>
+      </d_01>
+      <l_02 />
+    </l_F7>
+  </d_dicFonctions>
+  <d_dicoCompetences>
+    <Competences_S B_obj="False" B_pre="False" S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicCompetences>
+        <Competence_C23 S_intitule="Effectuer des mesures, des essais">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids I_C="30" I_S="30" />
+          <d_sousComp>
+            <Competence_C23.4 S_intitule="Evaluer les performances d'un système à partir des valeurs mesurées">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les valeurs relevées permettent d'évaluer les performances">
+                  <d_ligne I_S="18" />
+                  <d_poids F_S="25.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C23.4>
+            <Competence_C23.1 S_intitule="Rechercher et / ou définir les--mesures et les tests à mettre--en oeuvre.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les procédures de contrôle du constructeur--sont identifiées.">
+                  <d_ligne I_C="7" />
+                  <d_poids F_C="14.285714" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le choix des mesures et des tests est pertinent--et permet de valider la fonction testée tout en--respectant les procédures de sécurité.">
+                  <d_ligne I_C="8" />
+                  <d_poids F_C="14.285714" />
+                  <d_revue I_C="2" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="La chronologie proposée est pertinente">
+                  <d_ligne I_C="9" />
+                  <d_poids F_C="9.52381" />
+                  <d_revue I_C="2" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les conditions de mesures ou de tests--à mettre en oeuvre sont identifiées.">
+                  <d_ligne I_C="10" />
+                  <d_poids F_C="23.809524" />
+                  <d_revue I_C="2" />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="Les tests et mesures définis respectent les--biens, les personnes et l’environnement.">
+                  <d_ligne I_C="11" />
+                  <d_poids F_C="4.761905" />
+                  <d_revue I_C="2" />
+                </Indicateur_04>
+                <Indicateur_05 S_intitule="Les outillages et moyens nécessaires sont--identifiés.">
+                  <d_ligne I_C="12" />
+                  <d_poids F_C="9.52381" />
+                  <d_revue I_C="2" />
+                </Indicateur_05>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C23.1>
+            <Competence_C23.3 S_intitule="Réaliser les tests et mesures">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les conditions de mesures sont respectées">
+                  <d_ligne I_S="15" />
+                  <d_poids F_S="30.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La mise en œuvre des appareils de mesure permet d'obtenir des valeurs exploitables et en relation avec les hypothèses">
+                  <d_ligne I_S="16" />
+                  <d_poids F_S="10.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les valeurs sont correctement exprimées (unités)">
+                  <d_ligne I_S="17" />
+                  <d_poids F_S="10.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C23.3>
+            <Competence_C23.2 S_intitule="Exploiter les outils de diagnostic">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les procédures d'utilisation des outils de diagnostic sont maîtrisées.">
+                  <d_ligne I_C="13" />
+                  <d_poids F_C="23.809524" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les informations fournies par les outils de diagnostic sont analysées (lecture des défauts, des paramètres, des tests actionneurs)">
+                  <d_ligne I_S="14" />
+                  <d_poids F_S="25.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C23.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C23>
+        <Competence_C43 S_intitule="Rédiger un document de synthèse">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids I_C="20" I_S="20" />
+          <d_sousComp>
+            <Competence_C43.3 S_intitule="Consulter l'historique du véhicule">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les supports existants sont consultés (base de données, outil de diagnostic, carnet de bord, factures)">
+                  <d_ligne I_C="24" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.3>
+            <Competence_C43.2 S_intitule="Collecter les informations sur le symptôme client et l'usage du véhicule">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le questionnement est adapté au symptôme">
+                  <d_ligne I_C="22" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les termes utilisés par le client sont traduits et reformulés dans un langage technique">
+                  <d_ligne I_C="23" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.2>
+            <Competence_C43.1 S_intitule="Collecter les informations administratives nécessaires à la réception du véhicule">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les informations collectées permettent de compléter les documents administratifs">
+                  <d_ligne I_C="20" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La procédure de réception est respectée">
+                  <d_ligne I_C="21" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.1>
+            <Competence_C43.7 S_intitule="Consulter les notices des nouveaux équipements">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La lecture des notices permet l'utilisation des matériels">
+                  <d_ligne I_C="28" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.7>
+            <Competence_C43.6 S_intitule="Dialoguer avec les systèmes embarqués">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les informations liées à l'outil de diagnostic sont bien exploitées">
+                  <d_ligne I_S="27" />
+                  <d_poids F_S="100.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.6>
+            <Competence_C43.5 S_intitule="Utiliser les informations techniques fournies par le constructeur">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les supports fournis par le constructeur (documentation en ligne) sont bien utilisés">
+                  <d_ligne I_C="26" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.5>
+            <Competence_C43.4 S_intitule="Identifier les systèmes embarqués">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La marque, le type et la version des éléments (calculateurs et logiciels) sont identifiés">
+                  <d_ligne I_C="25" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.4>
+            <Competence_C43.8 S_intitule="Collecter les données nécessaires au calcul des indicateurs de performance atelier">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les données nécessaires au calcul des ratios de performance de l'atelier (productivité, etc.) sont bien identifiées et collectées">
+                  <d_ligne I_C="29" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les données nécessaires au calcul des indices de satisfaction &quot;clientèle&quot; sont bien identifiées et collectées">
+                  <d_ligne I_C="30" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="2" />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C43.8>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C43>
+        <Competence_P S_intitule="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_P>
+        <Competence_C01 S_intitule="Communiquer">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C01>
+        <Competence_C03 S_intitule="Proposer">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C03>
+        <Competence_C05 S_intitule="Réaliser">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C05>
+        <Competence_C06 S_intitule="Prévenir">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C06>
+      </d_dicCompetences>
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
+    <Savoirs_P B_obj="True" B_pre="True" S_abrDiscipline="S5" S_codeDiscipline="Phy" S_nomDiscipline="Sciences Appliquées" S_nomGenerique="Savoirs">
+      <d_dicSavoirs>
+        <l_A S_00="Sciences appliquées à l’électrotechnique :">
+          <d_01>
+            <l_A.4 S_00="Électrothermie :">
+              <d_01>
+                <l_A.4.1 S_00="Les différents modes de transmissions de la chaleur : convection, conduction, rayonnement">
+                  <d_01 />
+                </l_A.4.1>
+                <l_A.4.2 S_00="Résistance et capacité thermiques : modélisation.">
+                  <d_01 />
+                </l_A.4.2>
+                <l_A.4.3 S_00="Différents procédés de production de la chaleur (résistance, induction, micro-ondes, infrarouge) : principe, caractéristiques principales, réglages.">
+                  <d_01 />
+                </l_A.4.3>
+              </d_01>
+            </l_A.4>
+            <l_A.5 S_00="Régimes transitoires dans les systèmes physiques :">
+              <d_01>
+                <l_A.5.1 S_00="Régime permanent et régime transitoire :">
+                  <l_01 S_00="Définitions ;" S_01="Système linéaire du premier ordre, système linéaire du second ordre et équations différentielles associées (écriture normalisée) ;" S_02="Réponse à un échelon." />
+                </l_A.5.1>
+                <l_A.5.2 S_00="Applications à quelques exemples :">
+                  <l_01 S_00="en électricité ;" S_01="en mécanique ;" S_02="en électrothermie." />
+                </l_A.5.2>
+              </d_01>
+            </l_A.5>
+            <l_A.1 S_00="Électricité générale :">
+              <d_01>
+                <l_A.1.1 S_00="Circuits en régime variable :">
+                  <l_01 S_00="Dipôles passifs, dipôles actifs, lois générales associées ;" S_01="Électromagnétisme : induction électromagnétique, loi de Lenz, force électromotrice, D8inductance, induction mutuelle, auto-induction, tension induite dans un conducteur ;" S_02="Circuits magnétiques : loi d’Hopkinson, théorème d’Ampère, influence d’un entrefer, aimants permanents." />
+                </l_A.1.1>
+                <l_A.1.3 S_00="Circuits en régime périodique (permanent) :">
+                  <l_01 S_00="Valeurs moyenne et efficace, facteur de forme ;" S_01="Principe de superposition ; théorème de Fourier ;" S_02="Puissances en régime périodique : application limitée au cas où l’une des deux grandeurs tension, intensité est sinusoïdale et l’autre pas. ;" S_03="Puissances active, réactive, déformante, apparente, facteur de puissance." />
+                </l_A.1.3>
+                <l_A.1.2 S_00="Circuits en régime sinusoïdal (permanent, monophasé) :">
+                  <l_01 S_00="Représentation de Fresnel. Notation complexe ;" S_01="Dipôles passifs et dipôles actifs ;" S_02="Loi d’Ohm généralisée et théorème de Thévenin ;" S_03="Quadripôles adaptateurs : adaptation d’un signal en impédance, en tension, en courant ; impédance caractéristique ;" S_04="Puissances, facteur de puissance ;" S_05="Circuits magnétiques (bobine à noyau de fer : modèle équivalent)." />
+                </l_A.1.2>
+                <l_A.1.5 S_00="Ondes :">
+                  <l_01 S_00="Ondes progressives : quelques exemples d’ondes et leurs caractéristiques ; lois de la réflexion et de la réfraction ;" S_01="Notions d’optique ondulatoire et géométrique (miroir plan, lentilles minces et fibre optique) ;" S_02="Description des principes physiques mis en jeu dans quelques sources lumineuses : sources à incandescence et sources à décharge ;" S_03="Grandeurs photométriques d’émission : flux énergétique, flux lumineux et éclairement ;" S_04="Perturbations électromagnétiques par conduction par induction, par effet capacitif, par rayonnement : causes, effets, remèdes." />
+                </l_A.1.5>
+                <l_A.1.4 S_00="Système triphasé :">
+                  <l_01 S_00="Tensions et courants triphasés ;" S_01="Montage étoile, montage en triangle ;" S_02="Systèmes équilibrés et déséquilibrés en courant ;" S_03="Schéma monophasé équivalent ;" S_04="Champs tournants ;" S_05="Puissances." />
+                </l_A.1.4>
+              </d_01>
+            </l_A.1>
+            <l_A.2 S_00="Énergie">
+              <d_01>
+                <l_A.2.2 S_00="Production d’énergie électrique :">
+                  <l_01 S_00="Centrales thermique, hydraulique et nucléaire ;" S_01="Énergie éolienne ;" S_02="Énergie photovoltaïque ;" S_03="Cogénération ;" S_04="Sources d’énergie autonomes : piles, accumulateurs, piles à combustible." />
+                </l_A.2.2>
+                <l_A.2.1 S_00="Les différentes formes d’énergie :">
+                  <l_01 S_00="Énergies renouvelables ;" S_01="Transformation et conservation de l’énergie ;" S_02="Pertes et rendement." />
+                </l_A.2.1>
+              </d_01>
+            </l_A.2>
+            <l_A.3 S_00="Solide et fluide en mouvement :">
+              <d_01>
+                <l_A.3.3 S_00="Moteurs électriques et charges mécaniques">
+                  <l_01 S_00="Caractéristiques couple vitesse de quelques moteurs électriques ;" S_01="Caractéristiques couple vitesse de diverses charges mécaniques : charges à couple constant, parabolique ou hyperbolique ;" S_02="Point de fonctionnement ;" S_03="Critères de stabilité ;" S_04="Adaptation vitesse moment d’inertie ;" S_05="Études de cas usuels portant sur des ensembles comprenant moteurs et masses à mettre en mouvement ;" />
+                </l_A.3.3>
+                <l_A.3.2 S_00="Aspect énergétique">
+                  <l_01 S_00="Travail, puissance, rendement ;" S_01="Énergie cinétique, énergie potentielle, énergie mécanique ;" S_02="Frottements." />
+                </l_A.3.2>
+                <l_A.3.1 S_00="Principe fondamental de la dynamique appliqué au solide :">
+                  <l_01 S_00="En mouvement de translation ;" S_01="En mouvement de rotation autour d'un axe fixe." />
+                </l_A.3.1>
+                <l_A.3.4 S_00="Dynamique des fluides">
+                  <l_01 S_00="Débit ;" S_01="Viscosité ;" S_02="Théorème de Bernoulli ;" S_03="Pertes de charge." />
+                </l_A.3.4>
+              </d_01>
+            </l_A.3>
+          </d_01>
+        </l_A>
+        <l_C S_00="Transformateurs et redresseurs :">
+          <d_01>
+            <l_C.4 S_00="Associations redresseur machine à courant continu :">
+              <d_01>
+                <l_C.4.1 S_00="Fonctionnement dans (un, deux) quatre quadrants.">
+                  <d_01 />
+                </l_C.4.1>
+              </d_01>
+            </l_C.4>
+            <l_C.2 S_00="Conversion alternatif continu : redresseurs">
+              <d_01>
+                <l_C.2.1 S_00="Cellules de commutation à cathodes communes et à anodes communes">
+                  <d_01 />
+                </l_C.2.1>
+                <l_C.2.2 S_00="Redresseurs non commandés :">
+                  <l_01 S_00="Montages monophasés et triphasés à commutation double en conduction continue." S_01="Filtrage par condensateur, étude qualitative des courants et tensions." />
+                </l_C.2.2>
+                <l_C.2.3 S_00="Redresseurs commandés en conduction continue">
+                  <l_01 S_00="Réversibilité du montage, conditions nécessaires à ce type de fonctionnement." />
+                </l_C.2.3>
+              </d_01>
+            </l_C.2>
+            <l_C.3 S_00="Associations transformateur redresseur :">
+              <d_01>
+                <l_C.3.1 S_00="Forme des courants au primaire du transformateur.">
+                  <d_01 />
+                </l_C.3.1>
+              </d_01>
+            </l_C.3>
+            <l_C.1 S_00="Transformateurs :">
+              <d_01>
+                <l_C.1.2 S_00="Transformateur triphasé :">
+                  <l_01 S_00="Constitution et couplages, indice horaire ;" S_01="Schéma équivalent. Caractéristiques. Rendement" />
+                </l_C.1.2>
+                <l_C.1.1 S_00="Transformateur monophasé.">
+                  <l_01 S_00="Constitution. Principe." S_01="Schéma équivalent. Caractéristique externe. Rendement." />
+                </l_C.1.1>
+              </d_01>
+            </l_C.1>
+          </d_01>
+        </l_C>
+        <l_B S_00="Machine à courant continu et hacheur :">
+          <d_01>
+            <l_B.2 S_00="Conversion continu continu : hacheurs en conduction continue">
+              <d_01>
+                <l_B.2.1 S_00="Structures des hacheurs :">
+                  <l_01 S_00="Cellules de commutation ;" S_01="Hacheurs série, parallèle réversibles deux et quatre quadrants." />
+                </l_B.2.1>
+                <l_B.2.2 S_00="Utilisation des hacheurs :">
+                  <l_01 S_00="Application à la motorisation électrique : variation de vitesse, contrôle de couple et/ou de vitesse, de tension et/ou de courant." />
+                </l_B.2.2>
+              </d_01>
+            </l_B.2>
+            <l_B.1 S_00="Machines à courant continu :">
+              <d_01>
+                <l_B.1.2 S_00="Schéma équivalent, réversibilité, bilan de puissances.">
+                  <d_01 />
+                </l_B.1.2>
+                <l_B.1.3 S_00="Caractéristique mécanique T(n).">
+                  <d_01 />
+                </l_B.1.3>
+                <l_B.1.1 S_00="Principe de fonctionnement, constitution, excitations indépendante et série.">
+                  <d_01 />
+                </l_B.1.1>
+                <l_B.1.4 S_00="Procédés de variation de vitesse.">
+                  <d_01 />
+                </l_B.1.4>
+                <l_B.1.5 S_00="Principe du moteur universel.">
+                  <d_01 />
+                </l_B.1.5>
+              </d_01>
+            </l_B.1>
+          </d_01>
+        </l_B>
+        <l_E S_00="Machine synchrone et convertisseur de fréquence :">
+          <d_01>
+            <l_E.1 S_00="Machine synchrone :">
+              <d_01>
+                <l_E.1.1 S_00="Constitution :">
+                  <l_01 S_00="Principe de fonctionnement ;" S_01="Réversibilité ;" S_02="Schéma équivalent de la machine synchrone à pôles lisses non saturée (diagramme à réactance synchrone) ;" S_03="Bilan de puissances." />
+                </l_E.1.1>
+                <l_E.1.3 S_00="Machine synchrone autopilotée :">
+                  <l_01 S_00="Structure du dispositif. Fonctionnement. Réversibilité. Caractéristiques mécaniques T (n)." />
+                </l_E.1.3>
+                <l_E.1.2 S_00="Alternateur :">
+                  <l_01 S_00="Alternateur autonome : caractéristiques électriques, détermination par méthodes directes et indirectes ;" S_01="Alternateur couplé sur un réseau : transfert des puissances active et réactive." />
+                </l_E.1.2>
+              </d_01>
+            </l_E.1>
+          </d_01>
+        </l_E>
+        <l_D S_00="Machine asynchrone et convertisseur de fréquence :">
+          <d_01>
+            <l_D.1 S_00="Machines asynchrones :">
+              <d_01>
+                <l_D.1.4 S_00="Procédés de variation de vitesse.">
+                  <d_01 />
+                </l_D.1.4>
+                <l_D.1.1 S_00="Constitution, principe de fonctionnement">
+                  <d_01 />
+                </l_D.1.1>
+                <l_D.1.2 S_00="Schémas équivalents, réversibilité, bilan de puissance.">
+                  <d_01 />
+                </l_D.1.2>
+                <l_D.1.3 S_00="Caractéristique mécanique T(n) à fréquence constante.">
+                  <d_01 />
+                </l_D.1.3>
+              </d_01>
+            </l_D.1>
+            <l_D.2 S_00="Conversion continu alternatif : Onduleurs">
+              <d_01>
+                <l_D.2.3 S_00="Autres applications des onduleurs :">
+                  <l_01 S_00="Onduleurs de secours ;" S_01="Onduleur à résonance : chauffage à induction." />
+                </l_D.2.3>
+                <l_D.2.2 S_00="Applications des variateurs de fréquence :">
+                  <l_01 S_00="Variateurs de vitesse pour moteur asynchrone : structure des variateurs, fonctionnement à U/f = constant, réversibilité de l'ensemble, harmoniques de tension, de courant et de couple." S_01="Machine asynchrone autopilotée. Introduction à la commande vectorielle." />
+                </l_D.2.2>
+                <l_D.2.1 S_00="Structure des onduleurs">
+                  <l_01 S_00="Onduleurs en pont et triphasés ;" S_01="Différentes commandes : symétrique, à modulation de largeur d'impulsions." />
+                </l_D.2.1>
+              </d_01>
+            </l_D.2>
+          </d_01>
+        </l_D>
+        <l_G S_00="Convertisseur alternatif / alternatif : gradateurs :">
+          <d_01>
+            <l_G.2 S_00="Structure des gradateurs monophasé et triphasé">
+              <d_01>
+                <l_G.2.1 S_00="Contacteur statique">
+                  <d_01 />
+                </l_G.2.1>
+                <l_G.2.2 S_00="Démarrage et modification de vitesse des moteurs asynchrones">
+                  <d_01 />
+                </l_G.2.2>
+                <l_G.2.3 S_00="Compensateur de puissance réactive">
+                  <d_01 />
+                </l_G.2.3>
+              </d_01>
+            </l_G.2>
+            <l_G.1 S_00="Structure des gradateurs monophasé et triphasé">
+              <d_01>
+                <l_G.1.3 S_00="Diverses commandes : retard de phase et train d’ondes.">
+                  <d_01 />
+                </l_G.1.3>
+                <l_G.1.2 S_00="Utilisation sur charge inductive">
+                  <d_01 />
+                </l_G.1.2>
+                <l_G.1.1 S_00="Utilisation sur charge résistive :">
+                  <d_01 />
+                </l_G.1.1>
+              </d_01>
+            </l_G.1>
+          </d_01>
+        </l_G>
+        <l_F S_00="Régulation et asservissement industriels :">
+          <d_01>
+            <l_F.2 S_00="Régulation et asservissement :">
+              <d_01>
+                <l_F.2.1 S_00="Principes : chaîne d'action, de réaction, propriétés en boucle fermée, précision, exemples dans le domaine analogique. Formalisme de Laplace.">
+                  <d_01 />
+                </l_F.2.1>
+                <l_F.2.3 S_00="Stabilité, dilemme stabilité précision, correction proportionnelle, intégrale et dérivée.">
+                  <d_01 />
+                </l_F.2.3>
+                <l_F.2.2 S_00="Réponse indicielle, réponse harmonique, diagramme de Bode.">
+                  <d_01 />
+                </l_F.2.2>
+                <l_F.2.5 S_00="Applications :">
+                  <l_01 S_00="Régulation de tension, de courant ou de couple ;" S_01="Asservissement de vitesse et de position ;" S_02="Variateur de vitesse réversible avec boucles de courant et de vitesse imbriquées : étude d'un cycle : démarrage, freinage et inversion du sens de marche ;" S_03="Régulation de température." />
+                </l_F.2.5>
+                <l_F.2.4 S_00="Critères de réglage :">
+                  <l_01 S_00="Marge de phase, marge de gain ;" S_01="Méthode de Broïda." />
+                </l_F.2.4>
+              </d_01>
+            </l_F.2>
+            <l_F.1 S_00="Conversion d'une grandeur physique en un signal électrique :">
+              <d_01>
+                <l_F.1.2 S_00="Principaux types de capteurs, exemples caractéristiques dans les domaines analogique et numérique : capteurs de courant, de tension, de déplacement, de vitesse, de position et de température.">
+                  <d_01 />
+                </l_F.1.2>
+                <l_F.1.3 S_00="Échantillonnage et numérisation d'un signal.">
+                  <d_01 />
+                </l_F.1.3>
+                <l_F.1.1 S_00="Principes physiques des capteurs les plus utilisés, fidélité, justesse et précision.">
+                  <d_01 />
+                </l_F.1.1>
+              </d_01>
+            </l_F.1>
+          </d_01>
+        </l_F>
+        <l_H S_00="Qualité de l’énergie électrique :">
+          <d_01>
+            <l_H.1 S_00="Notions d’ondes et de rayonnement.">
+              <d_01 />
+            </l_H.1>
+            <l_H.3 S_00="Compensation de l’énergie réactive :">
+              <d_01>
+                <l_H.3.1 S_00="Amélioration du facteur de puissance : filtrage passif et filtrage actif.">
+                  <d_01 />
+                </l_H.3.1>
+              </d_01>
+            </l_H.3>
+            <l_H.2 S_00="Pollution harmonique, norme CEM.">
+              <d_01 />
+            </l_H.2>
+            <l_H.4 S_00=" Absorption sinusoïdale">
+              <l_01 S_00=" " />
+            </l_H.4>
+          </d_01>
+        </l_H>
+      </d_dicSavoirs>
+    </Savoirs_P>
+    <Savoirs_S B_obj="False" B_pre="True" S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Savoirs">
+      <d_dicSavoirs>
+        <l_1 S_00="La conversion de l’énergie électrique dans les applications :">
+          <d_01>
+            <l_1.4 S_00="Les différents types de récepteurs en électrochimie :">
+              <d_01>
+                <l_1.4.1 S_00="Différents procédés de conversion en électrochimie.">
+                  <l_01 />
+                </l_1.4.1>
+              </d_01>
+            </l_1.4>
+            <l_1.5 S_00="La chaîne de commande des moteurs :">
+              <d_01>
+                <l_1.5.1 S_00="Différents principes et choix des matériels :">
+                  <l_01 S_00="Représentations graphiques utilisées dans le domaine de la conversion d’énergie électrique ;" S_01="Logiciel de conception assisté par ordinateur (C.A.O.) pour les représentations graphiques" S_02="Appareillage des départs moteurs selon les normes en vigueur (coordination type 1&amp; 2, …)" S_03="Appareillage des départs moteurs progressifs (électromécaniques et électroniques) ;" S_04="Appareillage de variation de vitesse." />
+                </l_1.5.1>
+                <l_1.5.2 S_00="Réalisation des équipements">
+                  <l_01 S_00="Règles de conception et réalisation des armoires électriques de commande de machine" />
+                </l_1.5.2>
+              </d_01>
+            </l_1.5>
+            <l_1.6 S_00="La régulation industrielle et les fonctions spéciales :">
+              <d_01>
+                <l_1.6.2 S_00="Boucle de régulation d’un procédé">
+                  <l_01 S_00="Outils adaptés pour programmer une application de régulation" S_01="Paramètres d'une boucle de régulation" />
+                </l_1.6.2>
+                <l_1.6.1 S_00="Différents principes de régulation">
+                  <l_01 S_00="Constituants d'un procédé de régulation" S_01="Boucle de régulation" />
+                </l_1.6.1>
+              </d_01>
+            </l_1.6>
+            <l_1.7 S_00="La sécurité machine et la mise en conformité :">
+              <d_01>
+                <l_1.7.1 S_00="Mise en sécurité des machines en accord avec la réglementation en vigueur">
+                  <l_01 S_00="Normes régissant la sécurité des machines" S_01="Démarche de réception d’une machine neuve ou reconditionnée vis à vis de la réglementation" S_02="Constituants de sécurité" />
+                </l_1.7.1>
+              </d_01>
+            </l_1.7>
+            <l_1.1 S_00="L’entraînement électrique :">
+              <d_01>
+                <l_1.1.1 S_00="Couplage d’une charge à une source par rapport à la charge (réversibilité) ou par rapport à l’environnement ;">
+                  <l_01 />
+                </l_1.1.1>
+                <l_1.1.2 S_00="Outils méthodologiques associés à l’étude d’une chaîne cinématique.">
+                  <l_01 />
+                </l_1.1.2>
+              </d_01>
+            </l_1.1>
+            <l_1.2 S_00="Les différents types d’actionneurs électromécaniques :">
+              <d_01>
+                <l_1.2.2 S_00="Actionneurs électromécaniques dédiés à la transformation de produit.">
+                  <l_01 />
+                </l_1.2.2>
+                <l_1.2.1 S_00="Actionneurs électromécaniques dédiés au déplacement de produit ;">
+                  <l_01 />
+                </l_1.2.1>
+              </d_01>
+            </l_1.2>
+            <l_1.3 S_00="Les différents types de récepteurs en électrothermie :">
+              <d_01>
+                <l_1.3.1 S_00="Différents procédés de conversion de l'énergie électrique en électrothermie.">
+                  <l_01 />
+                </l_1.3.1>
+              </d_01>
+            </l_1.3>
+          </d_01>
+        </l_1>
+        <l_3 S_00="Les équipements communicants :">
+          <d_01>
+            <l_3.4 S_00="Le transport et la gestion de l’information :">
+              <d_01>
+                <l_3.4.2 S_00="Les serveurs de données :">
+                  <l_01 S_00="Utilisation d’un serveur de données en communication avec un équipement programmable industriel." />
+                </l_3.4.2>
+                <l_3.4.1 S_00="Les concepts de base des réseaux industriels">
+                  <l_01 S_00="Connaissances de base en transmission de données (câblage, commutateurs,appareillages, adressage, protocole) ;" S_01="Architecture de communication." />
+                </l_3.4.1>
+              </d_01>
+            </l_3.4>
+            <l_3.5 S_00="La gestion déportée de l'énergie :">
+              <d_01>
+                <l_3.5.1 S_00="Système de gestion d'énergie relié à un réseau de communication.">
+                  <l_01 />
+                </l_3.5.1>
+              </d_01>
+            </l_3.5>
+            <l_3.2 S_00="Le traitement de l'information :">
+              <d_01>
+                <l_3.2.4 S_00="Outils de description de fonctionnement normalisé du type : Grafcet – Organigramme –Langage à contact – Langage littéral ;">
+                  <l_01 />
+                </l_3.2.4>
+                <l_3.2.5 S_00="Ateliers logiciels.">
+                  <l_01 />
+                </l_3.2.5>
+                <l_3.2.1 S_00="Équipements programmables industriels (API - PC…) ;">
+                  <l_01 />
+                </l_3.2.1>
+                <l_3.2.2 S_00="Langages de programmation utilisés dans les automates programmables ;">
+                  <l_01 />
+                </l_3.2.2>
+                <l_3.2.3 S_00="Langages de programmation utilisés dans les PC industriels ;">
+                  <l_01 />
+                </l_3.2.3>
+              </d_01>
+            </l_3.2>
+            <l_3.3 S_00="L’interface homme - machine :">
+              <d_01>
+                <l_3.3.1 S_00="Terminaux de dialogue industriels ;">
+                  <l_01 />
+                </l_3.3.1>
+                <l_3.3.2 S_00="Paramétrage des interfaces graphiques dédiées de suivi de procédés (gestion technique centralisée, supervision).">
+                  <l_01 />
+                </l_3.3.2>
+              </d_01>
+            </l_3.3>
+            <l_3.1 S_00="L’acquisition de l’information :">
+              <d_01>
+                <l_3.1.2 S_00="Les appareils communicants dédiés :">
+                  <l_01 S_00="Appareils communicants dédiés à la régulation, au comptage, à la mesure (appareils de mesure, de protection, de surveillance et d'analyse de réseaux) ;" S_01="Éntrées/sorties et des modules d'extension distribués." />
+                </l_3.1.2>
+                <l_3.1.1 S_00="Les capteurs et les détecteurs :">
+                  <l_01 S_00="Capteurs et détecteurs : tout ou rien, analogiques, numériques." />
+                </l_3.1.1>
+              </d_01>
+            </l_3.1>
+          </d_01>
+        </l_3>
+        <l_2 S_00="La production, le transport et la distribution de l’énergie électrique.">
+          <d_01>
+            <l_2.2 S_00="La qualité de l'énergie électrique en environnement perturbé :">
+              <d_01>
+                <l_2.2.4 S_00="Détermination et mise en œuvre d’une compensation d'énergie réactive en milieu perturbé">
+                  <l_01 S_00="Choix des condensateurs adéquats permettant de réduire la facture énergétique sur une installation, en milieu perturbé ;" S_01="Choix de la protection des condensateurs contre les phénomènes harmoniques pour éviter leur surcharge." />
+                </l_2.2.4>
+                <l_2.2.1 S_00="Connaissance des protections contre la foudre, conformément aux normes régissant la basse">
+                  <l_01 S_00="Éléments qui contribuent à la sûreté des installations ;" S_01="Dimensionnement des sources de remplacement (ASI, ADI …)" S_02="Protections contre la foudre nécessaires à la bonne marche d'une l'installation ;" S_03="Architecture des protections foudre d'une installation" S_04="Normes et réglementations." />
+                </l_2.2.1>
+                <l_2.2.3 S_00="Compréhension et minimisation des harmoniques">
+                  <l_01 S_00="Observation par des manipulations les perturbations dues aux harmoniques et leurs effets sur les équipements, analyser les relevés de mesure ;" S_01="Dysfonctionnements d'une installation électrique dus à la présence de perturbations harmoniques ;" S_02="Modifications nécessaires à une installation électrique pour minimiser les perturbations harmoniques." />
+                </l_2.2.3>
+                <l_2.2.2 S_00="La compatibilité électromagnétique : faire coexister courants forts et courants faibles">
+                  <l_01 S_00="Mise en évidence les phénomènes CÉM au travers d'expériences simples ;" S_01="Éxigences normatives de la directive CÉM ;" S_02="Éffets des perturbations sur une installation électrique ;" S_03="Modifications nécessaires sur une installation électrique pour éliminer les perturbations dans le domaine de la CÉM." />
+                </l_2.2.2>
+              </d_01>
+            </l_2.2>
+            <l_2.1 S_00="Les différentes sources d’énergie et leurs exploitations dans les applications électriques :">
+              <d_01>
+                <l_2.1.2 S_00="Transport de l'énergie électrique">
+                  <l_01 S_00="Architectures des réseaux de transport et d'interconnexion ;" S_01="Caractéristiques de l'appareillage HT ;" S_02="Normes relatives aux équipements mis en œuvre." />
+                </l_2.1.2>
+                <l_2.1.3 S_00="Distribution de l'énergie électrique :">
+                  <l_01 S_00="Vision globale d’une installation électrique et de son environnement ;" S_01="Matériels permettant de générer des économies d'énergie et d’optimiser les investissements (HTA et BT) ;" S_02="Définition graphique d’une architecture de réseau d'alimentation (HTA et BT) ;" S_03="Dimensionnement, par les calculs et les outils logiciels, les différents éléments qui composent une installation électrique (transformateurs, appareils, câbles…) ;" S_04="Contrôle des modifications d'une installation électrique (compensation réactif normal, …) en toute sécurité ;" S_05="Normes NFC15-100 et UTE 15-105" S_06="Sources de remplacement (groupes électrogènes, onduleurs,…) et équipements assurant la disponibilité de l'énergie électrique en toute sécurité ;" S_07="Représentations graphiques utilisées dans le domaine de la distribution électrique" S_08="Maîtrise d’un logiciel de CAO pour les représentations graphiques normalisées des installations électriques." />
+                </l_2.1.3>
+                <l_2.1.1 S_00="Production de l'énergie électrique">
+                  <l_01 S_00="Principales sources de production de l'énergie (nucléaire, hydraulique et fossile) ;" S_01="Principes et matériels mis en œuvre dans les autres sources d’énergie électrique (nouvelles énergies renouvelables) ;" S_02="Classement des différentes sources de production en fonction de leurs applications." />
+                </l_2.1.1>
+              </d_01>
+            </l_2.1>
+          </d_01>
+        </l_2>
+        <l_5 S_00="L’organisation d’un chantier :">
+          <d_01>
+            <l_5.1 S_00="La démarche de projet et de chantier :">
+              <d_01>
+                <l_5.1.9 S_00="L’éco conception :">
+                  <l_01 S_00="Démarche d’éco-conception." />
+                </l_5.1.9>
+                <l_5.1.8 S_00="Le suivi du produit :">
+                  <l_01 S_00="Suivi de l’exploitation de l’ouvrage, de l’équipement ou du produit et évaluation des performances." />
+                </l_5.1.8>
+                <l_5.1.5 S_00="La réalisation et son suivi :">
+                  <l_01 S_00="Réalisation d’un ouvrage, d’un équipement ou d’un produit en sécurité ;" S_01="Suivi de la réalisation en sécurité ;" S_02="Management de l’équipe." />
+                </l_5.1.5>
+                <l_5.1.4 S_00="L’organisation de la réalisation :">
+                  <l_01 S_00="Organisation des processus de fabrication ;" S_01="Prévision des outillages et de l'organisation des postes de travail ;" S_02="Prise en compte des ressources humaines et matérielles ;" S_03="Ordonnancement des approvisionnements en prenant en compte les filières d’approvisionnement ;" S_04="Utilisation d’un logiciel de gestion de projet ;" S_05="Planification de la prévention." />
+                </l_5.1.4>
+                <l_5.1.7 S_00="Le suivi du coût, des délais et de la qualité :">
+                  <l_01 S_00="Évaluation du coût, des délais de réalisation et de la qualité de l’ouvrage, de l’équipement ou du produit (par exemple un véhicule électrique) à chaque phase du projet." />
+                </l_5.1.7>
+                <l_5.1.6 S_00="Le contrôle, la mise en service et la réception :">
+                  <l_01 S_00="Élaboration des différents types de recettes et vérification par des essais." />
+                </l_5.1.6>
+                <l_5.1.1 S_00="L’analyse du besoin :">
+                  <l_01 S_00="Éxpression et validation du besoin en relation avec le client." />
+                </l_5.1.1>
+                <l_5.1.3 S_00="La conception et le choix d’une solution :">
+                  <l_01 S_00="Recherche, étude et validation de la solution ;" S_01="Utilisation des retours d’expérience." />
+                </l_5.1.3>
+                <l_5.1.2 S_00="L’étude de la faisabilité :">
+                  <l_01 S_00="Caractérisation et hiérarchisation des fonctions de services ;" S_01="Cahier des charges fonctionnel ;" S_02="Éstimation des coûts et des délais ;" S_03="Planification d’un projet ;" S_04="Validation de la faisabilité." />
+                </l_5.1.2>
+              </d_01>
+            </l_5.1>
+            <l_5.2 S_00="La conduite et exploitation d'un équipement électrique :">
+              <d_01>
+                <l_5.2.2 S_00="Choix et mise en œuvre des appareils de mesure ;">
+                  <l_01 />
+                </l_5.2.2>
+                <l_5.2.3 S_00="Interprétation des résultats de mesures ;">
+                  <l_01 />
+                </l_5.2.3>
+                <l_5.2.1 S_00="Réalisation, en sécurité, des opérations courantes d'exploitation de l’équipement ;">
+                  <l_01 />
+                </l_5.2.1>
+                <l_5.2.4 S_00="Intervention en cas de problème sur l’équipement électrique (en particulier sur les arrêts de production liés à une coupure d’énergie).">
+                  <l_01 />
+                </l_5.2.4>
+              </d_01>
+            </l_5.2>
+            <l_5.3 S_00="La sûreté de fonctionnement (concept de sûreté) :">
+              <d_01>
+                <l_5.3.3 S_00="Notions de maintenabilité.">
+                  <l_01 />
+                </l_5.3.3>
+                <l_5.3.2 S_00="Notions de disponibilité ;">
+                  <l_01 />
+                </l_5.3.2>
+                <l_5.3.1 S_00="Notions de fiabilité ;">
+                  <l_01 />
+                </l_5.3.1>
+              </d_01>
+            </l_5.3>
+            <l_5.4 S_00="Les procédures :">
+              <d_01>
+                <l_5.4.4 S_00="Fiche de réception des travaux ;">
+                  <l_01 />
+                </l_5.4.4>
+                <l_5.4.5 S_00="Procédure de démarche qualité normée ;">
+                  <l_01 />
+                </l_5.4.5>
+                <l_5.4.6 S_00="Procédures de gestion des données techniques.">
+                  <l_01 />
+                </l_5.4.6>
+                <l_5.4.1 S_00="Règles de santé et de sécurité au travail (S&amp;ST) ;">
+                  <l_01 />
+                </l_5.4.1>
+                <l_5.4.2 S_00="Rapports d'expertise ;">
+                  <l_01 />
+                </l_5.4.2>
+                <l_5.4.3 S_00="Fiches d'activité ;">
+                  <l_01 />
+                </l_5.4.3>
+              </d_01>
+            </l_5.4>
+            <l_5.5 S_00="Les relations avec le client :">
+              <d_01>
+                <l_5.5.1 S_00="Conseils techniques au client ;">
+                  <l_01 />
+                </l_5.5.1>
+                <l_5.5.2 S_00="Organisation et animation d’une réunion de formation ou d'information technique.">
+                  <l_01 />
+                </l_5.5.2>
+              </d_01>
+            </l_5.5>
+          </d_01>
+        </l_5>
+        <l_4 S_00="La communication technique appliquée aux infrastructures, à l’habitat, aux bâtiments industriels et tertiaires :">
+          <d_01>
+            <l_4.1 S_00="Le pilotage des équipements liés au confort :">
+              <d_01>
+                <l_4.1.4 S_00="Représentations graphiques normalisées utilisées dans le domaine de la climatique et de l’éclairage ;">
+                  <l_01 />
+                </l_4.1.4>
+                <l_4.1.5 S_00="Logiciels adaptés à la conception et au chiffrage d’une gestion technique centralisée.">
+                  <l_01 />
+                </l_4.1.5>
+                <l_4.1.1 S_00="Étude et choix du matériel adapté pour une installation de gestion technique centralisée dans l’habitat, les locaux recevant du public et les infrastructures en prenant en compte les contraintes de climatique, d’éclairement, de coûts et de confort, avec ou sans logiciel adapté ;">
+                  <l_01 />
+                </l_4.1.1>
+                <l_4.1.2 S_00="Mise en œuvre d’une installation de gestion technique centralisée dans l’habitat, les locaux recevant du public et les infrastructures ;">
+                  <l_01 />
+                </l_4.1.2>
+                <l_4.1.3 S_00="Normes et règlementations ;">
+                  <l_01 />
+                </l_4.1.3>
+              </d_01>
+            </l_4.1>
+            <l_4.3 S_00="Les équipements Voix - Données - Images :">
+              <d_01>
+                <l_4.3.2 S_00="Logiciels adaptés à la conception et au chiffrage d’une installation VDI dans le cadre d’une gestion technique centralisée.">
+                  <l_01 />
+                </l_4.3.2>
+                <l_4.3.1 S_00="Prescription des équipements d'un réseau VDI dans le cadre d’une gestion technique centralisée dans des bâtiments proches ou séparés selon les normes et règlementations en vigueur ;">
+                  <l_01 />
+                </l_4.3.1>
+              </d_01>
+            </l_4.3>
+            <l_4.2 S_00="La détection incendie et intrusion :">
+              <d_01>
+                <l_4.2.3 S_00="Logiciels adaptés à la conception et au chiffrage d’une gestion centralisée de détection.">
+                  <l_01 />
+                </l_4.2.3>
+                <l_4.2.2 S_00="Représentations graphiques normalisées utilisées dans le domaine de la détection incendie et intrusion ;">
+                  <l_01 />
+                </l_4.2.2>
+                <l_4.2.1 S_00="Prescription des systèmes de détection incendie ou d’intrusion dans le cadre de la globalité d’un projet en respectant la réglementation ;">
+                  <l_01 />
+                </l_4.2.1>
+              </d_01>
+            </l_4.2>
+          </d_01>
+        </l_4>
+        <l_6 S_00="Construction des structures matérielles appliquée à l’électrotechnique :">
+          <d_01>
+            <l_6.3 S_00="Analyse du cycle de vie des produits">
+              <d_01>
+                <l_6.3.4 S_00="Temps de retour sur investissement.">
+                  <d_01 />
+                </l_6.3.4>
+                <l_6.3.1 S_00="Étapes du cycle de vie :">
+                  <l_01 S_00="Disponibilité du moyen de production ;" S_01="Production ;" S_02="Distribution ;" S_03="Utilisation : écobilan (suivi énergétique et fonctionnement dégradé) ;" S_04="Recyclage des matériaux ;" S_05="Réutilisation des pièces ;" S_06="Remise à niveau du produit ;" S_07="Valorisation thermique ;" S_08="Déchets ultimes." />
+                </l_6.3.1>
+                <l_6.3.2 S_00="Impacts sur l’environnement :">
+                  <l_01 S_00="Identification, classement, pondération des impacts environnementaux ;" S_01="Incidence des coûts collatéraux (externalités, préservations des ressources et usages efficaces)." />
+                </l_6.3.2>
+                <l_6.3.3 S_00="Critères de choix d’un procédé lors de la conception.">
+                  <d_01 />
+                </l_6.3.3>
+              </d_01>
+            </l_6.3>
+            <l_6.2 S_00="Règles générales de l’éco-conception">
+              <d_01>
+                <l_6.2.1 S_00="Démarche d’éco-conception.">
+                  <d_01 />
+                </l_6.2.1>
+                <l_6.2.3 S_00="Minimisation des émissions et des déchets :">
+                  <l_01 S_00="Émission de gaz à effet de serre, toxicité, cycle climatique, cycle de l’eau." />
+                </l_6.2.3>
+                <l_6.2.2 S_00="Préservation et usage raisonné des ressources naturelles :">
+                  <l_01 S_00="Inventaire (qualitatif et quantitatif) des ressources énergétiques, hydriques et de matières premières ;" S_01="Minimisation des consommations pour un besoin donné." />
+                </l_6.2.2>
+                <l_6.2.5 S_00="Réduction de la consommation d’énergie (dans les secteurs habitat, transport, industrie).">
+                  <d_01 />
+                </l_6.2.5>
+                <l_6.2.4 S_00="Suppression ou minimisation des substances toxiques.">
+                  <d_01 />
+                </l_6.2.4>
+              </d_01>
+            </l_6.2>
+            <l_6.1 S_00="Service rendu par une application">
+              <d_01>
+                <l_6.1.4 S_00="Prise en compte de normes et réglementations : DEEE, RoHS,REACH, etc.">
+                  <l_01 />
+                </l_6.1.4>
+                <l_6.1.2 S_00="Rapport performance / coût.">
+                  <l_01 />
+                </l_6.1.2>
+                <l_6.1.3 S_00="Impact du développement durable sur les différents coûts">
+                  <l_01 />
+                </l_6.1.3>
+                <l_6.1.1 S_00="Éxpression du besoin : fonctions d'usage et fonctions de service.">
+                  <l_01 />
+                </l_6.1.1>
+              </d_01>
+            </l_6.1>
+          </d_01>
+        </l_6>
+      </d_dicSavoirs>
+    </Savoirs_S>
+    <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="S3" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Savoirs">
+      <d_dicSavoirs>
+        <l_10 S_00="Nombre complexes.">
+          <d_01>
+            <l_10.1 S_00="Forme algébrique et représentation géométrique">
+              <d_01>
+                <l_10.1.1 S_00="Nombres a + ib avec i2 = −1. Égalité, conjugué, somme, produit, quotient.">
+                  <d_01 />
+                </l_10.1.1>
+                <l_10.1.2 S_00="Équations du second degré à coefficients réels.">
+                  <d_01 />
+                </l_10.1.2>
+                <l_10.1.3 S_00="Représentation géométrique.">
+                  <d_01 />
+                </l_10.1.3>
+                <l_10.1.4 S_00="Ensemble de points dont l’affixe a une partie réelle ou imaginaire donnée.">
+                  <d_01 />
+                </l_10.1.4>
+              </d_01>
+            </l_10.1>
+            <l_10.3 S_00="Transformations">
+              <d_01>
+                <l_10.3.1 S_00="Exemples de transformations géométriques d’écritures complexes suivantes : z -&gt; z + b , z -&gt; az , z -&gt; z et z -&gt; z/1 -&gt; , où a et b sont des nombres réels.">
+                  <l_01 S_00=" " />
+                </l_10.3.1>
+              </d_01>
+            </l_10.3>
+            <l_10.2 S_00="Forme trigonométrique, forme exponentielle">
+              <d_01>
+                <l_10.2.3 S_00="Ensemble de points dont l’affixe z vérifie z − a = k ou arg(z − a) = k , où a désigne un nombre complexe et k un nombre réel.">
+                  <d_01 />
+                </l_10.2.3>
+                <l_10.2.2 S_00="Forme exponentielle et forme trigonométrique d’un nombre complexe.">
+                  <d_01 />
+                </l_10.2.2>
+                <l_10.2.1 S_00="Module d’un nombre complexe, arguments d’un nombre complexe non nul.">
+                  <d_01 />
+                </l_10.2.1>
+              </d_01>
+            </l_10.2>
+          </d_01>
+        </l_10>
+        <l_1 S_00="Suites numériques">
+          <d_01>
+            <l_1.1 S_00="Mode de génération d'une suite et comportement global">
+              <d_01>
+                <l_1.1.1 S_00="Exemples de génération d'une suite.">
+                  <l_01 S_00="Suites croissantes, suites décroissantes." />
+                </l_1.1.1>
+              </d_01>
+            </l_1.1>
+            <l_1.2 S_00="Suites arithmétiques et géométriques">
+              <d_01>
+                <l_1.2.1 S_00="Expression du terme général.">
+                  <d_01 />
+                </l_1.2.1>
+              </d_01>
+            </l_1.2>
+            <l_1.3 S_00="Limite d'une suite">
+              <d_01>
+                <l_1.3.1 S_00="Limite d’une suite géométrique">
+                  <d_01 />
+                </l_1.3.1>
+              </d_01>
+            </l_1.3>
+          </d_01>
+        </l_1>
+        <l_3 S_00="Fonctions d'une variable réelle et modélisation du signal.">
+          <d_01>
+            <l_3.2 S_00="Compléments sur les fonctions">
+              <d_01>
+                <l_3.2.4 S_00="décomposition en éléments simples.">
+                  <d_01 />
+                </l_3.2.4>
+                <l_3.2.1 S_00="Fonction paire, fonction impaire, fonction périodique :">
+                  <l_01 S_00="– définition ;" S_01="– interprétation graphique." />
+                </l_3.2.1>
+                <l_3.2.2 S_00="Calculs de dérivées :">
+                  <d_01 />
+                </l_3.2.2>
+                <l_3.2.3 S_00="Fonctions rationnelles :">
+                  <d_01 />
+                </l_3.2.3>
+              </d_01>
+            </l_3.2>
+            <l_3.3 S_00="Approximation globale d’une fonction sur un intervalle">
+              <d_01>
+                <l_3.3.1 S_00="Approche de la notion à partir d’exemples.">
+                  <d_01 />
+                </l_3.3.1>
+              </d_01>
+            </l_3.3>
+            <l_3.1 S_00="Fonctions de référence">
+              <d_01>
+                <l_3.1.1 S_00="Fonctions tangente et arctangente.">
+                  <d_01 />
+                </l_3.1.1>
+              </d_01>
+            </l_3.1>
+          </d_01>
+        </l_3>
+        <l_2 S_00="Fonctions d'une variable réelle">
+          <d_01>
+            <l_2.3 S_00="Limites de fonctions">
+              <d_01>
+                <l_2.3.1 S_00="Limite infinie d’une fonction à l’infini. Cas d'une asymptote oblique.">
+                  <d_01 />
+                </l_2.3.1>
+                <l_2.3.2 S_00="Limites et opérations.">
+                  <d_01 />
+                </l_2.3.2>
+                <l_2.3.3 S_00="limite infinie d’une fonction en un point.">
+                  <d_01 />
+                </l_2.3.3>
+              </d_01>
+            </l_2.3>
+            <l_2.2 S_00="Dérivation">
+              <d_01>
+                <l_2.2.1 S_00="Dérivée des fonctions de référence.">
+                  <d_01 />
+                </l_2.2.1>
+                <l_2.2.3 S_00="Dérivée de fonctions de la forme : un (x) avec n entier naturel non nul.">
+                  <d_01 />
+                </l_2.2.3>
+                <l_2.2.2 S_00="Dérivée d’une somme, d’un produit et d’un quotient.">
+                  <d_01 />
+                </l_2.2.2>
+              </d_01>
+            </l_2.2>
+            <l_2.1 S_00="Fonctions de référence">
+              <d_01>
+                <l_2.1.2 S_00="Fonctions polynômes de degré 2.">
+                  <d_01 />
+                </l_2.1.2>
+                <l_2.1.3 S_00="Fonctions logarithme népérien et exponentielle de base e.">
+                  <d_01 />
+                </l_2.1.3>
+                <l_2.1.1 S_00="Fonctions affines.">
+                  <d_01 />
+                </l_2.1.1>
+                <l_2.1.4 S_00="Fonction racine carrée.">
+                  <d_01 />
+                </l_2.1.4>
+                <l_2.1.5 S_00="Fonctions sinus et cosinus.">
+                  <d_01 />
+                </l_2.1.5>
+              </d_01>
+            </l_2.1>
+            <l_2.5 S_00="Courbes paramétrées">
+              <d_01>
+                <l_2.5.1 S_00="Exemples de courbes paramétrées définies par des fonctions polynomiales.">
+                  <d_01 />
+                </l_2.5.1>
+              </d_01>
+            </l_2.5>
+            <l_2.4 S_00="Approximation locale d'une fonction">
+              <d_01>
+                <l_2.4.2 S_00="Développement limité en 0 et tangente à la courbe représentative d’une fonction.">
+                  <d_01 />
+                </l_2.4.2>
+                <l_2.4.1 S_00="Développement limité en 0 d’une fonction.">
+                  <d_01 />
+                </l_2.4.1>
+              </d_01>
+            </l_2.4>
+          </d_01>
+        </l_2>
+        <l_5 S_00="Équations différentielles.">
+          <d_01>
+            <l_5.1 S_00="Équations linéaires du premier ordre">
+              <d_01>
+                <l_5.1.1 S_00="Équation différentielle ay′+by = c(t) où a, b sont des constantes réelles et c une fonction continue à valeurs réelles.">
+                  <d_01 />
+                </l_5.1.1>
+              </d_01>
+            </l_5.1>
+            <l_5.2 S_00="Nombres complexes">
+              <d_01>
+                <l_5.2.2 S_00="Équation du second degré à coefficients réels.">
+                  <d_01 />
+                </l_5.2.2>
+                <l_5.2.1 S_00="Forme algébrique d’un nombre complexe : somme, produit, conjugué.">
+                  <d_01 />
+                </l_5.2.1>
+              </d_01>
+            </l_5.2>
+            <l_5.3 S_00="Équations linéaires du second ordre à coefficients réels constants">
+              <d_01>
+                <l_5.3.1 S_00="Équation différentielle ay′′+by′+cy = d(t) où a, b et c sont des constantes réelles et d une fonction continue à valeurs réelles.">
+                  <d_01 />
+                </l_5.3.1>
+              </d_01>
+            </l_5.3>
+          </d_01>
+        </l_5>
+        <l_4 S_00="Calcul intégral">
+          <d_01>
+            <l_4.1 S_00="Primitives">
+              <d_01>
+                <l_4.1.1 S_00="Primitives de fonctions de référence, opérations algébriques.">
+                  <d_01 />
+                </l_4.1.1>
+                <l_4.1.2 S_00="Complément : primitives de cos (ωt + ϕ) et sin(ωt + ϕ), ω et ϕ étant réels.">
+                  <d_01 />
+                </l_4.1.2>
+              </d_01>
+            </l_4.1>
+            <l_4.3 S_00="Valeur moyenne d’une fonction sur un intervalle : définition, interprétation géométrique.">
+              <d_01>
+                <l_4.3.1 S_00="Formule d’intégration par parties.">
+                  <d_01 />
+                </l_4.3.1>
+              </d_01>
+            </l_4.3>
+            <l_4.2 S_00="Intégration">
+              <d_01>
+                <l_4.2.3 S_00="Calcul d’aires.">
+                  <d_01 />
+                </l_4.2.3>
+                <l_4.2.2 S_00="Propriétés de l’intégrale : relation de Chasles, linéarité et positivité.">
+                  <d_01 />
+                </l_4.2.2>
+                <l_4.2.1 S_00="Calcul intégral : f (x) dx = F(b) – F(a) où F est une primitive de f .">
+                  <d_01 />
+                </l_4.2.1>
+              </d_01>
+            </l_4.2>
+          </d_01>
+        </l_4>
+        <l_7 S_00="Transformation de Laplace.">
+          <d_01>
+            <l_7.2 S_00="Transformée de Laplace d’une dérivée.">
+              <d_01 />
+            </l_7.2>
+            <l_7.3 S_00="Transformée de Laplace d’une primitive.">
+              <d_01 />
+            </l_7.3>
+            <l_7.1 S_00="Transformation de Laplace">
+              <d_01>
+                <l_7.1.4 S_00="Théorème de la valeur initiale et théorème de la valeur finale.">
+                  <d_01 />
+                </l_7.1.4>
+                <l_7.1.3 S_00="Propriétés de la transformation de Laplace :">
+                  <l_01 S_00="– linéarité ;" S_01="– effet d’une translation ou d’un changement d’échelle sur la variable ;" S_02="– effet de la multiplication par e −at ." />
+                </l_7.1.3>
+                <l_7.1.2 S_00="Transformée de Laplace des fonctions causales usuelles.">
+                  <d_01 />
+                </l_7.1.2>
+                <l_7.1.1 S_00="Transformée de Laplace d’une fonction causale f.">
+                  <d_01 />
+                </l_7.1.1>
+              </d_01>
+            </l_7.1>
+          </d_01>
+        </l_7>
+        <l_6 S_00="Série de fourier">
+          <d_01>
+            <l_6.2 S_00="Séries de Fourier">
+              <d_01>
+                <l_6.2.1 S_00="Série de Fourier associée à une fonction T-périodique continue par morceaux sur R.">
+                  <d_01 />
+                </l_6.2.1>
+                <l_6.2.3 S_00="Convergence d’une série de Fourier lorsque f est de classe C1 par morceaux sur R (conditions de Dirichlet).">
+                  <d_01 />
+                </l_6.2.3>
+                <l_6.2.2 S_00="Cas d’une fonction paire, impaire.">
+                  <d_01 />
+                </l_6.2.2>
+                <l_6.2.4 S_00="Formule de Parseval">
+                  <d_01 />
+                </l_6.2.4>
+              </d_01>
+            </l_6.2>
+            <l_6.1 S_00="Exemples de séries numériques">
+              <d_01>
+                <l_6.1.2 S_00="Séries de Riemann : convergence.">
+                  <d_01 />
+                </l_6.1.2>
+                <l_6.1.1 S_00="Séries géométriques : convergence, somme.">
+                  <d_01 />
+                </l_6.1.1>
+              </d_01>
+            </l_6.1>
+          </d_01>
+        </l_6>
+        <l_9 S_00="Calcul vectoriel">
+          <d_01>
+            <l_9.1 S_00="Décomposition d’un vecteur dans une base du plan ou de l’espace">
+              <d_01 />
+            </l_9.1>
+            <l_9.2 S_00="Produit scalaire">
+              <d_01>
+                <l_9.2.1 S_00="Expressions du produit scalaire :">
+                  <l_01 S_00="– à l’aide d’une projection orthogonale ;" S_01="– à l’aide des normes et d’un angle ;" S_02="– à l’aide des coordonnées." />
+                </l_9.2.1>
+              </d_01>
+            </l_9.2>
+          </d_01>
+        </l_9>
+        <l_8 S_00="Probabilités 1.">
+          <d_01>
+            <l_8.1 S_00="Conditionnement et indépendance">
+              <d_01>
+                <l_8.1.1 S_00="Conditionnement par un événement de probabilité non nulle. Notation PA(B).">
+                  <d_01 />
+                </l_8.1.1>
+                <l_8.1.2 S_00="Indépendance de deux événements.">
+                  <d_01 />
+                </l_8.1.2>
+              </d_01>
+            </l_8.1>
+            <l_8.3 S_00="Exemples de lois à densité">
+              <d_01>
+                <l_8.3.2 S_00="Espérance, variance et écart type de la loi binomiale.">
+                  <d_01 />
+                </l_8.3.2>
+                <l_8.3.3 S_00="Loi normale d’espérance μ et d’écart type σ .">
+                  <d_01 />
+                </l_8.3.3>
+                <l_8.3.1 S_00="Loi uniforme sur [a, b].">
+                  <d_01 />
+                </l_8.3.1>
+                <l_8.3.6 S_00="Théorème de la limite centrée.">
+                  <d_01 />
+                </l_8.3.6>
+                <l_8.3.4 S_00="Approximation d’une loi binomiale par une loi normale.">
+                  <d_01 />
+                </l_8.3.4>
+                <l_8.3.5 S_00="Espérance et variance des lois de aX + b, X + Y, X – Y dans le cas où X et Y sont des variables aléatoires indépendantes.">
+                  <d_01 />
+                </l_8.3.5>
+              </d_01>
+            </l_8.3>
+            <l_8.2 S_00="Exemple de loi discrète">
+              <d_01>
+                <l_8.2.3 S_00="Espérance, variance et écart type de la loi binomiale.">
+                  <d_01 />
+                </l_8.2.3>
+                <l_8.2.2 S_00="Loi binomiale.">
+                  <d_01 />
+                </l_8.2.2>
+                <l_8.2.1 S_00="Variable aléatoire associée au nombre de succès dans un schéma de Bernoulli.">
+                  <d_01 />
+                </l_8.2.1>
+              </d_01>
+            </l_8.2>
+          </d_01>
+        </l_8>
+      </d_dicSavoirs>
+    </Savoirs_M>
+  </d_dicoSavoirs>
+  <d_domaines />
+  <d_effectifs>
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_D>
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_G>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_S />
+    <l_R />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  </d_effectifsSeance>
+  <d_horsClasse />
+  <d_labels>
+    <l_ELEVES S_00="étudiant(s)" S_01="étudiants" />
+    <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+  </d_labels>
+  <l_listCompetences S_00="S" />
+  <l_listProblematiques />
+  <l_listSavoirs S_00="S" S_01="M" S_02="P" />
+  <l_listeDemarches />
+  <l_listeDomaines />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeThematiques />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeHorsClasse />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="2" S_00="1_ère année" />
+    <l_01 I_01="2" S_00="2_ème année" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ B_tachesOnce="False" I_duree="40" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-MV_projet.html" S_intitule="Projet de fin d'année">
+      <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Activités du groupe" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectifs" S_01="" S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="Problématique/thème" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Mise en situation / Expression du besoin" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Option" S_01="" S_02="Véhicules particuliers--Véhicules de transport routier--Motocycles" S_03="" />
+        <l_PRX S_00="Moyens à mettre en œuvre" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Evaluation établissement" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_TIT>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="13" I_01="1" I_02="0" />
+            </l_00>
+          </l_TIT>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="21" I_01="1" I_02="0" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+        <d_S>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Evaluation commission" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="13" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="21" I_01="1" I_02="1" />
+            </l_00>
+          </l_Prof>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille BTS MV U62-2018.xlsx" S_01="I" />
+        <l_S S_00="Grille BTS MV U62-2018.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties S_00="C" S_01="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="3" I_01="4" />
+      <d_phases>
+        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" />
+        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
+        <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" />
+        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+      </d_phases>
+      <d_posRevues>
+        <l__03 S_00="Ana" S_01="Rea" S_02="Val" />
+      </d_posRevues>
+      <d_taches />
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_TD>
+    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SA>
+  </d_seances>
+  <d_thematiques />
+  <l_tr_com />
+</Referentiel>

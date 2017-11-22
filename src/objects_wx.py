@@ -12896,7 +12896,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         ww = 0
         for c in range(1, self.GetColumnCount()):
             ww += self.GetColumnWidth(c)
-        w = self.GetClientSize()[0]-20*SSCALE-ww
+        w = self.GetClientSize()[0] - ww - 20*SSCALE # + un petit peu (20 par expérience) pour la barre de défilement
         if w != self.GetColumnWidth(0):
             self.SetColumnWidth(0, w)
             if self.IsShown():
@@ -12909,8 +12909,10 @@ class ArbreCompetences(HTL.HyperTreeList):
     ####################################################################################
     def wrap(self,w):
         item = self.GetRootItem()
+        font = wx.ClientDC(self).GetFont()
         if item != None:
-            while 1:
+            dc = wx.ClientDC(self)
+            while 1: # On parcoure toutes les lignes de l'arbre
                 item = self.GetNext(item)
                 if item == None:
                     break
@@ -12920,12 +12922,20 @@ class ArbreCompetences(HTL.HyperTreeList):
                 if item._type == 0:
                     W = w*0.93 - 5*SSCALE
                 else:
-                    W = w - 35*SSCALE
-                    
+                    W = w - 35*SSCALE # 35 correspond au décallage des "enfants" (cases à cocher)
+                
                 text = self.GetItemText(item, 0).replace("\n", "")
-                text = wordwrap(text, W, wx.ClientDC(self))
+#                 try:
+#                     f = self.GetItemFont(item)#.GetPixelSize()
+#                     print dc.GetFullTextExtent("text", f)
+#                     print f.GetPixelSize()
+#                 except:
+#                     pass
+#                 wx.ClientDC(self).SetFont(f)
+                text = wordwrap(text, W*0.9, dc) # Je ne comprends pas mais il faut ce 0.9 ...
              
                 self.SetItemText(item, text, 0)
+#         wx.ClientDC(self).SetFont(font)
         
     ####################################################################################
     def Construire(self, branche, dic = None, ct_type = 0):
