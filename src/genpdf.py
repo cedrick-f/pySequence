@@ -44,6 +44,7 @@ from  constantes import ellipsizer, getAnneeScolaireStr, \
                         LONG_MAX_PROBLEMATIQUE, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
 import util_path
 import os.path
+from itertools import izip_longest
 #from textwrap import wrap
 #import csv
 
@@ -88,8 +89,8 @@ import time
 #
 # Elements HTML
 #
-def encap(s, t):
-    return "<"+t+">"+s+"</"+t+">"
+def encap(s, t, att = []):
+    return "<"+t+" "+" ".join(att)+">"+s+"</"+t+">"
     
 def italic(s):
     return "<i>"+s+"</i>"
@@ -163,6 +164,30 @@ def case_a_cocher(labels, etats):
     :type etats: list
     
     """
+    e = 0
+    cells = []
+    for c in labels.split(u"\n\n"):
+        col = []
+        cells.append(col)
+        for t in c.split(u"\n"):
+            col.append([checkbox(e in etats)] + t.split(":"))
+            e += 1
+    lignes = map(list, izip_longest(*cells, fillvalue = [""]*3))
+    
+    html = u""
+    
+    for l in lignes:
+        tr = u""
+        for c in l:
+            tr += encap(c[0], "td", ['style="width:16px"']) \
+                + encap(c[1], "td", ['style="width:36px"']) \
+                + encap(c[2], "td")
+        html += encap(tr, "tr")
+    
+    return encap(html, "table")#, ['style="border: 1px solid black"'])
+    
+    
+    
     colonnes = labels.split(u"\n\n")
     html = u""
     e = 0
@@ -174,7 +199,7 @@ def case_a_cocher(labels, etats):
             e += 1
         html += encap("<br>".join(hc), "td")
     
-    return encap(encap(html, "tr"), "table")
+    return encap(html, "table")
 
 #######################################################################################################################
 #
