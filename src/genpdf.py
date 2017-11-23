@@ -180,8 +180,9 @@ def case_a_cocher(labels, etats):
         tr = u""
         for c in l:
             tr += encap(c[0], "td", ['style="width:16px"']) \
-                + encap(c[1], "td", ['style="width:36px"']) \
-                + encap(c[2], "td")
+                + encap(c[1], "td", ['style="width:36px ; vertical-align:middle"'])
+            if len(c) > 2:
+                tr += encap(c[2], "td")
         html += encap(tr, "tr")
     
     return encap(html, "table")#, ['style="border: 1px solid black"'])

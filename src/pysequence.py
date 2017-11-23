@@ -10612,7 +10612,7 @@ class Eleve(Personne, ElementBase):
                         {chemin_absolu_du_fichier_grille_original : ([partie(s)_du_projet] , chemin_absolu_du_fichier_grille)}
             :rtype: dict
         """
-#        print "GetNomGrilles"
+#         print "GetNomGrilles"
         prj = self.GetDocument().GetProjetRef()
 #        print prj
 #        print prj.grilles
@@ -10641,9 +10641,9 @@ class Eleve(Personne, ElementBase):
                 else:
                     nomFichiers[fo] = os.path.join(dirpath, self.getNomFichierDefaut(prefixe))
                 nomFichiers[fo] += grilles.EXT_EXCEL
-                nomFichiers[fo] = (part, nomFichiers[fo])
+                nomFichiers[fo] = (parts, nomFichiers[fo])
                 
-#        print "   >", nomFichiers
+#         print "   >", nomFichiers
         return nomFichiers
     
 

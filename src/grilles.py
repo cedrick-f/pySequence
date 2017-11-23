@@ -259,7 +259,7 @@ def modifierGrille(doc, tableaux, eleve):
         :param eleve: Elève concerné par la grille à modifier
         :type eleve: pysequence.Eleve
     """
-#    print "modifierGrille", eleve
+#     print "modifierGrille", eleve, tableaux
     
     log = []
     ref = doc.GetReferentiel()
@@ -269,7 +269,10 @@ def modifierGrille(doc, tableaux, eleve):
     # On coche les cellules "non" (uniquement grilles "Revues" STI2D)
     #     
     for part, grille in prj.grilles.items():
+#         print ">>>", part
         dicInfo = prj.cellulesInfo[part]
+#         print "   ", dicInfo
+#         print "   ", ref.aColNon
         if part in ref.aColNon.keys() and ref.aColNon[part]:
             if not "NON" in dicInfo.keys():
                 log.append(u"Manque info \"NON\" pour %s" %prj.parties[part])
@@ -287,7 +290,7 @@ def modifierGrille(doc, tableaux, eleve):
                 feuille = feuilNON
             
             for i, indics in dicNon.items():
-#                print "   ", indics
+#                 print "   indic:", indics
                 lignes = [ind.ligne[part] for ind in indics if part in ind.ligne.keys() and ind.ligne[part] != 0]
 #                 print "keys", part, dicIndic.keys() 
                 for j, ligne in enumerate(lignes):
@@ -297,9 +300,10 @@ def modifierGrille(doc, tableaux, eleve):
                         indic = dicIndic['S'+i][j]
                     else:
                         indic = False
-                    
+#                     print "        ", i, indic
                     for parts, t in tableaux.values():
                         if part in parts and t != None:
+#                             print "!!!!!!"
                             if feuille in t.getSheets():
                                 nf = t.getSheetNum(feuille)
                                 if not indic: # indicateur pas évalué --> on coche NON !
