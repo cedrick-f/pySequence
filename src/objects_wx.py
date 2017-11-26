@@ -15232,8 +15232,6 @@ class myProgressDialog(wx.Frame):
 # Information PopUp (format HTML)
 # 
 #############################################################################################################
-
-
 class myHtmlWindow(html.HtmlWindow):
     def __init__(self, *arg, **kargs):
         html.HtmlWindow.__init__(self, *arg, **kargs)
@@ -15253,22 +15251,33 @@ class myHtmlWindow(html.HtmlWindow):
 
 
 class PopupInfo(wx.PopupWindow):
-    def __init__(self, parent, page, mode = "H", size=(400*SSCALE, 300*SSCALE)):
+    def __init__(self, parent, page = "", mode = "H", width = 400*SSCALE):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
+        
         self.parent = parent
         sizer = wx.BoxSizer(wx.VERTICAL)
+#         print "PopupInfo", size[0], id(self)
+        
+        self.w = width
+        size = (self.w, -1)
         
         #
         self.mode = mode
         if mode == "H":
             self.html = myHtmlWindow(self, -1, size = size,
-                                        style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
+                                     style = wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_AUTO)#html.HW_SCROLLBAR_NEVER)
         else:
             self.html = webview.WebView.New(self, size = size)
             self.SetClientSize(size)
         
+        
+        
         self.SetHTML(page)
         self.SetPage()
+        
+        self.SetMinSize(size)
+        self.html.SetSize(size)
+        
         self.SetAutoLayout(True)
         
         # Un fichier temporaire pour mettre une image ...
@@ -15772,10 +15781,21 @@ class PopupInfo(wx.PopupWindow):
 #        self.Fit()
 
         if self.mode == "H":
+#             print id(self), self.GetMinSize()
+#             self.html.SetPage("")
+            
 #             print self.soup.prettify()
+            
+#             self.html.SetPage(self.soup.prettify())
+#             self.html.AppendToPage(self.soup.prettify())
             self.html.SetPage(self.soup.prettify())
             ir = self.html.GetInternalRepresentation()
-            self.SetClientSize((ir.GetWidth(), ir.GetHeight()))
+#             ir.Layout(self.w)
+            
+#             self.html.SetSize( (ir.GetWidth()+25, ir.GetHeight()+25) )
+#             self.SetClientSize(self.html.GetSize()) 
+#             print ir.GetWidth(), ir.GetHeight()
+            self.SetClientSize((ir.GetWidth()+0, ir.GetHeight()+0))
             self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
         else:
             self.html.SetPage(self.soup.prettify(), "")

@@ -9,6 +9,7 @@ releases/
 *.cfg
 src/sequence.cfg
 src/profs.xml
+py3/
 
 #################
 ## Eclipse

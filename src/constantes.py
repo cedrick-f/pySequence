@@ -842,7 +842,7 @@ BASE_FICHE_HTML_ELEVE = u"""
     <table border="0" width = "100%">
         <tbody>
             <tr id = "ld" align="right" valign="middle">
-            <td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+            <td width="120"><span style="text-decoration: underline;">Durée d'activité :</span></td>
             </tr>
             
             <tr  id = "le" align="right" valign="middle">
@@ -976,7 +976,7 @@ BASE_FICHE_HTML_SUPPORT = u"""
     <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
     <p id="nom"> </p>
     
-    <table border="0" width="500">
+    <table border="0" width="100%">
         <tbody>
         <tr  valign="top">
             <td align="left" valign="top" width="300"><div id="des"> </div></td>
@@ -1022,7 +1022,7 @@ BASE_FICHE_HTML_PROB = u"""
 
 BASE_FICHE_HTML_PROJET = u"""
 <font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
-    <table border="0" width="400">
+    <table border="0">
         <tbody>
         
         <tr align="center" valign="top">
@@ -1068,7 +1068,7 @@ BASE_FICHE_HTML_PROJET = u"""
 
 BASE_FICHE_HTML_TACHE = u"""
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
-    <table border="0" width="400">
+    <table border="0">
         <tbody>
         
         <tr>
@@ -1109,7 +1109,7 @@ BASE_FICHE_HTML_PROF = u"""
     <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
 
 
-    <table border="1" width="100%">
+    <table border="0" width="100%">
         <tbody>
         <tr align="right" valign="top">
             <td width="200"><p id="nom"></p></td>

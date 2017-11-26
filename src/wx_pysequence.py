@@ -58,7 +58,7 @@ import select
 
 import util_path
 
-print sys.version_info
+print(sys.version_info)
 
 # à décommenter pour forcer l'utilisation de wxpython 2.8 (ubuntu 14)
 # if sys.platform != "win32":
@@ -127,7 +127,7 @@ if 'win' in sys.platform:
 #     print "screensize2", screensize2
     
     SSCALE = 1.0*screensize2[0]/screensize[0]
-    print "Facteur d'echelle :", SSCALE
+    print("Facteur d'echelle :", SSCALE)
     
 
 
@@ -162,7 +162,7 @@ class SingleInstApp(wx.App):
             if os.path.isfile(fichier):
                 cmd = u"OpenWindow.%s.%s" % (self.name, fichier)
                 if not SendMessage(cmd, port = self.PORT):
-                    print u"Failed to send message!"
+                    print(u"Failed to send message!")
             else:
                 wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
                 
@@ -329,12 +329,18 @@ class SingleInstApp(wx.App):
 #     from agw import advancedsplash as AS
 # except ImportError: # if it's not there locally, try the wxPython lib.
 #     import wx.lib.agw.advancedsplash as AS
-    
-class MySplashScreen(wx.SplashScreen):
+
+# Pour passage Python 3
+try:
+    import wx.adv as adv
+except:
+    adv = wx
+
+class MySplashScreen(adv.SplashScreen):
     def __init__(self, parent):
         bmp = self.GetSplash()
-        wx.SplashScreen.__init__(self, bmp,
-                                 wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
+        adv.SplashScreen.__init__(self, bmp,
+                                 adv.SPLASH_CENTRE_ON_SCREEN | adv.SPLASH_TIMEOUT,
                                  6000, None, -1,
                                  style = wx.BORDER_NONE | wx.STAY_ON_TOP)
         

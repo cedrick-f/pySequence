@@ -562,12 +562,12 @@ def GetObjectFromClipBoard(instance):
 #
 ######################################################################################  
 class ElementBase():
-    def __init__(self):
+    def __init__(self, tipWidth = 400*SSCALE):
         
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, "")
+        self.tip = PopupInfo(self.GetApp().parent, "", width = tipWidth)
         
         self.toolTip = None
 
@@ -844,7 +844,11 @@ class ElementBase():
     def GetProjetRef(self):
         return self.GetDocument().GetProjetRef()
 
-
+    ######################################################################################  
+    def GetTip(self):
+        if hasattr(self, 'tip'):
+            return self.tip
+        
     ######################################################################################  
     def GetFicheHTML(self, param = None):
         if param is None:
@@ -1347,7 +1351,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, "")
+        self.tip = PopupInfo(self.GetApp().parent, width = 1000*SSCALE)
+        self.zoneMove = None
+        self.curTip = None
         
         
     ######################################################################################  
@@ -1450,15 +1456,15 @@ class BaseDoc(ElementBase, ElementAvecLien):
         if hasattr(self, 'call'):
             self.call.Stop()
             
-        if hasattr(self, 'tip'):
+        if self.curTip is not None:#hasattr(self, 'curTip'):
             if pos is not None:
                 x, y = pos
 #                 print x, y
-                X, Y, W, H = self.tip.GetRect()
+                X, Y, W, H = self.curTip.GetRect()
 #                 print X, Y, W, H
                 if x > X and x < X+W and y > Y and y < Y+H:
                     return
-            self.tip.Show(False)
+            self.curTip.Show(False)
         
         
             
@@ -1544,49 +1550,91 @@ class BaseDoc(ElementBase, ElementAvecLien):
             
             elif zone.param == "EQU":
                 self.SelectItem(self.branchePrf, depuisFiche = True)
+                
+
+#     ######################################################################################  
+#     def GetTip(self):
+#         return self.tip
+        
+    
+#     ######################################################################################  
+#     def ShowTip(self, x, y, obj, zone): 
+#         tip = obj.GetTip()
+#         if self.tip != tip:
+#             if obj != self:
+#                 obj.SetTip()
+#             else:
+#                 obj.SetTip(zone.param, zone.obj)
+#             tip = obj.GetTip()
+#         if tip != None:
+#             w, h = tip.GetSize()
+#             X, Y, W, H = getDisplayPosSize()
+#             tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+#             tip.Show()
+#             self.tip = tip
+        
+    
+    ######################################################################################  
+    def Move(self, zone, x, y):
+#         print "Move", x, y, zone
             
+        self.HideTip()
+        
+        if self.zoneMove != zone:
+            self.call = wx.CallLater(500, self.SetAndShowTip, zone, x, y)
+            
+        else:
+            self.call = wx.CallLater(500, self.ShowTip, x, y)
 
 
     ######################################################################################  
-    def Move(self, zone, x, y):
-#         print "Move", x, y
-            
-        self.HideTip()
-            
-        tip = None 
+    def ShowTip(self, x, y):
+        X, Y, W, H = getDisplayPosSize()
+
+        w, h = self.curTip.GetSize()
+        self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+        self.curTip.Show()
+    
+        
+    ######################################################################################  
+    def SetAndShowTip(self, zone, x, y):
+#         print "SetAndShowTip", x, y
+             
+#         self.HideTip()
+        self.zoneMove = zone
+        
+        self.curTip = None 
         if zone.obj is not None and zone.param is None:
 #             print "    elem :", zone.obj
             if type(zone.obj) != list:
-            
+             
                 if hasattr(zone.obj, 'tip'):
                     zone.obj.SetTip()
-                    tip = zone.obj.tip
+                    self.curTip = zone.obj.tip
             else:
                 if hasattr(zone.obj[0], 'tip'):
                     zone.obj[0].SetTip()
-                    tip = zone.obj[0].tip 
-#            if hasattr(zone.obj, "branche"):
-#                elem = zone.obj.branche.GetData()
-#                
-#                if hasattr(elem, 'tip'):
-#                    elem.SetTip()
-#                    tip = elem.tip
-        
+                    self.curTip = zone.obj[0].tip
+         
         else:
 #             print "    zone", zone.param
-            tip = self.SetTip(zone.param, zone.obj)
+            self.SetTip(zone.param, zone.obj)
+            self.curTip = self.tip
+             
+        if self.curTip != None:
+            self.ShowTip(x, y)
+#             X, Y, W, H = getDisplayPosSize()
+#  
+# #             print "  tip", x, y, tip.GetSize()
+#  
+#             w, h = tip.GetSize()
+#             tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+# #             self.call = wx.CallLater(500, tip.Show, True)
+#             tip.Show()
             
-        if tip != None:
-            X, Y, W, H = getDisplayPosSize()
-
-#             print "  tip", x, y, tip.GetSize()
-
-            w, h = tip.GetSize()
-            tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
-            self.call = wx.CallLater(500, tip.Show, True)
-            self.tip = tip
-
-
+#             
+            
+            
     ######################################################################################  
     def MiseAJourListeSystemesClasse(self):
         return
@@ -3407,8 +3455,8 @@ class Projet(BaseDoc):
                 self.tip.SetWholeText("ori", self.origine)
                 self.tip.SetWholeText("con", self.contraintes)
                 self.tip.SetWholeText("pro", self.production)
-                self.tip.SetWholeText("dec", self.intituleParties)
-                self.tip.SetWholeText("par", self.besoinParties)
+                self.tip.SetWholeText("dec", self.besoinParties)
+                self.tip.SetWholeText("par", self.intituleParties)
             else:
                 pass
             
@@ -3468,7 +3516,7 @@ class Projet(BaseDoc):
                     
                 
         self.tip.SetPage()
-        return self.tip
+        return
         
         
         
@@ -8483,8 +8531,8 @@ class Tache(ElementAvecLien, ElementBase):
         
         self.projet = projet
         ElementAvecLien.__init__(self)
-        ElementBase.__init__(self)
-        self.tip.SetSize((500*SSCALE, -1))
+        ElementBase.__init__(self, 500*SSCALE)
+#         self.tip.SetSize((, -1))
         
         
         # Les données sauvegardées
@@ -10262,9 +10310,9 @@ class Modele(ElementAvecLien, ElementBase):
 #
 ####################################################################################
 class Personne(ElementBase):
-    def __init__(self, doc, Id = 0, nom = u"", prenom = u""):
+    def __init__(self, doc, Id = 0, nom = u"", prenom = u"", width = 400*SSCALE):
         self.doc = doc
-        ElementBase.__init__(self)
+        ElementBase.__init__(self, width)
 
         self.nom = nom
         self.prenom = prenom
@@ -10486,7 +10534,7 @@ class Eleve(Personne, ElementBase):
         for k in doc.GetProjetRef().parties.keys():
             self.grille[k] = Lien(typ = 'f')
         
-        Personne.__init__(self, doc, ident, nom = nom, prenom = prenom)
+        Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 500*SSCALE)
  
         self.modeles = []
         
