@@ -1665,7 +1665,9 @@ def rectangle_plein_doigt(ctx, x, y, w, h, b, yd, coulBord, coulInter, alpha = 1
 
 def boule(ctx, x, y, r, 
           color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1), 
-          transparent = True):
+          transparent = True, portion = 100):
+    
+    mask = 0.01*portion
     pat = cairo.RadialGradient (x-r/2, y-r/2, r/4,
                                 x-r/3, y-r/3, 3*r/2)
     if transparent:
@@ -1677,7 +1679,12 @@ def boule(ctx, x, y, r,
     pat.add_color_stop_rgba (0, color0[0], color0[1], color0[2], alpha0)
     pat.add_color_stop_rgba (1, color1[0], color1[1], color1[2], alpha1)
     ctx.set_source (pat)
-    ctx.arc (x, y, r, 0, 2*pi)
+    
+    ctx.move_to (x, y)
+    ctx.line_to (x, y-r)
+#     ctx.curve_to (51.2, 230.4, 51.2, 128.0, 128.0, 128.0);
+    ctx.arc (x, y, r, 3*pi/2, 2*pi*mask+3*pi/2)
+    ctx.close_path ()
     ctx.fill ()
 
 

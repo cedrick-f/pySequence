@@ -1146,8 +1146,13 @@ def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y, h):
     
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
-    """ Dessine les "boules"
+    u""" Dessine les "boules"
+    
     """ 
+    print "DrawCroisementsElevesTaches"
+    print tache.eleves
+    print tache.impEleves
+    
     #
     # Croisements Tâche/Eleves
     #
@@ -1171,22 +1176,24 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
         dy = 0
         r = 0.006 * COEF
         
-    for i in lstElv:
+    for i, e in enumerate(lstElv):
+        print "   ",i, e
 #        if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
         if differeSuivantEleve: 
             color1 = BCoulTache[tache.phase]
             color0 = (1, 1, 1, 1)
         else:
-            color0 = CoulAltern[i][0]
-            color1 = CoulAltern[i][1]
+            color0 = CoulAltern[e][0]
+            color1 = CoulAltern[e][1]
 
-        if i > len(xEleves)-1:
+        if e > len(xEleves)-1:
             break
         
-        _x = xEleves[i]
+        _x = xEleves[e]
         boule(ctx, _x, y, r, 
               color0 = color0, color1 = color1,
-              transparent = False)
+              transparent = False,
+              portion = tache.impEleves[i])
         
         eleves_groupes = tache.projet.eleves + tache.projet.groupes
         tache.GetDocument().zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], 

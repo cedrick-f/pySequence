@@ -9847,10 +9847,12 @@ class PanelPropriete_Tache(PanelPropriete):
     ############################################################################            
     def ConstruireListeEleves(self):
         u""" Ajout des cases "élève" :
-             - sur la page "Proprietes générale"
+             - sur la page "Proprietes générales"
              - sur les pages "Compétences" : cas des revues (sauf dernière(s)) et des compétences prédéterminées
         """
 #         print "ConstruireListeEleves", self.tache
+
+        # Sur la page "Proprietes générales"
         if hasattr(self, 'elevesCtrl'):
             
             self.pageGen.Freeze()
@@ -9860,14 +9862,31 @@ class PanelPropriete_Tache(PanelPropriete):
                 ss.Destroy()
                 
             self.elevesCtrl = []
+            self.impElevesCtrl = []
 
             for i, e in enumerate(self.GetDocument().eleves + self.GetDocument().groupes):
                 v = wx.CheckBox(self.pageGen, 100+i, e.GetNomPrenom())
 #                 v.SetMinSize((200,-1))
                 v.SetValue(i in self.tache.eleves)
                 self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
-                self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
+                self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.TOP|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
                 self.elevesCtrl.append(v)
+                
+                p = wx.SpinCtrl(self.pageGen, 200+i, "%", (50*SSCALE, 18*SSCALE))
+                p.SetMaxSize((50*SSCALE, 18*SSCALE))
+                p.SetToolTipString(u"Taux d'implication de l'élève dans la tâche")
+                p.SetRange(1,100)
+                if i in self.tache.eleves:
+                    p.SetValue(self.tache.impEleves[self.tache.eleves.index(i)])
+                    p.Enable(True)
+                else:
+                    p.SetValue(100)
+                    p.Enable(False)
+                self.pageGen.Bind(wx.EVT_SPINCTRL, self.OnSpin, p)
+                self.pageGen.Bind(wx.EVT_TEXT, self.OnSpin, p)
+                self.bsizer.Add(p, flag = wx.ALIGN_RIGHT|wx.BOTTOM|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
+                self.impElevesCtrl.append(p)
+                
             
             line = wx.StaticLine(self.pageGen)
             self.bsizer.Add(line, 0, flag = wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, border = 3)#)  size = (100,3))
@@ -9889,9 +9908,31 @@ class PanelPropriete_Tache(PanelPropriete):
             self.pageGen.Thaw()
 #             print [cb.GetSize()[0] for cb in self.elevesCtrl]
 #             line.SetSize((max([cb.GetSize()[0] for cb in self.elevesCtrl]), 3))
-            
+        
+        
+        # sur les pages "Compétences"
         self.ConstruireCasesEleve()
         
+        
+    #############################################################################            
+    def OnSpin(self, event):
+#         print event.GetId()
+        i = event.GetId()-200
+        if i in self.tache.eleves:
+            e = self.tache.eleves.index(i)
+            self.tache.impEleves[e] = self.impElevesCtrl[i].GetValue()
+#         print "    ", lst
+        
+            self.GetDocument().MiseAJourDureeEleves()
+    
+            self.sendEvent(modif = u"Modification du taux d'implication de l'%s dans la tâche" %getSingulier(self.tache.GetLabelEleve())) 
+            
+
+#     #############################################################################            
+#     def OnText(self, event):
+#         print event.GetEventObject()
+#         print event.GetId()
+#         self.log.write('OnText: %d\n' % self.sc.GetValue())
         
         
     #############################################################################            
@@ -9959,11 +10000,17 @@ class PanelPropriete_Tache(PanelPropriete):
             self.tousElevesCtrl.SetValue(all([b.IsChecked() for b in self.elevesCtrl]))
         
         lst = []
+        lsti = []
         for i in range(len(self.GetDocument().eleves) + len(self.GetDocument().groupes)):
             if self.elevesCtrl[i].IsChecked():
                 lst.append(i)
+                self.impElevesCtrl[i].Enable(True)
+                lsti.append(self.impElevesCtrl[i].GetValue())
+            else:
+                self.impElevesCtrl[i].Enable(False)
         
         self.tache.eleves = lst
+        self.tache.impEleves = lsti
 #         print "    ", lst
         
         self.GetDocument().MiseAJourDureeEleves()

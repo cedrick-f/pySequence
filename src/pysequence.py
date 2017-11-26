@@ -8544,7 +8544,8 @@ class Tache(ElementAvecLien, ElementBase):
         self.intituleDansDeroul = True
         
         # Les élèves concernés (liste d'élèves)
-        self.eleves = []
+        self.eleves = []        
+        self.impEleves = []   # taux d'implication des élèves dans la tâche
 
         # Le code de la tâche (affiché dans l'arbre et sur la fiche
         self.code = u""
@@ -8757,6 +8758,10 @@ class Tache(ElementAvecLien, ElementBase):
         for i, e in enumerate(self.eleves):
             brancheElv.set("Eleve"+str(i), str(e))
         
+        brancheElv = ET.Element("ImplicationEleves")
+        root.append(brancheElv)
+        for i, e in enumerate(self.impEleves):
+            brancheElv.set("Eleve"+str(i), str(e))
         
         if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
             # Structure des indicateurs :
@@ -8828,6 +8833,24 @@ class Tache(ElementAvecLien, ElementBase):
             if i < len(prj.eleves) + len(prj.groupes):
                 self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
         
+        
+        brancheElv = branche.find("ImplicationEleves")
+        impEleves = []
+        if brancheElv != None: ## cas pour Version <= 7.1.12
+            prj = self.GetDocument()
+            for i, e in enumerate(brancheElv.keys()):
+                if i < len(prj.eleves) + len(prj.groupes):
+                    impEleves.append(eval(brancheElv.get("Eleve"+str(i)), "100"))
+        
+        # On corrige un éventuel conflit de taille
+        self.impEleves = []
+        for i in range(len(self.eleves)):
+            if len(impEleves) > i:
+                self.impEleves.append(impEleves[i])
+            else:
+                self.impEleves.append(100)
+                
+                
         # Initialisation des Indicateurs par elève
         self.indicateursEleve = self.IndicateursEleveDefaut() 
         if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
@@ -10541,6 +10564,9 @@ class Eleve(Personne, ElementBase):
             
     ######################################################################################  
     def GetDuree(self, phase = None, total = False):
+        u""" Calcul de la durée que doit passer l'élève sur les Tâches du Projet
+            à partir de la phase 
+        """
 #        print "GetDuree", phase
         d = 0.0
         p = 0
@@ -10556,7 +10582,7 @@ class Eleve(Personne, ElementBase):
                 break
             if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:
-                    d += t.GetDuree()
+                    d += t.GetDuree() * t.impEleves[t.eleves.index(self.id)]*0.01
 #        print "   >>>", d
         return d
 
