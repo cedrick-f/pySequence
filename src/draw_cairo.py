@@ -1663,11 +1663,11 @@ def rectangle_plein_doigt(ctx, x, y, w, h, b, yd, coulBord, coulInter, alpha = 1
     ctx.stroke ()
 
 
-def boule(ctx, x, y, r, 
-          color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1), 
-          transparent = True, portion = 100):
+def boule(ctx, x, y, r, p = 100, 
+          color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1),
+          transparent = True):
     
-    mask = 0.01*portion
+    mask = 0.01*p
     pat = cairo.RadialGradient (x-r/2, y-r/2, r/4,
                                 x-r/3, y-r/3, 3*r/2)
     if transparent:
@@ -1676,16 +1676,23 @@ def boule(ctx, x, y, r,
     else:
         alpha0 = 1
         alpha1 = 1
+    
     pat.add_color_stop_rgba (0, color0[0], color0[1], color0[2], alpha0)
     pat.add_color_stop_rgba (1, color1[0], color1[1], color1[2], alpha1)
-    ctx.set_source (pat)
     
+    ctx.set_line_width (0.0003 * COEF)
+    ctx.set_source_rgba (1, 1, 1, 1)
+    ctx.arc (x, y, r, 0, 2*pi)
+    ctx.fill_preserve()
+    ctx.set_source_rgba (0, 0, 0, 1)
+    ctx.stroke ()
+    
+    ctx.set_source (pat)
     ctx.move_to (x, y)
     ctx.line_to (x, y-r)
-#     ctx.curve_to (51.2, 230.4, 51.2, 128.0, 128.0, 128.0);
-    ctx.arc (x, y, r, 3*pi/2, 2*pi*mask+3*pi/2)
-    ctx.close_path ()
-    ctx.fill ()
+    ctx.arc (x, y, r, 3*pi/2, 2*pi*mask + 3*pi/2)
+    ctx.fill()
+
 
 
 

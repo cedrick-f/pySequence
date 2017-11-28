@@ -842,11 +842,11 @@ BASE_FICHE_HTML_ELEVE = u"""
     <table border="0" width = "100%">
         <tbody>
             <tr id = "ld" align="right" valign="middle">
-            <td width="120"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+            <td width="120px"><span style="text-decoration: underline;">Durée d'activité</span></td>
             </tr>
             
             <tr  id = "le" align="right" valign="middle">
-            <td><span style="text-decoration: underline;">Evaluabilité :</span></td>
+            <td><span style="text-decoration: underline;">Evaluabilité</span></td>
             <td></td>
             </tr>
             {{tab_eval}}

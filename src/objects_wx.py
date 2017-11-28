@@ -3931,7 +3931,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4451,7 +4451,7 @@ class BaseFiche(wx.ScrolledWindow):
                 self.Refresh()
                 self.Update()
         except:
-            pass
+            print "Erreur Computation"
         self.t = None
         
         
@@ -9886,7 +9886,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.pageGen.Bind(wx.EVT_TEXT, self.OnSpin, p)
                 self.bsizer.Add(p, flag = wx.ALIGN_RIGHT|wx.BOTTOM|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
                 self.impElevesCtrl.append(p)
-                
+                 
             
             line = wx.StaticLine(self.pageGen)
             self.bsizer.Add(line, 0, flag = wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, border = 3)#)  size = (100,3))
@@ -15317,8 +15317,6 @@ class PopupInfo(wx.PopupWindow):
             self.html = webview.WebView.New(self, size = size)
             self.SetClientSize(size)
         
-        
-        
         self.SetHTML(page)
         self.SetPage()
         
@@ -15842,7 +15840,7 @@ class PopupInfo(wx.PopupWindow):
 #             self.html.SetSize( (ir.GetWidth()+25, ir.GetHeight()+25) )
 #             self.SetClientSize(self.html.GetSize()) 
 #             print ir.GetWidth(), ir.GetHeight()
-            self.SetClientSize((ir.GetWidth()+0, ir.GetHeight()+0))
+            self.SetClientSize((ir.GetWidth()+2, ir.GetHeight()+2))
             self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
         else:
             self.html.SetPage(self.soup.prettify(), "")

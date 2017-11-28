@@ -8840,7 +8840,7 @@ class Tache(ElementAvecLien, ElementBase):
             prj = self.GetDocument()
             for i, e in enumerate(brancheElv.keys()):
                 if i < len(prj.eleves) + len(prj.groupes):
-                    impEleves.append(eval(brancheElv.get("Eleve"+str(i)), "100"))
+                    impEleves.append(eval(brancheElv.get("Eleve"+str(i), "100")))
         
         # On corrige un éventuel conflit de taille
         self.impEleves = []
@@ -10557,7 +10557,7 @@ class Eleve(Personne, ElementBase):
         for k in doc.GetProjetRef().parties.keys():
             self.grille[k] = Lien(typ = 'f')
         
-        Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 500*SSCALE)
+        Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 550*SSCALE)
  
         self.modeles = []
         
@@ -11397,8 +11397,8 @@ class Eleve(Personne, ElementBase):
             dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
             dic['nom'] = self.GetProjetRef().parties[ph]
             dic['id'] = ph
-            ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
-<td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
+            ligne.append(u"""<tr  id = "le%(id)s" align="right" valign="middle" >
+<td><font color = "%(coul)s"><em>%(nom)s</em></font></td>
 </tr>""" %dic)
 
         ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_ELEVE)
