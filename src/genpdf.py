@@ -387,7 +387,7 @@ def genererFicheValidation(nomFichier, projet):
                    u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
         
     else:
-        messageErreur(self, u"Erreur !",
+        messageErreur(None, u"Erreur !",
                             u"Impossible de trouver le fichier HTML")
         return False
         

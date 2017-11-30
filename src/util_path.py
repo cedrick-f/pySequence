@@ -209,8 +209,28 @@ def toFileEncoding(path):
 #     return path.encode(FILE_ENCODING)
 #    except:
 #        return path
-    
-    
+
+
+######################################################################################  
+def verifierPath(path):
+    pathv = ""
+    if os.path.isfile(path):
+        pathv = path
+        print 1, pathv
+    else:
+        arg2 = path.decode('utf-8')
+        if os.path.isfile(arg2):
+            pathv = arg2
+            print 2, pathv
+        else:
+            arg2 = path.encode('utf-8')
+            if os.path.isfile(arg2):
+                pathv = arg2
+                print 3, pathv
+                    
+    return pathv
+
+
 ######################################################################################  
 def nomCourt(nomFichier):
     u""" Renvoie le nom du fichier au format court (pour affichage = encodé en SystemEncoding)

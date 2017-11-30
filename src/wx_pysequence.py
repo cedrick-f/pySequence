@@ -477,11 +477,12 @@ class IpcServer(threading.Thread):
                 cmd = r[0]
                 ses = r[1]
                 arg = ".".join(r[2:])
-                arg = arg.decode('utf-8')
-
+            
+                path = arg
+                
                 if ses == self.session:
-                    if cmd == u'OpenWindow' and len(arg) > 0:
-                        wx.CallAfter(self.app.DoOpenNewWindow, arg)
+                    if cmd == u'OpenWindow' and len(path) > 0:
+                        wx.CallAfter(self.app.DoOpenNewWindow, path)
                     else:
                         # unknown command message
                         pass
@@ -520,7 +521,7 @@ def GetArgs():
             if os.path.isfile(parametre):
                 fichier = parametre.decode(FILE_ENCODING)
                 fichier = fichier.encode('utf-8')
-          
+                fichier = util_path.verifierPath(fichier)
     return options, fichier
 
 

@@ -1301,6 +1301,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
         print "ouvrir", nomFichier, reparer
+        
+        nomFichier = util_path.verifierPath(nomFichier)
+        if len(nomFichier) == 0:
+            messageErreur(None, u'Erreur !',
+                  u"Impossible de trouver le fichier\n\n%s" %toSystemEncoding(nomFichier))
+            return
+        
+        
         self.Freeze()
         wx.BeginBusyCursor()
         
@@ -1414,8 +1422,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnAppelOuvrir(self, evt):
-#        print "OnAppelOuvrir"
         wx.CallAfter(self.ouvrir, evt.GetFile())
+        
+        
+#        print "OnAppelOuvrir"
+        
         
         
     ###############################################################################################
@@ -1423,7 +1434,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
         evt.SetFile(nomFichier)
         self.GetEventHandler().ProcessEvent(evt)
-    
+        
     
     #############################################################################
     def commandeDelete(self, event = None):    
@@ -3019,7 +3030,8 @@ class FenetreProjet(FenetreDocument):
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-    
+
+        
         #################################################################################################
         def get_err_message(err):
             return (u"\n  "+CHAR_POINT).join([e.getMessage() for e in err])
