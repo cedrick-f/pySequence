@@ -73,7 +73,7 @@ if sys.platform == "linux2":
 
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {'build_exe': 'build/bin',
-                     "packages": ["os", "xhtml2pdf","html5lib", "enchant", "reportlab"], 
+                     "packages": ["os", "xhtml2pdf", "html5lib", "enchant", "reportlab", "wx.lib.pdfwin"], 
                      "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
                      "optimize" : 0,
@@ -86,7 +86,7 @@ build_exe_options = {'build_exe': 'build/bin',
                                   'pywin.debugger.dbgcon', 'pywin.dialogs', 'tcl',
                                   'Tkconstants', 'pydoc', 'doctest', 'test', 'sqlite3',
                                   "PyQt4", "PyQt4.QtGui","PyQt4._qt",
-                                  "matplotlib",
+                                  "matplotlib", "cffi",
                                   "numpy",
                                   ],
                      "include_files": includefiles,

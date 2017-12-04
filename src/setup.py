@@ -133,9 +133,12 @@ binpathincludes = []
 if sys.platform == "linux2":
     binpathincludes += ["/usr/lib"]
 
+# _browserModule = win32com.client.gencache.EnsureModule(
+#         "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}", 0, 1, 1)
+
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {'build_exe': 'build/bin',
-                     "packages": ["os", "xhtml2pdf","html5lib", "enchant", "reportlab"], 
+                     "packages": ["os", "xhtml2pdf","html5lib", "enchant", "reportlab", "wx.lib.pdfwin"], 
                      "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
                      "optimize" : 0,
@@ -146,7 +149,7 @@ build_exe_options = {'build_exe': 'build/bin',
 #                     "zip_includes": [("../packages/html5lib/", "html5lib"),
 #                                      ("../packages/xhtml2pdf/w3c/css.py", "xhtml2pdf/w3c/css.py")],
                      "namespace_packages" : ["xhtml2pdf", "html5lib", "xhtml2pdf.w3c"],
-                     "excludes": ["tkinter",
+                     "excludes": ["tkinter", "cffi",
                                   '_gtkagg', '_tkagg', 'bsddb', 'curses', 'pywin.debugger',
                                   'pywin.debugger.dbgcon', 'pywin.dialogs', 'tcl',
                                   'Tkconstants', 'pydoc', 'doctest', 'test', 'sqlite3',
@@ -184,7 +187,7 @@ author_email = __mail__.replace("#", '@')
 description = u"pySéquence"
 url = "https://github.com/cedrick-f/pySequence"
 long_description = u"aide à la création de séquences pédagogiques et à la validation de projets"
-license = "GPL"
+lic = "GPL"
 
 if __name__ == '__main__':
     if sys.platform == "win32":
@@ -208,7 +211,7 @@ if __name__ == '__main__':
                 url = url,
                 description = description,
                 long_description = long_description,
-                license = license,
+                license = lic,
                 options = {"build_exe": build_exe_options,
                            "build": {'build_exe': 'build'},
                            "install" : {'install_exe': 'build'},

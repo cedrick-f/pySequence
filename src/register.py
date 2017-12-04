@@ -36,6 +36,7 @@ Module register
 ***************
 
 Enregistrement de pySéquence dans la base de registre (Windows)
+(Des)Activation du mode protégé d'Adobe Reader
 
 """
 
@@ -163,6 +164,35 @@ def getIcone(nomFichier):
         print fichier
     
     return
+
+
+########################################################################################
+# [HKEY_CURRENT_USER\Software\Adobe\Acrobat Reader\10.0\Privileged]
+# "bProtectedMode"=(0 = off; 1 = on)
+########################################################################################
+def EnableProtectedModeReader(val = 1):
+#     REG_PATH = r"Software\Adobe\Acrobat Reader\10.0\Privileged"
+    try:
+        REG_PATH = r"Software\Adobe\Acrobat Reader\DC\Privileged"
+        key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, REG_PATH, 0,
+                                           _winreg.KEY_WRITE)
+        _winreg.SetValueEx(key, "bProtectedMode", 0, _winreg.REG_DWORD, val)
+        _winreg.CloseKey(key)
+    except WindowsError:
+        return
+    
+def GetProtectedModeReader():
+#     REG_PATH = r"Software\Adobe\Acrobat Reader\10.0\Privileged"
+    try:
+        REG_PATH = r"Software\Adobe\Acrobat Reader\DC\Privileged"
+        key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, REG_PATH, 0,
+                                           _winreg.KEY_READ)
+        value, regtype = _winreg.QueryValueEx(key, "bProtectedMode")
+        _winreg.CloseKey(key)
+        return value
+    except WindowsError:
+        return None
+
 #Register(u"\"D:\\Developpement\\Sequence\\src\\dist\\Sequence.exe\" \"%1\"")
 #UnRegister()
 

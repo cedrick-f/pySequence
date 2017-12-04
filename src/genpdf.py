@@ -85,6 +85,7 @@ from reportlab.pdfbase import _fontdata_enc_macexpert
 from widgets import messageErreur
 import time
 
+from register import EnableProtectedModeReader, GetProtectedModeReader
 
 #
 # Elements HTML
@@ -673,14 +674,14 @@ if NOT_USE_ADOBE:
 else:
     from wx.lib.pdfwin import PDFWindow
 
-
+# print "HAS_PDFVIEWER", HAS_PDFVIEWER
 
 
 #if wx.Platform == '__WXMSW__':
 #    from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
 #elif wx.Platform == '__WXMAC__':
 #    print "MAC !!"
-    
+
 #    from wx.lib.pdfviewer import pdfViewer
 import tempfile
 import shutil
@@ -693,19 +694,23 @@ def getPDFViewer():
 
 class PdfPanel(wx.Panel):
     def __init__(self, parent):
+
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         if NOT_USE_ADOBE:
             if HAS_PDFVIEWER:
                 self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
                                     wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
             else:
                 self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
-                self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
+#                 self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
         else:
+            m = GetProtectedModeReader()
+            EnableProtectedModeReader(0)
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+            EnableProtectedModeReader(m)
 #             self.Bind(wx.EVT_CLOSE, self.OnClose)
 #             self.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
 #             self.Bind(wx.EVT_DESTROY, self.OnClose)
@@ -735,7 +740,7 @@ class PdfPanel(wx.Panel):
         self.SetAutoLayout(True)
     
         self.pdf.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-#         self.Bind(wx.EVT_CLOSE, self.OnClose)
+
 #         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
 
 #     ######################################################################################################
@@ -745,19 +750,19 @@ class PdfPanel(wx.Panel):
 #         self.pdf.FreeDlls()
 #         print "...FAIT"
 # 
-    ######################################################################################################
-    def OnClose(self, evt):
-        print "OnClose pdf"
-#         self.sizer.Detach(self.pdf)
-#         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
-        self.pdf.FreeDlls()
-#         self.sizer.Remove(self.pdf)
-#         self.pdf.Destroy()
-#         time.sleep(3)
-#         wx.CallAfter(self.Destroy)
-#         self.Destroy()
-#         self.pdf.Destroy()
-        evt.Skip()
+#     ######################################################################################################
+#     def OnClose(self, evt):
+#         print "OnClose pdf"
+# #         self.sizer.Detach(self.pdf)
+# #         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+#         self.pdf.FreeDlls()
+# #         self.sizer.Remove(self.pdf)
+# #         self.pdf.Destroy()
+# #         time.sleep(3)
+# #         wx.CallAfter(self.Destroy)
+# #         self.Destroy()
+# #         self.pdf.Destroy()
+#         evt.Skip()
 
     ######################################################################################################
     def OnEnter(self, event):
@@ -768,6 +773,7 @@ class PdfPanel(wx.Panel):
         
     ######################################################################################################
     def MiseAJour(self, projet, fenDoc):
+#         print "MiseAJour"
         if isinstance(self.pdf, wx.StaticText):
 #        if get_min_adobe_version() == None:
             print "Problème version Adobe"
@@ -815,14 +821,14 @@ class PdfPanel(wx.Panel):
             self.pdf.LoadFile(nomFichier)
             try:
                 pass
+#                 self.pdf.LoadFile(nomFichier)
             except:
-                print "ERREUR pdfViewer", self.pdf
+                print "ERREUR pdfViewer", nomFichier
         else:
-#             self.pdf.LoadFile(nomFichier)
             try:
                 self.pdf.LoadFile(nomFichier)
             except:
-                print "ERREUR PDFWindow", self.pdf
+                print "ERREUR PDFWindow", nomFichier
    
    
 #from pgmagick import Image

@@ -58,7 +58,7 @@ import select
 
 import util_path
 
-print(sys.version_info)
+print sys.version_info
 
 # à décommenter pour forcer l'utilisation de wxpython 2.8 (ubuntu 14)
 # if sys.platform != "win32":
@@ -127,7 +127,7 @@ if 'win' in sys.platform:
 #     print "screensize2", screensize2
     
     SSCALE = 1.0*screensize2[0]/screensize[0]
-    print("Facteur d'echelle :", SSCALE)
+    print "Facteur d'echelle :", SSCALE
     
 
 
@@ -149,7 +149,7 @@ class SingleInstApp(wx.App):
 
     def OnInit(self):
         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
-        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
+#         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
         
         self.name = u"pySéquence-%s" % wx.GetUserId()
         self.instance = wx.SingleInstanceChecker(self.name)
@@ -162,7 +162,7 @@ class SingleInstApp(wx.App):
             if os.path.isfile(fichier):
                 cmd = u"OpenWindow.%s.%s" % (self.name, fichier)
                 if not SendMessage(cmd, port = self.PORT):
-                    print(u"Failed to send message!")
+                    print u"Failed to send message!"
             else:
                 wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
                 
