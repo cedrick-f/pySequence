@@ -503,7 +503,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                     
             pos = (centreCib[0] + ray * sin(ang*pi/180) ,
                    centreCib[1] - ray * cos(ang*pi/180))
-            boule(ctx, pos[0], pos[1], 0.005 * COEF, (0.95, 1, 0.9, 1), (0.1, 0.3, 0.05, 1))
+            boule(ctx, pos[0], pos[1], 0.005 * COEF, 
+                  color0 = (0.95, 1, 0.9, 1), color1 = (0.1, 0.3, 0.05, 1))
 
 
 

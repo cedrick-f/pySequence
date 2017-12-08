@@ -1701,6 +1701,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         print "OnClose doc"
         fenDoc = self.GetNotebook().GetPage(evt.GetSelection())
         fenDoc.quitter()
+#         evt.Skip() # Crash !
         
     
     #############################################################################
@@ -1957,6 +1958,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         # Pour mettre à jour la barre d'outils
         self.parent.OnDocClosed()
         
+#         self.nb.Destroy()
 #         for w in self.nb.GetChildren():
 #             if isinstance(w, genpdf.PdfPanel):
 #                 print "  close", w
@@ -1985,12 +1987,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
  
 #         del self.mgr
         self.mgr.Destroy()
-         
+           
         try:
             self.Destroy()
         except:
             pass
-        
+         
         return True
         
     #############################################################################
@@ -2113,7 +2115,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     def exporterFichePDF(self, nomFichier, pourDossierValidation = False):
         """ Exporte la fiche au format PDF
         
-            pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
+            pourDossierValidation : concerne uniquement les Projets = pour anonymiser la fiche
         """
         # Le décodage/réencodage est obligatoire sous peine de crash !!
         try:
@@ -2869,6 +2871,9 @@ class FenetreProjet(FenetreDocument):
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
             self.pageDetails.Construire(self.fichierCourant, self.projet, self.typ)
+#             print "Close pagevalid"
+#             self.pageValid.pdf.LoadFile(None)
+#             self.pageValid.pdf.Destroy()
 #             self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
         
         elif new == 2: # On vient de cliquer sur la page "dossier de validation"

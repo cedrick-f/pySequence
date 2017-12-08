@@ -539,12 +539,14 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     input2 = open(fichertempF, "rb")
     merger.append(input1)
     merger.append(input2)
-    
+     
     output = open(nomFichier, "wb")
     merger.write(output)
-    output.close()
+     
+     
     input1.close()
     input2.close()
+    output.close()
     
     shutil.rmtree(dosstemp)
     wx.EndBusyCursor()
@@ -711,9 +713,9 @@ class PdfPanel(wx.Panel):
             EnableProtectedModeReader(0)
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
             EnableProtectedModeReader(m)
-#             self.Bind(wx.EVT_CLOSE, self.OnClose)
+#             self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
 #             self.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
-#             self.Bind(wx.EVT_DESTROY, self.OnClose)
+
         
 #        if ADOBE_VERSION == None:
 #            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
@@ -753,16 +755,19 @@ class PdfPanel(wx.Panel):
 #     ######################################################################################################
 #     def OnClose(self, evt):
 #         print "OnClose pdf"
+#         self.pdf.LoadFile(None)
 # #         self.sizer.Detach(self.pdf)
 # #         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+#         
 #         self.pdf.FreeDlls()
+#         self.pdf.Close()
 # #         self.sizer.Remove(self.pdf)
 # #         self.pdf.Destroy()
 # #         time.sleep(3)
-# #         wx.CallAfter(self.Destroy)
+# #         wx.CallAfter(self.pdf.Close)
 # #         self.Destroy()
 # #         self.pdf.Destroy()
-#         evt.Skip()
+# #         evt.Skip()
 
     ######################################################################################################
     def OnEnter(self, event):

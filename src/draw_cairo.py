@@ -1229,7 +1229,7 @@ def get_apercu(doc, larg, prop = 0.7071, entete = False):
     """
 #    print "get_apercu", larg, prop
 #    w, h = 0.04*prop * COEF, 0.04 * COEF
-    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(1.0*larg/prop))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  int(larg), int(1.0*larg/prop))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     s = 1.0*larg/prop/COEF
     ctx.scale(s, s) 
