@@ -7872,7 +7872,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbi = myStaticBox(self, -1, u"Intitulé de la Séquence", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
-        self.intit.SetMinSize((-1, 40*SSCALE))
+        self.intit.SetMinSize((-1, 30*SSCALE))
         self.intit.SetTitre(u"Intitulé de la Séquence", self.sequence.getIcone())
         self.intit.SetToolTipString(u"")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
@@ -8075,7 +8075,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.bmp.SetBitmap(self.sequence.getBitmapPeriode(300))
+        self.bmp.SetBitmap(self.sequence.getBitmapPeriode(300*SSCALE))
         self.position.SetValue(self.sequence.position)
         
     
