@@ -1648,13 +1648,18 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getNbrRevuesDefaut(self, codePrj):
-        return self.projets[codePrj].getNbrRevuesDefaut()
+        if codePrj is not None:
+            return self.projets[codePrj].getNbrRevuesDefaut()
+        else:
+            return 0
 
 
     #########################################################################
     def getPosRevuesDefaut(self, codePrj):
-        return self.projets[codePrj].getPosRevuesDefaut()
-
+        if codePrj is not None:
+            return self.projets[codePrj].getPosRevuesDefaut()
+        else:
+            return []
 
     #########################################################################
     def getIntituleIndicateur(self, comp):
@@ -1722,7 +1727,10 @@ class Referentiel(XMLelem):
         for k, p in self.projets.items():
             prj.append(k)
             pos.append(max(p.periode, 0))
-        return prj[pos.index(max(pos))]
+        
+        if len(prj) > 0:
+            return prj[pos.index(max(pos))]
+
 
 
     #############################################################################
@@ -1730,7 +1738,9 @@ class Referentiel(XMLelem):
         """ Renvoie l'épreuve de projet (évaluation)
             par défaut (pour les projets d'"entrainement" en cours d'année)
         """
-        return self.projets[self.getCodeProjetDefaut()]
+        code = self.getCodeProjetDefaut()
+        if code is not None:
+            return self.projets[code]
 
 
     #############################################################################

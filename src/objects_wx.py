@@ -697,6 +697,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                   ]
             
             
+    ###############################################################################################
+    def GetBoutonToolBar(self, typ, n):
+        for btn in self.tools[typ]:
+            if btn.GetId() == n:
+                return btn
             
     ###############################################################################################
     def ConstruireTb(self):
@@ -1010,7 +1015,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             else:
                 self.menuReg.SetText(u"Inscrire dans la base de registre")
             
-            
+    #############################################################################
+    def MiseAJourToolBar(self):
+        fenDoc = self.GetCurrentPage()
+        coderef = fenDoc.progression.GetReferentiel().Code
+#         print "   ", coderef
+        btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
+        if btnPrj is not None:
+#             print "   ", REFERENTIELS[coderef].projets
+            btnPrj.Enable(len(REFERENTIELS[coderef].projets) > 0)
+            self.tb.Realize()
             
     #############################################################################
     def DefinirOptions(self, options):
@@ -1215,7 +1229,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None, ouverture = False):
-#        print "commandeNouveau"
+#         print "commandeNouveau"
         if ext == None:
             dlg = DialogChoixDoc(self)
             val = dlg.ShowModal()
@@ -1241,6 +1255,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         else:
             child = None
         
+#         if not ouverture: # Si c'est vraiment pour un document vide
         self.OnDocChanged(None)
         
         if child != None:
@@ -1528,12 +1543,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             en fonction du type de document en cours
             Et rafraichissement des séquences de la fenêtre de Progression
         """
-#         print "OnDocChanged"
+        print "OnDocChanged", evt
         
         fenDoc = self.GetCurrentPage()
         
         if hasattr(fenDoc, 'typ'):
-            self.ajouterOutils(fenDoc.typ )
+            self.ajouterOutils(fenDoc.typ)
             
             if fenDoc.typ == "prj":
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterEleve,      id=50)
@@ -1563,6 +1578,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,    id=71)
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouvelleSequence,     id=72)
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouveauProjet,     id=73)
+                    
     
             if fenDoc.typ == "prj":
                 for i in [17, 19, 20]:
@@ -1585,6 +1601,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.supprimerOutils()
             self.tb.Realize()
             
+        wx.CallAfter(self.MiseAJourToolBar)
+        
         self.miseAJourUndo()
 
 
@@ -3939,6 +3957,7 @@ class FenetreProgression(FenetreDocument):
     
         self.SetTitre()
 #        self.progression.MiseAJourTypeEnseignement()
+        self.parent.MiseAJourToolBar()
         
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
@@ -7853,6 +7872,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbi = myStaticBox(self, -1, u"Intitulé de la Séquence", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
+        self.intit.SetMinSize((-1, 40*SSCALE))
         self.intit.SetTitre(u"Intitulé de la Séquence", self.sequence.getIcone())
         self.intit.SetToolTipString(u"")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)

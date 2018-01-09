@@ -2827,7 +2827,7 @@ class Projet(BaseDoc):
 #        print "   ", self.GetReferentiel()
         self.code = self.GetReferentiel().getCodeProjetDefaut()
   
-        self.position = self.GetProjetRef().getPeriodeDefaut()
+        self.position = self.GetPeriodeDefaut()
 #        print "position0", self.position
         self.nbrParties = 1
         
@@ -2899,6 +2899,13 @@ class Projet(BaseDoc):
             else:
                 return None
 
+    ######################################################################################  
+    def GetPeriodeDefaut(self):
+        projet = self.GetProjetRef()
+        if projet is not None:
+            return projet.getPeriodeDefaut()
+        else:
+            return [0,0]
         
     ######################################################################################  
     def GetDuree(self):
@@ -4316,7 +4323,7 @@ class Projet(BaseDoc):
 
         self.code = self.GetReferentiel().getCodeProjetDefaut()
 
-        self.position = self.GetProjetRef().getPeriodeDefaut()
+        self.position = self.GetPeriodeDefaut()
 #        print "position", self.position
         
         if hasattr(self, 'brancheElv'):
@@ -5344,6 +5351,7 @@ class Progression(BaseDoc):
             ps.path = toFileEncoding(path)
             if projet is not None:
                 ps.projet = projet
+                projet.SetText(os.path.splitext(os.path.basename(path))[0])
             else:
                 ps.ChargerProjet()
             self.sequences_projets.append(ps)
