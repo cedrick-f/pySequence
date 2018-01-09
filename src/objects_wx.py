@@ -1018,13 +1018,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def MiseAJourToolBar(self):
         fenDoc = self.GetCurrentPage()
-        coderef = fenDoc.progression.GetReferentiel().Code
-#         print "   ", coderef
-        btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
-        if btnPrj is not None:
-#             print "   ", REFERENTIELS[coderef].projets
-            btnPrj.Enable(len(REFERENTIELS[coderef].projets) > 0)
-            self.tb.Realize()
+        if fenDoc.typ == 'prg':
+            coderef = fenDoc.progression.GetReferentiel().Code
+    #         print "   ", coderef
+            btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
+            if btnPrj is not None:
+    #             print "   ", REFERENTIELS[coderef].projets
+                btnPrj.Enable(len(REFERENTIELS[coderef].projets) > 0)
+                self.tb.Realize()
             
     #############################################################################
     def DefinirOptions(self, options):
@@ -7872,7 +7873,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbi = myStaticBox(self, -1, u"Intitulé de la Séquence", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
-        self.intit.SetMinSize((-1, 30*SSCALE))
+        self.intit.SetMinSize((-1, 20*SSCALE))
         self.intit.SetTitre(u"Intitulé de la Séquence", self.sequence.getIcone())
         self.intit.SetToolTipString(u"")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
