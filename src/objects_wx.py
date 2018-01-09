@@ -3664,6 +3664,14 @@ class FenetreProgression(FenetreDocument):
 
     ###############################################################################################
     def ProposerEnregistrer(self, doc, pathProg):
+        u""" Propose l'enregistrement d'un (nouveau) fichier de Séquence ou de Projet
+            Renvoie un tuple : code, chemin du fichier
+            code : 
+            0 : Nouveau fichier --> à enregistrer
+            1 : Fichier existant --> à ouvrir
+            2 : Fichier existant --> annuler l'opération
+            3 : opération annulée
+        """
         wx.BeginBusyCursor()
         if doc.GetType() == 'seq':
             t = u"La %s sera engegistrée" %doc.nom_obj
@@ -6056,7 +6064,7 @@ class PanelPropriete_Progression(PanelPropriete):
 #             obj = 'intit'
         
 
-        modif = u"Modification des propriétés de la progression"
+        modif = u"Modification des propriétés de la Progression"
         if self.onUndoRedo():
             self.sendEvent(modif = modif)
         else:
@@ -8024,11 +8032,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def EvtText(self, event):
-        print "EvtText"
+#         print "EvtText"
         if event.GetEventObject() == self.intit:
             self.sequence.SetText(self.intit.GetText())
             self.lien.MiseAJourArbre()
-            t = u"Modification de l'intitulé de la séquence"
+            t = u"Modification de l'intitulé de la Séquence"
             self.GetDocument().GererDependants(self.sequence, t)
             
         if self.onUndoRedo():

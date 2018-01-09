@@ -5324,6 +5324,7 @@ class Progression(BaseDoc):
             ps.path = toFileEncoding(path)
             if sequence is not None:
                 ps.sequence = sequence
+                sequence.SetText(os.path.splitext(os.path.basename(path))[0])
             else:
                 ps.ChargerSequence()
             self.sequences_projets.append(ps)
@@ -5420,14 +5421,17 @@ class Progression(BaseDoc):
  
     ######################################################################################  
     def CreerSequence(self, classe, pathProg):
+        u""" Créé une (nouvelle) Séquence pour la progression
+            renvoie : un tuple Sequence, chemin du fichier de Séquence
+        """
         sequence = Sequence(self.GetApp(), classe)
         res = self.GetApp().ProposerEnregistrer(sequence, pathProg)
         
-        if res[0] == 2:
+        if res[0] == 2:     # Fichier existant --> on redemande
             return self.CreerSequence(classe, pathProg)
-        elif res[0] == 1:
+        elif res[0] == 1:   # Fichier existant --> fichier Séquence à ouvrir
             return None, res[1]
-        elif res[0] == 0:
+        elif res[0] == 0:   # Nouveau fichier --> nouvelle Séquence à enregistrer
             return sequence, res[1]
         else:
             return None, None
