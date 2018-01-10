@@ -1544,7 +1544,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             en fonction du type de document en cours
             Et rafraichissement des séquences de la fenêtre de Progression
         """
-        print "OnDocChanged", evt
+#         print "OnDocChanged", evt
         
         fenDoc = self.GetCurrentPage()
         
@@ -2442,7 +2442,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        
+        self.parent.MiseAJourToolBar()
         return
 
  

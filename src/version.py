@@ -48,7 +48,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "7.1.15"
+__version__ = "7.1-beta.16"
 __urlapi__ = "https://api.github.com/repos/cedrick-f/pySequence"
 __url__ = "https://github.com/cedrick-f/pySequence"
 __mail__ = "cedrick.faury#ac-clermont.fr"
