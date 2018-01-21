@@ -85,6 +85,8 @@ def get_winver():
     return (wv.major, wv.minor, sp)
 
 
+  
+  
 SSCALE = 1.0
 if 'win' in sys.platform:
     import ctypes
@@ -602,6 +604,7 @@ def SendMessage(message, port):
 if __name__ == '__main__':
     try:
         app = SingleInstApp(False)
+        
 #     wx.Log.SetActiveTarget( LogPrintStackStderr() )
         app.MainLoop()
     except SystemExit:

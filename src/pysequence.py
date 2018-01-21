@@ -5314,7 +5314,7 @@ class Progression(BaseDoc):
         if dossier == r"":
             messageInfo(None, u"Progression non enregistrée", 
                                   u"La progression %s n'a pas encore été enregistrée.\n\n"\
-                                  u"L'importation est prévue pour rechercher des fichier \"Séquence\" (.seq)" \
+                                  u"L'importation est prévue pour rechercher des fichiers \"Séquence\" (.seq)\n" \
                                   u"dans le même dossier que le fichier \"Progression\" (.prg)." %self.intitule)
             return False
         return True

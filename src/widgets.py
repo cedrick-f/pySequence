@@ -2013,3 +2013,97 @@ class EllipticStaticText(wx.StaticText):
 
         ret = text[0:last_good_length] + "..."    
         return ret
+
+
+
+class DisplayChoice(wx.Dialog):
+    def __init__(self, parent):
+        
+        
+#         s = (600,600)
+        
+        pre = wx.PreDialog()
+        pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+        pre.Create(parent, -1, u"Choisir un écran")
+        self.PostCreate(pre)
+
+        panel = wx.Panel(self)
+        panel.SetBackgroundColour("#FFB6C1")
+#         panel.SetMinSize(s)
+        
+#         st = wx.StaticText(panel, -1,
+#                           u"Choisir un écran", pos = (0,0))
+        
+#         bsizer = wx.BoxSizer(wx.HORIZONTAL)
+        # Détection multiples écrans
+        X, Y = [], []
+        W, H = [], []
+        for idx in range(wx.Display.GetCount()):
+            d = wx.Display(idx)
+            c = 10
+            X.append(d.GetGeometry()[0]/c)
+            Y.append(d.GetGeometry()[1]/c)
+            W.append(d.GetGeometry()[2]/c)
+            H.append(d.GetGeometry()[3]/c)
+            
+        xm, ym = 0, 0
+        for idx in range(wx.Display.GetCount()):
+            d = wx.Display(idx)
+#             print d.IsPrimary(), d.GetGeometry()
+            x, y, w, h = X[idx]-min(X), Y[idx]-min(Y), W[idx], H[idx]
+            
+#             print x, y, w, h
+            b = wx.Button(panel, 100+idx, str(idx+1), pos = (x,y+30), size = (w,h), style=wx.NO_BORDER)
+            t = u"Ecran %s" %str(idx+1)
+            if d.IsPrimary():
+                t += u"\nprincipal"
+            b.SetToolTipString(t)
+            
+            self.Bind(wx.EVT_BUTTON, self.OnClick, b)
+#             bsizer.Add(b, 1)
+            
+            xm = max(xm, x+w)
+            ym = max(ym, y+30+h)
+        
+        panel.SetSize((xm, ym))
+            
+        self.Fit()
+        self.Layout()
+        
+        x, y, w, h = parent.GetRect().Get()
+        self.SetPosition((x+w/2-panel.GetSize()[0]/2,
+                          y+h/2-panel.GetSize()[1]/2))
+        
+        self.res = None
+        
+    def OnClick(self, event):
+       
+        d = wx.Display(event.GetId()-100)
+        self.res = d.GetGeometry()[0:2]
+        self.Close()
+
+    def GetValue(self):
+        return self.res
+    
+#     def OnPaint(self, evt):
+#         print "OnPaint"
+#         pdc = wx.PaintDC(self)
+#         try:
+#             dc = wx.GCDC(pdc)
+#         except:
+#             dc = pdc
+#         rect = wx.Rect(0,0, 100, 100)
+#         for RGB, pos in [((178,  34,  34), ( 50,  90)),
+#                          (( 35, 142,  35), (110, 150)),
+#                          ((  0,   0, 139), (170,  90))
+#                          ]:
+#             r, g, b = RGB
+#             penclr   = wx.Colour(r, g, b, wx.ALPHA_OPAQUE)
+#             brushclr = wx.Colour(r, g, b, 128)   # half transparent
+#             dc.SetPen(wx.Pen(penclr))
+#             dc.SetBrush(wx.Brush(brushclr))
+#             rect.SetPosition(pos)
+#             dc.DrawRoundedRectangleRect(rect, 8)
+            
+
+

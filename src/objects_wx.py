@@ -161,7 +161,8 @@ from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     isstring, EditableListCtrl, \
                     TextCtrl_Help, CloseFenHelp, \
                     messageInfo, rognerImage, enregistrer_root, \
-                    tronquerDC, EllipticStaticText, scaleImage, scaleIcone
+                    tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
+                    DisplayChoice
                     #, chronometrer
 
 
@@ -908,11 +909,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandePleinEcran(self, event):
-        nb = self.GetNotebook()
-        if int(wx.version()[0]) > 2:
-            fenDoc = nb.GetCurrentPage()
-        else:
-            fenDoc = nb.GetPage(nb.GetSelection())
+        u"""
+        """
+        
+            
+        fenDoc = self.GetCurrentPage()
         
         if fenDoc is None:
             return
@@ -923,12 +924,21 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.pleinEcran = not self.pleinEcran
         
         if self.pleinEcran:
+            pos = None
+            if wx.Display.GetCount() > 1:
+                ch = DisplayChoice(self)
+                ch.ShowModal()
+                pos = ch.GetValue()
+                ch.Destroy()
+            if pos is None:
+                pos == [0,0]
             win = fenDoc.nb.GetCurrentPage()
             self.fsframe = wx.Frame(self, -1)
+            self.fsframe.SetPosition(pos)
             win.Reparent(self.fsframe)
             win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
             self.fsframe.ShowFullScreen(True, style=wx.FULLSCREEN_ALL)
-            
+            win.OnResize()
         else:
             win = self.fsframe.GetChildren()[0]
             win.Reparent(fenDoc.nb)
@@ -4400,6 +4410,7 @@ class BaseFiche(wx.ScrolledWindow):
             return
         
         w = self.GetClientSize()[0]
+#         print "  ", w
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
         self.w, self.h = self.GetVirtualSize()
 
