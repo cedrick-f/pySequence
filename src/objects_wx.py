@@ -3986,7 +3986,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4226,7 +4226,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -6120,10 +6120,10 @@ class PanelPropriete_Progression(PanelPropriete):
             self.sendEvent(modif = modif)
             
         elif var == self.nbrCreneaux:
-            self.GetDocument().nbrCreneaux = var.v[0]
             
-            modif = u"Modification du nombre de creneaux de la Progression"
-            self.sendEvent(modif = modif)
+            if self.GetDocument().SetNbrCreneaux(var.v[0]):
+                modif = u"Modification du nombre de creneaux de la Progression"
+                self.sendEvent(modif = modif)
             
         self.Refresh()
         
@@ -8466,7 +8466,7 @@ class PanelPropriete_Competences(PanelPropriete):
 #         def getNomComp(r):
 #             return r.nomCompetences + " " + r.Code
         if self.code == "Fct":
-            self.arbre = ArbreFonctionsPrj(self, self.code, None, self.compRef,
+            self.arbre = ArbreFonctionsPrj(self, self.code, self.compRef,
                                            self, agwStyle = HTL.TR_NO_HEADER)
             self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
 #             self.nb.AddPage(self, self.compRef.nomDiscipline) 
@@ -13172,6 +13172,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #             self.pptache = pptache
             
 #         print "ArbreCompetencesPrj", pptache
+        
         ArbreCompetences.__init__(self, parent, typ, dicCompetences, competences, pptache,
                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
 #         print self.pptache
@@ -13549,17 +13550,21 @@ class ArbreFonctionsPrj(ArbreCompetences):
         <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
-    def __init__(self, parent, ref, pptache, 
+    def __init__(self, parent, typ, competences, pptache, 
                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
                             CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
                             CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD):
 
-          
-        ArbreCompetences.__init__(self, parent, ref, pptache,
+
+        ArbreCompetences.__init__(self, parent, typ, None, competences, pptache,
                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+        
+          
+#         ArbreCompetences.__init__(self, parent, ref, pptache,
+#                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
-        
+        ref = self.competence.GetReferentiel()
         self.SetColumnText(0, ref.nomFonctions + u" et " + ref.nomTaches)
         
       

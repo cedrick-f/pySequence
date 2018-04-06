@@ -4657,6 +4657,19 @@ class Progression(BaseDoc):
         """
         return len(self.GetPositions())
 
+    ######################################################################################  
+    def SetNbrCreneaux(self, nc):
+        u""" Modifie le nombre de créneaux horaire utilisés dans la progression
+             Vérifie avant qu'on ne passe pas en dessous du nombre de créneaux utilisés dans les Sequences ou Projets
+        """
+        nc_sp = max([s.creneaux[-1]+1 for s in self.sequences_projets])
+        if nc >= nc_sp:
+            self.nbrCreneaux = nc
+            return True
+        
+        return False
+    
+    
     
     ######################################################################################  
     def GetRectangles(self):
@@ -4683,7 +4696,7 @@ class Progression(BaseDoc):
             un code d'erreur (anomalie détectée)
         """
         err = 0
-        
+#         print "GetRectangles", 
         
         ref = self.classe.referentiel
         
@@ -4693,14 +4706,18 @@ class Progression(BaseDoc):
         # Nombre de périodes utilisés dans la progression
         np = ref.getNbrPeriodes()  
     
+#         print np, nc
+        
         # Grille niveau 1
         grille = [[[] for c in range(nc)] for l in range(np)]
         for i, lienDoc in enumerate(self.sequences_projets):
+#             print "  ", i, lienDoc
             p = lienDoc.GetPosition()   # Première et dernière période
+            
             if p[0] == p[-1]:
                 p = [p[0]]
             c = lienDoc.GetCrenaux()    # Liste des créneaux
-    
+#             print "    ",p, c
             for lig in p:
                 for col in c:
                     grille[lig][col].append(i)
@@ -7199,7 +7216,7 @@ class Competences(ElementBase):
         #
         # Les "Fonctions" (à faire !)
         #
-        if (len(ref.dicFonctions) > 0):
+        if (len(ref.dicFonctions) > 0) and hasattr(self, 'arbre'):
             self.codeBranche["Fct"] = CodeBranche(self.arbre, u"")
             self.branches["Fct"] = arbre.AppendItem(branche, ref.nomFonctions, 
                                                    wnd = self.codeBranche[k], 
