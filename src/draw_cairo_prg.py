@@ -1715,19 +1715,28 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
     ref = prg.GetReferentiel()
     structComp = ref.dicoCompetences["S"].get2Niveaux()
     dicoComp = ref.dicoCompetences["S"]
-    
+#     print structComp
+#     print dicoComp.dicCompetences
     for i, (k1, l1) in enumerate(structComp):
+#         print "   ",k1, l1 
+#         print "   ", dicoComp.dicCompetences[k1].sousComp
+        
+        # Lignes commentées pour 7.1.16
         if len(l1) == 0:
             l1 = [k1]
         
         for k2 in l1:
             x = xComp[k2]
-                
-            comp = dicoComp.dicCompetences[k1].sousComp[k2] 
-            if len(comp.sousComp) > 0:
-                lc = sorted(comp.sousComp.keys())
+#             print "      ", k2
+            if len(dicoComp.dicCompetences[k1].sousComp) > 0:
+                comp = dicoComp.dicCompetences[k1].sousComp[k2] 
+                if len(comp.sousComp) > 0:
+                    lc = sorted(comp.sousComp.keys())
+                else:
+                    lc = [k2]
             else:
-                lc = [k2]
+                comp = dicoComp.dicCompetences[k1]
+                lc = [k1]
                 
             dx = wColComp/len(lc)
             for a, i in enumerate(lc):
