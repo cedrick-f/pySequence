@@ -1558,7 +1558,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     ctx.set_source_rgb (0,0,0)
     
     # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
-    rect = (x + hTacheMini, y, w, h)
+    rect = (x + hTacheMini, y, w - hTacheMini, h)
     if rect[2] > 0:
         show_text_rect(ctx, doc.intitule, rect, 
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
