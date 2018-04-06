@@ -5980,7 +5980,7 @@ class PanelPropriete_Progression(PanelPropriete):
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
         self.nbrCreneaux = Variable(u"Nombre de créneaux", lstVal = self.GetDocument().nbrCreneaux, 
-                                   typ = VAR_ENTIER_POS, bornes = [1,5])
+                                   typ = VAR_ENTIER_POS, bornes = [self.GetDocument().GetNbrCreneauxMini(),5])
         self.ctrlCreneaux = VariableCtrl(pageGen, self.nbrCreneaux, coef = 1, signeEgal = False,
                                       help = u"Nombre de créneaux horaire", sizeh = 40*SSCALE, 
                                       sliderAGauche = True, scale = SSCALE)
@@ -6124,6 +6124,8 @@ class PanelPropriete_Progression(PanelPropriete):
             if self.GetDocument().SetNbrCreneaux(var.v[0]):
                 modif = u"Modification du nombre de creneaux de la Progression"
                 self.sendEvent(modif = modif)
+            else:
+                self.nbrCreneaux.setValeur(var.v[0]+1)
             
         self.Refresh()
         

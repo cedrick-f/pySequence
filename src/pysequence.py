@@ -4658,11 +4658,18 @@ class Progression(BaseDoc):
         return len(self.GetPositions())
 
     ######################################################################################  
+    def GetNbrCreneauxMini(self):
+        u""" Renvoie le nombre de créneau minimum autorisé
+             --> nombre de créneaux utilisés dans les Sequences ou Projets
+        """
+        return max([s.creneaux[-1]+1 for s in self.sequences_projets])
+
+    ######################################################################################  
     def SetNbrCreneaux(self, nc):
         u""" Modifie le nombre de créneaux horaire utilisés dans la progression
              Vérifie avant qu'on ne passe pas en dessous du nombre de créneaux utilisés dans les Sequences ou Projets
         """
-        nc_sp = max([s.creneaux[-1]+1 for s in self.sequences_projets])
+        nc_sp = self.GetNbrCreneauxMini()
         if nc >= nc_sp:
             self.nbrCreneaux = nc
             return True
