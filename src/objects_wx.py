@@ -7824,12 +7824,15 @@ class Panel_Cible(wx.Panel):
         print "GererBoutons", len(self.CI.numCI), len(self.CI.CI_perso), self.getMaxCI()
         ref = self.CI.GetReferentiel()
         
+        seuil_filtr = 4         # Nombre seuil de CI selectionnés au dela duquel on ne filtre plus par branche
+        
         # Liste des boutons CI à afficher :
-        if len(self.CI.numCI) + len(self.CI.CI_perso) == 0 or self.getMaxCI() == 0:       # Tous les CI
+        if len(self.CI.numCI) + len(self.CI.CI_perso) == 0 or self.getMaxCI() == 0 \
+           or self.getMaxCI() > seuil_filtr:                                                                         # Tous les CI
             l = range(len(ref.CentresInterets))   
             p = True          
             
-        elif len(self.CI.numCI) + len(self.CI.CI_perso) == self.getMaxCI()-1:
+        elif self.getMaxCI() <= seuil_filtr and (len(self.CI.numCI) + len(self.CI.CI_perso) < self.getMaxCI()):    # Les CI de la même "branche"
             l = []
             for i,p in enumerate(ref.positions_CI):
                 p = p[:3].strip()
@@ -7845,7 +7848,7 @@ class Panel_Cible(wx.Panel):
             p = True
             
         else:
-            l = self.CI.numCI
+            l = self.CI.numCI                                                               # Seuls les CI déja sélectionnés
             p = self.getMaxCI() > len(l)
             
         print "   ", l, p
