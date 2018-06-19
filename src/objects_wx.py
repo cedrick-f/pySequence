@@ -7573,10 +7573,7 @@ class PanelPropriete_CI(PanelPropriete):
         """ 
 #         print "GererCases", perso
         for i, b in enumerate(self.group_ctrls):
-            if i in liste:
-                b[0].Enable(True)
-            else:
-                b[0].Enable(False)
+            b[0].Enable(i in liste)
                 
         self.elb.GetNewButton().Enable(perso)
         
@@ -7655,14 +7652,28 @@ class Panel_Cible(wx.Panel):
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self.backGround = self.GetBackgroundColour()
         
+        
+        bmp = self.GetBmpCible()
+        size_c = (bmp.GetWidth(), bmp.GetHeight())
+        
+        size_b = (0.1*size_c[0], 0.1*size_c[1])
+        
+        
 #        rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
 #        angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
-        centre = [96*SSCALE, 88*SSCALE]
+#         centre = [96, 88]
+        centre = [0.5*size_c[0], 0.5*size_c[1]]
         
-        rayons = {"F" : 60*SSCALE, 
-                  "S" : 40*SSCALE, 
-                  "C" : 20*SSCALE,
-                  "_" : 90*SSCALE}
+#         rayons = {"F" : 60, 
+#                   "S" : 40, 
+#                   "C" : 20,
+#                   "_" : 90}
+        
+        rayons = {"F" : 0.3*size_c[0], 
+                  "S" : 0.2*size_c[0], 
+                  "C" : 0.1*size_c[0],
+                  "_" : 0.45*size_c[0]}
+        
         angles = {"M" : 0,
                   "E" : 120,
                   "I" : -120,
@@ -7670,6 +7681,7 @@ class Panel_Cible(wx.Panel):
         
         ref = self.CI.GetReferentiel()
         
+        offset = 6
         for i in range(len(ref.CentresInterets)):
             mei, fsc = ref.positions_CI[i].split("_")
             mei = mei.replace(" ", "")
@@ -7700,9 +7712,9 @@ class Panel_Cible(wx.Panel):
 
             
             r = platebtn.PlateButton(self, 100+i, "", 
-                                     constantes.imagesCI[i].GetBitmap(), 
-                                     pos = (centre[0] + ray * sin(ang*pi/180) ,
-                                            centre[1] - ray * cos(ang*pi/180)), 
+                                     scaleImage(constantes.imagesCI[i].GetBitmap(), size_b[0], size_b[1]), 
+                                     pos = (centre[0] + ray * sin(ang*pi/180) - size_b[0]/2-offset,
+                                            centre[1] - ray * cos(ang*pi/180) - size_b[1]/2-offset/2), 
                                      style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
             r.SetPressColor(wx.Colour(245, 55, 245))
             
@@ -7728,12 +7740,16 @@ class Panel_Cible(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
             
             
+            
+        self.SetSize(size_c)
+        self.SetMinSize(size_c)
+    
+    
+    #############################################################################            
+    def GetBmpCible(self):
         bmp = images.Cible.GetBitmap()
-        size = (bmp.GetWidth(), bmp.GetHeight())    
-        self.SetSize(size)
-        self.SetMinSize(size)
-    
-    
+        size_c = (220*SSCALE, 200*SSCALE)
+        return scaleImage(bmp, *size_c)
     
     #############################################################################            
     def OnAide(self, event):
@@ -7752,7 +7768,7 @@ class Panel_Cible(wx.Panel):
         dc = wx.PaintDC(self)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        dc.DrawBitmap(images.Cible.GetBitmap(), 0, 0)
+        dc.DrawBitmap(self.GetBmpCible(), 0, 0)
         evt.Skip()
         
         
@@ -7772,7 +7788,7 @@ class Panel_Cible(wx.Panel):
 #        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        dc.DrawBitmap(images.Cible.GetBitmap(), 0, 0)    
+        dc.DrawBitmap(self.GetBmpCible(), 0, 0)    
     
     
     #############################################################################            
@@ -7805,7 +7821,7 @@ class Panel_Cible(wx.Panel):
             :param appuyer: pour initialisation : si vrai = appuie sur les boutons
             :type appuyer: boolean
         """
-#        print "GererBoutons"
+        print "GererBoutons", len(self.CI.numCI), len(self.CI.CI_perso), self.getMaxCI()
         ref = self.CI.GetReferentiel()
         
         # Liste des boutons CI à afficher :
@@ -7832,7 +7848,8 @@ class Panel_Cible(wx.Panel):
             l = self.CI.numCI
             p = self.getMaxCI() > len(l)
             
-                
+        print "   ", l, p
+        
         for i, b in enumerate(self.bouton):
             if i in l:
                 b.Show(True)
