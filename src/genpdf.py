@@ -85,7 +85,9 @@ from reportlab.pdfbase import _fontdata_enc_macexpert
 from widgets import messageErreur
 import time
 
-from register import EnableProtectedModeReader, GetProtectedModeReader
+import sys
+if sys.platform == "win32" :
+    from register import EnableProtectedModeReader, GetProtectedModeReader
 
 #
 # Elements HTML
@@ -709,10 +711,13 @@ class PdfPanel(wx.Panel):
                 self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
 #                 self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
         else:
-            m = GetProtectedModeReader()
-            EnableProtectedModeReader(0)
-            self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
-            EnableProtectedModeReader(m)
+            if sys.platform == "win32" :
+                m = GetProtectedModeReader()
+                EnableProtectedModeReader(0)
+                self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+                EnableProtectedModeReader(m)
+            else:
+                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
 #             self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
 #             self.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
 

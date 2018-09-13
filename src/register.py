@@ -36,6 +36,7 @@ Module register
 ***************
 
 Enregistrement de pySéquence dans la base de registre (Windows)
+
 (Des)Activation du mode protégé d'Adobe Reader
 
 """
