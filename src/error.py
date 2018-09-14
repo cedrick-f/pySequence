@@ -67,7 +67,7 @@ def MyExceptionHook(typ, value, traceb):
     print >>sys.stderr,"\nType : ",typ,"\n"
     print >>sys.stderr,"ValueError : ",value
 #     print "".join(traceback.format_exception(typ, value, traceb))
-    SendBugReport()
+    SendBugReport(traceb)
 #     sys.exit()
     
 
@@ -77,33 +77,33 @@ def MyExceptionHook(typ, value, traceb):
 
 
 
-class RedirectErr:
-    #
-    # Redirige la sortie des erreurs pour envoyer l'erreur par mail
-    #
-    def __init__(self,stderr):
-        self.stderr=stderr
-        self.content = ""
-        self.error_occured=False
-        self.file_error=None
-
-    def write(self,text):
-        #
-        # A la premiere erreur, on enregistrer la fonction de sortie
-        #
-        if not self.error_occured:
-            #
-            # Première erreur
-            # D'abord on enregistre la fonction atexit
-            import atexit
-            
-            atexit.register(SendBugReport)
-            # puis on ouvre le fichier qui contient les erreurs
-            self.file_error = open(util_path.ERROR_FILE,'w')
-            self.error_occured=True
-        if self.file_error is not None:
-            self.file_error.write(text)
-            self.file_error.flush()
+# class RedirectErr:
+#     #
+#     # Redirige la sortie des erreurs pour envoyer l'erreur par mail
+#     #
+#     def __init__(self,stderr):
+#         self.stderr=stderr
+#         self.content = ""
+#         self.error_occured=False
+#         self.file_error=None
+# 
+#     def write(self,text):
+#         #
+#         # A la premiere erreur, on enregistrer la fonction de sortie
+#         #
+#         if not self.error_occured:
+#             #
+#             # Première erreur
+#             # D'abord on enregistre la fonction atexit
+#             import atexit
+#             
+#             atexit.register(SendBugReport)
+#             # puis on ouvre le fichier qui contient les erreurs
+#             self.file_error = open(util_path.ERROR_FILE,'w')
+#             self.error_occured=True
+#         if self.file_error is not None:
+#             self.file_error.write(text)
+#             self.file_error.flush()
 
 
 # sys.stdout = open(util_path.LOG_FILE, "w")
@@ -118,7 +118,7 @@ if True:#not "beta" in version.__version__:
 
 
 
-def SendBugReport():
+def SendBugReport(traceb = ""):
     """
     Fonction qui envoie le rapport de bug par mail.
     """
@@ -160,10 +160,12 @@ def SendBugReport():
         #
         # Parcours du fichier
         #
-        file_error=open(util_path.ERROR_FILE,'r')
-        for line in file_error.readlines():
-            body+=line+"%0A"
-        file_error.close()
+        if os.path.isfile(util_path.ERROR_FILE):
+            with open(util_path.ERROR_FILE,'r') as file_error:
+                for line in file_error.readlines():
+                    body+=line+"%0A"
+        else:
+            body+=traceb
         body += u"==============================================%0A%0A"
         
         sys.stdout.close()
