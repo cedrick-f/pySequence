@@ -36,12 +36,6 @@ Ajouter au PATH (variables d’environnement) :
  * C:\Python27\Lib\site-packages\wx-3.0-msw
  * C:\Python27\Lib\site-packages\wx-3.0-msw\wx
 
-### pywin32 ###
-220
-
-https://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/pywin32-220.win32-py2.7.exe/download
-
-
 
 
 
@@ -96,6 +90,11 @@ Depuis une fenêtre de commande :
 1.1.2
 
     pip install comtypes
+
+### pywin32 ###
+223
+
+    pip install pywin32
 
 ### pyperclip ###
 1.5.27
