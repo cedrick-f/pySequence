@@ -216,7 +216,7 @@ class XMLelem():
 #                        _k = k[2:]
                         _k = k.split("_")#[1]
                         if len(_k) == 3:#k =="":#_k[0] == "_":
-                            _k = eval(_k[2])
+                            _k = int(_k[2])
                         else:
                             _k = _k[1]
                         if isinstance(_k, (str, unicode)) and "--" in _k:
@@ -1372,7 +1372,7 @@ class Referentiel(XMLelem):
                     else:
                         n = col[i+1]
                     
-                    for j in range((n-c)/3):
+                    for j in range((n-c)//3):
                         cp = c+j*3
                         part = str(sh_co.cell(3,cp).value)
                         self._colParties.append((part, cp))
@@ -1726,7 +1726,7 @@ class Referentiel(XMLelem):
         prj = []
         for k, p in self.projets.items():
             prj.append(k)
-            pos.append(max(p.periode, 0))
+            pos.append(max(*p.periode, 0))
         
         if len(prj) > 0:
             return prj[pos.index(max(pos))]
@@ -3205,7 +3205,10 @@ def chargerReferentiels():
     
     
     
-    ARBRE_REF = sorted(ARBRE_REF.items(), cmp = comp_per)
+    ARBRE_REF = sorted(list(ARBRE_REF.items()), cmp = comp_per)
+    # py3 :
+    #from functools import cmp_to_key
+    #ARBRE_REF = sorted(list(ARBRE_REF.items()), key=cmp_to_key(comp_per))
 
     
     

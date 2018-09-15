@@ -109,7 +109,12 @@ except:
     import wx.lib.agw.hyperlink as hl # à partir de wx 4
     
 import  wx.lib.scrolledpanel as scrolled
-import wx.combo
+try: # gros basard pour py3
+    import wx.combo as combo
+    combo_adv = combo
+except:
+    import wx.adv as combo_adv
+    combo = wx
 import wx.lib.platebtn as platebtn
 import wx.lib.colourdb
 import  wx.lib.colourselect as  csel
@@ -738,8 +743,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         redo_bmp = wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
         
         self.tb.SetToolBitmapSize(tsize)
-        
-        self.tb.AddLabelTool(10, u"Nouveau", new_bmp, 
+        # py3 :
+        #self.tb.AddLabelTool(10, u"Nouveau", new_bmp, wx.NullBitmap,
+        self.tb.AddLabelTool(10, u"Nouveau", new_bmp,
                              shortHelp=u"Création d'une nouvelle séquence ou d'un nouveau projet", 
                              longHelp=u"Création d'une nouvelle séquence ou d'un nouveau projet")
         
@@ -748,16 +754,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                              shortHelp=u"Ouverture d'un fichier séquence ou projet", 
                              longHelp=u"Ouverture d'un fichier séquence ou projet")
         
-        self.tb.AddLabelTool(12, u"Enregistrer", save_bmp, 
+        self.tb.AddLabelTool(12, u"Enregistrer", save_bmp, wx.NullBitmap,
                              shortHelp=u"Enregistrement du document courant sous son nom actuel", 
                              longHelp=u"Enregistrement du document courant sous son nom actuel")
         
-        self.tb.AddLabelTool(14, u"Enregistrer tout", saveall_bmp, 
+        self.tb.AddLabelTool(14, u"Enregistrer tout", saveall_bmp, wx.NullBitmap,
                              shortHelp=u"Enregistrement de tous les documents sous leurs noms actuels", 
                              longHelp=u"Enregistrement de tous les documents sous leurs noms actuels")
         
 
-        self.tb.AddLabelTool(13, u"Enregistrer sous...", saveas_bmp, 
+        self.tb.AddLabelTool(13, u"Enregistrer sous...", saveas_bmp, wx.NullBitmap,
                              shortHelp=u"Enregistrement du document courant sous un nom différent", 
                              longHelp=u"Enregistrement du document courant sous un nom différent")
         
@@ -770,12 +776,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.tb.AddSeparator()
         
-        self.tb.AddLabelTool(200, u"Annuler", undo_bmp, 
+        self.tb.AddLabelTool(200, u"Annuler", undo_bmp, wx.NullBitmap,
                              shortHelp=u"Annuler", 
                              longHelp=u"Annuler")
         
 
-        self.tb.AddLabelTool(201, u"Rétablir", redo_bmp, 
+        self.tb.AddLabelTool(201, u"Rétablir", redo_bmp, wx.NullBitmap,
                              shortHelp=u"Rétablir", 
                              longHelp=u"Rétablir")
         
@@ -795,7 +801,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         for typ in ['prj', 'seq', 'prg']:
             for i, tool in self.GetTools(typ):
                 if i > 0:
-                    self.tools[typ].append(self.tb.AddLabelTool(i, tool.label, tool.image, 
+                    self.tools[typ].append(self.tb.AddLabelTool(i, tool.label, tool.image, wx.NullBitmap,
                                                                shortHelp = tool.shortHelp, 
                                                                longHelp = tool.longHelp))
 #                 else:
@@ -810,7 +816,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #
         #################################################################################################################
         
-        self.tb.AddLabelTool(100, u"Plein écran", full_bmp, 
+        self.tb.AddLabelTool(100, u"Plein écran", full_bmp, wx.NullBitmap,
                              shortHelp=u"Affichage de la fiche en plein écran (Echap pour quitter le mode plein écran)", 
                              longHelp=u"Affichage de la fiche en plein écran (Echap pour quitter le mode plein écran)")
 
@@ -865,6 +871,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
         d = 8 # Position à changer selon le nombre d'outils "communs"
         for tool in self.tools[typ]:
+            # py3 :
+            #self.tb.InsertTool(d,tool)
             self.tb.InsertToolItem(d,tool)
             d += 1
         
@@ -964,6 +972,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         submenu = wx.Menu()
         file_menu.AppendMenu(14, u"&Ouvrir un fichier récent", submenu)
+        # py3 : 
+        #file_menu.Append(14, u"&Ouvrir un fichier récent", submenu)
         self.filehistory = wx.FileHistory()
         self.filehistory.UseMenu(submenu)
         
@@ -1742,12 +1752,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #            print "   Permission d'enregistrer les options refusée...",
 #        except:
 #            print "   Erreur enregistrement options...",
-            
+        #
+        # Fremeture du thread de test de version Excel
+        #
+        try:
+            pysequence.th_xls.exit()
+        except:
+            pass
         #
         # Récupération des dimensions des fenêtres
         #
-           
-        
         try:
             self.options.definir()
             self.options.valider(self)
@@ -1928,7 +1942,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #                         DockFixed().
 #                         Gripper(False).
 #                         Movable(False).
-                         Maximize().
+                         Maximize(). # pas avec py3
                          Caption(u"Structure").
                          CaptionVisible(True).
 #                         PaneBorder(False).
@@ -4418,6 +4432,8 @@ class BaseFiche(wx.ScrolledWindow):
             self.buffer = self.buffer.ConvertToImage().Scale(self.w, self.h,
                                            quality = wx.IMAGE_QUALITY_NORMAL).ConvertToBitmap()
         else:
+            # py3 :
+            #self.buffer = wx.Bitmap(self.w, self.h)
             self.buffer = wx.EmptyBitmap(self.w, self.h)
         self.Refresh()
         self.Update()
@@ -6324,7 +6340,8 @@ class PanelPropriete_Classe(PanelPropriete):
         pref_bmp = scaleImage(images.Icone_defaut_pref.GetBitmap(), *tsize)
 #         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
 #         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
-        
+        # py3 :
+        #tb.AddTool(30, u"Ouvrir un fichier classe", open_bmp)
         tb.AddSimpleTool(30, open_bmp, u"Ouvrir un fichier classe")
         self.Bind(wx.EVT_TOOL, self.commandeOuvrir, id=30)
         
@@ -12113,6 +12130,8 @@ class ArbreSequence(ArbreDoc):
 #        self.panelProp.AfficherPanel(self.sequence.GetPanelPropriete())
 
 #        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
+        # py3 :
+        #self.CurseurInsertApres = wx.Cursor(constantes.images.Curseur_InsererApres.GetImage())
         self.CurseurInsertApres = wx.CursorFromImage(constantes.images.Curseur_InsererApres.GetImage())
         self.CurseurInsertDans = wx.CursorFromImage(constantes.images.Curseur_InsererDans.GetImage())
         
@@ -14937,6 +14956,8 @@ class URLSelectorCombo(wx.Panel):
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
         self.texte.SetToolTipString(u"Saisir un nom de fichier/dossier\nou faire glisser un fichier")
         if self.dossier:
+            # py3 :
+            # bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
             bt1.SetToolTipString(u"Sélectionner un dossier")
             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
@@ -15205,6 +15226,8 @@ class StaticBitmapZoom(wx.StaticBitmap):
 class myStaticBox(wx.StaticBox):
     def __init__(self, *args, **kargs):
         wx.StaticBox.__init__(self, *args, **kargs)
+        # py3 :
+        #self.SetForegroundColour(wx.Colour("DIM GREY"))
         self.SetForegroundColour(wx.NamedColour("DIM GREY"))
         
         
@@ -15952,6 +15975,8 @@ class DialogChoixDoc(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         
         button = wx.Button(self, -1, u"Nouvelle Séquence")
+        # py3 :
+        #button.SetToolTip(u"Créer une nouvelle séquence pédagogique")
         button.SetToolTipString(u"Créer une nouvelle séquence pédagogique")
         if int(wx.version()[0]) > 2:
             button.SetBitmap(images.Icone_sequence.Bitmap,wx.LEFT)
@@ -16144,16 +16169,16 @@ class Panel_Details(wx.Panel):
         
         self.tb.SetToolBitmapSize(tsize)
         
-        self.tb.AddLabelTool(10, u"Enregistrer", save_bmp, 
+        self.tb.AddLabelTool(10, u"Enregistrer", save_bmp, wx.NullBitmap,
                              shortHelp=u"Enregistrement de la fiche courante sous son nom actuel", 
                              longHelp=u"Enregistrement de la fiche courante sous son nom actuel")
         
-        self.tb.AddLabelTool(12, u"Enregistrer tout", saveall_bmp, 
+        self.tb.AddLabelTool(12, u"Enregistrer tout", saveall_bmp, wx.NullBitmap,
                              shortHelp=u"Enregistrement de tous les documents sous leurs noms actuels", 
                              longHelp=u"Enregistrement de tous les documents sous leurs noms actuels")
         
 
-        self.tb.AddLabelTool(11, u"Enregistrer sous...", saveas_bmp, 
+        self.tb.AddLabelTool(11, u"Enregistrer sous...", saveas_bmp, wx.NullBitmap,
                              shortHelp=u"Enregistrement de la fiche courante sous un nom différent", 
                              longHelp=u"Enregistrement de la fiche courante sous un nom différent")
         
@@ -16164,7 +16189,7 @@ class Panel_Details(wx.Panel):
         
         self.tb.AddSeparator()
         
-        self.tb.AddLabelTool(13, u"Editer", edit_bmp, 
+        self.tb.AddLabelTool(13, u"Editer", edit_bmp, wx.NullBitmap,
                              shortHelp=u"Editer la fiche", 
                              longHelp=u"Editer la fiche")
         

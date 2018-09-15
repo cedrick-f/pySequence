@@ -615,6 +615,8 @@ class VariableCtrl(wx.Panel):
         self.txtnom = txtnom
             
         if len(help) > 0:
+            # py3 :
+            # txtnom.SetToolTip(help)
             txtnom.SetToolTipString(help)
             
         #
@@ -881,6 +883,8 @@ class VariableCtrl(wx.Panel):
     def marquerValid(self, etat):
         if etat:
             self.text.SetBackgroundColour(
+                # py3 :
+                # wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
                  wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
             
         else:
@@ -1043,9 +1047,12 @@ class ToolTip():
 FenHelp = None
 
 def GetImgHelp():
+    # py3 :
+    #return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
     return wx.ArtProvider_GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
 
 def GetIconHelp():
+    # py3 :
     return wx.ArtProvider_GetIcon(wx.ART_HELP, wx.ART_FRAME_ICON, (16, 16))
 
 def CloseFenHelp():
@@ -1203,6 +1210,8 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_BUTTON, self.OnButton, self.bouton)
         
+        # py3 :
+        #self.bouton.SetCursor(wx.Cursor(wx.CURSOR_HAND))
         self.bouton.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
         self.bouton.SetToolTipString(u"Obtenir de l'aide supplémentaire")
         
@@ -1759,11 +1768,13 @@ class EditableListCtrl(wx.Panel):
 #         self.SetColumnCount(self.GetColumnCount())
 #         event.Skip()
 
-    
-import wx.combo
-class CustomComboBox(wx.combo.BitmapComboBox):
+try:
+    import wx.combo as combo
+except:
+    import wx.adv as combo
+class CustomComboBox(combo.BitmapComboBox):
     def __init__(self, *args, **kargs):
-        wx.combo.BitmapComboBox.__init__(self, *args, **kargs)
+        combo.BitmapComboBox.__init__(self, *args, **kargs)
 
 
 
@@ -1855,6 +1866,8 @@ def scaleImage(image, wf = 24 , hf = 24):
 
 #############################################################################################################
 def scaleIcone(image, wf = 20 , hf = 20): 
+    # py3 :
+    #i = wx.Icon()
     i = wx.EmptyIcon()
     bmp = image.ConvertToImage().Scale(wf, hf, quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
     i.CopyFromBitmap(bmp)

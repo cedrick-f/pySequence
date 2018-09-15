@@ -51,7 +51,7 @@ if sys.platform == "win32" :
     import recup_excel
     # Pour compléter les grilles Excel
     import grilles
-
+    th_xls = grilles.get_th_xls()
 
 
 import version
@@ -6170,7 +6170,7 @@ class LienSequence(ElementBase, ElementProgression):
                                         data = self,
                                         image = self.arbre.images["Seq"])
 #         self.codeBranche.SetBranche(self.branche)
-        self.arbre.SetItemTextColour(self.branche, coul)
+        self.arbre.SetItemTextColour(self.branche, wx.Colour(*coul))
 
 #        self.codeBranche.SetBranche(self.branche)
         
@@ -6312,7 +6312,7 @@ class LienProjet(ElementBase, ElementProgression):
                                         data = self,
                                         image = self.arbre.images["Prj"])
 #         self.codeBranche.SetBranche(self.branche)
-        self.arbre.SetItemTextColour(self.branche, coul)
+        self.arbre.SetItemTextColour(self.branche, wx.Colour(*coul))
 
 #        self.codeBranche.SetBranche(self.branche)
         
@@ -9252,11 +9252,13 @@ class Tache(ElementAvecLien, ElementBase):
         self.codeBranche.SetBranche(self.branche)
         
         if self.phase in TOUTES_REVUES_EVAL:
-            arbre.SetItemTextColour(self.branche, "red")
+            # py3 :
+            #arbre.SetItemTextColour(self.branche, wx.Colour("red"))
+            arbre.SetItemTextColour(self.branche, wx.NamedColour("red"))
         elif self.phase == "Rev":
-            arbre.SetItemTextColour(self.branche, "ORANGE")
+            arbre.SetItemTextColour(self.branche, wx.NamedColour("ORANGE"))
         elif self.phase == "S":
-            arbre.SetItemTextColour(self.branche, "PURPLE")
+            arbre.SetItemTextColour(self.branche, wx.NamedColour("PURPLE"))
     
     
 #    ######################################################################################  
@@ -11584,7 +11586,8 @@ class Eleve(Personne, ElementBase):
 #   Classe définissant les propriétés d'un élève
 #
 ####################################################################################
-class Groupe(ElementBase, Eleve):
+# class Groupe(ElementBase, Eleve): changé pour py3
+class Groupe(Eleve):
     def __init__(self, doc, ident = 0):
         
         Eleve.__init__(self, doc, ident)

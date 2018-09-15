@@ -154,7 +154,7 @@ def getExentionExcel():
         print "pas Excel"
         return
     
-    if xlApp.Version < 12:
+    if float(xlApp.Version) < 12:
         EXT_EXCEL = ".xls"
     else:
         EXT_EXCEL = ".xlsx"
@@ -164,15 +164,15 @@ def getExentionExcel():
 
     print EXT_EXCEL
 
-
 EXT_EXCEL = None
-try:
-#     EXT_EXCEL = getExentionExcel()
-    a = threading.Thread(None, getExentionExcel, None)
-    a.start()
-    
-except:
-    EXT_EXCEL = None # ya pas Excel !
+def get_th_xls():
+    try:
+        th_xls = threading.Thread(None, getExentionExcel, None)
+        th_xls.start()
+        return th_xls
+    except:
+        pass # ya pas Excel !
+        
 
 
 # ######################################################################################################

@@ -52,7 +52,8 @@ if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
 else:
     reload(sys)  # Reload does the trick!
-    sys.setdefaultencoding('utf-8')
+    if hasattr(sys, 'setdefaultencoding'): # pas toujours (py3 ?)
+        sys.setdefaultencoding('utf-8')
 
 FILE_ENCODING = sys.getfilesystemencoding() 
 SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#

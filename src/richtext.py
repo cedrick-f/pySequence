@@ -124,12 +124,14 @@ class RichTextPanel(wx.Panel):
         
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         
+        self.rtc = RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS)
+        
         if toolBar:
             self.tbar = self.MakeToolBar()
             if self.tbar != None:
                 self.sizer.Add(self.tbar, flag = wx.EXPAND)
             
-        self.rtc = RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS);
+        
 #        self.spell = RTCSpellCheck(self.rtc, language="fr_FR")
         self.toutVerifier = False
         
@@ -141,6 +143,9 @@ class RichTextPanel(wx.Panel):
         self.Ouvrir()
 #        self.rtc.Bind(rt.EVT_RICHTEXT_LEFT_CLICK, self.OnModified)
 #        self.rtc.Bind(wx.EVT_IDLE, self.OnIdle)
+        # py3 :
+        # problème avec EVT_KILL_FOCUS
+        #self.rtc.Bind(wx.EVT_TEXT , self.Sauver)
         self.rtc.Bind(wx.EVT_KILL_FOCUS, self.Sauver)
         self.rtc.Bind(wx.EVT_TEXT_URL, self.OnURLClick)
 
@@ -244,6 +249,8 @@ class RichTextPanel(wx.Panel):
             out.write(text)
         
         out.seek(0)
+        # py3 :
+        #handler.LoadFile(buff, out)
         handler.LoadStream(buff, out)
         self.rtc.Refresh()
         
@@ -297,6 +304,8 @@ class RichTextPanel(wx.Panel):
         handler.SetFontSizeMapping([7,9,11,12,14,22,100])
 
         stream = cStringIO.StringIO()
+        # py3 :
+        #if not handler.SaveFile(self.rtc.GetBuffer(), stream):
         if not handler.SaveStream(self.rtc.GetBuffer(), stream):
             return
 
@@ -799,6 +808,9 @@ class RichTextPanel(wx.Panel):
 #        doBind( tbar.AddTool(-1, _rt_save.GetBitmap(),
 #                            shortHelpString=u"Enregistrer"), self.OnFileSave)
         tbar.AddSeparator()
+        # py3 :
+        #doBind( tbar.AddTool(wx.ID_CUT, "", _rt_cut.GetBitmap(), 
+        #                    shortHelp="Couper"), self.ForwardEvent, self.ForwardEvent)
         doBind( tbar.AddTool(wx.ID_CUT, _rt_cut.GetBitmap(),
                             shortHelpString=u"Couper"), self.ForwardEvent, self.ForwardEvent)
         doBind( tbar.AddTool(wx.ID_COPY, _rt_copy.GetBitmap(),
@@ -811,6 +823,8 @@ class RichTextPanel(wx.Panel):
         doBind( tbar.AddTool(wx.ID_REDO, _rt_redo.GetBitmap(),
                             shortHelpString=u"Rétablir"), self.ForwardEvent, self.ForwardEvent)
         tbar.AddSeparator()
+        # py3 :
+        #doBind( tbar.AddTool(-1, "", _rt_alignleft.GetBitmap(), kind = wx.ITEM_CHECK,
         doBind( tbar.AddTool(-1, _rt_bold.GetBitmap(), isToggle=True,
                             shortHelpString=u"Gras"), self.OnBold, self.OnUpdateBold)
         doBind( tbar.AddTool(-1, _rt_italic.GetBitmap(), isToggle=True,
