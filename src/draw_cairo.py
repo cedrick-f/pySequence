@@ -74,7 +74,8 @@ maxFont = 0.1 * COEF
 
 LargeurTotale = 0.72414 * COEF# Pour faire du A4
 
-font_family = "sans-serif"#"arial"#"Purisa"#"DejaVu Sans Mono"#
+# py3 : il faut arial sinon ça plante !!
+font_family = "arial"#"sans-serif"#"arial"#"Purisa"#"DejaVu Sans Mono"#
     
 def getPts(lst_rect):
     """Renvoie la liste des points Haut-Gauche des rectangles contenus dans <lst_rect>
@@ -86,12 +87,16 @@ def getPts(lst_rect):
     
 
 
-def permut(liste):
-    l = []
-    for a in liste[1:]:
-        l.append(a)
-    l.append(liste[0])
-    return l
+def permut(liste, n = 1):
+    u""" Permutation circulaire d'une liste
+         <<<
+    """
+    return liste[n:]+liste[0:n]
+#     l = []
+#     for a in liste[1:]:
+#         l.append(a)
+#     l.append(liste[0])
+#     return l
     
     
 

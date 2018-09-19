@@ -3277,6 +3277,8 @@ class Projet(BaseDoc):
                 adapterVersion = False
             else:
                 tache = Tache(self, branche = e)
+#                 print "code:", tache.code, type(tache.code)
+                # suite à virer pour py3 (à quoi ça sert ??)
                 if tache.code < 0 : # ça s'est mal passé lors du setbranche ...
                     err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, tache.code))
                     return err
@@ -4662,7 +4664,9 @@ class Progression(BaseDoc):
         u""" Renvoie le nombre de créneau minimum autorisé
              --> nombre de créneaux utilisés dans les Sequences ou Projets
         """
-        return max([s.creneaux[-1]+1 for s in self.sequences_projets])
+        # py3 :
+        #
+        return max(1,[s.creneaux[-1]+1 for s in self.sequences_projets])
 
     ######################################################################################  
     def SetNbrCreneaux(self, nc):

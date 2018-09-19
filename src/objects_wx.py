@@ -3283,7 +3283,7 @@ class FenetreProjet(FenetreDocument):
         
         dlg = wx.DirDialog(self, message = u"Emplacement des grilles", 
                            defaultPath = u"",
-                            style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
+                            style=wx.DD_DEFAULT_STYLE|wx.DD_CHANGE_DIR
                             )
 #        dlg.SetFilterIndex(0)
 
@@ -6528,6 +6528,8 @@ class PanelPropriete_Classe(PanelPropriete):
         mesFormats = constantes.FORMAT_FICHIER_CLASSE['cla'] + constantes.TOUS_FICHIER
   
         if nomFichier == None:
+            # py3 :
+            # rajouter FD_ devant les styles pour FileDialog
             dlg = wx.FileDialog(
                                 self, message=u"Ouvrir une classe",
                                 defaultFile = "",
@@ -14862,10 +14864,12 @@ def get_key(dic, value, pos = None):
 class URLDialog(wx.Dialog):
     def __init__(self, parent, lien, pathseq):
         wx.Dialog.__init__(self, parent, -1)
+        # py3 :
+#         self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+#         self.Create(parent, -1, "Sélection de lien")
         pre = wx.PreDialog()
         pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
         pre.Create(parent, -1, u"Sélection de lien")
-
         self.PostCreate(pre)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -15320,7 +15324,10 @@ class myProgressDialog(wx.Frame):
 
 
     def OnDestroy(self, event):
-        self.GetParent().Enable(True)
+        try:
+            self.GetParent().Enable(True)
+        except:
+            pass
         event.Skip()
     
     def Update(self, count, message):

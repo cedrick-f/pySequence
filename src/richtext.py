@@ -325,6 +325,19 @@ class RichTextPanel(wx.Panel):
 
         return stream.getvalue()
 
+    # py3 :
+#     def GetXML(self):
+#         # Get an instance of the html file handler, use it to save the
+#         # document to a StringIO stream
+#         handler = rt.RichTextXMLHandler()
+#         handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+#         
+#         stream = io.BytesIO()
+#         if not handler.SaveFile(self.rtc.GetBuffer(), stream):
+#             return
+# 
+#         stream.seek(0)
+#         return stream.read().decode("utf-8")
 
 
     def InsertImage(self):
@@ -1003,7 +1016,34 @@ def XMLtoHTML(texteXML):
         return soup.html.body.prettify()
 
 
-
+# py3 :
+# def XMLtoHTML(texteXML):
+#         """ Converti un texte au format RichText (XML)
+#             en HTML 
+#         """
+#         if texteXML is None:
+#             return
+#         
+#         out = io.BytesIO()
+#         handler = rt.RichTextXMLHandler()
+#         buff = rt.RichTextBuffer()
+#         out.write(bytes(texteXML, encoding = "utf8"))
+#         out.seek(0)
+#         handler.LoadFile(buff, out)
+#     
+#         # Get an instance of the html file handler, use it to save the
+#         # document to a StringIO stream
+#         handler2 = rt.RichTextHTMLHandler()
+#         handler2.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+#         handler2.SetFontSizeMapping([7,9,11,12,14,22,100])
+# 
+#         stream = io.BytesIO()
+#         if not handler2.SaveFile(buff, stream):
+#             return
+#         
+#         soup = BeautifulSoup(stream.read().decode('utf-8'), "html5lib")
+# #         soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
+#         return soup.html.body.prettify()
 
 
 

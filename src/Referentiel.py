@@ -1726,7 +1726,9 @@ class Referentiel(XMLelem):
         prj = []
         for k, p in self.projets.items():
             prj.append(k)
-            pos.append(max(*p.periode, 0))
+            # py3 :
+            #pos.append(max(*p.periode, 0))
+            pos.append(max(p.periode, 0))
         
         if len(prj) > 0:
             return prj[pos.index(max(pos))]

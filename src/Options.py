@@ -145,11 +145,11 @@ class Options:
             else:
 #                if type(val) in [str, unicode]:
 #                    val = val.encode('utf-8')
-                config.set(titre, nom, val)
+                config.set(titre, nom, val) # py3 : .replace('%', '%%'))
 
 
         for titre,dicopt in self.typesOptions.items():
-            titre = titre.encode('utf-8')
+            titre = titre.encode('utf-8')  # à virer pour py3
             config.add_section(titre)
             for nom, val in dicopt.items():
                 sav(nom, val)
@@ -165,13 +165,14 @@ class Options:
 #                    
 #                else:
 #                    config.set(titre, opt[0], opt[1])
-        
+        # py3 : 
+        #config.write(open(self.fichierOpt,'w', encoding="utf-8"))
         config.write(open(self.fichierOpt,'w'))
 
 
 
     ############################################################################
-    def ouvrir(self, encoding = 'utf_8'):
+    def ouvrir(self, encoding = 'utf-8'):
         """ Ouvre un fichier d'options 
         """
         print "Ouverture Options:", self.fichierOpt
@@ -284,6 +285,8 @@ class Options:
 
         
         for titre in self.typesOptions.keys():
+            # py3 :
+            #titreUtf = titre
             titreUtf = titre.encode('utf-8')
 #            print "   ", titreUtf, self.typesOptions[titre].keys()
             

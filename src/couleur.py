@@ -111,6 +111,8 @@ def generate(gradient, base_colors, desired_gradient_length):
 
 def GetCouleurWx(C):
     if type(C) == str:
+        # py3 : 
+        #return wx.Colour(C)
         return wx.NamedColour(C)
     else:
         return wx.Colour(C[0]*255, C[1]*255, C[2]*255)

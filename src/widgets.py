@@ -1783,7 +1783,7 @@ import xml.etree.ElementTree as ET
 from util_path import SYSTEM_ENCODING
 ##################################################################################################    
 def enregistrer_root(root, nomFichier):
-    fichier = file(nomFichier, 'w')
+    fichier = open(nomFichier, 'w')
     try:
         ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
     except IOError:
