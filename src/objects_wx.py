@@ -4172,14 +4172,14 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
             dc.SetBackground(wx.Brush('white'))
             dc.Clear()
             ctx = wx.lib.wxcairo.ContextFromDC(dc)
-            dc.BeginDrawing()
+            dc.BeginDrawing() # py3 : à virer
             self.normalize(ctx)
             self.Draw(ctx)
 #            ctx.show_page()
     #        b = Thread(None, self.Draw, None, (ctx,))
     #        b.start()
             
-            dc.EndDrawing()
+            dc.EndDrawing()  # py3 : à virer
             self.ctx = ctx
             self.Refresh()
     
@@ -5418,16 +5418,19 @@ class PanelPropriete_Projet(PanelPropriete):
     def onChanged(self, event):
 #        print "onChanged", event.GetSelection(), event.GetEventObject()
         self.projet.SetPosition(self.position.GetRange())
-        self.SetBitmapPosition()
+        
+        self.MiseAJourPosition()
+        
         self.sendEvent(modif = u"Changement de position du projet",
                        obj = self.projet)
         
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.bmp.SetBitmap(self.getBitmapPeriode(250*SSCALE))
-#        if bougerSlider != None:
-        self.position.SetValue(self.projet.position)
+        try: # py3 : pas trouvé mieux pour éviter les MemoryError
+            self.bmp.SetBitmap(self.getBitmapPeriode(250*SSCALE))
+        except:
+            pass
 
         
     #############################################################################            
@@ -5701,8 +5704,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def MiseAJourPosition(self, sendEvt = False):
-        self.bmp.SetBitmap(self.getBitmapPeriode(250*SSCALE))
-##        self.position.SetRange(0, self.projet.GetLastPosition())
+        self.SetBitmapPosition()
         self.position.SetValue(self.projet.position)
     
 
@@ -7244,9 +7246,11 @@ class PanelEffectifsClasse(wx.Panel):
             self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
         else:
             self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
-            
-        self.bmp.SetLargeBitmap(self.getBitmapClasse(640))
         
+        try: # py3 : pas trouvé mieux pour éviter les MemoryError
+            self.bmp.SetLargeBitmap(self.getBitmapClasse(640))
+        except:
+            pass
         
 #        t = u"groupes de "
 #        self.BoxEP.SetLabelText(t+strEffectif(self.classe, 'E', -1))
@@ -15101,6 +15105,7 @@ class A_propos(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         titre = wx.StaticText(self, -1, " "+version.__appname__)
         titre.SetFont(wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.BOLD, False))
+        # py3 : wx.Colour("BROWN")
         titre.SetForegroundColour(wx.NamedColour("BROWN"))
         sizer.Add(titre, border = 10)
         sizer.Add(wx.StaticText(self, -1, "Version : "+version.__version__+ " "), 

@@ -1675,6 +1675,10 @@ class EditableListCtrl(wx.Panel):
         
       
         self.IDajout = wx.NewId()
+        # py3 :
+#         self.tb.AddTool(self.IDajout, "Ajouter", scaleImage(img[0], *tsize), wx.NullBitmap,
+#                              shortHelp = hlp[0], 
+#                              longHelp  = hlp[0])
         self.tb.AddLabelTool(self.IDajout, u"Ajouter", scaleImage(img[0], *tsize), 
                              shortHelp = hlp[0], 
                              longHelp  = hlp[0])
