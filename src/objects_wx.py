@@ -9529,21 +9529,29 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Phase
         #
+        # Mise en place
+        c0 = wx.BoxSizer(wx.VERTICAL)
+        pageGen.sizer.Add(c0, (0,0), flag = wx.EXPAND)
+        c00 = wx.BoxSizer(wx.HORIZONTAL)
+        
         prj = self.tache.GetProjetRef()
 #        lstPhases = [p[1] for k, p in ref.phases_prj.items() if not k in ref.listPhasesEval_prj]
         lstPhases = [prj.phases[k][1] for k in prj.listPhases if not k in prj.listPhasesEval]
         
         titre = wx.StaticText(pageGen, -1, u"Phase :")
-        pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
+        c00.Add(titre, flag = wx.EXPAND)
+#         pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
         
         if tache.phase in TOUTES_REVUES_SOUT:
             txtPhas = wx.StaticText(pageGen, -1, prj.phases[tache.phase][1])
-            pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            c00.Add(txtPhas, flag = wx.EXPAND)
+#             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
             
         elif tache.estPredeterminee():
             txtPhas = wx.StaticText(pageGen, -1, u"")
-            pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+#             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
             self.txtPhas = txtPhas
+            c00.Add(txtPhas, flag = wx.EXPAND)
             
         else:
             cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Sélectionner la phase",
@@ -9559,10 +9567,13 @@ class PanelPropriete_Tache(PanelPropriete):
                 cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap(), 24*SSCALE, 24*SSCALE))
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
-            
-            pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
+            c00.Add(cbPhas, flag = wx.EXPAND)
+#             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
-
+        c0.Add(c00, flag = wx.EXPAND)    
+        
+        
+        
         
         #
         # Intitulé de la tache
@@ -9589,9 +9600,10 @@ class PanelPropriete_Tache(PanelPropriete):
                 cc = TreeCtrlComboBook(pageGen, self.tache, self.EvtComboBoxTache)
                 bsizer.Add(cc, 1, flag = wx.EXPAND)
                 self.cbTache = cc
-
-            pageGen.sizer.Add(bsizer, (1,0), (1,2), 
-                               flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)    
+            
+            c0.Add(bsizer, 1, flag = wx.EXPAND)
+#             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
+#                                flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)    
 
 
         #
@@ -9602,7 +9614,8 @@ class PanelPropriete_Tache(PanelPropriete):
                                    help = u"Volume horaire de la tâche, en heures")#, sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
-            pageGen.sizer.Add(vcDuree, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
+            c0.Add(vcDuree, flag = wx.EXPAND)
+#             pageGen.sizer.Add(vcDuree, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
 
 
         #
@@ -9610,35 +9623,14 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             isizer = self.CreateIconeSelect(pageGen)
-            pageGen.sizer.Add(isizer, (0,2), (3, 1), 
-                              flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
-            pageGen.sizer.AddGrowableCol(2)
-
-            
-#             ib = myStaticBox(pageGen, -1, u"Icônes")
-#             ibsizer = wx.StaticBoxSizer(ib, wx.VERTICAL)
-#             ims = wx.WrapSizer()
-#             
-# #             ims.SetSize((100,-1))
-#             self.icones = []
-#             for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
-#                 ico = img.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-#                 btn = wx.BitmapButton(pageGen, 100+i, ico)
-#                 btn.SetToolTipString(nom)
-#                 self.icones.append(nom)
-#                 ims.Add(btn, flag = wx.ALL, border = 2)
-#                 btn.Refresh()
-#                 self.Bind(wx.EVT_BUTTON, self.OnIconeClick, btn)
-#             
-#             ibsizer.Add(ims)
-#             
-#             self.btn_no_icon = wx.Button(pageGen, -1, u"Aucune")
-#             ibsizer.Add(self.btn_no_icon)
-#             self.Bind(wx.EVT_BUTTON, self.OnIconeClick, self.btn_no_icon)
-#             
-#             pageGen.sizer.Add(ibsizer, (0,2), (3, 1), 
+#             pageGen.sizer.Add(isizer, (0,2), (3, 1), 
 #                               flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
+            c1 = wx.BoxSizer(wx.VERTICAL)
+            c1.Add(isizer, 1, flag = wx.EXPAND)
+            pageGen.sizer.Add(c1, (0,1), flag = wx.EXPAND)
+            
 #             pageGen.sizer.AddGrowableCol(2)
+
 
         #
         # Elèves impliqués
@@ -9646,11 +9638,18 @@ class PanelPropriete_Tache(PanelPropriete):
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             self.box = myStaticBox(pageGen, -1, u"%s impliqués" %getPluriel(self.tache.GetLabelEleve()).capitalize())
 #            self.box.SetMinSize((150,-1))
-            self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+            ebsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+            sp = scrolled.ScrolledPanel(pageGen, -1)
+            ebsizer.Add(sp, 1, flag = wx.EXPAND)
+            
             self.elevesCtrl = []
-            self.ConstruireListeEleves()
-            pageGen.sizer.Add(self.bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
-#             pageGen.sizer.AddGrowableCol(3)
+            self.ConstruireListeEleves(sp)
+            
+            c2 = wx.BoxSizer(wx.VERTICAL)
+            c2.Add(ebsizer, 1, flag = wx.EXPAND)
+            pageGen.sizer.Add(c2, (0,2), flag = wx.EXPAND)
+#             pageGen.sizer.Add(self.bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
+# #             pageGen.sizer.AddGrowableCol(3)
         
         
         
@@ -9673,19 +9672,39 @@ class PanelPropriete_Tache(PanelPropriete):
 
 #        tc.SetMaxSize((-1, 150))
 #        tc.SetMinSize((150, 60))
-        dbsizer.Add(tc,1, flag = wx.EXPAND)
+        dbsizer.Add(tc, 1, flag = wx.EXPAND)
 #        dbsizer.Add(bd, flag = wx.EXPAND)
 #        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        if tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            pageGen.sizer.Add(dbsizer, (1,0), (2, 2), flag = wx.EXPAND)
-            pageGen.sizer.AddGrowableCol(0)
-        else:
-            pageGen.sizer.Add(dbsizer, (0,4), (3, 1), flag = wx.EXPAND)
-            pageGen.sizer.AddGrowableCol(4)
+#         if tache.phase in TOUTES_REVUES_EVAL_SOUT:
+#             pageGen.sizer.Add(dbsizer, (1,0), (2, 2), flag = wx.EXPAND)
+#             pageGen.sizer.AddGrowableCol(0)
+#         else:
+#             pageGen.sizer.Add(dbsizer, (0,4), (3, 1), flag = wx.EXPAND)
+#             pageGen.sizer.AddGrowableCol(4)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
-        pageGen.sizer.AddGrowableRow(1)
+#         pageGen.sizer.AddGrowableRow(1)
+        
+        c3 = wx.BoxSizer(wx.VERTICAL)
+        c3.Add(dbsizer, 1, flag = wx.EXPAND)
+        pageGen.sizer.Add(c3, (0,3), flag = wx.EXPAND)
+        
+        pageGen.sizer.AddGrowableRow(0)
+        pageGen.sizer.AddGrowableCol(3)
+        # Mise en place
+
+        
+        
+        
+        
+        
+ 
+
+        
+        
+        
+        
         
         
         self.ConstruireCompetences()
@@ -9947,7 +9966,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
 
     ############################################################################            
-    def ConstruireListeEleves(self):
+    def ConstruireListeEleves(self, panel):
         u""" Ajout des cases "élève" :
              - sur la page "Proprietes générales"
              - sur les pages "Compétences" : cas des revues (sauf dernière(s)) et des compétences prédéterminées
@@ -9957,24 +9976,27 @@ class PanelPropriete_Tache(PanelPropriete):
         # Sur la page "Proprietes générales"
         if hasattr(self, 'elevesCtrl'):
             
-            self.pageGen.Freeze()
+            panel.Freeze()
+            bsizer = wx.BoxSizer(wx.VERTICAL)
+            panel.SetSizer(bsizer)
+            panel.SetupScrolling()
             
             for ss in self.elevesCtrl:
-                self.bsizer.Detach(ss)
+                bsizer.Detach(ss)
                 ss.Destroy()
                 
             self.elevesCtrl = []
             self.impElevesCtrl = []
 
             for i, e in enumerate(self.GetDocument().eleves + self.GetDocument().groupes):
-                v = wx.CheckBox(self.pageGen, 100+i, e.GetNomPrenom())
+                v = wx.CheckBox(panel, 100+i, e.GetNomPrenom())
 #                 v.SetMinSize((200,-1))
                 v.SetValue(i in self.tache.eleves)
-                self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
-                self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.TOP|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
+                panel.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
+                bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.TOP|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
                 self.elevesCtrl.append(v)
                 
-                p = wx.SpinCtrl(self.pageGen, 200+i, "%", (50*SSCALE, 18*SSCALE))
+                p = wx.SpinCtrl(panel, 200+i, "%", (50*SSCALE, 18*SSCALE))
                 p.SetMaxSize((50*SSCALE, 18*SSCALE))
                 p.SetToolTipString(u"Taux d'implication de l'élève dans la tâche")
                 p.SetRange(1,100)
@@ -9984,21 +10006,21 @@ class PanelPropriete_Tache(PanelPropriete):
                 else:
                     p.SetValue(100)
                     p.Enable(False)
-                self.pageGen.Bind(wx.EVT_SPINCTRL, self.OnSpin, p)
-                self.pageGen.Bind(wx.EVT_TEXT, self.OnSpin, p)
-                self.bsizer.Add(p, flag = wx.ALIGN_RIGHT|wx.BOTTOM|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
+                panel.Bind(wx.EVT_SPINCTRL, self.OnSpin, p)
+                panel.Bind(wx.EVT_TEXT, self.OnSpin, p)
+                bsizer.Add(p, flag = wx.ALIGN_RIGHT|wx.BOTTOM|wx.LEFT|wx.RIGHT, border = 3)#|wx.EXPAND) 
                 self.impElevesCtrl.append(p)
                  
             
-            line = wx.StaticLine(self.pageGen)
-            self.bsizer.Add(line, 0, flag = wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, border = 3)#)  size = (100,3))
+            line = wx.StaticLine(panel)
+            bsizer.Add(line, 0, flag = wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, border = 3)#)  size = (100,3))
             
-            self.tousElevesCtrl = wx.CheckBox(self.pageGen, -1, u"tous")
+            self.tousElevesCtrl = wx.CheckBox(panel, -1, u"tous")
             self.tousElevesCtrl.SetValue(all([b.IsChecked() for b in self.elevesCtrl]))
-            self.bsizer.Add(self.tousElevesCtrl, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
-            self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, self.tousElevesCtrl)
+            bsizer.Add(self.tousElevesCtrl, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
+            panel.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, self.tousElevesCtrl)
             
-            self.bsizer.Layout()
+            bsizer.Layout()
             
             if len(self.GetDocument().eleves + self.GetDocument().groupes) > 0:
                 self.box.Show(True)
@@ -10006,8 +10028,8 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.box.Hide()
     
 #            self.box.SetMinSize((200,200))
-            self.bsizer.Layout()
-            self.pageGen.Thaw()
+            bsizer.Layout()
+            panel.Thaw()
 #             print [cb.GetSize()[0] for cb in self.elevesCtrl]
 #             line.SetSize((max([cb.GetSize()[0] for cb in self.elevesCtrl]), 3))
         

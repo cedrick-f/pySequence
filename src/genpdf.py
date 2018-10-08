@@ -667,7 +667,8 @@ if  wx.PlatformInfo[1] == 'wxMSW':
 
 from wx.lib.pdfwin import get_min_adobe_version
 NOT_USE_ADOBE = ADOBE_VERSION is None or ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8) or get_min_adobe_version() is None
-# NOT_USE_ADOBE = True
+if sys.platform != "win32" :
+    NOT_USE_ADOBE = True
 
 HAS_PDFVIEWER = True
 if NOT_USE_ADOBE:
@@ -711,13 +712,11 @@ class PdfPanel(wx.Panel):
                 self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
 #                 self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
         else:
-            if sys.platform == "win32" :
-                m = GetProtectedModeReader()
-                EnableProtectedModeReader(0)
-                self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
-                EnableProtectedModeReader(m)
-            else:
-                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
+            m = GetProtectedModeReader()
+            EnableProtectedModeReader(0)
+            self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+            EnableProtectedModeReader(m)
+
 #             self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
 #             self.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
 
