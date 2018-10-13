@@ -16,7 +16,7 @@ https://www.microsoft.com/fr-FR/download/details.aspx?id=29
 
 ## Installations avec installeurs Windows ##
 ### Python ###
-3.6 ou plus
+3.6
 
 https://www.python.org/downloads/
 
@@ -50,7 +50,7 @@ Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
     pip install markdown
 
 ### pyenchant ###
-1.6.6
+2.0.0
     
     pip install pyenchant
 
@@ -60,10 +60,10 @@ Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
     pip install reportlab
 
 ### xhtml2pdf 	(+ six, pyPdf2, html5lib) ###
-0.0.6   (1.10.0 , 1.25.1 , 1.0b8)
+0.0.6   (1.10.0 , 1.25.1 , 1.0.1)
     
     pip install xhtml2pdf
-    pip install html5lib==1.0b8
+    pip install html5lib
 
 ### xlrd	xlwt ###
 1.1.0   -	1.3.0
@@ -85,6 +85,11 @@ Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
 1.6.4
     
     pip install pyperclip
+
+### pyMuPDF ###
+1.13.20
+    
+    pip install pymupdf
 
 
 
