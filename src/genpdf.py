@@ -670,13 +670,14 @@ NOT_USE_ADOBE = ADOBE_VERSION is None or ADOBE_VERSION[:3] == (11, 0, 7) or ADOB
 if sys.platform != "win32" :
     NOT_USE_ADOBE = True
 
-HAS_PDFVIEWER = True
-if NOT_USE_ADOBE:
-    try:
-        from wx.lib.pdfviewer import pdfViewer
-    except:
-        HAS_PDFVIEWER = False
-else:
+# HAS_PDFVIEWER = True
+# try:
+#     from wx.lib.pdfviewer import pdfViewer
+# except:
+#     HAS_PDFVIEWER = False
+HAS_PDFVIEWER = False # désactivé ... ça marche pas !
+    
+if not NOT_USE_ADOBE:
     from wx.lib.pdfwin import PDFWindow
 
 # print "HAS_PDFVIEWER", HAS_PDFVIEWER
@@ -705,11 +706,12 @@ class PdfPanel(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         if NOT_USE_ADOBE:
-            if HAS_PDFVIEWER:
+            if HAS_PDFVIEWER: 
                 self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
                                     wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
             else:
-                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
+                self.pdf = PanelBoutonPdf(self)
+                
 #                 self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
         else:
             m = GetProtectedModeReader()
@@ -749,6 +751,87 @@ class PdfPanel(wx.Panel):
 
 #         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
 
+
+    ######################################################################################################
+    def OnEnter(self, event):
+#         print "OnEnter PDF"
+        self.pdf.SetFocus()
+        event.Skip()
+        
+        
+    ######################################################################################################
+    def MiseAJour(self, projet, fenDoc):
+        u""" Génération d'un fichier PDF temporaire pour affichage
+              - Dossier de validation
+              - ...
+        """
+        self.dosstemp = tempfile.mkdtemp()
+        fichertemp = os.path.join(self.dosstemp, "pdfdoss.pdf")
+        
+        wx.BeginBusyCursor()
+        Ok = genererDossierValidation(fichertemp, projet, fenDoc)
+        wx.EndBusyCursor()
+        
+        if Ok:
+            Ok = self.chargerFichierPDF(fichertemp)
+            
+        if not Ok:
+            m = u"Une erreur s'est porduite lors de la création ou l'affichage du fichier PDF.\n" \
+                u"Un des textes descriptifs du projet est peut-être trop grand !"
+            mess = wx.StaticText(self, -1, m)
+            self.sizer.Add(mess, proportion=1, flag=wx.EXPAND)
+            self.sizer.Layout()
+        
+    
+    ######################################################################################################
+    def supprimerDossierTemp(self):
+        u""" Suppression  du dossier temporaire
+             Méthode brute
+        """
+        if True:#get_min_adobe_version() != None:
+            try:
+                shutil.rmtree(self.dosstemp)
+            except:
+                time.sleep(.5)
+                try:
+                    shutil.rmtree(self.dosstemp)
+                except:
+                    pass
+    
+    
+    ######################################################################################################
+    def chargerFichierPDF(self, nomFichier):
+        u""" Affichage en interne du fichier PDF
+             ou bien mise à jour du bouton d'affichage externe
+        """
+        Ok = True
+        
+        if isinstance(self.pdf, PanelBoutonPdf):
+            self.pdf.MiseAJour(nomFichier)
+
+#         elif isinstance(self.pdf, pdfViewer):
+#             wx.BeginBusyCursor()
+#             try:
+#                 self.pdf.LoadFile(nomFichier)
+#             except:
+#                 print "ERREUR pdfViewer", nomFichier
+#                 Ok = False
+#             wx.EndBusyCursor()    
+                
+        elif isinstance(self.pdf, PDFWindow):
+            wx.BeginBusyCursor()
+            try:
+                self.pdf.LoadFile(nomFichier)
+            except:
+                print "ERREUR PDFWindow", nomFichier
+                Ok = False
+            wx.EndBusyCursor()
+                
+        
+                
+        
+        return Ok
+    
 #     ######################################################################################################
 #     def OnDestroyWindow(self, event):
 #         print "OnDestroy pdf"
@@ -772,74 +855,38 @@ class PdfPanel(wx.Panel):
 # #         self.Destroy()
 # #         self.pdf.Destroy()
 # #         evt.Skip()
+    
 
-    ######################################################################################################
-    def OnEnter(self, event):
-#         print "OnEnter PDF"
-        self.pdf.SetFocus()
-        event.Skip()
+class PanelBoutonPdf(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent, -1)
         
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
         
-    ######################################################################################################
-    def MiseAJour(self, projet, fenDoc):
-#         print "MiseAJour"
-        if isinstance(self.pdf, wx.StaticText):
-#        if get_min_adobe_version() == None:
-            print "Problème version Adobe"
-            return
-#        if hasattr(self, 'dosstemp') and get_min_adobe_version() == None:
-#            shutil.rmtree(self.dosstemp)
-        self.dosstemp = tempfile.mkdtemp()
-        fichertemp = os.path.join(self.dosstemp, "pdfdoss.pdf")
-
-        wx.BeginBusyCursor()
-        Ok = genererDossierValidation(fichertemp, projet, fenDoc)
-        if Ok:
-            if not self.chargerFichierPDF(fichertemp):
-                wx.EndBusyCursor()
-                return
-#            try:
-#                self.pdf.LoadFile(fichertemp)
-#            except:
-#                print "ERREUR PDF"
-#                wx.EndBusyCursor()
-#                return
-            
-        if True:#get_min_adobe_version() != None:
-            try:
-                shutil.rmtree(self.dosstemp)
-            except:
-                time.sleep(.5)
-                try:
-                    shutil.rmtree(self.dosstemp)
-                except:
-                    pass
-                
-        wx.EndBusyCursor()
-        if not Ok:
-            self.pdf = wx.StaticText(self, -1, u"Un des textes descriptifs du projet est trop grand !")
-            self.sizer.Add(self.pdf, proportion=1, flag=wx.EXPAND)
-            
+        self.nomFichier = ''
         
+        self.mess = wx.StaticText(self, -1, u"L'affichage des fichiers PDF\nn'est disponible qu'avec Adobe Acrobat Reader\n")
         
-    def chargerFichierPDF(self, nomFichier):
-        if isinstance(self.pdf, wx.StaticText):
-            return
+        self.bouton = wx.Button(self, -1, u"Ouvrir le fichier PDF")
         
-        if NOT_USE_ADOBE:
-            self.pdf.LoadFile(nomFichier)
-            try:
-                pass
-#                 self.pdf.LoadFile(nomFichier)
-            except:
-                print "ERREUR pdfViewer", nomFichier
-        else:
-            try:
-                self.pdf.LoadFile(nomFichier)
-            except:
-                print "ERREUR PDFWindow", nomFichier
-   
-   
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.bouton)
+        
+        self.sizer.Add(self.mess)
+        self.sizer.Add(self.bouton)
+        
+        self.SetSizer(self.sizer)
+        
+    
+    def OnClick(self, event):
+        try:
+            os.startfile(self.nomFichier)
+        except:
+            pass
+        
+    def MiseAJour(self, nomFichier):
+        self.nomFichier = nomFichier
+        self.bouton.SetToolTipString(u"Ouvrir le fichier PDF avec un lecteur externe\n\t%s" %self.nomFichier)
+        
 #from pgmagick import Image
 #im = Image('D:\\Developpement\\pysequence\\BO\\SSI\\candidats-individuels.pdf')     
 #im.write('D:\\Developpement\\pysequence\\BO\\SSI\\candidats-individuels.png')    

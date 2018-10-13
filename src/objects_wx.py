@@ -2880,7 +2880,7 @@ class FenetreProjet(FenetreDocument):
         
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
         
     
 
@@ -2905,6 +2905,15 @@ class FenetreProjet(FenetreDocument):
     ###############################################################################################
     def AjouterTache(self, event = None):
         self.arbre.AjouterTache()
+    
+    
+    ###############################################################################################
+    def OnPageChanging(self, event):
+        old = event.GetSelection()
+        event.Skip()
+        
+        if old == 2: # On vient de cliquer sur la page "dossier de validation"
+            self.pageValid.supprimerDossierTemp()
         
         
     ###############################################################################################
@@ -2914,10 +2923,6 @@ class FenetreProjet(FenetreDocument):
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
             self.pageDetails.Construire(self.fichierCourant, self.projet, self.typ)
-#             print "Close pagevalid"
-#             self.pageValid.pdf.LoadFile(None)
-#             self.pageValid.pdf.Destroy()
-#             self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
         
         elif new == 2: # On vient de cliquer sur la page "dossier de validation"
             self.pageValid.MiseAJour(self.projet, self)
@@ -2927,7 +2932,8 @@ class FenetreProjet(FenetreDocument):
 
         elif new == 0: # On vient de cliquer sur la fiche
             self.fiche.Redessiner()
-            
+        
+     
             
     ###############################################################################################
     def OnDocModified(self, event):
@@ -9531,7 +9537,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Mise en place
         c0 = wx.BoxSizer(wx.VERTICAL)
-        pageGen.sizer.Add(c0, (0,0), flag = wx.EXPAND)
+        pageGen.sizer.Add(c0, (0,0), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 2)
         c00 = wx.BoxSizer(wx.HORIZONTAL)
         
         prj = self.tache.GetProjetRef()
@@ -9627,7 +9633,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #                               flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
             c1 = wx.BoxSizer(wx.VERTICAL)
             c1.Add(isizer, 1, flag = wx.EXPAND)
-            pageGen.sizer.Add(c1, (0,1), flag = wx.EXPAND)
+            pageGen.sizer.Add(c1, (0,1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 2)
             
 #             pageGen.sizer.AddGrowableCol(2)
 
@@ -9647,7 +9653,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
             c2 = wx.BoxSizer(wx.VERTICAL)
             c2.Add(ebsizer, 1, flag = wx.EXPAND)
-            pageGen.sizer.Add(c2, (0,2), flag = wx.EXPAND)
+            pageGen.sizer.Add(c2, (0,2), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 2)
 #             pageGen.sizer.Add(self.bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
 # #             pageGen.sizer.AddGrowableCol(3)
         
@@ -9688,24 +9694,11 @@ class PanelPropriete_Tache(PanelPropriete):
         
         c3 = wx.BoxSizer(wx.VERTICAL)
         c3.Add(dbsizer, 1, flag = wx.EXPAND)
-        pageGen.sizer.Add(c3, (0,3), flag = wx.EXPAND)
+        pageGen.sizer.Add(c3, (0,3), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 2)
         
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(3)
-        # Mise en place
 
-        
-        
-        
-        
-        
- 
-
-        
-        
-        
-        
-        
         
         self.ConstruireCompetences()
         self.ConstruireCasesEleve()
