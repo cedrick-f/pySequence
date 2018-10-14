@@ -54,19 +54,19 @@ Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
     
     pip install pyenchant
 
-### reportlab (+ pillow) ###
-3.5.6 (5.2.0)
+### reportlab ###
+3.5.6
     
     pip install reportlab
 
-### xhtml2pdf 	(+ six, pyPdf2, html5lib) ###
-0.0.6   (1.10.0 , 1.25.1 , 1.0.1)
+### xhtml2pdf - html5lib ###
+0.0.6 - 1.0.1
     
     pip install xhtml2pdf
     pip install html5lib
 
-### xlrd	xlwt ###
-1.1.0   -	1.3.0
+### xlrd - xlwt ###
+1.1.0 - 1.3.0
     
     pip install xlrd
     pip install xlwt
