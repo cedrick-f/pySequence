@@ -47,20 +47,20 @@ fichIcone = "src/Images.py"
 #Images
 listFich = os.listdir(dosImages)
 listFich = glob.glob(os.path.join(dosImages, "*.*"))
-print listFich
+print(listFich)
 # Fichiers Icone & Logo #############################################################################
 
 
 FichiersImages = {}
 for f in listFich:
-    print os.path.splitext(f)[1]
-    print os.path.basename(f)
+    print(os.path.splitext(f)[1])
+    print(os.path.basename(f))
     
     if os.path.isfile(f) and os.path.splitext(f)[1] in ['.jpg', '.png', '.ico']:
         nom = os.path.splitext(os.path.basename(f))[0]
         FichiersImages[nom] = f
         
-print FichiersImages
+print(FichiersImages)
 #####################################################################################################
 # Compilation de tout ca ..........
 

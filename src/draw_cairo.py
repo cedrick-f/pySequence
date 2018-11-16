@@ -30,7 +30,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-u"""
+"""
 Module ``draw_cairo``
 *********************
 
@@ -74,8 +74,7 @@ maxFont = 0.1 * COEF
 
 LargeurTotale = 0.72414 * COEF# Pour faire du A4
 
-# py3 : il faut arial sinon ça plante !!
-font_family = "arial"#"sans-serif"#"arial"#"Purisa"#"DejaVu Sans Mono"#
+font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
     
 def getPts(lst_rect):
     """Renvoie la liste des points Haut-Gauche des rectangles contenus dans <lst_rect>
@@ -87,11 +86,11 @@ def getPts(lst_rect):
     
 
 
-def permut(liste, n = 1):
+def permut(liste):
     u""" Permutation circulaire d'une liste
          <<<
     """
-    return liste[n:]+liste[0:n]
+    return liste[1:]+liste[:1]
 #     l = []
 #     for a in liste[1:]:
 #         l.append(a)
@@ -231,7 +230,7 @@ def show_text_rect(ctx, texte, rect, \
     """
     #texte[:3] ==u'Ést'
     if debug:
-        print "show_text_rect", texte[:20], rect
+        print("show_text_rect", texte[:20], rect)
 
     if texte == "":
         return 0, rect
@@ -259,7 +258,7 @@ def show_text_rect(ctx, texte, rect, \
     if fontsizeMinMax[1] == -1:
         fontsizeMinMax = [fontsizeMinMax[0], maxFont]
         
-    if debug: print "   fontsizeMinMax :", fontsizeMinMax
+    if debug: print("   fontsizeMinMax :", fontsizeMinMax)
     
     ctx.set_font_size(fontsizeMinMax[0])
     fheight = ctx.font_extents()[2]
@@ -280,7 +279,7 @@ def show_text_rect(ctx, texte, rect, \
                                      wrap, couper, debug = debug)
     if lt == []:
         return 0, (x, y, 0,0)
-    if debug: print "   fontSize 1:", fontSize, "H", wh[1]
+    if debug: print("   fontSize 1:", fontSize, "H", wh[1])
     W, H = wh
     
     
@@ -290,7 +289,7 @@ def show_text_rect(ctx, texte, rect, \
     # Vérification que la taille de la police est dans l'intervale
     #
     if fontSize > fontsizeMax:
-        if debug: print "   fontSize maxi !", fontSize, fontsizeMax, texte
+        if debug: print("   fontSize maxi !", fontSize, fontsizeMax, texte)
         # Réglage taille selon taille préférée
         if fontsizePref > 0:
             fontSize = max(fontsizeMax * fontsizePref/100, fontsizeMin)
@@ -313,7 +312,7 @@ def show_text_rect(ctx, texte, rect, \
     
     
     if fontSize < fontsizeMin:
-        if debug: print "   fontSize mini !", fontSize, fontsizeMin, texte
+        if debug: print("   fontSize mini !", fontSize, fontsizeMin, texte)
         if not tracer:
             return fontsizeMin, (x, y, 0, 0)
         
@@ -380,12 +379,12 @@ def show_text_rect(ctx, texte, rect, \
     # Réglage taille selon taille préférée
     if fontsizePref > 0:
         fontSize = max(fontSize * fontsizePref/100, fontsizeMinMax[0])
-    if debug: print "   fontSize 4 :", fontSize, va
+    if debug: print("   fontSize 4 :", fontSize, va)
     
     if not tracer:
         return fontSize, (x, y, W,H)
 
-    if debug: print "H", h
+    if debug: print("H", h)
     ctx.set_font_size(fontSize)
     X, Y = show_lignes(ctx, lt, x, y, w, h, 
                        le, hl, ha = ha, coulBord = coulBord)
@@ -773,7 +772,7 @@ def DrawCalendrier(ctx, rect, calendrier):
     X = x
     
     jours_feries = constantes.JOURS_FERIES
-    lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
+    lstAcad = sorted([a[0] for a in list(constantes.ETABLISSEMENTS.values())])
     creneaux = calendrier.GetCreneauxFeries()
 #     print "creneaux", creneaux
     
@@ -894,7 +893,8 @@ def getBitmapCalendrier(larg, calendrier):
 
                  
 ######################################################################################  
-def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
+def DrawPeriodes(ctx, rect, pos = None, periodes = [["Année", 5]], projets = {}, 
+                 tailleTypeEns = 0):
     """ Dessine les périodes de l'enseignements
          >> Renvoie la liste des rectangles des positions
     """
@@ -907,12 +907,12 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
     x, y, wt, ht = rect
     
     # Toutes le périodes de projet
-    periodes_prj = [p.periode for p in projets.values()]
+    periodes_prj = [p.periode for p in list(projets.values())]
 #    print "   ", periodes, periodes_prj
     
     # Les noms des projets par période
     noms_prj = {}
-    for n, p in projets.items():
+    for n, p in list(projets.items()):
         for per in p.periode:
             noms_prj[per] = n
     
@@ -985,7 +985,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         
         for c in range(np):
             pa += 1
-            if pa in noms_prj.keys():
+            if pa in list(noms_prj.keys()):
                 n = noms_prj[pa]
             else:
                 n = ""
@@ -997,7 +997,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
     lstGrp = []
     for periode_prj in periodes_prj:
         if len(periode_prj) > 0:
-            lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
+            lstGrp.extend(list(range(periode_prj[0]+1, periode_prj[-1]+1)))
 #    print lstGrp
     
     for p in reversed(sorted(lstGrp)):
@@ -1042,21 +1042,27 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
 #          
 ########################################################################################            
 def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
-#    print "getBitmapPeriode", larg, 
+#     print("getBitmapPeriode", larg)
 #        print "  ", self.projet.position
 #        print "  ", self.projet.GetReferentiel().periodes
 #        print "  ", self.projet.GetReferentiel().periode_prj
     
     w, h = 0.04*prop * COEF, 0.04 * COEF
 #    print w, h
-    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  int(larg), int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24,  int(larg), int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     ctx.scale(larg/w, larg/w) 
-    DrawPeriodes(ctx, (0,0,w,h), position, periodes, projets)
+#     ctx.set_source_rgba(1,1,1,1)
+#     ctx.paint()
+    try:
+        DrawPeriodes(ctx, (0,0,w,h), position, periodes, projets)
+    except:
+        pass
 
     return imagesurface
 
 
+    
 
 
 
@@ -1130,7 +1136,6 @@ def DrawClasse(ctx, rect, classe):
     coul = constantes.CouleursGroupes["C"]
     rectanglePlein(X, Y, W, H, coul)
     rects.append((X, Y, W, H))
-
     show_text_rect_fix(ctx, classe.GetReferentiel().effectifs["C"][1], 
                            X+W-wtxt , Y, wtxt, H,
                            f, Nlignes = 2)
@@ -1214,15 +1219,21 @@ def DrawClasse(ctx, rect, classe):
 
 
 def getBitmapClasse(larg, classe):
-
+#     print("getBitmapClasse", larg)
     prop = 7.0
     w, h = 0.04*prop * COEF, 0.04 * COEF
 #    print w, h
-    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+#     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     ctx.scale(larg/w, larg/w) 
+    ctx.set_source_rgba(1,1,1,1)
+    ctx.paint()
+#     ctx.paint()
     DrawClasse(ctx, (0,0,w,h), classe)
-
+    
+    
+    
     return imagesurface
 
 
@@ -1903,17 +1914,17 @@ def liste_code_texte2(ctx, lstCodes, lstTexte, rect,
     # Hauteurs des textes
     c = [len(t) for t in lstTexte]
     tot = sum(c)
-    c = [float(l)/tot for l in c]
-    ht = h - no*hc
-    ht = [ht*cc for cc in c]
+    c = [float(l)/tot for l in c]   # Normalisation des longueurs des textes
+    ht = h - no*hc                  # Reste de hauteur pour les textes
+    ht = [ht*cc for cc in c]        # Répartition des hauteurs en fonction de la longueur des textes
 #     print "   ", hc, ht
     
     # On réduit les codes
     acote = False
     va = 'b'
-    if min(ht) < minfheight:
+    if min(ht) < minfheight:    # Pas la place en hauteur pour le texte (moins d'une ligne !)
         ht = [max(minfheight, hh) for hh in ht]
-        if ht <= h:
+        if sum(ht) <= h:
             hc = (h - sum(ht))/no
 #             print "      .", hc, ht
             # On déplace les textes sur le codé
@@ -2055,12 +2066,15 @@ def liste_code_texte(ctx, lstCodes, lstTexte, rect,
     ctx.set_font_size(maxFontSize)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
-    wt = max([ctx.text_extents(t)[2] for t in lstCodes if t.strip() != ""])
     
-#        for i, t in enumerate(lstCodes):
-#            if t.strip() != "":
-#                width = ctx.text_extents(t)[2]
-#                wt = max(wt, width)
+    wt = max([ctx.text_extents(t)[2] for t in lstCodes if t.strip() != ""])
+#     wt = 0
+#     for i, t in enumerate(lstCodes):
+#         if t.strip() != "":
+#             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                           cairo.FONT_WEIGHT_BOLD)
+#             width = ctx.text_extents(t)[2]
+#             wt = max(wt, width)
             
     #
     # Textes
@@ -2243,10 +2257,10 @@ class memoized(object):
     
     def __call__(self, ctx, texte, w, break_long_words):
         
-        if texte in self.cache.keys() \
+        if texte in list(self.cache.keys()) \
                 and w >= max(self.cache[texte][0]) and w <= self.cache[texte][1] \
                 and self.cache[texte][3] == break_long_words :
-            if texte[:3] ==u'Syn': print "CACHE", self.cache[texte]
+            if texte[:3] =='Syn': print("CACHE", self.cache[texte])
             return self.cache[texte][2], self.cache[texte][0]
         
         else:
@@ -2618,7 +2632,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     #
     # On vérifie dans le cache qu'on n'a pas déja fait le boulot
     #
-    if texte in CACHE.keys():
+    if texte in list(CACHE.keys()):
         www, hhh, bbb, lee, pee, lt, fontSize, wh = CACHE[texte]
         if www == w and hhh == h and lee == le and pee == pe and bbb == b:
             return lt, fontSize, wh
@@ -2627,8 +2641,8 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     # Options de débuggage
     #
 #     debug = texte == u'Les projets pédagogiques et technologiques'
-    if debug: print "ajuster_texte", texte, w, h
-    if debug: print "  couper :", couper
+    if debug: print("ajuster_texte", texte, w, h)
+    if debug: print("  couper :", couper)
 
 
     #
@@ -2638,10 +2652,10 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     fheight = ctx.font_extents()[2]
 
     hl = fheight * le
-    if debug: print "  hl", hl
+    if debug: print("  hl", hl)
     
     ecart = b * fheight * 2     # écart "total" (gauche + droite)
-    if debug: print "  ecart", ecart
+    if debug: print("  ecart", ecart)
     
     # Ratio du rectangle, écarts compris
     ratioRect = w/h
@@ -2653,7 +2667,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
 #    tps = time.time()
     if wrap:
         width = ctx.text_extents(texte)[2]              
-        if debug: print "  width", width
+        if debug: print("  width", width)
         
         pas = ctx.text_extents('a')[2] # Largeur "type"
         lignes = texte.splitlines()
@@ -2678,18 +2692,18 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
             if lt == []:
                 return lt, 1, 0
             
-            if debug: print
-            if debug: print "  lt", lt
+            if debug: print()
+            if debug: print("  lt", lt)
             
             # On mémorise la longueur de la plus longue ligne 
             #    (en caractères et en unité Cairo)
             maxw = calcul_largeur(ctx, lt)
-            if debug: print "  maxw", maxw
+            if debug: print("  maxw", maxw)
             
             ht = calcul_hauteur(fheight, le, len(lt))
             W, H = maxw + ecart, ht + ecart         # Echelle "1"
             rapport = (W/H) / ratioRect
-            if debug: print "  rapports", maxw/ht, "/", ratioRect
+            if debug: print("  rapports", maxw/ht, "/", ratioRect)
              
             if rapport <= 1:  # on a passé le cap ...
                 continuer = False
@@ -2722,7 +2736,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
 #         c = max((maxw+ecart)/w, (hl*len(lt)+ecart)/h)
 #         ratioRect = (w*c)/(h*c)
     
-    if debug: print "   >>", i
+    if debug: print("   >>", i)
     
 
     #
@@ -2736,7 +2750,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     W, H = maxw*fontSize, ht*fontSize        # Echelle "reele"
     
     fontSize *= COEF
-    if debug: print "  >>> fontSize :", fontSize
+    if debug: print("  >>> fontSize :", fontSize)
     
     #
     # On met le résultat du calcul dans le cache
@@ -2772,8 +2786,8 @@ def ajuster_texte_fixe(ctx, texte, w, h,
     # Options de débuggage
     #
 #     debug = texte == u'Les projets pédagogiques et technologiques'
-    if debug: print "ajuster_texte", texte, w, h
-    if debug: print "  couper :", couper
+    if debug: print("ajuster_texte", texte, w, h)
+    if debug: print("  couper :", couper)
 
 
     #
@@ -2783,14 +2797,26 @@ def ajuster_texte_fixe(ctx, texte, w, h,
     fheight = ctx.font_extents()[2]
 
     hl = fheight * le
-    if debug: print "  hl", hl
+    if debug: print("  hl", hl)
         
     #
     # Découpage du texte
     #
     if wrap:
         lignes = texte.splitlines()
+#         print(lignes)
         ptes = [[ctx.text_extents(l[:i+1])[2] for i in range(len(l))] for l in lignes]
+#         ptes = []
+#         for l in lignes:
+#             ll = []
+#             for i in range(len(l)):
+#                 try:
+#                     ll.append(ctx.text_extents(l[:i+1])[2])
+#                 except:
+#                     ll.append(0)
+#                     print("E", l[:i+1])
+#             ptes.append(ll)
+#         print(ptes)
         lt = []
         for l, pte in zip(lignes, ptes):
             lt.extend(wordwrap(ctx, l, w, pte, breakLongWords = couper))
@@ -2946,7 +2972,7 @@ def info(ctx, margeX, margeY):
     #
     # Informations
     #
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC, #"Sans"
                      cairo.FONT_WEIGHT_BOLD)
     ctx.set_font_size (0.007 * COEF)
     ctx.set_source_rgb(0.6, 0.6, 0.6)
@@ -2984,9 +3010,9 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     wid = width
 
     wrapped_lines = []
-    if debug: print "<<", text.splitlines()
-    if debug: print "<<", text.split("\n")
-    if debug: print type(text.splitlines()[0]), type(text.split("\n")[0])
+    if debug: print("<<", text.splitlines())
+    if debug: print("<<", text.split("\n"))
+    if debug: print(type(text.splitlines()[0]), type(text.split("\n")[0]))
     text = text.splitlines()
     
 #    text = text.split("\n")
@@ -2996,10 +3022,10 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
         start = 0
         startIdx = 0
         spcIdx = -1
-        if debug: print "  line", type(line), line
-        if debug: print "  pte", pte
+        if debug: print("  line", type(line), line)
+        if debug: print("  pte", pte)
         while idx < len(pte):
-            if debug: print "  idx", idx
+            if debug: print("  idx", idx)
             # remember the last seen space
             if line[idx] == ' ':
                 spcIdx = idx

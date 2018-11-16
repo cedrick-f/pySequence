@@ -40,10 +40,12 @@ from draw_cairo import *
 
 #import ConfigParser
 
-from constantes import Effectifs,COUL_COMPETENCES, mergeDict, getSingulierPluriel
+from constantes import Effectifs,COUL_COMPETENCES, mergeDict
                         #getSavoir, getCompetence, \ NomsEffectifs, listeDemarches, Demarches, \
                         #DemarchesCourt, 
 import constantes
+
+from widgets import getSingulier, getPluriel, getSingulierPluriel
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ACTIVITES
@@ -99,7 +101,8 @@ tailleCib = [posObj[0] - posCI[0] - tailleCI[0] - ecartX/2, None]
 tailleCib[1] = tailleCib[0] 
 IcoulCib = (0.8, 0.8, 1, 0.85)
 BcoulCib = (0.1, 0.1, 0.25, 1)
-centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006 * COEF, posCib[1] + tailleCib[0] / 2 - 0.004 * COEF)
+centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006 * COEF, 
+             posCib[1] + tailleCib[1] / 2 - 0.0015 * COEF)
 
 # Zone de commentaire
 fontIntComm = 0.01* COEF
@@ -169,6 +172,7 @@ BCoulSeance = {"ED" : (0.3,0.5,0.5),
                "R"  : (0.45,0.35,0.45), 
                "S"  : (0.45,0.45,0.35),
                "HC": (0.51,0.29,0.24),
+               "DM": (0.51,0.29,0.24),
                "ST" : (0.12,0.29,0.53)}
 
 ICoulSeance = {"ED" : (0.6, 0.8, 0.8), 
@@ -184,6 +188,7 @@ ICoulSeance = {"ED" : (0.6, 0.8, 0.8),
                "S"  : (0.75, 0.75, 0.65),
                ""   : (1.0, 1.0, 1.0),
                "HC": (0.86,0.49,0.41),
+               "DM": (0.86,0.49,0.41),
                "ST" : (0.21,0.49,0.54)}
 
 BStylSeance = {"ED" : [], 
@@ -199,6 +204,7 @@ BStylSeance = {"ED" : [],
                "S"  : [],
                ""   : [],
                "HC": [0.01 * COEF, 0.005 * COEF],
+               "DM": [0.01 * COEF, 0.005 * COEF],
                "ST" : [0.01 * COEF, 0.005 * COEF]}
 
 
@@ -217,10 +223,10 @@ def DefinirZones(seq, ctx):
     global wEff, a, b , ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
     #hHoraire
     # Zone de commentaire
-    if seq.commentaires == u"":
+    if seq.commentaires == "":
         tailleComm[1] = 0
     else:
-        tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + seq.commentaires, tailleComm[0], fontIntComm)
+        tailleComm[1], intComm = calc_h_texte(ctx, "Commentaires : " + seq.commentaires, tailleComm[0], fontIntComm)
 
     posComm[1] = 1 * COEF - tailleComm[1] - margeY
     
@@ -249,7 +255,7 @@ def DefinirZones(seq, ctx):
     posZIntSeances[1] = posZOrganis[1] + tailleZOrganis[1] - tailleZIntSeances[1]
     
     # Zone du tableau des Systèmes
-    systemes = seq.GetSystemesUtilises()
+    systemes = seq.GetSystemesUtilises(niveau = 0)
     tailleZSysteme[0] = wColSysteme * len(systemes)
     tailleZSysteme[1] = tailleZOrganis[1] - ecartY - tailleZIntSeances[1]
     posZSysteme[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZSysteme[0]
@@ -381,7 +387,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
     #    seq.zones_sens.append(Zone([rect], param = "INT"))
         if len(seq.intitule) == 0:
-            t = u"Séquence sans nom"
+            t = "Séquence sans nom"
         else:
             t = seq.intitule
         seq.pt_caract = curve_rect_titre(ctx, t, rect, 
@@ -400,7 +406,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     # Type d'enseignement
     #
     tailleTypeEns = tailleObj[0]/2
-    t = seq.classe.referentiel.Enseignement[0]
+    t = seq.classe.GetLabel()
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
@@ -411,7 +417,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                    coulBord = (0, 0, 0))
 
-    t = seq.classe.referentiel.Enseignement[1]
+    t = seq.classe.GetLabelComplet()
     ctx.set_source_rgb (0.3, 0.3, 0.8)
     show_text_rect(ctx, t, (posObj[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
@@ -440,8 +446,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     #
     # Etablissement
     #
-    if seq.classe.etablissement != u"":
-        t = seq.classe.etablissement + u" (" + seq.classe.ville + u")"
+    if seq.classe.etablissement != "":
+        t = seq.classe.etablissement + " (" + seq.classe.ville + ")"
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posObj[1]-posPos[1]-taillePos[1]), 
@@ -472,41 +478,57 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                   "E" : 120,
                   "I" : -120,
                   "_" : -98}
-        
-        for i, ci in enumerate(seq.CI.numCI):
+
+        for i, ci in enumerate(seq.CI.GetCodesCIs()):
             mei, fsc = seq.CI.GetPosCible(i).split("_")
             mei = mei.replace(" ", "")
             fsc = fsc.replace(" ", "")
-            
-            if len(fsc) == 0:
-                ray = 0
-            else:
-                ray = 0
-                for j in fsc:
-                    ray += rayons[j]
-                ray = ray/len(fsc)
-            
-            if len(mei) == 0:
-                ray = rayons["_"]
-                ang = angles["_"]
-                angles["_"] = -angles["_"] # on inverse le coté pour pouvoir mettre 2 CI en orbite
-            elif len(mei) == 3:
-                ray = 0
-                ang = 0
-            elif len(mei) == 2:
-                ang = (angles[mei[1]] + angles[mei[0]])/2
-                if ang == 0:
-                    ang = 180
+
+            # Rayon et angle
+            if seq.classe.referentiel.champsInter: # un seul point
+                if len(fsc) == 0:
+                    ray = 0
+                else:
+                    ray = 0
+                    for j in fsc:
+                        ray += rayons[j]
+                    ray = ray/len(fsc)
                 
-            else:
-                ang = angles[mei[0]]
+                if len(mei) == 0:
+                    ray = rayons["_"]
+                    ang = angles["_"]
+                    angles["_"] = -angles["_"] # on inverse le coté pour pouvoir mettre 2 CI en orbite
+                elif len(mei) == 3:
+                    ray = 0
+                    ang = 0
+                elif len(mei) == 2:
+                    ang = (angles[mei[1]] + angles[mei[0]])/2
+                    if ang == 0:
+                        ang = 180
                     
-            pos = (centreCib[0] + ray * sin(ang*pi/180) ,
-                   centreCib[1] - ray * cos(ang*pi/180))
-            boule(ctx, pos[0], pos[1], 0.005 * COEF, 
-                  color0 = (0.95, 1, 0.9, 1), color1 = (0.1, 0.3, 0.05, 1))
-
-
+                else:
+                    ang = angles[mei[0]]
+                        
+                pos = (centreCib[0] + ray * sin(ang*pi/180) ,
+                       centreCib[1] - ray * cos(ang*pi/180))
+    #             boule(ctx, pos[0], pos[1], 0.005 * COEF, 
+    #                   color0 = (0.95, 1, 0.9, 1), color1 = (0.1, 0.3, 0.05, 1))
+                r = 0.01 * COEF
+                image(ctx, pos[0]-r/2, pos[1]-r/2, r, r,
+                      constantes.images.impact.GetBitmap())
+                
+            else:   # plusieurs points
+                ray = [rayons[j] for j in fsc]
+                ang = [angles[j] for j in mei]
+                for a in ang:
+                    for r in ray:
+                        pos = (centreCib[0] + r * sin(a*pi/180) ,
+                               centreCib[1] - r * cos(a*pi/180))
+            #             boule(ctx, pos[0], pos[1], 0.005 * COEF, 
+            #                   color0 = (0.95, 1, 0.9, 1), color1 = (0.1, 0.3, 0.05, 1))
+                        r_ = 0.01 * COEF
+                        image(ctx, pos[0]-r_/2, pos[1]-r_/2, r_, r_,
+                              constantes.images.impact.GetBitmap())
 
     #
     # Durée de la séquence
@@ -580,7 +602,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     # Rectangle arrondi
     x0, y0 = posPre
     rect_width, rect_height  = taillePre
-    curve_rect_titre(ctx, u"Prérequis",  
+    curve_rect_titre(ctx, "Prérequis",  
                      (x0, y0, rect_width, rect_height),
                      BcoulPre, IcoulPre, fontPre)
     #
@@ -604,9 +626,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             comp = ref_tc.dicoCompetences["S"]
         else:
-            if typ in ref.dicoCompetences.keys():
+            if typ in list(ref.dicoCompetences.keys()):
                 comp = ref.dicoCompetences[typ]
-            elif ref_tc and typ in ref_tc.dicoCompetences.keys():
+            elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
                 comp = ref_tc.dicoCompetences[typ]
         lstComp.append([cod,comp])
         if not typ in lstTyp:
@@ -642,9 +664,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             savoir = ref_tc.dicoSavoirs["S"]
         else:
-            if typ in ref.dicoSavoirs.keys():
+            if typ in list(ref.dicoSavoirs.keys()):
                 savoir = ref.dicoSavoirs[typ]
-            elif ref_tc and typ in ref_tc.dicoSavoirs.keys():
+            elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
                 savoir = ref_tc.dicoSavoirs[typ]
         lstSav.append([cod,savoir])
         if not typ in lstTyp:
@@ -656,7 +678,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     
     for cod, savoir in lstSav:
         disc = savoir.codeDiscipline
-        lstTexteS.append(savoir.getSavoir(cod))
+        lstTexteS.append(savoir.getSavoir(cod).intitule)
         if multi:
             lstCodesS.append(savoir.abrDiscipline+" "+cod)
         else:
@@ -718,7 +740,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             seq.zones_sens.append(Zone([lstRect[i]], obj = c))
             
     else:
-        show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015 * COEF))
+        show_text_rect(ctx, "Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015 * COEF))
         seq.zones_sens.append(Zone([(x0, y0, rect_width, hl)], obj = seq.prerequis["S"]))
 
 
@@ -732,7 +754,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     x0, y0 = posObj
 #    tailleObj[0] =  taillePos[0]
     rect_width, rect_height  = tailleObj
-    curve_rect_titre(ctx, u"Objectifs", 
+    curve_rect_titre(ctx, ref.labels["OBJEC"][2].plur_(),#"Objectifs", 
                      (x0, y0, rect_width, rect_height), 
                      BcoulObj, IcoulObj, fontObj)
                           
@@ -746,22 +768,23 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     lstCodesC = []
     lstCoulC = []
     ref = seq.GetReferentiel()
+#     print(seq.GetObjAffiches())
     ref_tc = None
     if ref.tr_com != []:
         ref_tc = REFERENTIELS[ref.tr_com[0]]
         
     lstComp = []
     lstTyp = []
-    for c in seq.obj["C"].competences:
+    for c in seq.GetObjAffiches():#obj["C"].competences:
         typ, cod = c[0], c[1:]
         comp = None
 #         print "typ, cod =", typ, cod
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             comp = ref_tc.dicoCompetences["S"]
         else:
-            if typ in ref.dicoCompetences.keys():
+            if typ in list(ref.dicoCompetences.keys()):
                 comp = ref.dicoCompetences[typ]
-            elif ref_tc and typ in ref_tc.dicoCompetences.keys():
+            elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
                 comp = ref_tc.dicoCompetences[typ]
         lstComp.append([cod,comp])
         if not typ in lstTyp:
@@ -793,9 +816,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             savoir = ref_tc.dicoSavoirs["S"]
         else:
-            if typ in ref.dicoSavoirs.keys():
+            if typ in list(ref.dicoSavoirs.keys()):
                 savoir = ref.dicoSavoirs[typ]
-            elif ref_tc and typ in ref_tc.dicoSavoirs.keys():
+            elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
                 savoir = ref_tc.dicoSavoirs[typ]
         lstSav.append([cod,savoir])
         if not typ in lstTyp:
@@ -805,13 +828,15 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     
     for cod, savoir in lstSav:
         disc = savoir.codeDiscipline
-        lstTexteS.append(savoir.getSavoir(cod))
+        
+        lstTexteS.append(savoir.getSavoir(cod).intitule)
         if multi:
             lstCodesS.append(savoir.abrDiscipline + " " + cod)
         else:
             lstCodesS.append(cod)
         lstCoulS.append(constantes.COUL_DISCIPLINES[disc])
-            
+#     print("lstTexteS", lstTexteS)
+    
     h = rect_height+0.0001 * COEF
     
     ltot = taille(lstTexteC) + taille(lstTexteS)
@@ -931,7 +956,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
-            show_text_rect(ctx, u"Démarche",
+            show_text_rect(ctx, "Démarche",
                            (posZDemarche[0], posZDemarche[1],
                             tailleZDemarche[0], posZSeances[1] - posZSysteme[1]), \
                    va = 'h', ha = 'g', le = 0.8, pe = 1.0, \
@@ -1031,17 +1056,19 @@ def Draw_CI(ctx, CI, seq):
     #
     # code et intitulé des CI
     #
-    lstCodes = []
-    lstIntit = []
-    for i, c in enumerate(CI.numCI):
-        lstCodes.append(CI.GetCode(i))
-        lstIntit.append(CI.GetIntit(i))
-    
-    for j, c in enumerate(CI.CI_perso):
-        lstCodes.append(ref.abrevCI+str(len(ref.CentresInterets)+j+1))
-        lstIntit.append(c)
-
-        
+#     lstCodes = []
+#     lstIntit = []
+#     for i, c in enumerate(CI.numCI):
+#         lstCodes.append(CI.GetCode(i))
+#         lstIntit.append(CI.GetIntit(i))
+#     
+#     for j, c in enumerate(CI.CI_perso):
+#         lstCodes.append(ref.abrevCI+str(len(ref.CentresInterets)+j+1))
+#         lstIntit.append(c)
+# 
+#     print("CI:", lstCodes, lstIntit)
+    lstCodes = CI.GetCodesCIs()
+    lstIntit = CI.GetNomCIs()
     #
     # Problématiques
     #
@@ -1068,7 +1095,7 @@ def Draw_CI(ctx, CI, seq):
         
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                            cairo.FONT_WEIGHT_NORMAL)
-        show_text_rect(ctx, u"\n".join(lstPb), 
+        show_text_rect(ctx, "\n".join(lstPb), 
                        (x0, y0+0.0001 * COEF + hCI, rect_width, hPb)
                        )
 
@@ -1250,7 +1277,7 @@ class Bloc():
                         r = min(wColSysteme, cadre.h/(cadre.nf+1))
                         if not estRotation: # Cas des rotations traité plus bas ...
                             DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
-                                                   cadre.seance.GetNbrSystemes(), r)
+                                                   cadre.seance.GetNbrSystemes(niveau = 0), r)
                 
                 else:
                     cadre.DrawCroisement(estRotation)
@@ -1263,7 +1290,7 @@ class Bloc():
                 cadreOk = False
                 for cadre in ligne:
                     if isinstance(cadre, Cadre):
-                        ns = cadre.seance.GetNbrSystemes(simple = True)
+                        ns = cadre.seance.GetNbrSystemes(simple = True, niveau = 0)
                         mergeDict(NS, ns)
                         
 #                        if cadre.dy:# != None:
@@ -1417,6 +1444,9 @@ def DrawSeanceRacine(ctx, seance):
 
 ######################################################################################  
 def DrawCroisementSystemes(ctx, seance, x, y, ns, w):
+    """ Remplissage du tableau des systèmes mobilisés pour la séance
+        :ns: nombre de systèmes
+    """
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
 #    #
@@ -1428,8 +1458,8 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns, w):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
 
-    for s, n in ns.items():
-        if n > 0 and s in xSystemes.keys():
+    for s, n in list(ns.items()):
+        if n > 0 and s in list(xSystemes.keys()):
             x = xSystemes[s]
             rect = (x-w/2, y-w/2, w, w)
             ctx.rectangle(*rect)
@@ -1512,11 +1542,15 @@ def DrawCroisementsDemarche(ctx, seance, y, w):
     # Croisements Séance/Démarche
     #
     ref = seance.GetReferentiel()
-    if seance.typeSeance in ref.activites.keys():
-        if len(ref.demarches) > 0: 
-            bmp = constantes.imagesDemarches[seance.demarche].GetBitmap()
-            rect = (posZDemarche[0] , y - w/2, w, w)
-            image(ctx, posZDemarche[0], y - w/2, w, w, bmp, marge = 0.1)
+    if seance.typeSeance in list(ref.activites.keys()):
+        ld = seance.demarche.split()
+        if len(ld) > 0:
+            n = len(ld)
+            for i, d in enumerate(ld):
+                bmp = constantes.imagesDemarches[d].GetBitmap()
+                dx = w*(i-(n-1)/2)/2
+                rect =    (posZDemarche[0] + dx, y - w/2 + dx, w, w)
+                image(ctx, posZDemarche[0] + dx, y - w/2 + dx, w, w, bmp, marge = 0.1)
 #     _x = xDemarche[seance.demarche]
 # #        if self.typeSeance in ["AP", "ED", "P"]:
 # #    r = 0.008 * COEF
@@ -1565,7 +1599,7 @@ def DrawDomaines(ctx, seq, x, y, r = 0.008 * COEF):
         
 
 def gabarit():
-    print "Génération du gabarit ...", 
+    print("Génération du gabarit ...", end=' ') 
     import draw_cairo_seq
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
@@ -1582,12 +1616,12 @@ def gabarit():
         if attr[:6] == 'taille':
             taille[attr[6:]] = attr
     
-    print pos, taille
+    print(pos, taille)
     
     ctx.set_line_width(5.0/e)
     
-    for k, p in pos.items():
-        if k in taille.keys():
+    for k, p in list(pos.items()):
+        if k in list(taille.keys()):
             x, y = getattr(draw_cairo_seq, p)
             w, h = getattr(draw_cairo_seq, taille[k])
             
@@ -1600,7 +1634,7 @@ def gabarit():
                                wrap = False, couper = False,
                                va = 'h', ha = 'g' )
             except:
-                print "   ", k, " : ", x, y, w, h
+                print("   ", k, " : ", x, y, w, h)
     
     
     imagesurface.write_to_png('gabarit_seq.png')

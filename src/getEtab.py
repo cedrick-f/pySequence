@@ -49,25 +49,25 @@ import time
 
 #############################################################################################
 def GetFeries(win):
-    print "GetFeries"
+    print("GetFeries")
     from bs4 import BeautifulSoup
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
     from objects_wx import myProgressDialog
 
-    MOIS = [u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', 
-        u'juillet', u'août', u'septembre', u'octobre', u'novembre', u'décembre']
+    MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
+        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
     
-    message = u"Recherche des jours fériés\n\n"
+    message = "Recherche des jours fériés\n\n"
     
     ETABLISSEMENTS = ouvrir()
-    lstAcad = sorted([a[0] for a in ETABLISSEMENTS.values()])
+    lstAcad = sorted([a[0] for a in list(ETABLISSEMENTS.values())])
     
     
     urlCal = 'http://www.education.gouv.fr/pid25058/le-calendrier-scolaire.html' #?annee=160&search_input=cancale'
     try:
-        downloadPage = BeautifulSoup(urllib2.urlopen(urlCal, timeout = 10), "html5lib")
+        downloadPage = BeautifulSoup(urllib.request.urlopen(urlCal, timeout = 10), "html5lib")
     except IOError:
-        print u"pas d'accès Internet"
+        print("pas d'accès Internet")
         return   
     
     list_feries = {}
@@ -81,10 +81,10 @@ def GetFeries(win):
 #        print "     a:", a['label'].split("-")[0].split()[-1], annee
         annees[int(a['label'].split("-")[0].split()[-1])] = a['value']
             
-    print "  annees:", annees
+    print("  annees:", annees)
     
     
-    dlg = myProgressDialog(u"Recherche des jours fériés",
+    dlg = myProgressDialog("Recherche des jours fériés",
                                    message,
                                    len(annees),
                                    parent=win
@@ -93,23 +93,23 @@ def GetFeries(win):
     count = 1
     
     
-    for annee, code in annees.items():
+    for annee, code in list(annees.items()):
         count += 1
-        message += u"Année : "+ str(annee) + u"\n"
+        message += "Année : "+ str(annee) + "\n"
         dlg.Update(count, message)
         list_crenaux = {"A" : [], "B" : [], "C" : []} # Les créneaux de jours féries
         list_zones = {"A" : [], "B" : [], "C" : []} # Les académies rangées par zone
     
         url = urlCal + '?annee=%s' %code
     
-        page = BeautifulSoup(urllib2.urlopen(url, timeout = 10), "html5lib")
+        page = BeautifulSoup(urllib.request.urlopen(url, timeout = 10), "html5lib")
         
         tag_cal = page.find(id="calendrier-v2-detail")
         for z, tag_acad in enumerate(tag_cal.find_all(headers="academie")):
             for i, acad in enumerate(lstAcad):
                 if tag_acad.text is not None and acad in tag_acad.text:
                     list_zones[chr(65+z)].append(i)
-        print "  zones:", list_zones
+        print("  zones:", list_zones)
 
 
         for tr in tag_cal.find_all('tr'):
@@ -151,16 +151,16 @@ def GetFeries(win):
                         list_crenaux["B"].append(v)
                         list_crenaux["C"].append(v)
         
-        print "   crenaux:",list_crenaux
+        print("   crenaux:",list_crenaux)
         list_feries[annee] = [list_zones, list_crenaux]
         
         wx.Yield()
         if dlg.stop:
             dlg.Destroy()
-            print "STOP"
+            print("STOP")
             return []
         
-    print list_feries
+    print(list_feries)
     return list_feries
 
 
@@ -170,13 +170,13 @@ import wx
 def GetEtablissements(win):
     
     from bs4 import BeautifulSoup
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
     from objects_wx import myProgressDialog
     
     # titre, message, maximum, parent, style = 0, btnAnnul = True, msgAnnul = u"Annuler l'opération"
-    message = u"Recherche des établissements\n\n"
+    message = "Recherche des établissements\n\n"
     
-    errmsg = u""
+    errmsg = ""
     
     tentatives = 0
     
@@ -198,13 +198,13 @@ def GetEtablissements(win):
         for v in page.find_all('div'):
 #            print v.attrs.keys(), v['class']
 #            print type(v)
-            if (u'class' in v.attrs.keys()) and v['class'][0] == "annuaire-resultats-entete":
+            if ('class' in list(v.attrs.keys())) and v['class'][0] == "annuaire-resultats-entete":
                 ville = v.contents[0].split(',')[1].lstrip('\n').lstrip()
 #                 print "   ville :", ville
-                message += u"     ville : "+ ville + u"\n"
+                message += "     ville : "+ ville + "\n"
                 dlg.Update(count, message)
-            if (u'class' in v.attrs.keys()) and v['class'][0] == "annuaire-etablissement-label":
-                etab = unicode(v.a.string)
+            if ('class' in list(v.attrs.keys())) and v['class'][0] == "annuaire-etablissement-label":
+                etab = str(v.a.string)
 #                 print "       etab :", etab
 #                 message += u"      établissement : "+ etab + u"\n"
 #                 dlg.Update(0, message)
@@ -244,23 +244,23 @@ def GetEtablissements(win):
     urlAcad = 'http://www.education.gouv.fr/pid24301/annuaire-accueil-recherche.html'
     
     try:
-        downloadPage = BeautifulSoup(urllib2.urlopen(urlAcad, timeout = 10), "html5lib")
+        downloadPage = BeautifulSoup(urllib.request.urlopen(urlAcad, timeout = 10), "html5lib")
     except IOError:
 #         message += u"pas d'accès Internet"
 #         dlg.Update(0, message)
-        print "pas d'accès Internet"
+        print("pas d'accès Internet")
         return   
 
     acad_select = downloadPage.find(id="acad_select")
     liste_acad = [[o['label'], o['value']] for o in acad_select.find_all('option')]
-    liste_acad_txt = [l+u"\t"+str(v) for l, v in liste_acad]
+    liste_acad_txt = [l+"\t"+str(v) for l, v in liste_acad]
 #     message += u"Liste des académies :\n   "+ u"\n   ".join(liste_acad_txt)
 #     dlg.Update(0, message)
 #     print liste_acad
     
     liste_etab = {}
     
-    dlg = myProgressDialog(u"Recherche des établissements",
+    dlg = myProgressDialog("Recherche des établissements",
                                    message,
                                    len(liste_acad)*2,
                                    parent=win
@@ -270,7 +270,7 @@ def GetEtablissements(win):
     count = 1
     
     for acad, num in liste_acad:
-        message += u"Académie : "+ acad+ u"\t" + str(num) + u"\n"
+        message += "Académie : "+ acad+ "\t" + str(num) + "\n"
         dlg.Update(count, message)
 #         print "  ",acad, num
         
@@ -285,7 +285,7 @@ def GetEtablissements(win):
 #        urlCol = urlEtab + "?college=2&lycee_name=&localisation=2&dept_select[]=01"
 #        page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5))
         urlCol = urlEtab + '?college=2&localisation=3&nbPage=1000&acad_select[]='+num
-        message += u"  Collèges :\n  ----------\n"
+        message += "  Collèges :\n  ----------\n"
         dlg.Update(count, message)
 #         print "  ", urlCol
         
@@ -293,12 +293,12 @@ def GetEtablissements(win):
         n = 0
         while continuer:
             try:
-                page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5), "html5lib")
+                page = BeautifulSoup(urllib.request.urlopen(urlCol, timeout = 5), "html5lib")
                 tentatives = 0
-            except urllib2.HTTPError:
+            except urllib.error.HTTPError:
                 time.sleep(1)
                 tentatives += 1
-                message += u"+"
+                message += "+"
                 dlg.Update(count, message)
                 if tentatives > 10:
                     break
@@ -318,10 +318,10 @@ def GetEtablissements(win):
         r = len(liste_etab[num][1]) # Récupérés
         t = int(getNbrEtab(page))        # Trouvés
         if r < t:
-            errmsg += u"Académie "+acad+u" : manque "+str(t-r)+u" Collèges !\n"
+            errmsg += "Académie "+acad+" : manque "+str(t-r)+" Collèges !\n"
             
         count += 1
-        message += u"  " + str(r) + u" / " + str(t) + u" collèges récupérés\n\n"
+        message += "  " + str(r) + " / " + str(t) + " collèges récupérés\n\n"
         dlg.Update(count, message)
         
 #         print "   ", len(liste_etab[num][1]),"/",
@@ -341,7 +341,7 @@ def GetEtablissements(win):
 #        urlLyc = urlEtab + "?lycee=3&lycee_name=&localisation=2&dept_select[]=01"
 #        page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5))
         urlLyc = urlEtab + '?lycee=3&localisation=3&nbPage=1000&acad_select[]='+num
-        message += u"  Lycées :\n  --------\n"
+        message += "  Lycées :\n  --------\n"
         dlg.Update(count, message)
 #         print "  ", urlLyc
 
@@ -349,12 +349,12 @@ def GetEtablissements(win):
         n = 0
         while continuer:
             try:
-                page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5), "html5lib")
+                page = BeautifulSoup(urllib.request.urlopen(urlLyc, timeout = 5), "html5lib")
                 tentatives = 0
-            except urllib2.HTTPError:
+            except urllib.error.HTTPError:
                 time.sleep(1)
                 tentatives += 1
-                message += u"+"
+                message += "+"
                 dlg.Update(count, message)
                 if tentatives > 10:
                     break
@@ -375,25 +375,25 @@ def GetEtablissements(win):
         t = int(getNbrEtab(page))        # Trouvés
         
         if r < t:
-            errmsg += u"Académie "+acad+u" : manque "+str(t-r)+u" Lycées !\n"
+            errmsg += "Académie "+acad+" : manque "+str(t-r)+" Lycées !\n"
         count += 1
-        message += u"  " + str(r) + u" / " + str(t) + u" lycées récupérés\n\n"
+        message += "  " + str(r) + " / " + str(t) + " lycées récupérés\n\n"
         dlg.Update(count, message)
         
         
         wx.Yield()
         if dlg.stop:
             dlg.Destroy()
-            print "STOP"
+            print("STOP")
             return []
         
 #         print "   ", len(liste_etab[num][2]),"/",
 #         print getNbrEtab(page)
 #         print 
 
-    message += u"\nOpération Terminée !\n"
-    if errmsg != u"":
-        message += u"ERREURS de récupération :\n"
+    message += "\nOpération Terminée !\n"
+    if errmsg != "":
+        message += "ERREURS de récupération :\n"
         message += errmsg
     dlg.Update(count, message)
 #    print liste_etab
@@ -404,11 +404,11 @@ def GetEtablissements(win):
 def insert_branche(branche, val, nom):
     nom = nom.replace("\n", "--")
 #        print nom, type(val)
-    if type(val) == str or type(val) == unicode:
+    if type(val) == str or type(val) == str:
         branche.set("S_"+nom, val.replace("\n", "--"))
     elif type(val) == int:
         branche.set("I_"+nom, str(val))
-    elif type(val) == long:
+    elif type(val) == int:
         branche.set("L_"+nom, str(val))
     elif type(val) == float:
         branche.set("F_"+nom, str(val))
@@ -420,8 +420,8 @@ def insert_branche(branche, val, nom):
             insert_branche(sub, sv, nom+format(i, "02d"))
     elif type(val) == dict:
         sub = ET.SubElement(branche, "d_"+nom)
-        for k, sv in val.items():
-            if type(k) != str and type(k) != unicode:
+        for k, sv in list(val.items()):
+            if type(k) != str and type(k) != str:
                 k = "_"+format(k, "03d")
             insert_branche(sub, sv, k)
 
@@ -448,11 +448,11 @@ def setBranche(branche, nom = "d_Etablissement"):
     def lect(branche, nom = ""):
         
         if nom[:2] == "S_":
-            return unicode(branche.get(nom)).replace(u"--", u"\n")
+            return str(branche.get(nom)).replace("--", "\n")
         elif nom[:2] == "I_":
             return int(eval(branche.get(nom)))
         elif nom[:2] == "L_":
-            return long(eval(branche.get(nom)))
+            return int(eval(branche.get(nom)))
         elif nom[:2] == "F_":
             return float(eval(branche.get(nom)))
         elif nom[:2] == "B_":
@@ -464,15 +464,15 @@ def setBranche(branche, nom = "d_Etablissement"):
             sbranche = branche.find(nom)
             if sbranche == None: return []
             dic = {}
-            for k, sb in sbranche.items():
+            for k, sb in list(sbranche.items()):
                 _k = k[2:]
-                if isinstance(_k, (str, unicode)) and "--" in _k:
+                if isinstance(_k, str) and "--" in _k:
                     _k = _k.replace("--", "\n")
                 dic[_k] = lect(sbranche, k)
             for sb in list(sbranche):
                 k = sb.tag
                 _k = k[2:]
-                if isinstance(_k, (str, unicode)) and "--" in _k:
+                if isinstance(_k, str) and "--" in _k:
                     _k = _k.replace("--", "\n")
                 dic[_k] = lect(sbranche, k)
 #                print dic.values()
@@ -485,9 +485,9 @@ def setBranche(branche, nom = "d_Etablissement"):
             sbranche = branche.find(nom)
             d = {}
             if sbranche != None:
-                for k, sb in sbranche.items():
+                for k, sb in list(sbranche.items()):
                     _k = k[2:]
-                    if isinstance(_k, (str, unicode)) and "--" in _k:
+                    if isinstance(_k, str) and "--" in _k:
                         _k = _k.replace("--", "\n")
                     d[_k] = lect(sbranche, k)
                 for sb in list(sbranche):
@@ -496,7 +496,7 @@ def setBranche(branche, nom = "d_Etablissement"):
                     _k = k[2:]
                     if _k[0] == "_":
                         _k = eval(_k[1:])
-                    if isinstance(_k, (str, unicode)) and "--" in _k:
+                    if isinstance(_k, str) and "--" in _k:
                         _k = _k.replace("--", "\n")
                     d[_k] = lect(sbranche, k)
             return d

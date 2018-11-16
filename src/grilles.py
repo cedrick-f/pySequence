@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module grilles
 **************
 
@@ -45,7 +45,7 @@ Génération des grilles d'évaluation des projets.
 from util_path import TABLE_PATH, toFileEncoding
 
 # Caractère utilisé pour cocher les cases :
-COCHE = u"X"
+COCHE = "X"
 
 # Module utilisé pour accéder au classeur Excel
 # (Windows seulement)
@@ -63,13 +63,13 @@ from widgets import messageErreur
 
 
 def getFullNameGrille(fichier):
-    u""" Renvoie le chemin du fichier Grille nommé <fichier>
+    """ Renvoie le chemin du fichier Grille nommé <fichier>
     """
     return os.path.join(TABLE_PATH, toFileEncoding(fichier))
 
 
 def ouvrirXLS(fichier):
-    u""" Ouvre la grille XLS nommée <fichier>
+    """ Ouvre la grille XLS nommée <fichier>
         renvoie le classeur PyExcel
         
         :return: classeur PyExcel
@@ -102,7 +102,7 @@ def ouvrirXLS(fichier):
 
 
 def getTableau(win, nomFichier):
-    u""" Ouvre et renvoie les classeurs 
+    """ Ouvre et renvoie les classeurs 
         contenant les grilles d'évaluation : revues + soutenance
         
         :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant le processus
@@ -125,10 +125,10 @@ def getTableau(win, nomFichier):
         return tableau
     
     elif err&1 != 0:
-        messageErreur(win, u"Lancement d'Excel impossible !",
-                      u"L'erreur peut avoir une des causes suivantes :\n" \
-                      u" - L'application Excel n'est pas installée.\n" \
-                      u" - Le fichier original de la grille n'a pas la bonne extention.\n"
+        messageErreur(win, "Lancement d'Excel impossible !",
+                      "L'erreur peut avoir une des causes suivantes :\n" \
+                      " - L'application Excel n'est pas installée.\n" \
+                      " - Le fichier original de la grille n'a pas la bonne extention.\n"
                       )
         
 #    elif err&2 != 0:
@@ -137,7 +137,7 @@ def getTableau(win, nomFichier):
 #                      u"n'a pas été trouvé ! \n")
         
     else:
-        print "Erreur", err
+        print("Erreur", err)
 
 
 import threading
@@ -149,9 +149,9 @@ def getExentionExcel():
     pythoncom.CoInitialize()
     try:
         xlApp = win32com.client.Dispatch('Excel.Application')
-        print xlApp,
+        print(xlApp, end=' ')
     except :
-        print "pas Excel"
+        print("pas Excel")
         return
     
     if float(xlApp.Version) < 12:
@@ -162,7 +162,7 @@ def getExentionExcel():
     
     del xlApp       # Parfois très lent, d'où le thread ...
 
-    print EXT_EXCEL
+    print(EXT_EXCEL)
 
 EXT_EXCEL = None
 def get_th_xls():
@@ -172,7 +172,6 @@ def get_th_xls():
         return th_xls
     except:
         pass # ya pas Excel !
-        
 
 
 # ######################################################################################################
@@ -250,7 +249,7 @@ def get_th_xls():
 
 ###################################################################################################
 def modifierGrille(doc, tableaux, eleve):
-    u""" Remplissage automatique des grilles d'évaluation
+    """ Remplissage automatique des grilles d'évaluation
         
         :param tableaux: dictionnaire de la forme :
             {chemin_du_fichier_Excel_de_la_grille : (liste_des_parties_concernées, objet_tableau_Excel_ouvert)}
@@ -268,14 +267,14 @@ def modifierGrille(doc, tableaux, eleve):
     #
     # On coche les cellules "non" (uniquement grilles "Revues" STI2D)
     #     
-    for part, grille in prj.grilles.items():
+    for part, grille in list(prj.grilles.items()):
 #         print ">>>", part
         dicInfo = prj.cellulesInfo[part]
 #         print "   ", dicInfo
 #         print "   ", ref.aColNon
-        if part in ref.aColNon.keys() and ref.aColNon[part]:
-            if not "NON" in dicInfo.keys():
-                log.append(u"Manque info \"NON\" pour %s" %prj.parties[part])
+        if part in list(ref.aColNon.keys()) and ref.aColNon[part]:
+            if not "NON" in list(dicInfo.keys()):
+                log.append("Manque info \"NON\" pour %s" %prj.parties[part])
                 continue
             feuilNON = dicInfo["NON"][0][0]
             dicIndic = eleve.GetDicIndicateurs()
@@ -289,19 +288,19 @@ def modifierGrille(doc, tableaux, eleve):
             else:
                 feuille = feuilNON
             
-            for i, indics in dicNon.items():
+            for i, indics in list(dicNon.items()):
 #                 print "   indic:", indics
-                lignes = [ind.ligne[part] for ind in indics if part in ind.ligne.keys() and ind.ligne[part] != 0]
+                lignes = [ind.ligne[part] for ind in indics if part in list(ind.ligne.keys()) and ind.ligne[part] != 0]
 #                 print "keys", part, dicIndic.keys() 
                 for j, ligne in enumerate(lignes):
 #                     print "    ", i
                     # indic = l'indicateur "i" doit être évalué
-                    if 'S'+i in dicIndic.keys():
+                    if 'S'+i in list(dicIndic.keys()):
                         indic = dicIndic['S'+i][j]
                     else:
                         indic = False
 #                     print "        ", i, indic
-                    for parts, t in tableaux.values():
+                    for parts, t in list(tableaux.values()):
                         if part in parts and t != None:
 #                             print "!!!!!!"
                             if feuille in t.getSheets():
@@ -311,7 +310,7 @@ def modifierGrille(doc, tableaux, eleve):
                                 else:
                                     t.setCell(nf, ligne, colNON, '')
                             else:
-                                log.append(u"Feuille \"" + feuille + u"\" non trouvée")
+                                log.append("Feuille \"" + feuille + "\" non trouvée")
                             
     
 
@@ -327,14 +326,14 @@ def modifierGrille(doc, tableaux, eleve):
              "Sess": str(doc.annee+1)
              }
 #     print schem
-    for parts, t in tableaux.values():
+    for parts, t in list(tableaux.values()):
         for part in parts:
 #             print ">>>", part
             dicInfo = prj.cellulesInfo[part]
 #             print "  ", dicInfo
 #             print "  ", t
-            for k, v in schem.items():
-                if k in dicInfo.keys() and t != None:
+            for k, v in list(schem.items()):
+                if k in list(dicInfo.keys()) and t != None:
     #                print "    ", k
                     for d in dicInfo[k]:
                         f = d[0]   # Feuille
@@ -346,15 +345,15 @@ def modifierGrille(doc, tableaux, eleve):
                                 l += eleve.id * p
                             t.setCell(nf, l, c, pre+v)
                         else:
-                            log.append(u"Feuille \"" + f + u"\" non trouvée")
+                            log.append("Feuille \"" + f + "\" non trouvée")
     
     #
     # On rajoute les noms des professeurs
     #
-    for part, grille in prj.grilles.items():
+    for part, grille in list(prj.grilles.items()):
         dicInfo = prj.cellulesInfo[part]
-        ts = [t for parts, t in tableaux.values() if part in parts]
-        if "Prof" in dicInfo.keys():
+        ts = [t for parts, t in list(tableaux.values()) if part in parts]
+        if "Prof" in list(dicInfo.keys()):
             for t in ts:
                 f, lcp , pre = dicInfo["Prof"][0] 
                 l, c, p = lcp # ligne, colonne, période
@@ -375,9 +374,9 @@ def modifierGrille(doc, tableaux, eleve):
     #                                   + part + str(nf) + " " + str(l) + " " + str(c))
                         l += p
                 else:
-                    log.append(u"Feuille \"" + f + u"\" non trouvée")
+                    log.append("Feuille \"" + f + "\" non trouvée")
         
-        if "EtabPrf" in dicInfo.keys():
+        if "EtabPrf" in list(dicInfo.keys()):
             for t in ts:
                 f, lcp , pre = dicInfo["EtabPrf"][0] 
                 l, c, p = lcp # ligne, colonne, période
@@ -398,7 +397,7 @@ def modifierGrille(doc, tableaux, eleve):
     #                                   + part + str(nf) + " " + str(l) + " " + str(c))
                         l += p
                 else:
-                    log.append(u"Feuille \"" + f + u"\" non trouvée")
+                    log.append("Feuille \"" + f + "\" non trouvée")
                 
 #    print "log",log
     return list(set(log))
@@ -564,7 +563,7 @@ def copierClasseurs(doc, nomFichiers):
     
 #    fichierPB = []
     
-    for k, f in fichiers.items():
+    for k, f in list(fichiers.items()):
         shutil.copyfile(os.path.join(TABLE_PATH, toFileEncoding(f[0])), toFileEncoding(nomFichiers[k]))
 
 #    err = 0
@@ -703,12 +702,12 @@ class PyExcel:
     def addSheet(self,Before='',After=''):
         if Before :
             pos=self.xlBook.Worksheets(Before)
-            print self.xlBook.Worksheets.Add(Before=pos)
+            print(self.xlBook.Worksheets.Add(Before=pos))
         elif After:
             pos=self.xlBook.Worksheets(After)
-            print self.xlBook.Worksheets.Add(After=pos)
+            print(self.xlBook.Worksheets.Add(After=pos))
         else:
-            print self.xlBook.Worksheets.Add()
+            print(self.xlBook.Worksheets.Add())
             
     def addSheetName(self, name, Before='', After=''):
         self.renameSheet(self.addSheet(Before = Before, After = After), name)
@@ -766,7 +765,7 @@ class PyExcel:
         
     def setColor(self,sheet,row,col,color):
         sht = self.xlBook.Worksheets(sheet)
-        print sht.Cells(row, col).Interior.ColorIndex
+        print(sht.Cells(row, col).Interior.ColorIndex)
         # Feuille vérrouillé : modification impossible !
         #sht.Cells(row, col).Interior.ColorIndex = color
  

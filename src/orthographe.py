@@ -48,7 +48,7 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
         self.spell = STCSpellCheck(self, language="fr_FR")
         self.SetMarginType(0, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 0)
-        self.SetMinSize((200, 22))
+        self.SetMinSize((200, 32))
 #        self.SetScrollWidth(0)
 #        self.SetUseHorizontalScrollBar(False)
         self.SetWrapMode(stc.STC_WRAP_WORD)
@@ -90,7 +90,7 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
             menu = wx.Menu()
             
             if len(sugg) == 0:
-                item = wx.MenuItem(menu, wx.ID_ANY, u"Aucune suggestion")
+                item = wx.MenuItem(menu, wx.ID_ANY, "Aucune suggestion")
                 item.Enable(False)
                 item1 = menu.AppendItem(item)    
                 
@@ -107,7 +107,7 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
         else:
             evt.Skip()
         
-    def Remplacer(self, event = None, mot = u"", start = 0, end = 0):
+    def Remplacer(self, event = None, mot = "", start = 0, end = 0):
 #        print "Remplacer"
         self.remplace = True
         self.Replace(start, end, mot)
@@ -134,7 +134,7 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
         
  
     def OnModified(self, evt):
-#         print "OnModified", self.skipEvt
+#         print("OnModified", self.skipEvt)
         # NOTE: on really big insertions, evt.GetText can cause a
         # MemoryError on MSW, so I've commented this dprint out.
         mod = evt.GetModificationType()

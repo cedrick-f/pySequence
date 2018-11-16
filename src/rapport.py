@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module rapport
 **************
 
@@ -56,7 +56,7 @@ from widgets import messageErreur
 from util_path import toSystemEncoding
 
 import images
-import cStringIO
+import io
 
 from draw_cairo import getHoraireTxt
 from draw_cairo_prj import ICoulTache, BCoulTache
@@ -181,7 +181,7 @@ class StyleDeTexte:
 #########################################################################################
 class FrameRapport(wx.Frame):
     def __init__(self, parent, fichierCourant, doc, typ, eleve = None):
-        wx.Frame.__init__(self, parent, -1, u"Tâches élèves détaillées",
+        wx.Frame.__init__(self, parent, -1, "Tâches élèves détaillées",
                             size=(700, 500))#,
 #                            style = wx.DEFAULT_FRAME_STYLE)
         
@@ -241,7 +241,7 @@ class FrameRapport(wx.Frame):
         
     ######################################################################################################
     def OnFileSave(self, evt):
-        self.rtc.Enregistrer(u"Enregistrer les détails")
+        self.rtc.Enregistrer("Enregistrer les détails")
 #         if not self.rtc.GetFilename():
 #             self.OnFileSaveAs(evt)
 #             return
@@ -249,7 +249,7 @@ class FrameRapport(wx.Frame):
 
     ######################################################################################################
     def OnFileSaveAs(self, evt):
-        self.rtc.EnregistrerSous(u"Enregistrer les détails")
+        self.rtc.EnregistrerSous("Enregistrer les détails")
         
         
 #         wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
@@ -492,21 +492,21 @@ class FrameRapport(wx.Frame):
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
             
         fileMenu = wx.Menu()
-        doBind( fileMenu.Append(-1, u"&Enregistrer\tCtrl+S", u"Enregistrer le rapport"),
+        doBind( fileMenu.Append(-1, "&Enregistrer\tCtrl+S", "Enregistrer le rapport"),
                 self.OnFileSave )
-        doBind( fileMenu.Append(-1, u"&Enregistrer sous...\tF12", u"Enregistrer le rapport"),
+        doBind( fileMenu.Append(-1, "&Enregistrer sous...\tF12", "Enregistrer le rapport"),
                 self.OnFileSaveAs )
         fileMenu.AppendSeparator()
-        doBind( fileMenu.Append(-1, u"&Mise en Page...\tCtrl+M", u"Règle la mise en page de l'impression"),
+        doBind( fileMenu.Append(-1, "&Mise en Page...\tCtrl+M", "Règle la mise en page de l'impression"),
                 self.OnPageSetup )
-        doBind( fileMenu.Append(-1, u"Aperç&u avant impression...\tCtrl+U", u"Affiche un aperçu de ce qui sera imprimé"),
+        doBind( fileMenu.Append(-1, "Aperç&u avant impression...\tCtrl+U", "Affiche un aperçu de ce qui sera imprimé"),
                 self.OnPrintPreview )
-        doBind( fileMenu.Append(-1, u"&Imprimer\tCtrl+P", u"Imprime le document"),
+        doBind( fileMenu.Append(-1, "&Imprimer\tCtrl+P", "Imprime le document"),
                 self.OnDoPrint )
 #        doBind( fileMenu.Append(-1, u"&Aperçu HTML", u"Affiche un aperçu HTML"),
 #                self.OnFileViewHTML )
         fileMenu.AppendSeparator()
-        doBind( fileMenu.Append(-1, u"&Quitter\tCtrl+Q", u"Quitter le visualisateur de rapport"),
+        doBind( fileMenu.Append(-1, "&Quitter\tCtrl+Q", "Quitter le visualisateur de rapport"),
                 self.OnFileExit )
     
         
@@ -514,18 +514,18 @@ class FrameRapport(wx.Frame):
 
         
         editMenu = wx.Menu()
-        doBind( editMenu.Append(wx.ID_UNDO, u"&Annuler\tCtrl+Z"),
+        doBind( editMenu.Append(wx.ID_UNDO, "&Annuler\tCtrl+Z"),
                 self.ForwardEvent, self.ForwardEvent)
-        doBind( editMenu.Append(wx.ID_REDO, u"&R�tablir\tCtrl+Y"),
+        doBind( editMenu.Append(wx.ID_REDO, "&R�tablir\tCtrl+Y"),
                 self.ForwardEvent, self.ForwardEvent )
         editMenu.AppendSeparator()
-        doBind( editMenu.Append(wx.ID_CUT, u"Co&uper\tCtrl+X"),
+        doBind( editMenu.Append(wx.ID_CUT, "Co&uper\tCtrl+X"),
                 self.ForwardEvent, self.ForwardEvent )
-        doBind( editMenu.Append(wx.ID_COPY, u"&Copier\tCtrl+C"),
+        doBind( editMenu.Append(wx.ID_COPY, "&Copier\tCtrl+C"),
                 self.ForwardEvent, self.ForwardEvent)
-        doBind( editMenu.Append(wx.ID_PASTE, u"Co&ller\tCtrl+V"),
+        doBind( editMenu.Append(wx.ID_PASTE, "Co&ller\tCtrl+V"),
                 self.ForwardEvent, self.ForwardEvent)
-        doBind( editMenu.Append(wx.ID_CLEAR, u"&E&ffacer\tDel"),
+        doBind( editMenu.Append(wx.ID_CLEAR, "&E&ffacer\tDel"),
                 self.ForwardEvent, self.ForwardEvent)
         editMenu.AppendSeparator()
         doBind( editMenu.Append(wx.ID_SELECTALL, "Selectionner tout\tCtrl+A"),
@@ -536,31 +536,31 @@ class FrameRapport(wx.Frame):
         #doBind( editMenu.Append(-1, "&Replace...\tCtrl+R"),  )
 
         formatMenu = wx.Menu()
-        doBind( formatMenu.AppendCheckItem(-1, u"&Gras\tCtrl+B"),
+        doBind( formatMenu.AppendCheckItem(-1, "&Gras\tCtrl+B"),
                 self.OnBold, self.OnUpdateBold)
-        doBind( formatMenu.AppendCheckItem(-1, u"&Italic\tCtrl+I"),
+        doBind( formatMenu.AppendCheckItem(-1, "&Italic\tCtrl+I"),
                 self.OnItalic, self.OnUpdateItalic)
-        doBind( formatMenu.AppendCheckItem(-1, u"&Soulign�\tCtrl+U"),
+        doBind( formatMenu.AppendCheckItem(-1, "&Soulign�\tCtrl+U"),
                 self.OnUnderline, self.OnUpdateUnderline)
         formatMenu.AppendSeparator()
-        doBind( formatMenu.AppendCheckItem(-1, u"Aligner � &gauche"),
+        doBind( formatMenu.AppendCheckItem(-1, "Aligner � &gauche"),
                 self.OnAlignLeft, self.OnUpdateAlignLeft)
-        doBind( formatMenu.AppendCheckItem(-1, u"&Centrer"),
+        doBind( formatMenu.AppendCheckItem(-1, "&Centrer"),
                 self.OnAlignCenter, self.OnUpdateAlignCenter)
-        doBind( formatMenu.AppendCheckItem(-1, u"Aligner � &droite"),
+        doBind( formatMenu.AppendCheckItem(-1, "Aligner � &droite"),
                 self.OnAlignRight, self.OnUpdateAlignRight)
         formatMenu.AppendSeparator()
-        doBind( formatMenu.Append(-1, u"&Indenter"), self.OnIndentMore)
-        doBind( formatMenu.Append(-1, u"&Desindenter"), self.OnIndentLess)
+        doBind( formatMenu.Append(-1, "&Indenter"), self.OnIndentMore)
+        doBind( formatMenu.Append(-1, "&Desindenter"), self.OnIndentLess)
         formatMenu.AppendSeparator()
-        doBind( formatMenu.Append(-1, u"&Augmenter l'espace entre paragraphe"), self.OnParagraphSpacingMore)
-        doBind( formatMenu.Append(-1, u"&Diminuer l'espace entre paragraphe"), self.OnParagraphSpacingLess)
+        doBind( formatMenu.Append(-1, "&Augmenter l'espace entre paragraphe"), self.OnParagraphSpacingMore)
+        doBind( formatMenu.Append(-1, "&Diminuer l'espace entre paragraphe"), self.OnParagraphSpacingLess)
         formatMenu.AppendSeparator()
-        doBind( formatMenu.Append(-1, u"Interligne &simple"), self.OnLineSpacingSingle)
-        doBind( formatMenu.Append(-1, u"Interligne &x1.5"), self.OnLineSpacingHalf)
-        doBind( formatMenu.Append(-1, u"Interligne &double"), self.OnLineSpacingDouble)
+        doBind( formatMenu.Append(-1, "Interligne &simple"), self.OnLineSpacingSingle)
+        doBind( formatMenu.Append(-1, "Interligne &x1.5"), self.OnLineSpacingHalf)
+        doBind( formatMenu.Append(-1, "Interligne &double"), self.OnLineSpacingDouble)
         formatMenu.AppendSeparator()
-        doBind( formatMenu.Append(-1, u"&Police..."), self.OnFont)
+        doBind( formatMenu.Append(-1, "&Police..."), self.OnFont)
         
 
 
@@ -576,56 +576,56 @@ class FrameRapport(wx.Frame):
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
         
         tbar = self.CreateToolBar()
-        doBind( tbar.AddTool(-1, _rt_save.GetBitmap(),
-                            shortHelpString=u"Enregistrer"), self.OnFileSave)
-        bmp = wx.ArtProvider_GetBitmap(wx.ART_PRINT).ConvertToImage().Rescale(17,17,wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
-        doBind( tbar.AddTool(-1, bmp,
-                            shortHelpString=u"Imprimer le rapport"), self.OnDoPrint)
+        doBind( tbar.AddTool(-1, "", _rt_save.GetBitmap(),
+                            shortHelp="Enregistrer"), self.OnFileSave)
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_PRINT).ConvertToImage().Rescale(17,17,wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
+        doBind( tbar.AddTool(-1, "", bmp,
+                            shortHelp="Imprimer le rapport"), self.OnDoPrint)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(wx.ID_UNDO, _rt_undo.GetBitmap(),
-                            shortHelpString=u"Annuler"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_REDO, _rt_redo.GetBitmap(),
-                            shortHelpString=u"R�tablir"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_UNDO, "", _rt_undo.GetBitmap(),
+                            shortHelp="Annuler"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_REDO, "", _rt_redo.GetBitmap(),
+                            shortHelp="R�tablir"), self.ForwardEvent, self.ForwardEvent)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(wx.ID_CUT, _rt_cut.GetBitmap(),
-                            shortHelpString=u"Couper dans le presse-papier"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_COPY, _rt_copy.GetBitmap(),
-                            shortHelpString=u"Copier dans le presse-papier"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_PASTE, _rt_paste.GetBitmap(),
-                            shortHelpString=u"Coller depuis le presse-papier"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_CUT, "", _rt_cut.GetBitmap(),
+                            shortHelp="Couper dans le presse-papier"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_COPY, "", _rt_copy.GetBitmap(),
+                            shortHelp="Copier dans le presse-papier"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_PASTE, "", _rt_paste.GetBitmap(),
+                            shortHelp="Coller depuis le presse-papier"), self.ForwardEvent, self.ForwardEvent)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_bold.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Gras"), self.OnBold, self.OnUpdateBold)
-        doBind( tbar.AddTool(-1, _rt_italic.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Italic"), self.OnItalic, self.OnUpdateItalic)
-        doBind( tbar.AddTool(-1, _rt_underline.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Soulign�"), self.OnUnderline, self.OnUpdateUnderline)
+        doBind( tbar.AddTool(-1, "", _rt_bold.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Gras"), self.OnBold, self.OnUpdateBold)
+        doBind( tbar.AddTool(-1, "", _rt_italic.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Italic"), self.OnItalic, self.OnUpdateItalic)
+        doBind( tbar.AddTool(-1, "", _rt_underline.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Soulign�"), self.OnUnderline, self.OnUpdateUnderline)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_alignleft.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Aligner � gauche"), self.OnAlignLeft, self.OnUpdateAlignLeft)
-        doBind( tbar.AddTool(-1, _rt_centre.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Centrer"), self.OnAlignCenter, self.OnUpdateAlignCenter)
-        doBind( tbar.AddTool(-1, _rt_alignright.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Aligner � droite"), self.OnAlignRight, self.OnUpdateAlignRight)
+        doBind( tbar.AddTool(-1, "", _rt_alignleft.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Aligner � gauche"), self.OnAlignLeft, self.OnUpdateAlignLeft)
+        doBind( tbar.AddTool(-1, "", _rt_centre.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Centrer"), self.OnAlignCenter, self.OnUpdateAlignCenter)
+        doBind( tbar.AddTool(-1, "", _rt_alignright.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Aligner � droite"), self.OnAlignRight, self.OnUpdateAlignRight)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_indentless.GetBitmap(),
-                            shortHelpString="Indenter"), self.OnIndentLess)
-        doBind( tbar.AddTool(-1, _rt_indentmore.GetBitmap(),
-                            shortHelpString="Desindenter"), self.OnIndentMore)
+        doBind( tbar.AddTool(-1, "", _rt_indentless.GetBitmap(),
+                            shortHelp="Indenter"), self.OnIndentLess)
+        doBind( tbar.AddTool(-1, "", _rt_indentmore.GetBitmap(),
+                            shortHelp="Desindenter"), self.OnIndentMore)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_font.GetBitmap(),
-                            shortHelpString="Police"), self.OnFont)
-        doBind( tbar.AddTool(-1, _rt_colour.GetBitmap(),
-                            shortHelpString="Couleur de police"), self.OnColour)
+        doBind( tbar.AddTool(-1, "", _rt_font.GetBitmap(),
+                            shortHelp="Police"), self.OnFont)
+        doBind( tbar.AddTool(-1, "", _rt_colour.GetBitmap(),
+                            shortHelp="Couleur de police"), self.OnColour)
 
         tbar.AddSeparator()
         tbar.AddControl(
             wx.ComboBox(
-                tbar, -1, "Styles", choices = Styles.keys(),
+                tbar, -1, "Styles", choices = list(Styles.keys()),
                 size=(150,-1), style=wx.CB_DROPDOWN
                 ))
         self.Bind(wx.EVT_COMBOBOX, self.OnApplyStyle)
@@ -689,11 +689,11 @@ class FrameRapport(wx.Frame):
         handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
         handler.SetFontSizeMapping([7,9,11,12,14,22,100])
 
-        import cStringIO
-        stream = cStringIO.StringIO()
+        import io
+        stream = io.StringIO()
         if not handler.SaveStream(self.rtc.GetBuffer(), stream):
             return
-        print stream.getvalue()
+        print(stream.getvalue())
         import wx.html
         dlg = wx.Dialog(self, title="HTML", style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
         html = wx.html.HtmlWindow(dlg, size=(500,400), style=wx.BORDER_SUNKEN)
@@ -781,7 +781,7 @@ class RapportRTF2(richtext.RichTextPanel):
         else:
             Styles["Titre"].SetPageBreak(pageBreak=True)
 #        
-        parag = self.AddParagraph(titre + u"\n")
+        parag = self.AddParagraph(titre + "\n")
         self.MoveEnd()
         self.Newline()
         
@@ -800,7 +800,7 @@ class RapportRTF2(richtext.RichTextPanel):
     ######################################################################################################
     def AddTitreSeance(self, doc):
         
-        parag = self.AddParagraph(u"Détail des séances\n")
+        parag = self.AddParagraph("Détail des séances\n")
         self.MoveEnd()
         self.Newline()
         
@@ -862,7 +862,7 @@ class RapportRTF2(richtext.RichTextPanel):
         if not revue:
             Styles["Titre 2"].SetBackgroundColour(bgCoul)  
             self.BeginStyle(Styles["Titre 2"])
-            self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
+            self.WriteText("Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
             self.EndStyle()
             self.Newline()
             self.EndAlignment()
@@ -870,9 +870,9 @@ class RapportRTF2(richtext.RichTextPanel):
             self.BeginStyle(Styles["Message"])
 #            self.BeginLeftIndent(60)
             self.BeginUnderline()
-            self.WriteText(u"Intitulé :")
+            self.WriteText("Intitulé :")
             self.EndUnderline()
-            self.WriteText(u" " + tache.intitule)
+            self.WriteText(" " + tache.intitule)
             self.EndStyle()
 #            self.Newline()
         
@@ -1053,7 +1053,7 @@ class RapportRTF2(richtext.RichTextPanel):
         Styles["Titre 1"].SetBackgroundColour(bgCoul)
         
         self.BeginStyle(Styles["Titre 1"])
-        self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
+        self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + " : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
         self.EndStyle()
 #        self.BeginLeftIndent(60*(indent-1))
         self.Newline()
@@ -1061,9 +1061,9 @@ class RapportRTF2(richtext.RichTextPanel):
         
         self.BeginStyle(Styles["Message"])
         self.BeginUnderline()
-        self.WriteText(u"Intitulé :")
+        self.WriteText("Intitulé :")
         self.EndUnderline()
-        self.WriteText(u" " + seance.intitule)
+        self.WriteText(" " + seance.intitule)
 #        self.EndStyle()
 #        self.BeginLeftIndent(60*indent)
         self.Newline()
@@ -1392,11 +1392,11 @@ class RapportRTF2(richtext.RichTextPanel):
     
     ######################################################################################################
     def getNomFichierDefaut(self):
-        f = u"Tâches détaillées _ " + self.eleve.GetNomPrenom() + u".rtf"
+        f = "Tâches détaillées _ " + self.eleve.GetNomPrenom() + ".rtf"
         return os.path.join(self.projet.GetPath(), f)
     
     ######################################################################################################
-    def Enregistrer(self, titre, nomFichierDefaut = u""): 
+    def Enregistrer(self, titre, nomFichierDefaut = ""): 
         if not self.GetFilename():
             if self.Ecraser(nomFichierDefaut):
                 self.SetFilename(nomFichierDefaut)
@@ -1420,7 +1420,7 @@ class RapportRTF2(richtext.RichTextPanel):
                 handler = rt.RichTextHTMLHandler()
                 handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
                 handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-                stream = cStringIO.StringIO()
+                stream = io.StringIO()
                 if handler.SaveStream(self.GetBuffer(), stream):
                     f = open(nomFichierDefaut, 'w')
                     f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
@@ -1434,17 +1434,17 @@ class RapportRTF2(richtext.RichTextPanel):
                 handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
         
 
-        dlg = wx.MessageDialog(self, u"Le fichier a bien été enregistré\n\n%s\n\n"\
-                                   u"Voulez-vous l'ouvrir ?" %self.GetFilename(), 
-                                   u"Fichier enregistré",
+        dlg = wx.MessageDialog(self, "Le fichier a bien été enregistré\n\n%s\n\n"\
+                                   "Voulez-vous l'ouvrir ?" %self.GetFilename(), 
+                                   "Fichier enregistré",
                                    wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
         res = dlg.ShowModal()
         if res == wx.ID_YES:
             try:
                 os.startfile(self.GetFilename())
             except:
-                messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
+                messageErreur(None, "Ouverture impossible",
+                              "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
         dlg.Destroy()
 
 
@@ -1452,9 +1452,9 @@ class RapportRTF2(richtext.RichTextPanel):
     ######################################################################################################
     def Ecraser(self, nomFichier):
         if os.path.exists(nomFichier):
-            dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n%s\n\n"\
-                                   u"Voulez-vous l'écraser ?" %nomFichier, 
-                                   u"Fichier existant",
+            dlg = wx.MessageDialog(self, "Le fichier existe déja !\n\n%s\n\n"\
+                                   "Voulez-vous l'écraser ?" %nomFichier, 
+                                   "Fichier existant",
                                    wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
             res = dlg.ShowModal()
             dlg.Destroy()
@@ -1465,10 +1465,10 @@ class RapportRTF2(richtext.RichTextPanel):
         
         
     ######################################################################################################
-    def EnregistrerSous(self, titre, nomFichierDefaut = u""):
-        wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
-                    u"Format HTML (.html)|*.html|" \
-                    u"Fichier texte (.txt)|*.txt"
+    def EnregistrerSous(self, titre, nomFichierDefaut = ""):
+        wildcard =  "Rich Text Format (.rtf)|*.rtf|" \
+                    "Format HTML (.html)|*.html|" \
+                    "Fichier texte (.txt)|*.txt"
         types = [0, 3, 2]
         dlg = wx.FileDialog(self, titre,
                             wildcard=wildcard,
@@ -1522,7 +1522,7 @@ class RapportRTF(rt.RichTextCtrl):
                 if t.phase != phase and t.phase != '':
                     phase = t.phase
                     self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
-                self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
+                self.AddTache(t, eleve, revue = t.phase in ["R1", "R2", "R3", "Rev"])
             
             self.eleve = eleve
             self.projet = doc
@@ -1560,7 +1560,7 @@ class RapportRTF(rt.RichTextCtrl):
         else:
             Styles["Titre"].SetPageBreak(pageBreak=True)
 #        
-        parag = self.AddParagraph(titre + u"\n")
+        parag = self.AddParagraph(titre + "\n")
         self.MoveEnd()
         self.Newline()
         
@@ -1579,7 +1579,7 @@ class RapportRTF(rt.RichTextCtrl):
     ######################################################################################################
     def AddTitreSeance(self, doc):
         
-        parag = self.AddParagraph(u"Détail des séances\n")
+        parag = self.AddParagraph("Détail des séances\n")
         self.MoveEnd()
         self.Newline()
         
@@ -1625,7 +1625,7 @@ class RapportRTF(rt.RichTextCtrl):
 #        self.EndStyle()
          
     ######################################################################################################
-    def AddTache(self, tache, revue = False):
+    def AddTache(self, tache, eleve, revue = False):
         if tache.phase != '':
             r,v,b, a = ICoulTache[tache.phase]
         else:
@@ -1641,7 +1641,9 @@ class RapportRTF(rt.RichTextCtrl):
         if not revue:
             Styles["Titre 2"].SetBackgroundColour(bgCoul)  
             self.BeginStyle(Styles["Titre 2"])
-            self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
+#             self.WriteText("Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
+#             print(tache.impEleves, eleve.id)
+            self.WriteText("Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()*tache.impEleves[tache.eleves.index(eleve.id)]*0.01))
             self.EndStyle()
             self.Newline()
             self.EndAlignment()
@@ -1649,9 +1651,9 @@ class RapportRTF(rt.RichTextCtrl):
             self.BeginStyle(Styles["Message"])
 #            self.BeginLeftIndent(60)
             self.BeginUnderline()
-            self.WriteText(u"Intitulé :")
+            self.WriteText("Intitulé :")
             self.EndUnderline()
-            self.WriteText(u" " + tache.intitule)
+            self.WriteText(" " + tache.intitule)
             self.EndStyle()
 #            self.Newline()
         
@@ -1832,7 +1834,7 @@ class RapportRTF(rt.RichTextCtrl):
         Styles["Titre 1"].SetBackgroundColour(bgCoul)
         
         self.BeginStyle(Styles["Titre 1"])
-        self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
+        self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + " : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
         self.EndStyle()
 #        self.BeginLeftIndent(60*(indent-1))
         self.Newline()
@@ -1840,9 +1842,9 @@ class RapportRTF(rt.RichTextCtrl):
         
         self.BeginStyle(Styles["Message"])
         self.BeginUnderline()
-        self.WriteText(u"Intitulé :")
+        self.WriteText("Intitulé :")
         self.EndUnderline()
-        self.WriteText(u" " + seance.intitule)
+        self.WriteText(" " + seance.intitule)
 #        self.EndStyle()
 #        self.BeginLeftIndent(60*indent)
         self.Newline()
@@ -2171,11 +2173,15 @@ class RapportRTF(rt.RichTextCtrl):
     
     ######################################################################################################
     def getNomFichierDefaut(self):
-        f = u"Tâches détaillées _ " + self.eleve.GetNomPrenom() + u".rtf"
+        f = "Tâches détaillées _ " + self.eleve.GetNomPrenom() + ".rtf"
         return os.path.join(self.projet.GetPath(), f)
     
     ######################################################################################################
-    def Enregistrer(self, titre, nomFichierDefaut = u""): 
+    def Enregistrer(self, titre, nomFichierDefaut = ""): 
+        if nomFichierDefaut == "":
+            nomFichierDefaut = self.getNomFichierDefaut()
+#         print("Enregistrer", nomFichierDefaut)
+        
         if not self.GetFilename():
             if self.Ecraser(nomFichierDefaut):
                 self.SetFilename(nomFichierDefaut)
@@ -2185,45 +2191,46 @@ class RapportRTF(rt.RichTextCtrl):
 #         else:
 #             self.SaveFile()
            
-        if nomFichierDefaut:
-            ext = os.path.splitext(nomFichierDefaut)[1].lstrip('.')
-            if ext == 'txt':
-                wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
-                fileType = 1
-                ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
-                if not nomFichierDefaut.endswith(ext):
-                    nomFichierDefaut += '.' + ext
-                self.SaveFile(nomFichierDefaut, 1)
+        
+        
+        ext = os.path.splitext(nomFichierDefaut)[1].lstrip('.')
+        if ext == 'txt':
+            wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+            fileType = 1
+            ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
+            if not nomFichierDefaut.endswith(ext):
+                nomFichierDefaut += '.' + ext
+            self.SaveFile(nomFichierDefaut, 1)
+            
+        elif ext == 'html':
+            handler = rt.RichTextHTMLHandler()
+            handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+            handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+            stream = io.StringIO()
+            if handler.SaveStream(self.GetBuffer(), stream):
+                f = open(nomFichierDefaut, 'w')
+                f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
+                f.close()
                 
-            elif ext == 'html':
-                handler = rt.RichTextHTMLHandler()
-                handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-                handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-                stream = cStringIO.StringIO()
-                if handler.SaveStream(self.GetBuffer(), stream):
-                    f = open(nomFichierDefaut, 'w')
-                    f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
-                    f.close()
-                    
-            elif ext == 'rtf':
-                # Use the custom RTF Handler
-                handler = PyRTFParser.PyRichTextRTFHandler()
-                # Save the file with the custom RTF Handler.
-                # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
-                handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
+        elif ext == 'rtf':
+            # Use the custom RTF Handler
+            handler = PyRTFParser.PyRichTextRTFHandler()
+            # Save the file with the custom RTF Handler.
+            # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
+            handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
         
 
-        dlg = wx.MessageDialog(self, u"Le fichier a bien été enregistré\n\n%s\n\n"\
-                                   u"Voulez-vous l'ouvrir ?" %self.GetFilename(), 
-                                   u"Fichier enregistré",
+        dlg = wx.MessageDialog(self, "Le fichier a bien été enregistré\n\n%s\n\n"\
+                                   "Voulez-vous l'ouvrir ?" %self.GetFilename(), 
+                                   "Fichier enregistré",
                                    wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
         res = dlg.ShowModal()
         if res == wx.ID_YES:
             try:
                 os.startfile(self.GetFilename())
             except:
-                messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
+                messageErreur(None, "Ouverture impossible",
+                              "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
         dlg.Destroy()
 
 
@@ -2231,9 +2238,9 @@ class RapportRTF(rt.RichTextCtrl):
     ######################################################################################################
     def Ecraser(self, nomFichier):
         if os.path.exists(nomFichier):
-            dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n%s\n\n"\
-                                   u"Voulez-vous l'écraser ?" %nomFichier, 
-                                   u"Fichier existant",
+            dlg = wx.MessageDialog(self, "Le fichier existe déja !\n\n%s\n\n"\
+                                   "Voulez-vous l'écraser ?" %nomFichier, 
+                                   "Fichier existant",
                                    wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
             res = dlg.ShowModal()
             dlg.Destroy()
@@ -2244,10 +2251,10 @@ class RapportRTF(rt.RichTextCtrl):
         
         
     ######################################################################################################
-    def EnregistrerSous(self, titre, nomFichierDefaut = u""):
-        wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
-                    u"Format HTML (.html)|*.html|" \
-                    u"Fichier texte (.txt)|*.txt"
+    def EnregistrerSous(self, titre, nomFichierDefaut = ""):
+        wildcard =  "Rich Text Format (.rtf)|*.rtf|" \
+                    "Format HTML (.html)|*.html|" \
+                    "Fichier texte (.txt)|*.txt"
         types = [0, 3, 2]
         dlg = wx.FileDialog(self, titre,
                             wildcard=wildcard,
@@ -2272,7 +2279,7 @@ class RTPrinting(rt.RichTextPrinting):
     def __init__(self, parent):
         rt.RichTextPrinting.__init__(self, "", parent)
         
-        self.SetTitle(u"Tâches")
+        self.SetTitle("Tâches")
 
         printData = wx.PrintData()
         printData.SetPaperId(wx.PAPER_A4)
@@ -2285,7 +2292,7 @@ class RTPrinting(rt.RichTextPrinting):
         pageSetupData.SetMarginTopLeft(wx.Point(10,10))
 
 
-prefixeHTML = u"""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+prefixeHTML = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 ##This file is part of pySequence
@@ -30,23 +30,24 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-u"""
+"""
 Module Setup
 ************
 
 Script pour générer un pack avec executable :
-    c:\python27\python setup.py build
-    
+    C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/python setup.py build
 """
-
+    
+PATH_PYTHON36 = "C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32"
 
 import sys, os
-if hasattr(sys, 'setdefaultencoding'):
-    sys.setdefaultencoding('utf8')
-else:
-    reload(sys)  # Reload does the trick!
-    sys.setdefaultencoding('utf-8')
-print sys.getdefaultencoding()
+# if hasattr(sys, 'setdefaultencoding'):
+#     sys.setdefaultencoding('utf8')
+# else:
+#     reload(sys)  # Reload does the trick!
+#     sys.setdefaultencoding('utf-8')
+print(sys.getdefaultencoding())
+
 
 from version import __version__, GetVersion_cxFreeze, __mail__    
     
@@ -76,6 +77,7 @@ enchant_files = le
 includefiles = ['LICENSE.txt', 
                      'fichier_prj.ico', 
                      'fichier_seq.ico',
+                     'fichier_prg.ico', 
                      'etablissements.xml',
                      'JoursFeries.xml',
                      'splash.png',
@@ -89,44 +91,21 @@ includefiles = ['LICENSE.txt',
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\lib\\enchant\\*.dll', 'lib/enchant'),
                      ]
 if sys.platform == "win32":
-    includefiles.extend([('C:\Users\Cedrick\Documents\Developp\Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),])
+    includefiles.extend(["../VCRUNTIME140.dll"])
     
-includefiles.extend(enchant_files)
+# includefiles.extend(enchant_files)
 
 #includefiles.extend(glob(r"*.xlsx"))
 #includefiles.extend(glob(r"*.xls"))
 #includefiles.extend(glob(r"*.xlsm"))
-for p in ['C:\\Python27\\Lib\site-packages\\html5lib',
-            'C:\\Python27\\Lib\\site-packages\\xhtml2pdf',
-            'C:\\Python27\\Lib\\site-packages\\PIL',
-            "C:\\Python27\\Lib\\site-packages\\enchant"]:
-    if not p in sys.path:
-        sys.path.append(p)
+# for p in ['C:\\Python27\\Lib\site-packages\\html5lib',
+#             'C:\\Python27\\Lib\\site-packages\\xhtml2pdf',
+#             'C:\\Python27\\Lib\\site-packages\\PIL',
+#             "C:\\Python27\\Lib\\site-packages\\enchant"]:
+#     if not p in sys.path:
+#         sys.path.append(p)
 
-#sys.path = ['', 'C:\\Python27\\Lib\\idlelib', 
-#            'C:\\Python27\\lib\\site-packages\\setuptools-3.6-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\xmind-0.1a.0-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\distribute-0.7.3-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\six-1.8.0-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\python_dateutil-2.2-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\comtypes-1.1.1-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\xlutils-1.7.1-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\pillow-2.7.0-py2.7-win32.egg', 
-#            'C:\\Python27\\lib\\site-packages\\html5lib-1.0b3-py2.7.egg', 
-#            'C:\\Python27\\lib\\site-packages\\xhtml2pdf-0.0.6-py2.7.egg', 
-#            'C:\\Python27\\python27.zip', 'C:\\Python27\\DLLs', 
-#            'C:\\Python27\\lib', 
-#            'C:\\Python27\\lib\\plat-win', 
-#            'C:\\Python27\\lib\\lib-tk', 
-#            'C:\\Python27', 
-#            'C:\\Python27\\lib\\site-packages', 
-#            'C:\\Python27\\lib\\site-packages\\win32', 
-#            'C:\\Python27\\lib\\site-packages\\win32\\lib', 
-#            'C:\\Python27\\lib\\site-packages\\Pythonwin', 
-#            'C:\\Python27\\lib\\site-packages\\wx-3.0-msw',
-#            'C:\\Python27\\Lib\site-packages\\html5lib',
-#            'C:\\Python27\\Lib\\site-packages\\xhtml2pdf',
-#            'C:\\Python27\\Lib\\site-packages\\Pillow-2.7.0-py2.7-win32\\PIL']
+
 
 # pour que les bibliotheques binaires de /usr/lib soient recopiees aussi sous Linux
 binpathincludes = []
@@ -138,10 +117,12 @@ if sys.platform == "linux2":
 
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {'build_exe': 'build/bin',
-                     "packages": ["os", "xhtml2pdf","html5lib", "enchant", "reportlab", "wx.lib.pdfwin"], 
-                     "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
+                     'include_msvcr': True,
+                     'add_to_path': True,
+                     "packages": ["reportlab",],#"os", "xhtml2pdf","html5lib", "enchant", , "wx.lib.pdfwin", "PIL"], 
+#                      "zip_includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
-                     "optimize" : 0,
+                     "optimize" : 1,
 #                      'compressed': True,
 #                      'append_script_to_exe':False,
 #                      'copy_dependent_files':True,
@@ -161,7 +142,9 @@ build_exe_options = {'build_exe': 'build/bin',
                      "bin_path_includes": binpathincludes,
                      'bin_excludes' : ['libgdk-win32-2.0-0.dll', 'libgobject-2.0-0.dll', 'tcl85.dll',
                                               'tk85.dll', "UxTheme.dll", "mswsock.dll", "POWRPROF.dll",
-                                              "QtCore4.dll", "QtGui4.dll" ]}
+                                              "QtCore4.dll", "QtGui4.dll" ],
+                   
+                     }
 
 
 #bdist_rpm_options = {'bdist_rpm': 'build/bin',
@@ -180,13 +163,13 @@ if not "beta" in __version__:
         base = "Win32GUI"
 
 
-name = u"pySéquence"
+name = "pySéquence"
 version = GetVersion_cxFreeze()
-author = u"Cédrick FAURY & Jean-Claude FRICOU"
+author = "Cédrick FAURY & Jean-Claude FRICOU"
 author_email = __mail__.replace("#", '@')
-description = u"pySéquence"
+description = "pySéquence"
 url = "https://github.com/cedrick-f/pySequence"
-long_description = u"aide à la création de séquences pédagogiques et à la validation de projets"
+long_description = "aide à la création de séquences pédagogiques et à la validation de projets"
 lic = "GPL"
 
 if __name__ == '__main__':
@@ -195,12 +178,12 @@ if __name__ == '__main__':
         cible = Executable( script = "wx_pysequence.py",
                             targetName="Sequence.exe",
                             base = base,
-                            compress = True,
+#                             compress = True,
                             icon = os.path.join("", 'logo.ico'),
                             initScript = None,
-                            copyDependentFiles = True,
-                            appendScriptToExe = False,
-                            appendScriptToLibrary = False # disparu à partir de cx_freeze 5 !
+#                             copyDependentFiles = True,
+#                             appendScriptToExe = False,
+#                             appendScriptToLibrary = False # disparu à partir de cx_freeze 5 !
                             )
     
     
@@ -221,7 +204,7 @@ if __name__ == '__main__':
     
     else:
         from setuptools import setup, find_packages
-        print "PACKAGES", find_packages()
+        print("PACKAGES", find_packages())
         setup(  name = name,
                 version = version,
                 author = author,

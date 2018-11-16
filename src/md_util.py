@@ -30,7 +30,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-u"""
+"""
 Module md_util
 **************
 
@@ -99,7 +99,7 @@ import markdown as md
 # ...
 
 class SimpleHtmlWindow(wx.html.HtmlWindow):
-    def __init__(self, parent, texte = u""):
+    def __init__(self, parent, texte = ""):
         wx.html.HtmlWindow.__init__(self, parent, -1, style = wx.NO_FULL_REPAINT_ON_RESIZE)
 
         if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
@@ -130,7 +130,7 @@ class SimpleHtmlWindow(wx.html.HtmlWindow):
 
 
 class MD_editor(wx.Panel):
-    def __init__(self, parent, texte = u""):
+    def __init__(self, parent, texte = ""):
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -150,7 +150,7 @@ class MD_editor(wx.Panel):
         self.SetSizerAndFit(sizer)
         
     def OnText(self, evt = None):
-        print "OnText"
+        print("OnText")
         if AS_MD:
             html = md.markdown(self.texteMD.GetValue())
             self.texteHTML.SetPage(html)

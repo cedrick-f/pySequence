@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module register
 ***************
 
@@ -41,15 +41,15 @@ Enregistrement de pySéquence dans la base de registre (Windows)
 
 """
 
-import _winreg, os
+import winreg, os
 
 EXT_FICHIER_SEQ = ".seq"
-TYPE_FICHIER_SEQ = u"Fiche de Séquence Pédagogique"
+TYPE_FICHIER_SEQ = "Fiche de Séquence Pédagogique"
 KEY_TYPE_SEQ = "pySequence.sequence"
 ICON_SEQ = "fichier_seq.ico"
 
 EXT_FICHIER_PRJ = ".prj"
-TYPE_FICHIER_PRJ = u"Fiche de validation de Projet"
+TYPE_FICHIER_PRJ = "Fiche de validation de Projet"
 KEY_TYPE_PRJ = "pySequence.projet"
 ICON_PRJ = "fichier_prj.ico"
 
@@ -58,42 +58,42 @@ def Register(PATH):
     try:
         app = "\""+os.path.join(PATH, "Sequence.exe")+"\" \"%1\""
         # Clefs relatives aux "séquences"
-        key_ext = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
-        _winreg.SetValueEx(key_ext, '', 0, _winreg.REG_SZ, KEY_TYPE_SEQ)
-        _winreg.CloseKey(key_ext)
+        key_ext = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+        winreg.SetValueEx(key_ext, '', 0, winreg.REG_SZ, KEY_TYPE_SEQ)
+        winreg.CloseKey(key_ext)
         
         
-        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, app)
-        _winreg.CloseKey(key_typ)
+        key_typ = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
+        winreg.SetValueEx(key_typ, '', 0, winreg.REG_SZ, app)
+        winreg.CloseKey(key_typ)
         
         icone = os.path.join(PATH, ICON_SEQ)
-        key_ico = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_ico, '', 0, _winreg.REG_SZ, icone)
-        _winreg.CloseKey(key_ico)
+        key_ico = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
+        winreg.SetValueEx(key_ico, '', 0, winreg.REG_SZ, icone)
+        winreg.CloseKey(key_ico)
         
-        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, TYPE_FICHIER_SEQ)
-        _winreg.CloseKey(key_typ)
+        key_typ = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)#, 0, _winreg.KEY_NOTIFY)
+        winreg.SetValueEx(key_typ, '', 0, winreg.REG_SZ, TYPE_FICHIER_SEQ)
+        winreg.CloseKey(key_typ)
         
         
         # Clefs relatives aux "projets"
-        key_ext = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
-        _winreg.SetValueEx(key_ext, '', 0, _winreg.REG_SZ, KEY_TYPE_PRJ)
-        _winreg.CloseKey(key_ext)
+        key_ext = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
+        winreg.SetValueEx(key_ext, '', 0, winreg.REG_SZ, KEY_TYPE_PRJ)
+        winreg.CloseKey(key_ext)
         
-        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, app)
-        _winreg.CloseKey(key_typ)
+        key_typ = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
+        winreg.SetValueEx(key_typ, '', 0, winreg.REG_SZ, app)
+        winreg.CloseKey(key_typ)
         
         icone = os.path.join(PATH, ICON_PRJ)
-        key_ico = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_ico, '', 0, _winreg.REG_SZ, icone)
-        _winreg.CloseKey(key_ico)
+        key_ico = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
+        winreg.SetValueEx(key_ico, '', 0, winreg.REG_SZ, icone)
+        winreg.CloseKey(key_ico)
         
-        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, TYPE_FICHIER_PRJ)
-        _winreg.CloseKey(key_typ)
+        key_typ = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)#, 0, _winreg.KEY_NOTIFY)
+        winreg.SetValueEx(key_typ, '', 0, winreg.REG_SZ, TYPE_FICHIER_PRJ)
+        winreg.CloseKey(key_typ)
         
         return True
     except:
@@ -104,19 +104,19 @@ def Register(PATH):
 
 def UnRegister():
     try:
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
+        winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+        winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")
+        winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open")
+        winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell")
+        winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")
+        winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
         try:
-            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
-            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")
-            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open")
-            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell")
-            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")
-            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)
+            winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
+            winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")
+            winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open")
+            winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell")
+            winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")
+            winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)
         except:
             pass
         return True
@@ -125,25 +125,25 @@ def UnRegister():
 
 def UnRegister2():
 
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
 
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")
-    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")
+    winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)
 
     
 def IsRegistered():
     try:
-        _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
-        _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
+        winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+        winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
         return True
     except:
         return False
@@ -152,17 +152,17 @@ def IsRegistered():
     
 def getIcone(nomFichier):
     extension = os.path.splitext(nomFichier)[1]
-    print extension
-    key_ext = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, extension)
-    (valeur,typevaleur) = _winreg.QueryValueEx(key_ext,'')
-    print valeur
-    _winreg.CloseKey(key_ext)
-    key_ico = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, valeur+"\\DefaultIcon")
-    (valeur,typevaleur) = _winreg.QueryValueEx(key_ico,'')
-    _winreg.CloseKey(key_ico)
+    print(extension)
+    key_ext = winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, extension)
+    (valeur,typevaleur) = winreg.QueryValueEx(key_ext,'')
+    print(valeur)
+    winreg.CloseKey(key_ext)
+    key_ico = winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, valeur+"\\DefaultIcon")
+    (valeur,typevaleur) = winreg.QueryValueEx(key_ico,'')
+    winreg.CloseKey(key_ico)
     fichier = valeur.split(',')[0]
     if os.path.splitext(fichier)[1] == '.ico':
-        print fichier
+        print(fichier)
     
     return
 
@@ -175,10 +175,10 @@ def EnableProtectedModeReader(val = 1):
 #     REG_PATH = r"Software\Adobe\Acrobat Reader\10.0\Privileged"
     try:
         REG_PATH = r"Software\Adobe\Acrobat Reader\DC\Privileged"
-        key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, REG_PATH, 0,
-                                           _winreg.KEY_WRITE)
-        _winreg.SetValueEx(key, "bProtectedMode", 0, _winreg.REG_DWORD, val)
-        _winreg.CloseKey(key)
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, REG_PATH, 0,
+                                           winreg.KEY_WRITE)
+        winreg.SetValueEx(key, "bProtectedMode", 0, winreg.REG_DWORD, val)
+        winreg.CloseKey(key)
     except WindowsError:
         return
     
@@ -186,10 +186,10 @@ def GetProtectedModeReader():
 #     REG_PATH = r"Software\Adobe\Acrobat Reader\10.0\Privileged"
     try:
         REG_PATH = r"Software\Adobe\Acrobat Reader\DC\Privileged"
-        key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, REG_PATH, 0,
-                                           _winreg.KEY_READ)
-        value, regtype = _winreg.QueryValueEx(key, "bProtectedMode")
-        _winreg.CloseKey(key)
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, REG_PATH, 0,
+                                           winreg.KEY_READ)
+        value, regtype = winreg.QueryValueEx(key, "bProtectedMode")
+        winreg.CloseKey(key)
         return value
     except WindowsError:
         return None

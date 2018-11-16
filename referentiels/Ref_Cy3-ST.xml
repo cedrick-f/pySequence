@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" I_maxCI="0" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Oui" S_nomCI="Thème(s) de Séquence" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Oui" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)" S_nomSeances="Seances(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
   </l_BO_URL>
@@ -10,37 +10,37 @@
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_ED>
-    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_P>
     <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_activites>
   <d_compImposees B_C="False" B_S="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
-    <l_P S_00="I" S_01="R" S_02="P" />
     <l_AP S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
   </d_demarcheSeance>
   <d_demarches>
     <l_I S_00="Investigation" S_01="Investigation" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
-    <l_P S_00="Projet" S_01="Projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_P>
     <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_R>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_A B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="False" I_nivObj="3" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences>
-        <Competence_MMEI.4 S_intitule="Identifier un signal et une information.">
+        <Competence_CT1 S_intitule="Pratiquer des démarches scientifiques et technologiques">
           <l_domaines />
           <l_elemAssocies>
             <l_00 />
@@ -50,44 +50,7 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_MMEI.4.1 S_intitule="Identifier différentes formes de signaux (sonores, lumineux, radio…).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Nature d’un signal, nature d’une information, dans une application simple de la vie courante." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.4.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_MMEI.4>
-        <Competence_VDF.2 S_intitule="Expliquer les besoins variables en aliments de l’être humain ; l’origine et les techniques mises en oeuvre pour transformer et conserver les aliments.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_VDF.2.1 S_intitule="Établir une relation entre l’activité, l’âge, les conditions de l’environnement et les besoins de l’organisme.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Apports alimentaires : qualité et quantité." S_01="Origine des aliments consommés : un exemple d’élevage, un exemple de culture" />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.2.1>
-            <Competence_VDF.2.3 S_intitule="Mettre en évidence la place des microorganismes dans la production et la conservation des aliments.">
+            <Competence_CT1.1 S_intitule="formuler une question ou une problématique scientifique ou technologique simple ;">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -98,45 +61,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_VDF.2.3>
-            <Competence_VDF.2.2 S_intitule="Relier l’approvisionnement des organes aux fonctions de nutrition.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Apports discontinus (repas) et besoins continus" />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.2.2>
-            <Competence_VDF.2.4 S_intitule="Mettre en relation les paramètres physicochimiques lors de la conservation des aliments et la limitation de la prolifération de microorganismes pathogènes.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Quelques techniques permettant d’éviter la prolifération des microorganismes." S_01="Hygiène alimentaire." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.2.4>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_VDF.2>
-        <Competence_VDF.1 S_intitule="Classer les organismes, exploiter les liens de parenté pour comprendre et expliquer l’évolution des organismes.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_VDF.1.2 S_intitule="Utiliser différents critères pour classer les êtres vivants ; identifier des liens de parenté entre des organismes.">
+            </Competence_CT1.1>
+            <Competence_CT1.2 S_intitule="proposer une ou des hypothèses pour répondre à une question ou un problème ;">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -147,69 +73,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_VDF.1.2>
-            <Competence_VDF.1.3 S_intitule="Identifier les changements des peuplements de la Terre au cours du temps.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Diversités actuelle et passée des espèces." S_01="Évolution des espèces vivantes." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.1.3>
-            <Competence_VDF.1.1 S_intitule="Reconnaitre une cellule">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="La cellule, unité structurelle du vivant" />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.1.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_VDF.1>
-        <Competence_MMEI.1 S_intitule="Décrire les états et la constitution de la matière à l’échelle macroscopique.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_MMEI.1.1 S_intitule="Mettre en oeuvre des observations et des expériences pour caractériser un échantillon de matière.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Diversité de la matière : métaux, minéraux, verres, plastiques, matière organique sous différentes formes…" S_01="L’état physique d’un échantillon de matière dépend de conditions externes, notamment de sa température." S_02="Quelques propriétés de la matière solide ou liquide (par exemple : densité, solubilité, élasticité…)." S_03="La matière à grande échelle : Terre, planètes, Univers." S_04="La masse est une grandeur physique qui caractérise un échantillon de matière." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.1.1>
-            <Competence_MMEI.1.3 S_intitule="Mettre en oeuvre un protocole de séparation de constituants d’un mélange.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Réaliser des mélanges peut provoquer des transformations de la matière (dissolution, réaction)." S_01="La matière qui nous entoure (à l’état solide, liquide ou gazeux), résultat d’un mélange de différents constituants." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.1.3>
-            <Competence_MMEI.1.2 S_intitule="Identifier à partir de ressources documentaires les différents constituants d’un mélange.">
+            </Competence_CT1.2>
+            <Competence_CT1.3 S_intitule="proposer des expériences simples pour tester une hypothèse ;">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -220,70 +85,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_MMEI.1.2>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_MMEI.1>
-        <Competence_MMEI.2 S_intitule="Observer et décrire différents types de mouvements.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_MMEI.2.2 S_intitule="Élaborer et mettre en oeuvre un protocole pour appréhender la notion de mouvement et de mesure de la valeur de la vitesse d’un objet.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Mouvements dont la valeur de la vitesse (module) est constante ou variable (accélération, décélération) dans un mouvement rectiligne." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.2.2>
-            <Competence_MMEI.2.1 S_intitule="Décrire un mouvement et identifier les différences entre mouvements circulaire ou rectiligne.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Mouvement d’un objet (trajectoire et vitesse : unités et ordres de grandeur)." S_01="Exemples de mouvements simples : rectiligne, circulaire." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.2.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_MMEI.2>
-        <Competence_MMEI.3 S_intitule="Identifier différentes sources d’énergie.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_MMEI.3.3 S_intitule="Reconnaitre les situations où l’énergie est stockée, transformée, utilisée. La fabrication et le fonctionnement d’un objet technique nécessitent de l’énergie.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Exemples de sources d’énergie utilisées par les êtres humains : charbon, pétrole, bois, uranium, aliments, vent, Soleil, eau et barrage, pile…" S_01="Notion d’énergie renouvelable." S_02="Identifier quelques éléments d’une chaine d’énergie domestique simple." S_03="Quelques dispositifs visant à économiser la consommation d’énergie." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.3.3>
-            <Competence_MMEI.3.2 S_intitule="Prendre conscience que l’être humain a besoin d’énergie pour vivre, se chauffer, se déplacer, s’éclairer…">
+            </Competence_CT1.3>
+            <Competence_CT1.4 S_intitule="interpréter un résultat, en tirer une conclusion ;">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -294,131 +97,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_MMEI.3.2>
-            <Competence_MMEI.3.1 S_intitule="Identifier des sources d’énergie et des formes.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="L’énergie existe sous différentes formes (énergie associée à un objet en mouvement, énergie thermique, électrique…)." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MMEI.3.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_MMEI.3>
-        <Competence_MOT.3 S_intitule="Identifier les principales familles de matériaux.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos S_00="Familles de matériaux (distinction des matériaux selon les relations entre formes, fonctions et procédés)." S_01="Caractéristiques et propriétés (aptitude au façonnage, valorisation)." S_02="Impact environnemental." />
-          <d_poids />
-          <d_sousComp />
-          <l_thematiques />
-        </Competence_MOT.3>
-        <Competence_MOT.2 S_intitule="Décrire le fonctionnement d’objets techniques, leurs fonctions et leurs constitutions.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos S_00="Besoin, fonction d’usage et d’estime." S_01="Fonction technique, solutions techniques." S_02="Représentation du fonctionnement d’un objet technique." S_03="Comparaison de solutions techniques : constitutions, fonctions, organes." />
-          <d_poids />
-          <d_sousComp />
-          <l_thematiques />
-        </Competence_MOT.2>
-        <Competence_MOT.1 S_intitule="Identifier les principales évolutions du besoin et des objets.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_MOT.1.1 S_intitule="Repérer les évolutions d’un objet dans différents contextes (historique, économique, culturel).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="L’évolution technologique (innovation, invention, principe technique)." S_01="L’évolution des besoins." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_MOT.1.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_MOT.1>
-        <Competence_VDF.4 S_intitule="Expliquer l’origine de la matière organique des êtres vivants et son devenir.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_VDF.4.2 S_intitule="Identifier les matières échangées entre un être vivant et son milieu de vie.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Besoins alimentaires des animaux." S_01="Devenir de la matière organique n’appartenant plus à un organisme vivant." S_02="Décomposeurs." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.4.2>
-            <Competence_VDF.4.1 S_intitule="Relier les besoins des plantes vertes et leur place particulière dans les réseaux trophiques.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Besoins des plantes vertes." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_VDF.4.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_VDF.4>
-        <Competence_PTEVE.2 S_intitule="Identifier des enjeux liés à l’environnement.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_PTEVE.2.1 S_intitule="Décrire un milieu de vie dans ses diverses composantes.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Interactions des organismes vivants entre eux et avec leur environnement." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.2.1>
-            <Competence_PTEVE.2.3 S_intitule="Identifier la nature des interactions entre les êtres vivants et leur importance dans le peuplement des milieux.">
+            </Competence_CT1.4>
+            <Competence_CT1.5 S_intitule="formaliser une partie de sa recherche sous une forme écrite ou orale.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -429,20 +109,21 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_PTEVE.2.3>
-            <Competence_PTEVE.2.2 S_intitule="Relier le peuplement d’un milieu et les conditions de vie.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Modification du peuplement en fonction des conditions physicochimiques du milieu et des saisons." S_01="Écosystèmes (milieu de vie avec ses caractéristiques et son peuplement) ; conséquences de la modification d’un facteur physique ou biologique sur l’écosystème." S_02="La biodiversité, un réseau dynamique." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.2.2>
-            <Competence_PTEVE.2.5 S_intitule="Suivre et décrire le devenir de quelques matériaux de l’environnement proche.">
+            </Competence_CT1.5>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT1>
+        <Competence_CT2 S_intitule="Concevoir, créer, réaliser">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT2.1 S_intitule="dentifier les évolutions des besoins et des objets techniques dans leur contexte.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -453,117 +134,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_PTEVE.2.5>
-            <Competence_PTEVE.2.4 S_intitule="Identifier quelques impacts humains dans un environnement (aménagement, impact technologique...).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Aménagements de de l’espace par les humains et contraintes naturelles ; impacts technologiques positifs et négatifs sur l’environnement." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.2.4>
-            <Competence_PTEVE.2.6 S_intitule="Relier les besoins de l’être humain, l’exploitation des ressources naturelles et les impacts à prévoir et gérer (risques, rejets, valorisations, épuisement des stocks).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Exploitation raisonnée et utilisation des ressources (eau, pétrole, charbon, minerais, biodiversité, sols, bois, roches à des fins de construction…)." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.2.6>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_PTEVE.2>
-        <Competence_MOT.5 S_intitule="Repérer et comprendre la communication et la gestion de l’information.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos S_00="Environnement numérique de travail." S_01="Le stockage des données, notions d’algorithmes, les objets programmables." S_02="Usage des moyens numériques dans un réseau." S_03="Usage de logiciels usuels." />
-          <d_poids />
-          <d_sousComp />
-          <l_thematiques />
-        </Competence_MOT.5>
-        <Competence_MOT.4 S_intitule="Concevoir et produire tout ou partie d’un objet technique en équipe pour traduire une solution technologique répondant à un besoin.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos S_00="Notion de contrainte." S_01="Recherche d’idées (schémas, croquis…)." S_02="Modélisation du réel (maquette, modèles géométrique et numérique), représentation en conception assistée par ordinateur." S_03="Processus, planning, protocoles, procédés de réalisation (outils, machines)." S_04="Choix de matériaux." S_05="Maquette, prototype." S_06="Vérification et contrôles (dimensions, fonctionnement)." />
-          <d_poids />
-          <d_sousComp />
-          <l_thematiques />
-        </Competence_MOT.4>
-        <Competence_PTEVE.1 S_intitule="Situer la Terre dans le système solaire et caractériser les conditions de la vie terrestre.">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_PTEVE.1.4 S_intitule="Identifier les composantes biologiques et géologiques d’un paysage.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Paysages, géologie locale, interactions avec l’environnement et le peuplement." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.1.4>
-            <Competence_PTEVE.1.5 S_intitule="Relier certains phénomènes naturels (tempêtes, inondations, tremblements de terre) à des risques pour les populations.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Phénomènes géologiques traduisant activité interne de la terre (volcanisme, tremblements de terre…)." S_01="Phénomènes traduisant l’activité externe de la Terre : phénomènes météorologiques et climatiques ; évènements extrêmes (tempêtes, cyclones, inondations et sècheresses…)." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.1.5>
-            <Competence_PTEVE.1.2 S_intitule="Caractériser les conditions de vie sur Terre (température, présence d’eau liquide).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Le Soleil, les planètes." S_01="Position de la Terre dans le système solaire." S_02="Histoire de la Terre et développement de la vie." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.1.2>
-            <Competence_PTEVE.1.3 S_intitule="Décrire les mouvements de la Terre (rotation sur elle-même et alternance jour-nuit, autour du Soleil et cycle des saisons).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos S_00="Les mouvements de la Terre sur elle-même et autour du Soleil." S_01="Représentations géométriques de l’espace et des astres (cercle, sphère)." />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_PTEVE.1.3>
-            <Competence_PTEVE.1.1 S_intitule="Situer la Terre dans le système solaire.">
+            </Competence_CT2.1>
+            <Competence_CT2.2 S_intitule="Identifier les principales familles de matériaux.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -574,11 +146,47 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_PTEVE.1.1>
+            </Competence_CT2.2>
+            <Competence_CT2.3 S_intitule="Décrire le fonctionnement d’objets techniques, leurs fonctions et leurs composants.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.3>
+            <Competence_CT2.4 S_intitule="Réaliser en équipe tout ou une partie d’un objet technique répondant à un besoin.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.4>
+            <Competence_CT2.5 S_intitule="Repérer et comprendre la communication et la gestion de l’information.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT2.5>
           </d_sousComp>
           <l_thematiques />
-        </Competence_PTEVE.1>
-        <Competence_VDF.3 S_intitule="Décrire comment les êtres vivants se développent et deviennent aptes à se reproduire.">
+        </Competence_CT2>
+        <Competence_CT3 S_intitule="S’approprier des outils et des méthodes">
           <l_domaines />
           <l_elemAssocies>
             <l_00 />
@@ -588,39 +196,81 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_VDF.3.1 S_intitule="Identifier et caractériser les modifications subies par un organisme vivant (naissance, croissance, capacité à se reproduire, vieillissement, mort) au cours de sa vie.">
+            <Competence_CT3.1 S_intitule="Choisir ou utiliser le matériel adapté pour mener une observation, effectuer une mesure, réaliser une expérience ou une production.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs />
-              <l_infos S_00="Modifications de l’organisation et du fonctionnement d’une plante ou d’un animal au cours du temps, en lien avec sa nutrition et sa reproduction." S_01="Différences morphologiques homme, femme, garçon, fille." S_02="Stades de développement (grainesgermination- fleur-pollinisation, oeuf-larveadulte, oeuf-foetus-bébé-jeune-adulte)." />
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_VDF.3.1>
-            <Competence_VDF.3.2 S_intitule="Décrire et identifier les changements du corps au moment de la puberté.">
+            </Competence_CT3.1>
+            <Competence_CT3.2 S_intitule="Faire le lien entre la mesure réalisée, les unités et l’outil utilisés.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs />
-              <l_infos S_00="Modifications morphologiques, comportementales et physiologiques lors de la puberté." S_01="Rôle respectif des deux sexes dans la reproduction." />
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_VDF.3.2>
+            </Competence_CT3.2>
+            <Competence_CT3.3 S_intitule="Garder une trace écrite ou numérique des recherches, des observations et des expériences réalisées.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.3>
+            <Competence_CT3.4 S_intitule="Organiser seul ou en groupe un espace de réalisation expérimentale.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.4>
+            <Competence_CT3.5 S_intitule="Effectuer des recherches bibliographiques simples et ciblées. Extraire les informations pertinentes d’un document et les mettre en relation pour répondre à une question.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.5>
+            <Competence_CT3.6 S_intitule="Utiliser les outils mathématiques adaptés.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT3.6>
           </d_sousComp>
           <l_thematiques />
-        </Competence_VDF.3>
-      </d_dicCompetences>
-    </Competences_A>
-    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
-      <l_asso_contexte />
-      <l_asso_type />
-      <d_dicCompetences>
+        </Competence_CT3>
         <Competence_CT4 S_intitule="Pratiquer des langages">
           <l_domaines />
           <l_elemAssocies>
@@ -692,30 +342,6 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT5.5 S_intitule="Identifier des sources d’informations fiables.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT5.5>
-            <Competence_CT5.4 S_intitule="représenter des objets techniques.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT5.4>
             <Competence_CT5.1 S_intitule="communiquer des résultats ;">
               <l_domaines />
               <l_elemAssocies>
@@ -728,18 +354,6 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_CT5.1>
-            <Competence_CT5.3 S_intitule="simuler des phénomènes ;">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT5.3>
             <Competence_CT5.2 S_intitule="traiter des données ;">
               <l_domaines />
               <l_elemAssocies>
@@ -752,6 +366,42 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_CT5.2>
+            <Competence_CT5.3 S_intitule="simuler des phénomènes ;">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.3>
+            <Competence_CT5.4 S_intitule="représenter des objets techniques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.4>
+            <Competence_CT5.5 S_intitule="Identifier des sources d’informations fiables.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.5>
           </d_sousComp>
           <l_thematiques />
         </Competence_CT5>
@@ -765,18 +415,6 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT6.2 S_intitule="Mettre en oeuvre une action responsable et citoyenne, individuellement ou collectivement, en et hors milieu scolaire, et en témoigner.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT6.2>
             <Competence_CT6.1 S_intitule="Relier des connaissances acquises en sciences et technologie à des questions de santé, de sécurité et d’environnement.">
               <l_domaines />
               <l_elemAssocies>
@@ -789,6 +427,18 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_CT6.1>
+            <Competence_CT6.2 S_intitule="Mettre en oeuvre une action responsable et citoyenne, individuellement ou collectivement, en et hors milieu scolaire, et en témoigner.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT6.2>
           </d_sousComp>
           <l_thematiques />
         </Competence_CT6>
@@ -802,30 +452,6 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT7.3 S_intitule="Se situer dans l’environnement et maitriser les notions d’échelle.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT7.3>
-            <Competence_CT7.2 S_intitule="Se situer dans l’environnement et maitriser les notions d’échelle.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT7.2>
             <Competence_CT7.1 S_intitule="Replacer des évolutions scientifiques et technologiques dans un contexte historique, géographique,économique et culturel.">
               <l_domaines />
               <l_elemAssocies>
@@ -838,291 +464,753 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_CT7.1>
+            <Competence_CT7.2 S_intitule="Se situer dans l’environnement et maitriser les notions d’échelle.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT7.2>
+            <Competence_CT7.3 S_intitule="Se situer dans l’environnement et maitriser les notions d’échelle.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT7.3>
           </d_sousComp>
           <l_thematiques />
         </Competence_CT7>
-        <Competence_CT1 S_intitule="Pratiquer des démarches scientifiques et technologiques">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_CT1.1 S_intitule="formuler une question ou une problématique scientifique ou technologique simple ;">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.1>
-            <Competence_CT1.3 S_intitule="proposer des expériences simples pour tester une hypothèse ;">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.3>
-            <Competence_CT1.2 S_intitule="proposer une ou des hypothèses pour répondre à une question ou un problème ;">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.2>
-            <Competence_CT1.5 S_intitule="formaliser une partie de sa recherche sous une forme écrite ou orale.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.5>
-            <Competence_CT1.4 S_intitule="interpréter un résultat, en tirer une conclusion ;">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.4>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_CT1>
-        <Competence_CT2 S_intitule="Concevoir, créer, réaliser">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_CT2.4 S_intitule="Réaliser en équipe tout ou une partie d’un objet technique répondant à un besoin.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.4>
-            <Competence_CT2.5 S_intitule="Repérer et comprendre la communication et la gestion de l’information.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.5>
-            <Competence_CT2.2 S_intitule="Identifier les principales familles de matériaux.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.2>
-            <Competence_CT2.3 S_intitule="Décrire le fonctionnement d’objets techniques, leurs fonctions et leurs composants.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.3>
-            <Competence_CT2.1 S_intitule="dentifier les évolutions des besoins et des objets techniques dans leur contexte.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_CT2>
-        <Competence_CT3 S_intitule="S’approprier des outils et des méthodes">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_CT3.3 S_intitule="Garder une trace écrite ou numérique des recherches, des observations et des expériences réalisées.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.3>
-            <Competence_CT3.2 S_intitule="Faire le lien entre la mesure réalisée, les unités et l’outil utilisés.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.2>
-            <Competence_CT3.1 S_intitule="Choisir ou utiliser le matériel adapté pour mener une observation, effectuer une mesure, réaliser une expérience ou une production.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.1>
-            <Competence_CT3.6 S_intitule="Utiliser les outils mathématiques adaptés.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.6>
-            <Competence_CT3.5 S_intitule="Effectuer des recherches bibliographiques simples et ciblées. Extraire les informations pertinentes d’un document et les mettre en relation pour répondre à une question.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.5>
-            <Competence_CT3.4 S_intitule="Organiser seul ou en groupe un espace de réalisation expérimentale.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.4>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_CT3>
       </d_dicCompetences>
     </Competences_S>
-    <Competences_C B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_C B_obj="True" B_pre="False" I_nivObj="3" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences />
     </Competences_C>
+    <Competences_A B_obj="True" B_pre="False" I_nivObj="3" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicCompetences>
+        <Competence_MMEI.1 S_intitule="Décrire les états et la constitution de la matière à l’échelle macroscopique.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MMEI.1.1 S_intitule="Mettre en oeuvre des observations et des expériences pour caractériser un échantillon de matière.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Diversité de la matière : métaux, minéraux, verres, plastiques, matière organique sous différentes formes…" S_01="L’état physique d’un échantillon de matière dépend de conditions externes, notamment de sa température." S_02="Quelques propriétés de la matière solide ou liquide (par exemple : densité, solubilité, élasticité…)." S_03="La matière à grande échelle : Terre, planètes, Univers." S_04="La masse est une grandeur physique qui caractérise un échantillon de matière." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.1.1>
+            <Competence_MMEI.1.2 S_intitule="Identifier à partir de ressources documentaires les différents constituants d’un mélange.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.1.2>
+            <Competence_MMEI.1.3 S_intitule="Mettre en oeuvre un protocole de séparation de constituants d’un mélange.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Réaliser des mélanges peut provoquer des transformations de la matière (dissolution, réaction)." S_01="La matière qui nous entoure (à l’état solide, liquide ou gazeux), résultat d’un mélange de différents constituants." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.1.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MMEI.1>
+        <Competence_MMEI.2 S_intitule="Observer et décrire différents types de mouvements.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MMEI.2.1 S_intitule="Décrire un mouvement et identifier les différences entre mouvements circulaire ou rectiligne.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Mouvement d’un objet (trajectoire et vitesse : unités et ordres de grandeur)." S_01="Exemples de mouvements simples : rectiligne, circulaire." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.2.1>
+            <Competence_MMEI.2.2 S_intitule="Élaborer et mettre en oeuvre un protocole pour appréhender la notion de mouvement et de mesure de la valeur de la vitesse d’un objet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Mouvements dont la valeur de la vitesse (module) est constante ou variable (accélération, décélération) dans un mouvement rectiligne." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.2.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MMEI.2>
+        <Competence_MMEI.3 S_intitule="Identifier différentes sources d’énergie.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MMEI.3.1 S_intitule="Identifier des sources d’énergie et des formes.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="L’énergie existe sous différentes formes (énergie associée à un objet en mouvement, énergie thermique, électrique…)." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.3.1>
+            <Competence_MMEI.3.2 S_intitule="Prendre conscience que l’être humain a besoin d’énergie pour vivre, se chauffer, se déplacer, s’éclairer…">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.3.2>
+            <Competence_MMEI.3.3 S_intitule="Reconnaitre les situations où l’énergie est stockée, transformée, utilisée. La fabrication et le fonctionnement d’un objet technique nécessitent de l’énergie.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Exemples de sources d’énergie utilisées par les êtres humains : charbon, pétrole, bois, uranium, aliments, vent, Soleil, eau et barrage, pile…" S_01="Notion d’énergie renouvelable." S_02="Identifier quelques éléments d’une chaine d’énergie domestique simple." S_03="Quelques dispositifs visant à économiser la consommation d’énergie." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.3.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MMEI.3>
+        <Competence_MMEI.4 S_intitule="Identifier un signal et une information.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MMEI.4.1 S_intitule="Identifier différentes formes de signaux (sonores, lumineux, radio…).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Nature d’un signal, nature d’une information, dans une application simple de la vie courante." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MMEI.4.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MMEI.4>
+        <Competence_VDF.1 S_intitule="Classer les organismes, exploiter les liens de parenté pour comprendre et expliquer l’évolution des organismes.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_VDF.1.1 S_intitule="Reconnaitre une cellule">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="La cellule, unité structurelle du vivant" />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.1.1>
+            <Competence_VDF.1.2 S_intitule="Utiliser différents critères pour classer les êtres vivants ; identifier des liens de parenté entre des organismes.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.1.2>
+            <Competence_VDF.1.3 S_intitule="Identifier les changements des peuplements de la Terre au cours du temps.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Diversités actuelle et passée des espèces." S_01="Évolution des espèces vivantes." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.1.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_VDF.1>
+        <Competence_VDF.2 S_intitule="Expliquer les besoins variables en aliments de l’être humain ; l’origine et les techniques mises en oeuvre pour transformer et conserver les aliments.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_VDF.2.1 S_intitule="Établir une relation entre l’activité, l’âge, les conditions de l’environnement et les besoins de l’organisme.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Apports alimentaires : qualité et quantité." S_01="Origine des aliments consommés : un exemple d’élevage, un exemple de culture" />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.2.1>
+            <Competence_VDF.2.2 S_intitule="Relier l’approvisionnement des organes aux fonctions de nutrition.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Apports discontinus (repas) et besoins continus" />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.2.2>
+            <Competence_VDF.2.3 S_intitule="Mettre en évidence la place des microorganismes dans la production et la conservation des aliments.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.2.3>
+            <Competence_VDF.2.4 S_intitule="Mettre en relation les paramètres physicochimiques lors de la conservation des aliments et la limitation de la prolifération de microorganismes pathogènes.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Quelques techniques permettant d’éviter la prolifération des microorganismes." S_01="Hygiène alimentaire." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.2.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_VDF.2>
+        <Competence_VDF.3 S_intitule="Décrire comment les êtres vivants se développent et deviennent aptes à se reproduire.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_VDF.3.1 S_intitule="Identifier et caractériser les modifications subies par un organisme vivant (naissance, croissance, capacité à se reproduire, vieillissement, mort) au cours de sa vie.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Modifications de l’organisation et du fonctionnement d’une plante ou d’un animal au cours du temps, en lien avec sa nutrition et sa reproduction." S_01="Différences morphologiques homme, femme, garçon, fille." S_02="Stades de développement (grainesgermination- fleur-pollinisation, oeuf-larveadulte, oeuf-foetus-bébé-jeune-adulte)." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.3.1>
+            <Competence_VDF.3.2 S_intitule="Décrire et identifier les changements du corps au moment de la puberté.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Modifications morphologiques, comportementales et physiologiques lors de la puberté." S_01="Rôle respectif des deux sexes dans la reproduction." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.3.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_VDF.3>
+        <Competence_VDF.4 S_intitule="Expliquer l’origine de la matière organique des êtres vivants et son devenir.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_VDF.4.1 S_intitule="Relier les besoins des plantes vertes et leur place particulière dans les réseaux trophiques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Besoins des plantes vertes." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.4.1>
+            <Competence_VDF.4.2 S_intitule="Identifier les matières échangées entre un être vivant et son milieu de vie.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Besoins alimentaires des animaux." S_01="Devenir de la matière organique n’appartenant plus à un organisme vivant." S_02="Décomposeurs." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_VDF.4.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_VDF.4>
+        <Competence_MOT.1 S_intitule="Identifier les principales évolutions du besoin et des objets.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_MOT.1.1 S_intitule="Repérer les évolutions d’un objet dans différents contextes (historique, économique, culturel).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="L’évolution technologique (innovation, invention, principe technique)." S_01="L’évolution des besoins." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_MOT.1.1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_MOT.1>
+        <Competence_MOT.2 S_intitule="Décrire le fonctionnement d’objets techniques, leurs fonctions et leurs constitutions.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos S_00="Besoin, fonction d’usage et d’estime." S_01="Fonction technique, solutions techniques." S_02="Représentation du fonctionnement d’un objet technique." S_03="Comparaison de solutions techniques : constitutions, fonctions, organes." />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_MOT.2>
+        <Competence_MOT.3 S_intitule="Identifier les principales familles de matériaux.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos S_00="Familles de matériaux (distinction des matériaux selon les relations entre formes, fonctions et procédés)." S_01="Caractéristiques et propriétés (aptitude au façonnage, valorisation)." S_02="Impact environnemental." />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_MOT.3>
+        <Competence_MOT.4 S_intitule="Concevoir et produire tout ou partie d’un objet technique en équipe pour traduire une solution technologique répondant à un besoin.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos S_00="Notion de contrainte." S_01="Recherche d’idées (schémas, croquis…)." S_02="Modélisation du réel (maquette, modèles géométrique et numérique), représentation en conception assistée par ordinateur." S_03="Processus, planning, protocoles, procédés de réalisation (outils, machines)." S_04="Choix de matériaux." S_05="Maquette, prototype." S_06="Vérification et contrôles (dimensions, fonctionnement)." />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_MOT.4>
+        <Competence_MOT.5 S_intitule="Repérer et comprendre la communication et la gestion de l’information.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos S_00="Environnement numérique de travail." S_01="Le stockage des données, notions d’algorithmes, les objets programmables." S_02="Usage des moyens numériques dans un réseau." S_03="Usage de logiciels usuels." />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_MOT.5>
+        <Competence_PTEVE.1 S_intitule="Situer la Terre dans le système solaire et caractériser les conditions de la vie terrestre.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_PTEVE.1.1 S_intitule="Situer la Terre dans le système solaire.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.1.1>
+            <Competence_PTEVE.1.2 S_intitule="Caractériser les conditions de vie sur Terre (température, présence d’eau liquide).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Le Soleil, les planètes." S_01="Position de la Terre dans le système solaire." S_02="Histoire de la Terre et développement de la vie." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.1.2>
+            <Competence_PTEVE.1.3 S_intitule="Décrire les mouvements de la Terre (rotation sur elle-même et alternance jour-nuit, autour du Soleil et cycle des saisons).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Les mouvements de la Terre sur elle-même et autour du Soleil." S_01="Représentations géométriques de l’espace et des astres (cercle, sphère)." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.1.3>
+            <Competence_PTEVE.1.4 S_intitule="Identifier les composantes biologiques et géologiques d’un paysage.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Paysages, géologie locale, interactions avec l’environnement et le peuplement." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.1.4>
+            <Competence_PTEVE.1.5 S_intitule="Relier certains phénomènes naturels (tempêtes, inondations, tremblements de terre) à des risques pour les populations.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Phénomènes géologiques traduisant activité interne de la terre (volcanisme, tremblements de terre…)." S_01="Phénomènes traduisant l’activité externe de la Terre : phénomènes météorologiques et climatiques ; évènements extrêmes (tempêtes, cyclones, inondations et sècheresses…)." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.1.5>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_PTEVE.1>
+        <Competence_PTEVE.2 S_intitule="Identifier des enjeux liés à l’environnement.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_PTEVE.2.1 S_intitule="Décrire un milieu de vie dans ses diverses composantes.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Interactions des organismes vivants entre eux et avec leur environnement." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.2.1>
+            <Competence_PTEVE.2.2 S_intitule="Relier le peuplement d’un milieu et les conditions de vie.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Modification du peuplement en fonction des conditions physicochimiques du milieu et des saisons." S_01="Écosystèmes (milieu de vie avec ses caractéristiques et son peuplement) ; conséquences de la modification d’un facteur physique ou biologique sur l’écosystème." S_02="La biodiversité, un réseau dynamique." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.2.2>
+            <Competence_PTEVE.2.3 S_intitule="Identifier la nature des interactions entre les êtres vivants et leur importance dans le peuplement des milieux.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.2.3>
+            <Competence_PTEVE.2.4 S_intitule="Identifier quelques impacts humains dans un environnement (aménagement, impact technologique...).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Aménagements de de l’espace par les humains et contraintes naturelles ; impacts technologiques positifs et négatifs sur l’environnement." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.2.4>
+            <Competence_PTEVE.2.5 S_intitule="Suivre et décrire le devenir de quelques matériaux de l’environnement proche.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.2.5>
+            <Competence_PTEVE.2.6 S_intitule="Relier les besoins de l’être humain, l’exploitation des ressources naturelles et les impacts à prévoir et gérer (risques, rejets, valorisations, épuisement des stocks).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos S_00="Exploitation raisonnée et utilisation des ressources (eau, pétrole, charbon, minerais, biodiversité, sols, bois, roches à des fins de construction…)." />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_PTEVE.2.6>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_PTEVE.2>
+      </d_dicCompetences>
+    </Competences_A>
   </d_dicoCompetences>
   <d_dicoSavoirs>
     <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Connaissances &amp; Capacités">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <l_S9 S_00="Exemples de mouvements simples : rectiligne, circulaire">
-          <d_01 />
-        </l_S9>
-        <l_S8 S_00="Mouvement d'un objet ">
-          <d_01 />
-        </l_S8>
-        <l_S3 S_00="Quelques propriétés de la matière solide ou liquide">
-          <d_01 />
-        </l_S3>
-        <l_S2 S_00="L'état physique d'un échantillon de matière dépend de conditions externes, notamment de sa température">
-          <d_01 />
-        </l_S2>
-        <l_S1 S_00="Diversité de la matière : Métaux, minéraux, verres, plastiques, matière organique sous différentes formes…">
-          <d_01 />
-        </l_S1>
-        <l_S10 S_00="Mouvements dont la valeurs de la vitesse est constante ou variable dans un mouvement rectiligne">
-          <d_01 />
-        </l_S10>
-        <l_S7 S_00="La matière qui nous entoure, résultat d'un mélange de différents constituants">
-          <d_01 />
-        </l_S7>
-        <l_S6 S_00="Réaliser des mélanges peut provoquer des transformations de la matière">
-          <d_01 />
-        </l_S6>
-        <l_S5 S_00="La masse est une grandeur physique qui caractérise un échantillon de matière">
-          <d_01 />
-        </l_S5>
-        <l_S4 S_00="La matière à grande échelle : Terre, planètes, Univers">
-          <d_01 />
-        </l_S4>
+        <Savoir_S1 S_intitule="Diversité de la matière : Métaux, minéraux, verres, plastiques, matière organique sous différentes formes…">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S1>
+        <Savoir_S2 S_intitule="L'état physique d'un échantillon de matière dépend de conditions externes, notamment de sa température">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S2>
+        <Savoir_S3 S_intitule="Quelques propriétés de la matière solide ou liquide">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S3>
+        <Savoir_S4 S_intitule="La matière à grande échelle : Terre, planètes, Univers">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S4>
+        <Savoir_S5 S_intitule="La masse est une grandeur physique qui caractérise un échantillon de matière">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S5>
+        <Savoir_S6 S_intitule="Réaliser des mélanges peut provoquer des transformations de la matière">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S6>
+        <Savoir_S7 S_intitule="La matière qui nous entoure, résultat d'un mélange de différents constituants">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S7>
+        <Savoir_S8 S_intitule="Mouvement d'un objet ">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S8>
+        <Savoir_S9 S_intitule="Exemples de mouvements simples : rectiligne, circulaire">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S9>
+        <Savoir_S10 S_intitule="Mouvements dont la valeurs de la vitesse est constante ou variable dans un mouvement rectiligne">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_S10>
       </d_dicSavoirs>
+      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_S>
   </d_dicoSavoirs>
   <d_domaines>
-    <l_S S_00="Systèmes" S_01="Les systèmes naturels et les systèmes techniques" S_02="">
-      <l_03 I_00="153" I_01="51" I_02="0" />
-    </l_S>
-    <l_R S_00="Représentations" S_01="Les représentations du monde et l'activité humaine" S_02="">
-      <l_03 I_00="255" I_01="102" I_02="0" />
-    </l_R>
     <l_L S_00="Languages" S_01="Les langages pour penser et communiquer" S_02="">
       <l_03 I_00="0" I_01="128" I_02="0" />
     </l_L>
@@ -1132,43 +1220,63 @@
     <l_F S_00="Formation" S_01="La formation de la personne et du citoyen" S_02="">
       <l_03 I_00="0" I_01="102" I_02="204" />
     </l_F>
+    <l_S S_00="Systèmes" S_01="Les systèmes naturels et les systèmes techniques" S_02="">
+      <l_03 I_00="153" I_01="51" I_02="0" />
+    </l_S>
+    <l_R S_00="Représentations" S_01="Les représentations du monde et l'activité humaine" S_02="">
+      <l_03 I_00="255" I_01="102" I_02="0" />
+    </l_R>
   </d_domaines>
   <d_effectifs>
     <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_C>
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_E>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_D>
     <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_G>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_I>
+    </l_D>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
   </d_effectifs>
   <d_effectifsSeance>
-    <l_C S_00="C" />
-    <l_E S_00="C" />
-    <l_AP S_00="E" S_01="P" />
-    <l_SS S_00="C" />
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_AP S_00="E" S_01="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_S />
-    <l_R />
-    <l_SA S_00="C" S_01="G" />
+    <l_C S_00="C" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_SA S_00="C" S_01="G" />
+    <l_SS S_00="C" />
+    <l_E S_00="C" />
+    <l_R />
+    <l_S />
   </d_effectifsSeance>
+  <d_ensSpecif />
+  <d_ensSpecifSeance>
+    <l_ED />
+    <l_AP />
+    <l_P />
+    <l_C />
+    <l_TD />
+    <l_SA />
+    <l_SS />
+    <l_E />
+    <l_R />
+    <l_S />
+  </d_ensSpecifSeance>
   <d_horsClasse />
   <d_labels>
-    <l_ELEVES S_00="élève(s)" S_01="élèves" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+    <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
+    <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="C" S_02="A" />
   <l_listProblematiques>
@@ -1181,10 +1289,15 @@
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeDomaines S_00="L" S_01="O" S_02="F" S_03="S" S_04="R" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeEnsSpecif />
+  <l_listeNivTaxo />
+  <l_listeSpecialites />
+  <l_listeSystemes />
   <l_listeThematiques S_00="MMEI" S_01="VDF" S_02="MOT" S_03="PTEVE" />
-  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
   <l_listeTypeHorsClasse />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_nivTaxo />
   <d_options />
   <d_parties S_C="Conduite" S_S="Soutenance" />
   <l_periodes>
@@ -1194,37 +1307,22 @@
   <d_projets>
     <Projet_PRJ B_tachesOnce="False" I_duree="0" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet">
       <d_attributs>
-        <l_ S_00="" S_01="" S_02="" S_03="" />
-        <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_PAR S_00="" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="Découpage du projet" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
         <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
         <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="Origine" S_01="Partenariat, thématique, concours…" S_02="" S_03="" />
         <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="" />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
         <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Découpage du projet" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
         <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
-          <l_Pre>
-            <l_00 S_00="" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Nom>
-            <l_00 S_00="" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_NON>
-            <l_00 S_00="" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_NON>
           <l_Tit>
             <l_00 S_00="" S_02="">
               <l_01 I_00="0" I_01="0" I_02="0" />
@@ -1235,11 +1333,26 @@
               <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Des>
+          <l_Nom>
+            <l_00 S_00="" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_Pre>
           <l_Etab>
             <l_00 S_00="" S_02="">
               <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Etab>
+          <l_NON>
+            <l_00 S_00="" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_NON>
           <l_Prof>
             <l_00 S_00="" S_02="">
               <l_01 I_00="0" I_01="0" I_02="0" />
@@ -1252,16 +1365,16 @@
               <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Tit>
-          <l_Nom>
-            <l_00 S_00="" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Nom>
           <l_Des>
             <l_00 S_00="" S_02="">
               <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Des>
+          <l_Nom>
+            <l_00 S_00="" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_Nom>
           <l_Pre>
             <l_00 S_00="" S_02="">
               <l_01 I_00="0" I_01="0" I_02="0" />
@@ -1286,13 +1399,13 @@
       <l_periode />
       <d_phases>
         <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
         <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Rea" />
@@ -1302,50 +1415,52 @@
     </Projet_PRJ>
   </d_projets>
   <d_seances>
-    <l_C S_00="Cours" S_01="Cours" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_C>
-    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_E>
-    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_P>
-    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_SS>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_ED>
     <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
-    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_S>
-    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+    </l_P>
+    <l_C S_00="Cours" S_01="Cours" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_R>
+    </l_C>
     <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_TD>
     <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_SA>
-  </d_seances>
-  <d_thematiques>
-    <l_MOT S_00="Matériaux et objets techniques" S_01="Matériaux et objets techniques" S_02="">
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_MOT>
+    </l_SS>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+  </d_seances>
+  <d_specialite />
+  <d_systemes />
+  <d_thematiques>
     <l_MMEI S_00="Matière, mouvement, énergie, information" S_01="Matière, mouvement, énergie, information" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_MMEI>
-    <l_PTEVE S_00="La planète Terre. Les êtres vivants dans leur environnement" S_01="La planète Terre. Les êtres vivants dans leur environnement" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_PTEVE>
     <l_VDF S_00="Le vivant, sa diversité et les fonctions qui le caractérisent" S_01="Le vivant, sa diversité et les fonctions qui le caractérisent" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_VDF>
+    <l_MOT S_00="Matériaux et objets techniques" S_01="Matériaux et objets techniques" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_MOT>
+    <l_PTEVE S_00="La planète Terre. Les êtres vivants dans leur environnement" S_01="La planète Terre. Les êtres vivants dans leur environnement" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PTEVE>
   </d_thematiques>
   <l_tr_com />
 </Referentiel>

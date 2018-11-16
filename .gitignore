@@ -9,7 +9,10 @@ releases/
 *.cfg
 src/sequence.cfg
 src/profs.xml
+src/profs_.xml
 py3/
+VCRUNTIME140.dll
+
 
 #################
 ## Eclipse

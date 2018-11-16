@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module Options
 **************
 
@@ -40,7 +40,7 @@ Gestion des Options de **pySéquence**.
 
 """
 
-import ConfigParser
+import configparser
 import os.path
 import io
 
@@ -59,7 +59,7 @@ from Referentiel import REFERENTIELS
 #      Options     #
 ##############################################################################
 class Options:
-    u"""Définit les options de pySequence
+    """Définit les options de pySequence
     """
     def __init__(self, options = None):
         #
@@ -79,11 +79,11 @@ class Options:
           
 #        self.listeOptions = [u"Général", u"Affichage", u"Couleurs", u"Impression"] 
          
-        self.typesOptions = {u"Classe" : self.optClasse,
+        self.typesOptions = {"Classe" : self.optClasse,
                              #u"Systèmes" : self.optSystemes,
-                             u"Projet" : self.optProjet,
-                             u"Fichiers" : self.optFichiers,
-                             u"Fenetre" : self.optFenetre,
+                             "Projet" : self.optProjet,
+                             "Fichiers" : self.optFichiers,
+                             "Fenetre" : self.optFenetre,
 #                             u"Impression" : self.optImpression,
                              }
         
@@ -95,10 +95,10 @@ class Options:
 
     #########################################################################################################
     def __repr__(self):
-        print self.optClasse
-        print self.optProjet
+        print(self.optClasse)
+        print(self.optProjet)
 #        print self.optSystemes
-        print self.optFichiers
+        print(self.optFichiers)
         return ""
     
 #        t = "Options :\n"
@@ -121,16 +121,15 @@ class Options:
         """
 #        PATH=os.path.dirname(os.path.abspath(sys.argv[0]))
 #        os.chdir(globdef.PATH)
-        if os.path.isfile(self.fichierOpt):
-            return True
-        return False
+        return os.path.isfile(self.fichierOpt)
+
 
     #########################################################################################################
     def enregistrer(self):
         """" Enregistre les options dans un fichier
         """
-#        print "Enregistrement",self
-        config = ConfigParser.ConfigParser()
+#         print("Enregistrement",self.fichierOpt)
+        config = configparser.ConfigParser()
 
         
         def sav(nom, val):
@@ -139,19 +138,19 @@ class Options:
                     sav(nom+"_"+format(i, "02d"), v)
        
             elif type(val) == dict:
-                for k,v in val.items():
+                for k,v in list(val.items()):
                     sav(nom+"."+k, v)
             
             else:
 #                if type(val) in [str, unicode]:
 #                    val = val.encode('utf-8')
-                config.set(titre, nom, val) # py3 : .replace('%', '%%'))
+                config.set(titre, nom, str(val).replace('%', '%%'))
 
 
-        for titre,dicopt in self.typesOptions.items():
-            titre = titre.encode('utf-8')  # à virer pour py3
+        for titre,dicopt in list(self.typesOptions.items()):
+#             titre = titre.encode('utf-8')
             config.add_section(titre)
-            for nom, val in dicopt.items():
+            for nom, val in list(dicopt.items()):
                 sav(nom, val)
 #                if type(opt[1]) == list:
 #                    for i,v in enumerate(opt[1]):nom
@@ -165,9 +164,8 @@ class Options:
 #                    
 #                else:
 #                    config.set(titre, opt[0], opt[1])
-        # py3 : 
-        #config.write(open(self.fichierOpt,'w', encoding="utf-8"))
-        config.write(open(self.fichierOpt,'w'))
+        
+        config.write(open(self.fichierOpt,'w', encoding="utf-8"))
 
 
 
@@ -175,8 +173,8 @@ class Options:
     def ouvrir(self, encoding = 'utf-8'):
         """ Ouvre un fichier d'options 
         """
-        print "Ouverture Options:", self.fichierOpt
-        config = ConfigParser.ConfigParser()
+        print("Ouverture Options:", self.fichierOpt)
+        config = configparser.ConfigParser()
         
         with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
             config.readfp(fp)
@@ -207,7 +205,7 @@ class Options:
         
         def lec(titreopt):
             titreopt = titreopt.lower()
-            lst = zip(*config.items(titreUtf))
+            lst = list(zip(*config.items(titreUtf)))
             if len(lst) > 0 and titreopt in lst[0]:
                 return evl(titreopt)
             else:
@@ -284,13 +282,11 @@ class Options:
 #            self.typesOptions[titre][titreopt] = opt
 
         
-        for titre in self.typesOptions.keys():
-            # py3 :
-            #titreUtf = titre
-            titreUtf = titre.encode('utf-8')
+        for titre in list(self.typesOptions.keys()):
+            titreUtf = titre#.encode('utf-8')
 #            print "   ", titreUtf, self.typesOptions[titre].keys()
             
-            for titreopt in self.typesOptions[titre].keys():
+            for titreopt in list(self.typesOptions[titre].keys()):
 #                opt = self.typesOptions[titre][titreopt]
                 
                 self.typesOptions[titre][titreopt] = lec(titreopt)
@@ -357,10 +353,10 @@ class Options:
     def copie(self):
         """ Retourne une copie des options """
         options = Options()
-        for titre,dicopt in self.typesOptions.items():
+        for titre,dicopt in list(self.typesOptions.items()):
             titre.encode('utf-8')
             nopt = {}
-            for opt in dicopt.items():
+            for opt in list(dicopt.items()):
                 options.typesOptions[titre][opt[0]] = opt[1]
 #                nopt[opt[0]] = opt[1]
 #            options.typesOptions[titre] = (options.typesOptions[titre][0], nopt)
@@ -376,7 +372,7 @@ class Options:
         
     ############################################################################
     def defaut(self):
-        print "Options defaut"
+        print("Options defaut")
         self.definir()
         
     ############################################################################
@@ -481,7 +477,7 @@ class Options:
 
     ############################################################################
     def validerSystemes(self, sequence):
-        for syst, nbr in sequence.GetNbrSystemes().items():
+        for syst, nbr in list(sequence.GetNbrSystemes().items()):
             if syst in self.optSystemes["Systemes"]:
                 i = self.optSystemes["Systemes"].index(syst)
                 self.optSystemes["Nombre"][i] = str(max(self.optSystemes["Nombre"][i], nbr))
@@ -506,7 +502,7 @@ class Options:
 class FenOptions(wx.Dialog):
 #   "Fenêtre des options"      
     def __init__(self, parent, options):
-        wx.Dialog.__init__(self, parent, -1, u"Options de pySéquence")#, style = wx.RESIZE_BORDER)
+        wx.Dialog.__init__(self, parent, -1, "Options de pySéquence")#, style = wx.RESIZE_BORDER)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.options = options
@@ -517,7 +513,7 @@ class FenOptions(wx.Dialog):
         # Le book ...
         #
         nb = wx.Notebook(self, -1)
-        nb.AddPage(pnlClasse(nb, options.optClasse), u"Classe")
+        nb.AddPage(pnlClasse(nb, options.optClasse), "Classe")
 #        nb.AddPage(pnlAffichage(nb, options.optAffichage), _(u"Affichage"))
 #        nb.AddPage(pnlCalcul(nb, options.optCalcul), _(u"Calcul"))
 #        nb.AddPage(pnlImpression(nb, options.optImpression), _(u"Impression"))
@@ -536,21 +532,21 @@ class FenOptions(wx.Dialog):
             btnsizer.AddButton(btn)
         
         btn = wx.Button(self, wx.ID_OK)
-        help = u"Valider les changements apportés aux options"
+        help = "Valider les changements apportés aux options"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         btn.SetDefault()
         btnsizer.AddButton(btn)
 
         btn = wx.Button(self, wx.ID_CANCEL)
-        help = u"Annuler les changements et garder les options comme auparavant"
+        help = "Annuler les changements et garder les options comme auparavant"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         btnsizer.AddButton(btn)
         btnsizer.Realize()
         
-        btn = wx.Button(self, -1, u"Défaut")
-        help = u"Rétablir les options par défaut"
+        btn = wx.Button(self, -1, "Défaut")
+        help = "Rétablir les options par défaut"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
@@ -600,15 +596,15 @@ class pnlClasse(wx.Panel):
         #
         # Type d'enseignement
         #
-        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (200,-1))
+        sb0 = wx.StaticBox(self, -1, "Type d'enseignement", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.VERTICAL)
         
         
         cb = wx.ComboBox(self, -1,"", size = (40, -1), 
-                         choices = REFERENTIELS.keys(),
+                         choices = list(REFERENTIELS.keys()),
                          style = wx.CB_DROPDOWN|wx.CB_READONLY )
         cb.SetStringSelection(self.opt["TypeEnseignement"])
-        cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
+        cb.SetToolTip(wx.ToolTip("Choisir le type d'enseignement" ))
         sbs0.Add(cb, flag = wx.EXPAND|wx.ALL, border = 5)
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
         self.ns.Add(sbs0, flag = wx.EXPAND|wx.ALL)
@@ -617,7 +613,7 @@ class pnlClasse(wx.Panel):
         #
         # Centres d'intérêt
         #
-        sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
+        sb1 = wx.StaticBox(self, -1, "Centres d'intérêt ET", size = (200,-1))
         sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
         txt = wx.TextCtrl(self, -1, self.opt["CentresInteretET"],
                           style = wx.TE_MULTILINE)
@@ -626,8 +622,8 @@ class pnlClasse(wx.Panel):
         self.txtCi = txt
         if self.opt["TypeEnseignement"] != 'ET' :
             self.txtCi.Enable(False)
-        btn = wx.Button(self, -1, u"Sélectionner")
-        help = u"Sélectionner depuis un fichier Excel"
+        btn = wx.Button(self, -1, "Sélectionner")
+        help = "Sélectionner depuis un fichier Excel"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
         sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
@@ -637,7 +633,7 @@ class pnlClasse(wx.Panel):
         #
         # Effectifs
         #
-        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (200,-1))
+        sb3 = wx.StaticBox(self, -1, "Effectifs", size = (200,-1))
         sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
         varEff = []
         for i, eff in enumerate(constantes.listeEffectifs):
@@ -646,7 +642,7 @@ class pnlClasse(wx.Panel):
                          typ = VAR_ENTIER_POS, bornes = [1,40])
             varEff.append(v)
             vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
-                              help = u"Nombre d'élèves")
+                              help = "Nombre d'élèves")
             self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
             sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 2)
         self.ns.Add(sbs3, flag = wx.EXPAND|wx.ALL)
@@ -657,7 +653,7 @@ class pnlClasse(wx.Panel):
         
     ######################################################################################  
     def EvtComboBox(self, event):
-        print event.GetEventObject().GetValue()
+        print(event.GetEventObject().GetValue())
         self.opt["TypeEnseignement"] = event.GetEventObject().GetValue()
         if self.opt["TypeEnseignement"] != 'ET' :
             self.txtCi.Enable(False)
@@ -681,12 +677,12 @@ class pnlClasse(wx.Panel):
     ######################################################################################  
     def SelectCI(self, event = None):
         if recup_excel.ouvrirFichierExcel():
-            dlg = wx.MessageDialog(self.Parent, u"Sélectionner une liste de CI\n" \
-                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
-                                             u"puis appuyer sur Ok.\n\n" \
-                                             u"Format attendu de la selection :\n" \
-                                             u"Liste des CI sur une colonne.",
-                                             u'Sélection de CI',
+            dlg = wx.MessageDialog(self.Parent, "Sélectionner une liste de CI\n" \
+                                             "dans le classeur Excel qui vient de s'ouvrir,\n" \
+                                             "puis appuyer sur Ok.\n\n" \
+                                             "Format attendu de la selection :\n" \
+                                             "Liste des CI sur une colonne.",
+                                             'Sélection de CI',
                                              wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
                                              )
             res = dlg.ShowModal()
@@ -697,5 +693,5 @@ class pnlClasse(wx.Panel):
                 self.txtCi.ChangeValue(ci)
                 self.opt["CentresInteretET"] = ci
             elif res == wx.ID_NO:
-                print "Rien" 
+                print("Rien") 
 

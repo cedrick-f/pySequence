@@ -30,7 +30,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-u"""
+"""
 Module error
 ************
 
@@ -52,7 +52,7 @@ import version
 
 
 def MyExceptionHook(typ, value, traceb):
-    u"""
+    """
     Handler for all unhandled exceptions.
   
     :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);
@@ -62,10 +62,10 @@ def MyExceptionHook(typ, value, traceb):
      standard Python header: ``Traceback (most recent call last)``.
     """
 #     frame = traceb.tb_frame
-    print >>sys.stderr,"\n"
+    print("\n", file=sys.stderr)
     traceback.print_tb(traceb)
-    print >>sys.stderr,"\nType : ",typ,"\n"
-    print >>sys.stderr,"ValueError : ",value
+    print("\nType : ",typ,"\n", file=sys.stderr)
+    print("ValueError : ",value, file=sys.stderr)
 #     print "".join(traceback.format_exception(typ, value, traceb))
     SendBugReport(traceb)
 #     sys.exit()
@@ -127,36 +127,36 @@ def SendBugReport(traceb = ""):
     #
     import webbrowser, datetime
 
-    message= u"%s a rencontré une erreur et doit être fermé.\n\n" \
-             u"Voulez-vous envoyer un rapport d'erreur ?" %version.__appname__
+    message= "%s a rencontré une erreur et doit être fermé.\n\n" \
+             "Voulez-vous envoyer un rapport d'erreur ?" %version.__appname__
     dlg=wx.MessageDialog(None,message,"Erreur", wx.YES_NO| wx.ICON_ERROR).ShowModal()
     if dlg==5103:#YES, on envoie le mail
         #
         # Définition du mail
         #
         
-        messageInfo(None, u"Rapport d'erreur", 
-                    u"Rédaction du rapport d'erreur\n\n" \
-                    u"Votre logiciel de messagerie va s'ouvrir\n" \
-                    u"pour rédiger un courrier de rapport d'erreur.\n\n" \
-                    u"Merci d'y indiquer le plus précisément possible\n" \
-                    u"comment s'est produit cette erreur\n" \
-                    u"ainsi que le moyen de la reproduire.\n" \
-                    u"Ne pas hesiter à joindre un fichier .prj, .seq ou .prg.\n\n" \
-                    u"L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__)
+        messageInfo(None, "Rapport d'erreur", 
+                    "Rédaction du rapport d'erreur\n\n" \
+                    "Votre logiciel de messagerie va s'ouvrir\n" \
+                    "pour rédiger un courrier de rapport d'erreur.\n\n" \
+                    "Merci d'y indiquer le plus précisément possible\n" \
+                    "comment s'est produit cette erreur\n" \
+                    "ainsi que le moyen de la reproduire.\n" \
+                    "Ne pas hesiter à joindre un fichier .prj, .seq ou .prg.\n\n" \
+                    "L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__)
         
         
         import util_path
         e_mail="cedrick.faury@ac-clermont.fr"
         now = str(datetime.datetime.now())
         subject = version.__appname__ + version.__version__
-        subject += u" : rapport d'erreur" + now
+        subject += " : rapport d'erreur" + now
 #        body="<HTML><BODY><P>"
         
-        body = u"%s a rencontré une erreur le " %version.__appname__ + now
-        body += u"%0ADescription d'une méthode pour reproduire l'erreur :"
-        body += u"%0A%0A%0A%0A%0A"
-        body += u"=================TraceBack===================="
+        body = "%s a rencontré une erreur le " %version.__appname__ + now
+        body += "%0ADescription d'une méthode pour reproduire l'erreur :"
+        body += "%0A%0A%0A%0A%0A"
+        body += "=================TraceBack===================="
         #
         # Parcours du fichier
         #
@@ -166,12 +166,12 @@ def SendBugReport(traceb = ""):
                     body+=line+"%0A"
         else:
             body+=traceb
-        body += u"==============================================%0A%0A"
+        body += "==============================================%0A%0A"
         
         sys.stdout.close()
         file_log = open(util_path.LOG_FILE,'r')
 #         sys.stdout.seek(0, 0)
-        body += u"%0A".join(file_log.readlines())
+        body += "%0A".join(file_log.readlines())
         file_log.close()
         sys.stdout = open(util_path.LOG_FILE, "w")
 
@@ -180,7 +180,7 @@ def SendBugReport(traceb = ""):
         file_error.close()
         to_send="""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body)
 
-        print "Envoi ...",to_send
-        print webbrowser.open("""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body))
+        print("Envoi ...",to_send)
+        print(webbrowser.open("""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body)))
 
     

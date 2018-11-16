@@ -61,7 +61,7 @@ pack = lambda a, r, g, b: (f2c(a) << 24) | (f2c(r) << 16) | (f2c(g) << 8) | f2c(
 # print the list of colors, easy to copy paste into the source code.
 def print_results(colors):
     for c in colors:
-        print('0x{0:x},'.format(c))
+        print(('0x{0:x},'.format(c)))
 
 
 # run the generator and print the results to stdout.
@@ -111,9 +111,7 @@ def generate(gradient, base_colors, desired_gradient_length):
 
 def GetCouleurWx(C):
     if type(C) == str:
-        # py3 : 
-        #return wx.Colour(C)
-        return wx.NamedColour(C)
+        return wx.Colour(C)
     else:
         return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
 

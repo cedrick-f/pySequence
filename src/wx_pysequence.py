@@ -32,7 +32,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module ``wx_pysequence``
 *************************
 
@@ -58,7 +58,7 @@ import select
 
 import util_path
 
-print sys.version_info
+print(sys.version_info)
 
 # à décommenter pour forcer l'utilisation de wxpython 2.8 (ubuntu 14)
 # if sys.platform != "win32":
@@ -128,8 +128,10 @@ if 'win' in sys.platform:
     screensize2 = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 #     print "screensize2", screensize2
     
+    # Facteur d'échelle : 
+    # tout ce qui est sensé être en PIXEL doit être multiplié par ce facteur
     SSCALE = 1.0*screensize2[0]/screensize[0]
-    print "Facteur d'echelle :", SSCALE
+    print(("Facteur d'echelle :", SSCALE))
     
 
 
@@ -137,7 +139,7 @@ FILE_ENCODING = sys.getfilesystemencoding()
 
 
 class SingleInstApp(wx.App):
-    u"""Application à instance unique :
+    """Application à instance unique :
         Vérifie qu'aucune autre instance de pySéquence n'est lancée.
         Si une autre instance est déjà lancée
         et qu'un nom de fichier est passé en argument
@@ -153,7 +155,7 @@ class SingleInstApp(wx.App):
         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
 #         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
         
-        self.name = u"pySéquence-%s" % wx.GetUserId()
+        self.name = "pySéquence-%s" % wx.GetUserId()
         self.instance = wx.SingleInstanceChecker(self.name)
 
         if self.instance.IsAnotherRunning():
@@ -162,11 +164,11 @@ class SingleInstApp(wx.App):
             options, fichier = GetArgs()
             
             if os.path.isfile(fichier):
-                cmd = u"OpenWindow.%s.%s" % (self.name, fichier)
+                cmd = "OpenWindow.%s.%s" % (self.name, fichier)
                 if not SendMessage(cmd, port = self.PORT):
-                    print u"Failed to send message!"
+                    print("Failed to send message!")
             else:
-                wx.MessageBox(u"pySéquence semble être déjà lancé !", u"pySéquence")
+                wx.MessageBox("pySéquence semble être déjà lancé !", "pySéquence")
                 
             return False
 
@@ -176,7 +178,7 @@ class SingleInstApp(wx.App):
                 self._ipc = IpcServer(self, self.name, self.PORT)
                 self._ipc.start()
             except socket.error:
-                print u"Erreur création serveur"
+                print("Erreur création serveur")
             except:
                 pass
         
@@ -204,14 +206,14 @@ class SingleInstApp(wx.App):
 #        wx.Yield()
         
     def DestroySplashScreen(self):
-        print "DestroySplashScreen"
+        print("DestroySplashScreen")
         if self.splash is not None:
             self.splash.Show(False)
             self.splash.Destroy()
             self.splash = None
             
     def Cleanup(self):
-        print "Cleanup"
+        print("Cleanup")
         
         # Need to cleanup instance checker on exit
         if hasattr(self, '_checker'):
@@ -243,7 +245,7 @@ class SingleInstApp(wx.App):
         """ Interface for subclass to open new window
             on ipc notification.
         """
-        print u"DoOpenNewWindow", arg
+        print("DoOpenNewWindow", arg)
         self.frame.AppelOuvrir(arg)
         
 
@@ -354,7 +356,8 @@ class MySplashScreen(adv.SplashScreen):
         
         self.parent = parent
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.fc = wx.CallLater(2, self.ShowMain)
+#         self.ShowMain()
+        self.fc = wx.CallLater(2, self.ShowMain) #viré au passage à py3
 
 
     def OnClose(self, evt):
@@ -394,7 +397,7 @@ class MySplashScreen(adv.SplashScreen):
     
     ######################################################################################  
     def GetSplash(self):
-        txt = u"Version : "+version.__version__
+        txt = "Version : "+version.__version__
 
         bmp = wx.Bitmap(os.path.join(util_path.PATH, "splash.png"), wx.BITMAP_TYPE_PNG)
         return bmp
@@ -423,7 +426,7 @@ def AddRTCHandlers():
     import wx.richtext as rt
     # make sure we haven't already added them.
     if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
-        print u"AddRTCHandlers : déja fait"
+        print("AddRTCHandlers : déja fait")
         return
     
     # This would normally go in your app's OnInit method.  I'm
@@ -483,14 +486,14 @@ class IpcServer(threading.Thread):
                 path = arg
                 
                 if ses == self.session:
-                    if cmd == u'OpenWindow' and len(path) > 0:
+                    if cmd == 'OpenWindow' and len(path) > 0:
                         wx.CallAfter(self.app.DoOpenNewWindow, path)
                     else:
                         # unknown command message
                         pass
                 recieved = ''
-            except socket.error, msg:
-                print "TCP error! %s" % msg
+            except socket.error as msg:
+                print("TCP error! %s" % msg)
                 break
 
         # Shutdown the socket
@@ -507,11 +510,11 @@ class IpcServer(threading.Thread):
 
 
 def GetArgs():
-    u""" Vérifie si un fichier a été passé comme 1er argument
+    """ Vérifie si un fichier a été passé comme 1er argument
         au lancement du programme
         Et renvoi son nom
     """
-    fichier = u""
+    fichier = ""
     options = []
     if len(sys.argv)>1: # un paramètre a été passé
         for parametre in sys.argv[1:]:
@@ -564,7 +567,7 @@ def SendMessage(message, port):
         client.send(message)
         client.shutdown(socket.SHUT_RDWR)
         client.close()
-    except Exception, msg:
+    except Exception as msg:
         return False
     else:
         return True
@@ -578,34 +581,35 @@ def SendMessage(message, port):
 #
 #  * ou autre type d'erreur qui n'apparait pas dans le traceback
 
-# import traceback
-# class LogPrintStackStderr(wx.PyLog):
-#     def doPrint( self, *args, **kwargs ):
-#         sys.stderr.write( u': '.join(u'{}'.format(a) for a in args) )
-#         sys.stderr.write( '\n' )
-#         for k, v in kwargs.iteritems():
-#             sys.stderr.write( u'{}: {}\n'.format(k,v) )
-#      
-#     def DoLogText( self, *args, **kwargs ):
-#         sys.stderr.write( '*' * 78 + '\n' )
-#         traceback.print_stack( file=sys.stderr )
-#         self.doPrint( *args, **kwargs )
-#  
-#     def DoLogRecord( self, *args, **kwargs ):
-#         sys.stderr.write( '*' * 78 + '\n' )
-#         traceback.print_stack( file=sys.stderr )
-#         self.doPrint( *args, **kwargs )
-#          
-#     def DoLogTextAtLevel( self, *args, **kwargs ):
-#         sys.stderr.write( '*' * 78 + '\n' )
-#         traceback.print_stack( file=sys.stderr )
-#         self.doPrint( *args, **kwargs )
+# Suite utile pour débugger (davantage de messages !)
+import traceback
+class LogPrintStackStderr(wx.Log):
+    def doPrint( self, *args, **kwargs ):
+        sys.stderr.write( u': '.join(u'{}'.format(a) for a in args) )
+        sys.stderr.write( '\n' )
+        for k, v in kwargs.items():
+            sys.stderr.write( u'{}: {}\n'.format(k,v) )
+      
+    def DoLogText( self, *args, **kwargs ):
+        sys.stderr.write( '*' * 78 + '\n' )
+        traceback.print_stack( file=sys.stderr )
+        self.doPrint( *args, **kwargs )
+  
+    def DoLogRecord( self, *args, **kwargs ):
+        sys.stderr.write( '*' * 78 + '\n' )
+        traceback.print_stack( file=sys.stderr )
+        self.doPrint( *args, **kwargs )
+          
+    def DoLogTextAtLevel( self, *args, **kwargs ):
+        sys.stderr.write( '*' * 78 + '\n' )
+        traceback.print_stack( file=sys.stderr )
+        self.doPrint( *args, **kwargs )
 #         
 if __name__ == '__main__':
     try:
         app = SingleInstApp(False)
         
-#     wx.Log.SetActiveTarget( LogPrintStackStderr() )
+#         wx.Log.SetActiveTarget( LogPrintStackStderr() ) # Pour débug
         app.MainLoop()
     except SystemExit:
         sys.exit(0)

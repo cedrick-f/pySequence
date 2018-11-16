@@ -30,7 +30,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-u"""
+"""
 Module util_path
 ****************
 
@@ -39,6 +39,7 @@ Gestion des dossiers
 """
 
 import os, sys
+import imp
 
 
 
@@ -51,15 +52,15 @@ DEBUG = False
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
 else:
-    reload(sys)  # Reload does the trick!
-    if hasattr(sys, 'setdefaultencoding'): # pas toujours (py3 ?)
+    imp.reload(sys)  # Reload does the trick!
+    if hasattr(sys, 'setdefaultencoding'):
         sys.setdefaultencoding('utf-8')
 
 FILE_ENCODING = sys.getfilesystemencoding() 
 SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
 # sys.getfilesystemencoding = lambda: 'UTF-8'
-print "FILE_ENCODING", FILE_ENCODING
-print "SYSTEM_ENCODING", SYSTEM_ENCODING
+print("FILE_ENCODING", FILE_ENCODING)
+print("SYSTEM_ENCODING", SYSTEM_ENCODING)
 
 
 #
@@ -67,7 +68,7 @@ print "SYSTEM_ENCODING", SYSTEM_ENCODING
 # quel répertoire  sans que l'utilisation de chemins
 # relatifs ne soit perturbée
 #
-PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
+PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 # #PATH = os.path.split(PATH)[0]
 # os.chdir(PATH)
 sys.path.append(PATH)
@@ -81,30 +82,30 @@ sys.path.append(PATH)
 if sys.platform == 'win32':
     #On récupèreﾠ le dossier "Application data" 
     #On lit la clef de registre indiquant le type d'installation
-    import _winreg
+    import winreg
 
     try:
         # Vérifie si pySequence est installé
-        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence')
-        (value, keytype) = _winreg.QueryValueEx(regkey, 'DataFolder')
+        regkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence')
+        (value, keytype) = winreg.QueryValueEx(regkey, 'DataFolder')
         APP_DATA_PATH = value
         
         # pySequence installé : on récupère le dossier d'installation
         try:
-            regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\pySequence 1.0_is1')
-            (value, keytype) = _winreg.QueryValueEx(regkey, 'Inno Setup: App Path')
+            regkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\pySequence 1.0_is1')
+            (value, keytype) = winreg.QueryValueEx(regkey, 'Inno Setup: App Path')
             INSTALL_PATH = value
         except:
             try:
-                regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence')
-                (value, keytype) = _winreg.QueryValueEx(regkey, 'UninstallPath')
+                regkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence')
+                (value, keytype) = winreg.QueryValueEx(regkey, 'UninstallPath')
                 INSTALL_PATH = value
             except:
-                print u"install_path non trouvé"
+                print("install_path non trouvé")
                 
         INSTALL_PATH = os.path.join(os.path.split(INSTALL_PATH)[0], 'bin')
-        print u"pySequence installé dans", INSTALL_PATH
-        print u"pySequence démarré dans", PATH
+        print("pySequence installé dans", INSTALL_PATH)
+        print("pySequence démarré dans", PATH)
         
         if INSTALL_PATH == PATH:
             # On est bien en train d'éxécuter la version "installée"
@@ -112,13 +113,13 @@ if sys.platform == 'win32':
                 os.makedirs(APP_DATA_PATH)
         else:
             INSTALL_PATH = None
-            print u"Version PORTABLE", PATH
+            print("Version PORTABLE", PATH)
         
         
     except:
         INSTALL_PATH = None
         APP_DATA_PATH = PATH
-        print u"Version PORTABLE : ", PATH
+        print("Version PORTABLE : ", PATH)
         
     sys.path.append(os.path.join(PATH, 'bin'))
 
@@ -173,7 +174,7 @@ def samefile(path1, path2):
 
 ######################################################################################  
 def testRel(path, start):
-    u""" Renvoie le chemin <path> relatif à <start> 
+    """ Renvoie le chemin <path> relatif à <start> 
     """
     try:
         return os.path.relpath(path, start)
@@ -218,7 +219,7 @@ def verifierPath(path):
     if os.path.isfile(path):
         pathv = path
     else:
-        arg2 = path.decode('utf-8')
+        arg2 = path#.decode('utf-8')
         if os.path.isfile(arg2):
             pathv = arg2
         else:
@@ -231,7 +232,7 @@ def verifierPath(path):
 
 ######################################################################################  
 def nomCourt(nomFichier):
-    u""" Renvoie le nom du fichier au format court (pour affichage = encodé en SystemEncoding)
+    """ Renvoie le nom du fichier au format court (pour affichage = encodé en SystemEncoding)
         <nomFichier> encodé en FileEncoding
     """
     return toSystemEncoding(os.path.splitext(os.path.split(nomFichier)[1])[0])
@@ -241,8 +242,8 @@ def nomCourt(nomFichier):
 
 
 
-print u"Dossier COMMUN pour les données :", APP_DATA_PATH
-print u"Dossier USER pour les données :", APP_DATA_PATH_USER
+print("Dossier COMMUN pour les données :", APP_DATA_PATH)
+print("Dossier USER pour les données :", APP_DATA_PATH_USER)
 
 TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tables')
 #print u"Dossier des tableaux Excel :", TABLE_PATH

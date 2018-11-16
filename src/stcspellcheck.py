@@ -64,6 +64,7 @@ import os
 import locale
 import wx
 import wx.stc
+import imp
 
 # Assume MacPorts install of Enchant
 if wx.Platform == '__WXMAC__':
@@ -74,11 +75,11 @@ if wx.Platform == '__WXMAC__':
 try:
     import enchant
 except ImportError:
-    print "pas enchant"
+    print("pas enchant")
     # no big deal; support for enchant simply won't be included
     pass
 except:
-    print "error enchant"
+    print("error enchant")
     # big deal; enchant is there but there's some error that is preventing
     # its import
     import traceback
@@ -223,9 +224,9 @@ class STCSpellCheck(object):
         """
         try:
             return "Enchant version %s" % enchant.__version__
-        except NameError, e:
+        except NameError as e:
             return "No spell checker loaded."
-        except Exception, e:
+        except Exception as e:
             return "Error '%s' from enchant" % e
     
     @classmethod
@@ -283,7 +284,7 @@ class STCSpellCheck(object):
         return 'enchant' in globals()
 
     @classmethod
-    def reloadEnchant(cls, libpath=u''):
+    def reloadEnchant(cls, libpath=''):
         """Try (re)loading the enchant module. Use to dynamically try to
         import enchant incase it could be loaded at the time of the import of
         this module.
@@ -296,7 +297,7 @@ class STCSpellCheck(object):
                 os.environ['PYENCHANT_LIBRARY_PATH'] = libpath
 
             if cls.isEnchantOk():
-                reload(enchant)
+                imp.reload(enchant)
             else:
                 mod = __import__('enchant', globals(), locals())
                 globals()['enchant'] = mod
@@ -343,7 +344,7 @@ class STCSpellCheck(object):
         count = end - start
         if count <= 0:
             if self._spelling_debug:
-                print("No need to check range: start=%d end=%d count=%d" % (start, end, count))
+                print(("No need to check range: start=%d end=%d count=%d" % (start, end, count)))
             return
         self.stc.StartStyling(start, mask)
         self.stc.SetStyling(count, 0)
@@ -359,7 +360,7 @@ class STCSpellCheck(object):
             if end_index >= 0:
                 if end_index - start_index >= self._spelling_word_size:
                     if self._spelling_debug:
-                        print("checking %s at text[%d:%d]" % (repr(text[start_index:end_index]), start_index, end_index))
+                        print(("checking %s at text[%d:%d]" % (repr(text[start_index:end_index]), start_index, end_index)))
                     if not spell.check(text[start_index:end_index]):
                         # Because unicode characters are stored as utf-8 in the
                         # stc and the positions in the stc correspond to the
@@ -376,11 +377,11 @@ class STCSpellCheck(object):
                         
                         if self._spell_check_region(last_pos):
                             if self._spelling_debug:
-                                print("styling text[%d:%d] = (%d,%d) to %d" % (start_index, end_index, last_pos, last_pos + raw_count, mask))
+                                print(("styling text[%d:%d] = (%d,%d) to %d" % (start_index, end_index, last_pos, last_pos + raw_count, mask)))
                             self.stc.StartStyling(last_pos, mask)
                             self.stc.SetStyling(raw_count, mask)
                         elif self._spelling_debug:
-                            print("not in valid spell check region.  styling position corresponding to text[%d:%d] = (%d,%d)" % (start_index, end_index, last_pos, last_pos + raw_count))
+                            print(("not in valid spell check region.  styling position corresponding to text[%d:%d] = (%d,%d)" % (start_index, end_index, last_pos, last_pos + raw_count)))
                         last_pos += raw_count
                         last_index = end_index
                 unicode_index = end_index
@@ -416,7 +417,7 @@ class STCSpellCheck(object):
             endline = self.stc.GetLineCount() - 1
         end = self.stc.GetLineEndPosition(endline)
         if self._spelling_debug:
-            print("Checking lines %d-%d, chars %d=%d" % (startline, endline, start, end))
+            print(("Checking lines %d-%d, chars %d=%d" % (startline, endline, start, end)))
         return self.checkRange(start, end)
     
     def checkCurrentPage(self):
@@ -483,7 +484,7 @@ class STCSpellCheck(object):
         if self._spelling_last_idle_line < 0:
             return
         if self._spelling_debug:
-            print("Idle processing page starting at line %d" % self._spelling_last_idle_line)
+            print(("Idle processing page starting at line %d" % self._spelling_last_idle_line))
         self.checkLines(self._spelling_last_idle_line)
         self._spelling_last_idle_line += self.stc.LinesOnScreen()
         if self._spelling_last_idle_line > self.stc.GetLineCount():
@@ -526,7 +527,7 @@ class STCSpellCheck(object):
         if spell and len(word) >= self._spelling_word_size:
             words = spell.suggest(word)
             if self._spelling_debug:
-                print("suggestions for %s: %s" % (word, words))
+                print(("suggestions for %s: %s" % (word, words)))
             return words
         return []
     
@@ -545,7 +546,7 @@ class STCSpellCheck(object):
             end = self.getLikelyWordEnd(pos)
         start = self.getLikelyWordStart(pos)
         if self._spelling_debug:
-            print("%d-%d: %s" % (start, end, self.stc.GetTextRange(start, end)))
+            print(("%d-%d: %s" % (start, end, self.stc.GetTextRange(start, end))))
         self.checkRange(start, end)
     
     def getLikelyWordStart(self, pos):
@@ -638,7 +639,7 @@ class STCSpellCheck(object):
                 start = self.stc.PositionFromLine(line)
             
         if self._spelling_debug:
-            print("event: %d-%d, current dirty range: %d-%d, older=%s" % (start, end, self.current_dirty_start, self.current_dirty_end, self.dirty_ranges))
+            print(("event: %d-%d, current dirty range: %d-%d, older=%s" % (start, end, self.current_dirty_start, self.current_dirty_end, self.dirty_ranges)))
     
     def clearDirtyRanges(self, ranges=None):
         """Throw away all dirty ranges
@@ -664,7 +665,7 @@ class STCSpellCheck(object):
         # Check spelling around the region currently being typed
         if self.current_dirty_start >= 0:
             if self._spelling_debug:
-                print("processing current dirty range %d-%d" % (self.current_dirty_start, self.current_dirty_end))
+                print(("processing current dirty range %d-%d" % (self.current_dirty_start, self.current_dirty_end)))
             range_start, range_end = self.processDirtyRange(self.current_dirty_start, self.current_dirty_end)
             
             # If the cursor is in the middle of a word, remove the spelling
@@ -673,7 +674,7 @@ class STCSpellCheck(object):
                 word_start = self.getLikelyWordStart(cursor)
                 word_end = self.getLikelyWordEnd(cursor)
                 if self._spelling_debug:
-                    print("cursor in middle of word, removing styling %d-%d" % (word_start, word_end))
+                    print(("cursor in middle of word, removing styling %d-%d" % (word_start, word_end)))
                 mask = self._spelling_indicator_mask
                 self.stc.StartStyling(word_start, mask)
                 self.stc.SetStyling(word_end - word_start, 0)
@@ -691,14 +692,14 @@ class STCSpellCheck(object):
         self.dirty_ranges = self.dirty_ranges[needed:]
         for start, end in ranges:
             if self._spelling_debug:
-                print("processing %d-%d" % (start, end))
+                print(("processing %d-%d" % (start, end)))
             self.processDirtyRange(start, end)
     
     def processDirtyRange(self, start, end):
         range_start = self.getLikelyWordStart(start)
         range_end = self.getLikelyWordEnd(end)
         if self._spelling_debug:
-            print("processing dirty range %d-%d (modified from %d-%d): %s" % (range_start, range_end, start, end, repr(self.stc.GetTextRange(range_start, range_end))))
+            print(("processing dirty range %d-%d (modified from %d-%d): %s" % (range_start, range_end, start, end, repr(self.stc.GetTextRange(range_start, range_end)))))
         self.checkRange(range_start, range_end)
         return range_start, range_end
 
@@ -844,9 +845,9 @@ class RTCSpellCheck(object):
         """
         try:
             return "Enchant version %s" % enchant.__version__
-        except NameError, e:
+        except NameError as e:
             return "No spell checker loaded."
-        except Exception, e:
+        except Exception as e:
             return "Error '%s' from enchant" % e
     
     @classmethod
@@ -904,7 +905,7 @@ class RTCSpellCheck(object):
         return 'enchant' in globals()
 
     @classmethod
-    def reloadEnchant(cls, libpath=u''):
+    def reloadEnchant(cls, libpath=''):
         """Try (re)loading the enchant module. Use to dynamically try to
         import enchant incase it could be loaded at the time of the import of
         this module.
@@ -917,7 +918,7 @@ class RTCSpellCheck(object):
                 os.environ['PYENCHANT_LIBRARY_PATH'] = libpath
 
             if cls.isEnchantOk():
-                reload(enchant)
+                imp.reload(enchant)
             else:
                 mod = __import__('enchant', globals(), locals())
                 globals()['enchant'] = mod
@@ -969,7 +970,7 @@ class RTCSpellCheck(object):
         count = end - start
         if count <= 0:
             if True:#self._spelling_debug:
-                print("No need to check range: start=%d end=%d count=%d" % (start, end, count))
+                print(("No need to check range: start=%d end=%d count=%d" % (start, end, count)))
             return
         
         attr = rt.RichTextAttr()
@@ -990,7 +991,7 @@ class RTCSpellCheck(object):
             if end_index >= 0:
                 if end_index - start_index >= self._spelling_word_size:
                     if self._spelling_debug:
-                        print("checking %s at text[%d:%d]" % (repr(text[start_index:end_index]), start_index, end_index))
+                        print(("checking %s at text[%d:%d]" % (repr(text[start_index:end_index]), start_index, end_index)))
                     if not spell.check(text[start_index:end_index]):
                         # Because unicode characters are stored as utf-8 in the
                         # stc and the positions in the stc correspond to the
@@ -1007,7 +1008,7 @@ class RTCSpellCheck(object):
                         
                         if self._spell_check_region(last_pos):
                             if True:#self._spelling_debug:
-                                print("styling text[%d:%d] = (%d,%d) to %d" % (start_index, end_index, last_pos, last_pos + raw_count, mask))
+                                print(("styling text[%d:%d] = (%d,%d) to %d" % (start_index, end_index, last_pos, last_pos + raw_count, mask)))
                             
                             attr = rt.RichTextAttr()
                             attr.SetFlags(wx.TEXT_ATTR_FONT_UNDERLINE)
@@ -1020,7 +1021,7 @@ class RTCSpellCheck(object):
 #                            self.stc.StartStyling(last_pos, mask)
 #                            self.stc.SetStyling(raw_count, mask)
                         elif self._spelling_debug:
-                            print("not in valid spell check region.  styling position corresponding to text[%d:%d] = (%d,%d)" % (start_index, end_index, last_pos, last_pos + raw_count))
+                            print(("not in valid spell check region.  styling position corresponding to text[%d:%d] = (%d,%d)" % (start_index, end_index, last_pos, last_pos + raw_count)))
                         last_pos += raw_count
                         last_index = end_index
                 unicode_index = end_index
@@ -1056,7 +1057,7 @@ class RTCSpellCheck(object):
             endline = self.stc.GetLineCount() - 1
         end = self.stc.GetLineEndPosition(endline)
         if self._spelling_debug:
-            print("Checking lines %d-%d, chars %d=%d" % (startline, endline, start, end))
+            print(("Checking lines %d-%d, chars %d=%d" % (startline, endline, start, end)))
         return self.checkRange(start, end)
     
     def checkCurrentPage(self):
@@ -1123,7 +1124,7 @@ class RTCSpellCheck(object):
         if self._spelling_last_idle_line < 0:
             return
         if self._spelling_debug:
-            print("Idle processing page starting at line %d" % self._spelling_last_idle_line)
+            print(("Idle processing page starting at line %d" % self._spelling_last_idle_line))
         self.checkLines(self._spelling_last_idle_line)
         self._spelling_last_idle_line += self.stc.LinesOnScreen()
         if self._spelling_last_idle_line > self.stc.GetLineCount():
@@ -1166,7 +1167,7 @@ class RTCSpellCheck(object):
         if spell and len(word) >= self._spelling_word_size:
             words = spell.suggest(word)
             if self._spelling_debug:
-                print("suggestions for %s: %s" % (word, words))
+                print(("suggestions for %s: %s" % (word, words)))
             return words
         return []
     
@@ -1185,7 +1186,7 @@ class RTCSpellCheck(object):
             end = self.getLikelyWordEnd(pos)
         start = self.getLikelyWordStart(pos)
         if self._spelling_debug:
-            print("%d-%d: %s" % (start, end, self.stc.GetTextRange(start, end)))
+            print(("%d-%d: %s" % (start, end, self.stc.GetTextRange(start, end))))
         self.checkRange(start, end)
     
     def getLikelyWordStart(self, pos):
@@ -1283,7 +1284,7 @@ class RTCSpellCheck(object):
                 start = self.stc.PositionFromLine(line)
             
         if self._spelling_debug:
-            print("event: %d-%d, current dirty range: %d-%d, older=%s" % (start, end, self.current_dirty_start, self.current_dirty_end, self.dirty_ranges))
+            print(("event: %d-%d, current dirty range: %d-%d, older=%s" % (start, end, self.current_dirty_start, self.current_dirty_end, self.dirty_ranges)))
     
     def clearDirtyRanges(self, ranges=None):
         """Throw away all dirty ranges
@@ -1309,7 +1310,7 @@ class RTCSpellCheck(object):
         # Check spelling around the region currently being typed
         if self.current_dirty_start >= 0:
             if self._spelling_debug:
-                print("processing current dirty range %d-%d" % (self.current_dirty_start, self.current_dirty_end))
+                print(("processing current dirty range %d-%d" % (self.current_dirty_start, self.current_dirty_end)))
             range_start, range_end = self.processDirtyRange(self.current_dirty_start, self.current_dirty_end)
             
             # If the cursor is in the middle of a word, remove the spelling
@@ -1318,7 +1319,7 @@ class RTCSpellCheck(object):
                 word_start = self.getLikelyWordStart(cursor)
                 word_end = self.getLikelyWordEnd(cursor)
                 if True:#self._spelling_debug:
-                    print("cursor in middle of word, removing styling %d-%d" % (word_start, word_end))
+                    print(("cursor in middle of word, removing styling %d-%d" % (word_start, word_end)))
                 mask = self._spelling_indicator_mask
                 
                 attr = rt.RichTextAttr()
@@ -1343,14 +1344,14 @@ class RTCSpellCheck(object):
         self.dirty_ranges = self.dirty_ranges[needed:]
         for start, end in ranges:
             if self._spelling_debug:
-                print("processing %d-%d" % (start, end))
+                print(("processing %d-%d" % (start, end)))
             self.processDirtyRange(start, end)
     
     def processDirtyRange(self, start, end):
         range_start = self.getLikelyWordStart(start)
         range_end = self.getLikelyWordEnd(end)
         if self._spelling_debug:
-            print("processing dirty range %d-%d (modified from %d-%d): %s" % (range_start, range_end, start, end, repr(self.stc.GetTextRange(range_start, range_end))))
+            print(("processing dirty range %d-%d (modified from %d-%d): %s" % (range_start, range_end, start, end, repr(self.stc.GetTextRange(range_start, range_end)))))
         self.checkRange(range_start, range_end)
         return range_start, range_end
 
@@ -1451,7 +1452,7 @@ if __name__ == "__main__":
             self.stc.spell.checkCurrentPage()
         
         def loadSample(self, paragraphs=10):
-            lorem_ipsum = u"""\
+            lorem_ipsum = """\
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  Vivamus mattis
 commodo sem.  Phasellus scelerisque tellus id lorem.  Nulla facilisi.
 Suspendisse potenti.  Fusce velit odio, scelerisque vel, consequat nec,
@@ -1489,7 +1490,7 @@ And some Russian: \u041f\u0438\u0442\u043e\u043d - \u043b\u0443\u0447\u0448\u043
                                defaultFile = "",
                                wildcard = "*")
             if dlg.ShowModal() == wx.ID_OK:
-                print("Opening %s" % dlg.GetPath())
+                print(("Opening %s" % dlg.GetPath()))
                 self.loadFile(dlg.GetPath())
             dlg.Destroy()
         
@@ -1513,9 +1514,9 @@ And some Russian: \u041f\u0438\u0442\u043e\u043d - \u043b\u0443\u0447\u0448\u043
             normalized = locale.normalize(self.lang_id[id])
             try:
                 locale.setlocale(locale.LC_ALL, normalized)
-                print("Changing locale %s, dictionary set to %s" % (normalized, self.lang_id[id]))
+                print(("Changing locale %s, dictionary set to %s" % (normalized, self.lang_id[id])))
             except locale.Error:
-                print("Can't set python locale to %s; dictionary set to %s" % (normalized, self.lang_id[id]))
+                print(("Can't set python locale to %s; dictionary set to %s" % (normalized, self.lang_id[id])))
             self.stc.spell.setLanguage(self.lang_id[id])
             self.stc.spell.clearAll()
             self.stc.spell.checkCurrentPage()

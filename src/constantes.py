@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module constantes
 *****************
 
@@ -95,15 +95,15 @@ ERR_PRJ_GROUPES = 128
 
 ERR_INCONNUE = 65536
 
-ERREURS = {ERR_PRJ_EQUIPE :     u"Equipe pédagogique",
-           ERR_PRJ_SUPPORT :    u"Support",
-           ERR_PRJ_ELEVES :     u"Elève",
-           ERR_PRJ_GROUPES :    u"Groupe",
-           ERR_PRJ_TACHES :     u"Tâche : %s",
-           ERR_PRJ_T_VERSION :  u"Problème de version",
-           ERR_PRJ_T_TYPENS :   u"Type d'enseignement incompatible",
-           ERR_PRJ_C_TYPENS :   u"Référentiel %s non trouvé !",
-           ERR_INCONNUE     :   u"?? Erreur inconnue !"
+ERREURS = {ERR_PRJ_EQUIPE :     "Equipe pédagogique",
+           ERR_PRJ_SUPPORT :    "Support",
+           ERR_PRJ_ELEVES :     "Elève",
+           ERR_PRJ_GROUPES :    "Groupe",
+           ERR_PRJ_TACHES :     "Tâche : %s",
+           ERR_PRJ_T_VERSION :  "Problème de version",
+           ERR_PRJ_T_TYPENS :   "Type d'enseignement incompatible",
+           ERR_PRJ_C_TYPENS :   "Référentiel %s non trouvé !",
+           ERR_INCONNUE     :   "?? Erreur inconnue !"
            }
 
 
@@ -116,21 +116,21 @@ class Erreur():
     
     def getOkErr(self):
         if self.num == 0:
-            return u"Ok"
+            return "Ok"
         else:
-            return u"Erreur"
+            return "Erreur"
 
 
     def getMessage(self):
-        print self.info, ERREURS[self.num]
+        print(self.info, ERREURS[self.num])
         if self.info != None:
             return ERREURS[self.num] %self.info
         else:
             return ERREURS[self.num]
         
-MOIS = [u'Janvier', u'Février', u'Mars', u'Avril', u'Mai', u'Juin', 
-        u'Juillet', u'Août', u'Septembre', u'Octobre', u'Novembre', u'Décembre']
-JOURS = [u'Lundi', u'Mardi', u'Mercredi', u'Jeudi', u'Vendredi', u'Samedi', u'Dimanche']
+MOIS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 
 
 
@@ -142,7 +142,7 @@ JOURS = [u'Lundi', u'Mardi', u'Mercredi', u'Jeudi', u'Vendredi', u'Samedi', u'Di
 ####################################################################################
    
 def getAnneeScolaire():
-    u""" Renvoie la première année de l'année scolaire en cours
+    """ Renvoie la première année de l'année scolaire en cours
     """
     date = time.localtime()
     if date.tm_mon >= 9:
@@ -157,19 +157,8 @@ def getAnneeScolaireStr():
 
 
 
-def getSingulierPluriel(txt, pluriel):
-    if pluriel:
-        return getPluriel(txt)
-    else:
-        return getSingulier(txt)
 
-def getPluriel(txt):
-    return txt.replace("(", "").replace(")", "")
 
-def getSingulier(txt):
-    return txt.replace("(s)", "").replace("(x)", "")
-    
-    
 #    
 # Fonction pour indenter les XML générés par ElementTree
 #
@@ -192,7 +181,7 @@ def indent(elem, level=0):
 def ellipsizer(txt, lg):
     t = txt[:lg]
     if len(t) < len(txt):
-        t += u"..."
+        t += "..."
     return t
 
 def lettreCol(num):
@@ -200,14 +189,14 @@ def lettreCol(num):
 
 ######################################################################################  
 def supprime_accent(ligne):
-    u""" Supprime les accents du texte source
+    """ Supprime les accents du texte source
     """
-    accents = { u'a': [u'à', u'ã', u'á', u'â'],
-                u'e': [u'é', u'è', u'ê', u'ë'],
-                u'i': [u'î', u'ï'],
-                u'u': [u'ù', u'ü', u'û'],
-                u'o': [u'ô', u'ö'] }
-    for (char, accented_chars) in accents.iteritems():
+    accents = { 'a': ['à', 'ã', 'á', 'â'],
+                'e': ['é', 'è', 'ê', 'ë'],
+                'i': ['î', 'ï'],
+                'u': ['ù', 'ü', 'û'],
+                'o': ['ô', 'ö'] }
+    for (char, accented_chars) in accents.items():
         for accented_char in accented_chars:
             ligne = ligne.replace(accented_char, char)
     return ligne
@@ -217,8 +206,8 @@ def supprime_accent(ligne):
 #   Quelques caractères spéciaux ...
 #
 ####################################################################################
-CHAR_POINT = u"\u25CF" 
-CHAR_FLECHE = u"\u2192" 
+CHAR_POINT = "\u25CF" 
+CHAR_FLECHE = "\u2192" 
 
 ####################################################################################
 #
@@ -234,10 +223,10 @@ COUL_PARTIE = {'C' : "DEEPPINK2",
                ''  : "FIREBRICK"}
 
 def getCoulPartie(partie):
-    if partie in COUL_PARTIE.keys():
-        return COUL_PARTIE[partie]
+    if partie in list(COUL_PARTIE.keys()):
+        return wx.Colour(COUL_PARTIE[partie])
     else:
-        return COUL_PARTIE['']
+        return wx.Colour(COUL_PARTIE[''])
 #COUL_REVUE = "DEEPPINK2"#"FIREBRICK"
 #COUL_SOUT = "BLUEVIOLET"#"MEDIUMBLUE"
 COUL_ABS = "GREY"#"MEDIUMBLUE"
@@ -278,6 +267,7 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "SA" : images.Icone_synthese_Act,
                 "SS" : images.Icone_synthese_Seq,
                 "HC": images.Icone_maison,
+                "DM": images.Icone_maison,
                 "ST" : images.Icone_usine,
                 'Prf' : images.Icone_prof}
 
@@ -322,6 +312,13 @@ imagesDemarches =  {'R' : images.Dem_res_pb,
                     'EC' : images.Icone_evaluation,
                     
                     }
+
+
+imagesSystemes  =  {'OE' : images.Icone_systeme, 
+                    'SE' : images.Icone_support, 
+                    'SC' : images.Icone_systeme,
+                    }
+
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_5, images.CI_6, images.CI_7, images.CI_8,
@@ -425,24 +422,24 @@ def strEffectif(classe, e, n = 0, eleve = True):
                     eff_str = str(mini) + "-" + str(maxi)
                 else:
                     eff_str = str(mini)
-                eleves = u"élèves"
+                eleves = "élèves"
             else:
                 eff_str = str(lsteff[n])
                 if lsteff[n] == 1:
-                    eleves = u"élève"
+                    eleves = "élève"
                 else:
-                    eleves = u"élèves"
+                    eleves = "élèves"
             if eleve:
                 return eff_str+" "+eleves
             else:
                 return eff_str
         else:
-            return u""
+            return ""
 
 def strEffectifComplet(classe, e, n = 0):
     tit_eff = classe.GetReferentiel().effectifs[e][0]
     num_eff = strEffectif(classe, e, n)
-    if num_eff != u"":
+    if num_eff != "":
         return tit_eff+" ("+num_eff+")"
     else:
         return tit_eff
@@ -505,25 +502,47 @@ def toTxt(lst):
 
 #############################################################################################################
 def mergeDict(D, d):
-    for K in D.keys():
-        if K in d.keys():
+    for K in list(D.keys()):
+        if K in list(d.keys()):
             D[K] += d[K]
-    for k, v in d.items():
-        if not k in D.keys():
+    for k, v in list(d.items()):
+        if not k in list(D.keys()):
             D[k] = v
            
+
+#############################################################################################################
+def evaluer(s):
+    s = s.upper()
+    i = s.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    if len(i) == 0:
+        return s
+    else:
+        l = list(s[:-len(i)])
+#             print("  ", l, i)
+        l = sum([26**(j+1)*(ord(c)-64) for j, c in enumerate(l[::-1])])
+        i = int(i)
+        return l+i
+        
+        
+        
 #############################################################################################################
 def trier(l):
+    """ Tri de codes
+        Format acceptés :
+            1.2.3
+            A1.1
+            AB1.2
     """
-    """
-    def evaluer(s):
-        try:
-            v = int(s)
-        except:
-            v = s
-        return v
+    
+        
+#         try:
+#             v = int(s)
+#         except:
+#             v = s
+#         return v
             
-#     print "trier", l
+#     print("trier", l)
     if len(l) > 0:
         if '.' in l[0]:
             return sorted(l, key=lambda c: evaluer(c.split('.')[-1]))
@@ -604,33 +623,33 @@ def getElementFiltre(filtre):
 #    Données pour la gestion des fichiers .seq et .prj
 #
 #######################################################################################
-FORMAT_FICHIER = {'seqprj' : u"Fichier pySéquence (.seq .prj . prg)|*.seq;*.prj;*.prg|",
-                  'seq' : u"Séquence (.seq)|*.seq|",
-                  'prj' : u"Projet (.prj)|*.prj|",
-                  'prg' : u"Progression (.prg)|*.prg|"}
+FORMAT_FICHIER = {'seqprj' : "Fichier pySéquence (.seq .prj . prg)|*.seq;*.prj;*.prg|",
+                  'seq' : "Séquence (.seq)|*.seq|",
+                  'prj' : "Projet (.prj)|*.prj|",
+                  'prg' : "Progression (.prg)|*.prg|"}
 
-FORMAT_FICHIER_CLASSE = {'cla' : u"Classe pySéquence (.cla)|*.cla|"}
+FORMAT_FICHIER_CLASSE = {'cla' : "Classe pySéquence (.cla)|*.cla|"}
 
 
-TOUS_FICHIER = u"Tous les fichiers|*.*'"
+TOUS_FICHIER = "Tous les fichiers|*.*'"
 
-MESSAGE_ENR = {'seq' : u"Enregistrer la séquence sous ...",
-               'prj' : u"Enregistrer le projet sous ...",
-               'prg' : u"Enregistrer la progression sous ...",
-               'cla' : u"Enregistrer la classe sous ..."}
+MESSAGE_ENR = {'seq' : "Enregistrer la séquence sous ...",
+               'prj' : "Enregistrer le projet sous ...",
+               'prg' : "Enregistrer la progression sous ...",
+               'cla' : "Enregistrer la classe sous ..."}
 
-MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
-                'prj' : u"Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?",
-                'prg' : u"La progression est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la progression ?",
-                'cla' : u"La classe est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la classe ?"}
+MESSAGE_DEJA = {'seq' : "La séquence est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
+                'prj' : "Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?",
+                'prg' : "La progression est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la progression ?",
+                'cla' : "La classe est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la classe ?"}
 
-TITRE_DEFAUT = {'seq' : u"Nouvelle séquence",
-                'prj' : u"Nouveau projet",
-                'prg' : u"Nouvelle progression"}
+TITRE_DEFAUT = {'seq' : "Nouvelle séquence",
+                'prj' : "Nouveau projet",
+                'prg' : "Nouvelle progression"}
 
-MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?",
-                  'prj' : u"Le projet a été modifié.\n\n%s\n\nVoulez vous enregistrer les changements ?",
-                  'prg' : u"La progression a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
+MESSAGE_FERMER = {'seq' : "La séquence a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?",
+                  'prj' : "Le projet a été modifié.\n\n%s\n\nVoulez vous enregistrer les changements ?",
+                  'prg' : "La progression a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
 
 
 LONGUEUR_INTITULE_ARBRE = 30 # caractères
@@ -660,7 +679,7 @@ import getEtab
 try:
     ETABLISSEMENTS = getEtab.ouvrir()
 except:
-    print "Manque fichier etablissements.xml"
+    print("Manque fichier etablissements.xml")
     ETABLISSEMENTS = {}
     
 try:
@@ -680,39 +699,39 @@ class Discipline():
 
 # Disciplines "Prof"
 DISCIPLINES = ['SII', 'Tch', 'ISN', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Eco', 'Aut']#, 'GE', 'CM', 'SA']
-NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
-                   'SII' : u"Sciences Industrielles de l'Ingénieur",
-                   'ISN' : u"Informatique et Sciences du Numérique ",
-                   'Tch' : u"Technologie", 
-                   'Phy' : u"Physique/Chimie", 
-                   'Mat' : u"Mathématiques", 
-                   'Svt' : u"Sciences de la Vie et de la Terre",
-                   'Phi' : u"Philosophie", 
-                   'LV1' : u"Langue vivante",
-                   'Spo' : u"Education physique et sportive",
-                   'Eco' : u"Economie-Gestion",
-                   'Aut' : u"Autre discipline",
-                   'GE'  : u"Génie Électrique", 
-                   'CM'  : u"Construction Mécanique",
-                   'SA'  : u"Sciences Appliquées",
-                   'Tra' : u"Enseignement Transversal"}
+NOM_DISCIPLINES = {'Tec' : "Sciences Industrielles de l'Ingénieur", 
+                   'SII' : "Sciences Industrielles de l'Ingénieur",
+                   'ISN' : "Informatique et Sciences du Numérique ",
+                   'Tch' : "Technologie", 
+                   'Phy' : "Physique/Chimie", 
+                   'Mat' : "Mathématiques", 
+                   'Svt' : "Sciences de la Vie et de la Terre",
+                   'Phi' : "Philosophie", 
+                   'LV1' : "Langue vivante",
+                   'Spo' : "Education physique et sportive",
+                   'Eco' : "Economie-Gestion",
+                   'Aut' : "Autre discipline",
+                   'GE'  : "Génie Électrique", 
+                   'CM'  : "Construction Mécanique",
+                   'SA'  : "Sciences Appliquées",
+                   'Tra' : "Enseignement Transversal"}
 
-CODE_DISCIPLINES = {'Tec' : u"SII", 
-                    'SII' : u"SII",
-                    'ISN' : u"ISN",
-                    'Tch' : u"Techno", 
-                   'Phy' : u"PC", 
-                   'Mat' : u"M", 
-                   'Svt' : u"SVT",
-                   'Phi' : u"Phi", 
-                   'LV1' : u"LV",
-                   'Spo' : u"EP",
-                   'Eco' : u"Eco",
-                   'Aut' : u"Autre discipline",
-                   'GE'  : u"GE", 
-                   'CM'  : u"CM",
-                   'SA'  : u"SA",
-                   'Tra' : u"Tr"}
+CODE_DISCIPLINES = {'Tec' : "SII", 
+                    'SII' : "SII",
+                    'ISN' : "ISN",
+                    'Tch' : "Techno", 
+                   'Phy' : "PC", 
+                   'Mat' : "M", 
+                   'Svt' : "SVT",
+                   'Phi' : "Phi", 
+                   'LV1' : "LV",
+                   'Spo' : "EP",
+                   'Eco' : "Eco",
+                   'Aut' : "Autre discipline",
+                   'GE'  : "GE", 
+                   'CM'  : "CM",
+                   'SA'  : "SA",
+                   'Tra' : "Tr"}
 
 COUL_DISCIPLINES = {'Tec' : (.1, .1, .1), 
                     'SII' : (.1, .1, .1), 
@@ -747,44 +766,44 @@ def getLstDisciplines():
 #   x = case à cocher
 #   _ = texte libre (avec case à cocher)
 #   
-LOGICIELS = [(u".Solidworks", [u".Motion",
-                             u".Meca3D",
-                             u"xFlowSim",
-                             u"xSimulation",
-                             u"_"],
+LOGICIELS = [(".Solidworks", [".Motion",
+                             ".Meca3D",
+                             "xFlowSim",
+                             "xSimulation",
+                             "_"],
               ),
-             (u".CATIA", []),
-             (u".Inventor", []),
-             (u".AutoCAD", []),
-             (u".Top Solid", []),
-             (u".Solidedge", []),
-             (u".Pro Engineer", []),
-             (u".FreeCAD", []),
-             (u".Sketchup", []),
+             (".CATIA", []),
+             (".Inventor", []),
+             (".AutoCAD", []),
+             (".Top Solid", []),
+             (".Solidedge", []),
+             (".Pro Engineer", []),
+             (".FreeCAD", []),
+             (".Sketchup", []),
              
-             (u".MATLAB", [u"xSimulink",
-                         u"xStateflow",
-                         u"xSimscape",
-                         u"xSimElectronics",
-                         u"xSimPowerSystems",
-                         u"xSimMechanics",
-                         u"_"]),
-             (u".SciLAB", [u"xXcos"]),
-             (u".LabView", []),
-             (u"_", [])
+             (".MATLAB", ["xSimulink",
+                         "xStateflow",
+                         "xSimscape",
+                         "xSimElectronics",
+                         "xSimPowerSystems",
+                         "xSimMechanics",
+                         "_"]),
+             (".SciLAB", ["xXcos"]),
+             (".LabView", []),
+             ("_", [])
              ]
 
-IMG_LOGICIELS = {u"Solidworks" : images.Logiciel_SW,
-                 u"MATLAB" : images.Logiciel_MATLAB,
-                 u"LabView" : images.Logiciel_LV,
-                 u"CATIA" : images.Logiciel_CATIA,
-                 u"AutoCAD" : images.Logiciel_Autocad,
-                 u"Python" : images.Logiciel_Python,
-                 u"Solidedge" : images.Logiciel_SEdge,
-                 u"Inventor" : images.Logiciel_Inventor,
-                 u"Top Solid" : images.Logiciel_Topsolid,
-                 u"FreeCAD" : images.Logiciel_FreeCAD,
-                 u"Sketchup" : images.Logiciel_Sketchup
+IMG_LOGICIELS = {"Solidworks" : images.Logiciel_SW,
+                 "MATLAB" : images.Logiciel_MATLAB,
+                 "LabView" : images.Logiciel_LV,
+                 "CATIA" : images.Logiciel_CATIA,
+                 "AutoCAD" : images.Logiciel_Autocad,
+                 "Python" : images.Logiciel_Python,
+                 "Solidedge" : images.Logiciel_SEdge,
+                 "Inventor" : images.Logiciel_Inventor,
+                 "Top Solid" : images.Logiciel_Topsolid,
+                 "FreeCAD" : images.Logiciel_FreeCAD,
+                 "Sketchup" : images.Logiciel_Sketchup
                  }
 
 
@@ -807,7 +826,7 @@ LIMITE_GRAND_PETIT_CARACT = 500 # Limite en nombre de caractères pour l'utilisa
 #                      u"- fonctionnalités de cet objet ;\n" \
 #                      u"- caractéristiques fonctionnelles et techniques."
                       
-TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
+TIP_PB_LIMITE = "\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
                       
 #TIP_CONTRAINTES =    u"Indiquer :\n" \
 #                     u"- coût maximal ;\n" \
@@ -824,10 +843,10 @@ TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
 #<?xml version="1.0" encoding="utf-8"?>
 
 def encap_HTML(s):
-    return u"<HTML>"+s+u"</HTML>"
+    return "<HTML>"+s+"</HTML>"
 
 
-BASE_FICHE_HTML_ELEVE = u"""
+BASE_FICHE_HTML_ELEVE = """
     <p id = "tit" style="text-align: center;"><font size="12"><b></b></font></p>
     
     <table border="0" width = "100%">
@@ -865,7 +884,7 @@ BASE_FICHE_HTML_ELEVE = u"""
 """
 
 
-BASE_FICHE_HTML_GROUPE = u"""
+BASE_FICHE_HTML_GROUPE = """
     <p style="text-align: center;"><font size="12"><b>Groupe</b></font></p>
     <p id="nom">Nom-Prénom</p>
     <img id="av" src="" alt=" ">
@@ -878,7 +897,7 @@ BASE_FICHE_HTML_GROUPE = u"""
     </table>
 """
 
-BASE_FICHE_HTML_SEANCE = u"""
+BASE_FICHE_HTML_SEANCE = """
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
     <table border="0" width="500">
         <tbody>
@@ -914,12 +933,12 @@ BASE_FICHE_HTML_SEANCE = u"""
 
 
 
-BASE_FICHE_HTML_CALENDRIER = u"""
+BASE_FICHE_HTML_CALENDRIER = """
     <font size="12"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <img id="img" src="" alt=""> 
 """
 
-BASE_FICHE_HTML_CI = u"""
+BASE_FICHE_HTML_CI = """
     <font size=11><font color="red"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font></font>
     <dl id = "ci">
         <dt> </dt> <dd> </dd>
@@ -930,14 +949,14 @@ BASE_FICHE_HTML_CI = u"""
     </ul>
 """
 
-BASE_FICHE_HTML_COMP = u"""
+BASE_FICHE_HTML_COMP = """
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <dl id = "list">
         <dt> </dt> <dd> </dd>
     </dl> 
 """
 
-BASE_FICHE_HTML_COMP_PRJ = u"""
+BASE_FICHE_HTML_COMP_PRJ = """
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <h2 style="font-size:11px" id="grp"> </h2>
     <h4 style="font-size:10px" id="int"> </h4>
@@ -948,7 +967,7 @@ BASE_FICHE_HTML_COMP_PRJ = u"""
     </dl> 
 """
 
-BASE_FICHE_HTML_DOM = u"""
+BASE_FICHE_HTML_DOM = """
     <font size="12" color="GRAY"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
     <h4 style="font-size:11px" id="int"> </h4>
     <ul id = "dom">
@@ -956,14 +975,14 @@ BASE_FICHE_HTML_DOM = u"""
     </ul>
 """
 
-BASE_FICHE_HTML_SAV = u"""
+BASE_FICHE_HTML_SAV = """
     <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <dl id = "list">
         <dt> </dt> <dd> </dd>
     </dl> 
 """
 
-BASE_FICHE_HTML_SYSTEME = u"""
+BASE_FICHE_HTML_SYSTEME = """
     <p style="color:blue;text-align: center;font-size: 16">Système</p>
     <p id="nom">_</p>
     <p id="nbr">_</p>
@@ -972,7 +991,7 @@ BASE_FICHE_HTML_SYSTEME = u"""
 """
 
 
-BASE_FICHE_HTML_SUPPORT = u"""
+BASE_FICHE_HTML_SUPPORT = """
     <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
     <p id="nom"> </p>
     
@@ -997,7 +1016,7 @@ BASE_FICHE_HTML_SUPPORT = u"""
 """
 
 
-BASE_FICHE_HTML_MODELE = u"""
+BASE_FICHE_HTML_MODELE = """
         <tr  valign="top">
             <td id = "int" align="left"></td>
             <td rowspan = "3" alig="right" valign="top"><img id="img" src=" " alt=" "></td>
@@ -1011,7 +1030,7 @@ BASE_FICHE_HTML_MODELE = u"""
 """
 
 
-BASE_FICHE_HTML_PROB = u"""
+BASE_FICHE_HTML_PROB = """
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
 
 <p id="txt"> </p>
@@ -1020,7 +1039,7 @@ BASE_FICHE_HTML_PROB = u"""
 """
 
 
-BASE_FICHE_HTML_PROJET = u"""
+BASE_FICHE_HTML_PROJET = """
 <font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
     <table border="0">
         <tbody>
@@ -1066,7 +1085,7 @@ BASE_FICHE_HTML_PROJET = u"""
 """
 
 
-BASE_FICHE_HTML_TACHE = u"""
+BASE_FICHE_HTML_TACHE = """
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <table border="0">
         <tbody>
@@ -1092,20 +1111,20 @@ BASE_FICHE_HTML_TACHE = u"""
 """
 
 
-BASE_FICHE_HTML_SEQ = u"""
+BASE_FICHE_HTML_SEQ = """
     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
     <p id="nom">Intitulé</p>
     <img id="ap" src="" alt=" "> 
 """
 
 
-BASE_FICHE_HTML_PRJ = u"""
+BASE_FICHE_HTML_PRJ = """
     <p style="text-align: center;"><font size="12"><b>Projet</b></font></p>
     <p id="nom">Intitulé</p>
     <img id="ap" src=" " alt=" "> 
 """
 
-BASE_FICHE_HTML_PROF = u"""
+BASE_FICHE_HTML_PROF = """
     <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
 
 
@@ -1123,14 +1142,14 @@ BASE_FICHE_HTML_PROF = u"""
 """
 
 
-BASE_FICHE_HTML_PERIODES = u"""
+BASE_FICHE_HTML_PERIODES = """
     <font size=11><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
     <p id="txt"> </p>
     <img id="img" src=" " alt=" "> 
 """
 
 
-BASE_FICHE_HTML = u"""
+BASE_FICHE_HTML = """
     <font size="11"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <p id="txt"> </p>
     <img id="img" src="" alt="i"> 
@@ -1138,7 +1157,7 @@ BASE_FICHE_HTML = u"""
 
 
               
-xmlVide = u"""<?xml version="1.0" encoding="UTF-8"?>
+xmlVide = """<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph>

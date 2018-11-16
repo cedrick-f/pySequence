@@ -36,7 +36,7 @@ Created on 26 oct. 2011
 # Pour débuggage
 #import time
 
-import cairo
+# import cairo
 from draw_cairo import *
 #from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
 #                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
@@ -307,7 +307,7 @@ def calculCoefCalcH(prj, ctx, hm):
     
 ######################################################################################  
 def getCoulComp(partie, alpha = 1.0):
-    if partie in ICoulComp.keys():
+    if partie in list(ICoulComp.keys()):
         return (ICoulComp[partie][0], ICoulComp[partie][1], ICoulComp[partie][2], alpha)  
     return (ICoulComp[''][0], ICoulComp[''][1], ICoulComp[''][2], alpha)
     
@@ -320,7 +320,7 @@ def getPts(lst_rect):
     
 ######################################################################################  
 def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = False):
-    """ Dessine une fiche de séquence de la séquence <prj>
+    """ Dessine une fiche de projet du projet <prj>
         dans un contexte cairo <ctx>
     """
     
@@ -391,8 +391,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #
     # Etablissement
     #
-    if prj.classe.etablissement != u"":
-        t = prj.classe.etablissement + u" (" + prj.classe.ville + u")"
+    if prj.classe.etablissement != "":
+        t = prj.classe.etablissement + " (" + prj.classe.ville + ")"
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posPro[1]-posPos[1]-taillePos[1]), 
@@ -421,7 +421,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #  Equipe
     #
     rectEqu = posEqu + tailleEqu
-    prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, 
+    prj.pt_caract.append(curve_rect_titre(ctx, "Equipe pédagogique",  rectEqu, 
                                           BcoulEqu, IcoulEqu, fontEqu))
     
     lstTexte = []
@@ -432,7 +432,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
         if p.referent:
             g = i
         c.append(constantes.COUL_DISCIPLINES[p.discipline])
-    lstCodes = [u" \u25CF"] * len(lstTexte)
+    lstCodes = [" \u25CF"] * len(lstTexte)
 
    
     if len(lstTexte) > 0:
@@ -452,7 +452,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #
     prj.pt_caract.append(posPro)
     rectPro = posPro + taillePro
-    prj.pt_caract.append(curve_rect_titre(ctx, u"Problématique",  rectPro, BcoulPro, IcoulPro, fontPro))
+    prj.pt_caract.append(curve_rect_titre(ctx, "Problématique",  rectPro, BcoulPro, IcoulPro, fontPro))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
@@ -645,7 +645,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #
     if not entete:
 #    tps = time.time()
-        curve_rect_titre(ctx, u"Tâches à réaliser",  
+        curve_rect_titre(ctx, "Tâches à réaliser",  
                          (posZDeroul[0], posZDeroul[1], 
                           tailleZDeroul[0], tailleZDeroul[1]), 
                          BcoulZDeroul, IcoulZDeroul, fontZDeroul)
@@ -706,7 +706,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                 DrawCroisementsCompetencesTaches(ctx, t, y)
         
         # Nom des phases
-        for phase, yh in yh_phase.items():
+        for phase, yh in list(yh_phase.items()):
     #        print phase, yh
             if len(yh[0]) > 0:
                 yh[0] = min(yh[0])
@@ -1030,19 +1030,19 @@ def regrouperDic(obj, dicIndicateurs):
     if obj.GetProjetRef()._niveau == 3:
         dic = {}
         typ = {}
-        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+        for disc, tousIndicateurs in list(obj.GetProjetRef()._dicoCompetences.items()):
 #             print "   ", disc, tousIndicateurs
-            for k0, competence in tousIndicateurs.items():
+            for k0, competence in list(tousIndicateurs.items()):
 #                 print "      ",k0,  competence
-                for k1, sousComp in competence.sousComp.items():
+                for k1, sousComp in list(competence.sousComp.items()):
 #                     print "         ", k1, sousComp
                     dic[disc+k1] = []
                     typ[disc+k1] = []
-                    lk2 = sousComp.sousComp.keys()
+                    lk2 = list(sousComp.sousComp.keys())
                     lk2.sort()
     #                print "  ", lk2
                     for k2 in lk2:
-                        if disc+k2 in dicIndicateurs.keys():
+                        if disc+k2 in list(dicIndicateurs.keys()):
                             dic[disc+k1].extend(dicIndicateurs[disc+k2])
     #                        print "   **", v1[1][k2]
                             typ[disc+k1].extend([p.poids for p in sousComp.sousComp[k2].indicateurs])
@@ -1051,7 +1051,7 @@ def regrouperDic(obj, dicIndicateurs):
                             dic[disc+k1].extend([False]*l)
                             typ[disc+k1].extend(['']*l)
                     
-                    if not disc+k1 in xComp.keys():
+                    if not disc+k1 in list(xComp.keys()):
 #                     if dic[disc+k1] == [] or not (True in dic[disc+k1]):
                         del dic[disc+k1]
                         del typ[disc+k1]
@@ -1062,17 +1062,17 @@ def regrouperDic(obj, dicIndicateurs):
     else:
         dic = {}
         typ = {}
-        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+        for disc, tousIndicateurs in list(obj.GetProjetRef()._dicoCompetences.items()):
 #             print "-----", disc
-            for k0, competence in tousIndicateurs.items():
+            for k0, competence in list(tousIndicateurs.items()):
 #                 print "     ", k0, competence
-                for k1, sousComp in competence.sousComp.items():
+                for k1, sousComp in list(competence.sousComp.items()):
 #                     print "        ", k1, sousComp
                     dic[disc+k1] = []
                     typ[disc+k1] = []
                     
                     
-                    if disc+k1 in dicIndicateurs.keys():
+                    if disc+k1 in list(dicIndicateurs.keys()):
                         dic[disc+k1].extend(dicIndicateurs[disc+k1])
 #                        print "   **", v1[1][k2]
                         typ[disc+k1].extend([p.poids for p in sousComp.indicateurs])
@@ -1082,7 +1082,7 @@ def regrouperDic(obj, dicIndicateurs):
                         typ[disc+k1].extend(['']*l)
                     
                     
-                    if not disc+k1 in xComp.keys():
+                    if not disc+k1 in list(xComp.keys()):
 #                     if dic[disc+k1] == [] or not (True in dic[disc+k1]):
                         del dic[disc+k1]
                         del typ[disc+k1]
@@ -1118,10 +1118,10 @@ def regrouperLst(prjRef, lstCompetences):
     lstCompetences.sort()
     if prjRef is not None and prjRef._niveau == 3:
         lstGrpCompetences = []
-        for disc, tousIndicateurs in prjRef._dicoCompetences.items():
+        for disc, tousIndicateurs in list(prjRef._dicoCompetences.items()):
             dic = []
-            for k0, competence in tousIndicateurs.items():
-                for k1, sousComp in competence.sousComp.items():
+            for k0, competence in list(tousIndicateurs.items()):
+                for k1, sousComp in list(competence.sousComp.items()):
                     for k2 in sorted(sousComp.sousComp.keys()):
                         if disc+k2 in lstCompetences:
                             dic.append(disc+k1)
@@ -1146,7 +1146,7 @@ def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y, h):
     
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
-    u""" Dessine les "boules"
+    """ Dessine les "boules"
     
     """ 
 #     print "DrawCroisementsElevesTaches", tache
@@ -1163,7 +1163,7 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
         
 #    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve: 
     if differeSuivantEleve: 
-        lstElv = range(len(tache.projet.eleves + tache.projet.groupes))
+        lstElv = list(range(len(tache.projet.eleves + tache.projet.groupes)))
         lstImp = [100]*len(lstElv)
     else:
         lstElv = tache.eleves
@@ -1231,9 +1231,9 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     ctx.set_line_width (0.0004 * COEF)
     dicIndic, dictype = dicIndic
  
-    for s in dicIndic.keys():
+    for s in list(dicIndic.keys()):
         
-        if s in dicIndic.keys():
+        if s in list(dicIndic.keys()):
             x = xComp[s]-wColComp/2
             
             rect = (x, y-h/2, wColComp, h)
@@ -1253,7 +1253,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
             for a, i in enumerate(indic):
                 if i: # Rose ou bleu
     #                 print "   ", s, a
-                    part = dictype[s][a].keys()[0]
+                    part = list(dictype[s][a].keys())[0]
                     if part == 'S':
     #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
                         d = -1
@@ -1289,7 +1289,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
 ###########################################################################################
 def gabarit():
     
-    print "Génération du gabarit ...", 
+    print("Génération du gabarit ...", end=' ') 
     import draw_cairo_prj
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
@@ -1307,12 +1307,12 @@ def gabarit():
         if attr[:6] == 'taille':
             taille[attr[6:]] = attr
     
-    print pos, taille
+    print(pos, taille)
     
     ctx.set_line_width(5.0/e)
     
-    for k, p in pos.items():
-        if k in taille.keys():
+    for k, p in list(pos.items()):
+        if k in list(taille.keys()):
             x, y = getattr(draw_cairo_prj, p)
             w, h = getattr(draw_cairo_prj, taille[k])
             
@@ -1322,7 +1322,7 @@ def gabarit():
                 show_text_rect(ctx, k, (x, y, w, h), fontsizeMinMax = (-1, 30.0/e),
                                wrap = False, couper = False)
             except:
-                print "   ", k, " : ", x, y, w, h
+                print("   ", k, " : ", x, y, w, h)
     
     
     imagesurface.write_to_png('gabarit_prj.png')

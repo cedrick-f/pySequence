@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module genpdf
 *************
 
@@ -44,7 +44,7 @@ from  constantes import ellipsizer, getAnneeScolaireStr, \
                         LONG_MAX_PROBLEMATIQUE, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
 import util_path
 import os.path
-from itertools import izip_longest
+from itertools import zip_longest
 #from textwrap import wrap
 #import csv
 
@@ -121,7 +121,7 @@ def checkbox(etat = False):
     return "<img src=\"{{MEDIA_URL}}/" + c + "\" height=\"12\" width=\"12\">&nbsp;&nbsp;"
 
 def remplaceCR(txt):
-    return txt.replace(u"\n", "<br>")
+    return txt.replace("\n", "<br>")
 
     
 def splitParagraph(text, style, Italic = False, Bold = False):
@@ -138,10 +138,10 @@ def splitParagraph(text, style, Italic = False, Bold = False):
 def table_taches(taches, eleves, projet):
 
     p = None
-    h = u"""<th style="width:6%">Tâches</th>  <th>Contrats de tâche</th>  <th  style="width:30%">Compétences</th>"""
+    h = """<th style="width:6%">Tâches</th>  <th>Contrats de tâche</th>  <th  style="width:30%">Compétences</th>"""
     for e in eleves:
-        h += u"""<th style="width:6%%" class = "verticalTableHeader">%s</th>""" %e.GetNomPrenom()
-    h = encap(h, u"tr")
+        h += """<th style="width:6%%" class = "verticalTableHeader">%s</th>""" %e.GetNomPrenom()
+    h = encap(h, "tr")
     for c in projet.listTaches:
         nm = taches[c][1]
         ph = taches[c][0]
@@ -149,15 +149,15 @@ def table_taches(taches, eleves, projet):
 
         if ph != p:
             phase = projet.phases[ph][1]
-            h += u"""<tr><td colspan = "%s"><b>%s</b></td></tr>""" %(str(3+len(eleves)), phase)
+            h += """<tr><td colspan = "%s"><b>%s</b></td></tr>""" %(str(3+len(eleves)), phase)
             p = ph
 
-        h += u"<tr> <td>%s</td> <td>%s</td> <td>%s</td> %s </tr>" %(c, nm, u" ".join(cp), "<td></td>"*len(eleves))
+        h += "<tr> <td>%s</td> <td>%s</td> <td>%s</td> %s </tr>" %(c, nm, " ".join(cp), "<td></td>"*len(eleves))
             
     return h
 
 def case_a_cocher(labels, etats):
-    u"""
+    """
     :param labels: chaine de caractères comportant l'ensemble des libellé des cases
                     colonnes séparées par "\n\n"
                     libélés séparés par "\n"
@@ -169,18 +169,18 @@ def case_a_cocher(labels, etats):
     """
     e = 0
     cells = []
-    for c in labels.split(u"\n\n"):
+    for c in labels.split("\n\n"):
         col = []
         cells.append(col)
-        for t in c.split(u"\n"):
+        for t in c.split("\n"):
             col.append([checkbox(e in etats)] + t.split(":"))
             e += 1
-    lignes = map(list, izip_longest(*cells, fillvalue = [""]*3))
+    lignes = list(map(list, zip_longest(*cells, fillvalue = [""]*3)))
     
-    html = u""
+    html = ""
     
     for l in lignes:
-        tr = u""
+        tr = ""
         for c in l:
             tr += encap(c[0], "td", ['style="width:16px"']) \
                 + encap(c[1], "td", ['style="width:36px ; vertical-align:middle"'])
@@ -192,11 +192,11 @@ def case_a_cocher(labels, etats):
     
     
     
-    colonnes = labels.split(u"\n\n")
-    html = u""
+    colonnes = labels.split("\n\n")
+    html = ""
     e = 0
     for c in colonnes:
-        typo = c.split(u"\n")
+        typo = c.split("\n")
         hc = []
         for i, t in enumerate(typo):
             hc.append(checkbox(e in etats) + t)
@@ -276,7 +276,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 #     TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
     TY = case_a_cocher(projet.GetProjetRef().attributs['TYP'][2], projet.typologie)
     
-    etab = projet.classe.etablissement+"<br>("+italic(projet.classe.ville)+u")"
+    etab = projet.classe.etablissement+"<br>("+italic(projet.classe.ville)+")"
     
     champs = {'ACA' : projet.classe.academie,
               'SES' : str(projet.annee+1),
@@ -298,8 +298,8 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     
 #    print champs['TCH']
     
-    for code, val in champs.items():
-        sourceHtml = sourceHtml.replace(u"[["+code+u"]]", val)
+    for code, val in list(champs.items()):
+        sourceHtml = sourceHtml.replace("[["+code+"]]", val)
     
     sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(util_path.PATH, r"..", DOSSIER_REF))
     
@@ -323,7 +323,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 def genererFicheValidation(nomFichier, projet):
     """
     """
-    
+#     print("genererFicheValidation")
     #
     # Styles
     #
@@ -374,24 +374,24 @@ def genererFicheValidation(nomFichier, projet):
     #
     # En-tête
     #
-    story.append(Paragraph(u"Fiche de validation du projet",
+    story.append(Paragraph("Fiche de validation du projet",
                            title_style
                            ))
     story.append(Spacer(1, 5*mm))
     
     if projet.GetTypeEnseignement() == 'SSI':
-        en_tete = [u"Bulletin officiel n°39 du 23 octobre 2014",
-                   u"Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
-                   u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire"]
+        en_tete = ["Bulletin officiel n°39 du 23 octobre 2014",
+                   "Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
+                   "Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire"]
         
     elif ref.Famille == 'STI':
-        en_tete = [u"Bulletin officiel n°39 du 23 octobre 2014",
-                   u"Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
-                   u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
+        en_tete = ["Bulletin officiel n°39 du 23 octobre 2014",
+                   "Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
+                   "Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
         
     else:
-        messageErreur(None, u"Erreur !",
-                            u"Impossible de trouver le fichier HTML")
+        messageErreur(None, "Erreur !",
+                            "Impossible de trouver le fichier HTML")
         return False
         
         
@@ -414,10 +414,10 @@ def genererFicheValidation(nomFichier, projet):
             np = italic(np)
         NP.append(Paragraph(np, normal_style))
         
-    data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+getAnneeScolaireStr(), normal_style),
-                                                                                                                         Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
-           [Paragraph(gras(u"Spécialité : ")+ ref.Enseignement[0], normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
-           [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style), NP]]
+    data= [[[Paragraph(gras('Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras("Année scolaire : ")+getAnneeScolaireStr(), normal_style),
+                                                                                                                         Paragraph(gras("Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
+           [Paragraph(gras("Spécialité : ")+ ref.Enseignement[0], normal_style), Paragraph(gras("Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
+           [Paragraph(gras("Noms et prénoms des enseignants responsables :"), normal_style), NP]]
     t = Table(data, style = [('VALIGN',      (0,0),(-1,-1),'TOP')])
     
     story.append(t)
@@ -432,21 +432,21 @@ def genererFicheValidation(nomFichier, projet):
     #
 #    print ref.attributs_prj
     # Colonne de gauche
-    ppi = Paragraph(gras(u'Intitulé du projet'),normal_style)
+    ppi = Paragraph(gras('Intitulé du projet'),normal_style)
     
-    ppo = Paragraph(gras(u'Origine de la proposition'),normal_style)
+    ppo = Paragraph(gras('Origine de la proposition'),normal_style)
     
-    ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
+    ppb = [Paragraph(gras('Problématique - Énoncé général du besoin'),normal_style)]
     ppb.append(splitParagraph(prj.attributs['PB'][1], info_style, Italic = True))
 
-    pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
+    pco = [Paragraph(gras('Contraintes imposées au projet'),normal_style)]
     pco.append(splitParagraph(prj.attributs['CCF'][1], info_style, Italic = True))
 
-    ppig = Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style)
+    ppig = Paragraph(gras('Intitulé des parties du projet confiées à chaque groupe'),normal_style)
     
-    ppbg = Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style)
+    ppbg = Paragraph(gras('Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style)
     
-    ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
+    ppr = [Paragraph(gras('Production finale attendue'),normal_style)]
     ppr.append(splitParagraph(prj.attributs['OBJ'][1], info_style, Italic = True))
     
     
@@ -490,18 +490,18 @@ def genererFicheValidation(nomFichier, projet):
     # Zone des signatures
     #
     story.append(Spacer(1, 5*mm))
-    V1 = [Paragraph(u"Visa du chef d’établissement", normal_style),
-          Paragraph(u"(Nom, prénom, date et signature)", info_style)]
-    V2 = [Paragraph(u"Visa du ou des IA-IPR", normal_style),
-          Paragraph(u"(Noms, prénoms, qualités, dates et signatures)", info_style)]
+    V1 = [Paragraph("Visa du chef d’établissement", normal_style),
+          Paragraph("(Nom, prénom, date et signature)", info_style)]
+    V2 = [Paragraph("Visa du ou des IA-IPR", normal_style),
+          Paragraph("(Noms, prénoms, qualités, dates et signatures)", info_style)]
     data= [[V1, V2]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     story.append(t)
     
     try:
         doc.build(story)
-    except doctemplate.LayoutError, err:
-        print "Paragraphe trop grand"
+    except doctemplate.LayoutError as err:
+        print("Paragraphe trop grand")
 #        print err.message
 #        print type(err)
 #        print dir(err)
@@ -530,25 +530,40 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     else:
         Ok = genererFicheValidation(fichertempV, projet)
     
+    
     if not Ok:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
         return False
+#     print("Ok", Ok)
+    
     fenDoc.exporterFichePDF(fichertempF, pourDossierValidation = True)
     
-    merger = PdfFileMerger()
-    input1 = open(fichertempV, "rb")
-    input2 = open(fichertempF, "rb")
-    merger.append(input1)
-    merger.append(input2)
-     
-    output = open(nomFichier, "wb")
-    merger.write(output)
-     
-     
-    input1.close()
-    input2.close()
-    output.close()
+    doc1 = fitz.open(fichertempV)
+    doc2 = fitz.open(fichertempF)
+    
+    doc = fitz.open()
+    doc.insertPDF(doc1) 
+    doc.insertPDF(doc2)
+    doc.save(nomFichier)
+    
+    doc1.close()
+    doc2.close()
+    doc.close()
+    
+#     merger = PdfFileMerger()
+#     input1 = open(fichertempV, "rb")
+#     input2 = open(fichertempF, "rb")
+#     merger.append(input1)
+#     merger.append(input2)
+#      
+#     output = open(nomFichier, "wb")
+#     merger.write(output)
+#      
+#      
+#     input1.close()
+#     input2.close()
+#     output.close()
     
     shutil.rmtree(dosstemp)
     wx.EndBusyCursor()
@@ -589,14 +604,14 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
 #             grille.close()
         except:
             Ok = False
-            print "Erreur save_pdf 1"
+            print("Erreur save_pdf 1")
         try:
             f = open(fichertempV, "rb")
             merger.append(f)
             f.close()
         except:
             Ok = False
-            print "Erreur save_pdf 2"  
+            print("Erreur save_pdf 2")  
         
     for grille in g:
         try:
@@ -609,8 +624,8 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     if not Ok:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
-        messageErreur(self, u"Erreur !",
-                            u"Impossible de générer le fichier PDF des grilles")
+        messageErreur(self, "Erreur !",
+                            "Impossible de générer le fichier PDF des grilles")
         return False
     
     output = open(nomFichier, "wb")
@@ -619,7 +634,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     try:
         shutil.rmtree(dosstemp)
     except:
-        print u"Grilles temporaires non supprimées :", dosstemp
+        print("Grilles temporaires non supprimées :", dosstemp)
         
     wx.EndBusyCursor()
     return True
@@ -663,19 +678,21 @@ if  wx.PlatformInfo[1] == 'wxMSW':
     except:
         ADOBE_VERSION = None
         
-    print "Version Adobe Reader", ADOBE_VERSION
+    print("Version Adobe Reader", ADOBE_VERSION)
 
 from wx.lib.pdfwin import get_min_adobe_version
 NOT_USE_ADOBE = ADOBE_VERSION is None or ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8) or get_min_adobe_version() is None
+# NOT_USE_ADOBE = True
 if sys.platform != "win32" :
     NOT_USE_ADOBE = True
-
-# HAS_PDFVIEWER = True
-# try:
-#     from wx.lib.pdfviewer import pdfViewer
-# except:
-#     HAS_PDFVIEWER = False
-HAS_PDFVIEWER = False # désactivé ... ça marche pas !
+    
+HAS_PDFVIEWER = True
+# if NOT_USE_ADOBE:
+try:
+    from wx.lib.pdfviewer import pdfViewer
+except:
+    HAS_PDFVIEWER = False
+# HAS_PDFVIEWER = False # désactivé ... ça marche pas !
     
 if not NOT_USE_ADOBE:
     from wx.lib.pdfwin import PDFWindow
@@ -691,8 +708,8 @@ if not NOT_USE_ADOBE:
 #    from wx.lib.pdfviewer import pdfViewer
 import tempfile
 import shutil
-from PyPDF2 import PdfFileMerger
-
+# from PyPDF2 import PdfFileMerger
+import fitz
 
 
 def getPDFViewer():
@@ -705,23 +722,18 @@ class PdfPanel(wx.Panel):
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        if NOT_USE_ADOBE:
-            if HAS_PDFVIEWER: 
+        if True:#NOT_USE_ADOBE:
+            if HAS_PDFVIEWER:
                 self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
                                     wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
             else:
                 self.pdf = PanelBoutonPdf(self)
-                
-#                 self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
         else:
             m = GetProtectedModeReader()
             EnableProtectedModeReader(0)
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
             EnableProtectedModeReader(m)
-
-#             self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
-#             self.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
-
+        
         
 #        if ADOBE_VERSION == None:
 #            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
@@ -748,9 +760,39 @@ class PdfPanel(wx.Panel):
         self.SetAutoLayout(True)
     
         self.pdf.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-
+#         self.Bind(wx.EVT_CLOSE, self.OnClose )
+#         self.pdf.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
 #         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
 
+#     ######################################################################################################
+#     def OnDestroyWindow(self, event):
+#         print "OnDestroy pdf"
+#         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+#         self.pdf.FreeDlls()
+#         print "...FAIT"
+# 
+    ######################################################################################################
+    def PreClose(self):
+        print("PreClose pdf")
+        try:
+            self.pdf.LoadFile(None)
+            self.pdf.FreeDlls()
+        except:
+            pass
+        
+#         
+# #         self.sizer.Detach(self.pdf)
+# #         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
+#         
+#         
+#         self.pdf.Close()
+# #         self.sizer.Remove(self.pdf)
+# #         self.pdf.Destroy()
+# #         time.sleep(3)
+# #         wx.CallAfter(self.pdf.Close)
+# #         self.Destroy()
+# #         self.pdf.Destroy()
+# #         evt.Skip()
 
     ######################################################################################################
     def OnEnter(self, event):
@@ -761,7 +803,7 @@ class PdfPanel(wx.Panel):
         
     ######################################################################################################
     def MiseAJour(self, projet, fenDoc):
-        u""" Génération d'un fichier PDF temporaire pour affichage
+        """ Génération d'un fichier PDF temporaire pour affichage
               - Dossier de validation
               - ...
         """
@@ -776,16 +818,15 @@ class PdfPanel(wx.Panel):
             Ok = self.chargerFichierPDF(fichertemp)
             
         if not Ok:
-            m = u"Une erreur s'est porduite lors de la création ou l'affichage du fichier PDF.\n" \
-                u"Un des textes descriptifs du projet est peut-être trop grand !"
+            m = "Une erreur s'est porduite lors de la création ou l'affichage du fichier PDF.\n" \
+                "Un des textes descriptifs du projet est peut-être trop grand !"
             mess = wx.StaticText(self, -1, m)
             self.sizer.Add(mess, proportion=1, flag=wx.EXPAND)
             self.sizer.Layout()
-        
     
     ######################################################################################################
     def supprimerDossierTemp(self):
-        u""" Suppression  du dossier temporaire
+        """ Suppression  du dossier temporaire
              Méthode brute
         """
         if True:#get_min_adobe_version() != None:
@@ -797,11 +838,10 @@ class PdfPanel(wx.Panel):
                     shutil.rmtree(self.dosstemp)
                 except:
                     pass
-    
-    
+                
     ######################################################################################################
     def chargerFichierPDF(self, nomFichier):
-        u""" Affichage en interne du fichier PDF
+        """ Affichage en interne du fichier PDF
              ou bien mise à jour du bouton d'affichage externe
         """
         Ok = True
@@ -809,53 +849,26 @@ class PdfPanel(wx.Panel):
         if isinstance(self.pdf, PanelBoutonPdf):
             self.pdf.MiseAJour(nomFichier)
 
-#         elif isinstance(self.pdf, pdfViewer):
-#             wx.BeginBusyCursor()
-#             try:
-#                 self.pdf.LoadFile(nomFichier)
-#             except:
-#                 print "ERREUR pdfViewer", nomFichier
-#                 Ok = False
-#             wx.EndBusyCursor()    
+        elif isinstance(self.pdf, pdfViewer):
+            wx.BeginBusyCursor()
+            try:
+                self.pdf.LoadFile(nomFichier)
+            except:
+                print("ERREUR pdfViewer", nomFichier)
+                Ok = False
+            wx.EndBusyCursor()    
                 
         elif isinstance(self.pdf, PDFWindow):
             wx.BeginBusyCursor()
             try:
                 self.pdf.LoadFile(nomFichier)
             except:
-                print "ERREUR PDFWindow", nomFichier
+                print("ERREUR PDFWindow", nomFichier)
                 Ok = False
             wx.EndBusyCursor()
-                
-        
-                
         
         return Ok
-    
-#     ######################################################################################################
-#     def OnDestroyWindow(self, event):
-#         print "OnDestroy pdf"
-#         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
-#         self.pdf.FreeDlls()
-#         print "...FAIT"
-# 
-#     ######################################################################################################
-#     def OnClose(self, evt):
-#         print "OnClose pdf"
-#         self.pdf.LoadFile(None)
-# #         self.sizer.Detach(self.pdf)
-# #         self.pdf.Unbind(wx.EVT_ENTER_WINDOW)
-#         
-#         self.pdf.FreeDlls()
-#         self.pdf.Close()
-# #         self.sizer.Remove(self.pdf)
-# #         self.pdf.Destroy()
-# #         time.sleep(3)
-# #         wx.CallAfter(self.pdf.Close)
-# #         self.Destroy()
-# #         self.pdf.Destroy()
-# #         evt.Skip()
-    
+
 
 class PanelBoutonPdf(wx.Panel):
     def __init__(self, parent):
@@ -865,9 +878,9 @@ class PanelBoutonPdf(wx.Panel):
         
         self.nomFichier = ''
         
-        self.mess = wx.StaticText(self, -1, u"L'affichage des fichiers PDF\nn'est disponible qu'avec Adobe Acrobat Reader\n")
+        self.mess = wx.StaticText(self, -1, "L'affichage des fichiers PDF\nn'est disponible qu'avec Adobe Acrobat Reader\n")
         
-        self.bouton = wx.Button(self, -1, u"Ouvrir le fichier PDF")
+        self.bouton = wx.Button(self, -1, "Ouvrir le fichier PDF")
         
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.bouton)
         
@@ -885,8 +898,10 @@ class PanelBoutonPdf(wx.Panel):
         
     def MiseAJour(self, nomFichier):
         self.nomFichier = nomFichier
-        self.bouton.SetToolTipString(u"Ouvrir le fichier PDF avec un lecteur externe\n\t%s" %self.nomFichier)
-        
+        self.bouton.SetToolTip("Ouvrir le fichier PDF avec un lecteur externe\n\t%s" %self.nomFichier)
+
+
+
 #from pgmagick import Image
 #im = Image('D:\\Developpement\\pysequence\\BO\\SSI\\candidats-individuels.pdf')     
 #im.write('D:\\Developpement\\pysequence\\BO\\SSI\\candidats-individuels.png')    

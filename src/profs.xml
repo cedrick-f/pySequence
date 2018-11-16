@@ -1,8 +1,3 @@
-﻿<Professeurs>
-  <Prof Discipline="Tec" Id="0" Nom="FAURY" Prenom="Cédrick" Referent="True" />
-  <Prof Discipline="Tec" Id="0" Nom="Garcimore" Prenom="" Referent="False" />
-  <Prof Discipline="Phy" Id="1" Nom="LE BOUQUIN" Prenom="Corentin" Referent="False" />
-  <Prof Discipline="Phy" Id="1" Nom="LEBOUQUIN" Prenom="Corentin" Referent="False" />
-  <Prof Discipline="Phy" Id="1" Nom="TRAGIN" Prenom="Thierry" Referent="False" />
-  <Prof Discipline="Tec" Id="1" Nom="zorro" Prenom="" Referent="False" />
+<Professeurs>
+  <Prof Discipline="Tec" Id="0" Nom="FAURY" Prenom="Cédrick" Referent="False" />
 </Professeurs>

@@ -31,7 +31,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-u"""
+"""
 Module ``widgets``
 ******************
 
@@ -41,6 +41,7 @@ Différents widgets perso pour wx
 """
 
 import wx
+import wx.adv as adv
 import md_util
 import time, os, sys
 import  wx.lib.scrolledpanel as scrolled
@@ -48,21 +49,166 @@ from wx.lib.wordwrap import wordwrap
 
 
 ######################################################################################  
+#
+#   Classe permettant de gérer la grammaire des éléments
+#
+######################################################################################  
+class Grammaire():
+    def __init__(self, nom_code):
+        """ :nom_code: nom de l'objet au format "nom(s)$g"
+                        avec g = "f", "m", "q"
+            
+        """ 
+        ng = nom_code.split("$")
+        
+        self.nom_obj = ng[0]     # le nom (pluriel)
+        if len(ng) > 1 and ng[1] in ["f", "m", "q"]:
+            self.genre = ng[1]              # "m", "f" ou "q" pour une quantité
+        else:
+            self.genre = "f"                # "m", "f" ou "q" pour une quantité 
+        
+
+    def __repr__(self):
+        return self.nom_obj
+    
+    
+    def voyelle(self, c):
+        return c.lower() in "aeiouhéèàêîëïùû"
+    
+    
+    def du_(self):
+        """ article partitif singulier + nom
+        """
+        if self.genre == "f":
+            if self.voyelle(self.nom_obj[0]):
+                a = "de l'"
+            else:
+                a = "de la"
+        
+        elif self.genre in ["q","m"]:
+            if self.voyelle(self.nom_obj[0]):
+                a = "de l'"
+            else:
+                a = "du"
+        
+        else:
+            a = ""
+        
+        return a + getSingulier(self.nom_obj)
+    
+    
+    def de_(self):
+        """ article ??? singulier + nom
+        """
+        if self.voyelle(self.nom_obj[0]):
+            a = "d'"
+        else:
+            a = "de"
+        
+        return a + getSingulier(self.nom_obj)
+    
+    
+    def de_plur_(self):
+        """ article ??? singulier + nom
+        """
+        if self.voyelle(self.nom_obj[0]):
+            a = "d'"
+        else:
+            a = "de"
+        
+        return a + getPluriel(self.nom_obj)
+    
+    def des_(self):
+        """ article partitif pluriel + nom
+        """
+        return "des"+getPluriel(self.nom_obj)
+    
+    
+    def les_(self):
+        """ article défini pluriel + nom
+        """
+        return "les"+getPluriel(self.nom_obj)
+    
+    
+    def le_(self):
+        """ article défini singulier + nom
+        """
+        if self.genre == "f":
+            a = "le"
+        else:
+            a = "la"
+        return a + getSingulier(self.nom_obj)
+     
+    
+    def un_(self):
+        """ article indéfini pluriel + nom
+        """
+        if self.genre == "f":
+            a = "une"
+        elif self.genre == "m":
+            a = "un"
+        elif self.genre == "q":
+            a = "du"
+        else:
+            a = ""
+        return a + getSingulier(self.nom_obj)
+    
+
+    def sing_(self):
+        return getSingulier(self.nom_obj)
+    
+    def plur_(self):
+        return getPluriel(self.nom_obj)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+######################################################################################
+def getSingulierPluriel(txt, pluriel):
+    if pluriel:
+        return getPluriel(txt)
+    else:
+        return getSingulier(txt)
+
+def getPluriel(txt):
+    return txt.replace("(", "").replace(")", "")
+
+def getSingulier(txt):
+    return txt.replace("(s)", "").replace("(x)", "")
+    
+def et2ou(txt):
+    return txt.replace(" et ", " ou ")
+
+
+
+
+######################################################################################  
 def isstring(s):
-    return isinstance(s, (str, unicode))
+    return isinstance(s, str)
 
 
 ######################################################################################  
 def getNomFichier(prefixe, intitule, extension = r""):
     nomFichier = prefixe+"_"+intitule
-    for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
+    for c in ["\t", "\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
         nomFichier = nomFichier.replace(c, r"_")
     return nomFichier+extension
 
 ######################################################################################  
 def rallonge(txt):
-    return u" "+txt+" "
+    return " "+txt+" "
 
+
+######################################################################################  
+def sublist(sub, lst):
+   l = [e for e in sub if e in lst]
+   return len(l) == len(sub)
 
 ######################################################################################  
 def pourCent(v, ajuster = False):
@@ -80,16 +226,16 @@ def pourCent2(v, ajuster = False):
 
 ######################################################################################  
 def remplaceLF2Code(txt):
-    d = {u"##13##" : [u"\n",
-                      u"\u000D\u000A", #CRLF
-                      u"\u000A", #LF
-                      u"\u000D", #CR
-                      u"\u000B", #VT
-                      u"\u000C", #FF
-                      u"\u2028", #LS
-                      u"\u2029", #LS
+    d = {"##13##" : ["\n",
+                      "\u000D\u000A", #CRLF
+                      "\u000A", #LF
+                      "\u000D", #CR
+                      "\u000B", #VT
+                      "\u000C", #FF
+                      "\u2028", #LS
+                      "\u2029", #LS
                       ]}
-    for k, lv in d.items():
+    for k, lv in list(d.items()):
         for v in lv:
             txt = txt.replace(v, k)
     return txt
@@ -128,9 +274,24 @@ def pstdev(data):
     return pvar**0.5
 
 
+#
+# Fonction pour réaliser l'intersection de deux filtres
+#
+def intersection(f1, f2):
+    """ Fonction pour réaliser l'intersection de deux filtres
+        None = pas de filtrage
+    """
+    if f1 is None:
+        return f2
+    if f2 is None:
+        return f1
+    return list(set(f1).intersection(f2))
+
+
+
 
 #
-# Fonction pour v�rifier si un point x, y est dans un rectangle (x0, y0, x1, y1)
+# Fonction pour vérifier si un point x, y est dans un rectangle (x0, y0, x1, y1)
 #
 def dansRectangle(x, y, rect):
     """ Renvoie True si le point x, y est dans un des rectangles de la liste de rectangles r(xr, yr, wr, hr)
@@ -142,7 +303,7 @@ def dansRectangle(x, y, rect):
 
 
 def getAncreFenetre(x, y, w, h, W, H, e = 0):
-    u""" Renvoie la meilleure position (maximum de visibilité dans l'écran)
+    """ Renvoie la meilleure position (maximum de visibilité dans l'écran)
         x, y : position de référence (pointeur, ...)
         w, h : dimension de la fenêtre à afficher
         W, H : dimension de l'écran
@@ -323,7 +484,7 @@ math_list = safe_list + ['*', '/', '+', '^', '-', '(', ')']
 
 
 class Expression():
-    u""" Expression mathématique 
+    """ Expression mathématique 
     """
     def __init__(self, expr = ''):
         self.MiseAJour(expr)
@@ -340,7 +501,7 @@ class Expression():
         vari = self.getVariables()
 #        print "vari =",vari
         self.vari = {}
-        for n, v in vari.items():
+        for n, v in list(vari.items()):
             if n in GREEK:
                 nn = r""+"\\"+n
             else:
@@ -359,15 +520,15 @@ class Expression():
     
     ######################################################################################################
     def evaluer(self):
-        u""" Renvoie une valeur numérique de l'expression
+        """ Renvoie une valeur numérique de l'expression
         """
         
         # On cr�e un dictionnaire de variables : {'nom' : valeur}
         #    (nécessaire pour "eval")
 
         dict = {}
-        for n, v in self.vari.items():
-            print " ", n, v
+        for n, v in list(self.vari.items()):
+            print(" ", n, v)
             dict[n] = v.v[0]
         
         global safe_dict
@@ -530,7 +691,7 @@ class Expression():
         
     #########################################################################################################
     def getVariables(self):
-        u""" Analyse de la chaine (prétendue expression mathématique)
+        """ Analyse de la chaine (prétendue expression mathématique)
             et renvoie un dictionnaire {nom : valeur}
         """
         expr = self.py_expr
@@ -582,7 +743,7 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, signeEgal = True, 
-                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = u"", sliderAGauche = False, scale = 1.0):
+                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = "", sliderAGauche = False, scale = 1.0):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
@@ -615,9 +776,7 @@ class VariableCtrl(wx.Panel):
         self.txtnom = txtnom
             
         if len(help) > 0:
-            # py3 :
-            # txtnom.SetToolTip(help)
-            txtnom.SetToolTipString(help)
+            txtnom.SetToolTip(help)
             
         #
         # Valeur de la variable
@@ -625,13 +784,13 @@ class VariableCtrl(wx.Panel):
         self.text = wx.TextCtrl(self, -1, self.lstToText(self.variable.v), size = (sizeh, -1))#,
         
         if len(help) > 0:
-            self.text.SetToolTipString(help)
+            self.text.SetToolTip(help)
         else:
             if self.variable.nn == "":
-                txtn = u"de la variable "+self.variable.n
+                txtn = "de la variable "+self.variable.n
             else:
                 txtn = self.variable.nn
-            self.text.SetToolTipString(u"Saisir la valeur "+txtn)
+            self.text.SetToolTip("Saisir la valeur "+txtn)
             
         self.Bind(wx.EVT_TEXT, self.OnChar, self.text)
 #        self.Bind(wx.EVT_CHAR, self.OnChar, self.text)
@@ -645,9 +804,9 @@ class VariableCtrl(wx.Panel):
         self.spin.SetRange(-100, 100)
         self.spin.SetValue(0)
         if len(help) > 0:
-            self.spin.SetToolTipString(help)
+            self.spin.SetToolTip(help)
         else:
-            self.spin.SetToolTipString(u"Agir ici pour augmenter/diminuer la valeur "+txtn)
+            self.spin.SetToolTip("Agir ici pour augmenter/diminuer la valeur "+txtn)
 
         self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp, self.spin)
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)
@@ -682,10 +841,10 @@ class VariableCtrl(wx.Panel):
         
         if len(self.help) == 0:
             if self.variable.nn == "":
-                txtn = u"de la variable "+self.variable.n
+                txtn = "de la variable "+self.variable.n
             else:
                 txtn = self.variable.nn
-            self.text.SetToolTipString(u"Saisir la valeur "+txtn)
+            self.text.SetToolTip("Saisir la valeur "+txtn)
         
         
     #########################################################################################################
@@ -883,9 +1042,7 @@ class VariableCtrl(wx.Panel):
     def marquerValid(self, etat):
         if etat:
             self.text.SetBackgroundColour(
-                # py3 :
-                # wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-                 wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
+                 wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
             
         else:
             self.text.SetBackgroundColour("pink")
@@ -934,7 +1091,7 @@ class VariableCtrl(wx.Panel):
 #  
 #          
 #  
-#     def SetToolTipString(self, message):
+#     def SetToolTip(self, message):
 #         """ Surcharge de la fonction du TextCtrl
 #         """
 # #         print message, len(message)
@@ -965,7 +1122,7 @@ class ToolTip():
 
     def initToolTip(self):
         
-        self.tip = STT.SuperToolTip(u"")
+        self.tip = STT.SuperToolTip("")
         
 
 
@@ -1010,7 +1167,7 @@ class ToolTip():
 #         print "OnKillFocus"
 #         event.Skip()
 # 
-    def SetToolTipString(self, message):
+    def SetToolTip(self, message):
         """ Surcharge de la fonction du TextCtrl
         """
 #         print message, len(message)
@@ -1023,7 +1180,7 @@ class ToolTip():
  
     def SetTitre(self, titre, bmp = None):
         if len(titre.strip()) == 0:
-            titre = u"_"
+            titre = "_"
         self.tip.SetHeader(titre)
         if bmp is not None:
             self.tip.SetHeaderBitmap(bmp)
@@ -1047,13 +1204,10 @@ class ToolTip():
 FenHelp = None
 
 def GetImgHelp():
-    # py3 :
-    #return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
-    return wx.ArtProvider_GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
+    return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
 
 def GetIconHelp():
-    # py3 :
-    return wx.ArtProvider_GetIcon(wx.ART_HELP, wx.ART_FRAME_ICON, (16, 16))
+    return wx.ArtProvider.GetIcon(wx.ART_HELP, wx.ART_FRAME_ICON, (16, 16))
 
 def CloseFenHelp():
     global FenHelp
@@ -1062,7 +1216,7 @@ def CloseFenHelp():
         try:
             FenHelp.Close()
         except:
-            print "Erreur Fermeture FenHelp"
+            print("Erreur Fermeture FenHelp")
     FenHelp = None
     
 class BaseGestionFenHelp():
@@ -1095,7 +1249,7 @@ class BaseGestionFenHelp():
         
         
 class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
-    def __init__(self, parent, Id, titre, img = None, md = u""):
+    def __init__(self, parent, Id, titre, img = None, md = ""):
         wx.StaticBox.__init__(self, parent, Id, titre)
         if img == None:
             img = GetImgHelp()
@@ -1142,11 +1296,11 @@ class ImageButtonTransparent(wx.StaticBitmap):
             self.SetBitmap(self.bmp)
                 
     def enter(self, event):
-        self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
         self.SetBitmap(self.bmp.ConvertToImage().Scale(self.bmp.GetWidth()*1.1, self.bmp.GetHeight()*1.1).ConvertToBitmap())
         
     def leave(self, event):
-        self.SetCursor(wx.StockCursor(wx.CURSOR_DEFAULT))
+        self.SetCursor(wx.Cursor(wx.CURSOR_DEFAULT))
         self.SetBitmap(self.bmp)
         
 # import  wx.lib.buttons  as  buttons
@@ -1154,10 +1308,10 @@ class ImageButtonTransparent(wx.StaticBitmap):
 
 class PlaceholderTextCtrl(wx.TextCtrl):
     def __init__(self,*args,**kwargs):
-        print kwargs
+        print(kwargs)
         self.default_text = kwargs.pop("placeholder","")
         kwargs["value"] = self.default_text
-        print ">>", kwargs
+        print(">>", kwargs)
         wx.TextCtrl.__init__(self,*args,**kwargs)
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
@@ -1193,7 +1347,7 @@ class CheckBoxValue(wx.CheckBox):
 import orthographe
 
 class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
-    def __init__(self, parent, titre = u"", md = u""):
+    def __init__(self, parent, titre = "", md = ""):
         orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)
         
         img = GetImgHelp()
@@ -1210,10 +1364,8 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_BUTTON, self.OnButton, self.bouton)
         
-        # py3 :
-        #self.bouton.SetCursor(wx.Cursor(wx.CURSOR_HAND))
-        self.bouton.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-        self.bouton.SetToolTipString(u"Obtenir de l'aide supplémentaire")
+        self.bouton.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+        self.bouton.SetToolTip("Obtenir de l'aide supplémentaire")
         
 #        self.bouton.Bind(wx.EVT_ENTER_WINDOW, self.OnButtonEnter)
         self.bouton.Bind(wx.EVT_LEAVE_WINDOW, self.OnButtonLeave)
@@ -1231,7 +1383,7 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
             t.SetAutoPop(0)
             t.SetAutoPop(3)
 #         t = self.GetToolTipString()
-#         self.SetToolTipString(t)
+#         self.SetToolTip(t)
 #             print dir(t)
 #             print t.Tip
             
@@ -1520,7 +1672,7 @@ class ColumnSorterMixinNextGen(object):
         self.sortflags[col] = not self.sortflags[col] # invert the last sorting order
 
         self.sortdata = dict() # prepare the data holder
-        for index in xrange(0, self.GetItemCount()):
+        for index in range(0, self.GetItemCount()):
             # loop over all items and gather the ItemData and ColumnText
             itemdata = self.GetItemData(index)
             item = self.GetItem(index, col)
@@ -1555,7 +1707,7 @@ class ColumnSorterMixinNextGen(object):
         item2 = self.sortdata[key2]
 
         #--- Internationalization of string sorting with locale module
-        if type(item1) == unicode and type(item2) == unicode:
+        if type(item1) == str and type(item2) == str:
             cmpVal = locale.strcoll(item1, item2)
         elif type(item1) == str or type(item2) == str:
             cmpVal = locale.strcoll(str(item1), str(item2))
@@ -1564,7 +1716,7 @@ class ColumnSorterMixinNextGen(object):
 
         # If the items are equal then pick something else to make the sort value unique
         if not cmpVal:
-            cmpVal = apply(cmp, self.GetSecondarySortValues(self.col, key1, key2))
+            cmpVal = cmp(*self.GetSecondarySortValues(self.col, key1, key2))
 
         return cmpVal if ascending else -cmpVal
 
@@ -1662,7 +1814,7 @@ class EditableListCtrl(wx.Panel):
     def __init__(self, parent, ID, pos=wx.DefaultPosition,
                  size=wx.DefaultSize,
                  img = (wx.NullBitmap, wx.NullBitmap), 
-                 hlp = (u"Ajouter", u"Supprimer la selection")):
+                 hlp = ("Ajouter", "Supprimer la selection")):
         
         wx.Panel.__init__(self, parent, ID)
         self.listCtrl = ListCtrlMixed(self, -1)
@@ -1675,18 +1827,14 @@ class EditableListCtrl(wx.Panel):
         
       
         self.IDajout = wx.NewId()
-        # py3 :
-#         self.tb.AddTool(self.IDajout, "Ajouter", scaleImage(img[0], *tsize), wx.NullBitmap,
-#                              shortHelp = hlp[0], 
-#                              longHelp  = hlp[0])
-        self.tb.AddLabelTool(self.IDajout, u"Ajouter", scaleImage(img[0], *tsize), 
+        self.tb.AddTool(self.IDajout, "Ajouter", scaleImage(img[0], *tsize), wx.NullBitmap,
                              shortHelp = hlp[0], 
                              longHelp  = hlp[0])
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=self.IDajout)
         
 
         self.IDsuppr = wx.NewId()
-        self.tb.AddLabelTool(self.IDsuppr, u"Supprimer", scaleImage(img[1], *tsize), 
+        self.tb.AddTool(self.IDsuppr, "Supprimer", scaleImage(img[1], *tsize),  wx.NullBitmap,
                              shortHelp = hlp[1], 
                              longHelp  = hlp[1])
         self.tb.Realize()
@@ -1772,10 +1920,12 @@ class EditableListCtrl(wx.Panel):
 #         self.SetColumnCount(self.GetColumnCount())
 #         event.Skip()
 
+    
 try:
     import wx.combo as combo
 except:
     import wx.adv as combo
+    
 class CustomComboBox(combo.BitmapComboBox):
     def __init__(self, *args, **kargs):
         combo.BitmapComboBox.__init__(self, *args, **kargs)
@@ -1787,19 +1937,19 @@ import xml.etree.ElementTree as ET
 from util_path import SYSTEM_ENCODING
 ##################################################################################################    
 def enregistrer_root(root, nomFichier):
-    fichier = open(nomFichier, 'w')
+#     fichier = open(nomFichier, 'w')
     try:
-        ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
+        ET.ElementTree(root).write(nomFichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
     except IOError:
-        messageErreur(None, u"Accès refusé", 
-                              u"L'accès au fichier %s a été refusé !\n\n"\
-                              u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+        messageErreur(None, "Accès refusé", 
+                              "L'accès au fichier %s a été refusé !\n\n"\
+                              "Essayer de faire \"Enregistrer sous...\"" %nomFichier)
     except UnicodeDecodeError:
-        messageErreur(None, u"Erreur d'encodage", 
-                              u"Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
-                              u"Essayer de le localiser et de le supprimer.\n"\
-                              u"Merci de reporter cette erreur au développeur.")
-    fichier.close()
+        messageErreur(None, "Erreur d'encodage", 
+                              "Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
+                              "Essayer de le localiser et de le supprimer.\n"\
+                              "Merci de reporter cette erreur au développeur.")
+#     fichier.close()
     
 #############################################################################################################
 def messageErreur(parent, titre, message, icon = wx.ICON_WARNING):
@@ -1841,7 +1991,7 @@ def chronometrer(fct, *args, **kargs):
     return tps2 - tps1, result
 
 
-def getHoraireTxt(v, prefixe = u""): 
+def getHoraireTxt(v, prefixe = ""): 
     h, m = divmod(v*60, 60)
     h = str(int(h))
     if m == 0:
@@ -1864,15 +2014,15 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
     return image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
 
 #############################################################################################################
-def scaleImage(image, wf = 24 , hf = 24): 
+def scaleImage(image, wf = 24 , hf = None):
+    if hf is None:
+        hf = wf
     return image.ConvertToImage().Scale(int(wf), int(hf), quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
 
 
 #############################################################################################################
 def scaleIcone(image, wf = 20 , hf = 20): 
-    # py3 :
-    #i = wx.Icon()
-    i = wx.EmptyIcon()
+    i = wx.Icon()
     bmp = image.ConvertToImage().Scale(wf, hf, quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
     i.CopyFromBitmap(bmp)
     return i
@@ -1899,7 +2049,7 @@ def tronquerDC(texte, taille, wnd, suffix = '...'):
 #     print "   ", texte
     
     dc = wx.ClientDC(wnd)
-    t = wordwrap(texte, taille, dc).split(u"\n")[0]
+    t = wordwrap(texte, taille, dc).split("\n")[0]
     if len(t) < len(texte):
         ts = t + suffix
     else:
@@ -2000,7 +2150,7 @@ class EllipticStaticText(wx.StaticText):
 
 
     def ChopText(self, dc, text, max_size):
-        u"""
+        """
         Chops the input `text` if its size does not fit in `max_size`, by cutting the
         text and adding ellipsis at the end.
 
@@ -2018,7 +2168,7 @@ class EllipticStaticText(wx.StaticText):
         textLen = len(text)
         last_good_length = 0
 
-        for i in xrange(textLen, -1, -1):
+        for i in range(textLen, -1, -1):
             s = text[0:i]
             s += "..."
 
@@ -2033,17 +2183,38 @@ class EllipticStaticText(wx.StaticText):
 
 
 
+
+
+
+
+
+
+class MyEditableListBox(adv.EditableListBox):
+    def __init__(self, *args, **kargs):
+        adv.EditableListBox.__init__(self, *args, **kargs)
+        
+#         self.GetEditButton().SetToolTip("Éditer")
+    
+    def AppendColumn(self, *args, **kargs):
+        self.GetListCtrl().AppendColumn(*args, **kargs)
+
+
+
+
+
+
+
+
+
 class DisplayChoice(wx.Dialog):
     def __init__(self, parent):
         
         
 #         s = (600,600)
+        wx.Dialog.__init__(self)
+        self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+        self.Create(parent, -1, "Choisir un écran")
         
-        pre = wx.PreDialog()
-        pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
-        pre.Create(parent, -1, u"Choisir un écran")
-        self.PostCreate(pre)
-
         panel = wx.Panel(self)
         panel.SetBackgroundColour("#FFB6C1")
 #         panel.SetMinSize(s)
@@ -2071,10 +2242,10 @@ class DisplayChoice(wx.Dialog):
             
 #             print x, y, w, h
             b = wx.Button(panel, 100+idx, str(idx+1), pos = (x,y+30), size = (w,h), style=wx.NO_BORDER)
-            t = u"Ecran %s" %str(idx+1)
+            t = "Ecran %s" %str(idx+1)
             if d.IsPrimary():
-                t += u"\nprincipal"
-            b.SetToolTipString(t)
+                t += "\nprincipal"
+            b.SetToolTip(t)
             
             self.Bind(wx.EVT_BUTTON, self.OnClick, b)
 #             bsizer.Add(b, 1)
@@ -2122,5 +2293,4 @@ class DisplayChoice(wx.Dialog):
 #             rect.SetPosition(pos)
 #             dc.DrawRoundedRectangleRect(rect, 8)
             
-
 

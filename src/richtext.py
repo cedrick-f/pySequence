@@ -31,7 +31,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-u"""
+"""
 Module richtext
 ***************
 
@@ -43,13 +43,13 @@ import wx
 import wx.richtext as rt
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
-import cStringIO
+import io
 
 import webbrowser
 import images
 
 from widgets import ToolTip
-
+import functools
 
 def is_valid_url(url):
     import re
@@ -120,12 +120,11 @@ class RichTextPanel(wx.Panel):
         # Constantes
         self.indent = 50
         self.subindent = 30
-        self.bullet = u"\u25CF" 
+        self.bullet = "\u25CF" 
         
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         
         self.rtc = RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS)
-        
         if toolBar:
             self.tbar = self.MakeToolBar()
             if self.tbar != None:
@@ -143,10 +142,8 @@ class RichTextPanel(wx.Panel):
         self.Ouvrir()
 #        self.rtc.Bind(rt.EVT_RICHTEXT_LEFT_CLICK, self.OnModified)
 #        self.rtc.Bind(wx.EVT_IDLE, self.OnIdle)
-        # py3 :
-        # problème avec EVT_KILL_FOCUS
-        #self.rtc.Bind(wx.EVT_TEXT , self.Sauver)
-        self.rtc.Bind(wx.EVT_KILL_FOCUS, self.Sauver)
+        #self.rtc.Bind(wx.EVT_KILL_FOCUS, self.Sauver)
+        self.rtc.Bind(wx.EVT_TEXT , self.Sauver)
         self.rtc.Bind(wx.EVT_TEXT_URL, self.OnURLClick)
 
         
@@ -180,7 +177,7 @@ class RichTextPanel(wx.Panel):
         else:
             evt.Skip()
         
-    def Remplacer(self, event = None, mot = u"", start = 0, end = 0):
+    def Remplacer(self, event = None, mot = "", start = 0, end = 0):
         self.Replace(start, end, mot)
         
     def GetWordFromPosition(self, pos):
@@ -204,7 +201,7 @@ class RichTextPanel(wx.Panel):
     def OnModified(self, evt):
         # NOTE: on really big insertions, evt.GetText can cause a
         # MemoryError on MSW, so I've commented this dprint out.
-        print "OnModified"
+        print("OnModified")
                     
         if self.toutVerifier:
             pos = 1
@@ -239,52 +236,57 @@ class RichTextPanel(wx.Panel):
     
     def SetTexteXML(self, text = None):
         from constantes import xmlVide
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         handler = rt.RichTextXMLHandler()
         buff = self.rtc.GetBuffer()
-    
+        buff.AddHandler(handler) 
         if text == None:
-            out.write(xmlVide)
+            out.write(bytes(xmlVide, encoding = "utf8"))
         else:
-            out.write(text)
+            out.write(bytes(text, encoding = "utf8"))
         
         out.seek(0)
-        # py3 :
-        #handler.LoadFile(buff, out)
-        handler.LoadStream(buff, out)
+        handler.LoadFile(buff, out)
+
         self.rtc.Refresh()
         
     def Ouvrir(self):
-        u""" Rempli la zone de texte avec le contenu de objet.description
+        """ Rempli la zone de texte avec le contenu de objet.description
         """
         from constantes import xmlVide
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
+        
         handler = rt.RichTextXMLHandler()
         buff = self.rtc.GetBuffer()
-#        buff.AddHandler(handler)
+        buff.AddHandler(handler)
         if hasattr(self.objet, "description"):
             if self.objet.description == None:
-                out.write(xmlVide)
+                out.write(bytes(xmlVide, encoding = "utf8"))
             else:
-                out.write(self.objet.description)
+#                 print(self.objet.description)
+                out.write(bytes(self.objet.description, encoding = "utf8"))
+                
         else:
-            if self.objet[0] == u"":
-                out.write(xmlVide)
+            if self.objet[0] == "":
+                out.write(bytes(xmlVide, encoding = "utf8"))
             else:
-                out.write(self.objet[0])
+                out.write(bytes(self.objet[0], encoding = "utf8"))
         out.seek(0)
-        handler.LoadStream(buff, out)
+        
+        handler.LoadFile(buff, out)
         self.rtc.Refresh()
 
 
     def Sauver(self, evt = None):
+#         print("Sauver", self.rtc.GetValue())
         if self.rtc.GetValue() == "":
             if hasattr(self.objet, "description"):
                 self.objet.SetDescription(None)
             else:
-                self.objet[0]=u""
+                self.objet[0]=""
         else:
             texte = self.GetXML()
+#             print(">>", texte)
             if texte is None:
                 return
             if hasattr(self.objet, "description"):
@@ -303,10 +305,8 @@ class RichTextPanel(wx.Panel):
         handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
         handler.SetFontSizeMapping([7,9,11,12,14,22,100])
 
-        stream = cStringIO.StringIO()
-        # py3 :
-        #if not handler.SaveFile(self.rtc.GetBuffer(), stream):
-        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+        stream = io.StringIO()
+        if not handler.SaveFile(self.rtc.GetBuffer(), stream):
             return
 
         return stream.getvalue()
@@ -319,37 +319,25 @@ class RichTextPanel(wx.Panel):
         handler = rt.RichTextXMLHandler()
         handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
         
-        stream = cStringIO.StringIO()
-        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+        stream = io.BytesIO()
+        if not handler.SaveFile(self.rtc.GetBuffer(), stream):
             return
 
-        return stream.getvalue()
+        stream.seek(0)
+        return stream.read().decode("utf-8")
 
-    # py3 :
-#     def GetXML(self):
-#         # Get an instance of the html file handler, use it to save the
-#         # document to a StringIO stream
-#         handler = rt.RichTextXMLHandler()
-#         handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-#         
-#         stream = io.BytesIO()
-#         if not handler.SaveFile(self.rtc.GetBuffer(), stream):
-#             return
-# 
-#         stream.seek(0)
-#         return stream.read().decode("utf-8")
 
 
     def InsertImage(self):
-        wildcard= u"Fichier image (bmp, gif, jpeg, png, tiff, tga, pnm, pcx, ico, xpm)|(*.bmp; *.gif; *.jpg; *.jpeg; *.png; *.tif; *.tiff; *.tga; *.xpm ; *.ico ; *.pcx ; *.pnm)"
-        dlg = wx.FileDialog(self, u"Choisir un fichier image",
+        wildcard= "Fichier image (bmp, gif, jpeg, png, tiff, tga, pnm, pcx, ico, xpm)|(*.bmp; *.gif; *.jpg; *.jpeg; *.png; *.tif; *.tiff; *.tga; *.xpm ; *.ico ; *.pcx ; *.pnm)"
+        dlg = wx.FileDialog(self, "Choisir un fichier image",
                             wildcard=wildcard,
-                            style=wx.OPEN)
+                            style=wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             if path:
                 ext = os.path.splitext(path)[1]
-                if ext in typesImg.keys():
+                if ext in list(typesImg.keys()):
                     img = wx.Image(path) 
                     self.rtc.WriteImage(img)#, typesImg[ext])
         dlg.Destroy()
@@ -755,20 +743,20 @@ class RichTextPanel(wx.Panel):
         
 
         
-        dlg = wx.TextEntryDialog(self, u"Adresse du lien",
-                                 u'Insérer un lien')
+        dlg = wx.TextEntryDialog(self, "Adresse du lien",
+                                 'Insérer un lien')
         
         if is_valid_url(t):
             dlg.SetValue(t)
         else:
-            dlg.SetValue(u"")
+            dlg.SetValue("")
 
         if dlg.ShowModal() == wx.ID_OK:
 #            print parse(dlg.GetValue())
 #            if is_valid_url(dlg.GetValue()):
 #                print dlg.GetValue()
             urlStyle = rt.RichTextAttr()
-            urlStyle.SetTextColour(wx.BLUE)
+            urlStyle.SetTextColour(wx.Colour(wx.BLUE))
             urlStyle.SetFontUnderlined(True)
             urlStyle.SetFontSize(8)
             
@@ -801,6 +789,7 @@ class RichTextPanel(wx.Panel):
                 else:
                     r = self.rtc.GetSelectionRange()
                     attr.SetFlags(wx.TEXT_ATTR_TEXT_COLOUR)
+#                     print("Colour", colour, type(colour))
                     attr.SetTextColour(colour)
                     self.rtc.SetStyle(r, attr)
         dlg.Destroy()
@@ -821,70 +810,65 @@ class RichTextPanel(wx.Panel):
 #        doBind( tbar.AddTool(-1, _rt_save.GetBitmap(),
 #                            shortHelpString=u"Enregistrer"), self.OnFileSave)
         tbar.AddSeparator()
-        # py3 :
-        #doBind( tbar.AddTool(wx.ID_CUT, "", _rt_cut.GetBitmap(), 
-        #                    shortHelp="Couper"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_CUT, _rt_cut.GetBitmap(),
-                            shortHelpString=u"Couper"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_COPY, _rt_copy.GetBitmap(),
-                            shortHelpString=u"Copier"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_PASTE, _rt_paste.GetBitmap(),
-                            shortHelpString=u"Coller"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_CUT, "", _rt_cut.GetBitmap(), 
+                            shortHelp="Couper"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_COPY, "", _rt_copy.GetBitmap(), 
+                            shortHelp="Copier"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_PASTE, "", _rt_paste.GetBitmap(), 
+                            shortHelp="Coller"), self.ForwardEvent, self.ForwardEvent)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(wx.ID_UNDO, _rt_undo.GetBitmap(),
-                            shortHelpString=u"Annuler"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_REDO, _rt_redo.GetBitmap(),
-                            shortHelpString=u"Rétablir"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_UNDO, "", _rt_undo.GetBitmap(), 
+                            shortHelp="Annuler"), self.ForwardEvent, self.ForwardEvent)
+        doBind( tbar.AddTool(wx.ID_REDO, "", _rt_redo.GetBitmap(),
+                            shortHelp="Rétablir"), self.ForwardEvent, self.ForwardEvent)
         tbar.AddSeparator()
-        # py3 :
-        #doBind( tbar.AddTool(-1, "", _rt_alignleft.GetBitmap(), kind = wx.ITEM_CHECK,
-        doBind( tbar.AddTool(-1, _rt_bold.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Gras"), self.OnBold, self.OnUpdateBold)
-        doBind( tbar.AddTool(-1, _rt_italic.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Italique"), self.OnItalic, self.OnUpdateItalic)
-        doBind( tbar.AddTool(-1, _rt_underline.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Souligné"), self.OnUnderline, self.OnUpdateUnderline)
+        doBind( tbar.AddTool(-1, "", _rt_bold.GetBitmap(),  kind = wx.ITEM_CHECK,
+                            shortHelp="Gras"), self.OnBold, self.OnUpdateBold)
+        doBind( tbar.AddTool(-1, "", _rt_italic.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Italique"), self.OnItalic, self.OnUpdateItalic)
+        doBind( tbar.AddTool(-1, "", _rt_underline.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Souligné"), self.OnUnderline, self.OnUpdateUnderline)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_alignleft.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Aligner à gauche"), self.OnAlignLeft, self.OnUpdateAlignLeft)
-        doBind( tbar.AddTool(-1, _rt_centre.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Centrer"), self.OnAlignCenter, self.OnUpdateAlignCenter)
-        doBind( tbar.AddTool(-1, _rt_alignright.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Aligner à droite"), self.OnAlignRight, self.OnUpdateAlignRight)
+        doBind( tbar.AddTool(-1, "", _rt_alignleft.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Aligner à gauche"), self.OnAlignLeft, self.OnUpdateAlignLeft)
+        doBind( tbar.AddTool(-1, "", _rt_centre.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Centrer"), self.OnAlignCenter, self.OnUpdateAlignCenter)
+        doBind( tbar.AddTool(-1, "", _rt_alignright.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Aligner à droite"), self.OnAlignRight, self.OnUpdateAlignRight)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_list.GetBitmap(), isToggle=True,
-                            shortHelpString=u"Liste à puce"), self.OnListPuce, self.OnUpdateListPuce)
+        doBind( tbar.AddTool(-1, "", _rt_list.GetBitmap(), kind = wx.ITEM_CHECK,
+                            shortHelp="Liste à puce"), self.OnListPuce, self.OnUpdateListPuce)
 #         doBind( tbar.AddTool(-1, _rt_list.GetBitmap(),
 #                             shortHelpString=u""), self.OnListPuce)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_indentless.GetBitmap(),
-                            shortHelpString=u"Diminuer le retrait"), self.OnIndentLess)
-        doBind( tbar.AddTool(-1, _rt_indentmore.GetBitmap(),
-                            shortHelpString=u"Augmenter le retrait"), self.OnIndentMore)
+        doBind( tbar.AddTool(-1, "", _rt_indentless.GetBitmap(),
+                            shortHelp="Diminuer le retrait"), self.OnIndentLess)
+        doBind( tbar.AddTool(-1, "", _rt_indentmore.GetBitmap(), 
+                            shortHelp="Augmenter le retrait"), self.OnIndentMore)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_hless.GetBitmap(),
-                            shortHelpString=u"Diminuer le niveau hierarchique"), self.OnHeaderLess)
-        doBind( tbar.AddTool(-1, _rt_hmore.GetBitmap(),
-                            shortHelpString=u"Augmenter le niveau hierarchique"), self.OnHeaderMore)
+        doBind( tbar.AddTool(-1, "", _rt_hless.GetBitmap(), 
+                            shortHelp="Diminuer le niveau hierarchique"), self.OnHeaderLess)
+        doBind( tbar.AddTool(-1, "", _rt_hmore.GetBitmap(), 
+                            shortHelp="Augmenter le niveau hierarchique"), self.OnHeaderMore)
         
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_font.GetBitmap(),
-                            shortHelpString=u"Police de caractères"), self.OnFont)
-        doBind( tbar.AddTool(-1, _rt_colour.GetBitmap(),
-                            shortHelpString=u"Couleur de la police"), self.OnColour)
+        doBind( tbar.AddTool(-1, "", _rt_font.GetBitmap(), 
+                            shortHelp="Police de caractères"), self.OnFont)
+        doBind( tbar.AddTool(-1, "", _rt_colour.GetBitmap(), 
+                            shortHelp="Couleur de la police"), self.OnColour)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, _rt_images.GetBitmap(),
-                            shortHelpString=u"Insérer une image"), self.OnImage)
+        doBind( tbar.AddTool(-1, "", _rt_images.GetBitmap(), 
+                            shortHelp="Insérer une image"), self.OnImage)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, images.Bouton_lien.GetBitmap(),
-                            shortHelpString=u"Insérer un lien"), self.OnURL)
+        doBind( tbar.AddTool(-1, "", images.Bouton_lien.GetBitmap(), 
+                            shortHelp="Insérer un lien"), self.OnURL)
         try:
             tbar.Realize()
         except wx._core.PyAssertionError:
-            print u"Trop de documents ouverts"
+            print("Trop de documents ouverts")
             return None
         
         return tbar
@@ -988,18 +972,18 @@ except ImportError:
     from bs4 import BeautifulSoup
 
 def XMLtoHTML(texteXML):
-        u""" Converti un texte au format RichText (XML)
+        """ Converti un texte au format RichText (XML)
             en HTML 
         """
         if texteXML is None:
             return
         
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         handler = rt.RichTextXMLHandler()
         buff = rt.RichTextBuffer()
-        out.write(texteXML)
+        out.write(bytes(texteXML, encoding = "utf8"))
         out.seek(0)
-        handler.LoadStream(buff, out)
+        handler.LoadFile(buff, out)
     
         # Get an instance of the html file handler, use it to save the
         # document to a StringIO stream
@@ -1007,43 +991,16 @@ def XMLtoHTML(texteXML):
         handler2.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
         handler2.SetFontSizeMapping([7,9,11,12,14,22,100])
 
-        stream = cStringIO.StringIO()
-        if not handler2.SaveStream(buff, stream):
+        stream = io.BytesIO()
+        if not handler2.SaveFile(buff, stream):
             return
         
-        soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
-
+        soup = BeautifulSoup(stream.read().decode('utf-8'), "html5lib")
+#         soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
         return soup.html.body.prettify()
 
 
-# py3 :
-# def XMLtoHTML(texteXML):
-#         """ Converti un texte au format RichText (XML)
-#             en HTML 
-#         """
-#         if texteXML is None:
-#             return
-#         
-#         out = io.BytesIO()
-#         handler = rt.RichTextXMLHandler()
-#         buff = rt.RichTextBuffer()
-#         out.write(bytes(texteXML, encoding = "utf8"))
-#         out.seek(0)
-#         handler.LoadFile(buff, out)
-#     
-#         # Get an instance of the html file handler, use it to save the
-#         # document to a StringIO stream
-#         handler2 = rt.RichTextHTMLHandler()
-#         handler2.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-#         handler2.SetFontSizeMapping([7,9,11,12,14,22,100])
-# 
-#         stream = io.BytesIO()
-#         if not handler2.SaveFile(buff, stream):
-#             return
-#         
-#         soup = BeautifulSoup(stream.read().decode('utf-8'), "html5lib")
-# #         soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
-#         return soup.html.body.prettify()
+
 
 
 
@@ -1277,7 +1234,7 @@ _rt_images = PyEmbeddedImage(
 
 
 class MyFrame(wx.Frame):
-    demo = u"""<?xml version="1.0" encoding="UTF-8"?>
+    demo = """<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontpointsize="9" fontfamily="70" fontstyle="90" fontweight="90" fontunderlined="0" fontface="Segoe UI" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10" margin-left="5,4098" margin-right="5,4098" margin-top="5,4098" margin-bottom="5,4098">
     <paragraph fontweight="92" alignment="2" parspacingafter="20" parspacingbefore="0">
@@ -1418,8 +1375,8 @@ class MyFrame(wx.Frame):
         wx.Frame.__init__(self, parent, title=title, size=(200,100))
         rtp = RichTextPanel(self, [self.demo], toolBar=True, size = (1000, 600))
         self.SetSize((1000, 600))
-        rtp.SetTitre(u"Test")
-        rtp.SetToolTipString(u"")
+        rtp.SetTitre("Test")
+        rtp.SetToolTipString("")
         self.Show(True)
    
 

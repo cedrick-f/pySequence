@@ -32,7 +32,7 @@ import wx
 import wx.richtext as richtext
 
 # import Python's cStringIO, os, and string modules
-import cStringIO, os, string
+import io, os, string
 # import Python's XML Sax handler
 import xml.sax.handler
 import struct
@@ -126,11 +126,12 @@ class PyRichTextRTFHandler(richtext.RichTextFileHandler):
         # NOTE:  buf.Dump() just returns the text contents of the buffer, not any formatting information.
         xmlHandler = richtext.RichTextXMLHandler()
         # Create a stream object that can hold the data
-        stream = cStringIO.StringIO()
+        stream = io.BytesIO()
         # Extract the wxRichTextBuffer data to the stream object
-        if xmlHandler.SaveStream(buf, stream):
+        if xmlHandler.SaveFile(buf, stream):
             # Convert the stream to a string
-            contents = stream.getvalue()
+            stream.seek(0)
+            contents = stream.read().decode("utf-8")
             # Get the XML to RTF File Handler
             fileHandler = XMLToRTFHandler()
             # Use xml.sax, with the XML to RTF File Handler, to parse the XML and create
@@ -182,7 +183,7 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
         Transana (htp://www.transana.org) needs Rich Text Format features supported.
         by David K. Woods (dwoods@wcer.wisc.edu) """
 
-    def __init__(self, encoding='utf8'):
+    def __init__(self, encoding='utf-8'):
         """ Initialize the XMLToRTFHandler
             Parameters:  encoding='utf8'  Character Encoding to use (only utf8 has been tested, and I don't
                                           think the RTF Parser decodes yet. """
@@ -191,76 +192,76 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
 
         # Define an initial Fonts.  We define multiple levels of fonts to handle cascading styles.
         self.fontAttributes = {}
-        self.fontAttributes[u'text'] = {u'bgcolor' : '#FFFFFF',
-                                    u'fontface' : 'Courier New',
-                                    u'fontsize' : 12,
-                                    u'fontstyle' : wx.FONTSTYLE_NORMAL,
-                                    u'fontunderlined' : u'0',
-                                    u'fontweight' : wx.FONTSTYLE_NORMAL,
-                                    u'textcolor' : '#000000'}
+        self.fontAttributes['text'] = {'bgcolor' : '#FFFFFF',
+                                    'fontface' : 'Courier New',
+                                    'fontsize' : 12,
+                                    'fontstyle' : wx.FONTSTYLE_NORMAL,
+                                    'fontunderlined' : '0',
+                                    'fontweight' : wx.FONTSTYLE_NORMAL,
+                                    'textcolor' : '#000000'}
 
-        self.fontAttributes[u'symbol'] = {u'bgcolor' : '#FFFFFF',
-                                    u'fontface' : 'Courier New',
-                                    u'fontsize' : 12,
-                                    u'fontstyle' : wx.FONTSTYLE_NORMAL,
-                                    u'fontunderlined' : u'0',
-                                    u'fontweight' : wx.FONTSTYLE_NORMAL,
-                                    u'textcolor' : '#000000'}
+        self.fontAttributes['symbol'] = {'bgcolor' : '#FFFFFF',
+                                    'fontface' : 'Courier New',
+                                    'fontsize' : 12,
+                                    'fontstyle' : wx.FONTSTYLE_NORMAL,
+                                    'fontunderlined' : '0',
+                                    'fontweight' : wx.FONTSTYLE_NORMAL,
+                                    'textcolor' : '#000000'}
 
-        self.fontAttributes[u'paragraph'] = {u'bgcolor' : '#FFFFFF',
-                                         u'fontface' : 'Courier New',
-                                         u'fontsize' : 12,
-                                         u'fontstyle' : wx.FONTSTYLE_NORMAL,
-                                         u'fontunderlined' : u'0',
-                                         u'fontweight' : wx.FONTSTYLE_NORMAL,
-                                         u'textcolor' : '#000000'}
+        self.fontAttributes['paragraph'] = {'bgcolor' : '#FFFFFF',
+                                         'fontface' : 'Courier New',
+                                         'fontsize' : 12,
+                                         'fontstyle' : wx.FONTSTYLE_NORMAL,
+                                         'fontunderlined' : '0',
+                                         'fontweight' : wx.FONTSTYLE_NORMAL,
+                                         'textcolor' : '#000000'}
 
-        self.fontAttributes[u'paragraphlayout'] = {u'bgcolor' : '#FFFFFF',
-                                               u'fontface' : 'Courier New',
-                                               u'fontsize' : 12,
-                                               u'fontstyle' : wx.FONTSTYLE_NORMAL,
-                                               u'fontunderlined' : u'0',
-                                               u'fontweight' : wx.FONTSTYLE_NORMAL,
-                                               u'textcolor' : '#000000'}
+        self.fontAttributes['paragraphlayout'] = {'bgcolor' : '#FFFFFF',
+                                               'fontface' : 'Courier New',
+                                               'fontsize' : 12,
+                                               'fontstyle' : wx.FONTSTYLE_NORMAL,
+                                               'fontunderlined' : '0',
+                                               'fontweight' : wx.FONTSTYLE_NORMAL,
+                                               'textcolor' : '#000000'}
 
         # Define the initial Paragraph attributes.  We define mulitple levels to handle cascading styles.
         self.paragraphAttributes = {}
-        self.paragraphAttributes[u'paragraph'] = {u'alignment' : u'1',
-                                                  u'linespacing' : u'10',
-                                                  u'leftindent' : u'0',
-                                                  u'rightindent' : u'0',
-                                                  u'leftsubindent' : u'0',
-                                                  u'parspacingbefore' : u'0',
-                                                  u'parspacingafter' : u'0',
-                                                  u'bulletnumber' : None,
-                                                  u'bulletstyle' : None,
-                                                  u'bulletfont' : None,
-                                                  u'bulletsymbol' : None,
-                                                  u'bullettext' : None,
-                                                  u'tabs' : None}
+        self.paragraphAttributes['paragraph'] = {'alignment' : '1',
+                                                  'linespacing' : '10',
+                                                  'leftindent' : '0',
+                                                  'rightindent' : '0',
+                                                  'leftsubindent' : '0',
+                                                  'parspacingbefore' : '0',
+                                                  'parspacingafter' : '0',
+                                                  'bulletnumber' : None,
+                                                  'bulletstyle' : None,
+                                                  'bulletfont' : None,
+                                                  'bulletsymbol' : None,
+                                                  'bullettext' : None,
+                                                  'tabs' : None}
 
-        self.paragraphAttributes[u'paragraphlayout'] = {u'alignment' : u'1',
-                                                      u'linespacing' : u'10',
-                                                      u'leftindent' : u'0',
-                                                      u'rightindent' : u'0',
-                                                      u'leftsubindent' : u'0',
-                                                      u'parspacingbefore' : u'0',
-                                                      u'parspacingafter' : u'0',
-                                                      u'bulletnumber' : None,
-                                                      u'bulletstyle' : None,
-                                                      u'bulletfont' : None,
-                                                      u'bulletsymbol' : None,
-                                                      u'bullettext' : None,
-                                                      u'tabs' : None}
+        self.paragraphAttributes['paragraphlayout'] = {'alignment' : '1',
+                                                      'linespacing' : '10',
+                                                      'leftindent' : '0',
+                                                      'rightindent' : '0',
+                                                      'leftsubindent' : '0',
+                                                      'parspacingbefore' : '0',
+                                                      'parspacingafter' : '0',
+                                                      'bulletnumber' : None,
+                                                      'bulletstyle' : None,
+                                                      'bulletfont' : None,
+                                                      'bulletsymbol' : None,
+                                                      'bullettext' : None,
+                                                      'tabs' : None}
 
         # Define an initial font table
-        self.fontTable = [u'Courier New']
+        self.fontTable = ['Courier New']
 
         # define an initial color table
         self.colorTable = ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFFFF']
 
         # Define the parsed text output  (cStringIO used for the speed improvements it provides!)
-        self.outputString = cStringIO.StringIO()
+        self.outputString = io.StringIO()
 
         # Define a variable for tracking what element we are changing
         self.element = ''
@@ -281,7 +282,7 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
             numerals = { 1 : "I", 4 : "IV", 5 : "V", 9 : "IX", 10 : "X", 40 : "XL",
                         50 : "L", 90 : "XC", 100 : "C", 400 : "CD", 500 : "D", 900 : "CM", 1000 : "M" }
             result = ""
-            for value, numeral in sorted(numerals.items(), reverse=True):
+            for value, numeral in sorted(list(numerals.items()), reverse=True):
                 while number >= value:
                     result += numeral
                     number -= value
@@ -291,7 +292,7 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
         self.element = name
 
         # If the element is a paragraphlayout, paragraph, symbol, or text element ...
-        if name in [u'paragraphlayout', u'paragraph', u'symbol', u'text']:
+        if name in ['paragraphlayout', 'paragraph', 'symbol', 'text']:
 
             # Let's cascade the font and paragraph settings from a level up BEFORE we change things to reset the font and
             # paragraph settings to the proper initial state.  First, let's create empty character and paragraph cascade lists
@@ -299,81 +300,81 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
             # Initially, assume we will cascade from our current object for character styles
             cascadesource = name
             # If we're in a Paragraph spec ...
-            if name == u'paragraph':
+            if name == 'paragraph':
                 # ... we need to cascase paragraph, symbol, and text styles for characters ...
-                charcascade = [u'paragraph', u'symbol', u'text']
+                charcascade = ['paragraph', 'symbol', 'text']
                 # ... from the paragraph layout style for characters ...
-                cascadesource = u'paragraphlayout'
+                cascadesource = 'paragraphlayout'
                 # ... and we need to cascare paragraph styles for paragraphs
-                paracascade = [u'paragraph']
+                paracascade = ['paragraph']
             # If we're in a Text spec ...
-            elif name == u'text':
+            elif name == 'text':
                 # ... we need to cascase text styles for characters ...
-                charcascade = [u'text']
+                charcascade = ['text']
                 # ... from the paragraph style for characters ...
-                cascadesource = u'paragraph'
+                cascadesource = 'paragraph'
             # If we're in a Symbol spec ...
-            elif name == u'symbol':
+            elif name == 'symbol':
                 # ... we need to cascase symbol styles for characters ...
-                charcascade = [u'symbol']
+                charcascade = ['symbol']
                 # ... from the paragraph style for characters ...
-                cascadesource = u'paragraph'
+                cascadesource = 'paragraph'
             # For each type of character style we need to cascade ...
             for x in charcascade:
                 # ... iterate through the dictionary elements ...
-                for y in self.fontAttributes[x].keys():
+                for y in list(self.fontAttributes[x].keys()):
                     # ... and assign the character cascade source styles (cascadesource) to the destination element (x)
                     self.fontAttributes[x][y] = self.fontAttributes[cascadesource][y]
             # For each type of paragraph style we need to cascade ...
             for x in paracascade:
                 # ... iterate through the dictionary elements ...
-                for y in self.paragraphAttributes[x].keys():
+                for y in list(self.paragraphAttributes[x].keys()):
                     # ... and assign the paragraph cascade source styles (cascadesource) to the destination element (x)
                     self.paragraphAttributes[x][y] = self.paragraphAttributes[cascadesource][y]
 
             # If the element is a paragraph element or a paragraph layout element, there is extra processing to do at the start
-            if name in [u'paragraph', u'paragraphlayout']:
+            if name in ['paragraph', 'paragraphlayout']:
                 # ... iterate through the element attributes looking for paragraph attributes
-                for x in attributes.keys():
+                for x in list(attributes.keys()):
                     # If the attribute is a paragraph format attribute ...
-                    if x in [u'alignment',
-                             u'linespacing',
-                             u'leftindent',
-                             u'rightindent',
-                             u'leftsubindent',
-                             u'parspacingbefore',
-                             u'parspacingafter',
-                             u'bulletnumber',
-                             u'bulletstyle',
-                             u'bulletfont',
-                             u'bulletsymbol',
-                             u'bullettext',
-                             u'tabs']:
+                    if x in ['alignment',
+                             'linespacing',
+                             'leftindent',
+                             'rightindent',
+                             'leftsubindent',
+                             'parspacingbefore',
+                             'parspacingafter',
+                             'bulletnumber',
+                             'bulletstyle',
+                             'bulletfont',
+                             'bulletsymbol',
+                             'bullettext',
+                             'tabs']:
                         # ... update the current paragraph dictionary
                         self.paragraphAttributes[name][x] = attributes[x]
 
             # ... iterate through the element attributes looking for font attributes
-            for x in attributes.keys():
+            for x in list(attributes.keys()):
                 # If the attribute is a font format attribute ...
-                if x in [u'bgcolor',
-                         u'fontface',
-                         u'fontsize',
-                         u'fontstyle',
-                         u'fontunderlined',
-                         u'fontweight',
-                         u'textcolor']:
+                if x in ['bgcolor',
+                         'fontface',
+                         'fontsize',
+                         'fontstyle',
+                         'fontunderlined',
+                         'fontweight',
+                         'textcolor']:
                     # ... update the current font dictionary
                     self.fontAttributes[name][x] = attributes[x]
 
                 # If the attribute is a font name ...
-                if x == u'fontface':
+                if x == 'fontface':
                     # ... that is not already in the font table ...
                     if not(attributes[x] in self.fontTable):
                         # ... add the font name to the font table list
                         self.fontTable.append(attributes[x])
 
                 # If the element is a text element and the attribute is a url attribute ...
-                if (name == u'text') and (x == u'url'):
+                if (name == 'text') and (x == 'url'):
                     # ... capture the URL data.
                     self.url = attributes[x]
 
@@ -383,57 +384,57 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
             # Initially, assume we will cascade from our current object for character styles
             cascadesource = name
             # If we're in a Paragraph Layout spec ...
-            if name == u'paragraphlayout':
+            if name == 'paragraphlayout':
                 # ... we need to cascase paragraph, symbol, and text styles for characters ...
-                charcascade = [u'paragraph', u'symbol', u'text']
+                charcascade = ['paragraph', 'symbol', 'text']
                 # ... we need to cascase paragraph styles for paragraphs ...
-                paracascade = [u'paragraph']
+                paracascade = ['paragraph']
             # If we're in a Paragraph spec ...
-            elif name == u'paragraph':
+            elif name == 'paragraph':
                 # ... we need to cascase symbol and text styles for characters ...
-                charcascade = [u'symbol', u'text']
+                charcascade = ['symbol', 'text']
             # For each type of character style we need to cascade ...
             for x in charcascade:
                 # ... iterate through the dictionary elements ...
-                for y in self.fontAttributes[x].keys():
+                for y in list(self.fontAttributes[x].keys()):
                     # ... and assign the character cascade source styles (cascadesource) to the destination element (x)
                     self.fontAttributes[x][y] = self.fontAttributes[cascadesource][y]
             for x in paracascade:
                 # ... iterate through the dictionary elements ...
-                for y in self.paragraphAttributes[x].keys():
+                for y in list(self.paragraphAttributes[x].keys()):
                     # ... and assign the paragraph cascade source styles (cascadesource) to the destination element (x)
                     self.paragraphAttributes[x][y] = self.paragraphAttributes[cascadesource][y]
 
             if DEBUG:
                 # List unknown elements
-                for x in attributes.keys():
-                    if not x in [u'bgcolor',
-                                 u'fontface',
-                                 u'fontsize',
-                                 u'fontstyle',
-                                 u'fontunderlined',
-                                 u'fontweight',
-                                 u'textcolor',
-                                 u'alignment',
-                                 u'linespacing',
-                                 u'leftindent',
-                                 u'rightindent',
-                                 u'leftsubindent',
-                                 u'parspacingbefore',
-                                 u'parspacingafter',
-                                 u'url',
-                                 u'tabs',
-                                 u'bulletnumber',
-                                 u'bulletstyle',
-                                 u'bulletfont',
-                                 u'bulletsymbol',
-                                 u'bullettext']:
-                        print "Unknown %s attribute:  %s  %s" % (name, x, attributes[x])
+                for x in list(attributes.keys()):
+                    if not x in ['bgcolor',
+                                 'fontface',
+                                 'fontsize',
+                                 'fontstyle',
+                                 'fontunderlined',
+                                 'fontweight',
+                                 'textcolor',
+                                 'alignment',
+                                 'linespacing',
+                                 'leftindent',
+                                 'rightindent',
+                                 'leftsubindent',
+                                 'parspacingbefore',
+                                 'parspacingafter',
+                                 'url',
+                                 'tabs',
+                                 'bulletnumber',
+                                 'bulletstyle',
+                                 'bulletfont',
+                                 'bulletsymbol',
+                                 'bullettext']:
+                        print("Unknown %s attribute:  %s  %s" % (name, x, attributes[x]))
 
         # If the element is an image element ...
-        elif name in [u'image']:
+        elif name in ['image']:
             # ... if we have a PNG graphic ...
-            if attributes[u'imagetype'] == u'15':  # wx.BITMAP_TYPE_PNG = 15
+            if attributes['imagetype'] == '15':  # wx.BITMAP_TYPE_PNG = 15
                 # ... signal that we have a PNG image to process ...
                 self.elementType = "ImagePNG"
                 # ... and start the RTF code for a PNG image block
@@ -443,22 +444,22 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                 # if not, signal a unknown image type
                 self.elementType = 'ImageUnknown'
 
-                print "Image of UNKNOWN TYPE!!", attributes.keys()
+                print("Image of UNKNOWN TYPE!!", list(attributes.keys()))
 
         # If the element is a data or richtext element ...
-        elif name in [u'data', u'richtext']:
+        elif name in ['data', 'richtext']:
             # ... we should do nothing here at this time
             pass
         # If we have an unhandled element ...
         else:
             # ... output a message and the element attributes.
-            print "PyRTFParser.XMLToRTFHandler.startElement():  Unknown XML tag:", name
-            for x in attributes.keys():
-                print x, attributes[x]
-            print
+            print("PyRTFParser.XMLToRTFHandler.startElement():  Unknown XML tag:", name)
+            for x in list(attributes.keys()):
+                print(x, attributes[x])
+            print()
 
         # If the element is a paragraph element ...
-        if name in [u'paragraph']:
+        if name in ['paragraph']:
 
 
             # Code for handling bullet lists and numbered lists is preliminary and probably very buggy
@@ -475,23 +476,23 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
 #            print
 
             # If we have a bullet or numbered list specification ...
-            if self.paragraphAttributes[u'paragraph'][u'bulletstyle'] != None:
+            if self.paragraphAttributes['paragraph']['bulletstyle'] != None:
             # ... indicate that in the RTF output string
                 self.outputString.write('{\\listtext\\pard\\plain')
 
                 # Convert the Bullet Style to a hex string so we can interpret it correctly.
                 # (I'm sure there's a better way to do this!)
-                styleHexStr = "%04x" % int(self.paragraphAttributes[u'paragraph'][u'bulletstyle'])
+                styleHexStr = "%04x" % int(self.paragraphAttributes['paragraph']['bulletstyle'])
 
                 # If we have a known symbol bullet (TEXT_ATTR_BULLET_STYLE_SYMBOL and defined bulletsymbol) ...
-                if (styleHexStr[2] == '2') and (self.paragraphAttributes[u'paragraph'][u'bulletsymbol'] != None):
+                if (styleHexStr[2] == '2') and (self.paragraphAttributes['paragraph']['bulletsymbol'] != None):
                     # ... add that to the RTF Output String
                     try:
-                        b = unichr(int(self.paragraphAttributes[u'paragraph'][u'bulletsymbol']))
+                        b = chr(int(self.paragraphAttributes['paragraph']['bulletsymbol']))
                     except:
                         b = '*'
-                        print "ERR", self.paragraphAttributes[u'paragraph'][u'bulletsymbol']
-                    self.outputString.write("\\f%s %s\\tab}" % (self.fontTable.index(self.fontAttributes[name][u'fontface']), 
+                        print("ERR", self.paragraphAttributes['paragraph']['bulletsymbol'])
+                    self.outputString.write("\\f%s %s\\tab}" % (self.fontTable.index(self.fontAttributes[name]['fontface']), 
                                                                 b))
 
                 # if the second characters is a "2", we have richtext.TEXT_ATTR_BULLET_STYLE_STANDARD
@@ -504,7 +505,7 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                     self.outputString.write("\\f%s \\'b7\\tab}" % self.fontTable.index('Symbol'))
 
                 # If we have a know bullet NUMBER (i.e. a numbered list) ...
-                elif self.paragraphAttributes[u'paragraph'][u'bulletnumber'] != None:
+                elif self.paragraphAttributes['paragraph']['bulletnumber'] != None:
                     # Initialize variables used for presenting the proper "number" style and punctuation
                     numberChar = ''
                     numberLeadingChar = ''
@@ -513,21 +514,21 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                     # Put the bullet "number" into the correct format
                     # TEXT_ATTR_BULLET_STYLE_ARABIC
                     if styleHexStr[3] == '1':
-                        numberChar = self.paragraphAttributes[u'paragraph'][u'bulletnumber']
+                        numberChar = self.paragraphAttributes['paragraph']['bulletnumber']
                     # TEXT_ATTR_BULLET_STYLE_LETTERS_UPPER
                     elif styleHexStr[3] == '2':
                         bulletChars = string.uppercase[:26]
-                        numberChar = bulletChars[int(self.paragraphAttributes[u'paragraph'][u'bulletnumber']) - 1]
+                        numberChar = bulletChars[int(self.paragraphAttributes['paragraph']['bulletnumber']) - 1]
                     # TEXT_ATTR_BULLET_STYLE_LETTERS_LOWER
                     elif styleHexStr[3] == '4':
                         bulletChars = string.lowercase[:26]
-                        numberChar = bulletChars[int(self.paragraphAttributes[u'paragraph'][u'bulletnumber']) - 1]
+                        numberChar = bulletChars[int(self.paragraphAttributes['paragraph']['bulletnumber']) - 1]
                     # TEXT_ATTR_BULLET_STYLE_ROMAN_UPPER
                     elif styleHexStr[3] == '8':
-                        numberChar = int2roman(int(self.paragraphAttributes[u'paragraph'][u'bulletnumber']))
+                        numberChar = int2roman(int(self.paragraphAttributes['paragraph']['bulletnumber']))
                     # TEXT_ATTR_BULLET_STYLE_ROMAN_LOWER
                     elif styleHexStr[2] == '1':
-                        numberChar = int2roman(int(self.paragraphAttributes[u'paragraph'][u'bulletnumber'])).lower()
+                        numberChar = int2roman(int(self.paragraphAttributes['paragraph']['bulletnumber'])).lower()
 
                     # Put the bullet "number" into the correct punctuation structure
                     # TEXT_ATTR_BULLET_STYLE_PERIOD
@@ -542,57 +543,57 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                         numberTrailingChar = ')'
 
                     # ... add that to the RTF Output String
-                    self.outputString.write("\\f%s %s%s%s\\tab}" % (self.fontTable.index(self.fontAttributes[name][u'fontface']), numberLeadingChar, numberChar, numberTrailingChar))
+                    self.outputString.write("\\f%s %s%s%s\\tab}" % (self.fontTable.index(self.fontAttributes[name]['fontface']), numberLeadingChar, numberChar, numberTrailingChar))
 
                 # If we have a know bullet symbol ...
-                elif self.paragraphAttributes[u'paragraph'][u'bulletsymbol'] != None:
+                elif self.paragraphAttributes['paragraph']['bulletsymbol'] != None:
                     # ... add that to the RTF Output String
-                    self.outputString.write("\\f%s %s\\tab}" % (self.fontTable.index(self.fontAttributes[name][u'fontface']), unichr(int(self.paragraphAttributes[u'paragraph'][u'bulletsymbol']))))
+                    self.outputString.write("\\f%s %s\\tab}" % (self.fontTable.index(self.fontAttributes[name]['fontface']), chr(int(self.paragraphAttributes['paragraph']['bulletsymbol']))))
 
                 # If we still don't know what kind of bullet we have, we're in trouble.
                 else:
-                    print "PyRTFParser.startElement() SYMBOL INSERTION FAILURE"
+                    print("PyRTFParser.startElement() SYMBOL INSERTION FAILURE")
 
             # Signal the start of a new paragraph in the RTF output string
             self.outputString.write('\\pard')
 
             # Paragraph alignment left is u'1'
-            if self.paragraphAttributes[u'paragraph'][u'alignment'] == u'1':
+            if self.paragraphAttributes['paragraph']['alignment'] == '1':
                 self.outputString.write('\\ql')
             # Paragraph alignment centered is u'2'
-            elif self.paragraphAttributes[u'paragraph'][u'alignment'] == u'2':
+            elif self.paragraphAttributes['paragraph']['alignment'] == '2':
                 self.outputString.write('\\qc')
             # Paragraph alignment right is u'3'
-            elif self.paragraphAttributes[u'paragraph'][u'alignment'] == u'3':
+            elif self.paragraphAttributes['paragraph']['alignment'] == '3':
                 self.outputString.write('\\qr')
             else:
-                print "Unknown alignment:", self.paragraphAttributes[u'paragraph'][u'alignment'], type(self.paragraphAttributes[u'paragraph'][u'alignment'])
+                print("Unknown alignment:", self.paragraphAttributes['paragraph']['alignment'], type(self.paragraphAttributes['paragraph']['alignment']))
 
             # line spacing u'10' is single line spacing, which is NOT included in the RTF as it is the default.
-            if self.paragraphAttributes[u'paragraph'][u'linespacing'] == u'10':
+            if self.paragraphAttributes['paragraph']['linespacing'] == '10':
                 pass
             # 1.5 line spacing is u'15'
-            elif self.paragraphAttributes[u'paragraph'][u'linespacing'] == u'15':
+            elif self.paragraphAttributes['paragraph']['linespacing'] == '15':
                 # I'm not exactly sure why spacing for lines of 360, a multiple of normal, is the right specifier,
                 # but that seems to be what Word uses.
                 self.outputString.write('\\sl360\\slmult1')
             # double line spacing is u'20'
-            elif self.paragraphAttributes[u'paragraph'][u'linespacing'] == u'20':
+            elif self.paragraphAttributes['paragraph']['linespacing'] == '20':
                 # I'm not exactly sure why spacing for lines of 480, a multiple of normal, is the right specifier,
                 # but that seems to be what Word uses.
                 self.outputString.write('\\sl480\\slmult1')
             else:
-                print "Unknown linespacing:", self.paragraphAttributes[u'paragraph'][u'linespacing'], type(self.paragraphAttributes[u'paragraph'][u'linespacing'])
+                print("Unknown linespacing:", self.paragraphAttributes['paragraph']['linespacing'], type(self.paragraphAttributes['paragraph']['linespacing']))
 
             # Paragraph Margins and first-line indents
             # First, let's convert the unicode strings we got from the XML to integers and translate from wxRichTextCtrl's
             # system to RTF's system.
             # Left Indent in RTF is the sum of wxRichTextCtrl's left indent and left subindent
-            leftindent = int(self.paragraphAttributes[u'paragraph'][u'leftindent']) + int(self.paragraphAttributes[u'paragraph'][u'leftsubindent'])
+            leftindent = int(self.paragraphAttributes['paragraph']['leftindent']) + int(self.paragraphAttributes['paragraph']['leftsubindent'])
             # The First Line Indent in RTF is the wxRichTextCtrl's left indent minus the left indent calculated above.
-            firstlineindent = int(self.paragraphAttributes[u'paragraph'][u'leftindent']) - leftindent
+            firstlineindent = int(self.paragraphAttributes['paragraph']['leftindent']) - leftindent
             # The Right Indent translates directly
-            rightindent = int(self.paragraphAttributes[u'paragraph'][u'rightindent'])
+            rightindent = int(self.paragraphAttributes['paragraph']['rightindent'])
 
             # Now let's convert what we got from the conversions above to twips.
             leftMargin = self.twips((leftindent) / 100.0)
@@ -602,57 +603,57 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
             self.outputString.write('\\li%d\\ri%d\\fi%d' % (leftMargin, rightMargin, firstIndent))
 
             # Add non-zero Spacing before and after paragraphs to the RTF output String
-            if int(self.paragraphAttributes[u'paragraph'][u'parspacingbefore']) != 0:
-                self.outputString.write('\\sb%d' % self.twips(int(self.paragraphAttributes[u'paragraph'][u'parspacingbefore']) / 100.0))
-            if int(self.paragraphAttributes[u'paragraph'][u'parspacingafter']) != 0:
-                self.outputString.write('\\sa%d' % self.twips(int(self.paragraphAttributes[u'paragraph'][u'parspacingafter']) / 100.0))
+            if int(self.paragraphAttributes['paragraph']['parspacingbefore']) != 0:
+                self.outputString.write('\\sb%d' % self.twips(int(self.paragraphAttributes['paragraph']['parspacingbefore']) / 100.0))
+            if int(self.paragraphAttributes['paragraph']['parspacingafter']) != 0:
+                self.outputString.write('\\sa%d' % self.twips(int(self.paragraphAttributes['paragraph']['parspacingafter']) / 100.0))
 
             # If Tabs are defined ...
-            if self.paragraphAttributes[u'paragraph'][u'tabs'] != None:
+            if self.paragraphAttributes['paragraph']['tabs'] != None:
                 # ... break the tab data into its component pieces
-                tabStops = self.paragraphAttributes[u'paragraph'][u'tabs'].split(',')
+                tabStops = self.paragraphAttributes['paragraph']['tabs'].split(',')
                 # For each tab stop ...
                 for x in tabStops:
                     # ... (assuming the data isn't empty) ...
-                    if x != u'':
+                    if x != '':
                         # ... add the tab stop data to the RTF output string
                         self.outputString.write('\\tx%d' % self.twips(int(x) / 100.0))
 
         # Add Font formatting when we process text or symbol tags, as text and symbol specs can modify paragraph-level font specifications
-        if name in [u'text', u'symbol']:
+        if name in ['text', 'symbol']:
             # Begin an RTF block
             self.outputString.write('{')
             # Add Font Face information
-            self.outputString.write('\\f%d' % self.fontTable.index(self.fontAttributes[name][u'fontface']))
+            self.outputString.write('\\f%d' % self.fontTable.index(self.fontAttributes[name]['fontface']))
             # Add Font Size information
-            self.outputString.write('\\fs%d' % (int(self.fontAttributes[name][u'fontsize']) * 2))
+            self.outputString.write('\\fs%d' % (int(self.fontAttributes[name]['fontsize']) * 2))
             # If bold, add Bold
-            if self.fontAttributes[name][u'fontweight'] == str(wx.FONTWEIGHT_BOLD):
+            if self.fontAttributes[name]['fontweight'] == str(wx.FONTWEIGHT_BOLD):
                 self.outputString.write('\\b')
             # If Italics, add Italics
-            if self.fontAttributes[name][u'fontstyle'] == str(wx.FONTSTYLE_ITALIC):
+            if self.fontAttributes[name]['fontstyle'] == str(wx.FONTSTYLE_ITALIC):
                 self.outputString.write('\\i')
             # If Underline, add Underline
-            if self.fontAttributes[name][u'fontunderlined'] == u'1':
+            if self.fontAttributes[name]['fontunderlined'] == '1':
                 self.outputString.write('\\ul')
             # If Text Color is not black ...
-            if self.fontAttributes[name][u'textcolor'] != '#000000':
+            if self.fontAttributes[name]['textcolor'] != '#000000':
                 # Check the color table.  If the color is not there ...
-                if not self.fontAttributes[name][u'textcolor'] in self.colorTable:
+                if not self.fontAttributes[name]['textcolor'] in self.colorTable:
                     # ... add it to the color table
-                    self.colorTable.append(self.fontAttributes[name][u'textcolor'])
+                    self.colorTable.append(self.fontAttributes[name]['textcolor'])
                 # ... Add text foreground color
-                self.outputString.write('\\cf%d' % self.colorTable.index(self.fontAttributes[name][u'textcolor']))
+                self.outputString.write('\\cf%d' % self.colorTable.index(self.fontAttributes[name]['textcolor']))
             # If Text Background Color is not White ...
-            if self.fontAttributes[name][u'bgcolor'] != '#FFFFFF':
+            if self.fontAttributes[name]['bgcolor'] != '#FFFFFF':
                 # Check the color table.  If the color is not there ...
-                if not self.fontAttributes[name][u'bgcolor'] in self.colorTable:
+                if not self.fontAttributes[name]['bgcolor'] in self.colorTable:
                     # ... add it to the color table
-                    self.colorTable.append(self.fontAttributes[name][u'bgcolor'])
+                    self.colorTable.append(self.fontAttributes[name]['bgcolor'])
                 # ... Add text background color to the RTF output string
                 # Replaced "cb" with "highlight" for WORD compatibility.  "cb" works in OS X TextEdit.
                 # self.outputString.write('\\cb%d' % self.colorTable.index(self.fontAttributes[name][u'bgcolor']))
-                self.outputString.write('\\highlight%d' % self.colorTable.index(self.fontAttributes[name][u'bgcolor']))
+                self.outputString.write('\\highlight%d' % self.colorTable.index(self.fontAttributes[name]['bgcolor']))
 
             # Done with formatting string.  Add a space to terminate the formatting block, but don't close the text block yet.
             self.outputString.write(' ')
@@ -682,7 +683,7 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                 elif data != '"':
                     # ... then add the encoded character to the RTF output string.  Since we're in the first 127 characters
                     # here, the encoding probably does nothing.
-                    self.outputString.write(data.encode(self.encoding))
+                    self.outputString.write(data)#.encode(self.encoding))
 
                 # Transana requires special processing of Time Codes, with their "hidden" data
                 if IN_TRANSANA:
@@ -712,7 +713,7 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                 # I'm not sure why, but this causes problems in the RTF.  Therefore skip this combo in Transana
                 if not (IN_TRANSANA and (data == ' "')):
                     # Encode the data and add it to the RTF output string
-                    self.outputString.write(data.encode(self.encoding))
+                    self.outputString.write(data)#.encode(self.encoding))
 
             # If we've just added a URL hyperlink ...
             if self.url != '':
@@ -727,9 +728,9 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
             # we don't have a newline character.
             if (len(data.strip()) > 0) and ((len(data) != 1) or (ord(data) != 10)):
                 # Convert the symbol data to the appropriate unicode character
-                data = unichr(int(data))
+                data = chr(int(data))
                 # Add that unicode character to the RTF output string
-                self.outputString.write(data.encode(self.encoding))
+                self.outputString.write(data)#.encode(self.encoding))
 
 
         # If the characters come from a data element ...
@@ -743,27 +744,27 @@ class XMLToRTFHandler(xml.sax.handler.ContentHandler):
                 # If we're dealing with an image, we could convert the image to PNG, then do a Hex conversion.
                 # RTF can also JPEG images directly, as well as Enhanced Metafiles, Windows Metafiles, QuickDraw
                 # pictures, none of which I think wxPython can handle.
-                print "I don't know how to handle the data!!"
+                print("I don't know how to handle the data!!")
 
         # We can ignore whitespace here, which will be made up of the spaces added by XML and newline characters
         # that are part of the XML file but not part of the data.
         elif data.strip() != '':
             # Otherwise, print a message to the developer
-            print "PyRTFParser.characters():  Unhandled text."
-            print '"%s"' % data
+            print("PyRTFParser.characters():  Unhandled text.")
+            print('"%s"' % data)
 
     def endElement(self, name):
         """ xml.sax required method for handling the ending of an XML element (the close tag) """
         # If we have a text, data, or symbol end tag ...
-        if name in [u'text', u'data', u'symbol']:
+        if name in ['text', 'data', 'symbol']:
             # ... we need to close the RTF block
             self.outputString.write('}')
         # If we have a paragraph end tag ...
-        elif name in [u'paragraph']:
+        elif name in ['paragraph']:
             # ... we need to add the end paragraph RTF information
             self.outputString.write('\par\n')
         # If we have a text, data, paragraph, paragraphlayout, or richtext end tag ...
-        if name in [u'text', u'data', u'paragraph', u'paragraphlayout', u'richtext']:
+        if name in ['text', 'data', 'paragraph', 'paragraphlayout', 'richtext']:
             # ... we need to clear the element type, as we're no longer processing that type of element!
             self.element = None
 
@@ -1055,7 +1056,7 @@ class RTFTowxRichTextCtrlParser:
                         # If our character value is 161 or larger ...
                         if val >= 161:
                             # ... we can add the appropriate unicode character to the font name
-                            txt += unichr(val)
+                            txt += chr(val)
                         # If our value is less than 161 ...
                         elif val > 138:
                             # ... then unichr() and chr() disagree, and we need the chr() character instead.
@@ -1064,7 +1065,7 @@ class RTFTowxRichTextCtrlParser:
                         # If our character value is 161 or larger ...
                         if val >= 161:
                             # ... we can insert the appropriate unicode character
-                            self.process_text(unichr(val))
+                            self.process_text(chr(val))
                         # If our value is less than 161 ...
                         elif val > 138:
                             # ... then unichr() and chr() disagree, and we need the chr() character instead.
@@ -1137,7 +1138,7 @@ class RTFTowxRichTextCtrlParser:
                                     # ... if we have a PNG (implemented, tested) or a JPEG (not implemented not tested, theoretically possible) ...
                                     if self.image_type in [wx.BITMAP_TYPE_PNG, wx.BITMAP_TYPE_JPEG]:
                                         # Create a StringIO stream from the HEX-converted image data
-                                        stream = cStringIO.StringIO(self.hex2int(txt))
+                                        stream = io.StringIO(self.hex2int(txt))
                                         # Now convert that stream to an image
                                         img = wx.ImageFromStream(stream, self.image_type)
                                         # If we were successful in creating a valid image ...
@@ -1356,7 +1357,7 @@ class RTFTowxRichTextCtrlParser:
         # The \ character signals an RTF Control Word.  Confirm that.
         if self.buffer[self.index] != "\\":
             # Raise an exception if we don't have a backslash!
-            raise RTFParseError, "Expected \\ (programming error?)"
+            raise RTFParseError("Expected \\ (programming error?)")
 
         # Start exception handling
         try:
@@ -1406,7 +1407,7 @@ class RTFTowxRichTextCtrlParser:
                 num = None
 
             if DEBUG:
-                print "Processing control word '%s' with numeric parameter %s" % (cw, num)
+                print("Processing control word '%s' with numeric parameter %s" % (cw, num))
 
             # Now index points to the first non-digit character after the control word.
             # If the next character is a space ...
@@ -1495,7 +1496,7 @@ class RTFTowxRichTextCtrlParser:
                 # Right now, all we do is print a message for programmers who want it if we're dealing with
                 # something other than the English Code Page
                 if (num != 1252) and DEBUG:
-                    print "ansicpg is NOT 1252, US English."
+                    print("ansicpg is NOT 1252, US English.")
 
             # Bold
             elif cw == "b":
@@ -1556,7 +1557,7 @@ class RTFTowxRichTextCtrlParser:
             # Font number specification
             elif cw == "f":
                 # If the font number is NOT already in the Font Table dictionary ...
-                if not self.fontTable.has_key(num):
+                if num not in self.fontTable:
                     # ... we need to add it.  (This should only occur when the Font Table is being read.)
                     # But we don't have all the data we need yet, such as the font name.  So let's just remember
                     # the font number that we just found out for now.
@@ -1759,7 +1760,7 @@ class RTFTowxRichTextCtrlParser:
             elif cw == "rtf":
                 # Report if desired
                 if DEBUG:
-                    print "Document uses RTF version %d" % num
+                    print("Document uses RTF version %d" % num)
                 # There's nothing to do.
                 pass
 
@@ -1819,7 +1820,7 @@ class RTFTowxRichTextCtrlParser:
             elif cw == 'u':
 
                 if DEBUG and (num not in [164, 8232]):
-                    print "Processing Unicode Character Code %d" % num
+                    print("Processing Unicode Character Code %d" % num)
 
                 # Start exception handling
                 try:
@@ -1829,7 +1830,7 @@ class RTFTowxRichTextCtrlParser:
                     # Otherwise ...
                     else:
                         # ... convert the number to a unicode character ...
-                        tempChar = unichr(num)
+                        tempChar = chr(num)
                         # ... and process the character as text
                         self.process_text(tempChar)
 
@@ -1848,7 +1849,7 @@ class RTFTowxRichTextCtrlParser:
                 except ValueError:
                     # Report to the programmer if desired
                     if DEBUG:
-                        print "ValueError in RTF Processing for Unicode.  Control Word 'u', num =", num
+                        print("ValueError in RTF Processing for Unicode.  Control Word 'u', num =", num)
                     # ... and just move on.
                     pass
 
@@ -2023,7 +2024,7 @@ class RTFTowxRichTextCtrlParser:
                 ('bliptag' in cw.lower()) or \
                 ('charrsid' in cw.lower())   :
                 if DEBUG:
-                    print "Ignoring Control Word '%s'" % cw
+                    print("Ignoring Control Word '%s'" % cw)
                 else:
                     pass
 
@@ -2032,15 +2033,15 @@ class RTFTowxRichTextCtrlParser:
                     numstr = ''
                     if num:
                         numstr = '(' + str(num) + ')'
-                    print "Ignoring unknown control word %s%s" % (cw, numstr)
+                    print("Ignoring unknown control word %s%s" % (cw, numstr))
 
         # Handle the IndexError exception
         except IndexError:
             if DEBUG:
                 # Display the Exception Message, allow "continue" flag to remain true
-                print "Caught IndexError exception (aborting control word)"
+                print("Caught IndexError exception (aborting control word)")
                 import sys, traceback
-                print "Exception %s: %s" % (sys.exc_info()[0], sys.exc_info()[1])
+                print("Exception %s: %s" % (sys.exc_info()[0], sys.exc_info()[1]))
                 traceback.print_exc(file=sys.stdout)
             return
 

@@ -55,7 +55,7 @@ from math import log, pi
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
 #                        DemarchesCourt, estCompetenceRevue
 import constantes
-from constantes import getSingulier, getPluriel, getSingulierPluriel
+from widgets import getSingulier, getPluriel, getSingulierPluriel
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS
@@ -262,7 +262,7 @@ def DefinirZones(prg, ctx):
     tailleZComp[0] -= dx
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     
-    for s in xComp.keys():
+    for s in list(xComp.keys()):
         xComp[s] += posZComp[0] # positions -> absolues
     
     
@@ -590,8 +590,8 @@ def Draw(ctx, prg, mouchard = False):
     #
     # Etablissement
     #
-    if classe.etablissement != u"":
-        t = classe.etablissement + u" (" + classe.ville + u")"
+    if classe.etablissement != "":
+        t = classe.etablissement + " (" + classe.ville + ")"
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posPro[1]-posPos[1]-taillePos[1]), 
@@ -633,7 +633,7 @@ def Draw(ctx, prg, mouchard = False):
     #  Equipe
     #
     rectEqu = posEqu + tailleEqu
-    prg.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, 
+    prg.pt_caract.append(curve_rect_titre(ctx, "Equipe pédagogique",  rectEqu, 
                                           BcoulEqu, IcoulEqu, fontEqu))
     
     lstTexte = []
@@ -644,7 +644,7 @@ def Draw(ctx, prg, mouchard = False):
         if p.referent:
             g = i
         c.append(constantes.COUL_DISCIPLINES[p.discipline])
-    lstCodes = [u" \u25CF"] * len(lstTexte)
+    lstCodes = [" \u25CF"] * len(lstTexte)
 
     if len(lstTexte) > 0:
         r = liste_code_texte(ctx, lstCodes, lstTexte, 
@@ -667,10 +667,10 @@ def Draw(ctx, prg, mouchard = False):
     #
 #    prg.pt_caract.append(posPro)
     rectPro = posPro + taillePro
-    prg.pt_caract.append(curve_rect_titre(ctx, u"Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro))
+    prg.pt_caract.append(curve_rect_titre(ctx, "Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, constantes.ellipsizer(u"", constantes.LONG_MAX_PROBLEMATIQUE), 
+    show_text_rect(ctx, constantes.ellipsizer("", constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     DrawCalendrier(ctx, rectPro, prg.calendrier)
@@ -688,11 +688,11 @@ def Draw(ctx, prg, mouchard = False):
 #    prg.pt_caract = []
 #    prg.pts_caract = []
     rectNom = posNom+tailleNom
-    prg.pt_caract.append(curve_rect_titre(ctx, u"Progression pédagogique",  
+    prg.pt_caract.append(curve_rect_titre(ctx, "Progression pédagogique",  
                                           rectNom, BcoulNom, IcoulNom, fontNom))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, u"Années scolaires " + prg.GetAnnees(), 
+    show_text_rect(ctx, "Années scolaires " + prg.GetAnnees(), 
                    rectNom, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.017 * COEF),
                    wrap = False, couper = False)
@@ -1290,7 +1290,7 @@ def DrawSequencesEtProjets(ctx, prg):
 #     print "y_per", y_per        
 #     print        
     
-    curve_rect_titre(ctx, u"Séquences et Projets",  
+    curve_rect_titre(ctx, "Séquences et Projets",  
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
@@ -1320,7 +1320,7 @@ def DrawSequencesEtProjets(ctx, prg):
         yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
     
     # Ajustement des yTaches
-    yt = zip(yTaches, range(len(yTaches)))
+    yt = list(zip(yTaches, list(range(len(yTaches)))))
 
     yt.sort(key=lambda x:x[0])
 
@@ -1340,7 +1340,7 @@ def DrawSequencesEtProjets(ctx, prg):
     yt.sort(key=lambda x:x[1])
 
     try:
-        yTaches, i = zip(*yt)
+        yTaches, i = list(zip(*yt))
     except:
         pass
     
@@ -1387,7 +1387,7 @@ def DrawSequencesEtProjets2(ctx, prg):
     #  Séquences et Projets
     #
     
-    curve_rect_titre(ctx, u"Séquences et Projets",  
+    curve_rect_titre(ctx, "Séquences et Projets",  
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
@@ -1419,7 +1419,7 @@ def DrawSequencesEtProjets2(ctx, prg):
         yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
     
     # Ajustement des yTaches
-    yt = zip(yTaches, range(len(yTaches)))
+    yt = list(zip(yTaches, list(range(len(yTaches)))))
 
     yt.sort(key=lambda x:x[0])
 
@@ -1439,7 +1439,7 @@ def DrawSequencesEtProjets2(ctx, prg):
     yt.sort(key=lambda x:x[1])
 
     try:
-        yTaches, i = zip(*yt)
+        yTaches, i = list(zip(*yt))
     except:
         pass
     
@@ -1605,15 +1605,15 @@ def regrouperDic(obj, dicIndicateurs):
         dic = {}
         typ = {}
         tousIndicateurs = obj.GetProjetRef()._dicCompetences
-        for k0, v0 in tousIndicateurs.items():
-            for k1, v1 in v0[1].items():
+        for k0, v0 in list(tousIndicateurs.items()):
+            for k1, v1 in list(v0[1].items()):
                 dic[k1] = []
                 typ[k1] = []
-                lk2 = v1[1].keys()
+                lk2 = list(v1[1].keys())
                 lk2.sort()
 #                print "  ", lk2
                 for k2 in lk2:
-                    if k2 in dicIndicateurs.keys():
+                    if k2 in list(dicIndicateurs.keys()):
                         dic[k1].extend(dicIndicateurs[k2])
 #                        print "   **", v1[1][k2]
                         typ[k1].extend([p.poids for p in v1[1][k2][1]])
@@ -1631,7 +1631,7 @@ def regrouperDic(obj, dicIndicateurs):
         return dic, typ
     else:
         typ = {}
-        for k in dicIndicateurs.keys():
+        for k in list(dicIndicateurs.keys()):
             typ[k] = [p.poids for p in obj.GetProjetRef().getIndicateur(k)]
 #        print "  >>>", dicIndicateurs, typ
         return dicIndicateurs, typ
@@ -1803,7 +1803,7 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
 
 def gabarit():
     
-    print "Génération du gabarit ...", 
+    print("Génération du gabarit ...", end=' ') 
     import draw_cairo_prg
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
@@ -1821,12 +1821,12 @@ def gabarit():
         if attr[:6] == 'taille':
             taille[attr[6:]] = attr
     
-    print pos, taille
+    print(pos, taille)
     
     ctx.set_line_width(5.0/e)
     
-    for k, p in pos.items():
-        if k in taille.keys():
+    for k, p in list(pos.items()):
+        if k in list(taille.keys()):
             x, y = getattr(draw_cairo_prg, p)
             w, h = getattr(draw_cairo_prg, taille[k])
             
@@ -1839,7 +1839,7 @@ def gabarit():
                                wrap = False, couper = False,
                                va = 'h', ha = 'g' )
             except:
-                print "   ", k, " : ", x, y, w, h
+                print("   ", k, " : ", x, y, w, h)
     
     
     imagesurface.write_to_png('gabarit_prg.png')

@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="ISN" S_Famille="ISN" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="ISN" S_Famille="ISN" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Seances(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=57572" />
     <l_01 S_00="Epreuves" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=57489" />
@@ -12,36 +12,122 @@
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_ED>
-    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_P>
     <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_activites>
   <d_compImposees B_C="False" B_S="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
-    <l_P S_00="I" S_01="R" S_02="P" />
     <l_AP S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
   </d_demarcheSeance>
   <d_demarches>
     <l_I S_00="Investigation" S_01="Investigation" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
-    <l_P S_00="Projet" S_01="Projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_P>
     <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_R>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ISN" S_codeDiscipline="ISN" S_nomDiscipline="Informatique et Sciences du Numérique " S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="ISN" S_codeDiscipline="ISN" S_nomDiscipline="Informatique et Sciences du Numérique " S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences>
+        <Competence_C1 S_intitule="Décrire et expliquer une situation, un système ou un programme">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C1.1 S_intitule="Justifier dans une situation donnée, un codage numérique ou l'usage d'un format approprié, qu'un programme réalise l'action attendue…">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.1>
+            <Competence_C1.2 S_intitule="Détailler le déroulement d'une communication numérique, le rôle des constituants d'un système numérique, le rôle des éléments constitutifs d'une page web, ce qu'effectue tout ou partie d'un programme ou de l'algorithme associé, l'enchaînement des événements qui réalisent la fonction attendue par un programme...">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C1>
+        <Competence_C2 S_intitule="Concevoir et réaliser une solution informatique en réponse à un problème">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C2.1 S_intitule="Analyser un besoin dans un système d'information, le fonctionnement d'un algorithme…">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.1>
+            <Competence_C2.2 S_intitule="Structurer une formule logique, des données, une arborescence, une page web, une approche fonctionnelle en réponse à un besoin…">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.2>
+            <Competence_C2.3 S_intitule="Développer une interface logicielle ou une interface homme-machine, un algorithme, un programme, un document ou fichier numérique…">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C2>
         <Competence_C3 S_intitule="Collaborer efficacement au sein d'une équipe dans le cadre d'un projet">
           <l_domaines />
           <l_elemAssocies>
@@ -91,129 +177,6 @@
           </d_sousComp>
           <l_thematiques />
         </Competence_C3>
-        <Competence_C2 S_intitule="Concevoir et réaliser une solution informatique en réponse à un problème">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_C2.1 S_intitule="Analyser un besoin dans un système d'information, le fonctionnement d'un algorithme…">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C2.1>
-            <Competence_C2.3 S_intitule="Développer une interface logicielle ou une interface homme-machine, un algorithme, un programme, un document ou fichier numérique…">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C2.3>
-            <Competence_C2.2 S_intitule="Structurer une formule logique, des données, une arborescence, une page web, une approche fonctionnelle en réponse à un besoin…">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C2.2>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_C2>
-        <Competence_C1 S_intitule="Décrire et expliquer une situation, un système ou un programme">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_C1.2 S_intitule="Détailler le déroulement d'une communication numérique, le rôle des constituants d'un système numérique, le rôle des éléments constitutifs d'une page web, ce qu'effectue tout ou partie d'un programme ou de l'algorithme associé, l'enchaînement des événements qui réalisent la fonction attendue par un programme...">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C1.2>
-            <Competence_C1.1 S_intitule="Justifier dans une situation donnée, un codage numérique ou l'usage d'un format approprié, qu'un programme réalise l'action attendue…">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C1.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_C1>
-        <Competence_C5 S_intitule="Faire un usage responsable des sciences du numérique en ayant conscience des problèmes sociétaux induits">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_C5.2 S_intitule="Mesurer les limites et les conséquences de la persistance de l'information numérique, des lois régissant les échanges numériques, du caractère supranational des réseaux.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C5.2>
-            <Competence_C5.1 S_intitule="Avoir conscience de l'impact du numérique dans la société notamment de la persistance de l'information numérique, de la non-rivalité des biens immatériels, du caractère supranational des réseaux, de l'importance des licences et du droit.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C5.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_C5>
         <Competence_C4 S_intitule="Communiquer à l'écrit et à l'oral">
           <l_domaines />
           <l_elemAssocies>
@@ -224,30 +187,6 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_C4.3 S_intitule="Argumenter les choix relatifs à une solution (choix d'un format, d'un algorithme, d'une interface...).">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C4.3>
-            <Competence_C4.2 S_intitule="Présenter le cahier des charges relatif à un projet ou un mini-projet, la répartition des tâches au sein de l'équipe, les phases successives mises en œuvre, le déroulement de l'ensemble des opérations…">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_C4.2>
             <Competence_C4.1 S_intitule="Documenter un projet numérique pour en permettre la communication en cours de réalisation et à l'achèvement, tout en précisant le déroulement et la finalité du projet.">
               <l_domaines />
               <l_elemAssocies>
@@ -260,236 +199,1335 @@
               <d_sousComp />
               <l_thematiques />
             </Competence_C4.1>
+            <Competence_C4.2 S_intitule="Présenter le cahier des charges relatif à un projet ou un mini-projet, la répartition des tâches au sein de l'équipe, les phases successives mises en œuvre, le déroulement de l'ensemble des opérations…">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.2>
+            <Competence_C4.3 S_intitule="Argumenter les choix relatifs à une solution (choix d'un format, d'un algorithme, d'une interface...).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.3>
           </d_sousComp>
           <l_thematiques />
         </Competence_C4>
+        <Competence_C5 S_intitule="Faire un usage responsable des sciences du numérique en ayant conscience des problèmes sociétaux induits">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C5.1 S_intitule="Avoir conscience de l'impact du numérique dans la société notamment de la persistance de l'information numérique, de la non-rivalité des biens immatériels, du caractère supranational des réseaux, de l'importance des licences et du droit.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.1>
+            <Competence_C5.2 S_intitule="Mesurer les limites et les conséquences de la persistance de l'information numérique, des lois régissant les échanges numériques, du caractère supranational des réseaux.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C5>
       </d_dicCompetences>
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
     <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="ISN" S_codeDiscipline="ISN" S_nomDiscipline="Informatique et Sciences du Numérique " S_nomGenerique="Savoir(s) et Capacité(s)">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <l_1 S_00="Représentation de l'information">
-          <d_01>
-            <l_1.4 S_00="Formats">
-              <d_01>
-                <l_1.4.1 S_00="Identifier quelques formats de documents, d'images, de données sonores.">
-                  <l_01 S_00="Les données numériques sont agencées de manière à en faciliter le stockage et le traitement.--L'organisation des données numériques respecte des formats qui sont soit des standards de fait, soit des normes." />
-                </l_1.4.1>
-                <l_1.4.2 S_00="Choisir un format approprié par rapport à un usage ou un besoin, à une qualité, à des limites.">
-                  <l_01 S_00="Les données numériques sont agencées de manière à en faciliter le stockage et le traitement.--L'organisation des données numériques respecte des formats qui sont soit des standards de fait, soit des normes." />
-                </l_1.4.2>
-              </d_01>
-            </l_1.4>
-            <l_1.5 S_00="Compression">
-              <d_01>
-                <l_1.5.1 S_00="♦ Utiliser un logiciel de compression.">
-                  <l_01 S_00="♦ Notion de compression de données.--♦ Compression avec et sans perte d'information." />
-                </l_1.5.1>
-              </d_01>
-            </l_1.5>
-            <l_1.6 S_00="Structuration et organisation de l'information">
-              <d_01>
-                <l_1.6.1 S_00="Classer des informations, notamment sous forme d'une arborescence.">
-                  <l_01 S_00="On manipule de grandes quantités d'informations. Il est nécessaire de les organiser." />
-                </l_1.6.1>
-              </d_01>
-            </l_1.6>
-            <l_1.7 S_00="Persistance de l'information">
-              <d_01>
-                <l_1.7.2 S_00="Comprendre les principes généraux permettant de se comporter de façon responsable par rapport au droit des personnes dans les espaces numériques.">
-                  <l_01 S_00="Les données, notamment personnelles, sont susceptibles d'être mémorisées pour de longues périodes sans maîtrise par les personnes concernées." />
-                </l_1.7.2>
-                <l_1.7.1 S_00="Prendre conscience de la persistance de l'information sur les espaces numériques interconnectés.">
-                  <l_01 S_00="Les données, notamment personnelles, sont susceptibles d'être mémorisées pour de longues périodes sans maîtrise par les personnes concernées." />
-                </l_1.7.1>
-              </d_01>
-            </l_1.7>
-            <l_1.1 S_00="Représentation binaire">
-              <d_01>
-                <l_1.1.1 S_00="Manipuler à l'aide d'opérations élémentaires les trois unités de base : bit, octet, mot.">
-                  <l_01 S_00="Un ordinateur est une machine qui manipule des valeurs numériques représentées sous forme binaire" />
-                </l_1.1.1>
-              </d_01>
-            </l_1.1>
-            <l_1.2 S_00="Opérations booléennes">
-              <d_01>
-                <l_1.2.1 S_00="Exprimer des opérations logiques simples par combinaison d'opérateurs de base.">
-                  <l_01 S_00="Présentation des opérations booléennes de base (et, ou, non, ou-exclusif)" />
-                </l_1.2.1>
-              </d_01>
-            </l_1.2>
-            <l_1.3 S_00="Numérisation">
-              <d_01>
-                <l_1.3.3 S_00="♦ Modifier format, taille, contraste ou luminance d'images numériques.">
-                  <d_01 />
-                </l_1.3.3>
-                <l_1.3.2 S_00="Numériser une image ou un son sous forme d'un tableau de valeurs numériques.">
-                  <l_01 S_00="L'ordinateur manipule uniquement des valeurs numériques. Une étape de numérisation des objets du monde physique est donc indispensable." />
-                </l_1.3.2>
-                <l_1.3.1 S_00="Coder un nombre, un caractère au travers d'un code standard, un texte sous forme d'une liste de valeurs numériques.">
-                  <l_01 S_00="L'ordinateur manipule uniquement des valeurs numériques. Une étape de numérisation des objets du monde physique est donc indispensable." />
-                </l_1.3.1>
-                <l_1.3.5 S_00="♦ Créer une image à l'aide d'un logiciel de modélisation.">
-                  <d_01 />
-                </l_1.3.5>
-                <l_1.3.4 S_00="♦ Filtrer et détecter des informations spécifiques.">
-                  <d_01 />
-                </l_1.3.4>
-              </d_01>
-            </l_1.3>
-            <l_1.8 S_00="Non-rivalité de l'information">
-              <d_01>
-                <l_1.8.1 S_00="Prendre conscience de la non-rivalité des biens immatériels.">
-                  <l_01 S_00="Existence de lois régissant la détention et la circulation de données numériques." />
-                </l_1.8.1>
-                <l_1.8.2 S_00="Distinguer différents types de licences (libres, propriétaires).">
-                  <l_01 S_00="Existence de lois régissant la détention et la circulation de données numériques." />
-                </l_1.8.2>
-              </d_01>
-            </l_1.8>
-          </d_01>
-        </l_1>
-        <l_3 S_00="Langages et programmation">
-          <d_01>
-            <l_3.4 S_00="Langages de description">
-              <d_01>
-                <l_3.4.1 S_00="Créer et analyser une page web en langage HTML.">
-                  <l_01 S_00="Présentation du langage HTML et du principe de séparation du contenu et de la mise en forme." />
-                </l_3.4.1>
-              </d_01>
-            </l_3.4>
-            <l_3.2 S_00="Fonctions">
-              <d_01>
-                <l_3.2.1 S_00="Concevoir l'entête (ou l'interface) d'une fonction, puis la fonction elle-même.">
-                  <l_01 S_00="notion de fonction ;" S_01="portée des variables et passage d'arguments ;" S_02="définition récursive de fonctions." />
-                </l_3.2.1>
-              </d_01>
-            </l_3.2>
-            <l_3.3 S_00="Correction d'un programme">
-              <d_01>
-                <l_3.3.1 S_00="Mettre un programme au point en le testant, en l'instrumentant.">
-                  <l_01 S_00="test ;" S_01="instrumentation ;" S_02="situations d'erreur ou bugs." />
-                </l_3.3.1>
-                <l_3.3.2 S_00="♦ Utiliser un outil de mise au point.">
-                  <d_01 />
-                </l_3.3.2>
-              </d_01>
-            </l_3.3>
-            <l_3.1 S_00="Types de données">
-              <d_01>
-                <l_3.1.1 S_00="Choisir un type de donnée en fonction d'un problème à résoudre.">
-                  <l_01 S_00="nombre entier ;" S_01="virgule flottante ;" S_02="booléen ;" S_03="caractère ;" S_04="tableau ;" S_05="chaîne de caractères." />
-                </l_3.1.1>
-              </d_01>
-            </l_3.1>
-          </d_01>
-        </l_3>
-        <l_2 S_00="Algorithmique">
-          <d_01>
-            <l_2.2 S_00="Algorithmes plus avancés">
-              <d_01>
-                <l_2.2.1 S_00="Comprendre et expliquer (oralement ou par écrit) ce que fait un algorithme.">
-                  <l_01 S_00="♦ tri par fusion ;--♦ recherche d'un chemin dans un graphe par un parcours en profondeur (DFS) ;--♦ recherche d'un plus court chemin par un parcours en largeur (BFS)." />
-                </l_2.2.1>
-                <l_2.2.2 S_00="♦ S'interroger sur l'efficacité d'un algorithme.">
-                  <d_01 />
-                </l_2.2.2>
-              </d_01>
-            </l_2.2>
-            <l_2.1 S_00="Algorithmes simples">
-              <d_01>
-                <l_2.1.2 S_00="Modifier un algorithme existant pour obtenir un résultat différent.">
-                  <l_01 S_00=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire." />
-                </l_2.1.2>
-                <l_2.1.3 S_00="Concevoir un algorithme.">
-                  <l_01 S_00=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire." />
-                </l_2.1.3>
-                <l_2.1.1 S_00="Comprendre un algorithme et expliquer ce qu'il fait.">
-                  <l_01 S_00=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire." />
-                </l_2.1.1>
-                <l_2.1.4 S_00="Programmer un algorithme.">
-                  <l_01 S_00=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire." />
-                </l_2.1.4>
-                <l_2.1.5 S_00="♦ S'interroger sur l'efficacité d'un algorithme.">
-                  <d_01 />
-                </l_2.1.5>
-              </d_01>
-            </l_2.1>
-          </d_01>
-        </l_2>
-        <l_4 S_00="Architectures matérielles">
-          <d_01>
-            <l_4.1 S_00="Architecture des ordinateurs">
-              <d_01>
-                <l_4.1.1 S_00="Éléments d'architecture">
-                  <d_01>
-                    <l_4.1.1.1 S_00="Expliquer le rôle des constituants d'un ordinateur.">
-                      <l_01 S_00="Composants de base (unité centrale, mémoires, périphériques)." />
-                    </l_4.1.1.1>
-                  </d_01>
-                </l_4.1.1>
-                <l_4.1.2 S_00="Jeu d'instructions">
-                  <d_01>
-                    <l_4.1.2.1 S_00="♦ Savoir dérouler l'exécution d'une séquence d'instructions simples de type langage machine.">
-                      <l_01 S_00="Instructions simples (chargement, stockage, opérations arithmétiques et logiques, saut conditionnel)." />
-                    </l_4.1.2.1>
-                  </d_01>
-                </l_4.1.2>
-              </d_01>
-            </l_4.1>
-            <l_4.3 S_00="Initiation à la robotique">
-              <d_01>
-                <l_4.3.1 S_00="Découverte d'un système robotique et de sa programmation">
-                  <d_01>
-                    <l_4.3.1.2 S_00="♦ Programmer (dans un langage de haut niveau) un minirobot pour lui faire exécuter une tâche complexe.">
-                      <d_01 />
-                    </l_4.3.1.2>
-                    <l_4.3.1.1 S_00="♦ Identifier les différents composants d'un minirobot et comprendre leurs rôles respectifs.">
-                      <d_01 />
-                    </l_4.3.1.1>
-                  </d_01>
-                </l_4.3.1>
-              </d_01>
-            </l_4.3>
-            <l_4.2 S_00="Réseaux">
-              <d_01>
-                <l_4.2.3 S_00="Routage">
-                  <d_01>
-                    <l_4.2.3.1 S_00="♦ Analyser les entêtes de messages électroniques, pour décrire le chemin suivi par l'information.">
-                      <l_01 S_00="Mécanismes induits par la communication sur un réseau dont la structure est de type graphe." S_01="Notions de paquets, de chemins, de routage." />
-                    </l_4.2.3.1>
-                  </d_01>
-                </l_4.2.3>
-                <l_4.2.2 S_00="Adressage sur un réseau">
-                  <d_01>
-                    <l_4.2.2.1 S_00="Décrire une situation d'adressage sur un type de réseau particulier.">
-                      <l_01 S_00="Mécanismes d'adressage pour identifier des machines distantes." />
-                    </l_4.2.2.1>
-                    <l_4.2.2.2 S_00="♦ Analyser le trafic (trames) sur un réseau et mettre ainsi en évidence la notion de protocole.">
-                      <d_01 />
-                    </l_4.2.2.2>
-                  </d_01>
-                </l_4.2.2>
-                <l_4.2.1 S_00="Transmission point à point">
-                  <d_01>
-                    <l_4.2.1.1 S_00="♦ Établir une communication sérielle entre deux machines.">
-                      <l_01 S_00="Principes de base d'une transmission d'informations numériques entre un émetteur et un récepteur." />
-                    </l_4.2.1.1>
-                  </d_01>
-                </l_4.2.1>
-                <l_4.2.4 S_00="Supranationalité des réseaux">
-                  <d_01>
-                    <l_4.2.4.1 S_00="Prendre conscience du caractère supranational des réseaux et des conséquences sociales, économiques et politiques qui en découlent.">
-                      <l_01 />
-                    </l_4.2.4.1>
-                  </d_01>
-                </l_4.2.4>
-              </d_01>
-            </l_4.2>
-          </d_01>
-        </l_4>
+        <Savoir_1 S_intitule="Représentation de l'information">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_1.1 S_intitule="Représentation binaire">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.1.1 S_intitule="Manipuler à l'aide d'opérations élémentaires les trois unités de base : bit, octet, mot.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.1.1.1 S_intitule="Un ordinateur est une machine qui manipule des valeurs numériques représentées sous forme binaire">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.1.1.1>
+                  </d_sousSav>
+                </Savoir_1.1.1>
+              </d_sousSav>
+            </Savoir_1.1>
+            <Savoir_1.2 S_intitule="Opérations booléennes">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.2.1 S_intitule="Exprimer des opérations logiques simples par combinaison d'opérateurs de base.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.2.1.1 S_intitule="Présentation des opérations booléennes de base (et, ou, non, ou-exclusif)">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.2.1.1>
+                  </d_sousSav>
+                </Savoir_1.2.1>
+              </d_sousSav>
+            </Savoir_1.2>
+            <Savoir_1.3 S_intitule="Numérisation">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.3.1 S_intitule="Coder un nombre, un caractère au travers d'un code standard, un texte sous forme d'une liste de valeurs numériques.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.3.1.1 S_intitule="L'ordinateur manipule uniquement des valeurs numériques. Une étape de numérisation des objets du monde physique est donc indispensable.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.3.1.1>
+                  </d_sousSav>
+                </Savoir_1.3.1>
+                <Savoir_1.3.2 S_intitule="Numériser une image ou un son sous forme d'un tableau de valeurs numériques.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.3.2.1 S_intitule="L'ordinateur manipule uniquement des valeurs numériques. Une étape de numérisation des objets du monde physique est donc indispensable.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.3.2.1>
+                  </d_sousSav>
+                </Savoir_1.3.2>
+                <Savoir_1.3.3 S_intitule="♦ Modifier format, taille, contraste ou luminance d'images numériques.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.3.3>
+                <Savoir_1.3.4 S_intitule="♦ Filtrer et détecter des informations spécifiques.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.3.4>
+                <Savoir_1.3.5 S_intitule="♦ Créer une image à l'aide d'un logiciel de modélisation.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.3.5>
+              </d_sousSav>
+            </Savoir_1.3>
+            <Savoir_1.4 S_intitule="Formats">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.4.1 S_intitule="Identifier quelques formats de documents, d'images, de données sonores.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.4.1.1 S_intitule="Les données numériques sont agencées de manière à en faciliter le stockage et le traitement.--L'organisation des données numériques respecte des formats qui sont soit des standards de fait, soit des normes.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.4.1.1>
+                  </d_sousSav>
+                </Savoir_1.4.1>
+                <Savoir_1.4.2 S_intitule="Choisir un format approprié par rapport à un usage ou un besoin, à une qualité, à des limites.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.4.2.1 S_intitule="Les données numériques sont agencées de manière à en faciliter le stockage et le traitement.--L'organisation des données numériques respecte des formats qui sont soit des standards de fait, soit des normes.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.4.2.1>
+                  </d_sousSav>
+                </Savoir_1.4.2>
+              </d_sousSav>
+            </Savoir_1.4>
+            <Savoir_1.5 S_intitule="Compression">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.5.1 S_intitule="♦ Utiliser un logiciel de compression.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.5.1.1 S_intitule="♦ Notion de compression de données.--♦ Compression avec et sans perte d'information.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.5.1.1>
+                  </d_sousSav>
+                </Savoir_1.5.1>
+              </d_sousSav>
+            </Savoir_1.5>
+            <Savoir_1.6 S_intitule="Structuration et organisation de l'information">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.6.1 S_intitule="Classer des informations, notamment sous forme d'une arborescence.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.6.1.1 S_intitule="On manipule de grandes quantités d'informations. Il est nécessaire de les organiser.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.6.1.1>
+                  </d_sousSav>
+                </Savoir_1.6.1>
+              </d_sousSav>
+            </Savoir_1.6>
+            <Savoir_1.7 S_intitule="Persistance de l'information">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.7.1 S_intitule="Prendre conscience de la persistance de l'information sur les espaces numériques interconnectés.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.7.1.1 S_intitule="Les données, notamment personnelles, sont susceptibles d'être mémorisées pour de longues périodes sans maîtrise par les personnes concernées.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.7.1.1>
+                  </d_sousSav>
+                </Savoir_1.7.1>
+                <Savoir_1.7.2 S_intitule="Comprendre les principes généraux permettant de se comporter de façon responsable par rapport au droit des personnes dans les espaces numériques.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.7.2.1 S_intitule="Les données, notamment personnelles, sont susceptibles d'être mémorisées pour de longues périodes sans maîtrise par les personnes concernées.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.7.2.1>
+                  </d_sousSav>
+                </Savoir_1.7.2>
+              </d_sousSav>
+            </Savoir_1.7>
+            <Savoir_1.8 S_intitule="Non-rivalité de l'information">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.8.1 S_intitule="Prendre conscience de la non-rivalité des biens immatériels.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.8.1.1 S_intitule="Existence de lois régissant la détention et la circulation de données numériques.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.8.1.1>
+                  </d_sousSav>
+                </Savoir_1.8.1>
+                <Savoir_1.8.2 S_intitule="Distinguer différents types de licences (libres, propriétaires).">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_1.8.2.1 S_intitule="Existence de lois régissant la détention et la circulation de données numériques.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_1.8.2.1>
+                  </d_sousSav>
+                </Savoir_1.8.2>
+              </d_sousSav>
+            </Savoir_1.8>
+          </d_sousSav>
+        </Savoir_1>
+        <Savoir_2 S_intitule="Algorithmique">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_2.1 S_intitule="Algorithmes simples">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_2.1.1 S_intitule="Comprendre un algorithme et expliquer ce qu'il fait.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_2.1.1.1 S_intitule=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_2.1.1.1>
+                  </d_sousSav>
+                </Savoir_2.1.1>
+                <Savoir_2.1.2 S_intitule="Modifier un algorithme existant pour obtenir un résultat différent.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_2.1.2.1 S_intitule=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_2.1.2.1>
+                  </d_sousSav>
+                </Savoir_2.1.2>
+                <Savoir_2.1.3 S_intitule="Concevoir un algorithme.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_2.1.3.1 S_intitule=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_2.1.3.1>
+                  </d_sousSav>
+                </Savoir_2.1.3>
+                <Savoir_2.1.4 S_intitule="Programmer un algorithme.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_2.1.4.1 S_intitule=" - rechercher un élément dans un tableau trié par une méthode dichotomique ;-- - trier un tableau par sélection ;-- - ajouter deux entiers exprimés en binaire.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_2.1.4.1>
+                  </d_sousSav>
+                </Savoir_2.1.4>
+                <Savoir_2.1.5 S_intitule="♦ S'interroger sur l'efficacité d'un algorithme.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.1.5>
+              </d_sousSav>
+            </Savoir_2.1>
+            <Savoir_2.2 S_intitule="Algorithmes plus avancés">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_2.2.1 S_intitule="Comprendre et expliquer (oralement ou par écrit) ce que fait un algorithme.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_2.2.1.1 S_intitule="♦ tri par fusion ;--♦ recherche d'un chemin dans un graphe par un parcours en profondeur (DFS) ;--♦ recherche d'un plus court chemin par un parcours en largeur (BFS).">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_2.2.1.1>
+                  </d_sousSav>
+                </Savoir_2.2.1>
+                <Savoir_2.2.2 S_intitule="♦ S'interroger sur l'efficacité d'un algorithme.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.2.2>
+              </d_sousSav>
+            </Savoir_2.2>
+          </d_sousSav>
+        </Savoir_2>
+        <Savoir_3 S_intitule="Langages et programmation">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_3.1 S_intitule="Types de données">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_3.1.1 S_intitule="Choisir un type de donnée en fonction d'un problème à résoudre.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_3.1.1.1 S_intitule="nombre entier ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.1.1.1>
+                    <Savoir_3.1.1.2 S_intitule="virgule flottante ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.1.1.2>
+                    <Savoir_3.1.1.3 S_intitule="booléen ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.1.1.3>
+                    <Savoir_3.1.1.4 S_intitule="caractère ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.1.1.4>
+                    <Savoir_3.1.1.5 S_intitule="tableau ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.1.1.5>
+                    <Savoir_3.1.1.6 S_intitule="chaîne de caractères.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.1.1.6>
+                  </d_sousSav>
+                </Savoir_3.1.1>
+              </d_sousSav>
+            </Savoir_3.1>
+            <Savoir_3.2 S_intitule="Fonctions">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_3.2.1 S_intitule="Concevoir l'entête (ou l'interface) d'une fonction, puis la fonction elle-même.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_3.2.1.1 S_intitule="notion de fonction ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.2.1.1>
+                    <Savoir_3.2.1.2 S_intitule="portée des variables et passage d'arguments ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.2.1.2>
+                    <Savoir_3.2.1.3 S_intitule="définition récursive de fonctions.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.2.1.3>
+                  </d_sousSav>
+                </Savoir_3.2.1>
+              </d_sousSav>
+            </Savoir_3.2>
+            <Savoir_3.3 S_intitule="Correction d'un programme">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_3.3.1 S_intitule="Mettre un programme au point en le testant, en l'instrumentant.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_3.3.1.1 S_intitule="test ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.3.1.1>
+                    <Savoir_3.3.1.2 S_intitule="instrumentation ;">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.3.1.2>
+                    <Savoir_3.3.1.3 S_intitule="situations d'erreur ou bugs.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.3.1.3>
+                  </d_sousSav>
+                </Savoir_3.3.1>
+                <Savoir_3.3.2 S_intitule="♦ Utiliser un outil de mise au point.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.3.2>
+              </d_sousSav>
+            </Savoir_3.3>
+            <Savoir_3.4 S_intitule="Langages de description">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_3.4.1 S_intitule="Créer et analyser une page web en langage HTML.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_3.4.1.1 S_intitule="Présentation du langage HTML et du principe de séparation du contenu et de la mise en forme.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_3.4.1.1>
+                  </d_sousSav>
+                </Savoir_3.4.1>
+              </d_sousSav>
+            </Savoir_3.4>
+          </d_sousSav>
+        </Savoir_3>
+        <Savoir_4 S_intitule="Architectures matérielles">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_4.1 S_intitule="Architecture des ordinateurs">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_4.1.1 S_intitule="Éléments d'architecture">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.1.1.1 S_intitule="Expliquer le rôle des constituants d'un ordinateur.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav>
+                        <Savoir_4.1.1.1.1 S_intitule="Composants de base (unité centrale, mémoires, périphériques).">
+                          <l_elemAssocies>
+                            <l_00 />
+                            <l_01 />
+                          </l_elemAssocies>
+                          <l_infos />
+                          <l_nivTaxo>
+                            <l_00 />
+                            <l_01 />
+                          </l_nivTaxo>
+                          <d_sousSav />
+                        </Savoir_4.1.1.1.1>
+                      </d_sousSav>
+                    </Savoir_4.1.1.1>
+                  </d_sousSav>
+                </Savoir_4.1.1>
+                <Savoir_4.1.2 S_intitule="Jeu d'instructions">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.1.2.1 S_intitule="♦ Savoir dérouler l'exécution d'une séquence d'instructions simples de type langage machine.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav>
+                        <Savoir_4.1.2.1.1 S_intitule="Instructions simples (chargement, stockage, opérations arithmétiques et logiques, saut conditionnel).">
+                          <l_elemAssocies>
+                            <l_00 />
+                            <l_01 />
+                          </l_elemAssocies>
+                          <l_infos />
+                          <l_nivTaxo>
+                            <l_00 />
+                            <l_01 />
+                          </l_nivTaxo>
+                          <d_sousSav />
+                        </Savoir_4.1.2.1.1>
+                      </d_sousSav>
+                    </Savoir_4.1.2.1>
+                  </d_sousSav>
+                </Savoir_4.1.2>
+              </d_sousSav>
+            </Savoir_4.1>
+            <Savoir_4.2 S_intitule="Réseaux">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_4.2.1 S_intitule="Transmission point à point">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.2.1.1 S_intitule="♦ Établir une communication sérielle entre deux machines.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav>
+                        <Savoir_4.2.1.1.1 S_intitule="Principes de base d'une transmission d'informations numériques entre un émetteur et un récepteur.">
+                          <l_elemAssocies>
+                            <l_00 />
+                            <l_01 />
+                          </l_elemAssocies>
+                          <l_infos />
+                          <l_nivTaxo>
+                            <l_00 />
+                            <l_01 />
+                          </l_nivTaxo>
+                          <d_sousSav />
+                        </Savoir_4.2.1.1.1>
+                      </d_sousSav>
+                    </Savoir_4.2.1.1>
+                  </d_sousSav>
+                </Savoir_4.2.1>
+                <Savoir_4.2.2 S_intitule="Adressage sur un réseau">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.2.2.1 S_intitule="Décrire une situation d'adressage sur un type de réseau particulier.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav>
+                        <Savoir_4.2.2.1.1 S_intitule="Mécanismes d'adressage pour identifier des machines distantes.">
+                          <l_elemAssocies>
+                            <l_00 />
+                            <l_01 />
+                          </l_elemAssocies>
+                          <l_infos />
+                          <l_nivTaxo>
+                            <l_00 />
+                            <l_01 />
+                          </l_nivTaxo>
+                          <d_sousSav />
+                        </Savoir_4.2.2.1.1>
+                      </d_sousSav>
+                    </Savoir_4.2.2.1>
+                    <Savoir_4.2.2.2 S_intitule="♦ Analyser le trafic (trames) sur un réseau et mettre ainsi en évidence la notion de protocole.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_4.2.2.2>
+                  </d_sousSav>
+                </Savoir_4.2.2>
+                <Savoir_4.2.3 S_intitule="Routage">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.2.3.1 S_intitule="♦ Analyser les entêtes de messages électroniques, pour décrire le chemin suivi par l'information.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav>
+                        <Savoir_4.2.3.1.1 S_intitule="Mécanismes induits par la communication sur un réseau dont la structure est de type graphe.">
+                          <l_elemAssocies>
+                            <l_00 />
+                            <l_01 />
+                          </l_elemAssocies>
+                          <l_infos />
+                          <l_nivTaxo>
+                            <l_00 />
+                            <l_01 />
+                          </l_nivTaxo>
+                          <d_sousSav />
+                        </Savoir_4.2.3.1.1>
+                        <Savoir_4.2.3.1.2 S_intitule="Notions de paquets, de chemins, de routage.">
+                          <l_elemAssocies>
+                            <l_00 />
+                            <l_01 />
+                          </l_elemAssocies>
+                          <l_infos />
+                          <l_nivTaxo>
+                            <l_00 />
+                            <l_01 />
+                          </l_nivTaxo>
+                          <d_sousSav />
+                        </Savoir_4.2.3.1.2>
+                      </d_sousSav>
+                    </Savoir_4.2.3.1>
+                  </d_sousSav>
+                </Savoir_4.2.3>
+                <Savoir_4.2.4 S_intitule="Supranationalité des réseaux">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.2.4.1 S_intitule="4.2.4.1">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_4.2.4.1>
+                  </d_sousSav>
+                </Savoir_4.2.4>
+              </d_sousSav>
+            </Savoir_4.2>
+            <Savoir_4.3 S_intitule="Initiation à la robotique">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_4.3.1 S_intitule="Découverte d'un système robotique et de sa programmation">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_4.3.1.1 S_intitule="♦ Identifier les différents composants d'un minirobot et comprendre leurs rôles respectifs.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_4.3.1.1>
+                    <Savoir_4.3.1.2 S_intitule="♦ Programmer (dans un langage de haut niveau) un minirobot pour lui faire exécuter une tâche complexe.">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_4.3.1.2>
+                  </d_sousSav>
+                </Savoir_4.3.1>
+              </d_sousSav>
+            </Savoir_4.3>
+          </d_sousSav>
+        </Savoir_4>
       </d_dicSavoirs>
+      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_S>
   </d_dicoSavoirs>
   <d_domaines />
@@ -497,38 +1535,52 @@
     <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_C>
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_E>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_D>
     <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_G>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_I>
+    </l_D>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
   </d_effectifs>
   <d_effectifsSeance>
-    <l_C S_00="C" />
-    <l_E S_00="C" />
-    <l_AP S_00="E" S_01="P" />
-    <l_SS S_00="C" />
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_AP S_00="E" S_01="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_S />
-    <l_R />
-    <l_SA S_00="C" S_01="G" />
+    <l_C S_00="C" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_SA S_00="C" S_01="G" />
+    <l_SS S_00="C" />
+    <l_E S_00="C" />
+    <l_R />
+    <l_S />
   </d_effectifsSeance>
+  <d_ensSpecif />
+  <d_ensSpecifSeance>
+    <l_ED />
+    <l_AP />
+    <l_P />
+    <l_C />
+    <l_TD />
+    <l_SA />
+    <l_SS />
+    <l_E />
+    <l_R />
+    <l_S />
+  </d_ensSpecifSeance>
   <d_horsClasse />
   <d_labels>
-    <l_ELEVES S_00="Elève(s)" S_01="Elèves" />
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+    <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
+    <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />
@@ -536,10 +1588,15 @@
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeDomaines />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeEnsSpecif />
+  <l_listeNivTaxo />
+  <l_listeSpecialites />
+  <l_listeSystemes />
   <l_listeThematiques />
-  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
   <l_listeTypeHorsClasse />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_nivTaxo />
   <d_options />
   <d_parties S_C="Évaluation d'un projet et soutenance orale" S_S="Dialogue argumenté" />
   <l_periodes>
@@ -549,32 +1606,22 @@
   <d_projets>
     <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet">
       <d_attributs>
-        <l_ S_00="" S_01="" S_02="" S_03="" />
-        <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_PAR S_00="" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="Découpage du projet" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
         <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
         <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="Origine" S_01="Partenariat, thématique, concours…" S_02="" S_03="" />
         <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="" />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
         <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Découpage du projet" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
         <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
-          <l_Pre>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="10" I_01="2" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
-            </l_00>
-          </l_Nom>
           <l_Tit>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="12" I_01="2" I_02="0" />
@@ -585,6 +1632,16 @@
               <l_01 I_00="14" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
           <l_Etab>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="7" I_01="2" I_02="0" />
@@ -602,16 +1659,16 @@
               <l_01 I_00="12" I_01="2" I_02="0" />
             </l_00>
           </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
-            </l_00>
-          </l_Nom>
           <l_Des>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="14" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
           <l_Pre>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="10" I_01="2" I_02="0" />
@@ -636,13 +1693,13 @@
       <l_periode I_00="4" I_01="5" />
       <d_phases>
         <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
         <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Rea" />
@@ -652,37 +1709,39 @@
     </Projet_PRJ>
   </d_projets>
   <d_seances>
-    <l_C S_00="Cours" S_01="Cours" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_C>
-    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_E>
-    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_P>
-    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_SS>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_ED>
     <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
-    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_S>
-    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+    </l_P>
+    <l_C S_00="Cours" S_01="Cours" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_R>
+    </l_C>
     <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_TD>
     <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_SA>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
   </d_seances>
+  <d_specialite />
+  <d_systemes />
   <d_thematiques />
   <l_tr_com />
 </Referentiel>
