@@ -49,7 +49,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="20" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO1.1 S_intitule="Justifier les choix des structures matérielles et/ou logicielles d’un produit, Identifier les flux mis en œuvre dans une approche de développement durable">
               <l_domaines />
@@ -57,18 +57,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 1">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="16.666667" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 2">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="16.666667" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -80,18 +69,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 3">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="16.666667" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 4">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="16.666667" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -103,18 +81,7 @@
                 <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 5">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="16.666667" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 6">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="16.666667" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -131,7 +98,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="20" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO2.1 S_intitule="Décoder le cahier des charges d’un produit, participer, si besoin, à sa modification">
               <l_domaines />
@@ -139,18 +106,7 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 7">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 8">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -162,18 +118,7 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 9">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 10">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -190,7 +135,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="30" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO3.1 S_intitule="Identifier et caractériser les fonctions et les constituants d’un produit ainsi que ses entrées/sorties">
               <l_domaines />
@@ -300,7 +245,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="45" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO5.1 S_intitule="S’impliquer dans un groupe de projet">
               <l_domaines />
@@ -308,13 +253,7 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 11">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -326,13 +265,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 12">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -344,18 +277,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 13">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 14">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -367,13 +289,7 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 15">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -385,13 +301,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 16">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -403,18 +313,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 17">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Indic 18">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -426,13 +325,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 19">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="5.882353" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -454,13 +347,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 20">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -472,13 +359,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 21">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -490,13 +371,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 22">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -508,13 +383,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 23">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -526,13 +395,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 24">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -544,13 +407,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 25">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -562,13 +419,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 26">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -580,13 +431,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 27">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="5.882353" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -606,7 +451,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="45" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO6.1 S_intitule="Expliquer des éléments d’une modélisation multiphysique proposée relative au comportement de tout ou partie d’un produit">
               <l_domaines />
@@ -672,13 +517,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 27">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -690,13 +529,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 28">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -708,13 +541,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 29">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -726,13 +553,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 30">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -744,13 +565,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 31">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -762,13 +577,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 32">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -780,13 +589,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 33">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="14.285714" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -806,7 +609,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="20" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO7.1 S_intitule="Réaliser et valider un prototype ou une maquette obtenus en réponse à tout ou partie du cahier des charges initial">
               <l_domaines />
@@ -814,13 +617,7 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 34">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -832,13 +629,7 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 35">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="10.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -860,13 +651,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 36">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -878,13 +663,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 37">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -896,13 +675,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 38">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -914,13 +687,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 39">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -932,13 +699,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 40">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -950,13 +711,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 41">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -968,13 +723,7 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs>
-                    <Indicateur_00 S_intitule="Indic 42">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="10.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_indicateurs>
+                  <l_indicateurs />
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -6427,7 +6176,7 @@
     </l_PCM>
   </d_specialite>
   <d_systemes>
-    <l_OE I_04="0" S_00="Objet d’étude" S_01="Objet d’étude" S_02="">
+    <l_OE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_OE>
     <l_SE I_04="1" S_00="Support experimental" S_01="Support experimental" S_02="">

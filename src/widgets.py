@@ -83,18 +83,18 @@ class Grammaire():
             if self.voyelle(self.nom_obj[0]):
                 a = "de l'"
             else:
-                a = "de la"
+                a = "de la "
         
         elif self.genre in ["q","m"]:
             if self.voyelle(self.nom_obj[0]):
                 a = "de l'"
             else:
-                a = "du"
+                a = "du "
         
         else:
             a = ""
         
-        return a + getSingulier(self.nom_obj)
+        return a + getSingulier(self.nom_obj.lower())
     
     
     def de_(self):
@@ -103,9 +103,9 @@ class Grammaire():
         if self.voyelle(self.nom_obj[0]):
             a = "d'"
         else:
-            a = "de"
+            a = "de "
         
-        return a + getSingulier(self.nom_obj)
+        return a + getSingulier(self.nom_obj.lower())
     
     
     def de_plur_(self):
@@ -114,48 +114,49 @@ class Grammaire():
         if self.voyelle(self.nom_obj[0]):
             a = "d'"
         else:
-            a = "de"
+            a = "de "
         
-        return a + getPluriel(self.nom_obj)
+        return a + getPluriel(self.nom_obj.lower())
     
     def des_(self):
         """ article partitif pluriel + nom
         """
-        return "des"+getPluriel(self.nom_obj)
+        return "des "+getPluriel(self.nom_obj.lower())
     
     
     def les_(self):
         """ article défini pluriel + nom
         """
-        return "les"+getPluriel(self.nom_obj)
+        return "les "+getPluriel(self.nom_obj.lower())
     
     
     def le_(self):
         """ article défini singulier + nom
         """
         if self.genre == "f":
-            a = "le"
+            a = "le "
         else:
-            a = "la"
-        return a + getSingulier(self.nom_obj)
+            a = "la "
+        return a + getSingulier(self.nom_obj.lower())
      
     
     def un_(self):
         """ article indéfini pluriel + nom
         """
         if self.genre == "f":
-            a = "une"
+            a = "une "
         elif self.genre == "m":
-            a = "un"
+            a = "un "
         elif self.genre == "q":
-            a = "du"
+            a = "du "
         else:
             a = ""
-        return a + getSingulier(self.nom_obj)
+        return a + getSingulier(self.nom_obj.lower())
     
 
     def sing_(self):
         return getSingulier(self.nom_obj)
+    
     
     def plur_(self):
         return getPluriel(self.nom_obj)

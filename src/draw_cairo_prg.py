@@ -545,7 +545,7 @@ def Draw(ctx, prg, mouchard = False):
     # Type d'enseignement
     #
     tailleTypeEns = taillePro[0]/2
-    t = ref.Enseignement[0]
+    t = prg.classe.GetLabel()
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
@@ -556,7 +556,7 @@ def Draw(ctx, prg, mouchard = False):
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = False, couper = False,
                    coulBord = (0, 0, 0))
     
-    t = ref.Enseignement[1]
+    t = prg.classe.GetLabelComplet()
     ctx.set_source_rgb (0.3, 0.3, 0.8)
     show_text_rect(ctx, t, (posPro[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
                    va = 'c', ha = 'c', b = 0, orient = 'h', 

@@ -92,11 +92,11 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
             if len(sugg) == 0:
                 item = wx.MenuItem(menu, wx.ID_ANY, "Aucune suggestion")
                 item.Enable(False)
-                item1 = menu.AppendItem(item)    
+                item1 = menu.Append(item)    
                 
             for w in sugg:
                 item = wx.MenuItem(menu, wx.ID_ANY, w)
-                item1 = menu.AppendItem(item)    
+                item1 = menu.Append(item)    
                 self.Bind(wx.EVT_MENU, 
                           functools.partial(self.Remplacer, mot = w, start = words[1], end = words[2]), 
                           item1)

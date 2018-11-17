@@ -102,7 +102,7 @@ from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
 from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, \
-                    getSingulier, getPluriel, getSingulierPluriel, Grammaire, \
+                    getSingulier, getPluriel, getSingulierPluriel, Grammaire, et2ou, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     getAncreFenetre, tronquer, getHoraireTxt, scaleImage#, chronometrer
                     
@@ -675,7 +675,7 @@ class ElementBase(Grammaire):
     
     ######################################################################################  
     def CopyToClipBoard(self, event = None):
-        pyperclip.copy(ET.tostring(self.getBranche()))
+        pyperclip.copy(ET.tostring(self.getBranche(), encoding="utf-8").decode('utf-8'))
         
     ######################################################################################  
     def SetToolTip(self, toolTip):
@@ -2839,12 +2839,21 @@ class Sequence(BaseDoc):
     #########################################################################
     def GetObjAffiches(self):
         """ Renvoie la liste de codes d'objectifs à afficher sur la fiche
+            Sélection parmi les objectifs visés selon un critère de quantité
+            d'information affichée :
+            Trop d'objectifs >> on affiche les parents/grand parents ...
+            
+            En tenant compte du niveau maximum imposé par le Référentiel.
         """
         lst = []
         ref = self.GetReferentiel()
         for cmp in self.obj["C"].competences: # liste de codes depuis pysequence.Competences
-            i = -ref.dicoCompetences[cmp[0]].nivObj
+            # Chemin de la compétence, jusqu'à la racine.
             path = ref.getPathCompetence(cmp)
+            
+            
+            i = -ref.dicoCompetences[cmp[0]].nivObj
+            
 #             print(i, path)
             lst.append(cmp[0]+path[i])
         return list(set(lst))
@@ -3037,8 +3046,8 @@ class Sequence(BaseDoc):
 #            self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
             
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
-            listItems = [["Ajouter une séance", 
+        elif self.arbre.GetItemData(itemArbre) == "Sea": # Séances
+            listItems = [["Ajouter %s" %ref._nomActivites.un_(), 
                           self.AjouterSeance,
                           scaleImage(images.Icone_ajout_seance.GetBitmap())]]
             
@@ -3052,8 +3061,8 @@ class Sequence(BaseDoc):
             self.app.AfficherMenuContextuel(listItems)
                 
                 
-        elif self.arbre.GetItemText(itemArbre) == ref.nomSystemes: # Système
-            self.app.AfficherMenuContextuel([["Ajouter un système", 
+        elif self.arbre.GetItemData(itemArbre) == "Sys": # Système
+            self.app.AfficherMenuContextuel([["Ajouter %s" %et2ou(ref._nomSystemes.un_()), 
                                               self.AjouterSysteme,
                                               scaleImage(images.Icone_ajout_systeme.GetBitmap())], 
                                              ["Selectionner depuis un fichier", 
@@ -3062,8 +3071,8 @@ class Sequence(BaseDoc):
 #                                             [u"Sauvegarder la liste dans les préférences", self.SauvSystemes]
                                              ])
          
-        elif self.arbre.GetItemText(itemArbre) == Titres[1] or self.arbre.GetItemText(itemArbre) == "Séquences": # Prérequis
-            self.app.AfficherMenuContextuel([["Ajouter une séquence", self.AjouterSequencePre, 
+        elif self.arbre.GetItemData(itemArbre) == "Pre" or self.arbre.GetItemText(itemArbre) == "Séquences": # Prérequis
+            self.app.AfficherMenuContextuel([["Ajouter %s" %self.un_(), self.AjouterSequencePre, 
                                               scaleImage(images.Icone_ajout_seq.GetBitmap())], 
                                              ])
         
@@ -4563,6 +4572,8 @@ class Projet(BaseDoc, Grammaire):
         """
 #         print "AfficherMenuContextuel"
 #         print self.arbre.GetItemText(itemArbre), getPluriel(self.GetLabelEleve())
+        ref = self.GetReferentiel()
+        
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([["Enregistrer", self.app.commandeEnregistrer,
                                               getIconeFileSave()],
@@ -4598,14 +4609,14 @@ class Projet(BaseDoc, Grammaire):
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Support):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
-        elif self.arbre.GetItemText(itemArbre) == self.GetReferentiel().labels["ELEVES"][2].plur_(): # Eleve
-            self.app.AfficherMenuContextuel([["Ajouter "+ self.GetReferentiel().labels["ELEVES"][2].un_(), self.AjouterEleve, 
+        elif self.arbre.GetItemText(itemArbre) == ref.labels["ELEVES"][2].plur_(): # Eleve
+            self.app.AfficherMenuContextuel([["Ajouter "+ ref.labels["ELEVES"][2].un_(), self.AjouterEleve, 
                                               scaleImage(images.Icone_ajout_eleve.GetBitmap())],
-                                             ["Ajouter un groupe "+ self.GetReferentiel().labels["ELEVES"][2].de_plur_(), self.AjouterGroupe, 
+                                             ["Ajouter un groupe "+ ref.labels["ELEVES"][2].de_plur_(), self.AjouterGroupe, 
                                               scaleImage(images.Icone_ajout_groupe.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
-            listItems = [["Ajouter une tâche", self.AjouterTache, 
+            listItems = [["Ajouter %s" %ref._nomTaches.un_(), self.AjouterTache, 
                           scaleImage(images.Icone_ajout_tache.GetBitmap())]]
             elementCopie = GetObjectFromClipBoard('Tache')
             if elementCopie is not None:
@@ -4816,7 +4827,8 @@ class Projet(BaseDoc, Grammaire):
 #        print "MiseAJourTypeEnseignement projet"
 
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-
+        self.classe.MiseAJourTypeEnseignement()
+        
         self.position = self.GetPeriodeDefaut()
 #        print "position", self.position
         
@@ -11400,7 +11412,7 @@ class Eleve(Personne, ElementBase):
     def __init__(self, doc, ident = 0, nom = "", prenom = ""):
         
 #         self.titre = u"élève"
-        self.titre = self.GetReferentiel().labels["ELEVES"][2].sing_()
+        
         self.code = "Elv"
         
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
@@ -11408,6 +11420,8 @@ class Eleve(Personne, ElementBase):
             self.grille[k] = Lien(typ = 'f')
         
         Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 550*SSCALE)
+        
+        self.titre = self.GetReferentiel().labels["ELEVES"][2].sing_()
  
         self.modeles = []
         

@@ -610,6 +610,39 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.elementCopie = data      
         
     ###############################################################################################
+    def RenameTools(self, typ):
+        fenDoc = self.GetCurrentPage()
+        if hasattr(fenDoc, 'typ'):
+            ref = fenDoc.projet.GetReferentiel()
+            for tool in self.tools[fenDoc.typ]:
+                if tool.GetId() == 50:
+                    tool.SetLabel("Ajouter %s" %ref.labels["ELEVES"][2].un_())
+                    tool.SetShortHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
+                    tool.SetLongHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
+                
+                elif tool.GetId() == 54:
+                    tool.SetLabel("Ajouter un groupe %s" %ref.labels["ELEVES"][2].de_plur_())
+                    tool.SetShortHelp("Ajout d'un groupe %s au projet" %ref.labels["ELEVES"][2].de_plur_())
+                    tool.SetLongHelp("Ajout d'un groupe %s au projet" %ref.labels["ELEVES"][2].de_plur_())
+                
+                elif tool.GetId() == 51:
+                    tool.SetLabel("Ajouter un professeur")
+                    tool.SetShortHelp("Ajout d'un professeur à l'équipe pédagogique")
+                    tool.SetLongHelp("Ajout d'un professeur à l'équipe pédagogique")
+        
+                elif tool.GetId() == 52:
+                    tool.SetLabel("Ajouter %s" %ref._nomTaches.un_())
+                    tool.SetShortHelp("Ajout d'%s au projet" %ref._nomTaches.un_())
+                    tool.SetLongHelp("Ajout d'%s au projet" %ref._nomTaches.un_())
+    
+                elif tool.GetId() == 53:
+                    tool.SetLabel("Ajouter une revue")
+                    tool.SetShortHelp("Ajout d'une revue au projet")
+                    tool.SetLongHelp("Ajout d'une revue au projet")
+    
+    
+    
+    ###############################################################################################
     def GetTools(self, typ):
         ts = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         if typ == 'prj':
@@ -1573,6 +1606,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if hasattr(fenDoc, 'typ'):
             self.ajouterOutils(fenDoc.typ)
             
+            #
+            # Connection des outils
+            #
             if fenDoc.typ == "prj":
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterEleve,      id=50)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterProf,       id=51)
@@ -1580,18 +1616,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue,      id=53)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterGroupe,      id=54)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.support.AjouterModele,      id=55)
-                
-                ref = fenDoc.projet.GetReferentiel()
-                
-                for tool in self.tools[fenDoc.typ]:
-                    if tool.GetId() == 50:
-                        tool.SetLabel("Ajouter %s" %ref.labels["ELEVES"][2].un_())
-                        tool.SetShortHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
-                        tool.SetLongHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
-                    elif tool.GetId() == 54:
-                        tool.SetLabel("Ajouter un groupe %s" %ref.labels["ELEVES"][2].de_plur_())
-                        tool.SetShortHelp("Ajout d'un groupe %s au projet" %ref.labels["ELEVES"][2].de_plur_())
-                        tool.SetLongHelp("Ajout d'un groupe %s au projet" %ref.labels["ELEVES"][2].de_plur_())
                 
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
@@ -1604,7 +1628,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouvelleSequence,     id=72)
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouveauProjet,     id=73)
                     
-    
+            #
+            # Infosbulle des outils
+            #
+            self.RenameTools()
+            
+                        
+                        
+            #
+            # Eléments de Menu
+            #
             if fenDoc.typ == "prj":
                 for i in [17, 19, 20]:
                     if self.file_menu.FindItemById(i) is not None:
@@ -1791,8 +1824,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if toutferme:
             evt.Skip()
             wx.GetApp()._ipc.Exit()
-            wx.CallAfter(sys.exit)
-#             wx.CallAfter(self.Destroy)
+#             wx.CallAfter(sys.exit)
+            wx.CallAfter(self.Destroy)
 
 
 
@@ -3056,7 +3089,7 @@ class FenetreProjet(FenetreDocument):
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
-        self.arbre.SelectItem(self.arbre.classe.branche)
+#         self.arbre.SelectItem(self.arbre.classe.branche)
         
         return message, count
     
@@ -3239,10 +3272,10 @@ class FenetreProjet(FenetreDocument):
 
 #        self.arbre.SelectItem(self.classe.branche)
 
-#        self.arbre.Layout()
-#        self.arbre.ExpandAll()
-#        self.arbre.CalculatePositions()
-#        self.arbre.SelectItem(self.arbre.classe.branche)
+#         self.arbre.Layout()
+#         self.arbre.ExpandAll()
+#         self.arbre.CalculatePositions()
+#         self.arbre.SelectItem(self.arbre.classe.branche)
         
         
     
@@ -3545,7 +3578,7 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.nb.SetPageText(1, "Tâches %s détaillées" %self.GetReferentiel().labels["ELEVES"][2].plur_())
+        self.nb.SetPageText(1, "Tâches %s détaillées" %self.projet.GetReferentiel().labels["ELEVES"][2].plur_())
         self.parent.OnDocChanged()
     
 #class ThreadRedess(Thread):
@@ -10158,7 +10191,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Elèves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.GetReferentiel().labels["ELEVES"][2].plur_())
+            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.tache.GetReferentiel().labels["ELEVES"][2].plur_())
 #            self.box.SetMinSize((150,-1))
 #             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             ebsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -10341,6 +10374,8 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.lb.SetSelection(index)    # so that (un)checking also selects (moves the highlight)
         
 
+    
+   
     ######################################################################################  
     def AjouterCompetence(self, code, propag = True):
         self.tache.AjouterCompetence(code, propag)
@@ -10455,20 +10490,21 @@ class PanelPropriete_Tache(PanelPropriete):
             #
             self.arbres = {}
             self.pagesComp = []
-            
-            for code, dicComp in list(prj._dicoCompetences.items()):
+#             print(prj._dicoCompetences)
+            for code, dicComp in prj._dicoCompetences.items():
                 self.pagesComp.append(wx.Panel(self.nb, -1))
-                comp = ref.dicoCompetences[code]
+                compRef = ref.dicoCompetences[code]
                 pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
                 
-                self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, dicComp, comp, self,
+                self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, 
+                                                        dicComp, compRef, self,
                                                  revue = self.tache.phase in TOUTES_REVUES_SOUT, 
                                                  eleves = (self.tache.phase in TOUTES_REVUES_EVAL_SOUT \
                                                            or self.tache.estPredeterminee()))
                 
                 pageComsizer.Add(self.arbres[code], 1, flag = wx.EXPAND)
                 self.pagesComp[-1].SetSizer(pageComsizer)
-                self.nb.AddPage(self.pagesComp[-1], getPluriel(comp.nomGenerique) + " à mobiliser : " + comp.abrDiscipline) 
+                self.nb.AddPage(self.pagesComp[-1], getPluriel(compRef.nomGenerique) + " à mobiliser : " + compRef.abrDiscipline) 
                 
                 self.pageComsizer = pageComsizer
             
@@ -13942,7 +13978,7 @@ class ArbreCompetences(HTL.HyperTreeList):
 
     ####################################################################################
     def getCode(self, item):
-        return self.typ+self.GetItemPyData(item)
+        return self.typ + self.GetItemPyData(item)
 
 
     ####################################################################################
@@ -14110,7 +14146,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
-    def __init__(self, parent, typ, dicCompetences, compRef,  pptache, revue = False, eleves = False, 
+    def __init__(self, parent, typ, dicComp, compRef,  pptache, revue = False, eleves = False, 
                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
                             CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS| \
                             CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD):
@@ -14125,7 +14161,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
 #         print "ArbreCompetencesPrj", pptache
         
-        ArbreCompetences.__init__(self, parent, typ, dicCompetences, compRef, 
+        ArbreCompetences.__init__(self, parent, typ, dicComp, compRef, 
                                   pptache, agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
 #         print self.pptache
 #         """    
@@ -14170,7 +14206,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             self.SetColumnWidth(i+1, 0)
         
         self.colEleves = len(list(prj.parties.keys()))+1
-        self.AddColumn(self.GetReferentiel().labels["ELEVES"][2].plur_())#(u"Eleves")
+        self.AddColumn(tache.GetReferentiel().labels["ELEVES"][2].plur_())#(u"Eleves")
         self.SetColumnWidth(self.colEleves, 0)
         
         
@@ -14222,7 +14258,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #        print " prj", prj, self.typ
         if dic == None: # Construction de la racine
 #            dic = self.competences.dicCompetences
-            dic = self.dicCompetences
+#             dic = tache.GetReferentiel().dicCompetences
+            self.compFiltre
             
         
 #        print "   ProjetRef", prj
@@ -14255,13 +14292,15 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     if competence.poids == {}: # Compétence 
 #                     if len(v) == 2: # Compétence 
                         if not tache.estPredeterminee() or k in prj.taches[tache.intitule][2]:
-                            b = self.AppendItem(br, k+" "+competence.intitule)
+                            b = self.AppendItem(br, k+" "+competence.intitule,
+                                                data = k)
                         else:
                             b = None
                     
                     else:   # Groupe de compétences - avec poids 
                         if debug: print("   prem's"+" "*niveau, competence.poids)
-                        b = self.AppendItem(br, k+" "+competence.intitule)
+                        b = self.AppendItem(br, k+" "+competence.intitule,
+                                                data = k)
 #                        print " * ",v[2]
                         
                         for i, part in enumerate(prj.parties.keys()):
@@ -14286,7 +14325,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     
                     if not tache.estPredeterminee() or (tache.intitule in list(prj.taches.keys()) and k in prj.taches[tache.intitule][2]):
                         cc = [cd+ " " + it for cd, it in zip(k.split("\n"), competence.intitule.split("\n"))]
-                        comp = self.AppendItem(br, "\n ".join(cc))
+                        comp = self.AppendItem(br, "\n ".join(cc),
+                                                data = k)
                         
                         #
                         # Compétence "racine" - avec poids
@@ -14318,7 +14358,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 print("  ", prj.getTypeIndicateur(self.typ+codeIndic))
                             
                             if tache == None:
-                                b = self.AppendItem(comp, indic.intitule, data = codeIndic)
+                                b = self.AppendItem(comp, indic.intitule, 
+                                                    data = codeIndic)
                                 for j, part in enumerate(prj.parties.keys()):
                                     if part in list(competence.poids.keys()):
     #                            for j, p in enumerate(indic.poids[1:]):
@@ -14333,7 +14374,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                                                   or (self.typ+codeIndic in tache.indicateursMaxiEleve[0])) \
 #                                              and (prj.getTypeIndicateur(self.typ+codeIndic) == "S" or tache.phase != 'XXX'):#and (indic.revue[self.typ] == 0 or indic.revue[self.typ] >= tache.GetProchaineRevue()) \ # à revoir !!
                                 
-                                b = self.AppendItem(comp, indic.intitule, ct_type=1, data = codeIndic) # Avec case à cocher
+                                b = self.AppendItem(comp, indic.intitule, ct_type=1, 
+                                                    data = codeIndic) # Avec case à cocher
                                 
                                 if codeIndic in tache.indicateursEleve[0]:
                                     self.CheckItem2(b)
@@ -14380,7 +14422,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                     self.Layout()
                     
                     if b == None: # Désactivation si branche vide d'indicateurs
-                        self.SetItemType(br,0)
+                        pass#self.SetItemType(br,0)
                     else:
                         self.CheckItem2(br, tous)
 #                        if self.eleves:
@@ -14403,6 +14445,18 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 self.SetColumnWidth(i+1, 0)
         
         self.Refresh()
+
+
+   ###################################################################################
+    def OnItemCheck(self, event, item = None):
+#        print "OnItemCheck"
+        if event != None:
+            item = event.GetItem()
+            event.Skip()
+ 
+        self.AjouterEnleverCompetencesItem(item)
+         
+        wx.CallAfter(self.pp.SetCompetences)
 
 
     #############################################################################

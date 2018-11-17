@@ -458,7 +458,7 @@ class XMLelem():
     def getArbreProjet(self, dic, prj = None, debug = False):
 #        print "getArbreProjet", self.parties.keys()
         sdic = {}
-        for k0, v0 in list(dic.items()):
+        for k0, v0 in dic.items():
             if debug: print(k0)
             competence = v0
 #             print k0, v0
@@ -2558,6 +2558,28 @@ class Projet(XMLelem):
         if indic != None:
             return indic.getType()
         
+#     ####################################################################################
+#     def GetDicFiltre(self, filtre = None, dic = None):
+#         """ Renvoie le dictionnaire représentant l'arbre
+#             après passage à travers le filtre
+#             
+#             fonction récursive
+#         """
+# #         print("GetDicFiltre")
+#         if dic is None:
+#             dic = self._dicoCompetences
+#             
+#         dic_f0 = {}
+#         for k in dic.keys():
+#             s = self.GetDicFiltre(filtre, dic[k].sousComp)
+#             if len(s) > 0:
+#                 dic_f0[k] = [dic[k], s]
+#             else:
+#                 if filtre is None or k in filtre:
+#                     dic_f0[k] = [dic[k], None]
+#         
+#         return dic_f0
+    
     
     #########################################################################
     def getCompetence(self, disc, comp):
@@ -2769,13 +2791,9 @@ class Projet(XMLelem):
         self._dicoIndicateurs_famille = {}
         self._dicoIndicateurs_simple = {}
 #        self._dicoCompetences_simple = {}
+
         
-        itemComp = list(ref.dicoCompetences.items())
-#        if ref.tr_com != []:
-#            ref_tc = REFERENTIELS[ref.tr_com[0]]
-#            itemComp.insert(1, ("B", ref_tc.dicoCompetences["S"]))
-        
-        for code, comp in itemComp:
+        for code, comp in ref.dicoCompetences.items():
             if debug: print(code, end=' ')
             if debug: 
                 print("    ", comp.dicCompetences)   
