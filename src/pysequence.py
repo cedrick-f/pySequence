@@ -1359,6 +1359,20 @@ class Classe(ElementBase):
             self.codeBranche.SetToolTip(message)
             self.codeBranche.Refresh()
 
+
+
+####################################################################################################
+#
+# Classe définissant les propriétés d'un document
+#
+####################################################################################################
+class ProprietesDoc():
+    def __init__(self):
+        pass
+
+
+
+
 ####################################################################################################
 #
 # Classe définissant les documents principaux

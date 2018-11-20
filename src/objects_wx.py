@@ -161,7 +161,7 @@ import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, \
-                    getSingulier, getPluriel, getSingulierPluriel, \
+                    getSingulier, getPluriel, getSingulierPluriel, et2ou, \
                     TextCtrl_Help, CloseFenHelp, \
                     messageInfo, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
@@ -613,8 +613,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def RenameTools(self, typ):
         fenDoc = self.GetCurrentPage()
         if hasattr(fenDoc, 'typ'):
-            ref = fenDoc.projet.GetReferentiel()
+            ref = fenDoc.GetDocument().GetReferentiel()
             for tool in self.tools[fenDoc.typ]:
+                # Projets ###############################################################
                 if tool.GetId() == 50:
                     tool.SetLabel("Ajouter %s" %ref.labels["ELEVES"][2].un_())
                     tool.SetShortHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
@@ -640,103 +641,96 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     tool.SetShortHelp("Ajout d'une revue au projet")
                     tool.SetLongHelp("Ajout d'une revue au projet")
     
+                elif tool.GetId() == 55:
+                    tool.SetLabel("Ajouter un modèle")
+                    tool.SetShortHelp("Ajout d'un modèle numérique du support")
+                    tool.SetLongHelp("Ajout d'un modèle numérique du support")
+                    
+                # Séquences ##################################################################
+                elif tool.GetId() == 60:
+                    tool.SetLabel("Ajouter %s" %ref._nomActivites.un_())
+                    tool.SetShortHelp("Ajout d'%s dans la séquence" %ref._nomActivites.un_())
+                    tool.SetLongHelp("Ajout d'%s dans la séquence" %ref._nomActivites.un_())
+                    
+                elif tool.GetId() == 62:
+                    tool.SetLabel("Ajouter un professeur")
+                    tool.SetShortHelp("Ajout d'un professeur à l'équipe pédagogique")
+                    tool.SetLongHelp("Ajout d'un professeur à l'équipe pédagogique")
+                    
+                elif tool.GetId() == 61:
+                    tool.SetLabel("Ajouter %s" %et2ou(ref._nomSystemes.un_()))
+                    tool.SetShortHelp("Ajout d'%s" %et2ou(ref._nomSystemes.un_()))
+                    tool.SetLongHelp("Ajout d'%s" %et2ou(ref._nomSystemes.un_()))
+                    
+                
+                # Progressions ###############################################################
+                elif tool.GetId() == 70:
+                    tool.SetLabel("Actualiser la Progression")
+                    tool.SetShortHelp("Actualiser la Progression")
+                    tool.SetLongHelp("Actualiser la Progression")
+                
+                elif tool.GetId() == 71:
+                    tool.SetLabel("Ajouter un professeur")
+                    tool.SetShortHelp("Ajout d'un professeur à l'équipe pédagogique")
+                    tool.SetLongHelp("Ajout d'un professeur à l'équipe pédagogique")
+                       
+                elif tool.GetId() == 72:
+                    tool.SetLabel("Ajouter une Séquence")
+                    tool.SetShortHelp("Ajout d'une Séquence à la Progression")
+                    tool.SetLongHelp("Ajout d'une Séquence à la Progression")
+                    
+                elif tool.GetId() == 73:
+                    tool.SetLabel("Ajouter un Projet")
+                    tool.SetShortHelp("Ajout d'un Projet à la Progression")
+                    tool.SetLongHelp("Ajout d'un Projet à la Progression")
+    
+    
     
     
     ###############################################################################################
     def GetTools(self, typ):
+        """ Renvoie la liste des id et images des boutons de la toolbar
+            pour le type <typ>
+            Format :
+                [(id, wx.Bitmap), (id, wx.Bitmap), ...]
+        """
         ts = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         if typ == 'prj':
-            el = "élève" #getSingulier(self.support.GetLabelEleve())
-            els = "élèves" #getPluriel(self.support.GetLabelEleve())
-            return [(50 , BoutonToolBar("Ajouter un %s" %el,
-                                   scaleImage(images.Icone_ajout_eleve.GetBitmap(),
-                                                  *ts), 
-                                   shortHelp = "Ajout d'un %s au projet" %el, 
-                                   longHelp = "Ajout d'un %s au projet" %el)),
+            return [(50 , scaleImage(images.Icone_ajout_eleve.GetBitmap(), *ts)),
                     
-                    (54 , BoutonToolBar("Ajouter un groupe d'%s" %els,
-                                   scaleImage(images.Icone_ajout_groupe.GetBitmap(),
-                                                  *ts), 
-                                   shortHelp = "Ajout d'un groupe d'%s au projet" %els, 
-                                   longHelp = "Ajout d'un groupe d'%s au projet" %els)),
+                    (54 , scaleImage(images.Icone_ajout_groupe.GetBitmap(), *ts)),
                 
-                    (51 , BoutonToolBar("Ajouter un professeur", 
-                                       scaleImage(images.Icone_ajout_prof.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp = "Ajout d'un professeur à l'équipe pédagogique", 
-                                       longHelp = "Ajout d'un professeur à l'équipe pédagogique")),
+                    (51 , scaleImage(images.Icone_ajout_prof.GetBitmap(), *ts)),
                     
                     (0, None),
                     
-                    (52 , BoutonToolBar("Ajouter une tâche", 
-                                       scaleImage(images.Icone_ajout_tache.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp="Ajout d'une tâche au projet", 
-                                       longHelp="Ajout d'une tâche au projet")),
+                    (52 , scaleImage(images.Icone_ajout_tache.GetBitmap(), *ts)),
                     
-                    (53 , BoutonToolBar("Ajouter une revue", 
-                                       scaleImage(images.Icone_ajout_revue.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp = "Ajout d'une revue au projet", 
-                                       longHelp = "Ajout d'une revue au projet")),
+                    (53 , scaleImage(images.Icone_ajout_revue.GetBitmap(), *ts)),
                     
                     (0, None),
                     
-                    (55 , BoutonToolBar("Ajouter un modèle", 
-                                       scaleImage(images.Icone_ajout_modele.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp = "Ajout d'un modèle numérique du support", 
-                                       longHelp = "Ajout d'un modèle numérique du support")),
-                    
-                ]
+                    (55 , scaleImage(images.Icone_ajout_modele.GetBitmap(), *ts)),
+                    ]
         
         elif typ == 'seq':
-            return [(60 , BoutonToolBar("Ajouter une séance", 
-                                    scaleImage(images.Icone_ajout_seance.GetBitmap(),
-                                                  *ts), 
-                                    shortHelp="Ajout d'une séance dans la séquence", 
-                                    longHelp="Ajout d'une séance dans la séquence")),
+            return [(60 , scaleImage(images.Icone_ajout_seance.GetBitmap(), *ts)),
                     
-                    (62 , BoutonToolBar("Ajouter un professeur", 
-                                       scaleImage(images.Icone_ajout_prof.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp = "Ajout d'un professeur à l'équipe pédagogique", 
-                                       longHelp = "Ajout d'un professeur à l'équipe pédagogique")),
+                    (62 , scaleImage(images.Icone_ajout_prof.GetBitmap(), *ts)),
                     
-                    (61 , BoutonToolBar("Ajouter un système", 
-                                       scaleImage(images.Icone_ajout_systeme.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp="Ajout d'un système", 
-                                       longHelp="Ajout d'un système"))
+                    (61 , scaleImage(images.Icone_ajout_systeme.GetBitmap(), *ts))
                       ]
             
         elif typ == 'prg':
-            return [(70 , BoutonToolBar("Actualiser la Progression", 
-                                       scaleImage(images.Bouton_Actualiser.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp = "Actualiser la Progression", 
-                                       longHelp = "Actualiser la Progression")),
+            return [(70 , scaleImage(images.Bouton_Actualiser.GetBitmap(), *ts)),
                     
                     (0, None),
                     
-                    (71 , BoutonToolBar("Ajouter un professeur", 
-                                       scaleImage(images.Icone_ajout_prof.GetBitmap(),
-                                                  *ts), 
-                                       shortHelp = "Ajout d'un professeur à l'équipe pédagogique", 
-                                       longHelp = "Ajout d'un professeur à l'équipe pédagogique")),
+                    (71 , scaleImage(images.Icone_ajout_prof.GetBitmap(), *ts)),
                     
-                    (72 , BoutonToolBar("Ajouter une Séquence",
-                                   scaleImage(images.Icone_ajout_seq.GetBitmap(),
-                                                  *ts), 
-                                   shortHelp = "Ajout d'une Séquence à la Progression", 
-                                   longHelp = "Ajout d'une Séquence à la Progression")),
+                    (72 , scaleImage(images.Icone_ajout_seq.GetBitmap(), *ts)),
                     
-                    (73 , BoutonToolBar("Ajouter un Projet",
-                                   scaleImage(images.Icone_ajout_prj.GetBitmap(),
-                                                  *ts), 
-                                   shortHelp = "Ajout d'un Projet à la Progression", 
-                                   longHelp = "Ajout d'un Projet à la Progression")),
-                    
+                    (73 , scaleImage(images.Icone_ajout_prj.GetBitmap(), *ts)),
                   ]
             
             
@@ -835,11 +829,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #################################################################################################################
         self.tools = {'prj' : [], 'seq' : [], 'prg' : []}
         for typ in ['prj', 'seq', 'prg']:
-            for i, tool in self.GetTools(typ):
+            for i, bmp in self.GetTools(typ):
                 if i > 0:
-                    self.tools[typ].append(self.tb.AddTool(i, tool.label, tool.image, wx.NullBitmap,
-                                                               shortHelp = tool.shortHelp, 
-                                                               longHelp = tool.longHelp))
+                    self.tools[typ].append(self.tb.AddTool(i, "", bmp, wx.NullBitmap))
+                self.RenameTools(typ)
 #                 else:
 #                     self.tb.AddSeparator()
 
@@ -1631,7 +1624,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             #
             # Infosbulle des outils
             #
-            self.RenameTools()
+            self.RenameTools(fenDoc.typ)
             
                         
                         
@@ -6314,7 +6307,7 @@ class PanelPropriete_Classe(PanelPropriete):
         ref = self.classe.GetReferentiel()
         pageSys = PanelPropriete(nb, objet = classe)
         pageSys.SetBackgroundColour(bg_color)
-        nb.AddPage(pageSys, ref.nomSystemes)
+        nb.AddPage(pageSys, ref._nomSystemes.plur_())
         self.pageSys = pageSys
         
         self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
@@ -6411,7 +6404,7 @@ class PanelPropriete_Classe(PanelPropriete):
         sh.Add(self.cbv, 1,flag = wx.ALIGN_CENTER_VERTICAL|wx.LEFT, border = 5)
         sb.Add(sh, flag = wx.EXPAND)
         
-        t = wx.StaticText(pageGen, -1, "Etablissement :")
+        t = wx.StaticText(pageGen, -1, "Établissement :")
         sb.Add(t, flag = wx.EXPAND)
         
         self.cbe = wx.ComboBox(pageGen, -1, "sélectionner un établissement ...", (-1,-1), 
@@ -6463,8 +6456,8 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Systèmes
         #
-        self.btnAjouterSys = wx.Button(pageSys, -1, "Ajouter un système")
-        self.btnAjouterSys.SetToolTip("Ajouter un nouveau système à la liste")
+        self.btnAjouterSys = wx.Button(pageSys, -1, "Ajouter %s" %ref._nomSystemes.un_())
+        self.btnAjouterSys.SetToolTip("Ajouter %s à la liste" %ref._nomSystemes.un_("nouveau"))
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSyst, self.btnAjouterSys)
         
         self.lstSys = wx.ListBox(pageSys, -1,
@@ -6472,7 +6465,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_LISTBOX, self.EvtListBoxSyst, self.lstSys)
         
         self.btnSupprimerSys = wx.Button(pageSys, -1, "Supprimer")
-        self.btnSupprimerSys.SetToolTip("Supprimer le système de la liste")
+        self.btnSupprimerSys.SetToolTip("Supprimer %s de la liste" %ref._nomSystemes.le_())
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSupprSyst, self.btnSupprimerSys)
         
         s = pysequence.Systeme(self.classe)

@@ -745,7 +745,7 @@ class Referentiel(XMLelem):
         self.demarches = {}
         self.listeDemarches = []
         
-        self.nomSeances = "Seances(s)$f"
+        self.nomSeances = "Séance(s)$f" 
         self.seances = {}
         self.listeTypeSeance = []
         
@@ -778,7 +778,7 @@ class Referentiel(XMLelem):
         #
         # Enseignements Spécifiques
         #
-        self.nomEnsSpecif = "Enseignement(s) Spécifique(s)"
+        self.nomEnsSpecif = "Enseignement(s) Spécifique(s)$m"
         self.ensSpecif = {}
         self.listeEnsSpecif = []
         
@@ -2169,19 +2169,20 @@ class Referentiel(XMLelem):
         
         """
         elem_asso = []
-        for i, t in enumerate(elem.asso_type):
-            if contexte in elem.asso_contexte[i]:
-                elem_asso.append(t)
-#                 if t[:4] == "Comp":
-#                     elem_asso.append(self.dicoCompetences[t[5:]])
-#                 elif t[:3] == "Sav":
-#                     elem_asso.append(self.dicoSavoirs[t[4:]])
-#                 elif t == "Th":
-#                     elem_asso.append(self.thematiques)
-#                 elif t == "Dom":
-#                     elem_asso.append(self.domaines)
-#                 elif t == "Spe":
-#                     elem_asso.append(self.specialite)
+        if hasattr(elem, "asso_type"):
+            for i, t in enumerate(elem.asso_type):
+                if contexte in elem.asso_contexte[i]:
+                    elem_asso.append(t)
+    #                 if t[:4] == "Comp":
+    #                     elem_asso.append(self.dicoCompetences[t[5:]])
+    #                 elif t[:3] == "Sav":
+    #                     elem_asso.append(self.dicoSavoirs[t[4:]])
+    #                 elif t == "Th":
+    #                     elem_asso.append(self.thematiques)
+    #                 elif t == "Dom":
+    #                     elem_asso.append(self.domaines)
+    #                 elif t == "Spe":
+    #                     elem_asso.append(self.specialite)
         return elem_asso
         
         

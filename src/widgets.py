@@ -76,7 +76,7 @@ class Grammaire():
         return c.lower() in "aeiouhéèàêîëïùû"
     
     
-    def du_(self):
+    def du_(self, adj = ""):
         """ article partitif singulier + nom
         """
         if self.genre == "f":
@@ -94,10 +94,10 @@ class Grammaire():
         else:
             a = ""
         
-        return a + getSingulier(self.nom_obj.lower())
+        return a + getSingulier(adj+self.nom_obj.lower())
     
     
-    def de_(self):
+    def de_(self, adj = ""):
         """ article ??? singulier + nom
         """
         if self.voyelle(self.nom_obj[0]):
@@ -105,10 +105,10 @@ class Grammaire():
         else:
             a = "de "
         
-        return a + getSingulier(self.nom_obj.lower())
+        return a + getSingulier(adj+self.nom_obj.lower())
     
     
-    def de_plur_(self):
+    def de_plur_(self, adj = ""):
         """ article ??? singulier + nom
         """
         if self.voyelle(self.nom_obj[0]):
@@ -116,31 +116,31 @@ class Grammaire():
         else:
             a = "de "
         
-        return a + getPluriel(self.nom_obj.lower())
+        return a + getPluriel(adj+self.nom_obj.lower())
     
-    def des_(self):
+    def des_(self, adj = ""):
         """ article partitif pluriel + nom
         """
-        return "des "+getPluriel(self.nom_obj.lower())
+        return "des "+getPluriel(adj+self.nom_obj.lower())
     
     
-    def les_(self):
+    def les_(self, adj = ""):
         """ article défini pluriel + nom
         """
-        return "les "+getPluriel(self.nom_obj.lower())
+        return "les "+getPluriel(adj+self.nom_obj.lower())
     
     
-    def le_(self):
+    def le_(self, adj = ""):
         """ article défini singulier + nom
         """
         if self.genre == "f":
             a = "le "
         else:
             a = "la "
-        return a + getSingulier(self.nom_obj.lower())
+        return a + getSingulier(adj+self.nom_obj.lower())
      
     
-    def un_(self):
+    def un_(self, adj = ""):
         """ article indéfini pluriel + nom
         """
         if self.genre == "f":
@@ -151,7 +151,7 @@ class Grammaire():
             a = "du "
         else:
             a = ""
-        return a + getSingulier(self.nom_obj.lower())
+        return a + getSingulier(adj+self.nom_obj.lower())
     
 
     def sing_(self):
