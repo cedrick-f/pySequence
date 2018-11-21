@@ -96,6 +96,23 @@ class Grammaire():
         
         return a + getSingulier(adj+" "+self.nom_obj.lower())
     
+    def ce_(self, adj = ""):
+        """ 
+        """
+        if self.genre == "f":
+            a = "cette "
+        
+        elif self.genre in ["q","m"]:
+            if self.voyelle(self.nom_obj[0]):
+                a = "cet "
+            else:
+                a = "ce "
+        
+        else:
+            a = ""
+        
+        return a + getSingulier(adj+" "+self.nom_obj.lower())
+    
     
     def de_(self, adj = ""):
         """ article ??? singulier + nom
@@ -139,6 +156,7 @@ class Grammaire():
             a = "la "
         return a + getSingulier(adj+" "+self.nom_obj.lower())
      
+    
     
     def un_(self, adj = ""):
         """ article indéfini pluriel + nom
@@ -829,6 +847,16 @@ class VariableCtrl(wx.Panel):
         self.SetSizer(sizer)
     
     
+    #########################################################################################################
+    def SetHelp(self, text):
+        self.help = text
+        if len(self.help) > 0:
+            self.txtnom.SetToolTip(self.help)
+            self.text.SetToolTip(self.help)
+            self.spin.SetToolTip(self.help)
+        
+        
+        
     #########################################################################################################
     def SetVariable(self, variable):
         self.multiple = variable.multiple

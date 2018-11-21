@@ -4852,8 +4852,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
     #########################################################################################################
     def CreateImageSelect(self, parent, titre = "image", prefixe = "l'", defaut = wx.NullBitmap):
-        box = myStaticBox(parent, -1, titre.capitalize())
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        self.boxImg = myStaticBox(parent, -1, titre.capitalize())
+        bsizer = wx.StaticBoxSizer(self.boxImg, wx.VERTICAL)
         image = wx.StaticBitmap(parent, -1, defaut)
         self.image = image
         self.SetImage()
@@ -4870,12 +4870,18 @@ class PanelPropriete(scrolled.ScrolledPanel):
         bt.SetToolTip("Supprimer %s" %prefixe+titre)
         hsizer.Add(bt, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnSupprImage, bt)
-        self.btImg = bt
+        self.btSupImg = bt
         
         bsizer.Add(hsizer, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
         return bsizer
         
-    
+        
+    #########################################################################################################
+    def MiseAJourImageSelect(self, titre = "image", prefixe = "l'"):
+        self.boxImg.SetLabel(titre.capitalize())
+        self.btImg.SetToolTip("Sélectionner un fichier image pour %s" %prefixe+titre)
+        self.btSupImg.SetToolTip("Supprimer %s" %prefixe+titre)
+
     
     #############################################################################            
     def OnSupprImage(self, event):
@@ -6708,8 +6714,8 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Définition du nouveau nom
         #
-        
-        nom = "Nouveau système"
+        ref = self.classe.GetReferentiel()
+        nom = "Nouveau %s " %et2ou(ref._nomSystemes.sing_())
         if nom in [s.nom for s in self.classe.systemes]:
             return
         
@@ -6840,6 +6846,46 @@ class PanelPropriete_Classe(PanelPropriete):
         self.pageGen.sizer.Layout()
         
 
+    ######################################################################################  
+    def MiseAJourTypeEnseignement(self):    
+        
+        ref = self.classe.GetReferentiel()
+        
+        # Mise à jour l'onglet Systèmes
+        self.nb.SetPageText(1, ref._nomSystemes.plur_())
+        self.pageSys
+        self.btnAjouterSys.SetLabel("Ajouter %s" %et2ou(ref._nomSystemes.un_()))
+        self.btnAjouterSys.SetToolTip("Ajouter %s à la liste" %et2ou(ref._nomSystemes.un_("nouveau")))
+        
+        self.btnSupprimerSys.SetLabel("Supprimer")
+        self.btnSupprimerSys.SetToolTip("Supprimer %s de la liste" %et2ou(ref._nomSystemes.le_()))
+        
+        self.panelSys.MiseAJourTypeEnseignement()
+        
+#         if hasattr(self, 'panelSys'):
+#             try:
+#                 self.pageSys.sizer.Detach(self.panelSys)
+#             except:
+#                 pass
+#             self.panelSys.Destroy()
+#             del self.panelSys
+#         
+#         s = pysequence.Systeme(self.classe)
+#         self.panelSys = s.GetPanelPropriete(self.pageSys)
+#         self.panelSys.Show()
+#         self.pageSys.sizer.Add(self.panelSys, (0,1), (3,1),  flag = wx.ALL|wx.EXPAND, border = 2)
+        
+        # Modification des liens vers le BO
+        self.SetLienBO()
+        
+        # Modification des onglet du classeur
+        self.GetFenetreDoc().MiseAJourTypeEnseignement()
+        
+        self.Refresh()
+        
+        self.sendEvent(modif = "Modification du type d'enseignement",
+                       obj = self.classe)
+        
         
     ######################################################################################  
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
@@ -10916,12 +10962,12 @@ class PanelPropriete_Systeme(PanelPropriete):
         # Nom
         #
         hs = wx.BoxSizer(wx.HORIZONTAL)
-        titre = wx.StaticText(self, -1, "Nom du système :")
+        self.titre = wx.StaticText(self, -1, "Nom %s :" %et2ou(ref._nomSystemes.du_()))
         textctrl = wx.TextCtrl(self, -1, "")
         self.textctrl = textctrl
         
 #         self.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-        hs.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+        hs.Add(self.titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
         
         if isinstance(systeme.parent, pysequence.Sequence):
             self.cbListSys = wx.ComboBox(self, -1, "",
@@ -10946,36 +10992,37 @@ class PanelPropriete_Systeme(PanelPropriete):
         # Type de système
         #
 #         print(ref.listeSystemes)
-        if len(ref.listeSystemes) > 0:
-            titre = wx.StaticText(self, -1, "Type de %s :" %ref.nomSystemes)
-            listTypeS = [(ref.systemes[t][1], ref.getIconeSysteme(t, 24*SSCALE)) for t in ref.listeSystemes] 
-            tsizer = wx.BoxSizer(wx.VERTICAL)
-            cbType = combo_adv.BitmapComboBox(self, -1, "Choisir un type de %s" %ref.nomSystemes,
-                                 choices = [],# size = (-1,25),
-                                 style = wx.CB_DROPDOWN
-                                 | wx.TE_PROCESS_ENTER
-                                 | wx.CB_READONLY
-                                 #| wx.CB_SORT
-                                 )
-            
-            self.cbType = cbType
-            for s in listTypeS:
-                self.cbType.Append(s[0], s[1])
-                
-            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxSys, cbType)
-            
-            
-            tsizer.Add(titre, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
-            tsizer.Add(cbType, flag = wx.EXPAND|wx.LEFT, border = 2)
-            vs.Add(tsizer, flag = wx.EXPAND|wx.ALL, border = 2)
-#         self.sizer.Add(tsizer, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
+#         if len(ref.listeSystemes) > 0:
+        self.titreTyp = wx.StaticText(self, -1, "Type %s :" %et2ou(ref._nomSystemes.de_()))
+        self.tsizer = wx.BoxSizer(wx.VERTICAL)
+        cbType = combo_adv.BitmapComboBox(self, -1, "Choisir un type %s" %et2ou(ref._nomSystemes.de_()),
+                             choices = [],# size = (-1,25),
+                             style = wx.CB_DROPDOWN
+                             | wx.TE_PROCESS_ENTER
+                             | wx.CB_READONLY
+                             #| wx.CB_SORT
+                             )
         
+        self.cbType = cbType
+        for s in [(ref.systemes[t][1], ref.getIconeSysteme(t, 24*SSCALE)) for t in ref.listeSystemes]:
+            self.cbType.Append(s[0], s[1])
+            
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxSys, cbType)
+        
+        
+        self.tsizer.Add(self.titreTyp, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
+        self.tsizer.Add(cbType, flag = wx.EXPAND|wx.LEFT, border = 2)
+        vs.Add(self.tsizer, flag = wx.EXPAND|wx.ALL, border = 2)
+#         self.sizer.Add(tsizer, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
+        vs.Show(self.tsizer, len(ref.listeSystemes) > 0)
+        self.vs = vs
         
         #
         # Nombre de systèmes disponibles en paralléle
         #
         vcNombre = VariableCtrl(self, systeme.nbrDispo, signeEgal = True, slider = False, 
-                                help = "Nombre de d'exemplaires de ce système disponibles simultanément.", scale = SSCALE)
+                                help = "Nombre de d'exemplaires de %s disponibles simultanément." %et2ou(ref._nomSystemes.ce_()), 
+                                scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVar, vcNombre)
         self.vcNombre = vcNombre
         vs.Add(vcNombre, flag = wx.TOP|wx.BOTTOM, border = 3)
@@ -10987,7 +11034,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Image
         #
-        isizer = self.CreateImageSelect(self, titre = "image du système")
+        isizer = self.CreateImageSelect(self, titre = "image %s" %et2ou(ref._nomSystemes.du_()))
         self.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
@@ -11055,8 +11102,9 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.GetDocument().MiseAJourNomsSystemes()
         
         if isinstance(self.systeme.parent, pysequence.Sequence):
+            ref = self.systeme.GetReferentiel()
             self.systeme.parent.MiseAJourNomsSystemes()
-            modif = "Modification des systèmes nécessaires"
+            modif = "Modification %s nécessaires" %et2ou(ref._nomSystemes.des_())
             if self.onUndoRedo():
                 self.sendEvent(modif = modif)
             else:
@@ -11117,12 +11165,12 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def EvtComboBoxSys(self, event):
 #        print "EvtComboBoxSys"
-        
-        self.systeme
+        ref = self.systeme.GetReferentiel()
+        self.systeme.typ = ref.listeSystemes[event.GetSelection()]
         
         self.Layout()
 #        print "ok"
-        self.sendEvent(modif = "Modification du type de Système")
+        self.sendEvent(modif = "Modification du type %s" %et2ou(ref._nomSystemes.de_()))
         
         
         
@@ -11133,12 +11181,13 @@ class PanelPropriete_Systeme(PanelPropriete):
 
     #############################################################################            
     def MarquerNomValide(self, etat = True):
+        ref = self.systeme.GetReferentiel()
         if etat:
             self.textctrl.SetBackgroundColour("white")
-            self.textctrl.SetToolTip("Saisir le nom du Système")
+            self.textctrl.SetToolTip("Saisir le nom %s" %et2ou(ref._nomSystemes.du_()))
         else:
             self.textctrl.SetBackgroundColour("pink")
-            self.textctrl.SetToolTip("Un autre Système porte déja ce nom !")
+            self.textctrl.SetToolTip("Un autre %s porte déja ce nom !" %et2ou(ref._nomSystemes.sing_()))
         self.textctrl.Refresh()
         
         
@@ -11147,12 +11196,12 @@ class PanelPropriete_Systeme(PanelPropriete):
     def EvtText(self, event):
         """ Modification du nom du système
         """
-        
+        ref = self.systeme.GetReferentiel()
 #         print "EvtText", event.GetString()
         if isinstance(self.systeme.parent, pysequence.Sequence):
             self.systeme.SetNom(event.GetString())
             self.systeme.parent.MiseAJourNomsSystemes()         # mise à jour dans l'arbre de la Séquence
-            modif = "Modification du nom du Système"
+            modif = "Modification du nom %s" %et2ou(ref._nomSystemes.du_())
             if self.onUndoRedo():
                 self.sendEvent(modif = modif)
             else:
@@ -11175,9 +11224,10 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def EvtVar(self, event):
         self.systeme.SetNombre()
-        
+
         if isinstance(self.systeme.parent, pysequence.Sequence):
-            modif = "Modification du nombre de Systèmes disponibles"
+            ref = self.systeme.GetReferentiel()
+            modif = "Modification du nombre %s disponibles" %et2ou(ref._nomSystemes.de_())
             if self.onUndoRedo():
                 self.sendEvent(modif = modif)
             else:
@@ -11217,6 +11267,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.vcNombre.Enable(etat)
         self.selec.Enable(etat)
         self.btImg.Enable(etat)
+        self.cbType.Enable(etat)
         self.sizer.Layout()
     
     
@@ -11229,16 +11280,34 @@ class PanelPropriete_Systeme(PanelPropriete):
     
     
     #############################################################################            
+    def MiseAJourTypeEnseignement(self):
+        ref = self.systeme.GetReferentiel()
+        self.titre.SetLabel("Nom %s :" %et2ou(ref._nomSystemes.du_()))
+        self.titreTyp.SetLabel("Type %s :" %et2ou(ref._nomSystemes.de_()))
+        self.vcNombre.SetHelp("Nombre de d'exemplaires de %s disponibles simultanément." %et2ou(ref._nomSystemes.ce_()))
+        self.MiseAJourImageSelect(titre = "image %s" %et2ou(ref._nomSystemes.du_()))
+        
+        self.cbType.Clear()
+        for s in [(ref.systemes[t][1], ref.getIconeSysteme(t, 24*SSCALE)) for t in ref.listeSystemes]:
+            self.cbType.Append(s[0], s[1])
+        self.vs.Show(self.tsizer, len(ref.listeSystemes) > 0)
+        
+        self.MiseAJour()
+        self.sizer.Layout()
+        
+        
+    #############################################################################            
     def MiseAJour(self, sendEvt = False):
         """
         """
-#         print "MiseAJour panelPropriete Systeme", self.systeme
+#         print("MiseAJour panelPropriete Systeme", self.systeme.typ)
         ref = self.systeme.GetReferentiel()
         self.textctrl.ChangeValue(self.systeme.nom)
         self.vcNombre.mofifierValeursSsEvt()
         
-        if hasattr(self, "cbType"):
-            self.cbType.SetSelection(self.cbType.GetStrings().index(ref.systemes[self.systeme.typ][0]))
+        if len(ref.listeSystemes) > 0:
+            self.cbType.SetSelection(ref.listeSystemes.index(self.systeme.typ))
+#             self.cbType.SetSelection(self.cbType.GetStrings().index(ref.systemes[self.systeme.typ][1]))
         
         self.SetImage()
         
@@ -14967,16 +15036,19 @@ class Panel_SelectEnseignement(wx.Panel):
         self.MiseAJour()
         self.sizer.Layout()
             
-        # Modification des liens vers le BO
-        self.panelClasse.SetLienBO()
+        # Mise à jour du panel Classe
+        self.panelClasse.MiseAJourTypeEnseignement()
         
-        # Modification des onglet du classeur
-        self.panelClasse.GetFenetreDoc().MiseAJourTypeEnseignement()
-        
-        self.Refresh()
-        
-        self.panelClasse.sendEvent(modif = "Modification du type d'enseignement",
-                                   obj = self.classe)
+#         # Modification des liens vers le BO
+#         self.panelClasse.SetLienBO()
+#         
+#         # Modification des onglet du classeur
+#         self.panelClasse.GetFenetreDoc().MiseAJourTypeEnseignement()
+#         
+#         self.Refresh()
+#         
+#         self.panelClasse.sendEvent(modif = "Modification du type d'enseignement",
+#                                    obj = self.classe)
     
     
     ######################################################################################  

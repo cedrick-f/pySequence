@@ -7865,10 +7865,10 @@ class Competences(ElementBase):
         else:
             aff = any([d.obj for k, d in lst])
             ctx = "O"
-        
+        self.codeBranche = {}
         if aff:
             self.arbre = arbre
-            self.codeBranche = {}
+            
             self.branches = {}
             for k, d in lst:
                 if (prerequis and d.pre) or (not prerequis and d.obj):
