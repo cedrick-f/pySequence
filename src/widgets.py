@@ -94,7 +94,7 @@ class Grammaire():
         else:
             a = ""
         
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + getSingulier(adj+" "+self.nom_obj.lower())
     
     
     def de_(self, adj = ""):
@@ -105,7 +105,7 @@ class Grammaire():
         else:
             a = "de "
         
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + getSingulier(adj+" "+self.nom_obj.lower())
     
     
     def de_plur_(self, adj = ""):
@@ -116,18 +116,18 @@ class Grammaire():
         else:
             a = "de "
         
-        return a + getPluriel(adj+self.nom_obj.lower())
+        return a + getPluriel(adj+" "+self.nom_obj.lower())
     
     def des_(self, adj = ""):
         """ article partitif pluriel + nom
         """
-        return "des "+getPluriel(adj+self.nom_obj.lower())
+        return "des "+getPluriel(adj+" "+self.nom_obj.lower())
     
     
     def les_(self, adj = ""):
         """ article défini pluriel + nom
         """
-        return "les "+getPluriel(adj+self.nom_obj.lower())
+        return "les "+getPluriel(adj+" "+self.nom_obj.lower())
     
     
     def le_(self, adj = ""):
@@ -137,7 +137,7 @@ class Grammaire():
             a = "le "
         else:
             a = "la "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + getSingulier(adj+" "+self.nom_obj.lower())
      
     
     def un_(self, adj = ""):
@@ -151,7 +151,7 @@ class Grammaire():
             a = "du "
         else:
             a = ""
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + getSingulier(adj+" "+self.nom_obj.lower())
     
 
     def sing_(self):
@@ -2294,4 +2294,256 @@ class DisplayChoice(wx.Dialog):
 #             rect.SetPosition(pos)
 #             dc.DrawRoundedRectangleRect(rect, 8)
             
+
+##########################################################################################
+#
+#    Elément au format XML enregistrable
+#        les attributs commençant par "_" sont ignorés
+#
+##########################################################################################        
+class XMLelem():
+    ######################################################################################  
+    def getBranche(self, nomb = ""):
+        """ Construction et renvoi d'une branche XML
+            (enregistrement de fichier)
+        """
+#        print "getBranche", self._codeXML, self
+        if nomb != "":
+            nomb = "_" + nomb
+        ref = ET.Element(str(self._codeXML+nomb))
+
+        def sauv(branche, val, nom = None):
+            nom = nom.replace("\n", "--")
+            if type(val) == str or type(val) == str:
+                branche.set("S_"+nom, val.replace("\n", "--"))
+            elif type(val) == int:
+                branche.set("I_"+nom, str(val))
+            elif type(val) == int:
+                branche.set("L_"+nom, str(val))
+            elif type(val) == float:
+                branche.set("F_"+nom, str(val))
+            elif type(val) == bool:
+                branche.set("B_"+nom, str(val))
+            elif type(val) == list or type(val) == tuple:
+                sub = ET.SubElement(branche, "l_"+nom)
+                for i, sv in enumerate(val):
+                    sauv(sub, sv, format(i, "02d"))
+            elif type(val) == dict:
+                sub = ET.SubElement(branche, "d_"+nom)
+                for k, sv in list(val.items()):
+                    if type(k) != str and type(k) != str:
+                        k = "_"+format(k, "02d")
+                    sauv(sub, sv, k)
+            elif isinstance(val, XMLelem):
+                branche.append(val.getBranche(nom))
+                
+                
+        for attr in dir(self):
+            if attr[0] != "_":
+                val = getattr(self, attr)
+                sauv(ref, val, attr)
+            
+        return ref
+        
+    
+        
+        
+    ######################################################################################
+    def setBranche(self, branche):
+        """ Lecture de la branche XML
+            (ouverture de fichier)
+        """
+#        print "setBranche", self._codeXML, self
+    
+        nomerr = []
+        
+        def lect(branche, nom = ""):
+            if nom[:2] == "S_":
+                return str(branche.get(nom)).replace("--", "\n")
+            
+            elif nom[:2] == "I_":
+                return int(branche.get(nom))
+            
+            elif nom[:2] == "L_":
+                return int(branche.get(nom))
+            
+            elif nom[:2] == "F_":
+                return float(branche.get(nom))
+            
+            elif nom[:2] == "B_":
+                return branche.get(nom)[0] == "T"
+            
+            elif nom[:2] == "l_":
+                sbranche = branche.find(nom)
+                if sbranche == None: return []
+                dic = {}
+                
+                # éléments "simples" : dans les items
+                for k, sb in list(sbranche.items()):
+#                     _k = k[2:]
+                    _k = k.split("_")[-1]
+                    if isinstance(_k, str) and "--" in _k:
+                        _k = _k.replace("--", "\n")
+                    dic[_k] = lect(sbranche, k)
+                
+                
+                
+                # éléments plus complexes : comme sous-élément
+                for sb in list(sbranche):
+                    k = sb.tag
+#                     _k = k[2:]
+                    _k = k.split("_")[-1]
+                    if isinstance(_k, str) and "--" in _k:
+                        _k = _k.replace("--", "\n")
+                    dic[_k] = lect(sbranche, k)
+                    
+                liste = [dic[v] for v in sorted(dic)]
+#                 print nom, liste
+#                 print "   ", sorted(dic)
+                
+          
+                return liste
+#                liste = [lect(sbranche, k) for k, sb in sbranche.items()]
+#                return liste + [lect(sb, k) for k, sb in list(sbranche)]
+            elif nom[:2] == "d_":
+                sbranche = branche.find(nom)
+                d = {}
+                if sbranche != None:
+                    for k, sb in list(sbranche.items()):
+#                        print k, sb
+#                        _k = k[2:]
+                        _k = k.split("_")[1]
+                        if isinstance(_k, str) and "--" in _k:
+                            _k = _k.replace("--", "\n")
+                        d[_k] = lect(sbranche, k)
+                    for sb in list(sbranche):
+                        k = sb.tag
+#                        _k = k[2:]
+                        _k = k.split("_")#[1]
+                        if len(_k) == 3:#k =="":#_k[0] == "_":
+                            _k = int(_k[2])
+                        else:
+                            _k = _k[1]
+                        if isinstance(_k, str) and "--" in _k:
+                            _k = _k.replace("--", "\n")
+                        d[_k] = lect(sbranche, k)
+                return d
+            
+            else:
+                sbranche = branche.find(nom)
+                classe = get_class(nom.split("_")[0])
+                obj, err = classe.setBranche(sbranche)
+                nomerr.extend(err)
+                return obj
+
+ 
+
+        for attr in dir(self):
+            if attr[0] != "_":
+                val = getattr(self, attr)
+                if type(val) == str or type(val) == str:
+                    _attr = "S_"+attr
+                elif type(val) == int:
+                    _attr = "I_"+attr
+                elif type(val) == int:
+                    _attr = "L_"+attr
+                elif type(val) == float:
+                    _attr = "F_"+attr
+                elif type(val) == bool:
+                    _attr = "B_"+attr
+                elif type(val) == list:
+                    _attr = "l_"+attr
+                elif type(val) == dict:
+                    _attr = "d_"+attr
+                else:
+                    _attr = None
+
+                if _attr != None:
+                    v = lect(branche, _attr.replace("\n", "--"))
+                    setattr(self, attr, v)
+
+        return self, nomerr
+
+
+    ######################################################################################  
+    def __eq__(self, ref):
+        """ Comparaison de deux référentiels
+        """
+        if not isinstance(ref, type(self)):
+            return False
+        
+        def egal(val1, val2):
+            if isinstance(val1, str) and isinstance(val2, str):
+#                if val1 != val2:#.replace("\n", "--"):
+#                    print "Erreur str : xml =", val1, "      xls =", val2#.replace("\n", "--")
+                return val1 == val2#.replace("\n", "--")
+            
+            elif type(val1) == bool and type(val2) == bool:
+#                if val1 != val2:
+#                    print "Erreur bool: xml =", val1, "      xls =", val2
+                return val1 == val2
+            
+            elif isinstance(val1, (int, float)) and isinstance(val2, (int, float)):
+#                if val1 != val2:
+#                    print "Erreur num: xml =", val1, "      xls =", val2
+                return val1 == val2
+            
+            elif type(val1) == list:
+                if len(val1) != len(val2):
+#                    print "Erreur list: xml =", val1, "      xls =", val2
+                    return False
+                
+                return all([egal(sval1, sval2) for sval1, sval2 in zip(val1, val2)])
+                
+#                 e = True
+#                 for sval1, sval2 in zip(val1, val2):
+#                     e = e and egal(sval1, sval2)
+#                 return e
+            
+            elif type(val1) == dict and type(val2) == dict:
+                if not egal(sorted(val1), sorted(val2)):
+#                    print "Erreur dict : xml =", val1, "      xls =", val2
+                    return False
+                return all([egal(v, val2[k]) for k, v in list(val1.items())])
+                
+#                 e = True
+#                 for k, v in val1.items():
+# #                    if isinstance(k, (str, unicode)):
+# #                        k = k.replace("--", "\n")
+#                     e = e and egal(v, val2[k])
+#                 return e
+            
+            elif isinstance(val1, XMLelem) and isinstance(val2, XMLelem):
+#                print "XMLelem", val1 == val2
+                return val1 == val2
+            
+            else:
+#                print "Erreur : xml =", val1, "      xls =", val2
+                return False
+        
+        for attr in dir(self):
+            if attr[0] != "_":
+                val1 = getattr(self, attr)
+                if isinstance(val1, (str, int, float, bool, list, dict, XMLelem)) :
+                    val2 = getattr(ref, attr)
+                    if not egal(val1, val2):
+#                         print u"Différence", ""
+#                         print "  ", attr
+#                         print "  xml:", val1
+#                         print "  xls:", val2
+                        break
+                        return False
+        return True
+
+
+def get_class( kls ):
+    parts = kls.split('.')
+    module = ".".join(parts[:-1])
+    m = __import__( module )
+    for comp in parts[1:]:
+        m = getattr(m, comp)            
+    return m
+
+
+
 

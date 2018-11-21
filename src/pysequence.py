@@ -101,7 +101,7 @@ from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
-                    rallonge, remplaceCode2LF, dansRectangle, \
+                    rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
                     getSingulier, getPluriel, getSingulierPluriel, Grammaire, et2ou, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     getAncreFenetre, tronquer, getHoraireTxt, scaleImage#, chronometrer
@@ -1366,7 +1366,7 @@ class Classe(ElementBase):
 # Classe définissant les propriétés d'un document
 #
 ####################################################################################################
-class ProprietesDoc():
+class ProprietesDoc(XMLelem):
     def __init__(self):
         pass
 
@@ -2813,7 +2813,7 @@ class Sequence(BaseDoc):
             #
             # Les Séances
             #
-            self.brancheSce = arbre.AppendItem(self.branche, Titres[3], 
+            self.brancheSce = arbre.AppendItem(self.branche, ref._nomSeances.plur_(), 
                                                image = self.arbre.images["Sea"], 
                                                data = "Sea")
             self.arbre.SetItemBold(self.brancheSce)
@@ -2951,9 +2951,10 @@ class Sequence(BaseDoc):
         # Intersection des différens filtres
         #
         if len(filtres) > 1:
-            lst = filtres[0]
+            filtre = set(filtres[0])
             for l in filtres[1:]:
-                lst = list(set(l).intersection(lst))
+                filtre.intersection_update(l)
+            filtre = list(filtre)
         elif len(filtres) > 0:
             filtre = filtres[0]
         else:

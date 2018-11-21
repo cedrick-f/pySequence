@@ -6456,8 +6456,8 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Systèmes
         #
-        self.btnAjouterSys = wx.Button(pageSys, -1, "Ajouter %s" %ref._nomSystemes.un_())
-        self.btnAjouterSys.SetToolTip("Ajouter %s à la liste" %ref._nomSystemes.un_("nouveau"))
+        self.btnAjouterSys = wx.Button(pageSys, -1, "Ajouter %s" %et2ou(ref._nomSystemes.un_()))
+        self.btnAjouterSys.SetToolTip("Ajouter %s à la liste" %et2ou(ref._nomSystemes.un_("nouveau")))
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSyst, self.btnAjouterSys)
         
         self.lstSys = wx.ListBox(pageSys, -1,
@@ -6465,7 +6465,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_LISTBOX, self.EvtListBoxSyst, self.lstSys)
         
         self.btnSupprimerSys = wx.Button(pageSys, -1, "Supprimer")
-        self.btnSupprimerSys.SetToolTip("Supprimer %s de la liste" %ref._nomSystemes.le_())
+        self.btnSupprimerSys.SetToolTip("Supprimer %s de la liste" %et2ou(ref._nomSystemes.le_()))
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSupprSyst, self.btnSupprimerSys)
         
         s = pysequence.Systeme(self.classe)
@@ -13417,11 +13417,11 @@ class ArbreSavoirs(HTL.HyperTreeList):
         doc = self.pp.GetDocument()
         for f in self.savoirsRef.nivTaxo:
             if f == "Spe":
-                self.AddColumn(doc.classe.specialite)
+                self.AddColumn(doc.classe.specialite, flag = wx.ALIGN_CENTER)
             elif f == "EnsSpe":
                 
                 for es in ref.listeEnsSpecif:
-                    self.AddColumn(es)
+                    self.AddColumn(es, flag = wx.ALIGN_CENTER)
         
         if self.GetColumnCount() > 1:
             self.SetAGWWindowStyleFlag(self.GetAGWWindowStyleFlag()^HTL.TR_NO_HEADER)           
@@ -13556,7 +13556,8 @@ class ArbreSavoirs(HTL.HyperTreeList):
                 ct_type = 0
                 
             b = self.AppendItem(branche, k+" "+dic[k][0].intitule, 
-                                ct_type = ct_type, data = toolTip)
+                                ct_type = ct_type, 
+                                data = toolTip)
             
             #
             # Taxonomie
@@ -13729,6 +13730,7 @@ class ArbreSavoirs(HTL.HyperTreeList):
     ####################################################################################
     def OnGetToolTip(self, event):
         toolTip = event.GetItem().GetData()
+#         print(event.GetPoint())
         if toolTip != None:
             event.SetToolTip(wx.ToolTip(toolTip))
 

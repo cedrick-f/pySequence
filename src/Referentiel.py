@@ -89,7 +89,12 @@ def includeElem(pl, gl):
 
 
                            
-                                
+##########################################################################################
+#
+#    Elément au format XML enregistrable
+#        les attributs commençant par "_" sont ignorés
+#
+##########################################################################################        
 class XMLelem():
     ######################################################################################  
     def getBranche(self, nomb = ""):
@@ -226,42 +231,50 @@ class XMLelem():
                         d[_k] = lect(sbranche, k)
                 return d
             
+            # Truc plus court à valider ...
+#             else:
+#                 sbranche = branche.find(nom)
+#                 classe = get_class(nom.split("_")[0])
+#                 obj, err = classe.setBranche(sbranche)
+#                 nomerr.extend(err)
+#                 return obj
+                 
             elif nom.split("_")[0] == "Indicateur":
                 sbranche = branche.find(nom)
                 indic, err = Indicateur().setBranche(sbranche)
                 nomerr.extend(err)
                 return indic
-            
+             
             elif nom.split("_")[0] == "Projet":
                 sbranche = branche.find(nom)
                 proj, err = Projet(self).setBranche(sbranche)
                 nomerr.extend(err)
                 return proj
-            
+             
             elif nom.split("_")[0] == "Savoirs":
                 sbranche = branche.find(nom)
                 sav, err = Savoirs().setBranche(sbranche)
                 nomerr.extend(err)
                 return sav
-            
+             
             elif nom.split("_")[0] == "Savoir":
                 sbranche = branche.find(nom)
                 sav, err = Savoir().setBranche(sbranche)
                 nomerr.extend(err)
                 return sav
-            
+             
             elif nom.split("_")[0] == "Competences":
                 sbranche = branche.find(nom)
                 comp, err = Competences().setBranche(sbranche)
                 nomerr.extend(err)
                 return comp
-            
+             
             elif nom.split("_")[0] == "Competence":
                 sbranche = branche.find(nom)
                 comp, err = Competence().setBranche(sbranche)
                 nomerr.extend(err)
                 return comp
-            
+             
             
 
         for attr in dir(self):
