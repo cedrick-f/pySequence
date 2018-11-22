@@ -7199,7 +7199,8 @@ class CentreInteret(ElementBase):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
-        self.branche = arbre.AppendItem(branche, getSingulierPluriel(self.GetReferentiel().nomCI, self.maxCI > 1)+" :", 
+        self.branche = arbre.AppendItem(branche, 
+                                        getSingulierPluriel(self.GetReferentiel()._nomCI.Plur_(), self.maxCI > 1)+" :", 
                                         wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         self.codeBranche.SetBranche(self.branche)
@@ -7771,12 +7772,12 @@ class Competences(ElementBase):
     ######################################################################################  
     def GetNomGenerique(self, code = "S"):
         dic = self.GetReferentiel().getDicToutesCompetences()
-        return getPluriel(dic[code].nomGenerique)  + " ("+ dic[code].abrDiscipline+ ")"
+        return getPluriel(dic[code]._nom.Plur_())  + " ("+ dic[code].abrDiscipline+ ")"
     
     ######################################################################################  
     def GetNomGenerique_sing(self, code = "S"):
         dic = self.GetReferentiel().getDicToutesCompetences()
-        return getSingulier(dic[code].nomGenerique)
+        return getSingulier(dic[code]._nom.sing_())
     
     ######################################################################################  
     def GetCodeDiscipline(self, code = "S"):
@@ -8120,12 +8121,12 @@ class Savoirs(ElementBase):
     ######################################################################################  
     def GetNomGenerique(self, code = "S"):
         dic = self.GetReferentiel().getDicTousSavoirs()
-        return getPluriel(dic[code].nomGenerique) + " ("+ dic[code].abrDiscipline+ ")"
+        return getPluriel(dic[code]._nom.Plur_()) + " ("+ dic[code].abrDiscipline+ ")"
     
     ######################################################################################  
     def GetNomGenerique_sing(self, code = "S"):
         dic = self.GetReferentiel().getDicTousSavoirs()
-        return getSingulier(dic[code].nomGenerique)
+        return getSingulier(dic[code]._nom.sing_())
     
     ######################################################################################  
     def GetDiscipline(self, code):

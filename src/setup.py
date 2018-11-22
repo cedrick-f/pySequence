@@ -163,7 +163,7 @@ if not "beta" in __version__:
         base = "Win32GUI"
 
 
-name = "pySéquence"
+name = "pySequence"
 version = GetVersion_cxFreeze()
 author = "Cédrick FAURY & Jean-Claude FRICOU"
 author_email = __mail__.replace("#", '@')

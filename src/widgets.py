@@ -179,6 +179,9 @@ class Grammaire():
     def plur_(self):
         return getPluriel(self.nom_obj)
     
+    def Plur_(self):
+        return getPluriel(self.nom_obj.capitalize())
+    
     
     
     

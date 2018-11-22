@@ -14941,9 +14941,6 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
 from wx.lib.combotreebox import ComboTreeBox
 class Panel_SelectEnseignement(wx.Panel):
     def __init__(self, parent, panelClasse, pourProjet, classe):
-        
-        
-        
         wx.Panel.__init__(self, parent, -1)
         
         self.classe = classe
@@ -14958,7 +14955,8 @@ class Panel_SelectEnseignement(wx.Panel):
         #
         # Type d'enseignement
         #
-        self.ctb_type = ComboTreeBox(self, wx.ID_ANY)
+#         self.ctb_type = ComboTreeBox(self, wx.ID_ANY)
+        self.ctb_type = myComboTreeBox(self, wx.ID_ANY)
         self.sizer.Add(self.ctb_type, 0, wx.GROW | wx.EXPAND| wx.ALL, 1)
         self.Construire()
         
@@ -15015,9 +15013,14 @@ class Panel_SelectEnseignement(wx.Panel):
     def EvtRadioBox(self, event = None, CodeFam = None):
         """ Sélection d'un type d'enseignement
         """
+#         print("EvtRadioBox")
         if event != None:
 #             radio_selected = event.GetEventObject()
             CodeFam = Referentiel.getEnseignementLabel(event.GetString())
+#         print("EvtRadioBox", CodeFam)
+        if CodeFam is None:
+            self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
+            return
         
         self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
         self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
@@ -15039,16 +15042,6 @@ class Panel_SelectEnseignement(wx.Panel):
         # Mise à jour du panel Classe
         self.panelClasse.MiseAJourTypeEnseignement()
         
-#         # Modification des liens vers le BO
-#         self.panelClasse.SetLienBO()
-#         
-#         # Modification des onglet du classeur
-#         self.panelClasse.GetFenetreDoc().MiseAJourTypeEnseignement()
-#         
-#         self.Refresh()
-#         
-#         self.panelClasse.sendEvent(modif = "Modification du type d'enseignement",
-#                                    obj = self.classe)
     
     
     ######################################################################################  
@@ -15075,7 +15068,7 @@ class Panel_SelectEnseignement(wx.Panel):
             
             if t[0] == "_" or (self.pourProjet and len(REFERENTIELS[t].projets) == 0):
                 branche = self.ctb_type.Append(REFERENTIELS[st[0]].Enseignement[2], 
-                                          clientData = REFERENTIELS[st[0]].Enseignement[3])
+                                               clientData = REFERENTIELS[st[0]].Enseignement[3])
                 self.Tooltips[REFERENTIELS[st[0]].Enseignement[2]] = REFERENTIELS[st[0]].Enseignement[2]
             else:
                 branche = self.ctb_type.Append(REFERENTIELS[t].Enseignement[0])#, ct_type=2)#, image = self.arbre.images["Seq"])
@@ -15104,14 +15097,18 @@ class Panel_SelectEnseignement(wx.Panel):
 
     ######################################################################################  
     def OnTreeTooltip(self, event):
-#         print("Tool tip!") #debug
+         #debug
         itemtext = self.ctb_type.GetString(event.GetItem())
-        event.SetToolTip(self.Tooltips[itemtext])
-        event.Skip()
+#         event.SetToolTip(self.Tooltips[itemtext])
+#         tree = event.GetClientObject()
+#         print("Tool tip!", event.GetEventObject(), self.Tooltips[itemtext])
+        event.GetEventObject().SetToolTip(self.Tooltips[itemtext])
+#         event.Skip()
         
         
     ######################################################################################  
     def MiseAJour(self):
+        print("MiseAJour")
         self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
 #         self.st_type.SetLabel(self.classe.GetLabel())
         self.rb_spe.Clear()
@@ -15901,7 +15898,7 @@ class TreeCtrlComboBook(wx.Panel):
         self.Refresh()
         
     def OnClick(self, evt):
-        win = TreeCtrlComboPopup(self,
+        win = TreeCtrlComboPopupTaches(self,
                                  wx.SIMPLE_BORDER,
                                  self.tache,
                                  self.EvtComboBox)
@@ -15940,15 +15937,12 @@ class TreeCtrlComboBook(wx.Panel):
 #  TreeCtrlComboPopup
 #
 ###########################################################################################################
-class TreeCtrlComboPopup(wx.PopupTransientWindow):
-    def __init__(self, parent, style, tache, fct):
-        self.fct = fct
+class TreeCtrlComboPopup2(wx.PopupTransientWindow):
+    def __init__(self, parent, style):
         wx.PopupTransientWindow.__init__(self, parent, style)
         
         self.pnl = wx.Panel(self)
         
-        prj = tache.GetProjetRef()
-
         self.tree = CT.CustomTreeCtrl(self.pnl, style=wx.TR_HIDE_ROOT
                                 |wx.TR_HAS_BUTTONS
                                 |wx.TR_SINGLE
@@ -15957,16 +15951,7 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
 #                                |wx.SIMPLE_BORDER,
                                 agwStyle = CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT)
         self.tree.SetMinSize((600*SSCALE,400*SSCALE))
-        ph = None
-        for ct in prj.listTaches:
-            if ph != prj.taches[ct][0]:
-                pph = self.AddItem(prj.phases[prj.taches[ct][0]][1])
-                self.tree.SetItemBold(pph, True)
-                ph = prj.taches[ct][0]
-            item = self.AddItem(ct+" "+prj.taches[ct][1], parent=pph)
-            if prj.tachesOnce:
-                self.tree.EnableItem(item, ct not in [t.intitule for t in tache.projet.taches])
-            
+        
                 
         self.tree.ExpandAll()
         
@@ -16084,6 +16069,206 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
 #        evt.Skip()
 
     
+class TreeCtrlComboPopupTaches(TreeCtrlComboPopup2):
+    def __init__(self, parent, style, tache, fct):
+        self.fct = fct
+        TreeCtrlComboPopup2.__init__(self, parent, style)
+        
+        prj = tache.GetProjetRef()
+
+        ph = None
+        for ct in prj.listTaches:
+            if ph != prj.taches[ct][0]:
+                pph = self.AddItem(prj.phases[prj.taches[ct][0]][1])
+                self.tree.SetItemBold(pph, True)
+                ph = prj.taches[ct][0]
+            item = self.AddItem(ct+" "+prj.taches[ct][1], parent=pph)
+            if prj.tachesOnce:
+                self.tree.EnableItem(item, ct not in [t.intitule for t in tache.projet.taches])
+            
+    
+###########################################################################################################
+#
+#  ComboTreeBox personnalisé
+#
+###########################################################################################################
+class myComboTreeBox(wx.ComboCtrl):
+    def __init__(self, *arg, **kargs):
+        wx.ComboCtrl.__init__(self, *arg, **kargs)
+        self.tcp = TreeCtrlComboPopup()
+        self.SetPopupControl(self.tcp)
+        
+#     def Append(self, itemText, parent = None, clientData=None):
+#         if parent is None:
+#             parent = self.tcp.GetRootItem()
+#         self.tcp.AppendItem(parent, itemText, image=-1, data=clientData)
+
+    def Append(self, value, parent = None, clientData = None):
+        return self.tcp.AddItem(value, parent, clientData)
+#         
+    def SetStringSelection(self, value):
+        self.tcp.SetStringValue(value)
+        self.SetValue(value)
+         
+    def GetString(self, item):
+        return self.tcp.GetString(item)
+
+    def OnLeftDown(self, evt):
+        self.Parent.GetEventHandler().ProcessEvent(evt)
+
+
+    
+class TreeCtrlComboPopup(wx.ComboPopup):
+    def __init__(self):
+        wx.ComboPopup.__init__(self)
+        self.tree = None
+    
+    
+    def FindItem(self, parentItem, text):        
+        item, cookie = self.tree.GetFirstChild(parentItem)
+        while item:
+            if self.tree.GetItemText(item) == text:
+                return item
+            if self.tree.ItemHasChildren(item):
+                item = self.FindItem(item, text)
+            item, cookie = self.tree.GetNextChild(parentItem, cookie)
+#         return wx.TreeItemId()
+
+
+    def AddItem(self, value, parent = None, clientData = None):
+        if not parent:
+            root = self.tree.GetRootItem()
+#             if not root:
+#                 root = self.tree.AddRoot("<hidden root>")
+            parent = root
+
+        item = self.tree.AppendItem(parent, value, data = clientData)
+        return item
+
+
+    def OnMotion(self, evt):
+        # have the selection follow the mouse, like in a real combobox
+        item, flags = self.tree.HitTest(evt.GetPosition())
+        if item:# and flags & wx.TREE_HITTEST_ONITEMLABEL:
+#             self.tree.SelectItem(item)
+            self.curitem = item
+#     def OnToolTip(self, evt):
+#         item, flags = self.tree.HitTest(evt.GetPosition())
+            ev = wx.TreeEvent(wx.EVT_TREE_ITEM_GETTOOLTIP.typeId, self.tree, item)
+            self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
+#         wx.CallAfter(self.tree.Refresh)
+#         self.tree.SetToolTip("aaa")
+        evt.Skip()
+        
+        
+    def OnLeftDown(self, evt):
+        # do the combobox selection
+        item, flags = self.tree.HitTest(evt.GetPosition())
+        if item and flags & wx.TREE_HITTEST_ONITEMLABEL:
+            self.curitem = item
+            self.value = item
+            self.Dismiss()
+        
+        ev = wx.CommandEvent(wx.EVT_COMBOBOX.typeId)
+        ev.SetString(self.GetStringValue())
+        self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
+#         self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
+        evt.Skip()
+        
+    # The following methods are those that are overridable from the
+    # ComboPopup base class.  Most of them are not required, but all
+    # are shown here for demonstration purposes.
+
+    # This is called immediately after construction finishes.  You can
+    # use self.GetCombo if needed to get to the ComboCtrl instance.
+    def Init(self):
+        self.value = None
+        self.curitem = None
+
+    # Create the popup child control.  Return true for success.
+    def Create(self, parent):
+        self.tree = wx.TreeCtrl(parent, style=wx.TR_HIDE_ROOT
+                                |wx.TR_HAS_BUTTONS
+                                |wx.TR_SINGLE
+                                |wx.TR_LINES_AT_ROOT
+                                |wx.SIMPLE_BORDER)
+        self.tree.Bind(wx.EVT_MOTION, self.OnMotion)
+        self.tree.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+#         self.tree.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+        return True
+
+    # Return the widget that is to be used for the popup
+    def GetControl(self):
+        return self.tree
+
+    # Called just prior to displaying the popup, you can use it to
+    # 'select' the current item.
+    def SetStringValue(self, value):
+#         print("SetStringValue", value)
+        root = self.tree.GetRootItem()
+        if not root:
+            return
+        found = self.FindItem(root, value)
+        
+        if found is not None:
+#             print(">>", found)
+            self.value = found
+            self.tree.SelectItem(found)
+
+    # Return a string representation of the current item.
+    def GetStringValue(self):
+        if self.value:
+            return self.tree.GetItemText(self.value)
+        return ""
+    
+    def GetString(self, item):
+        if item:
+            return self.tree.GetItemText(item)
+        return ""
+
+    # Called immediately after the popup is shown
+    def OnPopup(self):
+        wx.ComboPopup.OnPopup(self)
+        if self.value:
+            self.tree.EnsureVisible(self.value)
+            self.tree.SelectItem(self.value)
+
+
+    # Called when popup is dismissed
+    def OnDismiss(self):
+        wx.ComboPopup.OnDismiss(self)
+
+    # This is called to custom paint in the combo control itself
+    # (ie. not the popup).  Default implementation draws value as
+    # string.
+    def PaintComboControl(self, dc, rect):
+        wx.ComboPopup.PaintComboControl(self, dc, rect)
+
+    # Receives key events from the parent ComboCtrl.  Events not
+    # handled should be skipped, as usual.
+    def OnComboKeyEvent(self, event):
+        wx.ComboPopup.OnComboKeyEvent(self, event)
+
+    # Implement if you need to support special action when user
+    # double-clicks on the parent wxComboCtrl.
+    def OnComboDoubleClick(self):
+        wx.ComboPopup.OnComboDoubleClick(self)
+
+    # Return final size of popup. Called on every popup, just prior to OnPopup.
+    # minWidth = preferred minimum width for window
+    # prefHeight = preferred height. Only applies if > 0,
+    # maxHeight = max height for window, as limited by screen size
+    #   and should only be rounded down, if necessary.
+    def GetAdjustedSize(self, minWidth, prefHeight, maxHeight):
+        return wx.ComboPopup.GetAdjustedSize(self, minWidth, prefHeight, maxHeight)
+
+    # Return true if you want delay the call to Create until the popup
+    # is shown for the first time. It is more efficient, but note that
+    # it is often more convenient to have the control created
+    # immediately.
+    # Default returns false.
+    def LazyCreate(self):
+        return wx.ComboPopup.LazyCreate(self)
     
     
 ###########################################################################################################
