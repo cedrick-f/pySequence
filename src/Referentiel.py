@@ -3681,7 +3681,7 @@ class Savoirs(XMLelem):
             [] si on est au bout de la branche
         """
         
-        if code in list(self.dicSavoirs.keys()) and len(self.dicSavoirs[code]) > 1:
+        if code in list(self.dicSavoirs.keys()):# and len(self.dicSavoirs[code]) > 1:
             return list(self.dicSavoirs[code].sousSav.keys())#[1]
         return []
     

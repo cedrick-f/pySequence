@@ -371,6 +371,9 @@ def getDisplayPosSize():
 
 
 
+    
+    
+
 ####################################################################################
 #
 #   Classes pour gérer les boutons de la Toolbar principale
@@ -2736,23 +2739,13 @@ class FenetreSequence(FenetreDocument):
             :param nomFichier: encodé en FileEncoding
         """
         print("ouvrir sequence", nomFichier)
-        if not os.path.isfile(nomFichier):
-            return
         
-        fichier = open(nomFichier,'r', encoding='utf-8')
-        self.definirNomFichierCourant(nomFichier)
-    
-        parser = ET.XMLParser(encoding="utf-8")
+        root = pysequence.safeParse(nomFichier, wx.GetTopLevelParent(self))
+        if root is None:
+            return None, "", 0, False, True
+
         
-        try:
-            root = ET.parse(fichier, parser = parser).getroot()
-        except ET.ParseError:
-            messageErreur(wx.GetTopLevelParent(self), "Fichier corrompu", 
-                              "Le fichier suivant est corrompu !!\n\n"\
-                              "%s\n\n" \
-                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-            Annuler = True
-            return None, "", 0, False, Annuler
+
         
         ###############################################################################################################
         def ouvre():
@@ -2789,11 +2782,13 @@ class FenetreSequence(FenetreDocument):
                "Elle va être automatiquement convertie au format actuel." %nomCourt(nomFichier))
             reparer = True
             ouvre()
+            self.MarquerFichierCourantModifie(True)
+            
         except:
             messageErreur(self, "Erreur d'ouverture",
                           "La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !\n" \
                           "Essayez de faire Outils/Ouvrir et réparer." %nomCourt(nomFichier))
-            fichier.close()
+
             self.Close()
             if DEBUG:
                 raise
@@ -2803,10 +2798,7 @@ class FenetreSequence(FenetreDocument):
 #        self.arbre.ExpandAll()
 #        self.arbre.CalculatePositions()
 #        self.arbre.SelectItem(self.arbre.classe.branche)
-        
-        fichier.close()
-        
-        
+
         
 #         if redessiner:
 #             wx.CallAfter(self.fiche.Redessiner)
@@ -2815,7 +2807,7 @@ class FenetreSequence(FenetreDocument):
         self.sequence.undoStack.do("Ouverture de la Séquence")
         self.parent.miseAJourUndo()
         
-       
+        self.definirNomFichierCourant(nomFichier)
         
         return self.sequence
         
@@ -3128,21 +3120,12 @@ class FenetreProjet(FenetreDocument):
         dlg.Show()
 
 #         self.fiche.Hide()
+        root = pysequence.safeParse(nomFichier, dlg)
+        if root is None:
+            return None, "", 0, False, True
         
-        fichier = open(nomFichier,'r', encoding='utf-8')
-        self.definirNomFichierCourant(nomFichier)
-        parser = ET.XMLParser(encoding="utf-8")
-        
-        try:
-            root = ET.parse(fichier, parser = parser).getroot()
-        except ET.ParseError:
-            messageErreur(dlg, "Fichier corrompu", 
-                              "Le fichier suivant est corrompu !!\n\n"\
-                              "%s\n\n" \
-                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-            Annuler = True
-            return None, "", 0, False, Annuler
-           
+
+            
         
         #################################################################################################
         def get_err_message(err):
@@ -3150,7 +3133,7 @@ class FenetreProjet(FenetreDocument):
         
         
         #################################################################################################
-        def ouvre(fichier, message):
+        def ouvre(message):
             count = 1
             Ok = True
             Annuler = False
@@ -3228,7 +3211,7 @@ class FenetreProjet(FenetreDocument):
             if len(err) > 0:
                 message += "\n   L'erreur concerne :"
                 message += get_err_message(err)
-            fichier.close()
+                
             self.fermer()
             count = nbr_etapes
 #            dlg.UpdateWindowUI()
@@ -3248,13 +3231,15 @@ class FenetreProjet(FenetreDocument):
         ################################################################################################
         err = []
         try:
-            root, message, count, Ok, Annuler = ouvre(fichier, message)
+            root, message, count, Ok, Annuler = ouvre(message)
         except OldVersion:
             messageWarning(dlg, "Ancienne version",
                                "Le projet\n    %s\n a été créé avec une version ancienne de pySéquence !\n" \
                                "Il va être automatiquement converti au format actuel." %nomCourt(nomFichier))
             reparer = True
-            root, message, count, Ok, Annuler = ouvre(fichier, message)
+            root, message, count, Ok, Annuler = ouvre(message)
+            self.MarquerFichierCourantModifie(True)
+            
         except:
             count = 0
             err = [constantes.Erreur(constantes.ERR_INCONNUE)]
@@ -3268,8 +3253,6 @@ class FenetreProjet(FenetreDocument):
         if Annuler:
             annuleTout(message)
             return
-        
-        fichier.close()
         
 
         try:
@@ -3325,6 +3308,8 @@ class FenetreProjet(FenetreDocument):
         self.classe.undoStack.do("Ouverture de la Classe")
         self.projet.undoStack.do("Ouverture du Projet")
         self.parent.miseAJourUndo()
+        
+        self.definirNomFichierCourant(nomFichier)
         
         return self.projet
 
@@ -3839,8 +3824,6 @@ class FenetreProgression(FenetreDocument):
         """ <nomFichier> encodé en FileEncoding
         """
         print("Ouverture progression", nomFichier)
-        if not os.path.isfile(nomFichier):
-            return
         
         Ok = True
         Annuler = False
@@ -3856,20 +3839,10 @@ class FenetreProgression(FenetreDocument):
 #         print(wx.GetTopLevelParent(self))
 #         self.fiche.Hide()
         
-        fichier = open(nomFichier,'r', encoding='utf-8')
-        self.definirNomFichierCourant(nomFichier)
-        parser = ET.XMLParser(encoding="utf-8")
-    
-        try:
-            root = ET.parse(fichier, parser = parser).getroot()
-        except ET.ParseError:
-            messageErreur(dlg, "Fichier corrompu", 
-                              "Le fichier suivant est corrompu !!\n\n"\
-                              "%s\n\n" \
-                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-            Annuler = True
-            return None, "", 0, False, Annuler
-        
+        root = pysequence.safeParse(nomFichier, dlg)
+        if root is None:
+            return None, "", 0, False, True
+         
         
         #################################################################################################
         def get_err_message(err):
@@ -3877,7 +3850,7 @@ class FenetreProgression(FenetreDocument):
         
         
         #################################################################################################
-        def ouvre(fichier, message):         
+        def ouvre(message):         
             count = 0
             Ok = True
             Annuler = False
@@ -3924,14 +3897,15 @@ class FenetreProgression(FenetreDocument):
         err = []
 
         try:
-            root, message, count, Ok, Annuler = ouvre(fichier, message)
+            root, message, count, Ok, Annuler = ouvre(message)
             
         except OldVersion:
             messageWarning(dlg, "Ancienne version",
                                "La progression\n    %s\n a été créée avec une version ancienne de pySéquence !\n" \
                                "Elle va être automatiquement converti au format actuel." %nomCourt(nomFichier))
             reparer = True
-            root, message, count, Ok, Annuler = ouvre(fichier, message)
+            root, message, count, Ok, Annuler = ouvre(message)
+            self.MarquerFichierCourantModifie(True)
             
         except:
             count = 0
@@ -3948,14 +3922,13 @@ class FenetreProgression(FenetreDocument):
             if len(err) > 0:
                 message += "\n   L'erreur concerne :"
                 message += get_err_message(err)
-            fichier.close()
+        
             self.Close()
             count = nbr_etapes
             dlg.update(count, message)
             wx.CallAfter(dlg.Destroy)
             return
         
-        fichier.close()
         
         #
         # Finalisation de l'ouverture
@@ -3966,9 +3939,9 @@ class FenetreProgression(FenetreDocument):
                          "Construction de l'arborescence de la classe...\t"],
                          [self.progression.ConstruireArbre, [self.arbre, root], {},
                           "Construction de l'arborescence de la progression...\t"],
-                        [self.progression.ChargerSequences, [], {},
+                        [self.progression.ChargerSequences, [], {"reparer" : reparer},
                          "Chargement des Séquences...\t"],
-                        [self.progression.ChargerProjets, [], {},
+                        [self.progression.ChargerProjets, [], {"reparer" : reparer},
                          "Chargement des Projets...\t"],
                         [self.progression.Ordonner, [], {},
                          "Classement...\t"],
@@ -4024,7 +3997,9 @@ class FenetreProgression(FenetreDocument):
         self.classe.undoStack.do("Ouverture de la Classe")
         self.progression.undoStack.do("Ouverture de la Progression")
         self.parent.miseAJourUndo()
-    
+        
+        self.definirNomFichierCourant(nomFichier)
+        
         return self.progression
     
     

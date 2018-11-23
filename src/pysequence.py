@@ -132,6 +132,27 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
 
 
 
+def safeParse(nomFichier, toplevelwnd):
+    if not os.path.isfile(nomFichier):
+        return
+    
+    fichier = open(nomFichier,'r', encoding='utf-8')
+    parser = ET.XMLParser(encoding="utf-8")
+    
+    try:
+        root = ET.parse(fichier, parser = parser).getroot()
+        fichier.close()
+        return root
+    
+    except ET.ParseError:
+        messageErreur(toplevelwnd, "Fichier corrompu", 
+                          "Le fichier suivant est corrompu !!\n\n"\
+                          "%s\n\n" \
+                          "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+        fichier.close()
+        
+    
+
 #######################################################################################  
 #def forceID(xml):
 #    for node in xml.childNodes:
@@ -1090,14 +1111,13 @@ class Classe(ElementBase):
                 if code != self.typeEnseignement:
                     self.typeEnseignement = code
                 
-                
-                    
                     
             print("   TypeEnseignement :", self.typeEnseignement)
             if self.typeEnseignement in REFERENTIELS:
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
             else:
                 err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
+            
             self.referentiel.postTraiter()
             self.referentiel.completer(forcer = True)
                 
@@ -5732,7 +5752,7 @@ class Progression(BaseDoc, Grammaire):
 #        l.sequence.app = app
 
     ######################################################################################  
-    def ChargerSequences(self):
+    def ChargerSequences(self, reparer = False):
 #        print "ChargerSequences", self.sequences_projets
         aSupprimer = []
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
@@ -5776,7 +5796,7 @@ class Progression(BaseDoc, Grammaire):
                         aSupprimer.append(lienSeq)
                         continue
                 else: 
-                    lienSeq.ChargerSequence()
+                    lienSeq.ChargerSequence(reparer = reparer)
         
         #
         # On supprime les lienSequences à supprimer
@@ -5788,7 +5808,7 @@ class Progression(BaseDoc, Grammaire):
 
     
     ######################################################################################  
-    def ChargerProjets(self):
+    def ChargerProjets(self, reparer = False):
 #        print "ChargerProjets", self.sequences_projets
         aSupprimer = []
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
@@ -5832,7 +5852,7 @@ class Progression(BaseDoc, Grammaire):
                         aSupprimer.append(lienPrj)
                         continue
                 else: 
-                    lienPrj.ChargerProjet()
+                    lienPrj.ChargerProjet(reparer = reparer)
         
         #
         # On supprime les lienProjet à supprimer
@@ -6090,7 +6110,7 @@ class Progression(BaseDoc, Grammaire):
   
   
     ########################################################################################################
-    def OuvrirFichierSeq(self, nomFichier):
+    def OuvrirFichierSeq(self, nomFichier, reparer = False):
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
 #        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
@@ -6104,17 +6124,20 @@ class Progression(BaseDoc, Grammaire):
                 return classe, sequence
         
 #        print "///", nomFichier
-        fichier = open(nomFichier,'r')
+        root = safeParse(nomFichier, None)
+        if root is None:
+            return None,  None
+        
         classe = Classe(self.GetApp())
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
 #         try:
-        root = ET.parse(fichier).getroot()
+        
         rsequence = root.find("Sequence")
         rclasse = root.find("Classe")
         if rclasse is not None:
-            classe.setBranche(rclasse)
+            classe.setBranche(rclasse, reparer = reparer)
         if rsequence is not None:
             sequence.setBranche(rsequence)
         else:   # Ancienne version , forcément STI2D-ETT !!
@@ -6130,7 +6153,7 @@ class Progression(BaseDoc, Grammaire):
 
     
     ########################################################################################################
-    def OuvrirFichierPrj(self, nomFichier):
+    def OuvrirFichierPrj(self, nomFichier, reparer = False):
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
         for prj in self.GetApp().parent.GetDocumentsOuverts('prj'):
@@ -6141,19 +6164,20 @@ class Progression(BaseDoc, Grammaire):
                 projet = prj[0]
                 classe = projet.classe
                 return classe, projet
+
+        root = safeParse(nomFichier, None)
+        if root is None:
+            return None,  None
         
-#        print "///", nomFichier
-        fichier = open(nomFichier,'r')
         classe = Classe(self.GetApp())
         projet = Projet(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(projet)
 
         try:
-            root = ET.parse(fichier).getroot()
             rprojet = root.find("Projet")
             rclasse = root.find("Classe")
             if rclasse is not None:
-                classe.setBranche(rclasse)
+                classe.setBranche(rclasse, reparer = reparer)
             if rprojet is not None:
                 projet.setBranche(rprojet)
             else:   # Ancienne version , forcément STI2D-ETT !!
@@ -6164,8 +6188,7 @@ class Progression(BaseDoc, Grammaire):
         except:
             print("Le fichier n'a pas pu être ouvert :",nomFichier)
             return None, None
-        finally:
-            fichier.close()
+
 
 
     #############################################################################
@@ -6713,9 +6736,9 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
 
     
     ######################################################################################  
-    def ChargerSequence(self):
+    def ChargerSequence(self, reparer = False):
         print("ChargerSequence", self.path)
-        classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path)
+        classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path, reparer = reparer)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.sequence = sequence
 
@@ -6856,9 +6879,9 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
 
     
     ######################################################################################  
-    def ChargerProjet(self):
+    def ChargerProjet(self, reparer = False):
         print("ChargerProjet", self.path)
-        classe, projet = self.GetDocument().OuvrirFichierPrj(self.path)
+        classe, projet = self.GetDocument().OuvrirFichierPrj(self.path, reparer = reparer)
         print("   ", classe.typeEnseignement , self.GetReferentiel().Code)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.projet = projet
