@@ -1089,13 +1089,19 @@ class Classe(ElementBase):
                 print("   Code trouvé dans référentiel :", code)
                 if code != self.typeEnseignement:
                     self.typeEnseignement = code
+                
+                
+                    
                     
             print("   TypeEnseignement :", self.typeEnseignement)
             if self.typeEnseignement in REFERENTIELS:
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
             else:
                 err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
-        
+            self.referentiel.postTraiter()
+            self.referentiel.completer(forcer = True)
+                
+                
         def RecupCI():
             if self.GetVersionNum() < 5:
                 brancheCI = branche.find("CentreInteret")
@@ -12425,7 +12431,7 @@ class Eleve(Personne, ElementBase):
 
 ####################################################################################
 #
-#   Classe définissant les propriétés d'un élève
+#   Classe définissant les propriétés d'un groupe d'élève
 #
 ####################################################################################
 class Groupe(Eleve):

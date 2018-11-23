@@ -3087,18 +3087,16 @@ class FenetreProjet(FenetreDocument):
             if dlg is not None:
                 dlg.update(count, message)
             count += 1
-            if DEBUG:
+
+            try :
                 fct(*arg, **karg)
                 message += "Ok\n"
-            
-            else:
-                try :
-                    fct(*arg, **karg)
-                    message += "Ok\n"
-                except:
+            except:
 #                     Ok = False
-                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + "\n"
-                    
+                message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + "\n"
+                if DEBUG:
+                    raise
+        
         self.projet.Verrouiller()
         self.projet.VerifierVersionGrilles()
 
@@ -3273,14 +3271,13 @@ class FenetreProjet(FenetreDocument):
         
         fichier.close()
         
-        if DEBUG:
+
+        try:
             message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
-        else:
-            try:
-                message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
-            except:
-                annuleTout(message)
-                return
+        except:
+            annuleTout(message)
+            if DEBUG:raise
+            return
             
 
 #        self.projet.Verrouiller()
