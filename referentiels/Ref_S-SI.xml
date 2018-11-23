@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Seances(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt$m" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle$m" S_nomEnsSpecif="Enseignement(s) spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)$f">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/cid53329/mene1019619a.html" />
     <l_01 S_00="Epreuves" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
@@ -38,7 +38,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)$f" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences>
@@ -818,7 +818,7 @@
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
-    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Connaissance(s) &amp; Capacité(s)">
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Connaissance(s) &amp; Capacité(s)$f">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicSElemAssocies />
@@ -3201,7 +3201,7 @@
       </d_dicSavoirs>
       <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_S>
-    <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="Math" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Capacités Math">
+    <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="Math" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Capacité(s) Math$f">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicSElemAssocies />
@@ -4704,7 +4704,7 @@
       </d_dicSavoirs>
       <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_M>
-    <Savoirs_P B_obj="False" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Notions Physique/Chimie">
+    <Savoirs_P B_obj="False" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Notion(s) Physique/Chimie$f">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicSElemAssocies />
@@ -7321,14 +7321,27 @@
   <l_listeDomaines S_00="M" S_01="E" S_02="I" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
   <l_listeEnsSpecif />
-  <l_listeNivTaxo />
+  <l_listeNivTaxo S_00="1.0" S_01="2.0" S_02="3.0" S_03="4.0" />
   <l_listeSpecialites />
-  <l_listeSystemes />
+  <l_listeSystemes S_00="PE" S_01="SE" S_02="SC" />
   <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
   <l_listeTypeHorsClasse />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
-  <d_nivTaxo />
+  <d_nivTaxo>
+    <l_1.0 S_00="Niveau d'information" S_01="Le contenu est relatif à l'appréhension d’une vue d’ensemble d’un sujet : montrer ses réalités sous certains aspects de manière partielle ou globale" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_1.0>
+    <l_2.0 S_00="Niveau d'expression" S_01="Le contenu est relatif à l’acquisition de moyens d’expression et de communication : définir, utiliser les termes composant la discipline. Il s’agit de maîtriser un savoir « appris ».--Ce niveau englobe le précédent.--" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_2.0>
+    <l_3.0 S_00="Niveau de la maitrise d'outils" S_01="Le contenu est relatif à la maîtrise d’outils d’étude ou d’action : utiliser, manipuler des règles ou des ensembles de règles (algorithme), des principes, des démarches formalisées en vue d’un résultat à atteindre. --Ce niveau englobe les deux niveaux précédents.--" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_3.0>
+    <l_4.0 S_00="Niveau de la maitrise méthodologique" S_01="Le contenu est relatif à la maîtrise d’une méthodologie de formulation et de résolution de problèmes : assembler, organiser les éléments d’un sujet, identifier les relations, raisonner à partir de ces relations, décider en vue d’un but à atteindre. Il s’agit de maîtriser une démarche : induire, déduire, expérimenter, se documenter.--Ce niveau englobe les trois niveaux précédents." S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_4.0>
+  </d_nivTaxo>
   <d_options />
   <d_parties S_C="Conduite" S_S="Soutenance" />
   <l_periodes>
@@ -7494,7 +7507,17 @@
     </l_S>
   </d_seances>
   <d_specialite />
-  <d_systemes />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+    <l_SE I_04="1" S_00="Support experimental" S_01="Support experimental" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SE>
+    <l_SC I_04="0" S_00="Solution constructive" S_01="Solution constructive" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SC>
+  </d_systemes>
   <d_thematiques />
   <l_tr_com />
 </Referentiel>

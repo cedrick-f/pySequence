@@ -192,8 +192,6 @@ from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
 
-
-
 import io
 import  wx.html as  html
 # import wx.html2 as webview
@@ -13528,12 +13526,13 @@ class ArbreSavoirs(HTL.HyperTreeList):
 #         print("filtre Sav", self.filtre)
         self.Construire(self.root, savFiltre, et = et)
         
-        self.ExpandAll()
+        wx.CallAfter(self.OnSelChanged)
+#         self.ExpandAll()
         
         #
         # Gestion des évenements
         #
-#        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
+        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
@@ -13547,6 +13546,31 @@ class ArbreSavoirs(HTL.HyperTreeList):
         self.SetFocus()
         event.Skip()
     
+    ######################################################################################################
+    def OnSelChanged(self, event=None):
+#         print("OnSelChanged")
+        if event is None:
+            item = None
+        else:
+            item = event.GetItem()
+        self.ExpandAll()
+        def unselectAll(branche, niveau = 0):
+            for i in branche.GetChildren():
+                if not unselectAll(i, niveau+1):
+                    return False
+                if i.IsChecked():
+                    return False
+            if niveau >= 3:
+                self.Collapse(branche)
+            return True
+        
+        unselectAll(self.root)
+            
+        if item is not None:
+            self.Expand(item)
+        
+        if event is not None:
+            event.Skip()
     
     ####################################################################################
     def OnSize2(self, evt = None):

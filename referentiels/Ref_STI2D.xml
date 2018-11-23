@@ -5927,7 +5927,7 @@
   <l_listeEnsSpecif S_00="AC" S_01="EE" S_02="ITEC" S_03="SIN" />
   <l_listeNivTaxo S_00="1.0" S_01="2.0" S_02="3.0" S_03="4.0" />
   <l_listeSpecialites S_00="I2D" S_01="IT" S_02="2I2D" S_03="PCM" />
-  <l_listeSystemes S_00="OE" S_01="SE" S_02="SC" />
+  <l_listeSystemes S_00="PE" S_01="SE" S_02="SC" />
   <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="DM" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" />
   <l_listeTypeHorsClasse S_00="DM" />
@@ -6176,9 +6176,9 @@
     </l_PCM>
   </d_specialite>
   <d_systemes>
-    <l_OE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
-    </l_OE>
+    </l_PE>
     <l_SE I_04="1" S_00="Support experimental" S_01="Support experimental" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_SE>

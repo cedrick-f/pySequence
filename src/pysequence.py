@@ -130,6 +130,7 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             PanelPropriete_Groupe, PanelPropriete_Modele, SSCALE
 
 
+DEBUG = "beta" in version.__version__
 
 
 def safeParse(nomFichier, toplevelwnd):
@@ -6132,25 +6133,25 @@ class Progression(BaseDoc, Grammaire):
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
-#         try:
+        try:
         
-        rsequence = root.find("Sequence")
-        rclasse = root.find("Classe")
-        if rclasse is not None:
-            classe.setBranche(rclasse, reparer = reparer)
-        if rsequence is not None:
-            sequence.setBranche(rsequence)
-        else:   # Ancienne version , forcément STI2D-ETT !!
-            classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
-            classe.referentiel = REFERENTIELS[classe.typeEnseignement]
-            sequence.setBranche(root)
-        return classe, sequence
-#         except:
-#             print u"Le fichier n'a pas pu être ouvert :",nomFichier
-#             return None, None
-#         finally:
-#             fichier.close()
-
+            rsequence = root.find("Sequence")
+            rclasse = root.find("Classe")
+            if rclasse is not None:
+                classe.setBranche(rclasse, reparer = reparer)
+            if rsequence is not None:
+                sequence.setBranche(rsequence)
+            else:   # Ancienne version , forcément STI2D-ETT !!
+                classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
+                classe.referentiel = REFERENTIELS[classe.typeEnseignement]
+                sequence.setBranche(root)
+            return classe, sequence
+        except:
+            print("Le fichier n'a pas pu être ouvert :", nomFichier)
+            if DEBUG:
+                raise
+            return None, None
+    
     
     ########################################################################################################
     def OuvrirFichierPrj(self, nomFichier, reparer = False):
@@ -6180,13 +6181,15 @@ class Progression(BaseDoc, Grammaire):
                 classe.setBranche(rclasse, reparer = reparer)
             if rprojet is not None:
                 projet.setBranche(rprojet)
-            else:   # Ancienne version , forcément STI2D-ETT !!
+            else:   # Ancienne version (?), forcément STI2D-ETT !!
                 classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
                 classe.referentiel = REFERENTIELS[classe.typeEnseignement]
                 projet.setBranche(root)
             return classe, projet
         except:
             print("Le fichier n'a pas pu être ouvert :",nomFichier)
+            if DEBUG:
+                raise
             return None, None
 
 
@@ -10379,7 +10382,7 @@ class Tache(ElementAvecLien, ElementBase):
 #
 ####################################################################################
 class Systeme(ElementAvecLien, ElementBase):
-    def __init__(self, parent, nom = "", typ = "OE"):
+    def __init__(self, parent, nom = "", typ = "PE"):
         
         self.parent = parent
         ElementAvecLien.__init__(self)
@@ -10453,7 +10456,7 @@ class Systeme(ElementAvecLien, ElementBase):
                 
         else:
             self.nom  = branche.get("Nom", "")
-            self.typ  = branche.get("Type", "ST")
+            self.typ  = branche.get("Type", "PE")
             self.lien.setBranche(branche, self.GetPath())
     
             self.nbrDispo.v[0] = eval(branche.get("Nbr", "1"))
@@ -10520,7 +10523,10 @@ class Systeme(ElementAvecLien, ElementBase):
     ######################################################################################  
     def GetNiveau(self):
         ref = self.GetDocument().GetReferentiel()
-        return ref.systemes[self.typ][4]
+        if self.typ in ref.systemes.keys():
+            return ref.systemes[self.typ][4]
+        else:
+            return 0
         
     ######################################################################################  
     def GetIconeType(self):

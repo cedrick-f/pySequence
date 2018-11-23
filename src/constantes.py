@@ -314,7 +314,7 @@ imagesDemarches =  {'R' : images.Dem_res_pb,
                     }
 
 
-imagesSystemes  =  {'OE' : images.Icone_systeme, 
+imagesSystemes  =  {'PE' : images.Icone_systeme, 
                     'SE' : images.Icone_support, 
                     'SC' : images.Icone_systeme,
                     }
