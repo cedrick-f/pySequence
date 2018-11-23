@@ -163,7 +163,7 @@ from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     isstring, EditableListCtrl, \
                     getSingulier, getPluriel, getSingulierPluriel, et2ou, \
                     TextCtrl_Help, CloseFenHelp, \
-                    messageInfo, rognerImage, enregistrer_root, \
+                    messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
                     DisplayChoice, MyEditableListBox, intersection
                     #, chronometrer
@@ -219,6 +219,14 @@ DEBUG = "beta" in version.__version__
 if not DEBUG:
     import error
 
+####################################################################################
+#
+#   Classe permettant de gérer les anciennes versions des documents lors de l'ouverture
+#
+####################################################################################
+
+class OldVersion(Exception):
+    pass
 
 
 ####################################################################################
@@ -2736,11 +2744,18 @@ class FenetreSequence(FenetreDocument):
     
         parser = ET.XMLParser(encoding="utf-8")
         
+        try:
+            root = ET.parse(fichier, parser = parser).getroot()
+        except ET.ParseError:
+            messageErreur(wx.GetTopLevelParent(self), "Fichier corrompu", 
+                              "Le fichier suivant est corrompu !!\n\n"\
+                              "%s\n\n" \
+                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+            Annuler = True
+            return None, "", 0, False, Annuler
+        
         ###############################################################################################################
         def ouvre():
-            root = ET.parse(fichier, parser=parser).getroot()
-            
-            
             # La séquence
             sequence = root.find("Sequence")
             if sequence == None: # Ancienne version , forcément STI2D-ETT !!
@@ -2750,6 +2765,8 @@ class FenetreSequence(FenetreDocument):
                 # La classe
                 classe = root.find("Classe")
                 self.classe.setBranche(classe, reparer = reparer)
+                if not reparer and int(self.classe.version.split(".")[0]) < 8:
+                    raise OldVersion
                 self.sequence.MiseAJourTypeEnseignement()
                 self.sequence.setBranche(sequence)  
 
@@ -2763,18 +2780,24 @@ class FenetreSequence(FenetreDocument):
         ###############################################################################################################
         ###############################################################################################################
         
-        
-        if DEBUG:
+
+        try:
             ouvre()
-        else:
-            try:
-                ouvre()
-            except:
-                messageErreur(self, "Erreur d'ouverture",
-                              "La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !" %nomCourt(nomFichier))
-                fichier.close()
-                self.Close()
-                return
+        except OldVersion:
+            messageWarning(self, "Ancienne version",
+               "La séquence pédagogique\n    %s\n a été créée avec une version ancienne de pySéquence !\n" \
+               "Elle va être automatiquement convertie au format actuel." %nomCourt(nomFichier))
+            reparer = True
+            ouvre()
+        except:
+            messageErreur(self, "Erreur d'ouverture",
+                          "La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !\n" \
+                          "Essayez de faire Outils/Ouvrir et réparer." %nomCourt(nomFichier))
+            fichier.close()
+            self.Close()
+            if DEBUG:
+                raise
+            return
 
 #        self.arbre.Layout()
 #        self.arbre.ExpandAll()
@@ -3112,6 +3135,17 @@ class FenetreProjet(FenetreDocument):
         self.definirNomFichierCourant(nomFichier)
         parser = ET.XMLParser(encoding="utf-8")
         
+        try:
+            root = ET.parse(fichier, parser = parser).getroot()
+        except ET.ParseError:
+            messageErreur(dlg, "Fichier corrompu", 
+                              "Le fichier suivant est corrompu !!\n\n"\
+                              "%s\n\n" \
+                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+            Annuler = True
+            return None, "", 0, False, Annuler
+           
+        
         #################################################################################################
         def get_err_message(err):
             return ("\n  "+CHAR_POINT).join([e.getMessage() for e in err])
@@ -3119,18 +3153,6 @@ class FenetreProjet(FenetreDocument):
         
         #################################################################################################
         def ouvre(fichier, message):
-            
-            
-            try:
-                root = ET.parse(fichier, parser = parser).getroot()
-            except ET.ParseError:
-                messageErreur(wx.GetTopLevelParent(self), "Fichier corrompu", 
-                                  "Le fichier suivant est corrompu !!\n\n"\
-                                  "%s\n\n" \
-                                  "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-                Annuler = True
-                return None, "", 0, False, Annuler
-             
             count = 1
             Ok = True
             Annuler = False
@@ -3147,6 +3169,9 @@ class FenetreProjet(FenetreDocument):
                 count += 1
                 classe = root.find("Classe")
                 err = self.classe.setBranche(classe, reparer = reparer)
+                if not reparer and int(self.classe.version.split(".")[0]) < 8:
+                    raise OldVersion
+                
                 if len(err) > 0 :
                     Ok = False
                     message += get_err_message(err) 
@@ -3154,7 +3179,7 @@ class FenetreProjet(FenetreDocument):
                 
 #                print "V",self.classe.GetVersionNum()
                 if self.classe.GetVersionNum() < 5:
-                    messageInfo(None, "Ancien programme", 
+                    messageInfo(dlg, "Ancien programme", 
                                   "Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
                                   "Les indicateurs de compétence ne seront pas chargés.")
                 
@@ -3223,20 +3248,22 @@ class FenetreProjet(FenetreDocument):
         
         
         ################################################################################################
-        if DEBUG:
-#             print "beta"
+        err = []
+        try:
             root, message, count, Ok, Annuler = ouvre(fichier, message)
-            err = []
-        else:
-            try:
-                err = []
-                root, message, count, Ok, Annuler = ouvre(fichier, message)
-            except:
-                count = 0
-                err = [constantes.Erreur(constantes.ERR_INCONNUE)]
-                message += err[0].getMessage() + "\n"
-                Annuler = True
-        
+        except OldVersion:
+            messageWarning(dlg, "Ancienne version",
+                               "Le projet\n    %s\n a été créé avec une version ancienne de pySéquence !\n" \
+                               "Il va être automatiquement converti au format actuel." %nomCourt(nomFichier))
+            reparer = True
+            root, message, count, Ok, Annuler = ouvre(fichier, message)
+        except:
+            count = 0
+            err = [constantes.Erreur(constantes.ERR_INCONNUE)]
+            message += err[0].getMessage() + "\n"
+            Annuler = True
+            if DEBUG:
+                raise
         #
         # Erreur fatale d'ouverture
         #
@@ -3836,23 +3863,24 @@ class FenetreProgression(FenetreDocument):
         self.definirNomFichierCourant(nomFichier)
         parser = ET.XMLParser(encoding="utf-8")
     
+        try:
+            root = ET.parse(fichier, parser = parser).getroot()
+        except ET.ParseError:
+            messageErreur(dlg, "Fichier corrompu", 
+                              "Le fichier suivant est corrompu !!\n\n"\
+                              "%s\n\n" \
+                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+            Annuler = True
+            return None, "", 0, False, Annuler
+        
+        
         #################################################################################################
         def get_err_message(err):
             return ("\n  "+CHAR_POINT).join([e.getMessage() for e in err])
         
         
         #################################################################################################
-        def ouvre(fichier, message):
-            try:
-                root = ET.parse(fichier, parser = parser).getroot()
-            except ET.ParseError:
-                messageErreur(wx.GetTopLevelParent(self), "Fichier corrompu", 
-                                  "Le fichier suivant est corrompu !!\n\n"\
-                                  "%s\n\n" \
-                                  "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-                Annuler = True
-                return None, "", 0, False, Annuler
-             
+        def ouvre(fichier, message):         
             count = 0
             Ok = True
             Annuler = False
@@ -3869,6 +3897,9 @@ class FenetreProgression(FenetreDocument):
                 count += 1
                 classe = root.find("Classe")
                 err = self.classe.setBranche(classe, reparer = reparer)
+                if not reparer and int(self.classe.version.split(".")[0]) < 8:
+                    raise OldVersion
+                
                 if len(err) > 0 :
                     Ok = False
                     message += get_err_message(err) 
@@ -3893,20 +3924,25 @@ class FenetreProgression(FenetreDocument):
 
 
         ################################################################################################
-        if DEBUG:
-#             print("beta")
+        err = []
+
+        try:
             root, message, count, Ok, Annuler = ouvre(fichier, message)
-            err = []
-        else:
-            try:
-                err = []
-                root, message, count, Ok, Annuler = ouvre(fichier, message)
-            except:
-                count = 0
-                err = [constantes.Erreur(constantes.ERR_INCONNUE)]
-                message += err[0].getMessage() + "\n"
-                Annuler = True
-        
+            
+        except OldVersion:
+            messageWarning(dlg, "Ancienne version",
+                               "La progression\n    %s\n a été créée avec une version ancienne de pySéquence !\n" \
+                               "Elle va être automatiquement converti au format actuel." %nomCourt(nomFichier))
+            reparer = True
+            root, message, count, Ok, Annuler = ouvre(fichier, message)
+            
+        except:
+            count = 0
+            err = [constantes.Erreur(constantes.ERR_INCONNUE)]
+            message += err[0].getMessage() + "\n"
+            Annuler = True
+            if DEBUG:
+                raise
         #
         # Erreur fatale d'ouverture
         #
