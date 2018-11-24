@@ -1113,7 +1113,7 @@ BASE_FICHE_HTML_TACHE = """
 
 BASE_FICHE_HTML_SEQ = """
     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
-    <p id="nom">Intitulé</p>
+    <p id="nom">Intitulé : </p>
     <img id="ap" src="" alt=" "> 
 """
 

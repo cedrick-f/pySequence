@@ -1384,7 +1384,10 @@ class Referentiel(XMLelem):
             if n[:4] == "Sav_":
                 sh_sa = wb.sheet_by_name(n)
                 code = n[4]
-                self.dicoSavoirs[code] = Savoirs(sh_sa.cell(0,0).value, sh_sa.cell(2,0).value, sh_sa.cell(2,2).value, sh_sa.cell(2,1).value)
+                self.dicoSavoirs[code] = Savoirs(sh_sa.cell(0,0).value, 
+                                                 sh_sa.cell(2,0).value, 
+                                                 sh_sa.cell(2,2).value, 
+                                                 sh_sa.cell(2,1).value)
                 # Eventuels éléments associés à ces savoirs
                 l = 2
                 for c in [4, 5]: # Colonnes "Elements associés"
@@ -3553,6 +3556,7 @@ class Savoirs(XMLelem):
         self._codeXML = "Savoirs"
         self.nomGenerique = nomGenerique
         self._nom = Grammaire(nomGenerique)
+#         print(nomGenerique)
         self.codeDiscipline = codeDiscipline
         self.nomDiscipline = nomDiscipline
         self.abrDiscipline = abrDiscipline

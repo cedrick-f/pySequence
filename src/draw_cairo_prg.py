@@ -711,7 +711,7 @@ def Draw(ctx, prg, mouchard = False):
     
     # Titre
     htitre = 0.017 * COEF
-    show_text_rect(ctx, getPluriel(ref.dicoCompetences["S"].nomGenerique),
+    show_text_rect(ctx, ref.dicoCompetences["S"]._nom.Plur_(),
                    (posZComp[0], posZOrganis[1] + ecartY/2,
                     tailleZComp[0], htitre), 
                    va = 'c', ha = 'c', b = 0, orient = 'h', 
@@ -798,7 +798,7 @@ def Draw(ctx, prg, mouchard = False):
     if len(lstTh) > 0:
         rectTh = (posZThH[0], posZThV[1], 
                   tailleZThH[0], tailleZThH[1])
-        curve_rect_titre(ctx, getPluriel(ref.nomTh),
+        curve_rect_titre(ctx, ref._nomTh.Plur_(),
                          rectTh, BcoulCI, IcoulCI, fontCI)
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
@@ -899,7 +899,8 @@ def Draw(ctx, prg, mouchard = False):
         if len(l) > 0:
             rec = tableauH(ctx, l, x, y, 
                          w, 0, h, 
-                         va = 'c', ha = 'd', orient = 'h', coul = CoulAltern,
+                         va = 'c', ha = 'd', orient = 'h', 
+                         coul = CoulAltern,
                          tailleFixe = True)
             
     #        prj.pt_caract_eleve = getPts(rec)
@@ -1654,22 +1655,23 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
     #
     # Croisements Sequence/CI
     #
-    lstCI = seq.GetReferentiel().CentresInterets
+    ref = prg.GetReferentiel()
+    lstCI = prg.GetListeCI()
 #    print "DrawCroisementsCISeq", lstCI
     dy = 0
     r = 0.004 * COEF
         
-    for CI in range(len(lstCI)):
-        color0 = CoulAltern[CI][0]
-        color1 = CoulAltern[CI][1]
+    for num, CI in enumerate(lstCI):
+        color0 = CoulAltern[num][0]
+        color1 = CoulAltern[num][1]
 
-        _x = xCI[CI]
+        _x = xCI[num]
         
-        if CI in seq.CI.numCI:
+        if num in seq.CI.numCI or CI in seq.CI.CI_perso:
             boule(ctx, _x, y, r, 
                   color0 = color0, color1 = color1,
                   transparent = False)
-        else:
+        elif num < len(ref.CentresInterets):
             ctx.set_source_rgba (0,0,0,1)
             ctx.arc (_x, y, r, 0, 2*pi)
             ctx.stroke()
@@ -1677,7 +1679,7 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
                   color0 = color0, color1 = (1,1,1),
                   transparent = False)
         
-        prg.zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], obj = seq, param = "CI"+str(CI)))
+        prg.zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], obj = seq, param = "CI"+str(num)))
 #        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
 #        tache.projet.eleves[i].pts_caract.append((_x,y))
         y += dy

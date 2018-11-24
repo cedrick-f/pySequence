@@ -45,8 +45,6 @@ from constantes import Effectifs,COUL_COMPETENCES, mergeDict
                         #DemarchesCourt, 
 import constantes
 
-from widgets import getSingulier, getPluriel, getSingulierPluriel
-
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ACTIVITES
 import Referentiel
@@ -1043,7 +1041,10 @@ def Draw_CI(ctx, CI, seq):
     
     ref = CI.GetReferentiel()
     
-    t = getSingulierPluriel(ref.nomCI, len(CI.numCI)+len(CI.CI_perso) > 1)
+    if len(CI.numCI)+len(CI.CI_perso) > 1:
+        t = ref._nomCI.Plur_()
+    else:
+        t = ref._nomCI.Sing_()
     
     rect = (x0, y0, rect_width, rect_height)
     CI.pt_caract = (curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 

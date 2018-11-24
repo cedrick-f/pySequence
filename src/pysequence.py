@@ -5514,7 +5514,7 @@ class Progression(BaseDoc, Grammaire):
     def DefinirCouleurs(self):
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetReferentiel().CentresInterets))
+                                   len(self.GetListeCI()))
         
 
     ######################################################################################  
@@ -6227,14 +6227,22 @@ class Progression(BaseDoc, Grammaire):
     
     ########################################################################################################
     def GetListeCI(self):
+        """ Renvoie la liste des CI du référentiel
+            + ceux définis dans les Séquences de la Progresion
         """
-        """
-        return self.GetReferentiel().CentresInterets
+        lst = []
+        for e in self.sequences_projets:
+            if isinstance(e, LienSequence) and e.sequence is not None:
+                lst.extend(e.sequence.CI.CI_perso)
+#         print(lst)
+        lst = list(set(lst))
+        return self.GetReferentiel().CentresInterets + lst
     
     
     ########################################################################################################
     def GetListeTh(self):
-        """
+        """ Renvoie la liste des thématiques du référentiel
+            + ceux définis dans les Séquences de la Progresion
         """
         return []#self.GetReferentiel().listeThematiques
     
@@ -6452,13 +6460,15 @@ class Progression(BaseDoc, Grammaire):
             
             elif param[:2] == "CI":
                 ref = self.GetReferentiel()
-                self.tip.SetWholeText("titre", getSingulier(ref.nomCI))  
+                self.tip.SetWholeText("titre", ref._nomCI.Sing_())  
                 numCI = int(param[2:])
                 code = ref.abrevCI+str(numCI+1)
-                intit = ref.CentresInterets[numCI]
-                self.tip.AjouterElemListeDL("ci", code, intit)
+#                 intit = ref.CentresInterets[numCI]
+             
+                self.tip.AjouterElemListeDL("ci", code, 
+                                            self.GetListeCI()[numCI])
                 if len(ref.listProblematiques) > numCI and len(ref.listProblematiques[numCI]) > 0:
-                    self.tip.SetWholeText("nomPb", getPluriel(ref.nomPb) + " envisageables")  
+                    self.tip.SetWholeText("nomPb", ref._nomPb.Plur_() + " envisageables")  
                     for pb in ref.listProblematiques[numCI]:
                         self.tip.AjouterElemListeUL("pb", pb)
                 else:
@@ -6474,7 +6484,7 @@ class Progression(BaseDoc, Grammaire):
                     self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
                     k = param[3:]
                     code, groupe = competences[0]
-                    nc = getSingulier(ref.dicoCompetences["S"].nomGenerique)
+                    nc = ref.dicoCompetences["S"]._nom.Sing_()
                     self.tip.SetWholeText("titre", nc + " " + k)
                     self.tip.SetWholeText("grp", code + "  " + groupe.intitule)
 #                     print "***", competences
@@ -7272,8 +7282,11 @@ class CentreInteret(ElementBase):
         self.tip.SetHTML(self.GetFicheHTML())
         
         ref = self.GetReferentiel()
-        plusieurs = len(self.numCI)+len(self.CI_perso) > 0
-        self.tip.SetWholeText("titre", getSingulierPluriel(ref.nomCI, plusieurs))
+        if len(self.numCI)+len(self.CI_perso) > 0:
+            t = ref._nomCI.Plur_()
+        else:
+            t = ref._nomCI.Sing_()
+        self.tip.SetWholeText("titre", t)
         
         for i, c in enumerate(self.numCI):
             self.tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
@@ -7282,7 +7295,7 @@ class CentreInteret(ElementBase):
             self.tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
         
         if len(self.Pb + self.Pb_perso) > 0:
-            self.tip.SetWholeText("nomPb", getSingulier(ref.nomPb))
+            self.tip.SetWholeText("nomPb", ref.nomPb.Sing_())
             for pb in self.Pb + self.Pb_perso:
                 self.tip.AjouterElemListeUL("pb", pb)
         else:
@@ -8153,12 +8166,12 @@ class Savoirs(ElementBase):
     ######################################################################################  
     def GetNomGenerique(self, code = "S"):
         dic = self.GetReferentiel().getDicTousSavoirs()
-        return getPluriel(dic[code]._nom.Plur_()) + " ("+ dic[code].abrDiscipline+ ")"
+        return dic[code]._nom.Plur_() + " ("+ dic[code].abrDiscipline+ ")"
     
     ######################################################################################  
     def GetNomGenerique_sing(self, code = "S"):
         dic = self.GetReferentiel().getDicTousSavoirs()
-        return getSingulier(dic[code]._nom.sing_())
+        return dic[code]._nom.sing_()
     
     ######################################################################################  
     def GetDiscipline(self, code):
@@ -9266,6 +9279,7 @@ class Seance(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
+        ref = self.GetReferentiel()
         if itemArbre == self.branche:
             listItems = [["Supprimer", 
                           functools.partial(self.parent.SupprimerSeance, item = itemArbre), 
@@ -9275,7 +9289,7 @@ class Seance(ElementAvecLien, ElementBase):
                           scaleImage(images.Icone_lien.GetBitmap())]]
             
             if self.typeSeance in ["R", "S"]:
-                listItems.append(["Ajouter une séance", 
+                listItems.append(["Ajouter %s" %ref._nomActivites.un_(), 
                                   self.AjouterSeance, 
                                   scaleImage(images.Icone_ajout_seance.GetBitmap())])
             

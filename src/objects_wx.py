@@ -1072,7 +1072,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def MiseAJourToolBar(self):
         fenDoc = self.GetCurrentPage()
-        if fenDoc.typ == 'prg':
+        if fenDoc is not None and fenDoc.typ == 'prg':
             coderef = fenDoc.progression.GetReferentiel().Code
     #         print "   ", coderef
             btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
@@ -1124,10 +1124,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnReparer(self, event):
-        dlg = wx.MessageDialog(self, "Ouvrir et réparer un fichier de projet\n\n" \
-                               "L'opération qui va suivre permet d'ouvrir un fichier de projet (.prj)\n" \
-                               "en restaurant les valeurs par défaut du programme d'enseignement.\n" \
-                               "Si le projet utilise un programme d'enseignement personnalisé,\n" \
+        dlg = wx.MessageDialog(self, "Ouvrir et réparer un fichier\n\n" \
+                               "L'opération qui va suivre permet d'ouvrir un fichier\n" \
+                               "en restaurant les valeurs par défaut du référentiel d'enseignement.\n" \
+                               "Si le document utilise un programme d'enseignement personnalisé,\n" \
                                "les spécificités de ce dernier seront perdues.\n\n"\
                                "Voulez-vous continuer ?",
                                  "Ouvrir et réparer",
@@ -4053,7 +4053,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
          
         
     #############################################################################            
-    def OnResize(self, evt):
+    def OnResize(self, evt = None):
 #         print "OnResize"
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
@@ -8309,7 +8309,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200*SSCALE,-1))
+        sbp = myStaticBox(self, -1, ref._nomPb.Plur_(), size = (200*SSCALE,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         
         self.panelPb = PanelProblematiques(self, self.sequence.CI)
@@ -9419,7 +9419,7 @@ class PanelPropriete_Seance(PanelPropriete):
         if not self.seance.typeSeance in ["R", "S"]:
             vcDuree = VariableCtrl(self.pageGen, self.seance.duree, coef = 0.25, 
                                    signeEgal = True, slider = False, sizeh = 30,
-                                   help = "Durée %s en heures" %ref._nomSeances.du_(),
+                                   help = "Durée %s en heures" %ref._nomActivites.du_(),
                                    unite = "h", scale = SSCALE)
             self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
@@ -9478,7 +9478,8 @@ class PanelPropriete_Seance(PanelPropriete):
                 
         if self.seance.typeSeance in ref.listeTypeActivite:
             vcNombre = VariableCtrl(self.pageGen, self.seance.nombre, signeEgal = True, slider = False, sizeh = 30,
-                                    help = "Nombre de groupes réalisant simultanément la même séance", scale = SSCALE)
+                                    help = "Nombre de groupes réalisant simultanément %s" %ref._nomActivites.le_("même"),
+                                    scale = SSCALE)
             self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
             self.vcNombre = vcNombre
             self.bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.BOTTOM, border = 4)
@@ -15763,8 +15764,8 @@ class PanelProblematiques(wx.Panel):
                                               size = wx.DefaultSize,
                                               style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
         self.PbPerso.SetMinSize((-1, 60*SSCALE))
-        self.PbPerso.SetToolTip("Exprimer ici la(les) %s abordée(s)\n" \
-                                      "ou choisir une parmi les %s envisageables." %(getSingulier(ref.nomPb), getPluriel(ref.nomPb)))
+        self.PbPerso.SetToolTip("Exprimer ici la(les) %s(s) abordée(s)\n" \
+                                "ou choisir une parmi les %s envisageables." %(ref._nomPb.sing_(), ref._nomPb.plur_()))
 
         self.PbPerso.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.EvtText)
         self.Bind(wx.EVT_LIST_DELETE_ITEM, self.EvtText)

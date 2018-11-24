@@ -5917,6 +5917,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PROBL S_00="Enjeu(x) sociétal$m" S_01="" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="P" />
   <l_listProblematiques />
