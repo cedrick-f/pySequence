@@ -746,7 +746,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 
 
 
-    #
+    ##################################################################################
     #  Objectifs
     #
     x0, y0 = posObj
@@ -840,7 +840,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     ltot = taille(lstTexteC) + taille(lstTexteS)
     
     # Nombre de colonnes
-    nc = 1*(len(lstTexteC) > 0) + 1*(len(lstTexteS) > 0)
+#     nc = 1*(len(lstTexteC) > 0) + 1*(len(lstTexteS) > 0)
     
     if ltot > 0:
         # Répartition gauche/droite
@@ -861,7 +861,12 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         f = ctx.font_extents()[2]
         rectC = reduire_rect(x0, y0, wC, h, f, 0.2)
         rectS = reduire_rect(x0+wC, y0, wS, h, f, 0.2)
-
+        
+        ctx.set_source_rgba (*BcoulObj)
+        ctx.move_to(x0+wC, y0)
+        ctx.line_to(x0+wC, y0+h)
+        ctx.stroke()
+        
         ctx.set_source_rgba (*COUL_COMPETENCES)
         r = liste_code_texte2(ctx, lstCodesC, lstTexteC, 
                              rectC, 
@@ -888,7 +893,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 
 
 
-    #
+    #################################################################################
     #  CI
     #
     Draw_CI(ctx, seq.CI, seq)
@@ -897,7 +902,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 
 
     
-    #
+    #################################################################################
     #  Séances
     #
     if not entete:
