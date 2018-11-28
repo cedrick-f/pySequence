@@ -1,8 +1,7 @@
 # Installation de pySéquence #
 **avec Python 3**
-en phase de test !!
 
-_sous Windows, à partir des sources_
+_testé sous Windows, à partir des sources_
 
 
 ## Préparation ##
@@ -91,7 +90,10 @@ Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
     
     pip install pymupdf
 
+### jinja2 ###
+2.10
 
+pip install jinja2
 
 ### rsvg (en cours de développement) ###
 (source : https://github.com/jmcb/python-rsvg-dependencies)
