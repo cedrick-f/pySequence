@@ -93,7 +93,7 @@ Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
 ### jinja2 ###
 2.10
 
-pip install jinja2
+    pip install jinja2
 
 ### rsvg (en cours de développement) ###
 (source : https://github.com/jmcb/python-rsvg-dependencies)
