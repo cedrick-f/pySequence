@@ -1947,7 +1947,12 @@ class Sequence(BaseDoc):
 #        print "EnrichiSVG sequence"
         if hasattr(self, 'app'):
             t = doc.createElement("title")
-            txt = doc.createTextNode(os.path.split(self.app.fichierCourant)[1])
+            path = os.path.split(self.app.fichierCourant)[1]
+            print(type(path))
+            path = str(path)
+            print(type(path))
+            txt = doc.createTextNode(path)
+            
             t.appendChild(txt)
             svg = doc.getElementsByTagName("svg")[0]
             svg.insertBefore(t, svg.childNodes[0])

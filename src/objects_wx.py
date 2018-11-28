@@ -2184,13 +2184,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
             pourDossierValidation : concerne uniquement les Projets = pour anonymiser la fiche
         """
-        # Le décodage/réencodage est obligatoire sous peine de crash !!
-        try:
-            PDFsurface = cairo.PDFSurface(nomFichier, 595, 842)#.decode(SYSTEM_ENCODING).encode(FILE_ENCODING)
-        except IOError:
-            Dialog_ErreurAccesFichier(nomFichier)
-            wx.EndBusyCursor()
-            return
+        # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
+        tf = tempfile.mkstemp()[1]+".pdf"
+        PDFsurface = cairo.PDFSurface(nomFichier, 595, 842)#.decode(SYSTEM_ENCODING).encode(FILE_ENCODING)
 
         ctx = cairo.Context(PDFsurface)
         ctx.scale(820 / draw_cairo.COEF, 820/ draw_cairo.COEF) 
@@ -2203,21 +2199,43 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         PDFsurface.finish()
     
-    
+        try:
+            shutil.copy(tf, nomFichier)
+            os.remove(tf)
+        except IOError:
+            Dialog_ErreurAccesFichier(nomFichier)
+            wx.EndBusyCursor()
+            return
+        
+        
+        
     #############################################################################
     def exporterFicheSVG(self, nomFichier, pourDossierValidation = False):
         """ Exporte la fiche au format PDF
         
             pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
         """
-        try:
-            SVGsurface = cairo.SVGSurface(nomFichier, 595, 842)
-        except IOError:
-            Dialog_ErreurAccesFichier(nomFichier)
-            wx.EndBusyCursor()
-            return
+#         with cairo.SVGSurface(nomFichier, 595, 842) as SVGsurface:
+#             ctx = cairo.Context(SVGsurface)
+#             ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
+#             if self.typ == 'seq':
+#                 draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+#             elif self.typ == 'prj':
+#                 draw_cairo_prj.Draw(ctx, self.projet)
+#             elif self.typ == 'prg':
+#                 draw_cairo_prg.Draw(ctx, self.progression)
         
-        ctx = cairo.Context (SVGsurface)
+        # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
+        tf = tempfile.mkstemp()[1]+".svg"
+        SVGsurface = cairo.SVGSurface(tf, 595, 842)
+
+#         try:
+#             fichier = open(nomFichier, "x")
+#             print("os.name", os.name)
+#             print(sys.getfilesystemencoding())
+#             print(cairo.cairo_version())
+            
+        ctx = cairo.Context(SVGsurface)
         ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
         if self.typ == 'seq':
             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
@@ -2225,10 +2243,20 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             draw_cairo_prj.Draw(ctx, self.projet)
         elif self.typ == 'prg':
             draw_cairo_prg.Draw(ctx, self.progression)
-            
+             
         SVGsurface.finish()
+   
+        # et on reprend le nom de fichier unicode ...
+        try:
+            shutil.copy(tf, nomFichier)
+            os.remove(tf)
+        except IOError:
+            Dialog_ErreurAccesFichier(nomFichier)
+            wx.EndBusyCursor()
+            return
+            
         self.enrichirSVG(nomFichier)
-    
+        
     
     
     
@@ -2253,6 +2281,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 self.exporterFichePDF(path)
                 self.DossierSauvegarde = os.path.split(path)[0]
                 os.startfile(path)
+                
             elif ext == ".svg":
                 self.exporterFicheSVG(path)
                 self.DossierSauvegarde = os.path.split(path)[0]
@@ -2436,10 +2465,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         - ...
         """
         epsilon = 0.001
-
+        
         doc = parse(path)
         
-        f = open(path, 'w')
+        f = open(path, 'w', encoding = "utf-8")
 
         defs = doc.getElementsByTagName("defs")[0]
         defs.appendChild(getElementFiltre(constantes.FILTRE1))
@@ -2457,7 +2486,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         # Identification des items correspondants sur le doc SVG
         for p in doc.getElementsByTagName("path"):
             a = p.getAttribute("d")
-            a = str(a).translate(None, 'MCLZ')  # Supprime les  lettres
+            a = str(a).translate(str.maketrans(dict.fromkeys('MCLZ')))  # Supprime les  lettres
             l = a.split()
             if len(l) > 1:      # On récupére le premier point du <path>
                 x, y = l[0], l[1]
@@ -2477,7 +2506,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #            self.projet.EnrichiObjetsSVG(doc)
             
         doc.writexml(f, '   ', encoding = "utf-8")
-        f.close
+        f.close()
+        
+        
 
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = r''):
@@ -8841,7 +8872,7 @@ class PanelPropriete_Competences(PanelPropriete):
         
     
     ######################################################################################  
-    def AjouterEnleverCompetences(self, app, rem):
+    def AjouterEnleverCompetences(self, app, rem, compRef):
         for s in app:
             if not s in self.competences.competences:
                 self.competences.competences.append(s)
@@ -9034,7 +9065,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
     
     
     ######################################################################################  
-    def AjouterEnleverSavoirs(self, app, rem):
+    def AjouterEnleverSavoirs(self, app, rem, savRef):
         for s in app:
             if not s in self.savoirs.savoirs:
                 self.savoirs.savoirs.append(s)
@@ -15155,7 +15186,7 @@ class Panel_SelectEnseignement(wx.Panel):
         
     ######################################################################################  
     def MiseAJour(self):
-        print("MiseAJour")
+#         print("MiseAJour")
         self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
 #         self.st_type.SetLabel(self.classe.GetLabel())
         self.rb_spe.Clear()
