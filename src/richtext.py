@@ -977,14 +977,16 @@ def XMLtoHTML(texteXML):
         """
         if texteXML is None:
             return
-        
+#         print("XMLtoHTML", texteXML)
         out = io.BytesIO()
         handler = rt.RichTextXMLHandler()
         buff = rt.RichTextBuffer()
-        out.write(bytes(texteXML, encoding = "utf8"))
+        out.write(bytes(texteXML, encoding = "utf-8"))
         out.seek(0)
-        handler.LoadFile(buff, out)
-    
+#         print(out.getvalue())
+        
+        handler.LoadFile(buff, out)  # out >> buff
+ 
         # Get an instance of the html file handler, use it to save the
         # document to a StringIO stream
         handler2 = rt.RichTextHTMLHandler()
@@ -992,10 +994,11 @@ def XMLtoHTML(texteXML):
         handler2.SetFontSizeMapping([7,9,11,12,14,22,100])
 
         stream = io.BytesIO()
-        if not handler2.SaveFile(buff, stream):
+        if not handler2.SaveFile(buff, stream):  # buff >> stream
             return
         
-        soup = BeautifulSoup(stream.read().decode('utf-8'), "html5lib")
+        soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
+#         print(soup.html.body.prettify())
 #         soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
         return soup.html.body.prettify()
 

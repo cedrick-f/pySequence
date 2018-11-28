@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from ctypes.wintypes import LPCVOID
 
 
 ##This file is part of pySequence
@@ -54,7 +53,7 @@ if sys.platform == "win32" :
     import grilles
     th_xls = grilles.get_th_xls()
 
-
+from jinja2 import Template
 
 import version
 import textwrap
@@ -94,6 +93,8 @@ from constantes import calculerEffectifs, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, COUL_DISCIPLINES
 import constantes
+
+import proprietes
 
 from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
 
@@ -236,11 +237,24 @@ elif sys.platform == 'win32':
 import util_path
 import shutil
 
+import re
+
+
+
 ####################################################################################
 #
 #   Objet lien vers un fichier, un dossier ou bien un site web
 #
 ####################################################################################
+regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
+
 class Lien():
     def __init__(self, path = "", typ = ""):
         self.path = path # Impérativement toujours encodé en FILE_ENCODING !!
@@ -323,20 +337,34 @@ class Lien():
   
     ######################################################################################  
     def EvalTypeLien(self, pathseq):
-#         print "EvalTypeLien", self, pathseq
-        path = self.GetAbsPath(pathseq)
+        """ Evaluation du de self.lien.path
+            par rapport à pathseq
+            et attribue un type
+        """
+#         print("EvalTypeLien", self, pathseq)
+        abspath = self.GetAbsPath(pathseq)
         
-        if os.path.exists(path):
-            if os.path.isfile(path):
+        if os.path.exists(abspath):
+            relpath = testRel(abspath, pathseq)
+            if os.path.isfile(abspath):
                 self.type = 'f'
-                
-            elif os.path.isdir(path):
-                self.type = 'd'
 
-        else:
-            self.type = 'u'
-        
+            elif os.path.isdir(abspath):
+                self.type = 'd'
+            
+            self.path = relpath
+            self.ok = True
                 
+        elif re.match(regex, self.path):
+            self.type = 'u'
+            self.ok = True
+        
+        else:
+            self.type = ''
+            self.ok = False
+        
+        
+        
     ######################################################################################  
     def EvalLien(self, path, pathseq):
         """ Teste la validité du chemin <path> (SYSTEM_ENCODING)
@@ -345,7 +373,7 @@ class Lien():
              et change self.path (FILE_ENCODING)
              
         """
-#         print "EvalLien", path, pathseq, os.path.exists(pathseq)
+#         print("EvalLien", path, pathseq, os.path.exists(pathseq))
 #         print " >", chardet.detect(bytes(path))
 #         print " >", chardet.detect(bytes(pathseq))
         
@@ -355,28 +383,30 @@ class Lien():
             self.type = ""
             return
         
+        self.EvalTypeLien(pathseq)
 #         path = toFileEncoding(path)
 #        pathseq = toFileEncoding(pathseq)
-        abspath = self.GetAbsPath(pathseq, path)
-#         print "   abs :", abspath
-        
-        relpath = testRel(abspath, pathseq)
-
-#         relpath = testRel(abspath, pathseq)
-#         print "   rel :", relpath
+#         abspath = self.GetAbsPath(pathseq, path)
+#         print("   abs :", abspath)
 #         
-#         print "   ", os.getcwd()
-#         print "   ", os.curdir
-        self.ok = False
-        if os.path.exists(abspath):
-            if os.path.isfile(abspath):
-                self.type = 'f'
-                self.path = relpath
-                self.ok = True
-            elif os.path.isdir(abspath):
-                self.type = 'd'
-                self.path = relpath
-                self.ok = True
+#         EvalTypeLien
+#         relpath = testRel(abspath, pathseq)
+# 
+# #         relpath = testRel(abspath, pathseq)
+# #         print "   rel :", relpath
+# #         
+# #         print "   ", os.getcwd()
+# #         print "   ", os.curdir
+#         
+#         if os.path.exists(abspath):
+#             if os.path.isfile(abspath):
+#                 self.type = 'f'
+#                 self.path = relpath
+#                 self.ok = True
+#             elif os.path.isdir(abspath):
+#                 self.type = 'd'
+#                 self.path = relpath
+#                 self.ok = True
         
             
 #         else:
@@ -390,7 +420,7 @@ class Lien():
         """ Renvoie le chemin absolu du lien
             grace au chemin du document <pathseq>
         """
-#         print "GetAbsPath", path, pathseq
+#         print("GetAbsPath", path, pathseq)
         if path == None:
             path = self.path
             
@@ -409,19 +439,19 @@ class Lien():
 #         print os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING))
         
         # Immonde bricolage !!
-        if os.path.exists(os.path.abspath(path)) and os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING)):
-            path = path.decode(util_path.FILE_ENCODING)
+#         if os.path.exists(os.path.abspath(path)) and os.path.exists(os.path.abspath(path)):#.decode(util_path.FILE_ENCODING)):
+#             path = path.decode(util_path.FILE_ENCODING)
         
         path = os.path.abspath(path)#.decode(util_path.FILE_ENCODING)
         
         
         
         
-#         print "  abs >", path
+#         print("  abs >", path)
         if os.path.exists(path):
             path = path
         else:
-#             print " n'existe pas !"
+#             print(path, "n'existe pas !")
             try:
                 path = os.path.join(pathseq, path)
             except UnicodeDecodeError:
@@ -706,10 +736,10 @@ class ElementBase(Grammaire):
     ######################################################################################  
     def SetDescription(self, description):
         if self.description != description:
+            ref = self.GetReferentiel()
 #            print "SetDescription", self.nom_obj, self
             self.description = description
-            self.GetApp().sendEvent(modif = " ".join(["Modification de la description", 
-                                                                 self.article_c_obj, self.nom_obj]))
+            self.GetApp().sendEvent(modif = "Modification de la description %s" %ref._nomActivites.du_())
 #            self.tip.SetRichTexte()
 
     ######################################################################################  
@@ -1388,16 +1418,6 @@ class Classe(ElementBase):
 
 
 
-####################################################################################################
-#
-# Classe définissant les propriétés d'un document
-#
-####################################################################################################
-class ProprietesDoc(XMLelem):
-    def __init__(self):
-        pass
-
-
 
 
 ####################################################################################################
@@ -1441,6 +1461,8 @@ class BaseDoc(ElementBase, ElementAvecLien):
         wx.CallAfter(self.undoStack.do, "Création "+self.du_())
         
         self.path = ""
+        
+        self.proprietes = proprietes.ProprietesDoc()
         
         #
         # Création du Tip (PopupInfo)
@@ -8347,6 +8369,12 @@ class Seance(ElementAvecLien, ElementBase):
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self)
         
+        
+        ref = self.GetReferentiel()
+        Grammaire.__init__(self, ref.nomActivites)
+        
+        
+        
         # Les données sauvegardées
         self.ordre = 0
         self.ordreType = 0
@@ -8356,10 +8384,12 @@ class Seance(ElementAvecLien, ElementBase):
         self.intitule  = ""
         self.intituleDansDeroul = True
         self.effectif = "C"
+  
         if self.GetReferentiel().multiDemarches:
             self.demarche = ""
         else:
-            self.demarche = "I"  # Zéro, un ou plusieurs codes de démarche (séparés par espaces
+            self.demarche = "I"  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
+        
         self.systemes = []  # liste d'objets Variable() dont l'attribut data est un Systeme
         self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
         
@@ -9197,6 +9227,14 @@ class Seance(ElementAvecLien, ElementBase):
         if self.typeSeance in ["R", "S"]:
             for s in self.seances:
                 s.MiseAJourTypeEnseignement()
+        else:
+            if self.GetReferentiel().multiDemarches:
+                self.demarche = ""
+            else:
+                self.demarche = "I"  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
+
+        self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
+        
 #        else:
 #            self.GetPanelPropriete().MiseAJourTypeEnseignement()
         
@@ -9363,58 +9401,106 @@ class Seance(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
         ref = self.GetReferentiel()
-        titre = "Séance "+ self.code
-        self.tip.SetWholeText("titre", titre)
+        t = Template(constantes.encap_HTML(constantes.TEMPLATE_SEANCE))
         
-        # Type de séance
-        if self.typeSeance != "":
-            self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
-            self.tip.SetWholeText("txt", ref.seances[self.typeSeance][1], 
-                                  bold = True, size = 3,
-                                  fcoul = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]))
+        lst_dem = []
+        if self.typeSeance in ref.activites.keys():
+            for d in self.demarche.split():
+                lst_dem.append((self.tip.GetImgURL(scaleImage(constantes.imagesDemarches[d].GetBitmap(), 60*SSCALE)),
+                                ref.demarches[d][1])
+                              )
         
-        else:
-            self.tip.Supprime('icon')
+        lst_ensSpe = []
         
-        
-        
-        # Démarche
-        if self.typeSeance in list(ref.activites.keys()) and len(ref.listeDemarches) > 0 \
-            and self.demarche in constantes.imagesDemarches.keys():
-            self.tip.AjouterImg("icon2", constantes.imagesDemarches[self.demarche].GetBitmap(), width = 64)
-            self.tip.SetWholeText("dem", ref.demarches[self.demarche][1], italic = True, size = 3)
-        else:
-            self.tip.Supprime('icon2')
-        
-        # Intitulé
-        self.tip.SetWholeText("int", self.intitule, size = 5)
-        
-        
-        # Image
-        if self.image is not None:
-            self.tip.AjouterImg("img", self.image, width = 200)
-        else:
-            self.tip.Supprime('img')
-        
-        # Durée
-        self.tip.SetWholeText("dur", getHoraireTxt(self.GetDuree()), size = 3)
-        
-        # Effectif
-        self.tip.SetWholeText("eff", strEffectifComplet(self.GetDocument().classe, self.effectif), size = 3)
-        
-        # Description
-        if hasattr(self, 'description'):
-            self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
-        else:
-            self.tip.Supprime('ldes')
-        
-        self.tip.AjouterLien('lien', self.lien, self)
-        
+        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
+            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
+                for d in self.ensSpecif:
+#                     print(ref.ensSpecif[d][3], couleur.GetCouleurHTML(ref.ensSpecif[d][3]))
+                    lst_ensSpe.append((d, wx.Colour(*ref.ensSpecif[d][3]).GetAsString(wx.C2S_CSS_SYNTAX)))
+            
+#         print(lst_ensSpe)    
+        html = t.render(titre = ref._nomActivites.sing_()+" "+ self.code,
+                        nom_type = ref.seances[self.typeSeance][1],
+                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]),
+                        icon_type = self.tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap()),
+                        lst_dem = lst_dem,
+                        lst_ensSpe = lst_ensSpe,
+                        image = self.tip.GetImgURL(self.image),
+                        intitule = self.intitule,
+                        duree = getHoraireTxt(self.GetDuree()),
+                        effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
+                        decription = XMLtoHTML(self.description),
+                        lien = self.lien          
+                        )
+        self.tip.SetHTML(html)
         self.tip.SetPage()
         
+    
+    
+    
+    
+    
         
+#         self.tip.SetHTML(self.GetFicheHTML())
+#         ref = self.GetReferentiel()
+# #         titre = "Séance "+ self.code
+#         titre = ref._nomActivites.sing_()+" "+ self.code
+#         self.tip.SetWholeText("titre", titre)
+#         
+#         # Type de séance
+#         if self.typeSeance != "":
+#             self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
+#             self.tip.SetWholeText("txt", ref.seances[self.typeSeance][1], 
+#                                   bold = True, size = 3,
+#                                   fcoul = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]))
+#         
+#         else:
+#             self.tip.Supprime('icon')
+#         
+#         
+#         
+#         # Démarche
+#         ld = self.demarche.split()
+#         if self.typeSeance in ref.activites.keys() and len(ref.listeDemarches) > 0 \
+#             and len(ld) > 0:
+# #             if self.demarche in constantes.imagesDemarches.keys():
+#             for i, d in enumerate(ld):
+#                 bmp = constantes.imagesDemarches[d].GetBitmap()
+#             
+#             
+#                 self.tip.AjouterImg("icon2", constantes.imagesDemarches[self.demarche].GetBitmap(), width = 64)
+#                 self.tip.SetWholeText("dem", ref.demarches[self.demarche][1], italic = True, size = 3)
+#         else:
+#             self.tip.Supprime('icon2')
+#         
+#         # Intitulé
+#         self.tip.SetWholeText("int", self.intitule, size = 5)
+#         
+#         
+#         # Image
+#         if self.image is not None:
+#             self.tip.AjouterImg("img", self.image, width = 200)
+#         else:
+#             self.tip.Supprime('img')
+#         
+#         # Durée
+#         self.tip.SetWholeText("dur", getHoraireTxt(self.GetDuree()), size = 3)
+#         
+#         # Effectif
+#         self.tip.SetWholeText("eff", strEffectifComplet(self.GetDocument().classe, self.effectif), size = 3)
+#         
+#         # Description
+#         if hasattr(self, 'description'):
+#             self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
+#         else:
+#             self.tip.Supprime('ldes')
+#         
+#         self.tip.AjouterLien('lien', self.lien, self)
+#         
+#         self.tip.SetPage()
+#         
+#         
 
 
 

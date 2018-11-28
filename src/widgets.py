@@ -98,6 +98,29 @@ class Grammaire():
             adj += " "
         return a + getSingulier(adj+self.nom_obj.lower())
     
+    def au_(self, adj = ""):
+        """ 
+        """
+        if self.genre == "f":
+            if self.voyelle(self.nom_obj[0]):
+                a = "à l'"
+            else:
+                a = "à la "
+        
+        elif self.genre in ["q","m"]:
+            if self.voyelle(self.nom_obj[0]):
+                a = "à l'"
+            else:
+                a = "au "
+        
+        else:
+            a = ""
+        
+        if adj != "":
+            adj += " "
+        return a + getSingulier(adj+self.nom_obj.lower())
+    
+    
     def ce_(self, adj = ""):
         """ 
         """
@@ -248,8 +271,8 @@ def rallonge(txt):
 
 ######################################################################################  
 def sublist(sub, lst):
-   l = [e for e in sub if e in lst]
-   return len(l) == len(sub)
+    l = [e for e in sub if e in lst]
+    return len(l) == len(sub)
 
 ######################################################################################  
 def pourCent(v, ajuster = False):

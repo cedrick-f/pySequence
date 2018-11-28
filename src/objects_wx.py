@@ -2780,7 +2780,6 @@ class FenetreSequence(FenetreDocument):
                "Elle va être automatiquement convertie au format actuel." %nomCourt(nomFichier))
             reparer = True
             ouvre()
-            self.MarquerFichierCourantModifie(True)
             
         except:
             messageErreur(self, "Erreur d'ouverture",
@@ -2791,7 +2790,10 @@ class FenetreSequence(FenetreDocument):
             if DEBUG:
                 raise
             return
-
+        
+        if reparer:
+            self.MarquerFichierCourantModifie(True)
+            
 #        self.arbre.Layout()
 #        self.arbre.ExpandAll()
 #        self.arbre.CalculatePositions()
@@ -3236,7 +3238,6 @@ class FenetreProjet(FenetreDocument):
                                "Il va être automatiquement converti au format actuel." %nomCourt(nomFichier))
             reparer = True
             root, message, count, Ok, Annuler = ouvre(message)
-            self.MarquerFichierCourantModifie(True)
             
         except:
             count = 0
@@ -3245,6 +3246,11 @@ class FenetreProjet(FenetreDocument):
             Annuler = True
             if DEBUG:
                 raise
+        
+        if reparer:
+            self.MarquerFichierCourantModifie(True)
+            
+            
         #
         # Erreur fatale d'ouverture
         #
@@ -3903,7 +3909,6 @@ class FenetreProgression(FenetreDocument):
                                "Elle va être automatiquement converti au format actuel." %nomCourt(nomFichier))
             reparer = True
             root, message, count, Ok, Annuler = ouvre(message)
-            self.MarquerFichierCourantModifie(True)
             
         except:
             count = 0
@@ -3912,6 +3917,9 @@ class FenetreProgression(FenetreDocument):
             Annuler = True
             if DEBUG:
                 raise
+            
+        if reparer:
+            self.MarquerFichierCourantModifie(True)
         #
         # Erreur fatale d'ouverture
         #
@@ -4006,7 +4014,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4246,7 +4254,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4474,7 +4482,7 @@ class BaseFiche2(wx.ScrolledWindow):
 
     #-------------------------------------------------------------------------
     def Compute(self):
-        print("Compute")
+#         print("Compute")
         
         imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         self.ctx = cairo.Context(imagesurface)
@@ -4497,7 +4505,7 @@ class BaseFiche2(wx.ScrolledWindow):
 #         temp = r.get()
 #         try:
         if not self.timer.IsRunning():
-            print("ComputationDone")
+#             print("ComputationDone")
 #             self.buffer = temp
             self.Refresh()
             self.Update()
@@ -7670,12 +7678,12 @@ class PanelPropriete_CI(PanelPropriete):
         #
 #         print("maxCI", ref.maxCI)
         hs = wx.BoxSizer(wx.HORIZONTAL)
-        hs.Add(wx.StaticText(panelCI, -1, "Nombre maximum de %s" %getPluriel(ref.nomCI)), 
+        hs.Add(wx.StaticText(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.plur_()), 
                flag = wx.EXPAND|wx.TOP|wx.RIGHT, border = 4)
         
-        self.nCI = wx.SpinCtrl(panelCI, -1, "Nombre maximum de %s" %ref.nomCI, size = (35*SSCALE, -1))
+        self.nCI = wx.SpinCtrl(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.plur_(), size = (35*SSCALE, -1))
         self.nCI.SetToolTip("Fixe un nombre maximum de %s sélectionnables.\n" \
-                                  "0 = pas de limite" %getPluriel(ref.nomCI))
+                                  "0 = pas de limite" %ref._nomCI.plur_())
         self.nCI.SetRange(0,9)
         self.nCI.SetValue(0)
         self.Bind(wx.EVT_SPINCTRL, self.OnOption, self.nCI)
@@ -9525,9 +9533,10 @@ class PanelPropriete_Seance(PanelPropriete):
                 for cb in self.cbDem:
                     try:
                         self.speSizer.Detach(cb)
+                        cb.Destroy()
                     except:
                         pass
-                    cb.Destroy()
+                    
                     del cb
             else:
     #             try:
@@ -9593,7 +9602,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 del cb
 
         self.cbSpe = []
-        if self.seance.typeSeance in list(ref.ensSpecifSeance.keys()): # La Seance est concernée par les Enseignements de Spécialité
+        if self.seance.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
             if self.seance.GetDocument().classe.specialite in ref.ensSpecifSeance[self.seance.typeSeance]:
                 if len(ref.listeEnsSpecif) > 0:
                     
@@ -9931,23 +9940,27 @@ class PanelPropriete_Seance(PanelPropriete):
 #         event.Skip()
         self.AdapterAuType()
         self.MiseAJour()
-        self.sendEvent(modif = "Modification de l'enseignement spécifique de la Séance")
+        ref = self.seance.GetReferentiel()
+        self.sendEvent(modif = "Modification %s %s" %(ref._nomEnsSpecif.du_(), ref._nomActivites.du_()))
 
 
     #############################################################################            
     def EvtComboBoxDem(self, event):
+        ref = self.seance.GetReferentiel()
         cb = event.GetEventObject()
         self.seance.SetDemarche(cb.GetName())  
-        self.sendEvent(modif = "Modification de la démarche de la Séance") 
+        self.sendEvent(modif = "Modification de %s %s" %(ref._nomDemarches.le_(), ref._nomActivites.du_())) 
         
     
     #############################################################################            
     def EvtCheckBoxDem(self, event):
+        ref = self.seance.GetReferentiel()
         self.seance.SetDemarche(" ".join([cb.GetName() for cb in self.cbDem if cb.IsChecked()]))
-        self.sendEvent(modif = "Modification d'une démarche de la Séance") 
+        self.sendEvent(modif = "Modification d'%s %s" %(ref._nomDemarches.un_(), ref._nomActivites.du_())) 
+    
     
     ######################################################################################  
-    def AjouterEnleverCompetences(self, app, rem):
+    def AjouterEnleverCompetences(self, app, rem, compRef):
         for s in app:
             if not s in self.seance.compVisees:
                 self.seance.compVisees.append(s)
@@ -9955,24 +9968,25 @@ class PanelPropriete_Seance(PanelPropriete):
             if s in self.seance.compVisees:
                 self.seance.compVisees.remove(s)
         ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Ajout/Suppression d'une %s associée à la Séance" %getSingulier(ref.GetNomGeneriqueComp())) 
+        self.sendEvent(modif = "Ajout/Suppression d'%s associée %s" %(compRef._nom.un_(), ref._nomActivites.au_())) 
         
         
-    #############################################################################            
-    def AjouterCompetence(self, code, propag = None):
-        self.seance.compVisees.append(code)
-        ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Ajout d'une %s associée à la Séance" %getSingulier(ref.GetNomGeneriqueComp())) 
-        
-        
-    #############################################################################            
-    def EnleverCompetence(self, code, propag = None):
-        self.seance.compVisees.remove(code)
-        ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Suppression d'une %s associée à la Séance" %getSingulier(ref.GetNomGeneriqueComp())) 
+#     #############################################################################            
+#     def AjouterCompetence(self, code, propag = None):
+#         self.seance.compVisees.append(code)
+#         ref = self.seance.GetReferentiel()
+#         self.sendEvent(modif = "Ajout d'une %s associée %s" %(getSingulier(ref.GetNomGeneriqueComp()), ref._nomActivites.au_())) 
+#         
+#         
+#     #############################################################################            
+#     def EnleverCompetence(self, code, propag = None):
+#         self.seance.compVisees.remove(code)
+#         ref = self.seance.GetReferentiel()
+#         self.sendEvent(modif = "Suppression d'une %s associée %s" %(getSingulier(ref.GetNomGeneriqueComp()), ref._nomActivites.au_())) 
+    
     
     ######################################################################################  
-    def AjouterEnleverSavoirs(self, app, rem):
+    def AjouterEnleverSavoirs(self, app, rem, savoirsRef):
         for s in app:
             if not s in self.seance.savVises:
                 self.seance.savVises.append(s)
@@ -9980,21 +9994,21 @@ class PanelPropriete_Seance(PanelPropriete):
             if s in self.seance.savVises:
                 self.seance.savVises.remove(s)
         ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Ajout/Suppression d'une %s associée à la Séance" %getSingulier(ref.GetNomGeneriqueSav())) 
+        self.sendEvent(modif = "Ajout/Suppression d'%s associée %s" %(savoirsRef._nom.un_(), ref._nomActivites.au_())) 
         
         
-    #############################################################################            
-    def AjouterSavoir(self, code, propag = None):
-        self.seance.savVises.append(code)
-        ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Ajout d'une %s associée à la Séance" %getSingulier(ref.GetNomGeneriqueSav())) 
-        
-        
-    #############################################################################            
-    def EnleverSavoir(self, code, propag = None):
-        self.seance.savVises.remove(code)
-        ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Suppression d'une %s associée à la Séance" %getSingulier(ref.GetNomGeneriqueSav())) 
+#     #############################################################################            
+#     def AjouterSavoir(self, code, propag = None):
+#         self.seance.savVises.append(code)
+#         ref = self.seance.GetReferentiel()
+#         self.sendEvent(modif = "Ajout d'une %s associée %s" %(getSingulier(ref.GetNomGeneriqueSav()), ref._nomActivites.au_())) 
+#         
+#         
+#     #############################################################################            
+#     def EnleverSavoir(self, code, propag = None):
+#         self.seance.savVises.remove(code)
+#         ref = self.seance.GetReferentiel()
+#         self.sendEvent(modif = "Suppression d'une %s associée %s" %(getSingulier(ref.GetNomGeneriqueSav()), ref._nomActivites.au_())) 
         
         
     ######################################################################################  
@@ -13747,7 +13761,7 @@ class ArbreSavoirs(HTL.HyperTreeList):
         lstc, lstu = [], []
         self.getListItemCheckedUnchecked(self.root, lstc, lstu)
 
-        self.pp.AjouterEnleverSavoirs(lstc, lstu)
+        self.pp.AjouterEnleverSavoirs(lstc, lstu, self.savoirsRef)
         
         self.Refresh()                
         wx.CallAfter(self.pp.SetSavoirs)
@@ -14056,7 +14070,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         lstc, lstu = [], []
         self.getListItemCheckedUnchecked(self.root, lstc, lstu)
 
-        self.pp.AjouterEnleverCompetences(lstc, lstu)
+        self.pp.AjouterEnleverCompetences(lstc, lstu, self.competencesRef)
         
         self.Refresh()                
         wx.CallAfter(self.pp.SetCompetences)
@@ -15756,7 +15770,7 @@ class PanelProblematiques(wx.Panel):
         #
         # Cas des Problématiques personalisées
         #
-        t = getPluriel(ref.nomPb)
+        t = ref._nomPb.plur_()
         if hasPb:
             t += " personnalisées"
         
@@ -16533,7 +16547,6 @@ class URLSelectorCombo(wx.Panel):
     def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
 #         print "init URLSelectorCombo", pathseq
         
-        
         wx.Panel.__init__(self, parent, -1)
         self.SetMaxSize((-1,22*SSCALE))
         
@@ -16557,7 +16570,7 @@ class URLSelectorCombo(wx.Panel):
         bsize = (16*SSCALE, 16*SSCALE)
         
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
-        self.texte.SetToolTip("Saisir un nom de fichier/dossier\nou faire glisser un fichier")
+        self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
         if self.dossier:
             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
             bt1.SetToolTip("Sélectionner un dossier")
@@ -16628,7 +16641,8 @@ class URLSelectorCombo(wx.Panel):
 
     ###############################################################################################
     def MiseAJour(self):
-        self.btnlien.Show(self.lien.path != "")
+#         self.btnlien.Show(self.lien.path != "")
+        self.marquerValid()
 
 
     ###############################################################################################
@@ -16639,10 +16653,10 @@ class URLSelectorCombo(wx.Panel):
             
     ##########################################################################################
     def EvtText(self, event):
-        self.lien.EvalLien(event.GetString(), self.pathseq)
-        if not self.lien.ok:
-            self.lien.EvalTypeLien(self.pathseq)
-        self.SetPath()
+#         self.lien.EvalLien(event.GetString(), self.pathseq)
+#         if not self.lien.ok:
+#             self.lien.EvalTypeLien(self.pathseq)
+        self.SetPath(event.GetString())
 
 
     ##########################################################################################
@@ -16655,16 +16669,20 @@ class URLSelectorCombo(wx.Panel):
         """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
             
         """
-#         print "SetPath", self.lien
+#         print("SetPath", self.lien)
 #         print "   ", lien, typ
         if lien is not None:
-#             self.lien.path = lien
+            self.lien.path = lien
             self.lien.EvalLien(lien, self.pathseq)
-        if typ is not None:
-            self.lien.type = typ
-        else:
-            self.lien.EvalTypeLien(self.pathseq)
-#         print ">>", self.lien
+        
+#         if typ is not None:
+#             self.lien.type = typ
+#         else:
+#             self.lien.EvalTypeLien(self.pathseq)
+#         print(">>", self.lien)
+        
+#         self.texte.ChangeValue(self.lien.path)
+        
         
         try:
             self.texte.ChangeValue(self.lien.path)
@@ -16675,6 +16693,7 @@ class URLSelectorCombo(wx.Panel):
 
         self.MiseAJour()
         
+        
         if hasattr(self.Parent, 'GetPanelRacine'):
             self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
         
@@ -16683,7 +16702,24 @@ class URLSelectorCombo(wx.Panel):
     def SetPathSeq(self, pathseq):
         self.pathseq = pathseq
 
-
+    
+    ##########################################################################################
+    def marquerValid(self):
+        if self.lien.ok:
+            self.texte.SetBackgroundColour(
+                 wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
+            
+        else:
+            self.texte.SetBackgroundColour("pink")
+            self.texte.SetFocus()
+        
+        self.btnlien.Enable(self.lien.ok)
+        self.Refresh()
+        
+        
+        
+        
+        
 #############################################################################################################
 #
 # A propos ...
@@ -17025,12 +17061,12 @@ class myHtmlWindow(html.HtmlWindow):
         self.Parent.Show(False)
         
     def OnCellClicked(self, cell, x, y, evt):
-        print('OnCellClicked: %s, (%d %d)\n' % (cell, x, y))
+#         print('OnCellClicked: %s, (%d %d)\n' % (cell, x, y))
         if isinstance(cell, html.HtmlWordCell):
             sel = html.HtmlSelection()
-            print('     %s\n' % cell.ConvertToText(sel))
+#             print('     %s\n' % cell.ConvertToText(sel))
         super(myHtmlWindow, self).OnCellClicked(cell, x, y, evt)
-
+        return True
 
 
 
@@ -17067,7 +17103,7 @@ class PopupInfo(wx.PopupWindow):
         
         
         #'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">'+
-        sizer.Add(self.html)
+        sizer.Add(self.html, 1, flag = wx.EXPAND)
         
         self.SetSizer(sizer)
         
@@ -17136,11 +17172,15 @@ class PopupInfo(wx.PopupWindow):
         tag.extract()
 
 
+#     #####################################################################################
+#     def Render_Template(self, template, *args, **kargs):
+#         self.AjouterHTML
+        
     #####################################################################################
     def AjouterHTML(self, Id, text):
         """ Ajoute un texte au format HTML
         """
-#         print "AjouterHTML", text
+#         print("AjouterHTML", text)
         if text is None:
             return
         tag = self.soup.find(id=Id)
@@ -17264,6 +17304,18 @@ class PopupInfo(wx.PopupWindow):
                 tag.append(br)
             tag.append(NavigableString(l))
 #        print tag
+
+
+    ##########################################################################################
+    def GetImgURL(self, bmp, width = None):
+        try:
+            self.tfname.append(tempfile.mktemp()+".png")
+            bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
+        except:
+            return
+        
+        return self.tfname[-1]
+
 
 
     ##########################################################################################
@@ -17549,6 +17601,7 @@ class PopupInfo(wx.PopupWindow):
 
     ##########################################################################################
     def SetPage(self):
+#         print("SetPage")
 #        self.SetSize((10,1000))
 #        self.SetClientSize((100,1000))
 #        self.html.SetSize( (100, 100) )
@@ -17572,12 +17625,13 @@ class PopupInfo(wx.PopupWindow):
 #             self.html.AppendToPage(self.soup.prettify())
             self.html.SetPage(self.soup.prettify())
             ir = self.html.GetInternalRepresentation()
+#             print("   ", ir.GetWidth(), ir.GetHeight())
 #             ir.Layout(self.w)
             
 #             self.html.SetSize( (ir.GetWidth()+25, ir.GetHeight()+25) )
 #             self.SetClientSize(self.html.GetSize()) 
 #             print ir.GetWidth(), ir.GetHeight()
-            self.SetClientSize((ir.GetWidth()+2, ir.GetHeight()+2))
+            self.SetClientSize((ir.GetWidth()+10*SSCALE, ir.GetHeight()+5*SSCALE))
             self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
         else:
             self.html.SetPage(self.soup.prettify(), "")

@@ -1719,7 +1719,14 @@ class Referentiel(XMLelem):
             if len(l) < 3:
                 l.append(Grammaire(l[0]))
 
-            
+        for c in self.dicoCompetences.values():
+            c.postTraiter()
+        
+        
+        for s in self.dicoSavoirs.values():
+            s.postTraiter()
+        
+        
         
     #########################################################################
     def completer(self, forcer = False):
@@ -3315,6 +3322,15 @@ class Competences(XMLelem):
             for typi, dico in list(self.dicCompetences.items()):
                 print(" _poids :", dico.poids)
 
+    
+    #########################################################################
+    def postTraiter(self):
+        """ 
+        """
+#         print("postTraiter")
+
+        self._nom = Grammaire(self.nomGenerique)
+        
         
     ####################################################################################
     def GetDicFiltre(self, filtre = None, dic = None):
@@ -3765,7 +3781,16 @@ class Savoirs(XMLelem):
 
 
 
+    #########################################################################
+    def postTraiter(self):
+        """ 
+        """
+#         print("postTraiter")
 
+        self._nom = Grammaire(self.nomGenerique)
+            
+            
+            
     #########################################################################
     def getElemAssocies(self, elem_filtre = None, contexte = None):
         """ Renvoie un dictionnaire :

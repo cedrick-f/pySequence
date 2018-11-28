@@ -4942,7 +4942,7 @@
       </d_dicSavoirs>
       <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_M>
-    <Savoirs_P B_obj="True" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Notion(s) et contenu(s)">
+    <Savoirs_P B_obj="True" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Notion(s) et contenu(s)$m">
       <l_asso_contexte S_00="O" S_01="O" />
       <l_asso_type S_00="Spe" S_01="Comp_S" />
       <d_dicSElemAssocies />
@@ -5021,7 +5021,7 @@
             </Savoir_1.1>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_T S_intitule="ENERGIE">
+        <Savoir_2 S_intitule="ENERGIE">
           <l_elemAssocies>
             <l_00 S_00="PCM" />
             <l_01 />
@@ -5507,8 +5507,8 @@
               </d_sousSav>
             </Savoir_2.6>
           </d_sousSav>
-        </Savoir_T>
-        <Savoir_3.0 S_intitule="MATIERE ET MATERIAUX">
+        </Savoir_2>
+        <Savoir_3 S_intitule="MATIERE ET MATERIAUX">
           <l_elemAssocies>
             <l_00 S_00="PCM" />
             <l_01 />
@@ -5691,8 +5691,8 @@
               </d_sousSav>
             </Savoir_3.3>
           </d_sousSav>
-        </Savoir_3.0>
-        <Savoir_4.0 S_intitule="ONDES ET INFORMATIONS">
+        </Savoir_3>
+        <Savoir_4 S_intitule="ONDES ET INFORMATIONS">
           <l_elemAssocies>
             <l_00 S_00="PCM" />
             <l_01 />
@@ -5842,7 +5842,7 @@
               </d_sousSav>
             </Savoir_4.3>
           </d_sousSav>
-        </Savoir_4.0>
+        </Savoir_4>
       </d_dicSavoirs>
       <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_P>

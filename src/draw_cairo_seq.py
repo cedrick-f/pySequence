@@ -1548,7 +1548,7 @@ def DrawCroisementsDemarche(ctx, seance, y, w):
     # Croisements Séance/Démarche
     #
     ref = seance.GetReferentiel()
-    if seance.typeSeance in list(ref.activites.keys()):
+    if seance.typeSeance in ref.activites.keys():
         ld = seance.demarche.split()
         if len(ld) > 0:
             n = len(ld)

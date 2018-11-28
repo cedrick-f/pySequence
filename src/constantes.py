@@ -902,12 +902,14 @@ BASE_FICHE_HTML_SEANCE = """
     <table border="0" width="500">
         <tbody>
         <tr valign="top">
-            <td><p id="txt"><img id="icon" src="" alt=" "> </p></td>
-            <td rowspan="2"><img id="icon2" src="" alt=" "><p id="dem"> </p></td>
+            <td><img id="icon" src="" alt=" "></td>
+            <td><p id="txt"> </p></td>
+            <td rowspan="2"><img id="icon2" src="" alt=" "></td>
+            <td><p id="dem"> </p></td>
         </tr>
         
         <tr>
-            <td><p id="dur">Durée : </p><p id="eff">Effectif : </p></td>
+            <td colspan=4><p id="dur">Durée : </p><p id="eff">Effectif : </p></td>
         </tr>
         
         <tr align="left" valign="top">
@@ -916,7 +918,7 @@ BASE_FICHE_HTML_SEANCE = """
         </tr>
         
         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=2>
+            <td colspan=4>
                 <b>Description détaillée de la séance</b>
                 <span id="des"> </span>
             </td>
@@ -929,6 +931,72 @@ BASE_FICHE_HTML_SEANCE = """
 """
 
 
+TEMPLATE_SEANCE = """
+<font size="12" color="{{ coul_type }}"><b><h1 style="text-align: center;">{{ titre }}</h1></b></font>
+    <table border="0" width="500">
+        <tbody>
+        <tr valign="top">
+            <td><img src="{{ icon_type }}" alt=" "></td>
+            <td><b><font size="3" color="{{ coul_type }}">{{ nom_type }}</font></b></td>
+            <td>
+            {% for i, n in lst_dem %}
+            <div align="right">
+                <table border="0">
+                    <tr>
+                        <td align="right">{{n}}</td>
+                        {% if i is not none %}
+                        <td align="right"><img src="{{i}}" alt=" "></td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+    <table border="0" width="500">
+        <tr>
+            <td colspan={% if lst_ensSpe|length > 0 %}2{% else %}3{% endif %}><i>Durée : {{ duree }}</br>Effectif : {{effectif}}</i></td>
+            {% if lst_ensSpe|length > 0 %}
+            <td>
+                {% for n, c in lst_ensSpe %}
+                <font size="3" color="{{ c }}">{{ n }}</font>
+                {% endfor %}
+            </td>
+            {% endif %}
+        </tr>
+        
+        <tr align="left" valign="top">
+            <td colspan={% if image is none %}3{% else %}2{% endif %}><p><b><font size="5" color="{{ coul_type }}">{{ intitule }}</font></b></p></td>
+            {% if image is not none %}
+            <td><img src="{{ image }}" alt=" "></td>
+            {% endif %}
+        </tr>
+        
+        {% if decription is not none %}
+        <tr align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=3>
+                <b>Description détaillée de la séance</b>
+                <div>{{ decription }}</div>
+            </td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    
+    {% if lien.type == 'u' %}
+    <a href="{{ lien.path }}">{{ lien.path }}</a>
+    {% elif lien.type in ['f', 'd'] %}
+    <wxp module="wx" class="Button">
+        <param name="id" value="-1">
+        <param name="label" value="lien.path">
+    </wxp>
+    {% endif %}
+    
+"""
 
 
 
