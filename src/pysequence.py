@@ -9427,10 +9427,15 @@ class Seance(ElementAvecLien, ElementBase):
             t += "\n\n" + self.GetDescription()
         
         if self.typeSeance in ref.activites.keys():
-            t += "\n\n" + ref._nomDemarches.Plur_() + " :"
-            for d in self.demarche.split():
-                t += "  " + d
-        
+            if len(self.demarche) > 0:
+                if len(self.demarche) > 1:
+                    t += "\n\n" + ref._nomDemarches.Plur_()
+                else:
+                    t += "\n\n" + ref._nomDemarches.Sing_()
+                t += " " + ref._nomActivites.du_() + " :"
+                for d in self.demarche.split():
+                    t += "\n  " + ref.demarches[d][1]
+                
         if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
             if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
                 t += "\n\n" + ref._nomEnsSpecif.Plur_()

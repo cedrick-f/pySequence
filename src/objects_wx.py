@@ -2464,7 +2464,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         - liens 
         - ...
         """
-        print("enrichirSVG :")
+#         print("enrichirSVG :")
         epsilon = 1.5
         
         doc = parse(path)
@@ -2479,7 +2479,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         # Récupération des points caractéristiques sur la fiche
         pts_caract = self.GetDocument().GetPtCaract()
-        print(pts_caract)
+#         print(pts_caract)
         
         # Identification des items correspondants sur le doc SVG
         for p in doc.getElementsByTagName("path"):
@@ -9583,10 +9583,11 @@ class PanelPropriete_Seance(PanelPropriete):
             if len(ref.demarches) > 0:
                 
                 listDem = ref.demarcheSeance[self.seance.typeSeance]
-                if ref.multiDemarches:
+                if ref.multiDemarches and len(listDem) > 1:
                     tit = ref._nomDemarches.plur_()
                 else:
                     tit = ref._nomDemarches.sing_()
+                tit += ref._nomActivites.du_()
                 titre = wx.StaticText(self.pageGen, -1, tit + " :")
                 self.titreDem = titre
                 self.demSizer.Add(titre, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
