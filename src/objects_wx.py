@@ -9579,7 +9579,7 @@ class PanelPropriete_Seance(PanelPropriete):
             
             
         
-        if self.seance.typeSeance in list(ref.activites.keys()):
+        if self.seance.typeSeance in ref.activites.keys():
             if len(ref.demarches) > 0:
                 
                 listDem = ref.demarcheSeance[self.seance.typeSeance]

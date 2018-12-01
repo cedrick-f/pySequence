@@ -8501,6 +8501,7 @@ class Seance(ElementAvecLien, ElementBase):
     def getBranche(self):
         """ Renvoie la branche XML de la séance pour enregistrement
         """
+        ref = self.GetReferentiel()
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
         root.set("Intitule", self.intitule)
@@ -8523,7 +8524,7 @@ class Seance(ElementAvecLien, ElementBase):
             root.set("nbrRotations", str(self.nbrRotations.v[0]))
 #            root.set("nbrGroupes", str(self.nbrGroupes.v[0]))
             
-        elif self.typeSeance in ACTIVITES:
+        elif self.typeSeance in ref.activites.keys():
             root.set("Demarche", self.demarche)
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
@@ -8557,8 +8558,9 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def setBranche(self, branche):
-#         print "setBranche séance"
+        print("setBranche séance", self)
 #        t0 = time.time()
+        ref = self.GetReferentiel()
         
         self.ordre = eval(branche.tag[6:])
         
@@ -8590,10 +8592,11 @@ class Seance(ElementAvecLien, ElementBase):
 #                self.nbrGroupes.v[0] = eval(branche.get("nbrGroupes", str(len(self.Get???))))
                 self.reglerNbrRotMaxi()
             
-        elif self.typeSeance in ACTIVITES:   
+        elif self.typeSeance in ref.activites.keys():   
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
-            self.nombre.v[0] = eval(branche.get("Nombre", "1"))
+            self.nombre.v[0] = int(branche.get("Nombre", "1"))
+            print("   ", self.demarche)
 #            self.lien.setBranche(branche)
             
             # Les systèmes nécessaires
@@ -8601,16 +8604,16 @@ class Seance(ElementAvecLien, ElementBase):
                             # liée à la liste des systèmes de la Séquence
                             # Nouveau depuis v7.1
             for s in list(branche):
-                lstNSys.append(eval(s.get("Nombre", "")))  
+                lstNSys.append(int(s.get("Nombre", "")))  
                     
                 
             self.AjouterListeSystemes(lstNSys)#lstSys, 
 #             print "   >", lstSys
             # Durée
-            self.duree.v[0] = eval(branche.get("Duree", "1"))
+            self.duree.v[0] = float(branche.get("Duree", "1"))
         else:
             self.effectif = branche.get("Effectif", "C")
-            self.duree.v[0] = eval(branche.get("Duree", "1"))
+            self.duree.v[0] = float(branche.get("Duree", "1"))
         
         
         # Enseignements Spécifiques
@@ -9424,7 +9427,7 @@ class Seance(ElementAvecLien, ElementBase):
         ref = self.GetReferentiel()
         t = self.GetCode(i) + " :\n" + self.GetIntit(i)  
         if self.GetDescription() != None:
-            t += "\n\n" + self.GetDescription()
+            t += "\n\nDescription :\n" + self.GetDescription()
         
         if self.typeSeance in ref.activites.keys():
             if len(self.demarche) > 0:

@@ -705,13 +705,28 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         wC = rect_width*taille(lstTexteC)/(ltot)
         wS = rect_width*taille(lstTexteS)/(ltot)
         wSe = rect_width*len(lstTexteSe)/(ltot)
-        rectC = (x0, y0, wC, hl)
-        rectS = (x0+wC, y0, wS, hl)
-        rectSe = (x0+wC+wS, y0, wSe, hl)
         
+        # Création des deux zones
+        maxFontSize = 0.011 * COEF
+        ctx.set_font_size(maxFontSize)
+        f = ctx.font_extents()[2]
+        rectC  = reduire_rect(x0, y0, wC, hl, f, 0.2)
+        rectS  = reduire_rect(x0+wC, y0, wS, hl, f, 0.2)
+        rectSe = reduire_rect(x0+wC+wS, y0, wSe, hl, f, 0.2)
         
+        # lignes de séparation
+        ctx.set_source_rgba (*BcoulPre)
+        if len(lstTexteS) >0:
+            ctx.move_to(x0+wC, y0)
+            ctx.line_to(x0+wC, y0+hl)
+            ctx.stroke()
         
-        r = liste_code_texte(ctx, lstCodesC, lstTexteC, 
+        if len(lstTexteSe) >0:
+            ctx.move_to(x0+wC+wS, y0)
+            ctx.line_to(x0+wC+wS, y0+hl)
+            ctx.stroke()
+        
+        r = liste_code_texte2(ctx, lstCodesC, lstTexteC, 
                              rectC, 
                              0.05*rect_width, 0.1,
                              lstCoul = lstCoulC, va = 'c')
@@ -725,7 +740,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         
         
         
-        r = liste_code_texte(ctx, lstCodesS, lstTexteS, 
+        r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
                              rectS, 
                              0.05*rect_width, 0.1,
                              lstCoul = lstCoulS, va = 'c')
