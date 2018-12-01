@@ -82,7 +82,7 @@ includefiles = ['LICENSE.txt',
                      'JoursFeries.xml',
                      'splash.png',
                      ('../tables', "../tables"),
-                     ('../BO', "../BO"),
+#                      ('../BO', "../BO"),
                      ('../icones', "../icones"),
                      ('../referentiels', "../referentiels"),
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\share\\enchant\\myspell', 'share/enchant/myspell'), 
@@ -119,7 +119,7 @@ if sys.platform == "linux2":
 build_exe_options = {'build_exe': 'build/bin',
                      'include_msvcr': True,
                      'add_to_path': True,
-                     "packages": ["reportlab",],#"os", "xhtml2pdf","html5lib", "enchant", , "wx.lib.pdfwin", "PIL"], 
+                     "packages": ["reportlab",'encodings', 'asyncio'],#"os", "xhtml2pdf","html5lib", "enchant", , "wx.lib.pdfwin", "PIL"], 
 #                      "zip_includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
                      "optimize" : 1,
@@ -226,3 +226,18 @@ if __name__ == '__main__':
                                   'pyperclip']
                 )
 
+
+
+# Nettoyage (on enlève les python36.dll en trop
+def supprimer(racine, nomFichier, parent = "", niveau = 0):
+    # chemin absolu de la racine
+    abspath = os.path.join(parent, racine)
+    if os.path.isdir(abspath):
+        for fd in os.listdir(abspath):
+            supprimer(fd, nomFichier, abspath, niveau+1)
+    elif os.path.split(abspath)[1] == nomFichier:
+        os.remove(abspath)
+        print(abspath)
+supprimer('build/bin/lib', 'python36.dll')
+supprimer('build/bin/lib', 'VCRUNTIME140.dll')
+            

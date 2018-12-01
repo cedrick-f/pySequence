@@ -1862,6 +1862,7 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
     # angle du bout de flèche
     af = pi/5
     _x, _y = x+r*sin(a2), y+r*cos(a2)
+
     ctx.move_to(_x, _y)
     ctx.line_to(_x-f*cos(af-a2), _y-f*sin(af-a2))
     ctx.line_to(_x-f*cos(-a2-af), _y-f*sin(-a2-af))
@@ -2010,7 +2011,7 @@ def liste_code_texte2(ctx, lstCodes, lstTexte, rect,
 #             ep = ctx.get_line_width()
 #             co = ctx.get_source().get_rgba()
             ctx.set_line_width(0.0001 * COEF)
-            ctx.set_source_rgba (0.5, 0.5, 0.5, 0)
+            ctx.set_source_rgba (0.5, 0.5, 0.5, 0.01)
             ctx.rectangle(*rect)
             
             ctx.fill_preserve()
@@ -2107,8 +2108,8 @@ def liste_code_texte(ctx, lstCodes, lstTexte, rect,
             ep = ctx.get_line_width()
             co = ctx.get_source().get_rgba()
             ctx.set_line_width(0.0001 * COEF)
-            ctx.set_source_rgba (0.5, 0.5, 0.5, 0)
-            ctx.rectangle(rect[0], rect[1], rect[2], rect[3])
+            ctx.set_source_rgba (0.5, 0.5, 0.5, 0.01)
+            ctx.rectangle(*rect)
             
             ctx.fill_preserve()
             

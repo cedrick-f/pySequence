@@ -359,12 +359,13 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     
     DefinirZones(seq, ctx)
     
-#     gabarit()
+#     gabarit() # génération du gabarit de test
+
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
-    seq.zones_sens = []
-    seq.pt_caract = []
+    seq.zones_sens = [] # zones sensibles pour fiche depuis pySequence
+    seq.pt_caract = []  # points caractéristiques pour fiche SVG
     
     
     #
@@ -388,8 +389,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             t = "Séquence sans nom"
         else:
             t = seq.intitule
-        seq.pt_caract = curve_rect_titre(ctx, t, rect, 
-                                         BcoulIntitule, IcoulIntitule, FontIntitule)
+        seq.pt_caract.append((curve_rect_titre(ctx, t, rect, 
+                                               BcoulIntitule, IcoulIntitule, FontIntitule),
+                              "Seq"))
 
     #
     # Domaines
@@ -603,6 +605,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     curve_rect_titre(ctx, "Prérequis",  
                      (x0, y0, rect_width, rect_height),
                      BcoulPre, IcoulPre, fontPre)
+    
     #
     # Codes prerequis
     #
@@ -714,9 +717,11 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                              lstCoul = lstCoulC, va = 'c')
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis["C"].pts_caract = getPts(r)
+#         print("prerequis C", getPts(r))
         for i, c in enumerate(seq.prerequis["C"].competences): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["C"]))
-#            print "zzz", seq.zones_sens[-1]
+#             seq.prerequis["C"].pt_caract = (r[i][:2], i)
+
         
         
         
@@ -726,9 +731,10 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                              lstCoul = lstCoulS, va = 'c')
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis["S"].pts_caract = getPts(r)
+#         print("prerequis S", getPts(r))
         for i, c in enumerate(seq.prerequis["S"].savoirs): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["S"]))
-        
+#             seq.prerequis["S"].pt_caract = (r[i][:2], i)
         
             
         lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteSe), lstTexteSe, 
@@ -884,6 +890,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         seq.obj["S"].pts_caract = getPts(r)
     
         seq.zones_sens.append(Zone([rectC], obj = seq.obj["C"]))
+        
+        
+        
         seq.zones_sens.append(Zone([rectS], obj = seq.obj["S"]))
 #    seq.obj["C"].rect = 
 #    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
@@ -1139,7 +1148,7 @@ class Cadre():
         else:
             alpha = 1
             self.seance.pts_caract.append((x, y))
-        
+#         print(self.seance, (x, y))
         #
         # Le cadre
         #

@@ -112,7 +112,7 @@ import Referentiel
 
 import webbrowser
 
-from richtext import XMLtoHTML
+from richtext import XMLtoHTML, XMLtoTXT
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
@@ -546,11 +546,11 @@ class ElementAvecLien():
     def GetLienHTML(self):
         if self.lien.type in ['f', 'd', 's']:
             if self.lien.path != '':
-                return toSystemEncoding('file:///' + os.path.abspath(self.lien.path))
+                return str('file:///' + os.path.abspath(self.lien.path))
             else:
                 return ''
         else:
-            return toSystemEncoding(self.lien.path)
+            return str(self.lien.path)
     
     ######################################################################################  
     def CreerLien(self, event):
@@ -750,7 +750,7 @@ class ElementBase(Grammaire):
              - liens 
              - ...
         """
-#        print "EnrichiSVG", self, doc, seance
+        print("EnrichiSVG", self, doc, seance, self.cadre)
         # 
         # Le titre de la page
         #
@@ -805,7 +805,7 @@ class ElementBase(Grammaire):
             if hasattr(self, 'GetLien'):
                 lien = self.GetLienHTML()
 #                lien = lien.decode(FILE_ENCODING)
-                lien = lien.encode('utf-8')
+#                 lien = lien.encode('utf-8')
                 t = doc.createElement("a")
                 txt = doc.createTextNode(lien)
                 t.appendChild(txt)
@@ -824,6 +824,8 @@ class ElementBase(Grammaire):
     def GetPtCaract(self): 
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
+            Chaque points caractéristique est de la forme :
+            ((x, y), element, code ou indice)
         """
         lst = []
         if hasattr(self, 'pts_caract' ):
@@ -839,22 +841,22 @@ class ElementBase(Grammaire):
     
     ######################################################################################  
     def GetDescription(self):
-        return
-#        if hasattr(self, 'panelPropriete'):
-#            pp = self.GetPanelPropriete()
-#            if hasattr(pp, 'rtc'):
-#                return pp.rtc.GetValue()
+        if hasattr(self, "description"):
+            return XMLtoTXT(self.description)
+
             
     ######################################################################################  
     def GetBulleSVG(self, i):
-        des = ""
+        print("GetBulleSVG", self, i)
 #        if hasattr(self, 'description'):
 #            des = "\n\n" + self.GetDescription()
-            
+
+        t = self.GetCode(i) + " :\n" + self.GetIntit(i)  
         if self.GetDescription() != None:
-            des = "\n\n" + self.GetDescription()
-        t = self.GetCode(i) + " :\n" + self.GetIntit(i) + des
-        return t.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
+            t += "\n\n" + self.GetDescription()
+        
+#         print("ttt", type(t))
+        return t#.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
            
            
@@ -1930,6 +1932,7 @@ class Sequence(BaseDoc):
         lst.extend(self.obj["C"].GetPtCaract())
         lst.extend(self.obj["S"].GetPtCaract())
         lst.extend(self.prerequis["S"].GetPtCaract())
+        lst.extend(self.prerequis["C"].GetPtCaract())
         lst.extend(self.CI.GetPtCaract())
         for s in self.seances:
             lst.extend(s.GetPtCaract())
@@ -1941,24 +1944,23 @@ class Sequence(BaseDoc):
         """ Enrichissement de l'image SVG <doc> (format XML) avec :
              - mise en surbrillance des éléments actifs
              - infobulles sur les éléments actifs
-             - liens 
+             - liens
              - ...
         """
 #        print "EnrichiSVG sequence"
         if hasattr(self, 'app'):
             t = doc.createElement("title")
             path = os.path.split(self.app.fichierCourant)[1]
-            print(type(path))
-            path = str(path)
-            print(type(path))
+            path = str(path) # Conversion en unicode !!!
             txt = doc.createTextNode(path)
             
             t.appendChild(txt)
             svg = doc.getElementsByTagName("svg")[0]
             svg.insertBefore(t, svg.childNodes[0])
-            
+        
         self.obj["C"].EnrichiSVG(doc)
         self.obj["S"].EnrichiSVG(doc)
+        self.prerequis["C"].EnrichiSVG(doc)
         self.prerequis["S"].EnrichiSVG(doc)
         self.CI.EnrichiSVG(doc)
         for s in self.seances:
@@ -2014,6 +2016,7 @@ class Sequence(BaseDoc):
         
         prerequis = ET.SubElement(sequence, "Prerequis")
         prerequis.append(self.prerequis["S"].getBranche())
+        prerequis.append(self.prerequis["C"].getBranche())
         for ps in self.prerequisSeance:
             prerequis.append(ps.getBranche())
         
@@ -2080,8 +2083,13 @@ class Sequence(BaseDoc):
         if branchePre != None:
             savoirs = branchePre.find("Savoirs")
             self.prerequis["S"].setBranche(savoirs)
+            comp = branchePre.find("Competences")
+            if comp != None:
+                self.prerequis["C"].setBranche(comp)
             lst = list(branchePre)
             lst.remove(savoirs)
+            if comp in lst:
+                lst.remove(comp)
             self.prerequisSeance = []
             for bsp in lst:
                 sp = LienSequence(self)
@@ -7012,7 +7020,7 @@ class CentreInteret(ElementBase):
         
     ######################################################################################  
     def __repr__(self):
-        return "CI%s" %self.numCI
+        return "CI %s" %self.numCI
     
     ######################################################################################  
     def GetPanelPropriete(self, parent):
@@ -7200,9 +7208,10 @@ class CentreInteret(ElementBase):
         
     ######################################################################################  
     def GetIntit(self, num):
-        lstCI = self.GetListCIref()
-        if self.numCI[num] < len(lstCI):
-            return lstCI[self.numCI[num]]
+        return self.GetNomCIs()[num]
+#         lstCI = self.GetListCIref()
+#         if self.numCI[num] < len(lstCI):
+#             return lstCI[self.numCI[num]]
     
     
     ######################################################################################  
@@ -7322,7 +7331,7 @@ class CentreInteret(ElementBase):
             self.tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
         
         if len(self.Pb + self.Pb_perso) > 0:
-            self.tip.SetWholeText("nomPb", ref.nomPb.Sing_())
+            self.tip.SetWholeText("nomPb", ref._nomPb.Sing_())
             for pb in self.Pb + self.Pb_perso:
                 self.tip.AjouterElemListeUL("pb", pb)
         else:
@@ -8078,9 +8087,9 @@ class Savoirs(ElementBase):
         
         
                 
-#     ######################################################################################  
-#     def __repr__(self):
-#         return "Savoirs : "+" ".join(self.savoirs)
+    ######################################################################################  
+    def __repr__(self):
+        return "Savoirs : "+" ".join(self.savoirs)
         
     ######################################################################################  
     def GetApp(self):
@@ -8108,6 +8117,7 @@ class Savoirs(ElementBase):
         """ Renvoie la branche XML du savoir pour enregistrement
         """
         root = ET.Element("Savoirs")
+#         print("getBranche", self.savoirs)
         for i, s in enumerate(self.savoirs):
             root.set("S"+str(i), s)
         return root
@@ -9403,6 +9413,37 @@ class Seance(ElementAvecLien, ElementBase):
     def GetFicheHTML(self, param = None):
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEANCE)
 
+
+
+    ######################################################################################  
+    def GetBulleSVG(self, i):
+        
+#        if hasattr(self, 'description'):
+#            des = "\n\n" + self.GetDescription()
+        
+        ref = self.GetReferentiel()
+        t = self.GetCode(i) + " :\n" + self.GetIntit(i)  
+        if self.GetDescription() != None:
+            t += "\n\n" + self.GetDescription()
+        
+        if self.typeSeance in ref.activites.keys():
+            t += "\n\n" + ref._nomDemarches.Plur_() + " :"
+            for d in self.demarche.split():
+                t += "  " + d
+        
+        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
+            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
+                t += "\n\n" + ref._nomEnsSpecif.Plur_()
+                for d in self.ensSpecif:
+                    t += "  " + d
+                    
+        t += "\n\n" + "Durée : " + getHoraireTxt(self.GetDuree())
+        
+        t += "\n" + "Effectif : " + strEffectifComplet(self.GetDocument().classe, self.effectif)
+                    
+#         print("ttt", type(t))
+        return t#.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
+    
     
     ######################################################################################  
     def SetTip(self):

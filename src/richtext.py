@@ -971,6 +971,24 @@ try:
 except ImportError:
     from bs4 import BeautifulSoup
 
+
+def XMLtoTXT(texteXML):
+        """ Converti un texte au format RichText (XML)
+            en texte 
+        """
+        if texteXML is None:
+            return
+#         print("XMLtoHTML", texteXML)
+        out = io.BytesIO()
+        handler = rt.RichTextXMLHandler()
+        buff = rt.RichTextBuffer()
+        out.write(bytes(texteXML, encoding = "utf-8"))
+        out.seek(0)
+        
+        handler.LoadFile(buff, out)  # out >> buff
+        return buff.GetText()
+
+
 def XMLtoHTML(texteXML):
         """ Converti un texte au format RichText (XML)
             en HTML 

@@ -68,9 +68,9 @@ class Grammaire():
             self.genre = "f"                # "m", "f" ou "q" pour une quantité 
         
 
-    def __repr__(self):
-        return self.nom_obj
-    
+#     def __repr__(self):
+#         return self.nom_obj
+#     
     
     def voyelle(self, c):
         return c.lower() in "aeiouhéèàêîëïùû"

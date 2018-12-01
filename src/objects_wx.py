@@ -2464,7 +2464,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         - liens 
         - ...
         """
-        epsilon = 0.001
+        print("enrichirSVG :")
+        epsilon = 1.5
         
         doc = parse(path)
         
@@ -2478,10 +2479,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         # Récupération des points caractéristiques sur la fiche
         pts_caract = self.GetDocument().GetPtCaract()
-#        if self.typ == 'seq':
-#            pts_caract = self.sequence.GetPtCaract()
-#        else:
-#            pts_caract = self.projet.GetPtCaract()
+        print(pts_caract)
         
         # Identification des items correspondants sur le doc SVG
         for p in doc.getElementsByTagName("path"):
@@ -2491,12 +2489,13 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             if len(l) > 1:      # On récupére le premier point du <path>
                 x, y = l[0], l[1]
                 x, y = float(x), float(y)
-                
+#                 print("   ", l)
                 for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
+#                         print("    ", l, pt)
                         obj.cadre.append((p, flag))
                         if type(flag) != str:
-                            break 
+                            break
         
         # On lance la procédure d'enrichissement ...
         self.GetDocument().EnrichiSVGdoc(doc)
@@ -4045,7 +4044,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4246,6 +4245,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
     #############################################################################            
     def normalize(self, cr):
         h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
+#         print(h)
         if h <= 0:
             h = 1.0
         cr.scale(h, h) 
@@ -4285,7 +4285,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
