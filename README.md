@@ -4,9 +4,10 @@ _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)
   * décrire et valider des projets
 
 _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
-  * **STI2D** (_enseignements technologiques transversaux_ et de _spécialité_)
+  * **STI2D** (_ancien et nouveau programme 2021 en travaux_)
   * **S-SI** (_Sciences de l'ingénieur_ du bac S)
-  * **Technologie collège** (nouveau programme en travaux)
+  * **Spécialité SI** (_Sciences de l'ingénieur_ bac 2021)
+  * **Technologie collège** (_cycles 3 et 4_)
   * **STS : Electrotechnique** et **Systèmes Numériques** , **Maintenance de véhicule** ,  **Technique Services Materiels Agricoles**
   * **MPSI** (en travaux) 
   * **ISN** (en travaux)
@@ -23,7 +24,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 ## Fonctionnalités ##
 ### Aide à l'élaboration de [séquences pédagogiques](https://github.com/cedrick-f/pySequence/wiki/Fonctionalite_Seq) : ###
   * Structure d'une **séquence pédagogique**
-  * Présentation sous forme de fiche de séquence,
+  * Présentation sous forme de fiche de séquence (exportable en PDF, SVG et HTML),
   * Nombreux outils d'aide
 
 [Quelques captures d'écran de fiches de séquence](https://github.com/cedrick-f/pySequence/wiki/captures_ecran)
@@ -32,8 +33,8 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 ### Aide à la validation de [projets](https://github.com/cedrick-f/pySequence/wiki/Fonctionnalite_Prj) ###
   * Structure du **projet**
-  * Présentation sous forme de fiche,
-  * Nombreux outils d'aide
+  * Présentation sous forme de fiche (exportable en PDF, SVG et HTML),
+  * Nombreux outils d'aide à la validation
   * Génération de la **fiche de validation** conforme aux BO 2014 
 
 [Quelques exemples de fiches de projet](https://github.com/cedrick-f/pySequence/wiki/ExemplesProjets)
@@ -54,7 +55,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 |Lien |Remarque|
 |---|---|
-|[pySequence_7.1.11.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1.11/pySequence_7.1.11.zip)   |Dernière version stable|
+|[pySequence_7.1.17.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1.17/pySequence_7.1.17.zip)   |Dernière version stable|
 |[pySequence_7.1-beta9.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1-beta.9/pySequence_7.1-beta9.zip)|Dernière version beta|
 
 
