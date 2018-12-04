@@ -1873,7 +1873,8 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
 
 ########################################################################################
 def liste_code_texte2(ctx, lstCodes, lstTexte, rect, 
-                     dx, gras = None, lstCoul = None, va = 'h'):
+                     dx, gras = None, lstCoul = None, va = 'h', 
+                     coulFond = None):
     """ Affiche une liste d'élément sous la forme :
         code
         texte
@@ -1955,6 +1956,17 @@ def liste_code_texte2(ctx, lstCodes, lstTexte, rect,
                           cairo.FONT_WEIGHT_BOLD)
     for i, t in enumerate(lstCodes):
         if t.strip() != "":
+            
+            # Un rectangle pour la séléction
+            rect = (x, y + sum(ht[:i]) + i*hc, w, hc+ht[i])
+            lstRect.append(rect)
+            ctx.set_line_width(0.0001 * COEF)
+            ctx.set_source_rgba (*coulFond[:3], 0.01)
+            ctx.rectangle(*rect)
+            ctx.fill_preserve()
+            ctx.stroke()
+            
+            
             if lstCoul != None:
                 ctx.set_source_rgb (*lstCoul[i])
 #                else:
@@ -1994,29 +2006,15 @@ def liste_code_texte2(ctx, lstCodes, lstTexte, rect,
             else:
                 re = (x + dx, y + (i+1)*hc + sum(ht[:i]), 
                       w - dx, ht[i])
-                va = 'h'
+                va = 'h'  
+            
             show_text_rect(ctx, lstTexte[i], 
                            re, 
                            b = 0, ha = 'g', va = va, 
                            fontsizeMinMax = (-1, maxFontSize))
-#             ly.append(y+i*hl)
-#             ctx.set_line_width(0.0001 * COEF)
-#             ctx.rectangle(*re)
-#             ctx.stroke()   
             
-            rect = (x, y + sum(ht[:i]) + i*hc, w, hc+ht[i])
-            lstRect.append(rect)
             
-            # Un rectangle invisible pour la séléction
-#             ep = ctx.get_line_width()
-#             co = ctx.get_source().get_rgba()
-            ctx.set_line_width(0.0001 * COEF)
-            ctx.set_source_rgba (0.5, 0.5, 0.5, 0.01)
-            ctx.rectangle(*rect)
             
-            ctx.fill_preserve()
-            
-            ctx.stroke()
 #             ctx.set_line_width(ep)
 #             ctx.set_source_rgba (*co)
 #            ctx.restore()

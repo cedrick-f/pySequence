@@ -146,7 +146,7 @@ import constantes
 
 import couleur
 
-from xml.dom.minidom import parse
+from xml.dom.minidom import parse, parseString
 
 # Graphiques vectoriels
 
@@ -1016,7 +1016,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.AppendSeparator()
         
 #        file_menu.AppendSeparator()
-        file_menu.Append(15, "&Exporter la fiche (PDF ou SVG)\tCtrl+E")
+        file_menu.Append(15, "&Exporter la fiche\tCtrl+E")
         file_menu.Append(16, "&Exporter les détails\tCtrl+D")
         
         if sys.platform == "win32":
@@ -2215,28 +2215,14 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
             pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
         """
-#         with cairo.SVGSurface(nomFichier, 595, 842) as SVGsurface:
-#             ctx = cairo.Context(SVGsurface)
-#             ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
-#             if self.typ == 'seq':
-#                 draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
-#             elif self.typ == 'prj':
-#                 draw_cairo_prj.Draw(ctx, self.projet)
-#             elif self.typ == 'prg':
-#                 draw_cairo_prg.Draw(ctx, self.progression)
-        
+
         # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
         tf = tempfile.mkstemp()[1]+".svg"
-        SVGsurface = cairo.SVGSurface(tf, 595, 842)
-
-#         try:
-#             fichier = open(nomFichier, "x")
-#             print("os.name", os.name)
-#             print(sys.getfilesystemencoding())
-#             print(cairo.cairo_version())
+        SVGsurface = cairo.SVGSurface(tf, 707, 1000)
             
         ctx = cairo.Context(SVGsurface)
-        ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
+#         ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
+        ctx.scale(1.0, 1.0) 
         if self.typ == 'seq':
             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
         elif self.typ == 'prj':
@@ -2258,12 +2244,51 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.enrichirSVG(nomFichier)
         
     
-    
+    #############################################################################
+    def exporterFicheHTML(self, nomFichier, pourDossierValidation = False):
+        """ Exporte la fiche au format PDF
+        
+            pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
+        """
+
+        # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
+        tf = tempfile.mkstemp()[1]+".svg"
+        SVGsurface = cairo.SVGSurface(tf, 707, 1000)
+            
+        ctx = cairo.Context(SVGsurface)
+#         ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
+        ctx.scale(1.0, 1.0) 
+        if self.typ == 'seq':
+            draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+        elif self.typ == 'prj':
+            draw_cairo_prj.Draw(ctx, self.projet)
+        elif self.typ == 'prg':
+            draw_cairo_prg.Draw(ctx, self.progression)
+             
+        SVGsurface.finish()
+   
+        # et on reprend le nom de fichier unicode ...
+        try:
+            shutil.copy(tf, nomFichier)
+            os.remove(tf)
+        except IOError: # normalement, ça ne peut pas arriver
+            Dialog_ErreurAccesFichier(nomFichier)
+            wx.EndBusyCursor()
+            return
+            
+        # à virer ou remplacer après ...
+        self.enrichirHTML(nomFichier)
+        
+        
+        
+        
+        
     
     #############################################################################
     def exporterFiche(self, event = None):
         mesFormats = "pdf (.pdf)|*.pdf|" \
-                     "svg (.svg)|*.svg"
+                     "svg (.svg)|*.svg|" \
+                     "html (.html)|*.html"
 #                     "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
             self, message="Enregistrer la fiche sous ...", 
@@ -2287,6 +2312,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 self.DossierSauvegarde = os.path.split(path)[0]
                 os.startfile(path)
                 
+            elif ext == ".html":
+                self.exporterFicheHTML(path)
+                self.DossierSauvegarde = os.path.split(path)[0]
+                os.startfile(path)    
             wx.EndBusyCursor()
 
 #                os.startfile(path)
@@ -2499,15 +2528,71 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         # On lance la procédure d'enrichissement ...
         self.GetDocument().EnrichiSVGdoc(doc)
-#        if self.typ == 'seq':
-#            self.sequence.EnrichiSVG(doc)
-#        elif self.typ == 'prj':
-#            self.projet.EnrichiObjetsSVG(doc)
             
         doc.writexml(f, '   ', encoding = "utf-8")
         f.close()
         
         
+    #############################################################################
+    def enrichirHTML(self, nomFichierSVG):
+        """Enrichissement de l'image SVG <path> avec :
+        - mise en surbrillance des éléments actifs
+        - infobulles sur les éléments actifs
+        - liens 
+        - ...
+        """
+        
+        epsilon = 1.5
+        def match(p0, p1):
+            return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
+        
+        
+        
+        f = open(os.path.join(util_path.PATH, "fiche.html"))
+        soup = BeautifulSoup(f, "html5lib")
+        f.close()
+        
+        f = open(nomFichierSVG)
+        svg = BeautifulSoup(f, "html5lib")#, 'xml')
+        f.close()
+        
+#         titre = soup.find('title')
+        soup.head.title.string = str(os.path.splitext(os.path.split(nomFichierSVG)[1])[0])
+        
+        
+        soup.body.insert(0, svg.svg)
+        
+#         print(soup.body.svg)
+        # Récupération des points caractéristiques sur la fiche
+        pts_caract = self.GetDocument().GetPtCaract()
+        # Identification des items correspondants sur le doc SVG
+        for p in soup.body.svg.find_all("path"):
+#             print(p)
+            a = p.get("d")
+            a = str(a).translate(str.maketrans(dict.fromkeys('MCLZ')))  # Supprime les  lettres
+            l = a.split()
+            if len(l) > 1:      # On récupére le premier point du <path>
+                x, y = l[0], l[1]
+                x, y = float(x), float(y)
+#                 print("   ", l[0], l[1])
+                for pt, obj, flag in pts_caract:
+                    if match((x, y), pt) :
+#                         print("    ", l, pt)
+                        obj.cadre.append((p, flag, (x,y)))
+                        if type(flag) != str:
+                            break
+        
+        
+        # On lance la procédure d'enrichissement ...
+        self.GetDocument().EnrichiHTMLdoc(soup)
+        
+        # Enregistrement du fichier HTML
+        nomFichierHTML = os.path.splitext(nomFichierSVG)[0]+".html"
+        with open(nomFichierHTML, "wb") as f:
+            f.write(soup.prettify("utf-8"))
+        
+        return
+
 
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = r''):
@@ -2518,10 +2603,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.GetDocument().SetPath(nomFichier)
         self.SetTitre()
 
+
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         self.parent.MiseAJourToolBar()
         return
+
 
  
 def Dialog_ErreurAccesFichier(nomFichier):
@@ -2753,11 +2840,12 @@ class FenetreSequence(FenetreDocument):
         self.sequence.PubDescription()
         self.sequence.SetLiens()
         self.sequence.VerifPb()
-        self.sequence.MiseAJourTypeEnseignement()
+#         self.sequence.MiseAJourTypeEnseignement()
         self.sequence.Verrouiller()
         self.sequence.SetDefautExpansion()
 #         self.arbre.ExpandAll()
 #         self.arbre.SelectItem(self.classe.branche)
+        
         wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
         
         
@@ -4044,7 +4132,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4285,7 +4373,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -9587,7 +9675,7 @@ class PanelPropriete_Seance(PanelPropriete):
                     tit = ref._nomDemarches.plur_()
                 else:
                     tit = ref._nomDemarches.sing_()
-                tit += ref._nomActivites.du_()
+                tit += " " + ref._nomActivites.du_()
                 titre = wx.StaticText(self.pageGen, -1, tit + " :")
                 self.titreDem = titre
                 self.demSizer.Add(titre, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
@@ -9968,6 +10056,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtCheckBoxSpe(self, event):
+#         print("EvtCheckBoxSpe")
         self.seance.SetEnsSpecif([cb.GetName() for cb in self.cbSpe if cb.IsChecked()])
 #         event.Skip()
         self.AdapterAuType()

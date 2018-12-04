@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-type" />
+		<title></title>
+		<script src="d3.min.js"></script>
+		<style>
+        .tooltip {
+			pointer-events:none; /*let mouse events pass through*/
+			opacity:0;
+			transition: opacity 0.3s;
+			box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+			
+		}
+
+		div.tooltip {
+			background: white;
+			border:solid black;
+			position: absolute;
+			/*max-width: 8em;*/
+			text-align:center;
+		}
+		div.fixed {
+			position:fixed;
+		}
+		g.tooltip:not(.css) {
+		  fill:white;/*currentColor;*/
+		}
+		g.tooltip rect {
+			fill: white;
+			stroke: black;
+			
+		}
+		
+		svg {
+			width:100%;
+			overflow:visible; 
+			/*allow tooltips to spill into margins */
+		}
+		
+		button{
+		  display:block;
+		  margin: 0 auto 20px;
+		  padding: 0.5em;
+		  box-shadow: 0 0 2px 2px navy;
+		}
+
+		body {
+		  margin-left:auto;
+		  margin-right:auto;
+		}
+		
+		p, dl {
+		  margin: 0.5em 1.5em;
+		}
+		dt {
+		  font-weight:bold;
+		  display:run-in;
+		  padding-right:1em;
+		}
+		
+		h1 {
+		  font-weight:bold;
+		  font-size:15;
+		}
+		
+		.description {
+		  text-align:left;
+		  vertical-align:top;
+		  background-color:#f0f0f0;
+		}
+        </style>
+		
+		
+	</head>
+	<body>
+	
+	<script type="text/javascript">
+        var tooltip = d3.selectAll(".tooltip:not(.css)");
+		//var HTMLabsoluteTip = d3.select("div.tooltip.absolute");
+		//var HTMLfixedTip = d3.select("div.tooltip.fixed");
+		//var HTMLmouseTip = d3.select("div.tooltip.mouse");
+		//var SVGexactTip = d3.select("g.tooltip.exact");
+		//var SVGmouseTip = d3.select("g.tooltip.mouse");
+		/* If this seems like a lot of different variables,
+		   remember that normally you'd only implement one 
+		   type of tooltip! */
+
+		/* I'm using d3 to add the event handlers to the circles
+		   and set positioning attributes on the tooltips, but
+		   you could use JQuery or plain Javascript. */
+		var zsensibles = d3.select("svg").selectAll("path.sensible");
+		
+		zsensibles
+			/***** Easy but ugly tooltip *****/ 
+			.each(function(d, i) {
+				d3.select(this)
+					.append("title").text(this.getAttribute("id"));
+				})
+				
+			.on("mouseover", function () {
+				//tooltip.style("opacity", "1");
+			  
+				/* You'd normally set the tooltip text
+				   here, based on data from the  element
+				   being moused-over; I'm just setting colour. */
+				//tooltip.style("color", this.getAttribute("fill") );
+			  /* Note: SVG text is set in CSS to link fill colour to 
+				 the "color" attribute. */
+			  
+			  
+				/***** Positioning a tooltip precisely
+					   over an SVG element *****/ 
+				
+				/***** For an SVG tooltip *****/ 
+				
+				//"this" in the context of this function
+				//is the element that triggered this event handler
+				//which will be one of the circle elements.
+				/*var tooltipParent = SVGexactTip.node().parentElement;
+				var matrix = 
+						this.getTransformToElement(tooltipParent)
+							.translate(+this.getAttribute("cx"),
+								 +this.getAttribute("cy"));*/
+				
+				//getTransformToElement returns a matrix
+				//representing all translations, rotations, etc.
+				//to convert between two coordinate systems.
+				//The .translate(x,y) function adds an additional 
+				//translation to the centre of the circle.
+				
+				//the matrix has values a, b, c, d, e, and f
+				//we're only interested in e and f
+				//which represent the final horizontal and vertical
+				//translation between the top left of the svg and 
+				//the centre of the circle.
+				
+				//we get the position of the svg on the page
+				//using this.viewportElement to get the SVG
+				//and using offsetTop and offsetLeft to get the SVG's
+				//position relative to the page.
+				/*SVGexactTip
+					.attr("transform", "translate(" + (matrix.e)
+							  + "," + (matrix.f-20) + ")");*/
+				
+				/***** For an HTML tooltip *****/ 
+				
+				//for the HTML tooltip, we're not interested in a
+				//transformation relative to an internal SVG coordinate
+				//system, but relative to the page body
+				
+				//We can't get that matrix directly,
+				//but we can get the conversion to the
+				//screen coordinates.
+				
+				/*var HTMLabsoluteTip = d3.select("div#"+this.getAttribute("id"));
+				var matrix = this.getScreenCTM()
+						.translate(+this.getAttribute("x"),
+								   +this.getAttribute("y"));*/
+				
+				//You can use screen coordinates directly to position
+				//a fixed-position tooltip        
+				/*HTMLfixedTip 
+					.style("left", 
+						   (matrix.e) + "px")
+					.style("top",
+						   (matrix.f + 3) + "px");*/
+				//The limitation of fixed position is that it won't
+				//change when scrolled.
+				
+				//A better solution is to calculate the position 
+				//of the page on the screen to position an 
+				//absolute-positioned tooltip:
+				/*HTMLabsoluteTip
+					.style("opacity", "1")
+					.style("left", 
+						   (window.pageXOffset + matrix.e) + "px")
+					.style("top",
+						   (window.pageYOffset + matrix.f + 30) + "px");*/
+				
+			})
+			.on("mousemove", function () {
+				
+				/***** Positioning a tooltip using mouse coordinates *****/ 
+			  
+				/* The code is shorter, but it runs every time
+				   the mouse moves, so it could slow down other
+				   processes or animation. */
+				
+				
+				/***** For an HTML tooltip *****/ 
+			  
+				//mouse coordinates relative to the page as a whole
+				//can be accessed directly from the click event object
+				//(which d3 stores as d3.event)
+				var HTMLmouseTip = d3.select("div#"+this.getAttribute("id"));
+				HTMLmouseTip
+					.style("opacity", "1")
+					.style("left", Math.max(0, d3.event.pageX - 150) + "px")
+					.style("top", (d3.event.pageY + 20) + "px");
+			})
+			
+			.on("mouseout", function () {
+				return tooltip.style("opacity", "0");
+			});
+
+		var circleGroup = d3.select("g#circle-group");
+		d3.select("button#wiggle").on("click", function() {
+			circleGroup.transition().duration(1000)
+				.attr("transform",
+					  "rotate("+ (20*(Math.random()-0.5)) + ")"
+					  +"translate(" + (20*(Math.random()-0.5)) +","
+					  + (20*(Math.random()-0.5)) + ")"
+					  );
+		});
+        </script>
+	</body>
+</html>

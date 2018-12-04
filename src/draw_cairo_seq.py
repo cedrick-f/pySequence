@@ -729,7 +729,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         r = liste_code_texte2(ctx, lstCodesC, lstTexteC, 
                              rectC, 
                              0.05*rect_width, 0.1,
-                             lstCoul = lstCoulC, va = 'c')
+                             lstCoul = lstCoulC, va = 'c',
+                             coulFond = IcoulPre)
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis["C"].pts_caract = getPts(r)
 #         print("prerequis C", getPts(r))
@@ -743,7 +744,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
                              rectS, 
                              0.05*rect_width, 0.1,
-                             lstCoul = lstCoulS, va = 'c')
+                             lstCoul = lstCoulS, va = 'c',
+                             coulFond = IcoulPre)
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis["S"].pts_caract = getPts(r)
 #         print("prerequis S", getPts(r))
@@ -892,7 +894,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         r = liste_code_texte2(ctx, lstCodesC, lstTexteC, 
                              rectC, 
                              0.03*rect_width, 0.1, 
-                             lstCoul = lstCoulC, va = 'c') 
+                             lstCoul = lstCoulC, va = 'c',
+                             coulFond = IcoulObj) 
         seq.obj["C"].pts_caract = getPts(r)
         
         ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
@@ -901,7 +904,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
                              rectS, 
                              0.03*rect_width, 0.1, 
-                             lstCoul = lstCoulS, va = 'c')
+                             lstCoul = lstCoulS, va = 'c',
+                             coulFond = IcoulObj)
         seq.obj["S"].pts_caract = getPts(r)
     
         seq.zones_sens.append(Zone([rectC], obj = seq.obj["C"]))

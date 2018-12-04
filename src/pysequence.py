@@ -54,6 +54,7 @@ if sys.platform == "win32" :
     th_xls = grilles.get_th_xls()
 
 from jinja2 import Template
+from bs4 import BeautifulSoup
 
 import version
 import textwrap
@@ -117,6 +118,8 @@ from richtext import XMLtoHTML, XMLtoTXT
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
+
+from xml.dom.minidom import parseString
 
 from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             getBitmapFromImageSurface, img2str, getIconePaste, \
@@ -742,6 +745,33 @@ class ElementBase(Grammaire):
             self.GetApp().sendEvent(modif = "Modification de la description %s" %ref._nomActivites.du_())
 #            self.tip.SetRichTexte()
 
+
+    
+    ######################################################################################  
+    def EnrichiHTML(self, doc, seance = False):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
+        print("EnrichiHTML", self, seance, self.cadre)
+        
+        for i, (p, f, c) in enumerate(self.cadre):
+            div = doc.new_tag('div')
+            div['class'] = "mouse tooltip"
+            div['id'] = self.GetCode(i).replace('.', '_')
+            bulle = BeautifulSoup(self.GetBulleHTML(i, template = constantes.TEMPLATE_SEANCE_CSS), "html5lib")
+            div.append(bulle)
+            doc.body.insert(0, div)
+            
+            p['class'] = "sensible"
+            p['id'] = self.GetCode(i).replace('.', '_')
+            p['x'] = c[0]
+            p['y'] = c[1]
+        
+    
+    
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
         """ Enrichissement de l'image SVG <doc> (format XML) avec :
@@ -754,7 +784,7 @@ class ElementBase(Grammaire):
         # 
         # Le titre de la page
         #
-        pid = ''
+        pid = '' # id du path
         for p, f in self.cadre:
             if type(f) == str:
                 pid = f
@@ -940,7 +970,11 @@ class ElementBase(Grammaire):
             
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
 
-        
+    
+    ######################################################################################  
+    def GetBulleHTML(self, i , template = None):
+        print("GetBulleHTML", self, i)
+        return self.GetFicheHTML()
         
     ######################################################################################  
     def GetProfondeur(self):
@@ -1938,7 +1972,27 @@ class Sequence(BaseDoc):
             lst.extend(s.GetPtCaract())
         return lst    
     
-    
+    ######################################################################################  
+    def EnrichiHTMLdoc(self, doc):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens
+             - ...
+             :doc: beautifulsoup
+        """
+#        print "EnrichiSVG sequence"
+       
+        self.obj["C"].EnrichiHTML(doc)
+        self.obj["S"].EnrichiHTML(doc)
+        self.prerequis["C"].EnrichiHTML(doc)
+        self.prerequis["S"].EnrichiHTML(doc)
+        self.CI.EnrichiHTML(doc)
+        for s in self.seances:
+            s.EnrichiHTMLse(doc)
+            
+            
+            
     ######################################################################################  
     def EnrichiSVGdoc(self, doc):
         """ Enrichissement de l'image SVG <doc> (format XML) avec :
@@ -1946,6 +2000,7 @@ class Sequence(BaseDoc):
              - infobulles sur les éléments actifs
              - liens
              - ...
+             :doc: xml.doc.minidom
         """
 #        print "EnrichiSVG sequence"
         if hasattr(self, 'app'):
@@ -7314,11 +7369,45 @@ class CentreInteret(ElementBase):
     
     
     ######################################################################################  
+    def GetBulleHTML(self, i, template = None):
+        print("GetBulleHTML", self, i)
+        ref = self.GetReferentiel()
+        
+        if len(self.numCI)+len(self.CI_perso) > 1:
+            titre = ref._nomCI.Plur_()
+        else:
+            titre = ref._nomCI.Sing_()
+        
+        lst_CI = []
+        for i, c in enumerate(self.numCI):
+            lst_CI.append((self.GetCode(i), self.GetIntit(i)))
+        for i, c in enumerate(self.CI_perso):
+            lst_CI.append((ref.abrevCI+str(len(ref.CentresInterets)+i+1), c))
+        
+        lst_pb = []
+        if len(self.Pb + self.Pb_perso) > 0:
+            if len(self.Pb + self.Pb_perso) > 1:
+                nomPb = ref._nomPb.Plur_()
+            else:
+                nomPb = ref._nomPb.Sing_()
+            for pb in self.Pb + self.Pb_perso:
+                lst_pb.append(pb)
+        
+        
+        t = Template(constantes.TEMPLATE_CI_CSS)
+        html = t.render(titre = titre,
+                        lst_CI = lst_CI,
+                        lst_pb = lst_pb,
+                        nomPb = nomPb)
+        return html
+    
+    
+    ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
         
         ref = self.GetReferentiel()
-        if len(self.numCI)+len(self.CI_perso) > 0:
+        if len(self.numCI)+len(self.CI_perso) > 1:
             t = ref._nomCI.Plur_()
         else:
             t = ref._nomCI.Sing_()
@@ -8052,6 +8141,31 @@ class Competences(ElementBase):
 
     
     ######################################################################################  
+    def GetBulleSVG(self, i):
+        print("GetBulleSVG", self, i)
+
+        c = sorted(self.competences)[i]
+        t = self.GetDiscipline(c[0]) +" " + c[1:] + " :\n" + self.GetReferentiel().getCompetence(c).intitule  
+        if self.GetDescription() != None:
+            t += "\n\n" + self.GetDescription()
+        
+        return t
+    
+    ######################################################################################  
+    def GetBulleHTML(self, i, template = None):
+        print("GetBulleHTML", self, i)
+        ref = self.GetReferentiel()
+        t = Template(constantes.TEMPLATE_CMP_CSS)
+        lst_cmp = []
+        for i, c in enumerate(sorted(self.competences)):
+            lst_cmp.append((self.GetDiscipline(c[0]) +" " + c[1:], 
+                                 self.GetReferentiel().getCompetence(c).intitule))
+         
+        html = t.render(titre = self.GetNomGenerique(),
+                        lst_cmp = lst_cmp)
+        return html
+    
+    ######################################################################################  
     def SetTip(self):
 #         print "SetTip Comp"
         self.tip.SetHTML(self.GetFicheHTML())
@@ -8345,6 +8459,33 @@ class Savoirs(ElementBase):
 
     
     ######################################################################################  
+    def GetBulleSVG(self, i):
+        print("GetBulleSVG", self, i)
+
+        c = sorted(self.savoirs)[i]
+        t = self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1] + " :\n" + self.GetIntit(i)
+        if self.GetDescription() != None:
+            t += "\n\n" + self.GetDescription()
+        
+        return t
+    
+    
+    ######################################################################################  
+    def GetBulleHTML(self, i, template = None):
+        print("GetBulleHTML", self, i)
+        ref = self.GetReferentiel()
+        t = Template(constantes.TEMPLATE_SAV_CSS)
+        lst_sav = []
+        for i, c in enumerate(sorted(self.savoirs)):
+            lst_sav.append((self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
+                                 self.GetIntit(i)))
+         
+        html = t.render(titre = self.GetNomGenerique(),
+                        lst_sav = lst_sav)
+        return html
+    
+    
+    ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
         nc = self.GetNomGenerique()
@@ -8558,7 +8699,7 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print("setBranche séance", self)
+#         print("setBranche séance", self)
 #        t0 = time.time()
         ref = self.GetReferentiel()
         
@@ -8596,7 +8737,7 @@ class Seance(ElementAvecLien, ElementBase):
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
             self.nombre.v[0] = int(branche.get("Nombre", "1"))
-            print("   ", self.demarche)
+#             print("   ", self.demarche)
 #            self.lien.setBranche(branche)
             
             # Les systèmes nécessaires
@@ -8615,20 +8756,14 @@ class Seance(ElementAvecLien, ElementBase):
             self.effectif = branche.get("Effectif", "C")
             self.duree.v[0] = float(branche.get("Duree", "1"))
         
-        
         # Enseignements Spécifiques
-        brancheEnsSpe = branche.find("EnsSpecif")
-        self.ensSpecif = []
-        if brancheEnsSpe != None:
-            self.ensSpecif = branche.get("EnsSpecif", "").split()
-        
+        self.ensSpecif = branche.get("EnsSpecif", "").split()
         
         # Compétences visées
         self.compVisees = branche.get("CompVisees", "").split()
         
         # Savoirs visés
         self.savVises = branche.get("SavVises", "").split()
-            
                     
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
@@ -8659,6 +8794,7 @@ class Seance(ElementAvecLien, ElementBase):
     def GetIntit(self, num = None):
         return self.intitule
     
+    
     ######################################################################################  
     def EnrichiSVGse(self, doc):
         if self.typeSeance in ["R", "S"]:
@@ -8667,7 +8803,16 @@ class Seance(ElementAvecLien, ElementBase):
         else:
             self.EnrichiSVG(doc, seance = True)
         
-        
+    
+    ######################################################################################  
+    def EnrichiHTMLse(self, doc):
+        if self.typeSeance in ["R", "S"]:
+            for se in self.seances:
+                se.EnrichiHTML(doc, seance = True)
+        else:
+            self.EnrichiHTML(doc, seance = True)
+            
+            
     ######################################################################################  
     def GetEffectif(self):
         """ Renvoie l'effectif de la séance
@@ -9078,8 +9223,11 @@ class Seance(ElementAvecLien, ElementBase):
 
         self.code += num
         
-        if len(self.ensSpecif) > 0:
-            self.code += " - " + " ".join(self.ensSpecif)
+        ref = self.GetReferentiel()
+        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
+            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
+                if len(self.ensSpecif) > 0:
+                    self.code += " - " + " ".join(self.ensSpecif)
 
         self.SetCodeBranche()
         
@@ -9250,7 +9398,7 @@ class Seance(ElementAvecLien, ElementBase):
                 self.demarche = ""
             else:
                 self.demarche = "I"  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
-
+#         print("MiseAJourTypeEnseignement", self.demarche)
         self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
         
 #        else:
@@ -9414,12 +9562,59 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEANCE)
+        return constantes.BASE_FICHE_HTML_SEANCE
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEANCE)
 
+
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, template = constantes.TEMPLATE_SEANCE):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+#         print("GetBulleHTML séance", self, i)
+        ref = self.GetReferentiel()
+        t = Template(constantes.encap_HTML(template))
+        
+        lst_dem = []
+        if self.typeSeance in ref.activites.keys():
+            for d in self.demarche.split():
+                lst_dem.append((self.tip.GetImgURL(scaleImage(constantes.imagesDemarches[d].GetBitmap(), 60*SSCALE)),
+                                ref.demarches[d][1])
+                              )
+        
+        lst_ensSpe = []
+        
+        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
+            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
+                for d in self.ensSpecif:
+#                     print(ref.ensSpecif[d][3], couleur.GetCouleurHTML(ref.ensSpecif[d][3]))
+                    lst_ensSpe.append((d, wx.Colour(*ref.ensSpecif[d][3]).GetAsString(wx.C2S_CSS_SYNTAX)))
+            
+#         print(lst_ensSpe)    
+        html = t.render(titre = ref._nomActivites.sing_()+" "+ self.code,
+                        nom_type = ref.seances[self.typeSeance][1],
+                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]),
+                        icon_type = self.tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap()),
+                        lst_dem = lst_dem,
+                        lst_ensSpe = lst_ensSpe,
+                        image = self.tip.GetImgURL(self.image),
+                        intitule = self.intitule,
+                        duree = getHoraireTxt(self.GetDuree()),
+                        effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
+                        decription = XMLtoHTML(self.description),
+                        lien = self.lien          
+                        )
+    
+        return html
 
 
     ######################################################################################  
     def GetBulleSVG(self, i):
+        """ Renvoie le tootTip sous la forme d'un texte brut
+            pour affichage sur la fiche SVG
+        """
         
 #        if hasattr(self, 'description'):
 #            des = "\n\n" + self.GetDescription()
@@ -9455,39 +9650,10 @@ class Seance(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        ref = self.GetReferentiel()
-        t = Template(constantes.encap_HTML(constantes.TEMPLATE_SEANCE))
-        
-        lst_dem = []
-        if self.typeSeance in ref.activites.keys():
-            for d in self.demarche.split():
-                lst_dem.append((self.tip.GetImgURL(scaleImage(constantes.imagesDemarches[d].GetBitmap(), 60*SSCALE)),
-                                ref.demarches[d][1])
-                              )
-        
-        lst_ensSpe = []
-        
-        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
-            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
-                for d in self.ensSpecif:
-#                     print(ref.ensSpecif[d][3], couleur.GetCouleurHTML(ref.ensSpecif[d][3]))
-                    lst_ensSpe.append((d, wx.Colour(*ref.ensSpecif[d][3]).GetAsString(wx.C2S_CSS_SYNTAX)))
-            
-#         print(lst_ensSpe)    
-        html = t.render(titre = ref._nomActivites.sing_()+" "+ self.code,
-                        nom_type = ref.seances[self.typeSeance][1],
-                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]),
-                        icon_type = self.tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap()),
-                        lst_dem = lst_dem,
-                        lst_ensSpe = lst_ensSpe,
-                        image = self.tip.GetImgURL(self.image),
-                        intitule = self.intitule,
-                        duree = getHoraireTxt(self.GetDuree()),
-                        effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
-                        decription = XMLtoHTML(self.description),
-                        lien = self.lien          
-                        )
-        self.tip.SetHTML(html)
+        """ Construction du toolTip (format HTMLwindow)
+            qui apparait dans pySéquence
+        """
+        self.tip.SetHTML(self.GetBulleHTML())
         self.tip.SetPage()
         
     

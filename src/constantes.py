@@ -564,23 +564,52 @@ FILTRE5 = """<filter id = "f1" width = "200%" height = "200%">
     <feBlend in = "SourceGraphic" in2 = "blurOut" mode = "normal"/>
 </filter>""".replace("%1", str(.3)).replace("%2", str(0.03))
 
-FILTRE1 = """<filter id="f1"  x="-10%" y="-10%" width="200%" height="200%" filterUnits="">
+
+
+FILTRE6 = """<filter id="f1"  x="-10%" y="-10%" width="200%" height="200%" filterUnits="">
       <feGaussianBlur in="SourceAlpha" stdDeviation="%1" result="blur"/>
       <feOffset in="blur" dx="%1" dy="%1" result="offsetBlur"/>
-      <feSpecularLighting in="blur" surfaceScale="5" specularConstant=".75" 
-                          specularExponent="20" lighting-color="#bbbbbb"  
+      <feSpecularLighting in="blur" surfaceScale="5" specularConstant="1.75" 
+                          specularExponent="20" lighting-color="#bbbbbb"  fill-opacity="1"
                           result="specOut">
         <fePointLight x="-5000" y="-10000" z="20000"/>
       </feSpecularLighting>
+      
       <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
       <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" 
                    k1="0" k2="1" k3="1" k4="0" result="litPaint"/>
+      
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="100"/>
+      </feComponentTransfer>
+      
+      
       <feMerge>
         <feMergeNode in="offsetBlur"/>
         <feMergeNode in="litPaint"/>
+        <feMergeNode in="SourceGraphic"/>
       </feMerge>
+      
     </filter>""".replace("%1", str(0.002*100)).replace("%2", str(0.03))
-    
+
+
+FILTRE1 = """<filter id="f1">
+            <feColorMatrix in="SourceGraphic"
+                type="matrix"
+                values="0 0 0 0 0
+                        0 0 0 0 0
+                        0 0 0 100 0
+                        0 0 0 0 0" />
+                        
+            <feSpecularLighting in="SourceGraphic" surfaceScale="1" specularConstant="1.75" 
+                          specularExponent="20" lighting-color="#bbbbbb"  fill-opacity="1"
+                          result="specOut">
+                <fePointLight x="-5000" y="-10000" z="20000"/>
+            </feSpecularLighting>
+          
+      </filter>"""
+
+
 FILTRE2 = """<filter id="f1" x="0" y="0" width="200%" height="200%">
               <feOffset result="offOut" in="SourceAlpha" dx="0.006" dy="0.006" />
               <feGaussianBlur result="blurOut" in="offOut" stdDeviation="0.003" />
@@ -998,13 +1027,96 @@ TEMPLATE_SEANCE = """
     
 """
 
-
+TEMPLATE_SEANCE_CSS = """
+<h1 style="text-align: center; color:{{ coul_type }}">{{ titre }}</h1>
+    <table>
+        <tbody>
+        <tr>
+            <td><img src="{{ icon_type }}" alt=" "></td>
+            <td style="color:{{ coul_type }};">{{ nom_type }}</td>
+            <td>
+            {% for i, n in lst_dem %}
+            <div align="right">
+                <table border="0">
+                    <tr>
+                        <td align="right">{{n}}</td>
+                        {% if i is not none %}
+                        <td align="right"><img src="{{i}}" alt=" "></td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+    <table border="0">
+        <tr>
+            <td colspan={% if lst_ensSpe|length > 0 %}2{% else %}3{% endif %}><i>Durée : {{ duree }}</br>Effectif : {{effectif}}</i></td>
+            {% if lst_ensSpe|length > 0 %}
+            <td>
+                {% for n, c in lst_ensSpe %}
+                <font size="3" color="{{ c }}">{{ n }}</font>
+                {% endfor %}
+            </td>
+            {% endif %}
+        </tr>
+        
+        <tr align="left" valign="top">
+            <td colspan={% if image is none %}3{% else %}2{% endif %}><p><b><font size="5" color="{{ coul_type }}">{{ intitule }}</font></b></p></td>
+            {% if image is not none %}
+            <td><img src="{{ image }}" alt=" "></td>
+            {% endif %}
+        </tr>
+        
+        {% if decription is not none %}
+        <tr class="description">
+            <td colspan=3>
+                <b>Description détaillée de la séance</b>
+                <div>{{ decription }}</div>
+            </td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    
+    {% if lien.type == 'u' %}
+    <a href="{{ lien.path }}">{{ lien.path }}</a>
+    {% elif lien.type in ['f', 'd'] %}
+    <wxp module="wx" class="Button">
+        <param name="id" value="-1">
+        <param name="label" value="lien.path">
+    </wxp>
+    {% endif %}
+    
+"""
 
 
 BASE_FICHE_HTML_CALENDRIER = """
     <font size="12"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <img id="img" src="" alt=""> 
 """
+
+TEMPLATE_CI_CSS = """
+    <h1>{{ titre }}</h1>
+    <dl>
+    {% for i, n in lst_CI %}
+        <dt>{{ i }}</dt> <dd>{{ n }}</dd>
+    {% endfor %}
+    </dl> 
+    {% if lst_pb|length > 0 %}
+    <h2>{{ nomPb }}</h2>
+    <ul>
+    {% for i in lst_pb %}
+        <li>{{ i }}</li>
+    {% endfor %}
+    </ul> 
+    {% endif %}
+"""
+
 
 BASE_FICHE_HTML_CI = """
     <font size=11><font color="red"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font></font>
@@ -1016,6 +1128,17 @@ BASE_FICHE_HTML_CI = """
         <li> </li>
     </ul>
 """
+
+
+TEMPLATE_CMP_CSS = """
+    <h1>{{ titre }}</h1>
+    <dl>
+    {% for i, n in lst_cmp %}
+        <dt>{{ i }}</dt> <dd>{{ n }}</dd>
+    {% endfor %}
+    </dl> 
+"""
+
 
 BASE_FICHE_HTML_COMP = """
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
@@ -1042,6 +1165,17 @@ BASE_FICHE_HTML_DOM = """
     <li> </li>
     </ul>
 """
+
+
+TEMPLATE_SAV_CSS = """
+    <h1>{{ titre }}</h1>
+    <dl>
+    {% for i, n in lst_sav %}
+        <dt>{{ i }}</dt> <dd>{{ n }}</dd>
+    {% endfor %}
+    </dl> 
+"""
+
 
 BASE_FICHE_HTML_SAV = """
     <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
