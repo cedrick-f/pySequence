@@ -2552,15 +2552,23 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         soup = BeautifulSoup(f, "html5lib")
         f.close()
         
+        f = open(os.path.join(util_path.PATH, "d3.min.js"))
+        d3 = f.read()
+        f.close()
+        
+        
         f = open(nomFichierSVG)
         svg = BeautifulSoup(f, "html5lib")#, 'xml')
         f.close()
         
 #         titre = soup.find('title')
         soup.head.title.string = str(os.path.splitext(os.path.split(nomFichierSVG)[1])[0])
-        
-        
         soup.body.insert(0, svg.svg)
+        
+        script = soup.new_tag('script', type = "text/javascript")
+        script.append(d3)
+        soup.head.insert(2, script)
+        
         
 #         print(soup.body.svg)
         # Récupération des points caractéristiques sur la fiche

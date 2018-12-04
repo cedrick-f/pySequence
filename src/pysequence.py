@@ -9575,7 +9575,7 @@ class Seance(ElementAvecLien, ElementBase):
         """
 #         print("GetBulleHTML séance", self, i)
         ref = self.GetReferentiel()
-        t = Template(constantes.encap_HTML(template))
+        t = Template(template)
         
         lst_dem = []
         if self.typeSeance in ref.activites.keys():
