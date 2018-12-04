@@ -1032,7 +1032,7 @@ TEMPLATE_SEANCE_CSS = """
     <table>
         <tbody>
         <tr>
-            <td><img src="{{ icon_type }}" alt=" "></td>
+            <td><img class="icon_type" src="{{ icon_type }}" alt=" "></td>
             <td style="color:{{ coul_type }};">{{ nom_type }}</td>
             <td>
             {% for i, n in lst_dem %}
@@ -1041,7 +1041,7 @@ TEMPLATE_SEANCE_CSS = """
                     <tr>
                         <td align="right">{{n}}</td>
                         {% if i is not none %}
-                        <td align="right"><img src="{{i}}" alt=" "></td>
+                        <td align="right"><img class="icon_dem" src="{{i}}" alt=" "></td>
                         {% endif %}
                     </tr>
                 </table>

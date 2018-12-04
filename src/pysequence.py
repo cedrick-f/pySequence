@@ -58,7 +58,7 @@ from bs4 import BeautifulSoup
 
 import version
 import textwrap
-
+import base64
 
 from couleur import Str2Couleur, Couleur2Str
 import couleur
@@ -761,7 +761,7 @@ class ElementBase(Grammaire):
             div = doc.new_tag('div')
             div['class'] = "mouse tooltip"
             div['id'] = self.GetCode(i).replace('.', '_')
-            bulle = BeautifulSoup(self.GetBulleHTML(i, template = constantes.TEMPLATE_SEANCE_CSS), "html5lib")
+            bulle = BeautifulSoup(self.GetBulleHTML(i, css = True), "html5lib")
             div.append(bulle)
             doc.body.insert(0, div)
             
@@ -972,7 +972,7 @@ class ElementBase(Grammaire):
 
     
     ######################################################################################  
-    def GetBulleHTML(self, i , template = None):
+    def GetBulleHTML(self, i , css = False):
         print("GetBulleHTML", self, i)
         return self.GetFicheHTML()
         
@@ -7369,7 +7369,7 @@ class CentreInteret(ElementBase):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i, template = None):
+    def GetBulleHTML(self, i, css = False):
         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         
@@ -7393,8 +7393,10 @@ class CentreInteret(ElementBase):
             for pb in self.Pb + self.Pb_perso:
                 lst_pb.append(pb)
         
-        
-        t = Template(constantes.TEMPLATE_CI_CSS)
+        if css:
+            t = Template(constantes.TEMPLATE_CI_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_CI)
         html = t.render(titre = titre,
                         lst_CI = lst_CI,
                         lst_pb = lst_pb,
@@ -8152,10 +8154,14 @@ class Competences(ElementBase):
         return t
     
     ######################################################################################  
-    def GetBulleHTML(self, i, template = None):
+    def GetBulleHTML(self, i, css = False):
         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
-        t = Template(constantes.TEMPLATE_CMP_CSS)
+        if css:
+            t = Template(constantes.TEMPLATE_CMP_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_CMP)
+        
         lst_cmp = []
         for i, c in enumerate(sorted(self.competences)):
             lst_cmp.append((self.GetDiscipline(c[0]) +" " + c[1:], 
@@ -8471,10 +8477,13 @@ class Savoirs(ElementBase):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i, template = None):
+    def GetBulleHTML(self, i, css = False):
         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
-        t = Template(constantes.TEMPLATE_SAV_CSS)
+        if css:
+            t = Template(constantes.TEMPLATE_SAV_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_SAV)
         lst_sav = []
         for i, c in enumerate(sorted(self.savoirs)):
             lst_sav.append((self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
@@ -9567,7 +9576,7 @@ class Seance(ElementAvecLien, ElementBase):
 
 
     ######################################################################################  
-    def GetBulleHTML(self, i = None, template = constantes.TEMPLATE_SEANCE):
+    def GetBulleHTML(self, i = None, css = False):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
@@ -9575,12 +9584,23 @@ class Seance(ElementAvecLien, ElementBase):
         """
 #         print("GetBulleHTML séance", self, i)
         ref = self.GetReferentiel()
-        t = Template(template)
+        
+        def b64(img):
+            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+        
+        if css:
+            t = Template(constantes.TEMPLATE_SEANCE_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_SEANCE)
         
         lst_dem = []
         if self.typeSeance in ref.activites.keys():
             for d in self.demarche.split():
-                lst_dem.append((self.tip.GetImgURL(scaleImage(constantes.imagesDemarches[d].GetBitmap(), 60*SSCALE)),
+                if css:
+                    icon_dem = b64(constantes.imagesDemarches[d].GetData())
+                else:
+                    icon_dem = self.tip.GetImgURL(constantes.imagesDemarches[d].GetBitmap(), width = 60*SSCALE)
+                lst_dem.append((icon_dem,
                                 ref.demarches[d][1])
                               )
         
@@ -9591,20 +9611,38 @@ class Seance(ElementAvecLien, ElementBase):
                 for d in self.ensSpecif:
 #                     print(ref.ensSpecif[d][3], couleur.GetCouleurHTML(ref.ensSpecif[d][3]))
                     lst_ensSpe.append((d, wx.Colour(*ref.ensSpecif[d][3]).GetAsString(wx.C2S_CSS_SYNTAX)))
+        
+        
+        
+        
+        if css:
+            icon_type = b64(constantes.imagesSeance[self.typeSeance].GetData())
+            if self.image is not None:
+                image = b64(self.image.GetData())
+            else:
+                image = None
+            
+        else:
+            icon_type = self.tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap())
+            image = self.tip.GetImgURL(self.image, width = 200)
             
 #         print(lst_ensSpe)    
+        
+        
+        
         html = t.render(titre = ref._nomActivites.sing_()+" "+ self.code,
                         nom_type = ref.seances[self.typeSeance][1],
                         coul_type = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]),
-                        icon_type = self.tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap()),
+                        icon_type = icon_type,
                         lst_dem = lst_dem,
                         lst_ensSpe = lst_ensSpe,
-                        image = self.tip.GetImgURL(self.image),
+                        image = image,
                         intitule = self.intitule,
                         duree = getHoraireTxt(self.GetDuree()),
                         effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
                         decription = XMLtoHTML(self.description),
-                        lien = self.lien          
+                        lien = self.lien,
+                             
                         )
     
         return html
