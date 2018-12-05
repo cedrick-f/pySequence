@@ -721,7 +721,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             ctx.line_to(x0+wC, y0+hl)
             ctx.stroke()
         
-        if wS >0:
+        if wS >0 and len(lstTexteSe) > 0:
             ctx.move_to(x0+wC+wS, y0)
             ctx.line_to(x0+wC+wS, y0+hl)
             ctx.stroke()
