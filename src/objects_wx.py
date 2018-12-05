@@ -4140,7 +4140,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4381,7 +4381,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -9195,17 +9195,20 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-#         print "MiseAJour Savoirs", self.arbre
+#         print("MiseAJour Savoirs", self.arbre)
 #         print self.code
 
         if hasattr(self, 'arbre'):
+#             self.arbre.ExpandAll()
             for s in self.savoirs.savoirs:
                 if self.code == s[0]:
+#                     print("   ", s[1:])
                     i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
-                    if i.IsOk():
+#                     print("       ", i)
+                    if i is not None and i.IsOk():
                         self.arbre.CheckItem2(i)
                         self.arbre.AutoCheckChild(i, True)
-                
+#             self.arbre.OnSelChanged()
 #        for code, arbre in self.arbres.items():
 #            arbre.UnselectAll()
 #            for s in self.savoirs.savoirs:
@@ -14002,19 +14005,25 @@ class ArbreSavoirs(HTL.HyperTreeList):
     
     ####################################################################################
     def get_item_by_label(self, search_text, root_item):
+        """
+                source : https://stackoverflow.com/questions/6954242/wxpython-treectrl-how-can-i-get-a-tree-item-by-name
+        """
+#         print("get_item_by_label", search_text)
         item, cookie = self.GetFirstChild(root_item)
     
         while item != None and item.IsOk():
-            text = self.GetItemText(item)
-            if text.split()[0] == search_text:
+            text = self.GetItemText(item).replace("\n", "")
+#             print("   ", text)
+            if text.split(" ")[0] == search_text:
                 return item
             if self.ItemHasChildren(item):
-                match = self.get_item_by_label(search_text, item)
-                if match.IsOk():
-                    return match
+                return self.get_item_by_label(search_text, item)
+#                 match = self.get_item_by_label(search_text, item)
+#                 if match.IsOk():
+#                     return match
             item, cookie = self.GetNextChild(root_item, cookie)
     
-        return wx.TreeItemId()
+        return None
 
 
 

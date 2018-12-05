@@ -251,6 +251,7 @@ TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tabl
 BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
 DOSSIER_ICONES = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'icones')
 #HTML_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'html')
+TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'templates')
 
 
 #print "programdata", os.environ['ALLUSERSPROFILE']

@@ -716,12 +716,12 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         
         # lignes de séparation
         ctx.set_source_rgba (*BcoulPre)
-        if len(lstTexteS) >0:
+        if wC >0:
             ctx.move_to(x0+wC, y0)
             ctx.line_to(x0+wC, y0+hl)
             ctx.stroke()
         
-        if len(lstTexteSe) >0:
+        if wS >0:
             ctx.move_to(x0+wC+wS, y0)
             ctx.line_to(x0+wC+wS, y0+hl)
             ctx.stroke()

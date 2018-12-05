@@ -9642,7 +9642,7 @@ class Seance(ElementAvecLien, ElementBase):
                         effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
                         decription = XMLtoHTML(self.description),
                         lien = self.lien,
-                             
+                        nom_du_activite = ref._nomActivites.du_()     
                         )
     
         return html
