@@ -143,6 +143,7 @@ from constantes import calculerEffectifs, \
                         WMIN_STRUC, HMIN_STRUC, LOGICIELS, IMG_LOGICIELS, \
                         IMG_SIZE_TB, IMG_SIZE_TREE, evaluer#, bmp
 import constantes
+constantes.charger_templates()
 
 import couleur
 

@@ -987,7 +987,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
-            show_text_rect(ctx, "Démarche",
+            show_text_rect(ctx, ref._nomDemarches.Sing_(),
                            (posZDemarche[0], posZDemarche[1],
                             tailleZDemarche[0], posZSeances[1] - posZSysteme[1]), \
                    va = 'h', ha = 'g', le = 0.8, pe = 1.0, \
