@@ -1,0 +1,3 @@
+Utiliser ce dossier pour ajouter des icones à **_pySéquence_**
+
+Les **icones** sont utilisées pour illustrer certains éléments comme les **Activités** de Séquence, les **Tâches** de Projet, ...
