@@ -3,8 +3,8 @@
 # ![](Logo_60.png)  pySéquence
 
 _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui fournit une aide pour :
-  * élaborer des séquences pédagogiques
-  * décrire et valider des projets
+  * élaborer des **Séquences** et des **Progressions** pédagogiques
+  * décrire et valider des **Projets**
 
 _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
   * **STI2D** (_ancien et nouveau programme 2021 en travaux_)
