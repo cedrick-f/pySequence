@@ -1830,7 +1830,7 @@ def ReglageEchelle(echelle):
 
 
 def charger_templates():
-    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, TEMPLATE_SAV_CSS \
+    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, TEMPLATE_SAV_CSS, \
            TEMPLATE_CMP_CSS
     
     def charge(nf):
