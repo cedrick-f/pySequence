@@ -1,4 +1,4 @@
-# Grilles d'évaluation des Projet
+# Grilles d'évaluation des Projets
 
 Les fichiers de ce dossier sont les **grilles d'évaluation des Projets** qui constituent une épreuve à l'examen (Baccalauréat, DUT, BTS, ...).
 
