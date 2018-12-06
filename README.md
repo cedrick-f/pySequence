@@ -13,7 +13,7 @@ _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Ind
   * **ISN** (en travaux)
   * .......
 
-et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme).
+et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/blob/master/referentiels/README.md).
 
 
 ---
@@ -29,7 +29,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 [Quelques captures d'écran de fiches de séquence](https://github.com/cedrick-f/pySequence/wiki/captures_ecran)
 
-[Quelques exemples de fiches de séquence](https://github.com/cedrick-f/pySequence/wiki/ExemplesSequences)
+[Quelques exemples de fiches de séquence (périmés !)](https://github.com/cedrick-f/pySequence/wiki/ExemplesSequences)
 
 ### Aide à la validation de [projets](https://github.com/cedrick-f/pySequence/wiki/Fonctionnalite_Prj) ###
   * Structure du **projet**
@@ -70,15 +70,15 @@ _**pySequence**_ existe :
    * en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)
    * en version "installable"
  * pour Linux ou Mac :
-   * possible à partir des sources ... en suivant [cette méthode](https://github.com/cedrick-f/pySequence/wiki/InstallationMAC)
+   * possible à partir des sources ... en suivant [cette méthode](https://github.com/cedrick-f/pySequence/blob/master/Installation_Windows_py3.md)
 
 
 ---
 
 
 ## Documentation ##
-  * [Aide](https://github.com/cedrick-f/pySequence/wiki/Aide) en ligne de pySequence.
-  * Quelques exemples sont fournis avec les packs.
+  * [Aide (pas à jour !)](https://github.com/cedrick-f/pySequence/wiki/Aide) en ligne de pySequence (avis aux volontaires pour participer à la rédaction et/ou la mise à jour des pages d'aide)
+  * Quelques [exemples](https://github.com/cedrick-f/pySequence/blob/master/exemples/README.md) seraient les bienvenus !!
 
 
 ---
