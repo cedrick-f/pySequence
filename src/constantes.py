@@ -1100,22 +1100,22 @@ BASE_FICHE_HTML_CALENDRIER = """
     <img id="img" src="" alt=""> 
 """
 
-TEMPLATE_CI_CSS = """
-    <h1>{{ titre }}</h1>
-    <dl>
-    {% for i, n in lst_CI %}
-        <dt>{{ i }}</dt> <dd>{{ n }}</dd>
-    {% endfor %}
-    </dl> 
-    {% if lst_pb|length > 0 %}
-    <h2>{{ nomPb }}</h2>
-    <ul>
-    {% for i in lst_pb %}
-        <li>{{ i }}</li>
-    {% endfor %}
-    </ul> 
-    {% endif %}
-"""
+TEMPLATE_CI_CSS = ""
+#     <h1>{{ titre }}</h1>
+#     <dl>
+#     {% for i, n in lst_CI %}
+#         <dt>{{ i }}</dt> <dd>{{ n }}</dd>
+#     {% endfor %}
+#     </dl> 
+#     {% if lst_pb|length > 0 %}
+#     <h2>{{ nomPb }}</h2>
+#     <ul>
+#     {% for i in lst_pb %}
+#         <li>{{ i }}</li>
+#     {% endfor %}
+#     </ul> 
+#     {% endif %}
+# """
 
 
 BASE_FICHE_HTML_CI = """
@@ -1130,14 +1130,14 @@ BASE_FICHE_HTML_CI = """
 """
 
 
-TEMPLATE_CMP_CSS = """
-    <h1>{{ titre }}</h1>
-    <dl>
-    {% for i, n in lst_cmp %}
-        <dt>{{ i }}</dt> <dd>{{ n }}</dd>
-    {% endfor %}
-    </dl> 
-"""
+TEMPLATE_CMP_CSS = ""
+#     <h1>{{ titre }}</h1>
+#     <dl>
+#     {% for i, n in lst_cmp %}
+#         <dt>{{ i }}</dt> <dd>{{ n }}</dd>
+#     {% endfor %}
+#     </dl> 
+# """
 
 
 BASE_FICHE_HTML_COMP = """
@@ -1167,14 +1167,14 @@ BASE_FICHE_HTML_DOM = """
 """
 
 
-TEMPLATE_SAV_CSS = """
-    <h1>{{ titre }}</h1>
-    <dl>
-    {% for i, n in lst_sav %}
-        <dt>{{ i }}</dt> <dd>{{ n }}</dd>
-    {% endfor %}
-    </dl> 
-"""
+TEMPLATE_SAV_CSS = ""
+#     <h1>{{ titre }}</h1>
+#     <dl>
+#     {% for i, n in lst_sav %}
+#         <dt>{{ i }}</dt> <dd>{{ n }}</dd>
+#     {% endfor %}
+#     </dl> 
+# """
 
 
 BASE_FICHE_HTML_SAV = """
@@ -1830,7 +1830,8 @@ def ReglageEchelle(echelle):
 
 
 def charger_templates():
-    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE
+    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, TEMPLATE_SAV_CSS \
+           TEMPLATE_CMP_CSS
     
     def charge(nf):
         f = open(nf)
@@ -1840,6 +1841,9 @@ def charger_templates():
     
     TEMPLATE_SEANCE_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_activite_css.html"))
     TEMPLATE_SEANCE = charge(os.path.join(TEMPLATE_PATH, "popup_activite.html"))
+    TEMPLATE_CI_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_ci_css.html"))
+    TEMPLATE_SAV_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_sav_css.html"))
+    TEMPLATE_CMP_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_cmp_css.html"))
     
     
 #import array
