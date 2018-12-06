@@ -1,6 +1,6 @@
-![](Logo_60.png)
 
-# pySéquence
+
+# ![](Logo_60.png)pySéquence
 
 _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui fournit une aide pour :
   * élaborer des séquences pédagogiques
