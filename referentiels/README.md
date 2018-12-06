@@ -9,13 +9,11 @@ Le dossier `referentiels` comporte :
 ## Création d'un nouveau référentiel d'enseignement
 Il est possible de créer un nouveau référentiel d'enseignement, utilisable dans les **Séquences**, les **Progressions** et les **Projets**.
 
-
-
-
-Voici un petit résumé de la procédure à suivre, les indications plus précises étant disséminés sous forme de _commentaires_ dans les fichiers `.xls`.
+Voici un petit résumé de la procédure à suivre, les indications plus précises étant disséminées sous forme de _commentaires_ dans les fichiers `.xls`.
 1. Repérer parmi les référentiels existant celui qui ce rapproche le plus de celui que vous souhaitez créer.
 2. Faire une copie du fichier `.xls` de ce référentiel et lui donner un nom simple mais explicite (pas d'espace - pas d'accents !).
-3. 
+3. Modifier le contenu de ce nouveau fichier `.xls`.
+4. Relancer **_pySéquence_** pour voir les effets
 
 La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéquence_** ne démarrera plus si le fichier n'est pas conforme ! (mais il suffit de le supprimer pour revenir à la normale).
 
@@ -23,4 +21,4 @@ Conseils :
  * Procéder par **petites étapes**, pour bien comprendre le lien entre le contenu du fichier, et surtout pour comprendre et corriger ce qui fait planter **_pySéquence_** au démarrage.
  * Supprimer le fichier `.xml` à chaque modification du fichier `.xls` correspondant.
 
-**En cas de réussite, merci d'en faire profiter à la communauté d'utilisateur** : utiliser la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues) pour communiquer.
+**En cas de réussite, merci d'en faire profiter la communauté d'utilisateurs** : utiliser la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues) pour communiquer.
