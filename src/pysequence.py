@@ -3457,6 +3457,8 @@ class Projet(BaseDoc, Grammaire):
         self.eleves = []
         self.groupes = []
         
+        self.fct_serv = []   # Fonctions de service (développement en cours ...)
+        
         self.taches = self.creerTachesRevue()
             
         self.equipe = []
@@ -9761,8 +9763,101 @@ class Seance(ElementAvecLien, ElementBase):
 #         
 
 
+####################################################################################
+#
+#   Classe définissant les propriétés d'une fonction de service
+#
+####################################################################################
+class FonctionService(ElementAvecLien, ElementBase):
+                  
+    def __init__(self, projet, intitule = "", 
+                 branche = None):
+        """ Séance :
+                panelParent = le parent wx pour contenir "panelPropriete"
+                phaseTache = phase de la tache parmi 'Ana', 'Con', 'Rea', 'Val'
+        """
+#        print "__init__ tâche", phaseTache
+#         self.nom_obj = "Tâche"
+#         self.article_c_obj = "de la"
+#         self.article_obj = "la"
+        
+        self.projet = projet
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self, 500*SSCALE)
+#         self.tip.SetSize((, -1))
+        
+        
+        self.intitule  = intitule
+        
+        # Les élèves concernés (liste d'élèves)
+        self.eleves = []        
+    
+        # Le code de la fonction (affiché dans l'arbre et sur la fiche
+        self.code = ""
+        
+        # La description de la fonction
+        self.description = None
 
+        # Une icône pour illustrer la fonction
+        self.icone = None
+        self.image = None
+        
+#        
+        if branche != None:
+            self.setBranche(branche)
+        
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML de la fonction pour enregistrement
+        """
+        root = ET.Element("FonctionService"+str(self.ordre))
+        root.set("Intitule", self.intitule)
 
+        self.lien.getBranche(root)
+        
+        if self.description != None:
+            root.set("Description", self.description)
+        
+        self.getBrancheIcone(root)
+        
+        self.getBrancheImage(root)
+        
+        brancheElv = ET.Element("Eleves")
+        root.append(brancheElv)
+        for i, e in enumerate(self.eleves):
+            brancheElv.set("Eleve"+str(i), str(e))
+        
+        return root    
+    
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+        """
+        """
+        err = []
+        ref = self.GetProjetRef()
+        self.ordre = eval(branche.tag[5:])
+        self.intitule  = branche.get("Intitule", "")
+
+        self.description = branche.get("Description", None)
+        
+        self.lien.setBranche(branche, self.GetPath())
+        
+        self.setBrancheImage(branche)
+        
+        self.setBrancheIcone(branche)
+        
+        brancheElv = branche.find("Eleves")
+        self.eleves = []
+        prj = self.GetDocument()
+        for i, e in enumerate(brancheElv.keys()):
+            if i < len(prj.eleves) + len(prj.groupes):
+                self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
+        
+        return err
+    
+    
 
 ####################################################################################
 #
@@ -9770,7 +9865,6 @@ class Seance(ElementAvecLien, ElementBase):
 #
 ####################################################################################
 class Tache(ElementAvecLien, ElementBase):
-    
                   
     def __init__(self, projet, intitule = "", phaseTache = "", duree = 1.0, branche = None):
         """ Séance :

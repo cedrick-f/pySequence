@@ -329,15 +329,7 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
 
 
 
-ICONES_TACHES = {}
-liste = os.listdir(DOSSIER_ICONES)
 
-for fich_img in liste:
-    try:
-        ICONES_TACHES[os.path.splitext(fich_img)[0]] = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
-                        wx.BITMAP_TYPE_ANY ).ConvertToImage().Scale(200, 200).ConvertToBitmap()
-    except:
-        pass
 
 
 
@@ -1829,6 +1821,23 @@ def ReglageEchelle(echelle):
     IMG_SIZE_TB = (24,24)
 
 
+
+ICONES_TACHES = {}
+
+def charger_icones():
+    global ICONES_TACHES
+    
+    liste = os.listdir(DOSSIER_ICONES)
+    for fich_img in liste:
+#         print(os.path.splitext(fich_img))
+        if os.path.splitext(fich_img)[1] in [".jpg", ".png", ".gif"]:
+            try:
+                ICONES_TACHES[os.path.splitext(fich_img)[0]] = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
+                                wx.BITMAP_TYPE_ANY ).ConvertToImage().Scale(200, 200).ConvertToBitmap()
+            except:
+                pass
+    
+    
 def charger_templates():
     global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, TEMPLATE_SAV_CSS, \
            TEMPLATE_CMP_CSS

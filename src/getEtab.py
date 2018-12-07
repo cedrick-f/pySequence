@@ -89,14 +89,14 @@ def GetFeries(win):
                                    len(annees),
                                    parent=win
                                     )
-    
+    dlg.Show()
     count = 1
     
     
     for annee, code in list(annees.items()):
         count += 1
         message += "Année : "+ str(annee) + "\n"
-        dlg.Update(count, message)
+        dlg.update(count, message)
         list_crenaux = {"A" : [], "B" : [], "C" : []} # Les créneaux de jours féries
         list_zones = {"A" : [], "B" : [], "C" : []} # Les académies rangées par zone
     
@@ -202,7 +202,7 @@ def GetEtablissements(win):
                 ville = v.contents[0].split(',')[1].lstrip('\n').lstrip()
 #                 print "   ville :", ville
                 message += "     ville : "+ ville + "\n"
-                dlg.Update(count, message)
+                dlg.update(count, message)
             if ('class' in list(v.attrs.keys())) and v['class'][0] == "annuaire-etablissement-label":
                 etab = str(v.a.string)
 #                 print "       etab :", etab
@@ -265,13 +265,13 @@ def GetEtablissements(win):
                                    len(liste_acad)*2,
                                    parent=win
                                     )
-    
+    dlg.Show()
 #     dlg.maximum = len(liste_acad)*2
     count = 1
     
     for acad, num in liste_acad:
         message += "Académie : "+ acad+ "\t" + str(num) + "\n"
-        dlg.Update(count, message)
+        dlg.update(count, message)
 #         print "  ",acad, num
         
         liste_etab[num] = [acad, [], []]
@@ -286,7 +286,7 @@ def GetEtablissements(win):
 #        page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5))
         urlCol = urlEtab + '?college=2&localisation=3&nbPage=1000&acad_select[]='+num
         message += "  Collèges :\n  ----------\n"
-        dlg.Update(count, message)
+        dlg.update(count, message)
 #         print "  ", urlCol
         
         continuer = True
@@ -299,7 +299,7 @@ def GetEtablissements(win):
                 time.sleep(1)
                 tentatives += 1
                 message += "+"
-                dlg.Update(count, message)
+                dlg.update(count, message)
                 if tentatives > 10:
                     break
                 else:
@@ -322,7 +322,7 @@ def GetEtablissements(win):
             
         count += 1
         message += "  " + str(r) + " / " + str(t) + " collèges récupérés\n\n"
-        dlg.Update(count, message)
+        dlg.update(count, message)
         
 #         print "   ", len(liste_etab[num][1]),"/",
 #         print getNbrEtab(page)
@@ -342,7 +342,7 @@ def GetEtablissements(win):
 #        page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5))
         urlLyc = urlEtab + '?lycee=3&localisation=3&nbPage=1000&acad_select[]='+num
         message += "  Lycées :\n  --------\n"
-        dlg.Update(count, message)
+        dlg.update(count, message)
 #         print "  ", urlLyc
 
         continuer = True
@@ -355,7 +355,7 @@ def GetEtablissements(win):
                 time.sleep(1)
                 tentatives += 1
                 message += "+"
-                dlg.Update(count, message)
+                dlg.update(count, message)
                 if tentatives > 10:
                     break
                 else:
@@ -378,7 +378,7 @@ def GetEtablissements(win):
             errmsg += "Académie "+acad+" : manque "+str(t-r)+" Lycées !\n"
         count += 1
         message += "  " + str(r) + " / " + str(t) + " lycées récupérés\n\n"
-        dlg.Update(count, message)
+        dlg.update(count, message)
         
         
         wx.Yield()
@@ -395,7 +395,7 @@ def GetEtablissements(win):
     if errmsg != "":
         message += "ERREURS de récupération :\n"
         message += errmsg
-    dlg.Update(count, message)
+    dlg.update(count, message)
 #    print liste_etab
     return liste_etab
         
@@ -544,11 +544,11 @@ def SauvEtablissements(win, path):
     liste_etab = GetEtablissements(win)
     if len(liste_etab) > 0:
         nomF = os.path.join(path, "Etablissements.xml")
-        fichier = file(nomF, 'w')
+#         fichier = open(nomF, 'w', encoding = "utf-8")
         root = getBranche(liste_etab)
         indent(root)
-        ET.ElementTree(root).write(fichier)
-        fichier.close()
+        ET.ElementTree(root).write(nomF)#, encoding = "utf-8")
+#         fichier.close()
         return nomF
 
 
@@ -557,7 +557,7 @@ def SauvFeries(win, path):
     list_feries = GetFeries(win)
     if len(list_feries) > 0:
         nomF = os.path.join(path, "JoursFeries.xml")
-        fichier = file(nomF, 'w')
+        fichier = open(nomF, 'w', encoding = "utf-8")
         root = getBranche(list_feries)
         indent(root)
         ET.ElementTree(root).write(fichier)
