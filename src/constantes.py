@@ -1844,7 +1844,7 @@ def charger_templates():
            TEMPLATE_CMP_CSS
     
     def charge(nf):
-        f = open(nf)
+        f = open(nf, encoding = "utf-8")
         h = f.read()
         f.close()
         return h

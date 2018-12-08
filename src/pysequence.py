@@ -3409,7 +3409,7 @@ class Sequence(BaseDoc):
         classe = self.classe.getBranche()
         
         # La racine
-        root = ET.Element("Sequence_Classe")
+        root = ET.Element('Sequence_Classe')
         root.append(sequence)
         root.append(classe)
         constantes.indent(root)
