@@ -557,11 +557,11 @@ def SauvFeries(win, path):
     list_feries = GetFeries(win)
     if len(list_feries) > 0:
         nomF = os.path.join(path, "JoursFeries.xml")
-        fichier = open(nomF, 'w', encoding = "utf-8")
+#         fichier = open(nomF, 'w', encoding = "utf-8")
         root = getBranche(list_feries)
         indent(root)
-        ET.ElementTree(root).write(fichier)
-        fichier.close()
+        ET.ElementTree(root).write(nomF)
+#         fichier.close()
         return nomF
     
     

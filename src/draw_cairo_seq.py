@@ -573,6 +573,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 ctx.show_text(t)
 
 
+    ref = seq.GetReferentiel()
     # 
     # Effectifs
     #
@@ -586,7 +587,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
             y = posZDemarche[1] + 4 * h
             w = wEff[e]
-            DrawLigneEff(ctx, x+w, y+h, constantes.CouleursGroupes[e])
+#             DrawLigneEff(ctx, x+w, y+h, constantes.CouleursGroupes[e])
+            DrawLigneEff(ctx, x+w, y+h, couleur.CouleurInt2Float(ref.effectifs[e][3]))
 
 
 
@@ -613,7 +615,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     lstCodesC = []
     lstCoulC = []
     
-    ref = seq.GetReferentiel()
+    
     if ref.tr_com != []:
         ref_tc = REFERENTIELS[ref.tr_com[0]]
     else:

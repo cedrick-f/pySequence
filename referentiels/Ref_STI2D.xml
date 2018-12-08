@@ -5850,19 +5850,19 @@
   <d_domaines />
   <d_effectifs>
     <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
+      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
     </l_C>
     <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
+      <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_G>
     <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
+      <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
     <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
+      <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
     </l_E>
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
+      <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
     </l_P>
     <l_I S_00="Individuel" S_01="Individuel" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
@@ -5883,16 +5883,16 @@
   </d_effectifsSeance>
   <d_ensSpecif>
     <l_AC S_00="Architecture et Construction" S_01="Architecture et Construction" S_02="">
-      <l_03 I_00="51" I_01="51" I_02="51" />
+      <l_03 F_00="89.0" F_01="89.0" F_02="89.0" />
     </l_AC>
     <l_EE S_00="Energie et Environnement" S_01="Energie et Environnement" S_02="">
-      <l_03 I_00="153" I_01="51" I_02="0" />
+      <l_03 F_00="192.0" F_01="0.0" F_02="0.0" />
     </l_EE>
     <l_ITEC S_00="Innovation Technologique et Eco-Conception" S_01="Innovation Technologique et Eco-Conception" S_02="">
-      <l_03 I_00="0" I_01="51" I_02="102" />
+      <l_03 F_00="0.0" F_01="32.0" F_02="96.0" />
     </l_ITEC>
     <l_SIN S_00="Systèmes d'Information et Numérique" S_01="Systèmes d'Information et Numérique" S_02="">
-      <l_03 I_00="0" I_01="128" I_02="0" />
+      <l_03 F_00="0.0" F_01="108.0" F_02="49.0" />
     </l_SIN>
   </d_ensSpecif>
   <d_ensSpecifSeance>

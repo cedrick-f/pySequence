@@ -43,6 +43,8 @@ import xlrd
 from xlrd import open_workbook
 
 import constantes
+import couleur
+
 from widgets import scaleImage, Grammaire
 
 import os
@@ -1228,20 +1230,29 @@ class Referentiel(XMLelem):
         
         
         ###########################################################
-        def getbgcoul(wb, sh, l, c):
+        def getbgcoul(wb, sh, l, c, defaut = (0,0,0)):
+            """ Renvoie la couleur de la cellule de la feuille sh, ligne l colonne l
+                format : (255, 255, 255)
+            """
+            C = couleur.CouleurCSS2Float(sh.cell(l,c).value, bytes = True)
+            if C is not None:
+                return C
+            
             xfx = sh.cell_xf_index(l, c)
             xf = wb.xf_list[xfx]
             bgx = xf.background.pattern_colour_index
+#             bgx = xf.background.background_colour_index
             color_map = wb.colour_map[bgx]
+#             color_map = wb.colour_map.get(bgx)
 #             if color_map and (color_map[0] != 255 or color_map[1] != 255 or color_map[2] != 255):
 #                 print "coul", bgx
 #                 print "coul", color_map
 #             else:
-                
-#             print "coul", bgx
-#             print "map", color_map
+#             print(wb.palette_record)
+#             print("coul", bgx)
+#             print("map", color_map)
             if color_map is None:
-                return (0,0,0)
+                return defaut
             else:
                 return color_map
         
@@ -1615,7 +1626,9 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,0).value != "":
                 self.effectifs[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
-                                        sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
+                                        sh_g.cell(l,3).value, 
+                                        getbgcoul(wb, sh_g, l, 4, constantes.CouleursGroupes[code])
+                                        ]
                 self.listeEffectifs.append(code)
 
         # Systèmes

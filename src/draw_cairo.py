@@ -1075,6 +1075,9 @@ def DrawClasse(ctx, rect, classe):
 #     print classe.effectifs
 #     print classe.nbrGroupes
     
+    ref = classe.GetReferentiel()
+    
+    
     ctx.set_line_width (0.001 * COEF)
     
     x, y, wt, ht = rect 
@@ -1134,9 +1137,13 @@ def DrawClasse(ctx, rect, classe):
         
     ctx.set_line_width(e)
     coul = constantes.CouleursGroupes["C"]
+#     print(coul)
+#     print(ref.effectifs["C"][3])
+    coul = couleur.CouleurInt2Float(ref.effectifs["C"][3])
+#     print(coul)
     rectanglePlein(X, Y, W, H, coul)
     rects.append((X, Y, W, H))
-    show_text_rect_fix(ctx, classe.GetReferentiel().effectifs["C"][1], 
+    show_text_rect_fix(ctx, ref.effectifs["C"][1], 
                            X+W-wtxt , Y, wtxt, H,
                            f, Nlignes = 2)
     
@@ -1152,11 +1159,12 @@ def DrawClasse(ctx, rect, classe):
     wEff["G"] = W - (n-1) * dx
     
     ctx.set_line_width(e)
-    coul = constantes.CouleursGroupes["G"]
+#     coul = constantes.CouleursGroupes["G"]
+    coul = couleur.CouleurInt2Float(ref.effectifs["G"][3])
     empiler("", X, Y, W, H, n, coul)
     rects.append((X, Y, W, H))
     
-    show_text_rect_fix(ctx, classe.GetReferentiel().effectifs["G"][1], 
+    show_text_rect_fix(ctx, ref.effectifs["G"][1], 
                            X+wEff["G"]-wtxt, Y, wtxt, H,
                            f, Nlignes = 2)
     
@@ -1177,8 +1185,9 @@ def DrawClasse(ctx, rect, classe):
     wEff["D"] = wEff["G"] /2 
     
     ctx.set_line_width(e)
-    coul = constantes.CouleursGroupes["D"]
-    empiler(classe.GetReferentiel().effectifs["D"][1],
+#     coul = constantes.CouleursGroupes["D"]
+    coul = couleur.CouleurInt2Float(ref.effectifs["D"][3])
+    empiler(ref.effectifs["D"][1],
              X, Y, W, h, 2, coul)
     rects.append((X, Y, W, h))
     
@@ -1190,8 +1199,9 @@ def DrawClasse(ctx, rect, classe):
     h = Hc + (n-1)*dy
     
     ctx.set_line_width(e)
-    coul = constantes.CouleursGroupes["E"]
-    empiler(classe.GetReferentiel().effectifs["E"][1],
+#     coul = constantes.CouleursGroupes["E"]
+    coul = couleur.CouleurInt2Float(ref.effectifs["E"][3])
+    empiler(ref.effectifs["E"][1],
              X, Y, W, h, n, coul)
     rects.append((X, Y, W, h))
     wEff["E"] = wEff["G"] / n
@@ -1204,8 +1214,9 @@ def DrawClasse(ctx, rect, classe):
     h = Hc + (n-1)*dy
     
     ctx.set_line_width(e)
-    coul = constantes.CouleursGroupes["P"]
-    empiler(classe.GetReferentiel().effectifs["P"][1],
+#     coul = constantes.CouleursGroupes["P"]
+    coul = couleur.CouleurInt2Float(ref.effectifs["P"][3])
+    empiler(ref.effectifs["P"][1],
              X, Y, W, h, n, coul)
     rects.append((X, Y, W, h))
     wEff["P"] = wEff["G"] / n

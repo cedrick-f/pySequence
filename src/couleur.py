@@ -108,12 +108,23 @@ def generate(gradient, base_colors, desired_gradient_length):
 #            gradient.append(pack(a, r, g, b))
             gradient.append((r, g, b, a))
     
+def CouleurInt2Float(C):
+    return [c/256 for c in C]
 
-def GetCouleurWx(C):
+def GetCouleurWx(C, bytes = False):
+    """ Renvoie une wx.Colour
+        C peut prendre les formes suivantes
+         - str : nom d'une couleur
+         - (1.0, 1.0, 1.0)  + bytes = False
+         - (255, 255, 255) + bytes = True
+    """
     if type(C) == str:
         return wx.Colour(C)
     else:
-        return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
+        if bytes:
+            return wx.Colour(*C)
+        else:
+            return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
 
 def GetCouleurHTML(C, syntax = wx.C2S_CSS_SYNTAX):
     return GetCouleurWx(C).GetAsString(syntax)
@@ -129,6 +140,20 @@ def Wx2Couleur(Wx):
 
 def Couleur2Wx(C):
     return wx.Colour(C[0]*255, C[1]*255, C[2]*255, C[3]*255)
+
+def CouleurCSS2Float(s, bytes = False):
+    """ #FFF ou #FFFFFF  --> (1.0, 1.0, 1.0)
+    """
+    if bytes:
+        d = 1
+    else:
+        d = 256
+    if len(s) > 1 and s[0] == "#":
+        if len(s[1:]) == 3:
+            return [int(c, 16)/d for c in s[1:]]
+        elif len(s[1:]) == 6:
+            return [int(s[i:i+2], 16)/d for i in range(1, len(s)-1, 2)]
+
 
 # main entry point
 if __name__ == '__main__':

@@ -4143,7 +4143,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4384,7 +4384,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -7480,14 +7480,18 @@ class PanelEffectifsClasse(wx.Panel):
         #
         boxClasse = myStaticBox(self, -1, "Découpage de la classe")
 
-        coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
+#         coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
+        coulClasse = couleur.GetCouleurWx(ref.effectifs["C"][3], bytes = True)
 #        boxClasse.SetOwnForegroundColour(coulClasse)
         
-        self.coulEffRed = couleur.GetCouleurWx(constantes.CouleursGroupes['G'])
-
-        self.coulEP = couleur.GetCouleurWx(constantes.CouleursGroupes['E'])
+#         self.coulEffRed = couleur.GetCouleurWx(constantes.CouleursGroupes['G'])
+        self.coulEffRed = couleur.GetCouleurWx(ref.effectifs["G"][3], bytes = True)
+        
+#         self.coulEP = couleur.GetCouleurWx(constantes.CouleursGroupes['E'])
+        self.coulEP = couleur.GetCouleurWx(ref.effectifs["E"][3], bytes = True)
     
-        self.coulAP = couleur.GetCouleurWx(constantes.CouleursGroupes['P'])
+#         self.coulAP = couleur.GetCouleurWx(constantes.CouleursGroupes['P'])
+        self.coulAP = couleur.GetCouleurWx(ref.effectifs["P"][3], bytes = True)
         
 #        self.boxClasse = boxClasse
         bsizerClasse = wx.StaticBoxSizer(boxClasse, wx.VERTICAL)
@@ -7502,7 +7506,7 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,40])
         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = "Nombre %s dans la classe entiére" %ref.labels["ELEVES"][2].de_plur_(), 
+                                help = "Nombre %s dans la classe entière" %ref.labels["ELEVES"][2].de_plur_(), 
                                 sizeh = 30*SSCALE, 
                                 color = coulClasse, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
