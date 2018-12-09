@@ -7994,8 +7994,8 @@ class Competences(ElementBase):
                         ddif[d[0]] = [d[1:]]
                         
                 couleur = "TOMATO1"
-                message = "Certaines objectifs visés" \
-                          "ne sont pas abordés aux cours des Séances"
+                message = "Certaines objectifs visés\n" \
+                          "ne sont pas abordés aux cours des %s" %ref._nomActivites.plur_()
 
                 for k, cb in self.codeBranche.items():
                     if k in ddif.keys():
@@ -8010,8 +8010,8 @@ class Competences(ElementBase):
                     
                 
             else:
-                message = "Tous les objectifs visés" \
-                          "sont abordés aux cours des Séances"
+                message = "Tous les objectifs visés\n" \
+                          "sont abordés aux cours des %s" %ref._nomActivites.plur_()
                 couleur = COUL_OK
             
                 for cb in self.codeBranche.values():
