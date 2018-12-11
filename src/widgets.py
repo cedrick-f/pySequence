@@ -59,6 +59,11 @@ class Grammaire():
                         avec g = "f", "m", "q"
             
         """ 
+        
+        self.SetNomCode(nom_code)
+        
+        
+    def SetNomCode(self, nom_code):
         ng = nom_code.split("$")
         
         self.nom_obj = ng[0]     # le nom (pluriel)
@@ -71,6 +76,9 @@ class Grammaire():
 #     def __repr__(self):
 #         return self.nom_obj
 #     
+
+    
+        
     
     def voyelle(self, c):
         return c.lower() in "aeiouhéèàêîëïùû"

@@ -1471,7 +1471,7 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
         ctx.fill_preserve ()
         ctx.set_source_rgba (*_coul)
         show_text_rect(ctx, titre, (_x, y, wc, ht), va = va, ha = ha, b = b, orient = orient, 
-                       couper = False, wrap = False)
+                       couper = True, wrap = True)
         
 #        if orient == 'h':
         rect.append((_x, y, wc, ht))

@@ -978,7 +978,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 pos = ch.GetValue()
                 ch.Destroy()
             if pos is None:
-                pos == [0,0]
+                pos = [0,0]
             win = fenDoc.nb.GetCurrentPage()
             self.fsframe = wx.Frame(self, -1)
             self.fsframe.SetPosition(pos)
@@ -2887,9 +2887,9 @@ class FenetreSequence(FenetreDocument):
                 self.classe.setBranche(classe, reparer = reparer)
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
-                self.sequence.MiseAJourTypeEnseignement()
+                
                 self.sequence.setBranche(sequence)  
-
+                self.sequence.MiseAJourTypeEnseignement()
             if reparer:
                 self.VerifierReparation()
             
@@ -12779,9 +12779,12 @@ class ArbreDoc(CT.CustomTreeCtrl):
         #
         self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_RIGHT_CLICK, self.OnRightDown)
+        
         self.Bind(CT.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
+#         self.GetMainWindow().Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda x: None)
         self.Bind(CT.EVT_TREE_END_DRAG, self.OnEndDrag)
         self.Bind(wx.EVT_MOTION, self.OnMove)
+        
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
 #         self.Bind(wx.EVT_TREE_KEY_DOWN, self.OnKey)
         self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
@@ -12927,6 +12930,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         if self.item:
             event.Allow()
 
+
         
     ######################################################################################              
     def OnToolTip(self, event):
@@ -13038,10 +13042,15 @@ class ArbreSequence(ArbreDoc):
 
     ####################################################################################
     def OnMove(self, event):
+        
+            
         if not self.HasFocus():
             self.SetFocusIgnoringChildren()
             
         if self.itemDrag != None:
+#             if hasattr(self, "lastItem"):
+#                 self.RefreshSubtree(self.lastItem)
+            
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             
             if item != None:
@@ -13064,7 +13073,12 @@ class ArbreSequence(ArbreDoc):
                 elif a == 2 or a == 3 or a == 4:
                     self.SetCursor(self.CurseurInsertApres)
 
-                    
+#                 self.lastItem = item
+                
+#         else:
+#             if hasattr(self, "lastItem"):
+#                 del self.lastItem
+#                 self.RefreshSelectedUnder(self.itemDrag)
 #                if not isinstance(dataSource, Seance):
 #                    self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
 #                else:
@@ -13096,8 +13110,7 @@ class ArbreSequence(ArbreDoc):
                 3 : 
         """
         
-        
-            
+    
         if isinstance(dataSource, pysequence.Seance) and dataTarget != dataSource:
             if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
 #                print "0.1"
@@ -13128,7 +13141,7 @@ class ArbreSequence(ArbreDoc):
                     return 2
             
             # Insérer "aprés"
-            else:
+            elif isinstance(dataTarget, pysequence.Seance):
                 if dataTarget.parent != dataSource.parent:  # parents différents
 #                    print dataSource.typeSeance, dataTarget.GetListeTypes()
                     if hasattr(dataSource.parent, 'typeSeance') \
@@ -13150,7 +13163,8 @@ class ArbreSequence(ArbreDoc):
 #                    print "4"
                     return 4
             
-            
+            else:
+                return 0
 
 
 

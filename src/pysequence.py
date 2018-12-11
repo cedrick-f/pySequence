@@ -666,12 +666,14 @@ class ElementBase(Grammaire):
     ######################################################################################  
     def getBrancheImage(self, root, nom = "Image"):
         if self.image != None:
-            root.set(nom, img2str(self.image.ConvertToImage()))
+            root.set(nom, str(img2str(self.image.ConvertToImage()), 'utf-8'))
     
     
     ######################################################################################  
     def getBrancheIcone(self, root, nom = "Icone"):
         if self.icone != None:
+#             str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+            
             root.set(nom, img2str(self.icone.ConvertToImage()))
             
                     
@@ -1444,9 +1446,10 @@ class Classe(ElementBase):
             message = ""
         else:
             couleur = COUL_OK
+            ref = self.GetReferentiel()
             message = "Les paramètres de la classe sont verrouillés !\n" \
-                      "Pour pouvoir les modifier, supprimer le centre d'intérêt\n"\
-                      "ainsi que les prérequis et les objectifs."
+                      "Pour pouvoir les modifier, supprimer %s\n"\
+                      "ainsi que les prérequis et les objectifs." %ref._nomCI.les_()
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetBackgroundColour(couleur)
             self.codeBranche.SetToolTip(message)
@@ -3376,9 +3379,14 @@ class Sequence(BaseDoc):
 #         self.obj['C'].MiseAJourTypeEnseignement()
         for o in list(self.obj.values()):
             o.MiseAJourTypeEnseignement()
+            
         for p in list(self.prerequis.values()):
             p.MiseAJourTypeEnseignement()
+            
         for s in self.seances:
+            s.MiseAJourTypeEnseignement()
+        
+        for s in self.systemes:
             s.MiseAJourTypeEnseignement()
         
         if hasattr(self, 'arbre'):
@@ -7994,13 +8002,19 @@ class Competences(ElementBase):
                         ddif[d[0]] = [d[1:]]
                         
                 couleur = "TOMATO1"
-                message = "Certaines objectifs visés\n" \
+                message = "Certains objectifs visés\n" \
                           "ne sont pas abordés aux cours des %s" %ref._nomActivites.plur_()
 
                 for k, cb in self.codeBranche.items():
                     if k in ddif.keys():
                         if len(ddif[k]) < 4:
-                            message += "\n"+getSingulierPluriel(ref.GetNomGeneriqueComp(k), len(ddif[k]) > 1 )+" :"
+                            if len(ddif[k]) > 1:
+                                message += "\n"+self.GetNomGenerique(k)+" :"
+                            else:
+                                message += "\n"+self.GetNomGenerique_sing(k)+" :"
+                                
+                                
+#                             message += "\n"+getSingulierPluriel(ref.GetNomGeneriqueComp(k), len(ddif[k]) > 1 )+" :"
                             for d in ddif[k]:
                                 message += "\n"+d
                         
@@ -8383,10 +8397,14 @@ class Savoirs(ElementBase):
                 for k, cb in self.codeBranche.items():
 #                     print("   ", k)
                     message = "Certains objectifs visés " \
-                              "ne sont pas abordés aux cours des Séances"
+                              "ne sont pas abordés aux cours des %s" %ref._nomActivites.plur_()
                     if k in ddif.keys():
                         if len(ddif[k]) < 4:
-                            message += "\n"+getSingulierPluriel(ref.GetNomGeneriqueSav(k), len(ddif[k]) > 1 )+" :"
+                            if len(ddif[k]) > 1:
+                                message += "\n"+self.GetNomGenerique(k)+" :"
+                            else:
+                                message += "\n"+self.GetNomGenerique_sing(k)+" :"
+#                             message += "\n"+getSingulierPluriel(ref.GetNomGeneriqueSav(k), len(ddif[k]) > 1 )+" :"
                             for d in ddif[k]:
                                 message += "\n"+d
              
@@ -8397,7 +8415,7 @@ class Savoirs(ElementBase):
                 
             else:
                 message = "Tous les objectifs visés" \
-                          "sont abordés aux cours des Séances"
+                          "sont abordés aux cours des %s" %ref._nomActivites.plur_()
                 couleur = COUL_OK
             
                 for cb in self.codeBranche.values():
@@ -8953,6 +8971,7 @@ class Seance(ElementAvecLien, ElementBase):
     ######################################################################################  
     def SignalerPb(self, etatEff, etatSys):
         if hasattr(self, 'codeBranche'):
+            ref = self.GetReferentiel()
             etat = max(etatEff, etatSys)
             if etat == 0:
                 couleur = 'white'
@@ -8966,16 +8985,16 @@ class Seance(ElementAvecLien, ElementBase):
             if etatEff == 0:
                 message = ""
             elif etatEff == 1 :
-                message = "Tout le groupe \"effectif réduit\" n'est pas occupé"
+                message = "Tout le groupe \"%s\" n'est pas occupé" %ref.effectifs["G"][1]
             elif etatEff == 2:
-                message = "Effectif de la Séance supérieur à celui du groupe \"effectif réduit\""
+                message = "Effectif %s supérieur à celui du groupe \"%s\"" %(ref._nomActivites.du_(), ref.effectifs["G"][1])
             elif etatEff == 3:
-                message = "Séances en rotation d'effectifs différents !!"
+                message = "%s en rotation d'effectifs différents !!" %ref._nomActivites.Plur_()
                 
             if etatSys == 0:
                 message += ""
             elif etatSys == 1 :
-                message += "Nombre de systèmes nécessaires supérieur au nombre de systèmes disponibles."
+                message += "Nombre de %s nécessaires supérieur au nombre de %s disponibles." %(ref._nomSystemes.plur_(), ref._nomSystemes.plur_())
                 
             self.codeBranche.SetBackgroundColour(couleur)
             self.codeBranche.SetToolTip(message)
@@ -11031,6 +11050,11 @@ class Systeme(ElementAvecLien, ElementBase):
                                                      scaleImage(images.Icone_lien.GetBitmap())]])
             
     
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):
+        ref = self.GetReferentiel()
+        self.SetNomCode(ref.nomSystemes)
+        
     ######################################################################################  
     def GetFicheHTML(self, param = None):
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SYSTEME)
