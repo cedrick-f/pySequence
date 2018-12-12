@@ -911,9 +911,6 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         seq.obj["S"].pts_caract = getPts(r)
     
         seq.zones_sens.append(Zone([rectC], obj = seq.obj["C"]))
-        
-        
-        
         seq.zones_sens.append(Zone([rectS], obj = seq.obj["S"]))
 #    seq.obj["C"].rect = 
 #    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
@@ -945,7 +942,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     #    
     if not entete:
         nomsSystemes = []
-        systemes = seq.GetSystemesUtilises()
+        systemes = seq.GetSystemesUtilises(niveau = 0)
         for s in systemes:
             nomsSystemes.append(s.nom)
         

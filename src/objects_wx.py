@@ -4143,7 +4143,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4384,7 +4384,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -9202,17 +9202,17 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-        print("MiseAJour Savoirs", self.code, self.arbre)
+#         print("MiseAJour Savoirs", self.code, self.arbre)
 #         print self.code
 
         if hasattr(self, 'arbre'):
 #             self.arbre.ExpandAll()
             for s in self.savoirs.savoirs:
                 if self.code == s[0]:
-                    print("   ", s[1:])
+#                     print("   ", s[1:])
                     i = self.arbre.items[s[1:]]
 #                     i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
-                    print("       ", i)
+#                     print("       ", i)
                     if i is not None and i.IsOk():
                         self.arbre.CheckItem2(i)
                         self.arbre.AutoCheckChild(i, True)
@@ -11200,12 +11200,32 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         
         #
+        # Description de la séance
+        #
+        vs = wx.BoxSizer(wx.VERTICAL)
+        dbox = myStaticBox(self, -1, "Description")
+        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+        tc = richtext.RichTextPanel(self, self.systeme, toolBar = True)
+        tc.SetTitre("Description détaillée "+et2ou(ref._nomSystemes.du_()))
+        tc.SetToolTip("")
+        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+        vs.Add(dbsizer, 1, flag = wx.EXPAND|wx.ALL, border = 2)
+        self.rtc = tc
+        # Pour indiquer qu'une édition est déja en cours ...
+        self.edition = False  
+        
+        
+        #
         # Lien
         #
         lsizer = self.CreateLienSelect(self)
-        self.sizer.Add(lsizer, (0,3), (1, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
+        vs.Add(lsizer, flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(vs, (0,3), (1, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
         
-         
+        
+        
+
+        
         self.MiseAJour()
         self.Verrouiller()
         
@@ -13628,7 +13648,7 @@ class ArbreSavoirs(HTL.HyperTreeList):
             :pp: PanelPropriete contenant les méthodes AjouterEnlever...
         """
         HTL.HyperTreeList.__init__(self, parent, -1, 
-                                   agwStyle = wx.TR_MULTIPLE|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|\
+                                   agwStyle = wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|\
                                    CT.TR_AUTO_CHECK_PARENT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|HTL.TR_NO_HEADER|agwStyle) # wx.TR_DEFAULT_STYLE|<< le dernier pour accepter les texte multiligne (ça marche mais pas débuggé)
 #         print("ArbreSavoirs")
         self.parent = parent
@@ -14068,7 +14088,7 @@ class ArbreCompetences(HTL.HyperTreeList):
             :pp: PanelPropriete contenant les méthodes AjouterEnlever...
         """
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS,
-                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|\
+                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|wx.TR_HAS_BUTTONS|\
                                    CT.TR_AUTO_CHECK_PARENT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|agwStyle)#wx.TR_DEFAULT_STYLE|
         
         self.parent = parent

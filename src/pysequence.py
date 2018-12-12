@@ -741,10 +741,12 @@ class ElementBase(Grammaire):
     ######################################################################################  
     def SetDescription(self, description):
         if self.description != description:
-            ref = self.GetReferentiel()
+#             ref = self.GetReferentiel()
 #            print "SetDescription", self.nom_obj, self
             self.description = description
-            self.GetApp().sendEvent(modif = "Modification de la description %s" %ref._nomActivites.du_())
+#             self.GetApp().sendEvent(modif = "Modification de la description %s" %ref._nomActivites.du_())
+            self.GetApp().sendEvent(modif = "Modification de la description %s" %self.du_())
+            
 #            self.tip.SetRichTexte()
 
 
@@ -1651,13 +1653,17 @@ class BaseDoc(ElementBase, ElementAvecLien):
         
     ######################################################################################  
     def Click(self, zone, x, y):
-#         print "Click", zone
+#         print("Click", zone)
         self.HideTip()
         
         if zone.obj is not None:
             if zone.param is None:
+#                 print("   ", zone.obj)
                 if hasattr(zone.obj, "branche"):
-                    self.SelectItem(zone.obj.branche, depuisFiche = True)
+                    if hasattr(zone.obj, "branches") and len(zone.obj.branches.values()) > 0:
+                        self.SelectItem(list(zone.obj.branches.values())[0], depuisFiche = True)
+                    else:
+                        self.SelectItem(zone.obj.branche, depuisFiche = True)
                 elif hasattr(zone.obj, "branchePre"):
                     self.SelectItem(zone.obj.branchePre, depuisFiche = True)
             
@@ -1665,7 +1671,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
                 if isinstance(zone.obj, Sequence) and len(zone.param) > 2 and zone.param[:2] == "CI":
                     ref = self.GetReferentiel()
                     zone.obj.CI.ToogleNum(int(zone.param[2:]))
-                    t = "Modification des "+ ref.nomCI + " de la Séquence"
+                    t = "Modification "+ ref._nomCI.des_() + " de la Séquence"
                     pp = self.GetApp().GetPanelProp()
                     if hasattr(pp, "MiseAJourApercu"):
                         pp.MiseAJourApercu()
@@ -1673,8 +1679,8 @@ class BaseDoc(ElementBase, ElementAvecLien):
                 
                 elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
                     ref = self.GetReferentiel()
-                    print("Click : S"+zone.param[3:])
-                    print(zone.obj.obj['C'])
+#                     print("Click : S"+zone.param[3:])
+#                     print(zone.obj.obj['C'])
                     zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
                     t = "Modification des "+ getPluriel(ref.dicoCompetences["S"].nomGenerique) + " visées par la Séquence"
                     pp = self.GetApp().GetPanelProp()
@@ -3268,19 +3274,19 @@ class Sequence(BaseDoc):
     def GetSystemesUtilises(self, niveau = None):
         """ Renvoie la liste des systèmes utilisés pendant la séquence
         """
-#         print "GetSystemesUtilises"
+#         print("GetSystemesUtilises", self, niveau)
         lst = []
         for s in self.systemes:
 #             print "   ", s
             n = 0
             for se in self.seances:
                 ns = se.GetNbrSystemes(complet = True, niveau = niveau)
-#                 print "   ", ns
-                if s.nom in list(ns.keys()):
+#                 print("   ", se, ns)
+                if s.nom in ns.keys():
                     n += ns[s.nom]
             if n > 0:
                 lst.append(s)
-#         print ">>>", lst
+#         print(">>>", lst)
         return lst
 
 
@@ -7077,6 +7083,11 @@ class CentreInteret(ElementBase):
         self.Pb = []        # Problématiques proposées
         self.Pb_perso = []  # Problématiques personnalisées
         
+        
+        ref = self.GetReferentiel()
+        Grammaire.__init__(self, ref.nomCI)
+        
+        
         self.MiseAJourTypeEnseignement()
             
         self.SetNum(self.numCI)
@@ -9160,7 +9171,7 @@ class Seance(ElementAvecLien, ElementBase):
     def SetDemarche(self, text):
         """ Applique la(les) démarche(s) à la séance
         """
-        print("SetDemarche", text)
+#         print("SetDemarche", text)
 #         ref = self.GetReferentiel()
 #         for c, n in list(ref.demarches.items()):
 #             if n[1] == text:
@@ -9569,8 +9580,8 @@ class Seance(ElementAvecLien, ElementBase):
             if self.typeSeance == "S" or complet:
                 
                 for seance in self.seances:
-                    dd = seance.GetNbrSystemes(complet)
-                    for k, v in list(dd.items()):
+                    dd = seance.GetNbrSystemes(complet, niveau = niveau)
+                    for k, v in dd.items():
                         up(d, k, v)
 
             else:
@@ -9899,6 +9910,9 @@ class Tache(ElementAvecLien, ElementBase):
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self, 500*SSCALE)
 #         self.tip.SetSize((, -1))
+        
+        ref = self.GetReferentiel()
+        Grammaire.__init__(self, ref.nomTaches)
         
         
         # Les données sauvegardées
@@ -10867,6 +10881,13 @@ class Systeme(ElementAvecLien, ElementBase):
         self.image = None
         self.lienClasse = None
         
+        ref = self.GetReferentiel()
+        Grammaire.__init__(self, ref.nomSystemes)
+        
+        
+        # La description du système
+        self.description = None
+        
         
     ######################################################################################  
     def GetApp(self):
@@ -10882,7 +10903,7 @@ class Systeme(ElementAvecLien, ElementBase):
             i = img2str(self.image.ConvertToImage())[:20]
         else:
             i = "None"
-        return self.nom+" ("+str(self.nbrDispo.v[0])+") " + i
+        return self.nom#+" ("+str(self.nbrDispo.v[0])+") " + i
         
         
 
@@ -10905,6 +10926,9 @@ class Systeme(ElementAvecLien, ElementBase):
             self.lien.getBranche(root)
             root.set("Nbr", str(self.nbrDispo.v[0]))
             self.getBrancheImage(root)
+            
+            if self.description != None:
+                root.set("Description", self.description)
         
         return root
     
@@ -10933,6 +10957,8 @@ class Systeme(ElementAvecLien, ElementBase):
             self.nbrDispo.v[0] = eval(branche.get("Nbr", "1"))
             
             self.setBrancheImage(branche)
+            
+            self.description = branche.get("Description", None)
             
             
 #        self.GetPanelPropriete().MiseAJour()
