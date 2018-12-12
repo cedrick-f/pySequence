@@ -674,7 +674,7 @@ class ElementBase(Grammaire):
         if self.icone != None:
 #             str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
             
-            root.set(nom, img2str(self.icone.ConvertToImage()))
+            root.set(nom, str(img2str(self.icone.ConvertToImage()), 'utf-8'))
             
                     
     ######################################################################################  
@@ -1173,7 +1173,7 @@ class Classe(ElementBase):
         # Référentiel
         #
         def ChargerRefOriginal():
-            print("Réparation = pas référentiel intégré !")
+#             print("Réparation = pas référentiel intégré !")
             if self.GetVersionNum() >= 5:
                 code = self.referentiel.setBrancheCodeV5(brancheRef)
                 print("   Code trouvé dans référentiel :", code)
@@ -1181,7 +1181,7 @@ class Classe(ElementBase):
                     self.typeEnseignement = code
                 
                     
-            print("   TypeEnseignement :", self.typeEnseignement)
+#             print("   TypeEnseignement :", self.typeEnseignement)
             if self.typeEnseignement in REFERENTIELS:
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
             else:

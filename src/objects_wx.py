@@ -9202,16 +9202,17 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-#         print("MiseAJour Savoirs", self.arbre)
+        print("MiseAJour Savoirs", self.code, self.arbre)
 #         print self.code
 
         if hasattr(self, 'arbre'):
 #             self.arbre.ExpandAll()
             for s in self.savoirs.savoirs:
                 if self.code == s[0]:
-#                     print("   ", s[1:])
-                    i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
-#                     print("       ", i)
+                    print("   ", s[1:])
+                    i = self.arbre.items[s[1:]]
+#                     i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
+                    print("       ", i)
                     if i is not None and i.IsOk():
                         self.arbre.CheckItem2(i)
                         self.arbre.AutoCheckChild(i, True)
@@ -14029,12 +14030,12 @@ class ArbreSavoirs(HTL.HyperTreeList):
         """
                 source : https://stackoverflow.com/questions/6954242/wxpython-treectrl-how-can-i-get-a-tree-item-by-name
         """
-#         print("get_item_by_label", search_text)
+        print("get_item_by_label", search_text)
         item, cookie = self.GetFirstChild(root_item)
     
         while item != None and item.IsOk():
             text = self.GetItemText(item).replace("\n", "")
-#             print("   ", text)
+            print("   ", text)
             if text.split(" ")[0] == search_text:
                 return item
             if self.ItemHasChildren(item):
