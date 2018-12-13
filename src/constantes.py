@@ -377,7 +377,7 @@ TYPE_ENSEIGNEMENT_DEFAUT = "SSI"
 #
 ####################################################################################
 
-Effectifs = {"C" : 80,
+Effectifs = {"C" : 36,
              "G" : None,
              "D" : None, 
              "E" : None, 

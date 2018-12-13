@@ -739,13 +739,14 @@ class ElementBase(Grammaire):
         self.toolTip = toolTip
         
     ######################################################################################  
-    def SetDescription(self, description):
+    def SetDescription(self, description, draw = False):
         if self.description != description:
 #             ref = self.GetReferentiel()
-#            print "SetDescription", self.nom_obj, self
+            print("SetDescription", self)
             self.description = description
 #             self.GetApp().sendEvent(modif = "Modification de la description %s" %ref._nomActivites.du_())
-            self.GetApp().sendEvent(modif = "Modification de la description %s" %self.du_())
+            self.GetApp().sendEvent(modif = "Modification de la description %s" %self.du_(),
+                                    draw = draw)
             
 #            self.tip.SetRichTexte()
 
@@ -2097,7 +2098,10 @@ class Sequence(BaseDoc):
         systeme = ET.SubElement(sequence, "Systemes")
         for sy in self.systemes:
 #            c = hasattr(sy, 'panelPropriete') and sy.panelPropriete.cbListSys.GetStringSelection() != u""
-            systeme.append(sy.getBranche())
+            if isinstance(sy.parent, Classe):
+                systeme.append(sy.getBrancheClasse())
+            else:
+                systeme.append(sy.getBranche())
         
         return sequence
 
@@ -2178,8 +2182,12 @@ class Sequence(BaseDoc):
             systeme = Systeme(self)
             systeme.setBranche(sy)
             # On évite les systèmes redondants (correction d'un bug)
-            if systeme.lienClasse == None or  not systeme.lienClasse in [s.lienClasse for s in self.systemes]:
-                self.systemes.append(systeme)    
+            if systeme.lienClasse == None:# or  not systeme.lienClasse in [s.lienClasse for s in self.systemes]:
+                self.systemes.append(systeme)
+            else:
+                if not systeme.lienClasse in [s.lienClasse for s in self.systemes]:
+                    self.systemes.append(systeme.lienClasse)
+#             print("sy", self.systemes[-1].parent)
 
 #        t3 = time.time()
 #        print "  t3", t3-t2
@@ -2755,11 +2763,23 @@ class Sequence(BaseDoc):
         
         
         
+    ######################################################################################  
+    def RemplacerSysteme(self, sy1, sy2):
+        for i, s in enumerate(self.systemes):
+            if s == sy1:
+                self.systemes[i] = sy2
+                sy1.branche.SetData(sy2)
+                sy2.branche = sy1.branche
+                sy2.arbre = sy1.arbre
+                if not isinstance(sy1.parent, Classe):
+                    del sy1
+                return
         
         
     ######################################################################################  
     def AjouterSysteme(self, event = None):
         sy = Systeme(self)
+        print("AjouterSysteme", sy)
         self.systemes.append(sy)
         sy.ConstruireArbre(self.arbre, self.brancheSys)
         self.arbre.Expand(self.brancheSys)
@@ -2770,7 +2790,7 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def AjouterListeSystemes(self, syst = []):
-        print("AjouterListeSystemes séquence", syst)
+#         print("AjouterListeSystemes séquence", syst)
         nouvListe = []
         for s in syst:
             print("   ",s)
@@ -2809,7 +2829,7 @@ class Sequence(BaseDoc):
                 sy.SetCode()
 #            sy.nbrDispo.v[0] = eval(n)
 #            sy.panelPropriete.MiseAJour()
-        print("  nouvListe :", nouvListe)
+#         print("  nouvListe :", nouvListe)
         self.arbre.Expand(self.brancheSys)
         self.AjouterListeSystemesSeance(nouvListe)
         self.GetApp().sendEvent(modif = "Ajout d'une liste de Systèmes")
@@ -7197,7 +7217,13 @@ class CentreInteret(ElementBase):
                 else:
                     self.PosCI_perso.append(t)
                     i += 1
-                    
+        # Correction bug :
+        if len(self.PosCI_perso) > len(self.CI_perso):
+            self.PosCI_perso = self.PosCI_perso[:len(self.CI_perso)]
+        elif len(self.PosCI_perso) < len(self.CI_perso):
+            self.PosCI_perso.extend([""]*(len(self.CI_perso)-len(self.PosCI_perso)))
+        
+        
         # Problématiques proposées
         self.Pb = []
         Pb = branche.find("Problematiques")
@@ -10894,17 +10920,20 @@ class Systeme(ElementAvecLien, ElementBase):
         return self.parent.GetApp()
         
     ######################################################################################  
-    def GetDocument(self):    
-        return self.parent
-    
-    ######################################################################################  
-    def __repr__(self):
-        if self.image != None:
-            i = img2str(self.image.ConvertToImage())[:20]
+    def GetDocument(self):
+        if isinstance(self.parent, Classe):
+            return self.parent.GetDocument()
         else:
-            i = "None"
-        return self.nom#+" ("+str(self.nbrDispo.v[0])+") " + i
-        
+            return self.parent
+    
+#     ######################################################################################  
+#     def __repr__(self):
+#         if self.image != None:
+#             i = img2str(self.image.ConvertToImage())[:20]
+#         else:
+#             i = "None"
+#         return self.nom#+" ("+str(self.nbrDispo.v[0])+") " + i
+#         
         
 
     ######################################################################################  
@@ -10913,22 +10942,30 @@ class Systeme(ElementAvecLien, ElementBase):
     
     
     ######################################################################################  
-    def getBranche(self):
+    def getBrancheClasse(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
         root = ET.Element("Systeme")
-        if self.lienClasse != None:
-            root.set("NomClasse", self.lienClasse.nom)
-            
-        else:
-            root.set("Nom", self.nom)
-            root.set("Type", self.typ)
-            self.lien.getBranche(root)
-            root.set("Nbr", str(self.nbrDispo.v[0]))
-            self.getBrancheImage(root)
-            
-            if self.description != None:
-                root.set("Description", self.description)
+        root.set("NomClasse", self.nom)
+        return root
+    
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML de la compétence pour enregistrement
+        """
+#         print("getBranche", self, self.GetDocument())
+        
+        root = ET.Element("Systeme")
+        
+        root.set("Nom", self.nom)
+        root.set("Type", self.typ)
+        self.lien.getBranche(root)
+        root.set("Nbr", str(self.nbrDispo.v[0]))
+        self.getBrancheImage(root)
+        
+        if self.description != None:
+            root.set("Description", self.description)
         
         return root
     
@@ -10943,7 +10980,7 @@ class Systeme(ElementAvecLien, ElementBase):
             for s in classe.systemes:
                 if s.nom == nomClasse:
                     self.lienClasse = s
-                    self.setBranche(s.getBranche())
+#                     self.setBranche(s.getBranche())
 #                    self.GetPanelPropriete().Verrouiller(False)
 #                        self.panelPropriete.cbListSys.SetSelection(self.panelPropriete.cbListSys.FindString(self.nom))
                     break
@@ -11000,11 +11037,11 @@ class Systeme(ElementAvecLien, ElementBase):
             
     ######################################################################################  
     def SetNom(self, nom):
+#         print("SetNom", nom)
         self.nom = nom
         
         self.propagerChangements()
         
-                        
 #        if nom != u"":
         if hasattr(self, 'arbre'):
             self.SetCode()

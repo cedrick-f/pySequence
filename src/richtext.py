@@ -112,10 +112,15 @@ class RichTextCtrl(ToolTip, rt.RichTextCtrl):
 
 
 class RichTextPanel(wx.Panel):
-    def __init__(self, parent, objet, toolBar = False, size = wx.DefaultSize):
+    def __init__(self, parent, objet, draw = False,
+                 toolBar = False, size = wx.DefaultSize):
+        """
+            :draw: action associée à l'évévement envoyé à l'objet
+        """
         wx.Panel.__init__(self, parent, -1, style = wx.BORDER_SUNKEN)
         
         self.objet = objet
+        self.draw = draw
         
         # Constantes
         self.indent = 50
@@ -278,10 +283,10 @@ class RichTextPanel(wx.Panel):
 
 
     def Sauver(self, evt = None):
-#         print("Sauver", self.rtc.GetValue())
+#         print("Sauver", self.objet)
         if self.rtc.GetValue() == "":
             if hasattr(self.objet, "description"):
-                self.objet.SetDescription(None)
+                self.objet.SetDescription(None, self.draw)
             else:
                 self.objet[0]=""
         else:
@@ -290,7 +295,7 @@ class RichTextPanel(wx.Panel):
             if texte is None:
                 return
             if hasattr(self.objet, "description"):
-                self.objet.SetDescription(texte)
+                self.objet.SetDescription(texte, self.draw)
             else:
                 self.objet[0]=texte
             
