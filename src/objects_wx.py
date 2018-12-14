@@ -2888,8 +2888,9 @@ class FenetreSequence(FenetreDocument):
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
                 
-                self.sequence.setBranche(sequence)  
+                self.sequence.setBranche(sequence)
                 self.sequence.MiseAJourTypeEnseignement()
+                
             if reparer:
                 self.VerifierReparation()
             
@@ -9627,7 +9628,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.titreEff.Destroy()
             del self.cbEff
             del self.titreEff
-        print("ref.effectifsSeance", ref.effectifsSeance)
+#         print("ref.effectifsSeance", ref.effectifsSeance)
         if self.seance.typeSeance in ref.effectifsSeance.keys() \
                 and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
             titre = wx.StaticText(self.pageGen, -1, "Effectif : ")
