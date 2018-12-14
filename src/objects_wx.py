@@ -9943,6 +9943,7 @@ class PanelPropriete_Seance(PanelPropriete):
     ############################################################################            
     def ConstruireListeSystemes(self):
         self.Freeze()
+        ref = self.seance.GetReferentiel()
         if self.seance.typeSeance in ACTIVITES:
             for ss in self.systemeCtrl:
                 self.bsizer.Detach(ss)
@@ -9954,7 +9955,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 v = VariableCtrl(self.pageGen, s, signeEgal = False, 
                                  slider = False, fct = None, help = "", 
                                  sizeh = 30*SSCALE, scale = SSCALE)
-                v.SetHelp("Indiquer le nombre de %s nécessaires" %s.data.nom)
+                v.SetHelp("Indiquer le nombre de %s\n  \"%s\"\nnécessaires pour %s" %(ref.systemes[s.data.typ][1], s.data.nom, ref._nomActivites.le_()))
                 self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
                 self.systemeCtrl.append(v)

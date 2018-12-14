@@ -193,10 +193,14 @@ class Grammaire():
     def le_(self, adj = ""):
         """ article défini singulier + nom
         """
-        if self.genre == "f":
-            a = "la "
+        if self.voyelle(self.nom_obj[0]) and adj == "":
+            a = "l'"
         else:
-            a = "le "
+            if self.genre == "f":
+                a = "la "
+            else:
+                a = "le "
+        
         if adj != "":
             adj += " "
         return a + getSingulier(adj+self.nom_obj.lower())
