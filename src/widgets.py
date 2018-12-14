@@ -815,7 +815,8 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, signeEgal = True, 
-                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = "", sliderAGauche = False, scale = 1.0):
+                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, 
+                 unite = "", sliderAGauche = False, scale = 1.0):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:

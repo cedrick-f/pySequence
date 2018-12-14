@@ -8765,7 +8765,7 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def setBranche(self, branche):
-#         print("setBranche séance", self)
+        print("setBranche séance", self)
 #        t0 = time.time()
         ref = self.GetReferentiel()
         
@@ -8824,6 +8824,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         # Enseignements Spécifiques
         self.ensSpecif = branche.get("EnsSpecif", "").split()
+        print("   ensSpecif:", self.ensSpecif)
         
         # Compétences visées
         self.compVisees = branche.get("CompVisees", "").split()

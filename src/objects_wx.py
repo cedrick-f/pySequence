@@ -6450,7 +6450,17 @@ class PanelPropriete_Classe(PanelPropriete):
         
         nb.AddPage(pageGen, "Propriétés générales")
 
-
+        #
+        # la page "Découpage de la classe"
+        #
+        ref = self.classe.GetReferentiel()
+        pageDec = PanelPropriete(nb, objet = classe)
+        pageDec.SetBackgroundColour(bg_color)
+        nb.AddPage(pageDec, "Découpage de la classe")
+        self.pageDec = pageDec
+        
+        
+        
         #
         # la page "Systèmes"
         #
@@ -6459,12 +6469,15 @@ class PanelPropriete_Classe(PanelPropriete):
         pageSys.SetBackgroundColour(bg_color)
         nb.AddPage(pageSys, ref._nomSystemes.plur_())
         self.pageSys = pageSys
+
+        
+       
+        
         
         self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
         self.nb = nb
         self.sizer.AddGrowableCol(1)
 
-        
 
         #
         # La barre d'outils
@@ -6511,7 +6524,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.sel_type = Panel_SelectEnseignement(pageGen, self, self.pourProjet, self.classe)
         sb.Add(self.sel_type, 1, flag = wx.EXPAND)
 
-        pageGen.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        pageGen.sizer.Add(sb, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)#
 
 
         #
@@ -6579,7 +6592,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
 #        sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
 
-        pageGen.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
         
         #
         # Accés au BO
@@ -6587,20 +6600,26 @@ class PanelPropriete_Classe(PanelPropriete):
         titre = myStaticBox(pageGen, -1, "Documents Officiels en ligne")
         self.bo = []
         sbBO = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        pageGen.sizer.Add(sbBO, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sbBO, (0,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
         self.sbBO = sbBO
 #        self.SetLienBO()
+        
+        
+        pageGen.sizer.AddGrowableRow(0)
+        pageGen.sizer.AddGrowableCol(1)
+        
+        
         
         
         #
         # Effectifs
         #
-        self.ec = PanelEffectifsClasse(pageGen, classe)
+        self.ec = PanelEffectifsClasse(pageDec, classe)
         
-        pageGen.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
+        pageDec.sizer.Add(self.ec, (0,0), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
 
-        pageGen.sizer.AddGrowableRow(0)
-        pageGen.sizer.AddGrowableCol(2)
+        pageDec.sizer.AddGrowableRow(0)
+        pageDec.sizer.AddGrowableCol(0)
 #        pageGen.sizer.Layout()
 
 
@@ -6634,17 +6653,17 @@ class PanelPropriete_Classe(PanelPropriete):
         hs.Add(self.btnAjouterSys, flag = wx.ALL|wx.EXPAND, border = 2)
         hs.Add(self.btnSupprimerSys, flag = wx.ALL|wx.EXPAND, border = 2)
         
-        pageSys.sizer.Add(vs, (0,0), (3,1), flag = wx.ALL|wx.EXPAND, border = 2)
+        pageSys.sizer.Add(vs, (0,0), flag = wx.ALL|wx.EXPAND, border = 2)
         
-        pageSys.sizer.Add(self.panelSys, (0,1), (3,1),  flag = wx.ALL|wx.EXPAND, border = 2)
-        pageSys.sizer.AddGrowableRow(1)
+        pageSys.sizer.Add(self.panelSys, (0,1), flag = wx.ALL|wx.EXPAND, border = 2)
+        pageSys.sizer.AddGrowableRow(0)
         pageSys.sizer.AddGrowableCol(1)
     
         self.MiseAJour()
         self.Verrouiller()
         self.MiseAJourBoutonsSystem()
         
-        self.Bind(wx.EVT_SIZE, self.OnResize)
+#         self.Bind(wx.EVT_SIZE, self.OnResize)
         
         self.Layout()
         
@@ -7490,7 +7509,7 @@ class PanelEffectifsClasse(wx.Panel):
         #
         # Box "Classe"
         #
-        boxClasse = myStaticBox(self, -1, "Découpage de la classe")
+        boxClasse = myStaticBox(self, -1, ref.effectifs["C"][1])
 
 #         coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
         coulClasse = couleur.GetCouleurWx(ref.effectifs["C"][3], bytes = True)
@@ -7518,18 +7537,18 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,80])
         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = "Nombre %s dans la classe entière" %ref.labels["ELEVES"][2].de_plur_(), 
+                                help = "Nombre %s dans la %s" %(ref.labels["ELEVES"][2].de_plur_(),ref.effectifs["C"][1]), 
                                 sizeh = 30*SSCALE, 
                                 color = coulClasse, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
         
         # Nombre de groupes à effectif réduits
-        self.vNbERed = Variable("Nbr de groupes\nà effectif réduit",  
+        self.vNbERed = Variable("Nbr de groupes\n%s" %ref.effectifs["G"][1],  
                                 lstVal = classe.nbrGroupes['G'], 
                                 typ = VAR_ENTIER_POS, bornes = [1,4])
         self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
-                                    help = "Nombre de groupes à effectif réduit dans la classe", sizeh = 20*SSCALE, 
+                                    help = "Nombre de groupes %s dans la %s" %(ref.effectifs["G"][1],ref.effectifs["C"][1]), sizeh = 20*SSCALE, 
                                     color = self.coulEffRed, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
         sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
@@ -7539,6 +7558,8 @@ class PanelEffectifsClasse(wx.Panel):
         # Boxes Effectif Réduit
         #
         boxEffRed = myStaticBox(self, -1, "")
+        boxEffRed.SetBackgroundColour('white')
+        boxEffRed.SetOwnBackgroundColour('white')
         boxEffRed.SetOwnForegroundColour(self.coulEffRed)
         self.boxEffRed = boxEffRed
         bsizerEffRed = wx.StaticBoxSizer(boxEffRed, wx.HORIZONTAL)
@@ -7550,12 +7571,14 @@ class PanelEffectifsClasse(wx.Panel):
         sizerClasse_b.Add(bsizerEffRed)
         
         # Nombre de groupes d'étude/projet
-        self.vNbEtPr = Variable("Nbr de groupes\n\"Etudes et Projets\"",  
+        self.vNbEtPr = Variable("Nbr de groupes\n%s" %ref.effectifs["E"][1],  
                             lstVal = classe.nbrGroupes['E'], 
                             typ = VAR_ENTIER_POS, bornes = [1,10])
         self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
-                                help = "Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20*SSCALE, 
+                                help = "Nombre de groupes %s par groupe %s" %(ref.effectifs["E"][1], ref.effectifs["G"][1]), 
+                                sizeh = 20*SSCALE, 
                                 color = self.coulEP, scale = SSCALE)
+        self.cNbEtPr.SetBackgroundColour('white')
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
         self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
@@ -7566,12 +7589,14 @@ class PanelEffectifsClasse(wx.Panel):
 #        self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
             
         # Nombre de groupes d'activité pratique
-        self.vNbActP = Variable("Nbr de groupes\n\"Activités pratiques\"",  
+        self.vNbActP = Variable("Nbr de groupes\n%s" %ref.effectifs["P"][1],  
                             lstVal = classe.nbrGroupes['P'], 
                             typ = VAR_ENTIER_POS, bornes = [2,20])
         self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
-                                help = "Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20*SSCALE, 
+                                help = "Nombre de groupes %s par groupe %s" %(ref.effectifs["P"][1], ref.effectifs["G"][1]), 
+                                sizeh = 20*SSCALE, 
                                 color = self.coulAP, scale = SSCALE)
+        self.cNbActP.SetBackgroundColour('white')
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
         self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
@@ -7583,8 +7608,8 @@ class PanelEffectifsClasse(wx.Panel):
         
         
         # Illustration de la répartition
-        self.bmp = StaticBitmapZoom(self, -1, size = (320*SSCALE, 46*SSCALE))
-        bsizerClasse.Add(self.bmp, flag = wx.EXPAND)
+#         self.bmp = StaticBitmapZoom(self, -1, size = (400*SSCALE, 80*SSCALE))
+        self.bmp = wx.StaticBitmap(self, -1, size = (400*SSCALE, 80*SSCALE))
         
         self.lstBoxEffRed = []
         self.lstBoxEP = []
@@ -7594,8 +7619,10 @@ class PanelEffectifsClasse(wx.Panel):
         
         self.MiseAJourNbrEleve()
 
-        border = wx.BoxSizer()
-        border.Add(bsizerClasse, 1, wx.EXPAND)
+        border = wx.BoxSizer(wx.HORIZONTAL)
+        border.Add(bsizerClasse, flag = wx.EXPAND)
+        border.Add(self.bmp, 1, flag = wx.EXPAND|wx.ALL, border = 3)
+        
         self.SetSizer(border)
 
     
@@ -7676,7 +7703,8 @@ class PanelEffectifsClasse(wx.Panel):
             self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
         
         try: # py3 : pas trouvé mieux pour éviter les MemoryError
-            self.bmp.SetLargeBitmap(self.getBitmapClasse(640))
+#             self.bmp.SetLargeBitmap(self.getBitmapClasse(1200))
+            self.bmp.SetBitmap(self.getBitmapClasse(900))
         except:
             pass
         
@@ -9599,8 +9627,9 @@ class PanelPropriete_Seance(PanelPropriete):
             self.titreEff.Destroy()
             del self.cbEff
             del self.titreEff
-        
-        if self.seance.typeSeance in list(ref.effectifsSeance.keys()):
+        print("ref.effectifsSeance", ref.effectifsSeance)
+        if self.seance.typeSeance in ref.effectifsSeance.keys() \
+                and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
             titre = wx.StaticText(self.pageGen, -1, "Effectif : ")
             
             cbEff = wx.ComboBox(self.pageGen, -1, "",
@@ -9923,7 +9952,9 @@ class PanelPropriete_Seance(PanelPropriete):
             for s in self.seance.systemes:
 #                print "   ", type(s), "---", s
                 v = VariableCtrl(self.pageGen, s, signeEgal = False, 
-                                 slider = False, fct = None, help = "", sizeh = 30*SSCALE, scale = SSCALE)
+                                 slider = False, fct = None, help = "", 
+                                 sizeh = 30*SSCALE, scale = SSCALE)
+                v.SetHelp("Indiquer le nombre de %s nécessaires" %s.data.nom)
                 self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
                 self.systemeCtrl.append(v)
@@ -13793,7 +13824,10 @@ class ArbreSavoirs(HTL.HyperTreeList):
                 if i.IsChecked():
                     return False
             if niveau >= 3:
-                self.Collapse(branche)
+                try: # RuntimeError: wrapped C/C++ object of type TreeListMainWindow has been deleted
+                    self.Collapse(branche)
+                except:
+                    pass
             return True
         
         unselectAll(self.root)
