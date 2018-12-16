@@ -1852,12 +1852,19 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
         
     ctx.stroke ()
     
+def surbrillance(ctx, x, y, w, h):
+    ctx.rectangle(x, y, w, h)
+    ctx.set_source_rgba (1,1,0.3, 0.3)
+    ctx.fill_preserve ()
+    ctx.set_source_rgba (1,1,0.3, 1)
+    ctx.stroke ()
+    
     
 def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.rectangle(x, y, w, h)
-    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], alpha)
+    ctx.set_source_rgba (*coulInter[:3], alpha)
     ctx.fill_preserve ()
-    ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
+    ctx.set_source_rgba (*coulBord[:3], alpha)
     ctx.stroke ()
 
 
@@ -1869,9 +1876,9 @@ def rectangle_plein_biseau(ctx, x, y, w, h, b, coulBord, coulInter, alpha = 1):
     ctx.line_to(x+b, y)
     
     
-    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], alpha)
+    ctx.set_source_rgba (*coulInter[:3], alpha)
     ctx.fill_preserve ()
-    ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
+    ctx.set_source_rgba (*coulBord[:3], alpha)
     ctx.stroke ()
     
     

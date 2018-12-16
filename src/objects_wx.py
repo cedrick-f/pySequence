@@ -4144,7 +4144,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4239,9 +4239,14 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
     #############################################################################            
     def CentrerSur(self, obj):
         if hasattr(obj, 'rect'):
-            y = (obj.rect[0][1])*self.GetVirtualSizeTuple()[1]
-            self.Scroll(0, y/20/draw_cairo.COEF)
-            self.Refresh()
+            print("CentrerSur", obj)
+            self.GetDoc().surbrillance = obj
+            self.Redessiner()
+            if len(obj.rect) > 0:
+                y = (obj.rect[0][1])*self.GetVirtualSize()[1]
+                self.Scroll(0, y/20/draw_cairo.COEF)
+                self.Refresh()
+            self.GetDoc().surbrillance = None
     
     
     #############################################################################            
@@ -4385,7 +4390,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4396,7 +4401,6 @@ class BaseFiche(wx.ScrolledWindow):
         self.t = None
         self.w, self.h = self.GetVirtualSize()
         self.buffer = wx.Bitmap(self.w, self.h)
-        
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
@@ -4472,9 +4476,12 @@ class BaseFiche(wx.ScrolledWindow):
     #############################################################################            
     def CentrerSur(self, obj):
         if hasattr(obj, 'rect'):
+            self.GetDoc().surbrillance = obj
+            self.Redessiner()
             y = (obj.rect[0][1])*self.GetVirtualSizeTuple()[1]
             self.Scroll(0, y/20/draw_cairo.COEF)
             self.Refresh()
+            self.GetDoc().surbrillance = None
     
     
     #############################################################################            

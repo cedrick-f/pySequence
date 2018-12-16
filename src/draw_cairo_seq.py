@@ -296,7 +296,7 @@ def DefinirZones(seq, ctx):
 #              }
     
     wEff = {"C" : tailleZSeances[0],
-             "I" : tailleZSeances[0]}
+            "I" : tailleZSeances[0]}
     for k in 'GDSEP':
         if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
             wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(ref.effectifs[k][4]) * 0.9
@@ -480,7 +480,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     # Affichage des CI sur la cible
     if seq.classe.referentiel.CI_cible:
         seq.zones_sens.append(Zone([posCib+tailleCib], obj = seq.CI))
-#        seq.CI.rect.append(())
+        seq.CI.rect = [posCib+tailleCib]
 
         rayons = {"F" : tailleCib[0] * 0.28, 
                   "S" : tailleCib[0] * 0.19, 
@@ -927,7 +927,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         seq.zones_sens.append(Zone([rectC], obj = seq.obj["C"]))
         seq.zones_sens.append(Zone([rectS], obj = seq.obj["S"]))
 #    seq.obj["C"].rect = 
-#    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
+        seq.obj["S"].rect = [rectS]
+        seq.obj["C"].rect = [rectC]
     
 
 
@@ -1096,7 +1097,7 @@ def Draw_CI(ctx, CI, seq):
     CI.pt_caract = (curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
                     'CI')
     seq.zones_sens.append(Zone([rect], obj = CI))
-#    CI.rect.append()
+    CI.rect.append(rect)
     
     
     
@@ -1166,7 +1167,7 @@ class Cadre():
         self.y = None   # Position en Y du cadre
         self.dy = None  # Position en Y relative de la ligne
         self.nf = 0     # Nombre de "frères" (pour calcul rayon boule
-#        self.seance.rect = []
+        self.seance.rect = []
         self.signEgal = signEgal
         
     def __repr__(self):
@@ -1187,6 +1188,7 @@ class Cadre():
         epaisseurTrait = 0.002 * COEF
         self.ctx.set_line_width(epaisseurTrait)
         self.ctx.set_dash(BStylSeance[self.seance.typeSeance], 0)
+        
         rectangle_plein(self.ctx, x, y, self.w, self.h, 
                         BCoulSeance[self.seance.typeSeance], ICoulSeance[self.seance.typeSeance], alpha)
         self.ctx.set_dash([], 0)
@@ -1199,7 +1201,7 @@ class Cadre():
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             c = self.seance.couleur
-            self.ctx.set_source_rgba (c[0], c[1], c[2], alpha)
+            self.ctx.set_source_rgba (*c[:3], alpha)
 #            hc = max(hHoraire/4, 0.01)
             hc = H_code()
             f, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
@@ -1246,7 +1248,7 @@ class Cadre():
         self.y = y
         
         self.seance.GetDocument().zones_sens.append(Zone([(x, y, self.w, self.h)], obj = self.seance))
-#        self.seance.rect.append([x, y, self.w, self.h])
+        self.seance.rect.append([x, y, self.w, self.h])
         
         return x + self.w, y + self.h
 
@@ -1259,16 +1261,26 @@ class Bloc():
         contenu = [[], [], ...]
         lignes
     """
-    def __init__(self):
+    def __init__(self, ctx, seance):
         self.contenu = []
+        self.ctx = ctx
+        self.seq = seance.GetDocument()
+        self.seance = seance
         self.x = None
         self.y = None
-        
+    
+    
+    def GetRect(self):
+        return (self.x, self.y, )
+    
+    
     
     def Draw(self, x, y):
 #        print self.contenu
         self.x = x
         self.y = y
+        xf = self.x
+        yf = self.y
         for ligne in self.contenu:
 #            print 
             x = self.x
@@ -1279,14 +1291,20 @@ class Bloc():
                     xf, yf = elem.Draw(x, y)
                     
                 elif isinstance(elem, Bloc):
-                    xf, yf = elem.Draw(x, y)
+                    xf, yf, w, h = elem.Draw(x, y)
                     
                 x = xf
                     
             if len(ligne) > 0:
                 y = yf
-
-        return x, y
+        
+        w = xf - self.x
+        h = yf - self.y
+        
+        if self.seq.surbrillance == self.seance:
+            surbrillance(self.ctx, self.x, self.y, w, h)
+            
+        return x, y, w, h
     
     
     def DrawCroisement(self, estRotation):
@@ -1390,8 +1408,9 @@ def DrawSeanceRacine(ctx, seance):
     #
     def getBloc(seance, h, filigrane = False, decal = 0, nbr = 0, rotation = False):
         # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
+        seance.rect = []
         if not seance.typeSeance in ["R", "S", ""]:
-            bloc = Bloc()
+            bloc = Bloc(ctx, seance)
             seance.pts_caract = []
 #            if seance.typeSeance in ["AP", "ED", "P"]:
             l = []
@@ -1421,7 +1440,7 @@ def DrawSeanceRacine(ctx, seance):
         else:
             # Rotation : plusieurs lignes
             if seance.typeSeance == "R":           
-                bloc = Bloc()
+                bloc = Bloc(ctx, seance)
                 l0 = seance.GetListSousSeancesRot() # Liste des sous séances de la première colonne (têtes de ligne - foncé)
 #                print "l0 =", l0
                 for ss in l0[:seance.nbrRotations.v[0]]:
@@ -1448,7 +1467,7 @@ def DrawSeanceRacine(ctx, seance):
                 
             elif seance.typeSeance == "S":
                 n = len(seance.seances)
-                bloc = Bloc()
+                bloc = Bloc(ctx, seance)
                 bloc.contenu.append([])
 #                bloc.contenu.append(getLigne(seance, h))
                 for j, ss in enumerate(seance.seances):
@@ -1458,15 +1477,16 @@ def DrawSeanceRacine(ctx, seance):
                 
                 return bloc
             
-            return Bloc()
-        return Bloc()
+            return Bloc(ctx, seance)
+        return Bloc(ctx, seance)
 
     bloc = getBloc(seance, h)
     
 #    print "bloc :", bloc
 #    print "  ", cursY,
 #    y = cursY
-    x, cursY = bloc.Draw(posZSeances[0], cursY)
+    x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
+    seance.rect = [(x, cursY, w, h)]
     bloc.DrawCroisement(seance.typeSeance == "R") 
 #    for lbloc in blocs:
 #        
@@ -1604,9 +1624,8 @@ def DrawCroisementsDemarche(ctx, seance, y, w):
 #     boule(ctx, _x, y, r)
     
             seance.GetDocument().zones_sens.append(Zone([rect], obj = seance))
-    
-    
-#    seance.rect.append((_x -r , y - r, 2*r, 2*r))
+
+            seance.rect.append(rect)
 
 
 #####################################################################################  
