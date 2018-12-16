@@ -5849,35 +5849,38 @@
   </d_dicoSavoirs>
   <d_domaines />
   <d_effectifs>
-    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
       <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
     </l_C>
-    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="C" S_05="O">
       <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_G>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="G" S_05="N">
       <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
-    <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="">
+    <l_S S_00="Ens. Spécifique" S_01="Enseignement Spécifique" S_02="" S_04="C" S_05="N">
+      <l_03 F_00="102.0" F_01="114.0" F_02="34.0" />
+    </l_S>
+    <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="" S_04="G" S_05="N">
       <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
     </l_E>
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
       <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
     </l_P>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
   </d_effectifs>
   <d_effectifsSeance>
-    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_AP S_00="E" S_01="P" />
-    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
+    <l_AP S_00="S" S_01="E" S_02="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
     <l_DM S_00="I" />
-    <l_C S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
-    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_SA S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
-    <l_SS S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
-    <l_E S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_C S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
+    <l_SA S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
+    <l_SS S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
+    <l_E S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
     <l_R />
     <l_S />
   </d_effectifsSeance>
@@ -5924,7 +5927,7 @@
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeDomaines />
-  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
   <l_listeEnsSpecif S_00="AC" S_01="EE" S_02="ITEC" S_03="SIN" />
   <l_listeNivTaxo S_00="1.0" S_01="2.0" S_02="3.0" S_03="4.0" />
   <l_listeSpecialites S_00="I2D" S_01="IT" S_02="2I2D" S_03="PCM" />

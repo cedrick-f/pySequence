@@ -1067,7 +1067,7 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
 
 
 ######################################################################################  
-def DrawClasse(ctx, rect, classe):
+def DrawClasse2(ctx, rect, classe):
     """ Dessine la répartition des élèves dans la classe
          >> Renvoie la liste des rectangles des groupes
     """
@@ -1225,11 +1225,214 @@ def DrawClasse(ctx, rect, classe):
     return wEff, rects
 
 
+######################################################################################  
+def DrawClasse(ctx, rect, classe, complet = True):
+    """ Dessine la répartition des élèves dans la classe
+         >> Renvoie la liste des rectangles des groupes
+    """
+#     print("DrawClasse")
+#     print(classe.effectifs)
+#     print(classe.nbrGroupes)
+#     print(rect)
+    
+    ref = classe.GetReferentiel()
+    
+    ctx.set_line_width (0.001 * COEF)
+    
+    x, y, wt, ht = rect 
+    
+    rap = wt/ht
+    
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_NORMAL)
+    
+    ##########################################################################
+    # Dimentions (relatif)
+    #
+    # Ecart entre les cases
+    dy = 0.025#*45800/ht
+    dx = 0.025/rap#*45800/wt
+#     dz = 0.005/640*wt
+    
+    # Hauteur mini pour les rectangles
+    H = 0.1#*45800/ht
+    
+    # Espace pour écrire le texte au dessus des zones
+    htxt = 0.1#*45800/ht
+    
+    
+    ###########################################################################
+    # Calcul de la structure :
+    #
+    #  - format (exemple STI2D) :
+#     [{'G': [[{'D': [[],[(x,y,w,h), ...]]}, 
+#              {'E': [[],[(x,y,w,h), ...]]}, 
+#              {'P': [[],[(x,y,w,h), ...]]}],
+#             [(x,y,w,h), ...]]}, 
+#      {'S': [[],[(x,y,w,h), ...]]}]
+#     
+#     ref._effectifs :
+#         [{'G': [{'D': []}, 
+#                 {'E': []}, 
+#                 {'P': []}]}, 
+#          {'S': []}]
+    #classe.effectifs
+#     {'C': 36, 
+#      'G': [18, 18], 
+#      'D': [[9, 9], [9, 9]], 
+#      'S': [9, 9, 9, 9], 
+#      'E': [[5, 5, 4, 4], [5, 5, 4, 4]], 
+#      'P': [[3, 3, 2, 2, 2, 2, 2, 2], [3, 3, 2, 2, 2, 2, 2, 2]]}
+
+#     classe.divisions
+#     [{'C': [[36, [{'G': [[18, [{'D': [[9, []], [9, []]]}, 
+#                                {'E': [[5, []], [5, []], [4, []], [4, []]]}, 
+#                                {'P': [[3, []], [3, []], [2, []], [2, []], [2, []], [2, []], [2, []], [2, []]]}]], 
+#                          [18, [{'D': [[9, []], [9, []]]}, 
+#                                {'E': [[5, []], [5, []], [4, []], [4, []]]}, 
+#                                {'P': [[3, []], [3, []], [2, []], [2, []], [2, []], [2, []], [2, []], [2, []]]}]]]}, 
+#                   {'S': [[9, []], [9, []], [9, []], [9, []]]}]]]}]
+
+    #
+    # - largeur : 1.0, hauteur : auto
+    # 
+#     maxy = [0.1]
+    rectangles = []
+    def calcRect(lstdiv, rect, lstrec):
+        _x, _y, _w = rect   # position et largeur du rectangle contenant
+        _h = 0      # Hauteur (mini) du rectangle contenant
+        
+        for dic in lstdiv:
+            k, grp = list(dic.items())[0] # code et groupe (list)
+            rg = [] # liste de rectangles
+            lg = [] # liste de code (sous-groupe)
+            _h += dy
+            if complet: _h += htxt
+            
+            sh = 0
+            for n, g in enumerate(grp):
+                if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O": # Mêmes activités --> superposition
+                    R = [_x+dx+n*(dx), _y + _h, _w-2*dx-dx*len(grp)]
+                    _h += dy
+                else:                                                         # Activités différentes --> juxtaposition
+                    wg = (_w-2*dx)/classe.nbrGroupes[k]
+                    R = [_x+dx+n*wg, _y + _h, wg]
+                    
+                # Si superposition, on ne gerde que la couche du dessus
+                if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O" and n != len(grp)-1:
+                    lp = []
+                else:
+                    lp = lg
+                sh = max(H, calcRect(g[1], R[:3], lp))
+                
+                R.append(sh)
+                rg.append((g[0], R))
+            
+            _h += sh
+                    
+            _h += dy 
+        
+            lstrec.append({k: [lg, rg]})
+            
+#         maxy[0] = max(maxy[0], _y+_h)
+        
+        return _h
+    
+    h = calcRect(classe.divisions, [0, 0, 1.0], rectangles)
+#     print(h, "!= ?", maxy[0])
+#     rectangles = [{'C' : [rectangles, [(36,[0, htxt, 1.0, h])]]}]
+    
+    scale = wt, ht/h
+    
+#     print(scale, maxy[0])
+#     print(rectangles)
+    
+#     [{'C': [[{'G': [[{'D': [[], [(0.1, 0.74, 0.4, 0.2), (0.5, 0.74, 0.4, 0.2)]]}, 
+#                      {'E': [[], [(0.1, 0.74, 0.2, 0.2), (0.3, 0.74, 0.2, 0.2), (0.5, 0.74, 0.2, 0.2), (0.7, 0.74, 0.2, 0.2)]]}, 
+#                      {'P': [[], [(0.1, 0.74, 0.1, 0.2), (0.2, 0.74, 0.1, 0.2), (0.3, 0.74, 0.1, 0.2), (0.4, 0.74, 0.1, 0.2), (0.5, 0.74, 0.1, 0.2), (0.6, 0.74, 0.1, 0.2), (0.7, 0.74, 0.1, 0.2), (0.8, 0.74, 0.1, 0.2)]]}], 
+#                      [(0.05, 0.25, 0.9, 0.2), (0.07, 0.27, 0.9, 0.2)]]}, 
+#              {'S': [[], [(0.05, 0.25, 0.225, 0.2), (0.275, 0.25, 0.225, 0.2), (0.5, 0.25, 0.225, 0.2), (0.725, 0.25, 0.225, 0.2)]]}], [(0, 0.1, 1.0, 0.9)]]}]
+    
+    def rectanglePlein(x, y, w, h, coul):
+        ctx.set_line_width(e)
+        ctx.rectangle(x, y, w, h)
+        ctx.set_source_rgb(*[c*3.0 for c in coul[:3]])
+        ctx.fill_preserve ()
+        ctx.set_source_rgb(*coul[:3])      
+        ctx.stroke()
+    
+    ####################################################################################
+    # Tracé
+    
+    # Les rectangles à cliquer
+    rects = []
+    
+    # Epaisseur de ligne
+    e = wt/500
+    
+    # Taille de la police
+    f = htxt * scale[1]
+    
+    coulGrp = {k : couleur.CouleurInt2Float(ref.effectifs[k][3]) for k in ref.effectifs.keys()}
+#     print("coulGrp", coulGrp)
+    def tracRect(lst):
+        for dic in lst:
+            k, gr = list(dic.items())[0] # code et groupe-rect (list)
+            g, lstrl = gr
+#             print("   ", k, g, lstrl)
+            r0 = lstrl[0][1]    # premier rectangle
+            r1 = lstrl[-1][1]   # dernier rectangle
+            
+            # Grand rectangle pour titre
+            R = (x + r0[0]*scale[0],     y + (r0[1]-htxt)*scale[1], 
+                 (r1[0]+r1[2])*scale[0], htxt*scale[1])
+            
+            if complet:
+                ctx.set_source_rgb(*coulGrp[k][:3])
+                eff = classe.effectifs[k]
+#                 if type(eff) != list : eff = [eff]
+                t = ref.effectifs[k][1]# + " (" + "+".join([str(n) for n in eff])+ ")"
+                if type(eff) != list :
+                    t += " (" +str(eff)+ ")"
+                elif len(g) > 0:
+                    t += " (" + "+".join([str(n) for n in eff])+ ")"
+                show_text_rect_fix(ctx, t, *R,
+                                   f, Nlignes = 1, ha = 'g')
+            
+            for lab, r in lstrl: # label + rectangle
+                R = (r[0]*scale[0]+x, r[1]*scale[1]+y, r[2]*scale[0], r[3]*scale[1])
+                rectanglePlein(*R, coulGrp[k])
+                rects.append(R)
+                if complet and len(g) == 0:
+                    ctx.set_source_rgb(*coulGrp[k][:3])
+                    show_text_rect_fix(ctx, str(lab), *R, f*0.8, Nlignes = 1)
+                
+            tracRect(g)
+            
+    tracRect(rectangles)
+    
+    # Les positions des traits verticaux
+    wEff = {"C" : wt,
+#              "G" : wt*6/7,
+#              "D" : wt*5/7,
+#              "S" : wt*5/7,
+#              "E" : wt/classe.nbrGroupes['E']*6/7,
+#              "P" : wt/classe.nbrGroupes['P']*6/7
+             }
+    
+    for k in 'GDSEP':
+        if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
+            wEff[k] = wt * classe.GetEffectifNorm(ref.effectifs[k][4]) * 0.9
+        else:
+            wEff[k] = wt * classe.GetEffectifNorm(k) * classe.nbrGroupes[k]
+    
+    
+    
+    return wEff, rects
 
 
 
-
-def getBitmapClasse(larg, classe):
+def getBitmapClasse2(larg, classe):
 #     print("getBitmapClasse", larg)
     prop = 7.0
     w, h = 0.04*prop * COEF, 0.04 * COEF
@@ -1243,7 +1446,21 @@ def getBitmapClasse(larg, classe):
 #     ctx.paint()
     DrawClasse(ctx, (0,0,w,h), classe)
     
-    
+    return imagesurface
+
+
+def getBitmapClasse(W, H, classe):
+#     print("getBitmapClasse", W, H)
+    w, h = 0.04*W * COEF, 0.04 *H* COEF
+#     print(w, h)
+#     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24,  W, H)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    ctx.scale(W/w, W/w) 
+    ctx.set_source_rgba(1,1,1,1)
+    ctx.paint()
+#     ctx.paint()
+    DrawClasse(ctx, (0,0,w,h), classe)
     
     return imagesurface
 

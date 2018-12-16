@@ -1627,8 +1627,9 @@ class Referentiel(XMLelem):
             if sh_g.cell(l,0).value != "":
                 self.effectifs[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
                                         sh_g.cell(l,3).value, 
-                                        getbgcoul(wb, sh_g, l, 4, constantes.CouleursGroupes[code])
-                                        ]
+                                        getbgcoul(wb, sh_g, l, 4, constantes.CouleursGroupes[code]),
+                                        sh_g.cell(l,5).value, sh_g.cell(l,6).value]
+                    
                 self.listeEffectifs.append(code)
 
         # Systèmes
@@ -1732,6 +1733,33 @@ class Referentiel(XMLelem):
             if len(l) < 3:
                 l.append(Grammaire(l[0]))
 
+        # Valeurs par défaut pour effectifs (version >= 8)
+        for code in 'GDSEP':
+            if not code in self.effectifs.keys():
+                self.effectifs['S'] = [*self.effectifs['G']]
+                self.effectifs['S'][4] = constantes.SubdivGrp['S']
+                self.effectifs['S'][5] = constantes.MmActiv['S']
+            elif len(self.effectifs[code]) == 4:
+                self.effectifs[code].append(constantes.SubdivGrp[code])
+                self.effectifs[code].append(constantes.MmActiv[code])
+        
+                    
+        # Les effectifs sous forme arborescente
+        # exemple 'STI2D.xls' :
+#         [{'G': [{'D': []}, 
+#                 {'E': []}, 
+#                 {'P': []}]}, 
+#          {'S': []}]
+        self._effectifs = []
+        def eff(l, k0):
+            for k, e in self.effectifs.items():
+                if k != "I" and len(e) > 4 and e[4] == k0:
+                    ll = []
+                    eff(ll, k)
+                    l.append({k: ll})
+        eff(self._effectifs, "C")
+#         print(self, "_effectifs", self._effectifs)
+        
         for c in self.dicoCompetences.values():
             c.postTraiter()
         

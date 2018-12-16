@@ -219,6 +219,8 @@ def DefinirZones(seq, ctx):
         en fonction du nombre d'éléments (séances, systèmes)
     """
     global wEff, a, b , ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
+    ref = seq.GetReferentiel()
+    
     #hHoraire
     # Zone de commentaire
     if seq.commentaires == "":
@@ -282,16 +284,26 @@ def DefinirZones(seq, ctx):
     # Zone des séances
     tailleZSeances[0] = tailleZDeroul[0] - ecartX# - largeFlecheDuree - ecartX - bordureZOrganis#0.05 # écart pour les durées
     tailleZSeances[1] = tailleZSysteme[1] - posZSeances[1] + posZDeroul[1] - 0.05 * COEF
-    wEff = {"C" : tailleZSeances[0],
-             "G" : tailleZSeances[0]*6/7,
-             "D" : tailleZSeances[0]*3/7,
-             "E" : tailleZSeances[0]/seq.classe.nbrGroupes['E']*6/7,
-             "P" : tailleZSeances[0]/seq.classe.nbrGroupes['P']*6/7,
-             "I" : tailleZSeances[0]
-#             "E" : tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
-#             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
-             }
+#     wEff = {"C" : tailleZSeances[0],
+#              "G" : tailleZSeances[0]*6/7,
+#              "D" : tailleZSeances[0]*3/7,
+#              "S" : tailleZSeances[0]/seq.classe.nbrGroupes['E']*6/7,
+#              "E" : tailleZSeances[0]/seq.classe.nbrGroupes['E']*6/7,
+#              "P" : tailleZSeances[0]/seq.classe.nbrGroupes['P']*6/7,
+#              "I" : tailleZSeances[0]
+# #             "E" : tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
+# #             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
+#              }
     
+    wEff = {"C" : tailleZSeances[0],
+             "I" : tailleZSeances[0]}
+    for k in 'GDSEP':
+        if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
+            wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(ref.effectifs[k][4]) * 0.9
+        else:
+            wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(k) * seq.classe.nbrGroupes[ref.effectifs[k][4]]
+            
+            
 #    print "durées :"
     ecartSeanceY = 0.006 * COEF    # écart mini entre deux séances
     hmin = 0.016   * COEF           # hauteur minimum d'une séance
@@ -580,7 +592,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     if not entete:
         wEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
                                        tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
-                                 seq.classe)
+                                 seq.classe, complet = False)
+        
+        seq.zones_sens.append(Zone(rects, obj = seq.classe))
         
         for i, e in enumerate(["C", "G", "D", "E", "P"]):
             x = posZSeances[0]

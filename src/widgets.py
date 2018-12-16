@@ -451,9 +451,17 @@ class Variable:
         # Si la variable fait partie d'une expression
         self.expression = expression
         
+    
+    #########################################################################################################
     def __repr__(self):
         return self.n+" = "+str(self.v)+"("+str(self.t)+")"
 
+
+    #########################################################################################################
+    def GetData(self):
+        return self.data
+        
+        
     #########################################################################################################
     def redefBornes(self, bornes):
         self.bornes = bornes
@@ -464,12 +472,14 @@ class Variable:
                 self.v[n]  = self.bornes[0]
 
 
+    #########################################################################################################
     def Augmenter(self, coef = 1):
         if self.t == VAR_ENTIER or self.t == VAR_ENTIER_POS or not self.modeLog:
             for n in range(len(self.v)):
                 if self.EstValide(self.v[n] + coef):
                     self.v[n] += coef
             
+    #########################################################################################################
     def Diminuer(self, coef = 1):
         if self.t == VAR_ENTIER or self.t == VAR_ENTIER_POS or not self.modeLog:
             for n in range(len(self.v)):
@@ -482,10 +492,14 @@ class Variable:
         if self.EstValide(val):
             self.v[num] = val
         
+        
+    #########################################################################################################
     def ChangerSigne(self):
         for n in range(len(self.v)):
             self.v[n] = -self.v[n]
             
+            
+    #########################################################################################################
     def EstValideStr(self, val):
 #        print "validStr?",val, type(val), eval(val)
         
@@ -500,6 +514,7 @@ class Variable:
             return False, None
         except:
             return False, None    
+        
         
     #########################################################################################################
     def EstValide(self, val):
@@ -526,6 +541,8 @@ class Variable:
         
         return False
     
+    
+    #########################################################################################################
     def EstDansBornes(self, v):
         return      (self.bornes[0] == None or v >= self.bornes[0]) \
                 and (self.bornes[1] == None or v <= self.bornes[1])
@@ -913,6 +930,10 @@ class VariableCtrl(wx.Panel):
             self.text.SetToolTip(self.help)
             self.spin.SetToolTip(self.help)
         
+        
+    #########################################################################################################
+    def SetForegroundColour(self, color):
+        self.txtnom.SetForegroundColour(color)
         
         
     #########################################################################################################

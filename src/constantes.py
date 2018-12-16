@@ -380,6 +380,7 @@ TYPE_ENSEIGNEMENT_DEFAUT = "SSI"
 Effectifs = {"C" : 36,
              "G" : None,
              "D" : None, 
+             "S" : None, 
              "E" : None, 
              "P" : None,
              }
@@ -387,13 +388,30 @@ Effectifs = {"C" : 36,
 
 
 NbrGroupes = {"G" : 2, # Par classe
+              "D" : 2, # Par classe
+              "S" : 4, # Par classe
               "E" : 4, # Par grp Eff réduit
               "P" : 8, # Par grp Eff réduit
+              }
+
+SubdivGrp  = {"G" : "C", # Par classe
+              "D" : "G", # Par classe
+              "S" : "C", # Par classe
+              "E" : "G", # Par grp Eff réduit
+              "P" : "G", # Par grp Eff réduit
+              }
+
+MmActiv    = {"G" : "O", 
+              "D" : "N", 
+              "S" : "N", 
+              "E" : "N", 
+              "P" : "N", 
               }
 
 CouleursGroupes = {"C" : (77 , 77 , 179),
                    "G" : (102, 127, 102),
                    "D" : (179, 77 , 77),
+                   "S" : (226 , 107, 10),
                    "E" : (77 , 127, 127), 
                    "P" : (127, 77 , 127), 
                    "I" : (0  , 0  , 0), 
@@ -451,15 +469,56 @@ def partitionne(total, ngroupe):
             lst.append(partitionne(tot, ngroupe))
         return lst
         
-
-
-def calculerEffectifs(classe):
-    classe.effectifs['G'] = partitionne(classe.effectifs['C'], classe.nbrGroupes['G'])
-    classe.effectifs['D'] = partitionne(classe.effectifs['G'], 2)
-    classe.effectifs['E'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['E'])
-    classe.effectifs['P'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['P'])
+# def calculerEffectifs2(classe):
+#     classe.effectifs['G'] = partitionne(classe.effectifs['C'], classe.nbrGroupes['G'])
+#     classe.effectifs['D'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['D'])
+#     classe.effectifs['E'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['E'])
+#     classe.effectifs['P'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['P'])
     
 
+def calculerEffectifs(classe):
+#     print("calculerEffectifs")
+    ref = classe.GetReferentiel()
+
+#     ref._effectifs :
+#         [{'G': [{'D': []}, 
+#                 {'E': []}, 
+#                 {'P': []}]}, 
+#          {'S': []}]
+    
+    def calc(lst, k0, eff):
+        ll = []
+        for dic in lst:
+#             print("   ", dic)
+            k, g = list(dic.items())[0]
+            if classe.nbrGroupes[k] > 0:
+    #             print("   ", k, g)
+                l = []
+                for p in partitionne(eff, classe.nbrGroupes[k]):
+                    l.append([p, calc(g, k, p)])
+                ll.append({k: l})
+        return ll
+    
+    classe.divisions = [{"C":[[classe.effectifs['C'], calc(ref._effectifs, 'C', classe.effectifs['C'])]]}]
+    
+#     print("classe.divisions :\n", classe.divisions)
+#     [{'C': [[36, [{'G': [[18, [{'D': [[9, []], [9, []]]}, 
+#                                {'E': [[5, []], [5, []], [4, []], [4, []]]}, 
+#                                {'P': [[3, []], [3, []], [2, []], [2, []], [2, []], [2, []], [2, []], [2, []]]}]], 
+#                          [18, [{'D': [[9, []], [9, []]]}, 
+#                                {'E': [[5, []], [5, []], [4, []], [4, []]]}, 
+#                                {'P': [[3, []], [3, []], [2, []], [2, []], [2, []], [2, []], [2, []], [2, []]]}]]]}, 
+#                   {'S': [[9, []], [9, []], [9, []], [9, []]]}]]]}]
+
+    
+    
+    for k in 'GDSEP':
+#         print("   ", k, ref.effectifs[k])
+        if classe.nbrGroupes[k] > 0:
+            classe.effectifs[k] = partitionne(classe.effectifs[ref.effectifs[k][4]], classe.nbrGroupes[k])
+        else:
+            classe.effectifs[k] = []
+    
     
 # Calcul inverse UNIQUEMENT POUR COMPATIBILITE !!
 def revCalculerEffectifs(classe, effG, effE, effP):
@@ -905,7 +964,6 @@ BASE_FICHE_HTML_ELEVE = """
     
 """
 
-
 BASE_FICHE_HTML_GROUPE = """
     <p style="text-align: center;"><font size="12"><b>Groupe</b></font></p>
     <p id="nom">Nom-Prénom</p>
@@ -917,6 +975,12 @@ BASE_FICHE_HTML_GROUPE = """
             </tr>
         </tbody>
     </table>
+"""
+
+
+BASE_FICHE_HTML_CLASSE = """
+    <img id="eff" src="" alt=" ">
+    
 """
 
 BASE_FICHE_HTML_SEANCE = """

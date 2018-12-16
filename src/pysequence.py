@@ -1005,7 +1005,7 @@ class Classe(ElementBase):
         self.ville = ""
         self.etablissement = ""
         self.effectifs = {}
-        self.nbrGroupes = {}
+        self.nbrGroupes = {'C' : 1}
         self.systemes = []
         
         
@@ -1061,9 +1061,12 @@ class Classe(ElementBase):
         self.specialite = ""
         
         self.effectifs['C'] = constantes.Effectifs["C"]
-        self.nbrGroupes = {"G" : constantes.NbrGroupes["G"],
-                           "E" : constantes.NbrGroupes["E"],
-                           "P" : constantes.NbrGroupes["P"]}
+        self.nbrGroupes = { "C" : 1,
+                            "G" : constantes.NbrGroupes["G"],
+                            "S" : constantes.NbrGroupes["S"],
+                            "E" : constantes.NbrGroupes["E"],
+                            "P" : constantes.NbrGroupes["P"],
+                            "D" : 2}
         
         self.academie = ""
         self.ville = ""
@@ -1153,6 +1156,7 @@ class Classe(ElementBase):
         eff = ET.SubElement(classe, "Effectifs")
         eff.set('eC', str(self.effectifs['C']))
         eff.set('nG', str(self.nbrGroupes['G']))
+        eff.set('nS', str(self.nbrGroupes['S']))
         eff.set('nE', str(self.nbrGroupes['E']))
         eff.set('nP', str(self.nbrGroupes['P']))
                      
@@ -1323,6 +1327,7 @@ class Classe(ElementBase):
         else:
             self.effectifs['C'] = eval(brancheEff.get('eC', "1"))
             self.nbrGroupes['G'] = eval(brancheEff.get('nG', "1"))
+            self.nbrGroupes['S'] = eval(brancheEff.get('nS', "1"))
             self.nbrGroupes['E'] = eval(brancheEff.get('nE', "1"))
             self.nbrGroupes['P'] = eval(brancheEff.get('nP', "1"))
             calculerEffectifs(self)
@@ -1374,26 +1379,72 @@ class Classe(ElementBase):
         else:
             return self.GetReferentiel().Enseignement[1]
         
+    
+    ######################################################################################  
+    def GetEffectifNorm2(self, eff):
+        """ Renvoie les effectifs des groupes sous forme normalisée (de 0.0 à 1.0)
+            (portion de classe entière)
+        """
+        if eff == 'C':
+            return 1.0
+        
+        elif eff == 'G':
+            return 1.0 / self.nbrGroupes['G']
+        
+        elif eff == 'D':
+            return self.GetEffectifNorm('G') / 2
+        
+        elif eff == 'E':
+            return self.GetEffectifNorm('G') / self.nbrGroupes['E']
+        
+        elif eff == 'P':
+            return self.GetEffectifNorm('G') / self.nbrGroupes['P']
+        
+        elif eff == 'I':
+            return 1 / self.effectifs['C']
+        
+        else:
+            print("ERREUR", eff)
         
     ######################################################################################  
     def GetEffectifNorm(self, eff):
         """ Renvoie les effectifs des groupes sous forme normalisée (de 0.0 à 1.0)
             (portion de classe entière)
         """
+        ref = self.GetReferentiel()
+        
         if eff == 'C':
             return 1.0
-        elif eff == 'G':
-            return 1.0 / self.nbrGroupes['G']
-        elif eff == 'D':
-            return self.GetEffectifNorm('G') / 2
-        elif eff == 'E':
-            return self.GetEffectifNorm('G') / self.nbrGroupes['E']
-        elif eff == 'P':
-            return self.GetEffectifNorm('G') / self.nbrGroupes['P']
+        
         elif eff == 'I':
-            return 1 / self.effectifs['C']
+            return 1.0 / self.effectifs['C']
+        
         else:
-            print("ERREUR", eff)
+            if self.nbrGroupes[eff] > 0:
+                return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes[eff]
+            else:
+                return 0
+        
+        
+#         elif eff == 'G':
+#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['G']
+#         
+#         elif eff == 'D':
+#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['D']
+#         
+#         elif eff == 'S':
+#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['S']
+#         
+#         elif eff == 'E':
+#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['E']
+#         
+#         elif eff == 'P':
+#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['P']
+#         
+#         elif eff == 'I':
+#             return 1.0 / self.effectifs['C']
+        
+        
         
         
     ######################################################################################  
@@ -1439,6 +1490,16 @@ class Classe(ElementBase):
                                                        prop = 7)
         return getBitmapFromImageSurface(imagesurface)
     
+    
+    #############################################################################            
+    def getBitmapEffectifs(self, W, H):
+#         return wx.Bitmap(larg, larg)
+        imagesurface = draw_cairo.getBitmapClasse(W, H, self)
+
+        return getBitmapFromImageSurface(imagesurface)
+    
+    
+    
     ######################################################################################  
     def Verrouiller(self, etat):
 #        print "verrouiller classe", etat
@@ -1458,8 +1519,22 @@ class Classe(ElementBase):
             self.codeBranche.SetToolTip(message)
             self.codeBranche.Refresh()
 
+    ######################################################################################  
+    def GetFicheHTML(self, param = None):
+        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CLASSE)
+    
+    
+    
+    ######################################################################################  
+    def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
+        bmp = self.getBitmapEffectifs(800, 400)
+        self.tip.SetHTML(self.GetFicheHTML())
 
-
+        self.tip.AjouterImg("eff", bmp)
+            
+        self.tip.SetPage()
 
 
 ####################################################################################################

@@ -6440,40 +6440,37 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.BeginRepositioningChildren()
         self.SetupScrolling(scroll_x = False, scroll_y = False)
         
+        ref = self.classe.GetReferentiel()
+        bg_color = self.Parent.GetBackgroundColour()
+        
+        nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+        
         #
         # La page "Généralités"
         #
-        nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
         pageGen = PanelPropriete(nb, objet = classe)
-        bg_color = self.Parent.GetBackgroundColour()
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
-        
         nb.AddPage(pageGen, "Propriétés générales")
+
 
         #
         # la page "Découpage de la classe"
         #
-        ref = self.classe.GetReferentiel()
         pageDec = PanelPropriete(nb, objet = classe)
         pageDec.SetBackgroundColour(bg_color)
         nb.AddPage(pageDec, "Découpage de la classe")
         self.pageDec = pageDec
         
         
-        
         #
         # la page "Systèmes"
         #
-        ref = self.classe.GetReferentiel()
         pageSys = PanelPropriete(nb, objet = classe)
         pageSys.SetBackgroundColour(bg_color)
-        nb.AddPage(pageSys, ref._nomSystemes.plur_())
         self.pageSys = pageSys
+        nb.AddPage(pageSys, ref._nomSystemes.plur_())
 
-        
-       
-        
         
         self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
         self.nb = nb
@@ -7027,8 +7024,7 @@ class PanelPropriete_Classe(PanelPropriete):
         ref = self.classe.GetReferentiel()
         
         # Mise à jour l'onglet Systèmes
-        self.nb.SetPageText(1, ref._nomSystemes.plur_())
-        self.pageSys
+        self.nb.SetPageText(2, ref._nomSystemes.plur_())
         self.btnAjouterSys.SetLabel("Ajouter %s" %et2ou(ref._nomSystemes.un_()))
         self.btnAjouterSys.SetToolTip("Ajouter %s à la liste" %et2ou(ref._nomSystemes.un_("nouveau")))
         
@@ -7055,6 +7051,9 @@ class PanelPropriete_Classe(PanelPropriete):
         
         # Modification des onglet du classeur
         self.GetFenetreDoc().MiseAJourTypeEnseignement()
+        self.ec.MiseAJourTypeEnseignement()
+        
+        
         
         self.Refresh()
         
@@ -7495,9 +7494,241 @@ class PanelEffectifsClasse(wx.Panel):
         
         :Example:
         
-        listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+        listeEffectifs = ["C", "G", "D" ,"S", "E" ,"P"]
+        NbrGroupes =   {"G" : 2, # Par classe
+                        "E" : 2, # Par grp Eff réduit
+                        "S" : 3, # Par classe
+                        "P" : 4, # Par grp Eff réduit
+                        }
+                        
+        Les effectifs sous forme arborescente
+        exemple 'STI2D.xls' :
+        [{'G': [{'D': []}, 
+                {'E': []}, 
+                {'P': []}]}, 
+         {'S': []}, 
+         {'I': []}]
+                      
+    """
+    def __init__(self, parent, classe):
+        wx.Panel.__init__(self, parent, -1)
+        self.classe = classe
+        
+        #
+        # Box "Classe"
+        #
+        self.boxClasse = scrolled.ScrolledPanel(self, -1, style = wx.BORDER_SUNKEN)
+        self.boxClasse.SetupScrolling(scroll_x = False)
+        self.boxClasse.SetAutoLayout(True)
+        
+        self.bsizerClasse = wx.BoxSizer(wx.VERTICAL)
+        
+        self.tClasse = wx.StaticText(self.boxClasse, -1, "")
+        self.bsizerClasse.Add(self.tClasse, flag = wx.ALL|wx.EXPAND, border = 5)
+        
+        #
+        # Effectif de la classe
+        #
+        self.vEffClas = Variable("",  
+                                 lstVal = self.classe.effectifs['C'], 
+                                 typ = VAR_ENTIER_POS, bornes = [4,80],
+                                 data = "C")
+        self.cEffClas = VariableCtrl(self.boxClasse, self.vEffClas, coef = 1, signeEgal = False, 
+                                     sizeh = 30*SSCALE,
+                                     scale = SSCALE)
+        
+        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
+        self.bsizerClasse.Add(self.cEffClas, flag = wx.BOTTOM|wx.LEFT|wx.RIGHT|wx.EXPAND, border = 5)
+        
+        self.boxClasse.SetSizer(self.bsizerClasse)
+        
+        
+        # Illustration de la répartition
+        self.pnlImg = wx.Panel(self, -1)
+        self.bmp = wx.StaticBitmap(self.pnlImg, -1)#, size = (400*SSCALE, 80*SSCALE))
+        
+        sizer = wx.BoxSizer()
+        sizer.Add(self.bmp)
+        self.pnlImg.SetSizerAndFit(sizer)
+        
+        self.MiseAJourTypeEnseignement()
+        
+        self.MiseAJourNbrEleve()
+
+        border = wx.BoxSizer(wx.HORIZONTAL)
+        border.Add(self.boxClasse, flag = wx.EXPAND|wx.ALL, border = 3)
+        border.Add(self.pnlImg, 1, flag = wx.EXPAND|wx.ALL, border = 3)
+        
+        self.SetSizer(border)
+        self.Layout()
+        
+        self.Bind(wx.EVT_SIZE, self.Onsize)
+        
+
+    #############################################################################            
+    def Onsize(self, event = None):
+        wp, hp = self.pnlImg.GetSize()
+#         print("Onsize", wp, hp)
+        if wp > 0 and hp > 0:
+            self.bmp.SetBitmap(self.classe.getBitmapEffectifs(wp, hp))
+        
+        self.Refresh()
+        
+        if event is not None:
+            event.Skip()
+        
+        
+        
+        
+    ######################################################################################  
+    def MiseAJourTypeEnseignement(self):
+        ref = self.classe.GetReferentiel()
+        
+        # couleurs
+        coulGrp = {k : couleur.GetCouleurWx(ref.effectifs[k][3], bytes = True) for k in ref.effectifs.keys()}
+        
+        self.tClasse.SetLabel(ref.effectifs["C"][1])
+        self.boxClasse.SetBackgroundColour(coulGrp["C"].ChangeLightness(180))
+        self.boxClasse.SetForegroundColour(coulGrp["C"])
+            
+        #
+        # Effectif de la classe
+        #
+        self.vEffClas.n = "Nombre %s" %ref.labels["ELEVES"][2].de_plur_()
+        self.cEffClas.Renommer(self.vEffClas.n)
+        self.cEffClas.SetBackgroundColour(coulGrp['C'].ChangeLightness(180))
+        self.cEffClas.SetForegroundColour(coulGrp["C"])
+        self.cEffClas.SetHelp("Nombre %s dans la %s" %(ref.labels["ELEVES"][2].de_plur_(),ref.effectifs["C"][1]))
+        
+
+        # widgets + variables
+        if hasattr(self, "_widgets"):
+            for w in self._widgets:
+                try:
+                    w.Destroy()
+                except:
+                    pass
+        self._widgets = []
+#         if hasattr(self, "cNbGrp"):
+#             for c in self.cNbGrp.values():
+#                 c.Destroy()
+        self.vNbGrp = {}
+        self.cNbGrp = {}
+        
+        def construire(lst, k0, pnl):
+            for dic in lst:
+                k, g = list(dic.items())[0]
+                sb = wx.Panel(pnl, -1, style = wx.BORDER_RAISED)
+                st = wx.StaticText(sb, -1, ref.effectifs[k][1])
+                sb.SetOwnBackgroundColour(coulGrp[k].ChangeLightness(180))
+                sb.SetForegroundColour(coulGrp[k])
+                bs = wx.BoxSizer(wx.VERTICAL)
+                bs.Add(st, flag = wx.ALL|wx.EXPAND, border = 2)
+                
+                self.vNbGrp[k] = Variable("Nbr de groupes",  
+                                          lstVal = self.classe.nbrGroupes[k], 
+                                          typ = VAR_ENTIER_POS, bornes = [0,40],
+                                          data = k)
+                self.cNbGrp[k] = VariableCtrl(sb, self.vNbGrp[k], coef = 1, signeEgal = False,
+                                              help = "Nombre de groupes %s au sein du groupe %s" %(ref.effectifs[k][1], ref.effectifs[k0][1]), 
+                                              sizeh = 20*SSCALE, color = coulGrp[k],
+                                              scale = SSCALE)
+                self.cNbGrp[k].SetBackgroundColour(coulGrp[k].ChangeLightness(180))
+                self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbGrp[k])
+                bs.Add(self.cNbGrp[k], flag = wx.BOTTOM|wx.LEFT|wx.RIGHT|wx.EXPAND, border = 5)
+                sb.SetSizer(bs)
+                self._widgets.append(sb)
+                
+                pnl.GetSizer().Add(sb, flag = wx.ALL|wx.EXPAND, border = 5)
+                
+                construire(g, k, sb)
+                    
+        construire(ref._effectifs, "C", self.boxClasse)
+        
+#         self.boxClasse.Layout()
+
+        wx.CallAfter(self.Layout)
+        
+        
+#     #############################################################################            
+#     def getBitmapClasse(self, W, H):
+# #         return wx.Bitmap(larg, larg)
+#         imagesurface = draw_cairo.getBitmapClasse(W, H, self.classe)
+# 
+#         return getBitmapFromImageSurface(imagesurface)
+    
+    
+    #############################################################################            
+    def EvtVariableEff(self, event):
+        
+        var = event.GetVar()
+        if var == self.vEffClas:
+            self.classe.effectifs['C'] = var.v[0]
+        else:
+            k = var.GetData()
+#             print("EvtVariableEff", k, var.v[0])
+            self.classe.nbrGroupes[k] = var.v[0]
+        
+#        
+#         elif var == self.vNbERed:
+#             self.classe.nbrGroupes['G'] = var.v[0]
+#         elif var == self.vNbEtPr:
+#             self.classe.nbrGroupes['S'] = var.v[0]
+#         elif var == self.vNbEtPr:
+#             self.classe.nbrGroupes['E'] = var.v[0]
+#         elif var == self.vNbActP:
+#             self.classe.nbrGroupes['P'] = var.v[0]
+        
+        calculerEffectifs(self.classe)
+            
+        self.classe.GetApp().sendEvent(self.classe, modif = "Modification du découpage de la Classe",
+                              obj = self.classe)
+#        self.AjouterGroupesVides()
+        self.MiseAJourNbrEleve()
+        
+
+        
+    
+    def MiseAJourNbrEleve(self):
+        self.Onsize()
+#         if int(wx.version()[0]) > 2:
+#             self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
+#         else:
+#             self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
+        
+#         try: # py3 : pas trouvé mieux pour éviter les MemoryError
+# #             self.bmp.SetLargeBitmap(self.getBitmapClasse(1200))
+#             self.bmp.SetBitmap(self.getBitmapClasse(900))
+#         except:
+#             pass
+        
+        
+        
+    def MiseAJour(self):
+        self.vEffClas.v[0] = self.classe.effectifs['C']
+        for k, v in self.vNbGrp.items():
+            v.v[0] = self.classe.nbrGroupes[k]
+        
+        self.cEffClas.mofifierValeursSsEvt()
+        for c in self.cNbGrp.values():
+            c.mofifierValeursSsEvt()
+        
+#        self.AjouterGroupesVides()
+        self.MiseAJourNbrEleve()
+    
+    
+
+
+class PanelEffectifsClasse2(wx.Panel):
+    """Classe définissant le panel de réglage des effectifs
+        Rappel :
+        
+        :Example:
+        
+        listeEffectifs = ["C", "G", "D" ,"S", "E" ,"P"]
         NbrGroupes = {"G" : 2, # Par classe
         "E" : 2, # Par grp Eff réduit
+        "S" : 3, # Par classe
         "P" : 4, # Par grp Eff réduit
         }
                       
@@ -7732,6 +7963,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.MiseAJourNbrEleve()
         
 
+        
         
         
 ####################################################################################
