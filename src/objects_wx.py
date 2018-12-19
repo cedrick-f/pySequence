@@ -2184,7 +2184,6 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def exporterFichePDF(self, nomFichier, pourDossierValidation = False):
         """ Exporte la fiche au format PDF
-        
             pourDossierValidation : concerne uniquement les Projets = pour anonymiser la fiche
         """
         # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
@@ -2201,14 +2200,15 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             draw_cairo_prg.Draw(ctx, self.progression)
         
         PDFsurface.finish()
-    
+        
         try:
             shutil.copy(tf, nomFichier)
             os.remove(tf)
         except IOError:
             Dialog_ErreurAccesFichier(nomFichier)
-            wx.EndBusyCursor()
-            return
+#             wx.EndBusyCursor()
+            if DEBUG:
+                raise
         
         
         
@@ -2241,7 +2241,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             os.remove(tf)
         except IOError:
             Dialog_ErreurAccesFichier(nomFichier)
-            wx.EndBusyCursor()
+#             wx.EndBusyCursor()
             return
             
         self.enrichirSVG(nomFichier)
@@ -2276,7 +2276,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             os.remove(tf)
         except IOError: # normalement, ça ne peut pas arriver
             Dialog_ErreurAccesFichier(nomFichier)
-            wx.EndBusyCursor()
+#             wx.EndBusyCursor()
             return
             
         # à virer ou remplacer après ...
@@ -4144,7 +4144,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4153,6 +4153,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         self.SetScrollbars(20, 20, 50, 50);
         
         self.enCours = False
+        self.saved = False
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
@@ -4229,7 +4230,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
 
     #############################################################################            
     def OnPaint(self, evt):
-#        print "OnPaint"
+#         print("OnPaint")
 #        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
@@ -4239,16 +4240,28 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
     #############################################################################            
     def CentrerSur(self, obj):
         if hasattr(obj, 'rect'):
-            print("CentrerSur", obj)
-            self.GetDoc().surbrillance = obj
-            self.Redessiner()
+#             print("CentrerSur", obj, obj.rect)
+#             self.Redessiner()
             if len(obj.rect) > 0:
                 y = (obj.rect[0][1])*self.GetVirtualSize()[1]
                 self.Scroll(0, y/20/draw_cairo.COEF)
-                self.Refresh()
-            self.GetDoc().surbrillance = None
+#                 self.Refresh()
+            
     
-    
+    #############################################################################            
+    def Surbrillance(self, obj):
+#         if self.saved:
+#             self.ctx.restore()
+#             self.saved = False
+        
+        if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+#             self.ctx.save()
+#             self.saved = True
+            self.Redessiner(surRect = obj.rect)
+                
+#             self.GetDoc().surbrillance = None
+            
+            
     #############################################################################            
     def OnClick(self, evt):
         self.GetDoc().HideTip()
@@ -4304,9 +4317,9 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
 
 
     #############################################################################            
-    def Redessiner(self, event = None):  
+    def Redessiner(self, event = None, surRect = None):  
         print("Redessiner :")
-        tps1 = time.clock()
+#         tps1 = time.clock()
         def redess():
             wx.BeginBusyCursor()
 
@@ -4323,12 +4336,10 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
             ctx = wx.lib.wxcairo.ContextFromDC(dc)
             
             self.normalize(ctx)
-            self.Draw(ctx)
-#            ctx.show_page()
-    #        b = Thread(None, self.Draw, None, (ctx,))
-    #        b.start()
-            
-            
+            self.Draw(ctx, surRect = surRect)
+#             if r is not None:
+#                 draw_cairo.surbrillance(ctx, *r)
+
             self.ctx = ctx
             self.Refresh()
     
@@ -4341,7 +4352,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
 #         self.t.start()
 
         redess()        
-        tps2 = time.clock() 
+#         tps2 = time.clock() 
 #         print(tps2 - tps1)
 
 
@@ -4364,12 +4375,12 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
     
     #############################################################################            
-    def Draw(self, ctx):
+    def Draw(self, ctx, surRect = None):
 #         global threadDraw
 #         tps1 = time.clock()
         
         self.GetDoc().DefinirCouleurs()
-        self.GetDoc().draw.Draw(ctx, self.GetDoc())
+        self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = surRect)
 
 
 
@@ -4390,7 +4401,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4401,14 +4412,11 @@ class BaseFiche2(wx.ScrolledWindow):
         self.t = None
         self.w, self.h = self.GetVirtualSize()
         self.buffer = wx.Bitmap(self.w, self.h)
+        self.surRect = None
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
-
-#         self.InitBuffer()
         
         self.Bind(wx.EVT_SIZE, self.OnResize)
-        
-        
 #         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 
         self.timer = wx.Timer(self)
@@ -4476,13 +4484,32 @@ class BaseFiche2(wx.ScrolledWindow):
     #############################################################################            
     def CentrerSur(self, obj):
         if hasattr(obj, 'rect'):
-            self.GetDoc().surbrillance = obj
-            self.Redessiner()
-            y = (obj.rect[0][1])*self.GetVirtualSizeTuple()[1]
-            self.Scroll(0, y/20/draw_cairo.COEF)
-            self.Refresh()
-            self.GetDoc().surbrillance = None
+#             print("CentrerSur", obj, obj.rect)
+#             self.Redessiner()
+            if len(obj.rect) > 0:
+                y0 = min([r[1] for r in obj.rect])
+                y1 = max([r[1]+r[3] for r in obj.rect])
+                
+                y0 = y0*self.GetVirtualSize()[1]/draw_cairo.COEF/20
+                y1 = y1*self.GetVirtualSize()[1]/draw_cairo.COEF/20
+                Y = self.GetViewStart()[1]
+                H = self.GetClientSize()[1]/20
+#                 print(y0, y1, Y, H)
+                if y0 < Y:
+                    self.Scroll(0, y0)
+                if  y1 > Y+H:
+                    self.Scroll(0, y1-H+1)
+#                 self.Refresh()
+            
     
+    
+    #############################################################################            
+    def Surbrillance(self, obj):
+        self.surRect = None
+        if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+            self.surRect = obj.rect
+            self.Redessiner()
+            
     
     #############################################################################            
     def OnClick(self, evt):
@@ -4549,7 +4576,7 @@ class BaseFiche2(wx.ScrolledWindow):
     #############################################################################            
     def Draw(self, ctx):
         self.GetDoc().DefinirCouleurs()
-        self.GetDoc().draw.Draw(ctx, self.GetDoc())
+        self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
 
 
     #############################################################################            
@@ -13213,10 +13240,14 @@ class ArbreDoc(CT.CustomTreeCtrl):
         """
 #         tps1 = time.clock()
         
+        
+        
+        
         #
         # On ferme l'éventuelle fenêtre d'aide ...
         #
         CloseFenHelp()
+        
         
         #
         # On récupère les données associées à la branche cliquée ...
@@ -13236,6 +13267,19 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             print("err : ", data)
         
+        
+        #
+        # On centre la fiche sur l'objet
+        #
+        if hasattr(self.classe.doc.GetApp(), 'fiche'):
+            fiche = self.classe.doc.GetApp().fiche
+            if self.classe.doc.centrer:
+                fiche.CentrerSur(data)
+            fiche.Surbrillance(data)
+            
+        self.classe.doc.centrer = True
+        
+        
         if panelPropriete:
 #             tps2 = time.clock() 
 #             print "> panelPropriete", panelPropriete
@@ -13244,12 +13288,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             print("rien", panelPropriete)
 #         tps3 = time.clock() 
-        #
-        # On centre la fiche sur l'objet
-        #
-        if hasattr(self.classe.doc.GetApp(), 'fiche') and self.classe.doc.centrer:
-            self.classe.doc.GetApp().fiche.CentrerSur(data)
-        self.classe.doc.centrer = True
+        
         
         if event is not None:
             event.Skip()

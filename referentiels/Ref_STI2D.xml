@@ -4,7 +4,7 @@
     <l_01 S_00="Programme I2D" S_01="http://cache.media.education.gouv.fr/file/CSP/17/5/1e_STI2D_IT_I2D_2I2D_1021175.pdf" />
   </l_BO_URL>
   <l_BO_dossier />
-  <l_CentresInterets S_00="Caractéristiques des matériaux" />
+  <l_CentresInterets S_00="Mobilité" S_01="Transport" />
   <l_Enseignement S_00="STI2D" S_01="Sciences et Technologies de l'Industrie et du Développement Durable" S_02="STI2D" S_03="Sciences et Technologies de l'Industrie et du Développement Durable" />
   <d_aColNon />
   <d_activites>
@@ -5849,22 +5849,22 @@
   </d_dicoSavoirs>
   <d_domaines />
   <d_effectifs>
-    <l_C S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+    <l_C S_00="Effectif niveau" S_01="Effectif niveau" S_02="" S_04="" S_05="">
       <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
     </l_C>
-    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="C" S_05="O">
+    <l_G S_00="division" S_01="division" S_02="" S_04="C" S_05="O">
       <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_G>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="G" S_05="N">
+    <l_D S_00="groupe" S_01="groupe" S_02="" S_04="C" S_05="O">
       <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
     <l_S S_00="Ens. Spécifique" S_01="Enseignement Spécifique" S_02="" S_04="C" S_05="N">
       <l_03 F_00="102.0" F_01="114.0" F_02="34.0" />
     </l_S>
-    <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="" S_04="G" S_05="N">
+    <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="" S_04="D" S_05="N">
       <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
     </l_E>
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="D" S_05="N">
       <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
     </l_P>
     <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
@@ -5956,7 +5956,7 @@
     <l_00 I_01="5" S_00="1_ère" />
     <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
-  <l_positions_CI S_00="M  _   " />
+  <l_positions_CI S_00="   _   " S_01="   _   " />
   <d_projets>
     <Projet_P1 B_tachesOnce="False" I_duree="36" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin de 1ère">
       <d_attributs>

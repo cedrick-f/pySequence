@@ -1737,12 +1737,16 @@ class Referentiel(XMLelem):
         for code in 'GDSEP':
             if not code in self.effectifs.keys():
                 self.effectifs['S'] = [*self.effectifs['G']]
-                self.effectifs['S'][4] = constantes.SubdivGrp['S']
-                self.effectifs['S'][5] = constantes.MmActiv['S']
-            elif len(self.effectifs[code]) == 4:
+#                 if len(self.effectifs[code]) == 4:
+#                     self.effectifs['S'].append(constantes.SubdivGrp['S'])
+#                     self.effectifs['S'].append(constantes.MmActiv['S'])
+#                 else:
+#                     self.effectifs['S'][4] = constantes.SubdivGrp['S']
+#                     self.effectifs['S'][5] = constantes.MmActiv['S']
+            if len(self.effectifs[code]) == 4:
                 self.effectifs[code].append(constantes.SubdivGrp[code])
                 self.effectifs[code].append(constantes.MmActiv[code])
-        
+#             print(code, self.effectifs[code])
                     
         # Les effectifs sous forme arborescente
         # exemple 'STI2D.xls' :

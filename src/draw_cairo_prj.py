@@ -553,7 +553,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             e.pts_caract = []
             if pourDossierValidation:
                 
-                l.append(constantes.getSingulier(prj.GetReferentiel().labels["ELEVES"][0]).capitalize()+" "+str(i+1))
+                l.append(prj.GetReferentiel().labels["ELEVES"][2].Sing_()+" "+str(i+1))
             else:
                 l.append(e.GetNomPrenom())
         

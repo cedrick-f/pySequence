@@ -352,7 +352,7 @@ def InitCurseur():
     
     
 ######################################################################################  
-def Draw(ctx, seq, mouchard = False, entete = False):
+def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
     """
@@ -1052,7 +1052,11 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     if not entete:
         info(ctx, margeX, margeY)
     
-    
+    if surRect is not None:
+#         print("Surbrillance")
+        for r in surRect:
+#             print("   ", r)
+            surbrillance(ctx, *r)
 
 
 
@@ -1248,7 +1252,7 @@ class Cadre():
         self.y = y
         
         self.seance.GetDocument().zones_sens.append(Zone([(x, y, self.w, self.h)], obj = self.seance))
-        self.seance.rect.append([x, y, self.w, self.h])
+#         self.seance.rect.append([x, y, self.w, self.h])
         
         return x + self.w, y + self.h
 
@@ -1301,8 +1305,7 @@ class Bloc():
         w = xf - self.x
         h = yf - self.y
         
-        if self.seq.surbrillance == self.seance:
-            surbrillance(self.ctx, self.x, self.y, w, h)
+        self.seance.rect.append((self.x, self.y, w, h))
             
         return x, y, w, h
     
@@ -1486,7 +1489,8 @@ def DrawSeanceRacine(ctx, seance):
 #    print "  ", cursY,
 #    y = cursY
     x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
-    seance.rect = [(x, cursY, w, h)]
+    seance.rect.append((bloc.x, bloc.y, w, h))
+    
     bloc.DrawCroisement(seance.typeSeance == "R") 
 #    for lbloc in blocs:
 #        
