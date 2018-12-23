@@ -1005,7 +1005,7 @@ class Classe(ElementBase):
         self.ville = ""
         self.etablissement = ""
         self.effectifs = {}
-        self.nbrGroupes = {'C' : 1}
+        self.nbrGroupes = {'C' : 1} # un seul groupe "classe entière"
         self.systemes = []
         
         
@@ -1380,32 +1380,55 @@ class Classe(ElementBase):
             return self.GetReferentiel().Enseignement[1]
         
     
+#     ######################################################################################  
+#     def GetEffectifNorm2(self, eff):
+#         """ Renvoie les effectifs des groupes sous forme normalisée (de 0.0 à 1.0)
+#             (portion de classe entière)
+#         """
+#         if eff == 'C':
+#             return 1.0
+#         
+#         elif eff == 'G':
+#             return 1.0 / self.nbrGroupes['G']
+#         
+#         elif eff == 'D':
+#             return self.GetEffectifNorm('G') / 2
+#         
+#         elif eff == 'E':
+#             return self.GetEffectifNorm('G') / self.nbrGroupes['E']
+#         
+#         elif eff == 'P':
+#             return self.GetEffectifNorm('G') / self.nbrGroupes['P']
+#         
+#         elif eff == 'I':
+#             return 1 / self.effectifs['C']
+#         
+#         else:
+#             print("ERREUR", eff)
+    
     ######################################################################################  
-    def GetEffectifNorm2(self, eff):
-        """ Renvoie les effectifs des groupes sous forme normalisée (de 0.0 à 1.0)
-            (portion de classe entière)
+    def GetNbrCouches(self, k):
+        """ Renvoie le nombre de fois que l'activité de code-effectif 'k' est faite
+            
         """
-        if eff == 'C':
-            return 1.0
+#         print("GetNbrCouches", k)
+        ref = self.GetReferentiel()
         
-        elif eff == 'G':
-            return 1.0 / self.nbrGroupes['G']
-        
-        elif eff == 'D':
-            return self.GetEffectifNorm('G') / 2
-        
-        elif eff == 'E':
-            return self.GetEffectifNorm('G') / self.nbrGroupes['E']
-        
-        elif eff == 'P':
-            return self.GetEffectifNorm('G') / self.nbrGroupes['P']
-        
-        elif eff == 'I':
-            return 1 / self.effectifs['C']
-        
+        if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
+            # Les éventuelles couches supplémentaires
+            # pour séances à effectif dont tous les sous-groupes font les mêmes activités
+            n = self.nbrGroupes[k]
         else:
-            print("ERREUR", eff)
+            n = 1
+            
+        if len(ref.effectifs[k]) >= 5 and ref.effectifs[k][4] != '':
+            n *= self.GetNbrCouches(ref.effectifs[k][4])
         
+#         print("  >>>> :", n)
+        return n
+    
+    
+    
     ######################################################################################  
     def GetEffectifNorm(self, eff):
         """ Renvoie les effectifs des groupes sous forme normalisée (de 0.0 à 1.0)
@@ -1413,10 +1436,10 @@ class Classe(ElementBase):
         """
         ref = self.GetReferentiel()
         
-        if eff == 'C':
+        if eff == 'C':  # classe entière
             return 1.0
         
-        elif eff == 'I':
+        elif eff == 'I':    # individuel
             return 1.0 / self.effectifs['C']
         
         else:
@@ -8762,6 +8785,27 @@ class Seance(ElementAvecLien, ElementBase):
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
     
+    ######################################################################################  
+    def GetTypeActivite(self):
+        """ Renvoie le type de la première activité parmis les sous séances
+        """
+        if self.typeSeance in "RS" and len(self.seances) > 0:
+            return self.seances[0].GetTypeActivite()
+        else:
+            return self.typeSeance
+    
+            
+    ######################################################################################  
+    def GetCodeEffectif(self):
+#         print("GetCodeEffectif", self, self.typeSeance)
+        ref = self.GetReferentiel()
+        if self.typeSeance in "RS" and len(self.seances) > 0:
+            return self.seances[0].GetCodeEffectif()
+#             return ref.effectifs[self.seances[0].GetCodeEffectif()][4]
+        else:
+            return self.effectif
+    
+    
     
     ######################################################################################  
     def GetListeTypes(self, spe = ""):
@@ -9775,6 +9819,7 @@ class Seance(ElementAvecLien, ElementBase):
                         intitule = self.intitule,
                         duree = getHoraireTxt(self.GetDuree()),
                         effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
+                        coul_eff = couleur.GetCouleurHTML(ref.effectifs[self.effectif][3]),
                         decription = XMLtoHTML(self.description),
                         lien = self.lien,
                         nom_du_activite = ref._nomActivites.du_()     

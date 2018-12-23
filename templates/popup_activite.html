@@ -25,7 +25,7 @@
 
 <table border="0" width="500">
 	<tr>
-		<td colspan={% if lst_ensSpe|length > 0 %}2{% else %}3{% endif %}><i>Durée : {{ duree }}</br>Effectif : {{effectif}}</i></td>
+		<td colspan={% if lst_ensSpe|length > 0 %}2{% else %}3{% endif %}><i>Durée : {{ duree }}</br>Effectif : <font color="{{ coul_eff }}">{{effectif}}</font></i></td>
 		{% if lst_ensSpe|length > 0 %}
 		<td>
 			{% for n, c in lst_ensSpe %}

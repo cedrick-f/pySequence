@@ -67,6 +67,9 @@ margeY = 0.03 * COEF
 ecartX = 0.02 * COEF
 ecartY = 0.02 * COEF
 
+# Ecart pour les couches
+ecartC = ecartX/8
+
 # CI
 tailleCI = (0.17 * COEF, 0.085 * COEF)
 #posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
@@ -218,7 +221,7 @@ def DefinirZones(seq, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (séances, systèmes)
     """
-    global wEff, a, b , ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
+    global a, b , ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
     ref = seq.GetReferentiel()
     
     #hHoraire
@@ -295,14 +298,20 @@ def DefinirZones(seq, ctx):
 # #             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
 #              }
     
-    wEff = {"C" : tailleZSeances[0],
-            "I" : tailleZSeances[0]}
-    for k in 'GDSEP':
-        if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
-            wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(ref.effectifs[k][4]) * 0.9
-        else:
-            wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(k) * seq.classe.nbrGroupes[ref.effectifs[k][4]]
+#     wEff = {"C" : tailleZSeances[0],
+#             "I" : tailleZSeances[0]}
+#     for k in 'GDSEP':
+#         if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
+#             wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(k) * seq.classe.nbrGroupes[ref.effectifs[k][4]]
+#         else:
+#             wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(k)# * seq.classe.nbrGroupes[ref.effectifs[k][4]]
             
+    
+#     for k in 'GDSEP':
+#         if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
+#             wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(ref.effectifs[k][4]) * 0.9
+#         else:
+#             wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(k) * seq.classe.nbrGroupes[ref.effectifs[k][4]]
             
 #    print "durées :"
     ecartSeanceY = 0.006 * COEF    # écart mini entre deux séances
@@ -356,6 +365,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
     """
+    global rEff
 #    print "Draw séquence"
     InitCurseur()
     
@@ -590,21 +600,20 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     # Effectifs
     #
     if not entete:
-        wEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
-                                       tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
-                                 seq.classe, complet = False)
+        rEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
+                                 tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
+                           seq.classe, complet = False)
         
         seq.zones_sens.append(Zone(rects, obj = seq.classe))
         
-        for i, e in enumerate(["C", "G", "D", "E", "P"]):
-            x = posZSeances[0]
-            h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
-            y = posZDemarche[1] + 4 * h
-            w = wEff[e]
-#             DrawLigneEff(ctx, x+w, y+h, constantes.CouleursGroupes[e])
-            DrawLigneEff(ctx, x+w, y+h, couleur.CouleurInt2Float(ref.effectifs[e][3]))
-
-
+        # Lignes verticales
+        x = posZSeances[0]
+        h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
+        y = posZDemarche[1] + 4 * h
+        for e in "CGDSEP":
+            w = rEff[e][2]
+            DrawLigneEff(ctx, rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
+            DrawLigneEff(ctx, w+rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
 
 
     def taille(lstTxt):
@@ -1067,8 +1076,11 @@ def DrawLigneEff(ctx, x, y, coul):
                0.005 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
+    dashes = [ 0.002 * COEF,   # ink
+               0.002 * COEF,   # skip
+               ]
     ctx.set_source_rgba (*coul)
-    ctx.set_line_width (0.001 * COEF)
+    ctx.set_line_width (0.0005 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(x, posZDemarche[1] + tailleZDemarche[1])
     ctx.line_to(x, y)
@@ -1164,8 +1176,17 @@ class Cadre():
     def __init__(self, ctx, seance, h, filigrane = False, signEgal = False): 
         self.seance = seance
         self.ctx = ctx
-        self.w = wEff[seance.effectif]
+        self.w = rEff[seance.effectif][2]
         self.h = h
+        
+#         self.d = 0
+#         ref = seance.GetReferentiel()
+#         if len(ref.effectifs[seance.effectif]) >= 6 and ref.effectifs[seance.effectif][5] == "O":
+#             self.d = ecartX * seance.GetDocument().classe.nbrGroupes[seance.effectif]
+#             self.d = min(self.d, self.h/6)
+#             self.w -= self.d
+#             self.h -= self.d                      
+        
         self.filigrane = filigrane
         self.xd = None
         self.y = None   # Position en Y du cadre
@@ -1174,10 +1195,30 @@ class Cadre():
         self.seance.rect = []
         self.signEgal = signEgal
         
+        
+        # Gestion des séances à effectif dont tous les sous-groupes font les mêmes activités
+#         ref = seance.GetReferentiel()
+        
+        # Réduction taille
+#         self.ncouches = seance.GetDocument().classe.GetNbrCouches(seance.GetCodeEffectif()) - 1
+#         print("Cadre", self.seance, ":", self.ncouches, "couches")
+#         if self.ncouches >= 1 :
+#             self.h -= ecartC
+#         if len(ref.effectifs[seance.GetCodeEffectif()]) >= 6 and ref.effectifs[seance.GetCodeEffectif()][5] == "O":
+# #             self.w -= ecartC
+#             self.h -= ecartC
+#             # Les éventuelles couches supplémentaires
+#             # pour séances à effectif dont tous les sous-groupes font les mêmes activités
+#             self.ncouches = seance.GetDocument().classe.nbrGroupes[seance.GetCodeEffectif()]-1
+#         else:
+#             self.ncouches = 0
+            
+            
+        
     def __repr__(self):
         return self.seance.code
     
-    def Draw(self, x, y):
+    def Draw(self, x, y, vide = False):
         """ Dessine le cadre à la position (x,y)
         """
         if self.filigrane:
@@ -1186,67 +1227,87 @@ class Cadre():
             alpha = 1
             self.seance.pts_caract.append((x, y))
 #         print(self.seance, (x, y))
+        
         #
-        # Le cadre
+        # Le(s) cadre(s)
         #
-        epaisseurTrait = 0.002 * COEF
+        epaisseurTrait = 0.0015 * COEF
         self.ctx.set_line_width(epaisseurTrait)
         self.ctx.set_dash(BStylSeance[self.seance.typeSeance], 0)
         
+        # Rectangle(s) des couches à afficher derrière
+#         for c in range(self.ncouches):
+#             _x = x + ecartC*c/self.ncouches
+#             _y = y + ecartC*c/self.ncouches
+#             rectangle_plein(self.ctx, _x, _y, self.w, self.h, 
+#                             BCoulSeance[self.seance.typeSeance], 
+#                             ICoulSeance[self.seance.typeSeance], alpha)
+#         
+#         if self.ncouches > 0:
+#             x += ecartC
+#             y += ecartC
+        
+        # Rectangle(s) du dessus
         rectangle_plein(self.ctx, x, y, self.w, self.h, 
-                        BCoulSeance[self.seance.typeSeance], ICoulSeance[self.seance.typeSeance], alpha)
+                            BCoulSeance[self.seance.typeSeance], 
+                            ICoulSeance[self.seance.typeSeance], alpha)
+
         self.ctx.set_dash([], 0)
         
-        wc = 0
-        #
-        # Le code (en haut à gauche)
-        #
-        if hasattr(self.seance, 'code'):
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            c = self.seance.couleur
-            self.ctx.set_source_rgba (*c[:3], alpha)
-#            hc = max(hHoraire/4, 0.01)
-            hc = H_code()
-            f, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
-                                      wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
-            
-            wc = r[2] + ecartX/2
         
-        #
-        # L'intitulé (si intituleDansDeroul)
-        #
-        if self.seance.intituleDansDeroul and self.seance.intitule != "" and self.h-hc > 0:#not self.filigrane and 
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                                  cairo.FONT_WEIGHT_NORMAL)
-            self.ctx.set_source_rgba (0,0,0, alpha)
-#            print (x, y + hc, self.w, self.h-hc)
-#            print (wc, y, self.w - (wc-x), self.h)
-#            print 
-            if self.h < 0.02 * COEF: # h petit -> on écrit à coté du code !
-                rct = (wc, y, self.w - (wc-x), self.h)
-            else:
-                rct = (x, y + hc, self.w, self.h-hc)
+        if not vide:
+            wc = 0 # la largeur effective du code (calculé dans show_text_rect)
+            #
+            # Le code (en haut à gauche)
+            #
+            if hasattr(self.seance, 'code'):
+                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                           cairo.FONT_WEIGHT_BOLD)
+                c = self.seance.couleur
+                self.ctx.set_source_rgba (*c[:3], alpha)
 
-            show_text_rect(self.ctx, self.seance.intitule, rct, 
-                           ha = 'g', b = 0.2, fontsizeMinMax = (minFont, 0.015 * COEF), 
-                           fontsizePref = self.seance.taille.v[0])
-        
-        #
-        # L'intitulé (si intituleDansDeroul)
-        #
-        if  self.signEgal:# not self.filigrane and
-            dx = wEff["P"]/16
-#            dy = hHoraire/32
-            dy = b/4
-            self.ctx.set_source_rgba (0, 0.0, 0.2, alpha)
-            self.ctx.set_line_width (0.002 * COEF)
-            self.ctx.move_to(x-dx, y+self.h/2 - dy)
-            self.ctx.line_to(x+dx, y+self.h/2 - dy)
-            self.ctx.move_to(x-dx, y+self.h/2 + dy)
-            self.ctx.line_to(x+dx, y+self.h/2 + dy)
-            self.ctx.stroke()
+                hc = H_code()
+                f, r = show_text_rect(self.ctx, self.seance.code, (x, y, self.w, hc), ha = 'g', 
+                                          wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
+                
+                wc = r[2] + ecartX/2
             
+            #
+            # L'intitulé (si intituleDansDeroul)
+            #
+            if self.seance.intituleDansDeroul and self.seance.intitule != "" and self.h-hc > 0:  #not self.filigrane and 
+                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                                           cairo.FONT_WEIGHT_NORMAL)
+                self.ctx.set_source_rgba (0,0,0, alpha)
+    #            print (x, y + hc, self.w, self.h-hc)
+    #            print (wc, y, self.w - (wc-x), self.h)
+    #            print 
+                if self.h < 0.02 * COEF: # h petit -> on écrit à coté du code !
+                    rct = (wc, y, self.w - (wc-x), self.h)
+                else:
+                    rct = (x, y + hc, self.w, self.h-hc)
+    
+                show_text_rect(self.ctx, self.seance.intitule, rct, 
+                               ha = 'g', b = 0.2, fontsizeMinMax = (minFont, 0.015 * COEF), 
+                               fontsizePref = self.seance.taille.v[0])
+            
+            #
+            # Le signe "égal"
+            #
+            if  self.signEgal:# not self.filigrane and
+                dx = rEff["P"][2]/16
+    #            dy = hHoraire/32
+                dy = ecartY/4
+                self.ctx.set_source_rgba (0, 0.0, 0.2, alpha)
+                self.ctx.set_line_width (0.002 * COEF)
+                self.ctx.move_to(x-dx, y+self.h/2 - dy)
+                self.ctx.line_to(x+dx, y+self.h/2 - dy)
+                self.ctx.move_to(x-dx, y+self.h/2 + dy)
+                self.ctx.line_to(x+dx, y+self.h/2 + dy)
+                self.ctx.stroke()
+        
+        
+        
         # Sauvegarde de la position du bord droit pour les lignes de croisement
         self.xd = x+self.w
         self.y = y
@@ -1272,19 +1333,53 @@ class Bloc():
         self.seance = seance
         self.x = None
         self.y = None
-    
+        
+#         # Gestion des séances à effectif dont tous les sous-groupes font les mêmes activités
+#         self.ncouches = self.seq.classe.GetNbrCouches(seance.GetCodeEffectif()) - 1
+#         print("Bloc", self.seance, ":", self.ncouches, "couches")
+#         ref = seance.GetReferentiel()
+#         if len(ref.effectifs[seance.GetCodeEffectif()]) >= 6 and ref.effectifs[seance.GetCodeEffectif()][5] == "O":
+#             # Les éventuelles couches supplémentaires
+#             # pour séances à effectif dont tous les sous-groupes font les mêmes activités
+#             self.ncouches = self.seq.classe.nbrGroupes[seance.GetCodeEffectif()]-1
+#         else:
+#             self.ncouches = 0
     
     def GetRect(self):
         return (self.x, self.y, )
     
     
     
-    def Draw(self, x, y):
-#        print self.contenu
+    def Draw(self, x, y, vide = False):
+#         print("Draw", self.seance, self.seance.GetCodeEffectif())
         self.x = x
         self.y = y
-        xf = self.x
-        yf = self.y
+        xf = self.x # position droite du rectangle (à incrémenter)
+        yf = self.y # position basse du rectangle (à incrémenter)
+        
+        # Rectangle(s) des couches à afficher derrière
+#         for c in range(self.ncouches):
+#             y = self.y + ecartC*c/self.ncouches
+#             for ligne in self.contenu:
+#                 x = self.x + ecartC*c/self.ncouches
+#                 for elem in ligne:
+#                     if isinstance(elem, Cadre):
+#                         xf, yf = elem.Draw(x, y, vide = True)
+#                         
+#                     elif isinstance(elem, Bloc):
+#                         xf, yf, w, h = elem.Draw(x, y, vide = True)
+#             
+#                     x = xf
+#                     
+#                 if len(ligne) > 0:
+#                     y = yf
+# 
+#         if self.ncouches > 0:
+#             self.x += ecartC
+#             self.y += ecartC
+            
+        # La couche du dessus
+        y = self.y
         for ligne in self.contenu:
 #            print 
             x = self.x
@@ -1292,10 +1387,10 @@ class Bloc():
             for elem in ligne:
 #                print "  > ", elem
                 if isinstance(elem, Cadre):
-                    xf, yf = elem.Draw(x, y)
+                    xf, yf = elem.Draw(x, y, vide = vide)
                     
                 elif isinstance(elem, Bloc):
-                    xf, yf, w, h = elem.Draw(x, y)
+                    xf, yf, w, h = elem.Draw(x, y, vide = vide)
                     
                 x = xf
                     
@@ -1410,20 +1505,33 @@ def DrawSeanceRacine(ctx, seance):
     # Remplissage du tableau de blocs : [[], [], ...]
     #
     def getBloc(seance, h, filigrane = False, decal = 0, nbr = 0, rotation = False):
-        # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
+        """ Construction récursive du bloc (et des sous blocs) de la Séance
+        
+        :h: hauteur du bloc
+        :filigrane: True si  il faut afficher le bloc en mode filigrane (transparent)
+        :decal: proportion (0-1) du décalage pour les Séances en parallèles
+        :nbr:   nombre de Séances en parallèles
+        :rotation: True si la Séance fait partie d'une Rotation
+        
+        """
         seance.rect = []
+        
+        ###########################################################################################
+        # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
         if not seance.typeSeance in ["R", "S", ""]:
             bloc = Bloc(ctx, seance)
             seance.pts_caract = []
-#            if seance.typeSeance in ["AP", "ED", "P"]:
+
             l = []
             if rotation:
                 n = 1
             else:
                 n = int(seance.nombre.v[0])
+            
             for i in range(n):
                 l.append(Cadre(ctx, seance, h, signEgal = (i>0), filigrane = filigrane))
             bloc.contenu.append(l)
+            
             hc = H_code()
             if not filigrane:
                 if decal == 0 :
@@ -1439,21 +1547,20 @@ def DrawSeanceRacine(ctx, seance):
             return bloc
             
             
-        # Séance "complexe"    
+        ###########################################################################################
+        # Séance "complexe"   (Rotation ou Parallèle) 
         else:
-            # Rotation : plusieurs lignes
+            # Rotation : plusieurs lignes/plusieurs colonnes
             if seance.typeSeance == "R":           
                 bloc = Bloc(ctx, seance)
                 l0 = seance.GetListSousSeancesRot() # Liste des sous séances de la première colonne (têtes de ligne - foncé)
 #                print "l0 =", l0
                 for ss in l0[:seance.nbrRotations.v[0]]:
-#                for i in range(seance.nbrRotations.v[0]):
-#                    ss = seance.seances[i]
                     hl = h * ss.GetDuree()/seance.GetDuree() * len(l0)/  seance.nbrRotations.v[0] 
                     bloc.contenu.append([getBloc(ss, hl, rotation = True)])
                     
                 #
-                # Aperçu en filigrane de la rotation
+                # Aperçu en filigrane du reste de la rotation
                 #
                 if True:#seance.IsEffectifOk() <= 3:
                     l = seance.GetListSousSeancesRot(True)
@@ -1467,7 +1574,8 @@ def DrawSeanceRacine(ctx, seance):
 #                blocs.extend(bloc)
 #                print "   >>", bloc.contenu
                 return bloc
-                
+            
+            # Parallèle : plusieurs colonnes
             elif seance.typeSeance == "S":
                 n = len(seance.seances)
                 bloc = Bloc(ctx, seance)
@@ -1475,8 +1583,8 @@ def DrawSeanceRacine(ctx, seance):
 #                bloc.contenu.append(getLigne(seance, h))
                 for j, ss in enumerate(seance.seances):
                     bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree()/seance.GetDuree(), 
-                                                   decal = 1.0*(j+1)/(len(seance.seances)+1),
-                                                   nbr = len(seance.seances)))
+                                                   decal = 1.0*(j+1)/(n+1),
+                                                   nbr = n))
                 
                 return bloc
             
@@ -1488,7 +1596,28 @@ def DrawSeanceRacine(ctx, seance):
 #    print "bloc :", bloc
 #    print "  ", cursY,
 #    y = cursY
-    x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
+#     x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
+#     if seance.typeSeance in "RS":
+         
+    x0 = rEff[seance.GetCodeEffectif()][0]
+    
+    # Gestion des séances à effectif dont tous les sous-groupes font les mêmes activités
+    classe = seance.GetDocument().classe
+    ncouches = classe.GetNbrCouches(seance.GetCodeEffectif()) - 1
+    print("Bloc", seance, ":", ncouches, "couches")
+    
+
+    for c in range(ncouches):
+        x = x0 + ecartC*c/ncouches
+        y = cursY + ecartC*c/ncouches
+        bloc.Draw(x, y, vide = True)
+
+        
+    if ncouches > 0:
+        x0 += ecartC
+        cursY += ecartC
+        
+    x, cursY , w, h = bloc.Draw(x0, cursY)
     seance.rect.append((bloc.x, bloc.y, w, h))
     
     bloc.DrawCroisement(seance.typeSeance == "R") 

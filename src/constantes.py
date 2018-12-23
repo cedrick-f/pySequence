@@ -457,6 +457,12 @@ def strEffectifComplet(classe, e, n = 0):
 
 
 def partitionne(total, ngroupe):
+    """ Renvoie la liste des tailles des sous-groupes d'un total
+        exemple : [2,2,2,1] pour ngroupe = 4 et total = 7
+        
+        fonction récursive :
+        total peut être une liste de totaux à diviser
+    """
     if type(total) != list:
         d, r = divmod(total, ngroupe)
         lst = [d] * ngroupe
@@ -515,9 +521,10 @@ def calculerEffectifs(classe):
     for k in 'GDSEP':
 #         print("   ", k, ref.effectifs[k])
         if classe.nbrGroupes[k] > 0:
-            classe.effectifs[k] = partitionne(classe.effectifs[ref.effectifs[k][4]], classe.nbrGroupes[k])
+            classe.effectifs[k] = partitionne(classe.effectifs[ref.effectifs[k][4]], 
+                                              classe.nbrGroupes[k])
         else:
-            classe.effectifs[k] = []
+            classe.effectifs[k] = [0]
     
     
 # Calcul inverse UNIQUEMENT POUR COMPATIBILITE !!

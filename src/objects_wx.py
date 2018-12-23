@@ -4144,7 +4144,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4401,7 +4401,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -7087,8 +7087,6 @@ class PanelPropriete_Classe(PanelPropriete):
         self.GetFenetreDoc().MiseAJourTypeEnseignement()
         self.ec.MiseAJourTypeEnseignement()
         
-        
-        
         self.Refresh()
         
         self.sendEvent(modif = "Modification du type d'enseignement",
@@ -7612,8 +7610,6 @@ class PanelEffectifsClasse(wx.Panel):
             event.Skip()
         
         
-        
-        
     ######################################################################################  
     def MiseAJourTypeEnseignement(self):
         ref = self.classe.GetReferentiel()
@@ -7677,8 +7673,10 @@ class PanelEffectifsClasse(wx.Panel):
                 
                 construire(g, k, sb)
                     
+#         print("_effectifs", ref._effectifs)
         construire(ref._effectifs, "C", self.boxClasse)
-        
+        calculerEffectifs(self.classe)
+        self.Onsize()
 #         self.boxClasse.Layout()
 
         wx.CallAfter(self.Layout)
@@ -7703,20 +7701,11 @@ class PanelEffectifsClasse(wx.Panel):
 #             print("EvtVariableEff", k, var.v[0])
             self.classe.nbrGroupes[k] = var.v[0]
         
-#        
-#         elif var == self.vNbERed:
-#             self.classe.nbrGroupes['G'] = var.v[0]
-#         elif var == self.vNbEtPr:
-#             self.classe.nbrGroupes['S'] = var.v[0]
-#         elif var == self.vNbEtPr:
-#             self.classe.nbrGroupes['E'] = var.v[0]
-#         elif var == self.vNbActP:
-#             self.classe.nbrGroupes['P'] = var.v[0]
-        
         calculerEffectifs(self.classe)
             
-        self.classe.GetApp().sendEvent(self.classe, modif = "Modification du découpage de la Classe",
-                              obj = self.classe)
+        self.classe.GetApp().sendEvent(self.classe, 
+                                       modif = "Modification du découpage de la Classe",
+                                       obj = self.classe)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -15714,159 +15703,159 @@ class Panel_SelectEnseignement(wx.Panel):
 
 
 
-class Panel_SelectEnseignement2(wx.Panel):
-    def __init__(self, parent, panelClasse, pourProjet, classe):
-        
-        
-        
-        wx.Panel.__init__(self, parent, -1)
-        
-        self.classe = classe
-        self.panelClasse = panelClasse
-        
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.SetSizer(self.sizer)
-        
-#         self.st_type = wx.StaticText(self, -1, "")
-        #
-        # Type d'enseignement
-        #
-        self.cp_type = wx.CollapsiblePane(self, wx.ID_ANY, "Type d'enseignement",
-                                          style = wx.CP_NO_TLW_RESIZE|wx.BORDER_NONE)
-        
-        self.sizer.Add(self.cp_type, 0, wx.GROW | wx.EXPAND| wx.ALL, 1)
-
-        win = self.cp_type.GetPane()
-        self.cb_type = ArbreTypeEnseignement(win, self, pourProjet)
-        paneSz = wx.BoxSizer(wx.VERTICAL)
-        paneSz.Add(self.cb_type, 1, wx.GROW | wx.EXPAND | wx.ALL, 2)
-        win.SetSizer(paneSz)
-        paneSz.SetSizeHints(win)
-        
-        #
-        # Spécialité
-        #
-        self.sp_type = wx.CollapsiblePane(self, wx.ID_ANY, "Spécialité",
-                                          style = wx.CP_NO_TLW_RESIZE|wx.BORDER_NONE)
-        
-        self.sizer.Add(self.sp_type, 0, wx.GROW | wx.EXPAND| wx.ALL, 1)
-
-        win = self.sp_type.GetPane()
-        self.rb_spe = wx.Choice(win, -1, choices = [])
-        self.rb_spe.SetLabel("Choisir une spécialité")
-        paneSz = wx.BoxSizer(wx.VERTICAL)
-        paneSz.Add(self.rb_spe, 1, wx.GROW| wx.EXPAND | wx.ALL, 2)
-        win.SetSizer(paneSz)
-        paneSz.SetSizeHints(win)
-        
-        #
-        # Périodes possibles
-        #
-        self.bmp = wx.StaticBitmap(self, -1, wx.Bitmap())
-        self.bmp.SetToolTip("Périodes attribuées à la spécialité")
-        self.sizer.Add(self.bmp, wx.EXPAND| wx.ALL, 1)
-        
-        
-        self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, self.cb_type)
-        self.Bind(wx.EVT_CHOICE, self.EvtRadioBoxSpe, self.rb_spe)
-        self.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.layout)
-#         def_ref = REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT]
-        
-        
-        self.MiseAJour()
-        self.sizer.Layout()
-#         self.sp_type.SetLabel(def_ref.Enseignement[0])
-#         self.cb_type.SetStringSelection(def_ref.Enseignement[0])
-#         self.sp_type.Show(len(def_ref.listeSpecialites) > 0)
-
-    
-    ######################################################################################  
-    def layout(self, event):
-        self.sizer.Layout()
-        event.Skip()
-    
-    
-    ######################################################################################  
-    def EvtRadioBoxSpe(self, event):
-#         print('EvtRadioBoxSpe')
-        self.classe.specialite = event.GetString()
-#         self.classe.MiseAJourTypeEnseignement()
-        self.classe.doc.MiseAJourTypeEnseignement()
-        self.classe.doc.SetPosition(self.classe.doc.position)
-        self.MiseAJour()
-        self.sp_type.Collapse()
-        self.sizer.Layout()
-        
-        self.panelClasse.sendEvent(modif = "Modification de la spécialité",
-                                   obj = self.classe)
-        
-        
-    ######################################################################################  
-    def EvtRadioBox(self, event = None, CodeFam = None):
-        """ Sélection d'un type d'enseignement
-        """
-        if event != None:
-            radio_selected = event.GetEventObject()
-            CodeFam = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
-        
-        self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
-        self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
-        if len(self.classe.referentiel.listeSpecialites) > 0:
-            self.classe.specialite = self.classe.referentiel.listeSpecialites[0]
-        else:
-            self.classe.specialite = ""
-            
-            
-#         self.classe.MiseAJourTypeEnseignement()
-        self.classe.doc.MiseAJourTypeEnseignement()
-        self.classe.doc.SetPosition(self.classe.doc.position)
-        
-        # Gestion des affichages ...
-        self.MiseAJour()
-        self.cp_type.Collapse()
-        self.sp_type.Expand()
-        self.sizer.Layout()
-            
-        # Modification des liens vers le BO
-        self.panelClasse.SetLienBO()
-        
-        # Modification des onglet du classeur
-        self.panelClasse.GetFenetreDoc().MiseAJourTypeEnseignement()
-        
-        self.Refresh()
-        
-        self.panelClasse.sendEvent(modif = "Modification du type d'enseignement",
-                                   obj = self.classe)
-    
-    
-    ######################################################################################  
-    def Verrouiller(self):
-        etat = not self.classe.verrouillee
-        self.cp_type.Enable(etat)
-        self.sp_type.Enable(etat)
-        self.sizer.Layout()
-#         self.spe.Show(etat)
-#         self.arbre.Show(etat)
-        
-        
-        
-    ######################################################################################  
-    def MiseAJour(self):
-        self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
-        self.cp_type.SetLabel(self.classe.referentiel.Enseignement[0])
-#         self.st_type.SetLabel(self.classe.GetLabel())
-        self.rb_spe.Clear()
-        for s in self.classe.referentiel.listeSpecialites:
-            self.rb_spe.Append(s)
-            
-        self.sp_type.Show(len(self.classe.referentiel.listeSpecialites) > 0)    
-        self.rb_spe.SetStringSelection(self.classe.specialite)
-        if len(self.classe.specialite) > 0:
-            self.sp_type.SetLabel(self.classe.specialite)
-        else:
-            self.sp_type.SetLabel("Choisir la Spécialité")
-        
-        self.bmp.SetBitmap(self.classe.getBitmapPeriode(200*SSCALE))
+# class Panel_SelectEnseignement2(wx.Panel):
+#     def __init__(self, parent, panelClasse, pourProjet, classe):
+#         
+#         
+#         
+#         wx.Panel.__init__(self, parent, -1)
+#         
+#         self.classe = classe
+#         self.panelClasse = panelClasse
+#         
+#         self.sizer = wx.BoxSizer(wx.VERTICAL)
+#         self.SetSizer(self.sizer)
+#         
+# #         self.st_type = wx.StaticText(self, -1, "")
+#         #
+#         # Type d'enseignement
+#         #
+#         self.cp_type = wx.CollapsiblePane(self, wx.ID_ANY, "Type d'enseignement",
+#                                           style = wx.CP_NO_TLW_RESIZE|wx.BORDER_NONE)
+#         
+#         self.sizer.Add(self.cp_type, 0, wx.GROW | wx.EXPAND| wx.ALL, 1)
+# 
+#         win = self.cp_type.GetPane()
+#         self.cb_type = ArbreTypeEnseignement(win, self, pourProjet)
+#         paneSz = wx.BoxSizer(wx.VERTICAL)
+#         paneSz.Add(self.cb_type, 1, wx.GROW | wx.EXPAND | wx.ALL, 2)
+#         win.SetSizer(paneSz)
+#         paneSz.SetSizeHints(win)
+#         
+#         #
+#         # Spécialité
+#         #
+#         self.sp_type = wx.CollapsiblePane(self, wx.ID_ANY, "Spécialité",
+#                                           style = wx.CP_NO_TLW_RESIZE|wx.BORDER_NONE)
+#         
+#         self.sizer.Add(self.sp_type, 0, wx.GROW | wx.EXPAND| wx.ALL, 1)
+# 
+#         win = self.sp_type.GetPane()
+#         self.rb_spe = wx.Choice(win, -1, choices = [])
+#         self.rb_spe.SetLabel("Choisir une spécialité")
+#         paneSz = wx.BoxSizer(wx.VERTICAL)
+#         paneSz.Add(self.rb_spe, 1, wx.GROW| wx.EXPAND | wx.ALL, 2)
+#         win.SetSizer(paneSz)
+#         paneSz.SetSizeHints(win)
+#         
+#         #
+#         # Périodes possibles
+#         #
+#         self.bmp = wx.StaticBitmap(self, -1, wx.Bitmap())
+#         self.bmp.SetToolTip("Périodes attribuées à la spécialité")
+#         self.sizer.Add(self.bmp, wx.EXPAND| wx.ALL, 1)
+#         
+#         
+#         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, self.cb_type)
+#         self.Bind(wx.EVT_CHOICE, self.EvtRadioBoxSpe, self.rb_spe)
+#         self.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.layout)
+# #         def_ref = REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT]
+#         
+#         
+#         self.MiseAJour()
+#         self.sizer.Layout()
+# #         self.sp_type.SetLabel(def_ref.Enseignement[0])
+# #         self.cb_type.SetStringSelection(def_ref.Enseignement[0])
+# #         self.sp_type.Show(len(def_ref.listeSpecialites) > 0)
+# 
+#     
+#     ######################################################################################  
+#     def layout(self, event):
+#         self.sizer.Layout()
+#         event.Skip()
+#     
+#     
+#     ######################################################################################  
+#     def EvtRadioBoxSpe(self, event):
+# #         print('EvtRadioBoxSpe')
+#         self.classe.specialite = event.GetString()
+# #         self.classe.MiseAJourTypeEnseignement()
+#         self.classe.doc.MiseAJourTypeEnseignement()
+#         self.classe.doc.SetPosition(self.classe.doc.position)
+#         self.MiseAJour()
+#         self.sp_type.Collapse()
+#         self.sizer.Layout()
+#         
+#         self.panelClasse.sendEvent(modif = "Modification de la spécialité",
+#                                    obj = self.classe)
+#         
+#         
+#     ######################################################################################  
+#     def EvtRadioBox(self, event = None, CodeFam = None):
+#         """ Sélection d'un type d'enseignement
+#         """
+#         if event != None:
+#             radio_selected = event.GetEventObject()
+#             CodeFam = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
+#         
+#         self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
+#         self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
+#         if len(self.classe.referentiel.listeSpecialites) > 0:
+#             self.classe.specialite = self.classe.referentiel.listeSpecialites[0]
+#         else:
+#             self.classe.specialite = ""
+#             
+#             
+# #         self.classe.MiseAJourTypeEnseignement()
+#         self.classe.doc.MiseAJourTypeEnseignement()
+#         self.classe.doc.SetPosition(self.classe.doc.position)
+#         
+#         # Gestion des affichages ...
+#         self.MiseAJour()
+#         self.cp_type.Collapse()
+#         self.sp_type.Expand()
+#         self.sizer.Layout()
+#             
+#         # Modification des liens vers le BO
+#         self.panelClasse.SetLienBO()
+#         
+#         # Modification des onglet du classeur
+#         self.panelClasse.GetFenetreDoc().MiseAJourTypeEnseignement()
+#         
+#         self.Refresh()
+#         
+#         self.panelClasse.sendEvent(modif = "Modification du type d'enseignement",
+#                                    obj = self.classe)
+#     
+#     
+#     ######################################################################################  
+#     def Verrouiller(self):
+#         etat = not self.classe.verrouillee
+#         self.cp_type.Enable(etat)
+#         self.sp_type.Enable(etat)
+#         self.sizer.Layout()
+# #         self.spe.Show(etat)
+# #         self.arbre.Show(etat)
+#         
+#         
+#         
+#     ######################################################################################  
+#     def MiseAJour(self):
+#         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
+#         self.cp_type.SetLabel(self.classe.referentiel.Enseignement[0])
+# #         self.st_type.SetLabel(self.classe.GetLabel())
+#         self.rb_spe.Clear()
+#         for s in self.classe.referentiel.listeSpecialites:
+#             self.rb_spe.Append(s)
+#             
+#         self.sp_type.Show(len(self.classe.referentiel.listeSpecialites) > 0)    
+#         self.rb_spe.SetStringSelection(self.classe.specialite)
+#         if len(self.classe.specialite) > 0:
+#             self.sp_type.SetLabel(self.classe.specialite)
+#         else:
+#             self.sp_type.SetLabel("Choisir la Spécialité")
+#         
+#         self.bmp.SetBitmap(self.classe.getBitmapPeriode(200*SSCALE))
 
      
 class ArbreTypeEnseignement(CT.CustomTreeCtrl):

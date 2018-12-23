@@ -5852,14 +5852,14 @@
     <l_C S_00="Effectif niveau" S_01="Effectif niveau" S_02="" S_04="" S_05="">
       <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
     </l_C>
-    <l_G S_00="division" S_01="division" S_02="" S_04="C" S_05="O">
+    <l_G S_00="Division" S_01="Division" S_02="" S_04="C" S_05="O">
       <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_G>
-    <l_D S_00="groupe" S_01="groupe" S_02="" S_04="C" S_05="O">
+    <l_D S_00="Groupe" S_01="Groupe" S_02="" S_04="C" S_05="O">
       <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
     <l_S S_00="Ens. Spécifique" S_01="Enseignement Spécifique" S_02="" S_04="C" S_05="N">
-      <l_03 F_00="102.0" F_01="114.0" F_02="34.0" />
+      <l_03 F_00="188.0" F_01="154.0" F_02="0.0" />
     </l_S>
     <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="" S_04="D" S_05="N">
       <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
