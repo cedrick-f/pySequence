@@ -86,7 +86,6 @@ from undo import UndoStack
 
 # Les constantes partagées
 from constantes import calculerEffectifs, \
-                        strEffectifComplet, \
                         getCoulPartie, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
@@ -742,7 +741,7 @@ class ElementBase(Grammaire):
     def SetDescription(self, description, draw = False):
         if self.description != description:
 #             ref = self.GetReferentiel()
-            print("SetDescription", self)
+#             print("SetDescription", self)
             self.description = description
 #             self.GetApp().sendEvent(modif = "Modification de la description %s" %ref._nomActivites.du_())
             self.GetApp().sendEvent(modif = "Modification de la description %s" %self.du_(),
@@ -1428,6 +1427,46 @@ class Classe(ElementBase):
         return n
     
     
+    ######################################################################################  
+    def GetStrEffectif(self, e, n = 0, eleve = True):
+        if e == "C":
+            return str(self.effectifs[e])
+        else:
+            ref = self.GetReferentiel()
+            if e in self.effectifs:
+                lsteff = self.effectifs[e]
+                if type(lsteff[0]) == list:
+                    lsteff = lsteff[0]
+                if n == -1:
+                    mini, maxi = min(lsteff), max(lsteff)
+                    if mini != maxi:
+                        eff_str = str(mini) + "-" + str(maxi)
+                    else:
+                        eff_str = str(mini)
+                    eleves = ref.labels["ELEVES"][2].plur_()
+                else:
+                    eff_str = str(lsteff[n])
+                    if lsteff[n] == 1:
+                        eleves = ref.labels["ELEVES"][2].sing_()
+                    else:
+                        eleves = ref.labels["ELEVES"][2].plur_()
+                if eleve:
+                    return eff_str+" "+eleves
+                else:
+                    return eff_str
+            else:
+                return ""
+    
+    
+    ######################################################################################  
+    def GetStrEffectifComplet(self, e, n = 0):
+        tit_eff = self.GetReferentiel().effectifs[e][0]
+        num_eff = self.GetStrEffectif(e, n)
+        if num_eff != "":
+            return tit_eff+" ("+num_eff+")"
+        else:
+            return tit_eff
+
     
     ######################################################################################  
     def GetEffectifNorm(self, eff):
@@ -9806,7 +9845,19 @@ class Seance(ElementAvecLien, ElementBase):
             image = self.tip.GetImgURL(self.image, width = 200)
             
 #         print(lst_ensSpe)    
+#         print("self.compVisees", self.compVisees)
+        lstCompVisees = []
+        comp = self.GetDocument().obj["C"]
+        for i, c in enumerate(sorted(comp.competences)):
+            if c in self.compVisees:
+                lstCompVisees.append((c[1:], ref.getCompetence(c).intitule))
+#         print("lstCompVisees", lstCompVisees)
         
+        lstSavVises = []
+        sav = self.GetDocument().obj["S"]
+        for i, c in enumerate(sorted(sav.savoirs)):
+            if c in self.savVises:
+                lstSavVises.append((c[1:], ref.getSavoir(c).intitule))
         
         
         html = t.render(titre = ref._nomActivites.sing_()+" "+ self.code,
@@ -9818,11 +9869,17 @@ class Seance(ElementAvecLien, ElementBase):
                         image = image,
                         intitule = self.intitule,
                         duree = getHoraireTxt(self.GetDuree()),
-                        effectif = strEffectifComplet(self.GetDocument().classe, self.effectif),
+                        effectif = self.GetDocument().classe.GetStrEffectifComplet(self.effectif),
                         coul_eff = couleur.GetCouleurHTML(ref.effectifs[self.effectif][3]),
                         decription = XMLtoHTML(self.description),
                         lien = self.lien,
-                        nom_du_activite = ref._nomActivites.du_()     
+                        nom_du_activite = ref._nomActivites.du_(),
+                        compVisees = lstCompVisees,
+                        nomCompVisees = comp.GetNomGenerique(),
+                        savVises = lstSavVises,
+                        nomSavVises = sav.GetNomGenerique(),
+                        #savVises = savVises
+                        
                         )
     
         return html
@@ -9860,7 +9917,7 @@ class Seance(ElementAvecLien, ElementBase):
                     
         t += "\n\n" + "Durée : " + getHoraireTxt(self.GetDuree())
         
-        t += "\n" + "Effectif : " + strEffectifComplet(self.GetDocument().classe, self.effectif)
+        t += "\n" + "Effectif : " + self.GetDocument().classe.GetStrEffectifComplet(self.effectif)
                     
 #         print("ttt", type(t))
         return t#.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#

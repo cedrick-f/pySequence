@@ -61,3 +61,25 @@
 	<param name="label" value="lien.path">
 </wxp>
 {% endif %}
+
+{% if compVisees|length > 0 %}
+<h2>{{ nomCompVisees }}</h2>
+<dl>
+	{% for n, c in compVisees %}
+	<dt>{{ n }}</dt>
+	<dd>{{ c }}</dd>
+	{% endfor %}
+</dl>
+{% endif %}
+
+
+{% if savVises|length > 0 %}
+<h2>{{ nomSavVises }}</h2>
+<dl>
+	{% for n, c in savVises %}
+	<dt>{{ n }}</dt>
+	<dd>{{ c }}</dd>
+	{% endfor %}
+</dl>
+{% endif %}
+

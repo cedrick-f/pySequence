@@ -419,41 +419,6 @@ CouleursGroupes = {"C" : (77 , 77 , 179),
 
    
     
-def strEffectif(classe, e, n = 0, eleve = True):
-    if e == "C":
-        return str(classe.effectifs[e])
-    else:
-        if e in classe.effectifs:
-            lsteff = classe.effectifs[e]
-            if type(lsteff[0]) == list:
-                lsteff = lsteff[0]
-            if n == -1:
-                mini, maxi = min(lsteff), max(lsteff)
-                if mini != maxi:
-                    eff_str = str(mini) + "-" + str(maxi)
-                else:
-                    eff_str = str(mini)
-                eleves = "élèves"
-            else:
-                eff_str = str(lsteff[n])
-                if lsteff[n] == 1:
-                    eleves = "élève"
-                else:
-                    eleves = "élèves"
-            if eleve:
-                return eff_str+" "+eleves
-            else:
-                return eff_str
-        else:
-            return ""
-
-def strEffectifComplet(classe, e, n = 0):
-    tit_eff = classe.GetReferentiel().effectifs[e][0]
-    num_eff = strEffectif(classe, e, n)
-    if num_eff != "":
-        return tit_eff+" ("+num_eff+")"
-    else:
-        return tit_eff
 
 
 def partitionne(total, ngroupe):

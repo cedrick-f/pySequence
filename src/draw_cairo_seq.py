@@ -611,9 +611,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
         y = posZDemarche[1] + 4 * h
         for e in "CGDSEP":
-            w = rEff[e][2]
-            DrawLigneEff(ctx, rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
-            DrawLigneEff(ctx, w+rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
+            if e in rEff:
+                w = rEff[e][2]
+                DrawLigneEff(ctx, rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
+                DrawLigneEff(ctx, w+rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
 
 
     def taille(lstTxt):
@@ -1604,7 +1605,7 @@ def DrawSeanceRacine(ctx, seance):
     # Gestion des séances à effectif dont tous les sous-groupes font les mêmes activités
     classe = seance.GetDocument().classe
     ncouches = classe.GetNbrCouches(seance.GetCodeEffectif()) - 1
-    print("Bloc", seance, ":", ncouches, "couches")
+#     print("Bloc", seance, ":", ncouches, "couches")
     
 
     for c in range(ncouches):

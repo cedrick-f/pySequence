@@ -134,7 +134,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 
 # Les constantes partagées
 from constantes import calculerEffectifs, \
-                        strEffectifComplet, getElementFiltre, \
+                        getElementFiltre, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
@@ -1931,7 +1931,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #########################################################################################################
     def sendEvent(self, doc = None, modif = "", draw = True, obj = None):
-#        print "sendEvent", modif
+#         print("sendEvent", modif)
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
         if doc != None:
@@ -2740,15 +2740,15 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-#         print "OnDocModified", event.GetModif()
+#         print("OnDocModified", event.GetModif())
+        
         if event.GetModif() != "":
-            
             self.classe.undoStack.do(event.GetModif())
             self.sequence.undoStack.do(event.GetModif())
         
         if event.GetDocument() == self.sequence:
-            self.sequence.VerifPb()
             if event.GetDraw():
+                self.sequence.VerifPb()
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
             
@@ -7953,9 +7953,9 @@ class PanelEffectifsClasse2(wx.Panel):
     
     def MiseAJourNbrEleve(self):
         if int(wx.version()[0]) > 2:
-            self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
+            self.boxEffRed.SetLabelText(self.classe.GetStrEffectifComplet('G', -1))
         else:
-            self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
+            self.boxEffRed.SetLabel(self.classe.GetStrEffectifComplet('G', -1))
         
         try: # py3 : pas trouvé mieux pour éviter les MemoryError
 #             self.bmp.SetLargeBitmap(self.getBitmapClasse(1200))
@@ -9900,7 +9900,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbEff.Clear()
             listEff = ref.effectifsSeance[self.seance.typeSeance]
             for s in listEff:
-                self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
+                self.cbEff.Append(self.seance.GetDocument().classe.GetStrEffectifComplet(s, -1))
             self.cbEff.SetSelection(0)
             
             self.titreEff = titre
