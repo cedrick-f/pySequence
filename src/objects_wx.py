@@ -245,6 +245,7 @@ class SeqEvent(wx.PyCommandEvent):
         self.doc = None
         self.modif = ""
         self.draw = True
+        self.verif = False
         
     ######################################################################################  
     def SetDocument(self, doc):
@@ -267,9 +268,16 @@ class SeqEvent(wx.PyCommandEvent):
         self.draw = draw
         
     ######################################################################################  
+    def SetVerif(self, verif):
+        self.verif = verif
+        
+    ######################################################################################  
     def GetDraw(self):
         return self.draw
 
+    ######################################################################################  
+    def GetVerif(self):
+        return self.verif
 
 ####################################################################################
 #
@@ -1930,7 +1938,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         return self.panelProp.panel
 
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = "", draw = True, obj = None):
+    def sendEvent(self, doc = None, modif = "", draw = True, 
+                  obj = None, verif = False):
 #         print("sendEvent", modif)
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
@@ -1942,6 +1951,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         if modif != "":
             evt.SetModif(modif)
             
+        evt.SetVerif(verif)
         evt.SetDraw(draw)
         
         self.GetEventHandler().ProcessEvent(evt)
@@ -2747,13 +2757,15 @@ class FenetreSequence(FenetreDocument):
             self.sequence.undoStack.do(event.GetModif())
         
         if event.GetDocument() == self.sequence:
-            if event.GetDraw():
+            if event.GetVerif():
                 self.sequence.VerifPb()
+            if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
             
         elif event.GetDocument() == self.classe:
-            self.sequence.VerifPb()
+            if event.GetVerif():
+                self.sequence.VerifPb()
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
@@ -3115,7 +3127,8 @@ class FenetreProjet(FenetreDocument):
             self.projet.undoStack.do(event.GetModif())
             
         if event.GetDocument() == self.projet:
-            self.projet.VerifPb()
+            if event.GetVerif():
+                self.projet.VerifPb()
             self.projet.SetCompetencesRevuesSoutenance(miseAJourPanel = False)
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
@@ -3847,13 +3860,15 @@ class FenetreProgression(FenetreDocument):
             self.progression.undoStack.do(event.GetModif())
         
         if event.GetDocument() == self.progression:
-            self.progression.VerifPb()
+            if event.GetVerif():
+                self.progression.VerifPb()
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
             
         elif event.GetDocument() == self.classe:
-            self.progression.VerifPb()
+            if event.GetVerif():
+                self.progression.VerifPb()
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
@@ -4144,7 +4159,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4401,7 +4416,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5020,8 +5035,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
     
     
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = "", draw = True, obj = None):
-        self.GetDocument().GetApp().sendEvent(doc, modif, draw, obj)
+    def sendEvent(self, doc = None, modif = "", draw = False, obj = None, verif = False):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, obj = obj, verif = verif)
         self.eventAttente = False
         
     
@@ -5103,7 +5118,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         
         if sendEvt:
             self.sendEvent(modif = "Modification de l'illustration "+self.objet.du_(),
-                           obj = self)
+                           obj = self, draw = False, verif = False)
             
             
     #############################################################################            
@@ -5158,7 +5173,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
             self.objet.icone = None
         else:
             self.objet.icone = constantes.ICONES_TACHES[self.icones[event.GetId()-100]]
-        self.sendEvent(modif = "Modification de l'icône "+self.objet.du_())   
+        self.sendEvent(modif = "Modification de l'icône "+self.objet.du_(),
+                       draw = True, verif = False)   
 
 
 
@@ -5300,7 +5316,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sequence.SetPosition(self.position.GetRange())
         self.SetBitmapPosition()
         self.sendEvent(modif = "Changement de position de la Séquence",
-                       obj = self.sequence)
+                       obj = self.sequence, draw = True, verif = False)
         
         
     #############################################################################            
@@ -5316,7 +5332,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sequence.domaine = "".join([t for t, cb in list(self.cbD.items()) if cb.IsChecked()])
         self.sequence.classe.Verrouiller(len(self.sequence.domaine) > 0)
         
-        self.sendEvent(modif = "Modification du domaine de la Séquence")
+        self.sendEvent(modif = "Modification du domaine de la Séquence", 
+                       draw = False, verif = False)
         
             
     #############################################################################            
@@ -5330,16 +5347,16 @@ class PanelPropriete_Sequence(PanelPropriete):
             t = "Modification du commentaire de la Séquence"
         
         if self.onUndoRedo():
-            self.sendEvent(modif = t)
+            self.sendEvent(modif = t, draw = True, verif = False)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                wx.CallLater(DELAY, self.sendEvent, modif = t, draw = True, verif = False)
                 self.eventAttente = True
 
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "Miseàjour"
+        print("Miseàjour", self, sendEvt)
         
         self.textctrl.SetValue(self.sequence.intitule, False)
         self.commctrl.SetValue(self.sequence.commentaires, False)
@@ -5584,8 +5601,8 @@ class PanelPropriete_Projet(PanelPropriete):
         self.projet.SetPosition(self.position.GetRange())
         self.MiseAJourPosition()
         
-        self.sendEvent(modif = "Changement de position du projet",
-                       obj = self.projet)
+        self.sendEvent(modif = "Changement de position du Projet",
+                       obj = self.projet, draw = True, verif = True)
         
         
     #############################################################################            
@@ -5676,12 +5693,12 @@ class PanelPropriete_Projet(PanelPropriete):
 #         print obj
         modif = "Modification des propriétés du Projet"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = False)
         else:
             if not self.eventAttente:
                 wx.CallLater(DELAY, self.sendEvent, 
                              modif = modif,
-                             draw = maj)
+                             draw = maj, verif = False)
                 self.eventAttente = True
 
   
@@ -5877,7 +5894,7 @@ class PanelPropriete_Projet(PanelPropriete):
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-#        print "MiseAJour Projet", sendEvt
+        print("MiseAJour Projet", sendEvt)
 
         ref = self.projet.GetProjetRef()
         
@@ -5919,7 +5936,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.Layout()
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
 
 
     ######################################################################################  
@@ -6221,7 +6238,7 @@ class PanelPropriete_Progression(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour Progression", sendEvt
+        print("MiseAJour Progression", sendEvt)
 
         
         # La page "Généralités"
@@ -6230,7 +6247,7 @@ class PanelPropriete_Progression(PanelPropriete):
         self.Layout()
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
 
     
 #     #############################################################################            
@@ -6292,13 +6309,13 @@ class PanelPropriete_Progression(PanelPropriete):
 
         modif = "Modification des propriétés de la Progression"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = False)
         else:
             if not self.eventAttente:
 #                print "   modif", obj
                 wx.CallLater(DELAY, self.sendEvent, 
                              modif = modif,
-                             draw = maj)
+                             draw = maj, verif = False)
                 self.eventAttente = True
     
     
@@ -6312,13 +6329,13 @@ class PanelPropriete_Progression(PanelPropriete):
             self.ctrlAnnee.unite.SetLabel(str(cal.annee + cal.GetNbrAnnees())) 
             
             modif = "Modification de l'année scolaire de la Progression"
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = True)
             
         elif var == self.nbrCreneaux:
             
             if self.GetDocument().SetNbrCreneaux(var.v[0]):
                 modif = "Modification du nombre de creneaux de la Progression"
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = True)
             else:
                 self.nbrCreneaux.setValeur(var.v[0]+1)
             
@@ -6435,7 +6452,7 @@ class PanelOrganisation(wx.Panel):
             if monte:
                 self.objet.VerifierIndicRevue(numRevue)
             self.parent.sendEvent(modif = "Déplacement de la revue",
-                                  obj = self.objet)
+                                  obj = self.objet, draw = True, verif = True)
         
     #############################################################################            
     def MiseAJourListe(self):
@@ -6457,7 +6474,7 @@ class PanelOrganisation(wx.Panel):
                 self.objet.MiseAJourNbrRevues()
                 self.MiseAJourListe()
                 self.parent.sendEvent(modif = "Modification du nombre de revues",
-                                      obj = self.objet)
+                                      obj = self.objet, draw = True, verif = True)
 
 
 
@@ -6737,7 +6754,7 @@ class PanelPropriete_Classe(PanelPropriete):
             self.classe.ouvrir(nomFichier)
         
         self.sendEvent(modif = "Ouverture d'une Classe",
-                       obj = self.classe)
+                       obj = self.classe, draw = True, verif = True)
     
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -6795,7 +6812,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.classe.doc.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJour()
         self.sendEvent(modif = "Réinitialisation des paramètres de Classe",
-                       obj = self.classe)
+                       obj = self.classe, draw = True, verif = True)
         
         
 #    #############################################################################            
@@ -6851,7 +6868,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de l'académie",
-                           obj = self.classe)
+                           obj = self.classe, draw = True, verif = False)
             
     
     ######################################################################################  
@@ -6878,7 +6895,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de la ville",
-                           obj = self.classe)
+                           obj = self.classe, draw = True, verif = False)
         
             
         
@@ -6892,7 +6909,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.AfficherAutre(False)
         
         self.sendEvent(modif = "Modification de l'établissement",
-                       obj = self.classe)
+                       obj = self.classe, draw = True, verif = False)
      
 
     ######################################################################################  
@@ -7090,7 +7107,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Refresh()
         
         self.sendEvent(modif = "Modification du type d'enseignement",
-                       obj = self.classe)
+                       obj = self.classe, draw = True, verif = True)
         
         
     ######################################################################################  
@@ -7705,7 +7722,7 @@ class PanelEffectifsClasse(wx.Panel):
             
         self.classe.GetApp().sendEvent(self.classe, 
                                        modif = "Modification du découpage de la Classe",
-                                       obj = self.classe)
+                                       obj = self.classe, draw = True, verif = True)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -7903,7 +7920,7 @@ class PanelEffectifsClasse2(wx.Panel):
         calculerEffectifs(self.classe)
             
         self.classe.GetApp().sendEvent(self.classe, modif = "Modification du découpage de la Classe",
-                              obj = self.classe)
+                              obj = self.classe, draw = True, verif = True)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -8258,7 +8275,8 @@ class PanelPropriete_CI(PanelPropriete):
         
         
         
-        self.sendEvent(modif = "Modification des %s abordés" %getPluriel(ref.nomCI))
+        self.sendEvent(modif = "Modification des %s abordés" %getPluriel(ref.nomCI),
+                       draw = True, verif = True)
 
 
     #############################################################################            
@@ -8292,7 +8310,7 @@ class PanelPropriete_CI(PanelPropriete):
         
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
 
 
 
@@ -8351,7 +8369,8 @@ class PanelPropriete_CI(PanelPropriete):
         self.GererCases(l, p)
 #         print "MAJ_CI_perso", self.CI.CI_perso
         ref = self.CI.GetReferentiel()
-        self.sendEvent(modif = "Modification des %s personnalisés" %getPluriel(ref.nomCI))
+        self.sendEvent(modif = "Modification des %s personnalisés" %getPluriel(ref.nomCI),
+                       draw = True, verif = False)
         
         
     #############################################################################            
@@ -8573,7 +8592,7 @@ class Panel_Cible(wx.Panel):
         
         self.Layout()
         self.Parent.group_ctrls[button_selected][0].SetValue(event.GetEventObject().IsPressed())
-        self.Parent.sendEvent(modif = t)    
+        self.Parent.sendEvent(modif = t, draw = True, verif = False)    
         
         
     #############################################################################            
@@ -8818,7 +8837,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
     #############################################################################            
     def OnChangeCreneau(self):
-        self.sendEvent(modif = "Modification des créneaux horaire %s" % self.lien.du_())
+        self.sendEvent(modif = "Modification des créneaux horaire %s" % self.lien.du_(),
+                       draw = True, verif = True)
 
 
 
@@ -8846,7 +8866,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.Layout()
         ref = self.sequenceCI.parent.classe.referentiel
-        self.sendEvent(modif = "Modification des %s abordés" %getPluriel(ref.nomCI))
+        self.sendEvent(modif = "Modification des %s abordés" %getPluriel(ref.nomCI),
+                       draw = True, verif = True)
 
 
 
@@ -8860,10 +8881,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
             self.GetDocument().GererDependants(self.sequence, t)
             
         if self.onUndoRedo():
-            self.sendEvent(modif = t)
+            self.sendEvent(modif = t, draw = True, verif = False)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                wx.CallLater(DELAY, self.sendEvent, modif = t, draw = True, verif = False)
                 self.eventAttente = True
                              
     #############################################################################            
@@ -8883,7 +8904,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour PanelPropriete_LienSequence", self.lien
+        print("MiseAJour PanelPropriete_LienSequence", self.lien, sendEvt)
 
 #        self.intit.SetLabel(self.sequence.intitule)
         
@@ -8922,8 +8943,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
        
         if sendEvt:
-            print("sendEvent !")
-            self.sendEvent()
+#             print("sendEvent !")
+            self.sendEvent(draw = True, verif = True)
             
         return True
     
@@ -8939,7 +8960,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.Layout()
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = False, verif = False)
             
         return True
     
@@ -9113,7 +9134,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
     #############################################################################            
     def OnChangeCreneau(self):
     
-        self.sendEvent(modif = "Modification des créneaux horaire %s" %self.lien.du_())
+        self.sendEvent(modif = "Modification des créneaux horaire %s" %self.lien.du_(),
+                       draw = True, verif = True)
         
      
 
@@ -9132,10 +9154,10 @@ class PanelPropriete_LienProjet(PanelPropriete):
             self.GetDocument().GererDependants(self.projet, t)
             
         if self.onUndoRedo():
-            self.sendEvent(modif = t)
+            self.sendEvent(modif = t, draw = True, verif = False)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                wx.CallLater(DELAY, self.sendEvent, modif = t, draw = True, verif = False)
                 self.eventAttente = True
                              
     #############################################################################            
@@ -9184,7 +9206,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.MiseAJourApercu()
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
             
         return True
     
@@ -9200,7 +9222,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.Layout()
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = False, verif = False)
             
         return True
     
@@ -9293,6 +9315,7 @@ class PanelPropriete_Competences(PanelPropriete):
         self.competences.GererElementsDependants(code)
         self.competences.SetCodeBranche()
         
+        
     ######################################################################################  
     def EnleverCompetence(self, code, propag = None):
         if code in self.competences.competences:
@@ -9300,11 +9323,14 @@ class PanelPropriete_Competences(PanelPropriete):
             self.competences.GererElementsDependants(code)
             self.competences.SetCodeBranche()
         
+        
     ######################################################################################  
     def SetCompetences(self): 
         
         self.competences.parent.Verrouiller()
-        self.sendEvent(modif = "Ajout/suppression d'une compétence")
+        self.sendEvent(modif = "Ajout/suppression d'une compétence", 
+                       draw = True, verif = True)
+        
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -9350,7 +9376,7 @@ class PanelPropriete_Competences(PanelPropriete):
 #                self.arbre.CheckItem2(i)
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
 #        titre = wx.StaticText(self, -1, u"Compétence :")
 #        
 #        # Prévoir un truc pour que la liste des compétences tienne compte de celles déja choisies
@@ -9493,7 +9519,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
     ######################################################################################  
     def SetSavoirs(self): 
         self.savoirs.parent.Verrouiller()
-        self.sendEvent(modif = "Ajout/suppression d'un Savoir")
+        self.sendEvent(modif = "Ajout/suppression d'un Savoir", 
+                       draw = True, verif = True)
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -9547,7 +9574,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #                    self.arbre.CheckItem2(i)
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
             
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
@@ -10256,46 +10283,57 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def OnSelectColour(self, event):
 #        print "OnSelectColour", event.GetValue()
+        ref = self.GetReferentiel()
         self.seance.couleur = couleur.Wx2Couleur(event.GetValue())
-        self.sendEvent(modif = "Mofification de la couleur de la séance")
+        self.sendEvent(modif = "Mofification de la couleur %s" %ref._nomActivites.du_(), 
+                       draw = False, verif = False)
+        
         
     #############################################################################            
     def EvtVarSysteme(self, event):
-        self.sendEvent(modif = "Modification du nombre de systèmes nécessaires")
+        ref = self.GetReferentiel()
+        self.sendEvent(modif = "Modification du nombre de %s nécessaires" %ref._nomSystemes.plur_(),
+                       draw = True, verif = True)
+        
         
     #############################################################################            
     def EvtCheckBox(self, event):
+        ref = self.GetReferentiel()
         self.seance.intituleDansDeroul = event.IsChecked()
-        self.sendEvent(modif = "Ajout/Suppression d'un système nécessaire")
+        self.sendEvent(modif = "Ajout/Suppression d'%s nécessaire" %ref._nomSystemes.un_(),
+                       draw = True, verif = True)
+    
     
     #############################################################################            
     def EvtTextIntitule(self, event):
 #         print "EvtTextIntitule Seance"
         txt = self.textctrl.GetValue()
+        ref = self.GetReferentiel()
         
         if self.seance.intitule != txt:
             self.seance.SetIntitule(txt)
             
     #         print "EvtTextIntitule", self.textctrl.GetValue()
-            modif = "Modification de l'intitulé de la Séance"
+            modif = "Modification de l'intitulé %s" %ref._nomActivites.du_()
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = False, verif = False)
             else:
                 if not self.eventAttente:
-                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = False, verif = False)
                     self.eventAttente = True
         event.Skip()    
     
     #############################################################################            
     def EvtText(self, event):
+        ref = self.GetReferentiel()
         t = ""
         if hasattr(self, 'vcDuree') and event.GetId() == self.vcDuree.GetId():
             self.seance.SetDuree(event.GetVar().v[0])
-            t = "Modification de la durée de la Séance"
+            t = "Modification de la durée %s" %ref._nomActivites.du_()
         
         elif hasattr(self, 'vcNombre') and event.GetId() == self.vcNombre.GetId():
             self.seance.SetNombre(event.GetVar().v[0])
-            t = "Modification du nombre de groupes réalisant simultanément la méme séance"
+            t = "Modification du nombre de groupes réalisant simultanément %s" %ref._nomActivites.le_("même")
             
         elif hasattr(self, 'vcTaille') and event.GetId() == self.vcTaille.GetId():
             self.seance.SetTaille(event.GetVar().v[0])
@@ -10309,7 +10347,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.sendEvent(modif = t)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                wx.CallLater(DELAY, self.sendEvent, modif = t, draw = True, verif = True)
                 self.eventAttente = True
 
     #############################################################################            
@@ -10366,14 +10404,17 @@ class PanelPropriete_Seance(PanelPropriete):
         self.ConstruireListeSystemes()
         self.Layout()
 #        print "ok"
-        self.sendEvent(modif = "Modification du type %s" %self.GetReferentiel()._nomActivites.de_())
+        self.sendEvent(modif = "Modification du type %s" %self.GetReferentiel()._nomActivites.de_(), 
+                       draw = True, verif = True)
        
         
         
     #############################################################################            
     def EvtComboBoxEff(self, event):
         self.seance.SetEffectif(event.GetString())  
-        self.sendEvent(modif = "Modification de l'effectif %s" %self.GetReferentiel()._nomActivites.du_())
+        self.sendEvent(modif = "Modification de l'effectif %s" %self.GetReferentiel()._nomActivites.du_(), 
+                       draw = True, verif = True)
+
 
     #############################################################################            
     def EvtCheckBoxSpe(self, event):
@@ -10383,7 +10424,8 @@ class PanelPropriete_Seance(PanelPropriete):
         self.AdapterAuType()
         self.MiseAJour()
         ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Modification %s %s" %(ref._nomEnsSpecif.du_(), ref._nomActivites.du_()))
+        self.sendEvent(modif = "Modification %s %s" %(ref._nomEnsSpecif.du_(), ref._nomActivites.du_()), 
+                       draw = True, verif = True)
 
 
     #############################################################################            
@@ -10391,14 +10433,16 @@ class PanelPropriete_Seance(PanelPropriete):
         ref = self.seance.GetReferentiel()
         cb = event.GetEventObject()
         self.seance.SetDemarche(cb.GetName())  
-        self.sendEvent(modif = "Modification de %s %s" %(ref._nomDemarches.le_(), ref._nomActivites.du_())) 
+        self.sendEvent(modif = "Modification de %s %s" %(ref._nomDemarches.le_(), ref._nomActivites.du_()), 
+                       draw = True, verif = True) 
         
     
     #############################################################################            
     def EvtCheckBoxDem(self, event):
         ref = self.seance.GetReferentiel()
         self.seance.SetDemarche(" ".join([cb.GetName() for cb in self.cbDem if cb.IsChecked()]))
-        self.sendEvent(modif = "Modification d'%s %s" %(ref._nomDemarches.un_(), ref._nomActivites.du_())) 
+        self.sendEvent(modif = "Modification d'%s %s" %(ref._nomDemarches.un_(), ref._nomActivites.du_()), 
+                       draw = True, verif = True) 
     
     
     ######################################################################################  
@@ -10410,7 +10454,8 @@ class PanelPropriete_Seance(PanelPropriete):
             if s in self.seance.compVisees:
                 self.seance.compVisees.remove(s)
         ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Ajout/Suppression d'%s associée %s" %(compRef._nom.un_(), ref._nomActivites.au_())) 
+        self.sendEvent(modif = "Ajout/Suppression d'%s associée %s" %(compRef._nom.un_(), ref._nomActivites.au_()), 
+                       draw = True, verif = True) 
         
         
 #     #############################################################################            
@@ -10436,7 +10481,8 @@ class PanelPropriete_Seance(PanelPropriete):
             if s in self.seance.savVises:
                 self.seance.savVises.remove(s)
         ref = self.seance.GetReferentiel()
-        self.sendEvent(modif = "Ajout/Suppression d'%s associée %s" %(savoirsRef._nom.un_(), ref._nomActivites.au_())) 
+        self.sendEvent(modif = "Ajout/Suppression d'%s associée %s" %(savoirsRef._nom.un_(), ref._nomActivites.au_()), 
+                       draw = True, verif = True) 
         
         
 #     #############################################################################            
@@ -10530,7 +10576,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.cbInt.SetValue(self.seance.intituleDansDeroul)
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
         
         self.MiseAJourLien()
         
@@ -10961,9 +11007,9 @@ class PanelPropriete_Tache(PanelPropriete):
         
         modif = "Ajout/Suppression d'une compétence à la Tâche"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = True)
         else:
-            wx.CallAfter(self.sendEvent, modif = modif)
+            wx.CallAfter(self.sendEvent, modif = modif, draw = True, verif = True)
         self.tache.projet.Verrouiller()
 
 
@@ -11097,7 +11143,8 @@ class PanelPropriete_Tache(PanelPropriete):
         
             self.GetDocument().MiseAJourDureeEleves()
     
-            self.sendEvent(modif = "Modification du taux d'implication de l'%s dans la tâche" %self.GetReferentiel().labels["ELEVES"][2].le_()) 
+            self.sendEvent(modif = "Modification du taux d'implication de l'%s dans la tâche" %self.GetReferentiel().labels["ELEVES"][2].le_(), 
+                           draw = True, verif = False) 
             
 
 #     #############################################################################            
@@ -11189,7 +11236,8 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.GetDocument().MiseAJourTachesEleves()
         
         self.ConstruireCasesEleve()
-        self.sendEvent(modif = "Changement d'%s concerné par la tâche" %self.GetReferentiel().labels["ELEVES"][2].le_())    
+        self.sendEvent(modif = "Changement d'%s concerné par la tâche" %self.GetReferentiel().labels["ELEVES"][2].le_(), 
+                       draw = True, verif = True)    
 
 
     #############################################################################            
@@ -11201,10 +11249,10 @@ class PanelPropriete_Tache(PanelPropriete):
             self.tache.SetIntitule(txt)
             modif = "Modification de l'intitulé de la Tâche"
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = False)
             else:
                 if not self.eventAttente:
-                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
                     self.eventAttente = True
         
         event.Skip()
@@ -11245,10 +11293,10 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         modif = "Modification de l'intitulé de la Tâche"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = False)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
                 self.eventAttente = True
                 
 #        self.ccTache.SetTextCtrlStyle(wx.TE_READONLY|wx.TE_WORDWRAP|wx.TE_MULTILINE)
@@ -11267,10 +11315,10 @@ class PanelPropriete_Tache(PanelPropriete):
 #            t = u"Modification de la durée de la Tâche"
     
         if self.onUndoRedo():
-            self.sendEvent(modif = t)
+            self.sendEvent(modif = t, draw = True, verif = True)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                wx.CallLater(DELAY, self.sendEvent, modif = t, draw = True, verif = True)
                 self.eventAttente = True
                 
     
@@ -11292,7 +11340,7 @@ class PanelPropriete_Tache(PanelPropriete):
             for arbre in list(self.arbres.values()):
                 arbre.MiseAJourPhase(newPhase)
             self.pageGen.Layout()
-            self.sendEvent(modif = "Changement de phase de la Tâche")
+            self.sendEvent(modif = "Changement de phase de la Tâche", draw = True, verif = True)
         
     
 #    #############################################################################            
@@ -11381,7 +11429,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 pass
             
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
         
         
 #    #############################################################################
@@ -11593,10 +11641,10 @@ class PanelPropriete_Systeme(PanelPropriete):
             self.systeme.parent.MiseAJourNomsSystemes()
             modif = "Modification %s nécessaires" %et2ou(ref._nomSystemes.des_())
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = True)
             else:
                 if not self.eventAttente:
-                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = True)
                     self.eventAttente = True
 
 
@@ -11658,7 +11706,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.Layout()
 #        print "ok"
         self.sendEvent(modif = "Modification du type %s" %et2ou(ref._nomSystemes.de_()),
-                       draw = True)
+                       draw = True, verif = False)
         
         
         
@@ -11691,10 +11739,10 @@ class PanelPropriete_Systeme(PanelPropriete):
             self.systeme.parent.MiseAJourNomsSystemes()         # mise à jour dans l'arbre de la Séquence
             modif = "Modification du nom %s" %et2ou(ref._nomSystemes.du_())
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = False)
             else:
                 if not self.eventAttente:
-                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
                     self.eventAttente = True
         
         elif isinstance(self.systeme.parent, pysequence.Classe):
@@ -11718,10 +11766,10 @@ class PanelPropriete_Systeme(PanelPropriete):
             ref = self.systeme.GetReferentiel()
             modif = "Modification du nombre %s disponibles" %et2ou(ref._nomSystemes.de_())
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = True)
             else:
                 if not self.eventAttente:
-                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = True)
                     self.eventAttente = True
 
     ######################################################################################  
@@ -11811,7 +11859,7 @@ class PanelPropriete_Systeme(PanelPropriete):
 
         if isinstance(self.systeme.parent, pysequence.Sequence):
             if sendEvt:
-                self.sendEvent()
+                self.sendEvent(draw = True, verif = True)
             
         self.MiseAJourListeSys(self.systeme.nom)
         self.MiseAJourLien()
@@ -12100,7 +12148,7 @@ class PanelPropriete_Personne(PanelPropriete):
                 self.personne.referent = referent # Ca évite des conflits ...
                 modif = "Chargement d'un Professeur"
                 self.MiseAJour()
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = False)
                 self.personne.SetCode()
             dlg.Destroy()
             
@@ -12206,10 +12254,10 @@ class PanelPropriete_Personne(PanelPropriete):
         
         modif = "Modification du nom de la personne"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = False)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
                 self.eventAttente = True
         
 
@@ -12217,13 +12265,15 @@ class PanelPropriete_Personne(PanelPropriete):
     def EvtComboBox(self, event):
         self.personne.SetDiscipline(get_key(constantes.NOM_DISCIPLINES, self.cbPhas.GetStringSelection()))
         self.Layout()
-        self.sendEvent(modif = "Modification de la discipline du professeur")
+        self.sendEvent(modif = "Modification de la discipline du professeur", 
+                       draw = True, verif = False)
 
 
     #############################################################################            
     def EvtCheckBox(self, event):
         self.personne.GetDocument().SetReferent(self.personne, event.IsChecked())
-        self.sendEvent(modif = "Changement de status (référent) du professeur")
+        self.sendEvent(modif = "Changement de status (référent) du professeur", 
+                       draw = True, verif = False)
 
     #############################################################################            
     def EvtCheckListBox(self, event):
@@ -12231,7 +12281,8 @@ class PanelPropriete_Personne(PanelPropriete):
 #         label = self.lb.GetString(index)
         self.personne.AjouterEnleverModele(index)
         
-        self.sendEvent(modif = "Modification des modèles associés à %s" %self.GetReferentiel().labels["ELEVES"][2].le_())
+        self.sendEvent(modif = "Modification des modèles associés à %s" %self.GetReferentiel().labels["ELEVES"][2].le_(), 
+                       draw = False, verif = False)
         
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
@@ -12268,7 +12319,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.lb.Refresh()
 
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
 
     ######################################################################################  
     def OnPathModified(self, lien = "", marquerModifier = True):
@@ -12449,8 +12500,8 @@ class PanelPropriete_Groupe(PanelPropriete):
             l.append((n, p))
         self.groupe.SetListEleves(l)
         ref = self.groupe.GetReferentiel()
-        self.sendEvent(modif = "Modification de la liste %s d groupe." %ref.labels["ELEVES"][2].des_(),
-                           obj = self.groupe)
+        self.sendEvent(modif = "Modification de la liste %s du groupe." %ref.labels["ELEVES"][2].des_(),
+                           obj = self.groupe, draw = False, verif = False)
     
     #############################################################################            
     def GetDocument(self):
@@ -12485,7 +12536,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de l'académie",
-                           obj = self.groupe)
+                           obj = self.groupe, draw = True, verif = False)
             
     
     ######################################################################################  
@@ -12512,7 +12563,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de la ville",
-                           obj = self.groupe)
+                           obj = self.groupe, draw = True, verif = False)
         
             
         
@@ -12526,7 +12577,7 @@ class PanelPropriete_Groupe(PanelPropriete):
 #        self.AfficherAutre(False)
 
         self.sendEvent(modif = "Modification de l'établissement",
-                       obj = self.groupe)
+                       obj = self.groupe, draw = True, verif = False)
 
 
 
@@ -12537,10 +12588,10 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         modif = "Modification du nom du groupe"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = False)
         else:
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
                 self.eventAttente = True             
                     
     ######################################################################################  
@@ -12558,7 +12609,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.groupe.SetCode()
         
         self.sendEvent(modif = "Modification du type d'enseignement",
-                       obj = self.groupe)
+                       obj = self.groupe, draw = True, verif = True)
         
 
     
@@ -12582,7 +12633,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.list_ctrl.SetListItem(self.groupe.GetListEleves())
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
 
 
    
@@ -12835,10 +12886,10 @@ class PanelPropriete_Support(PanelPropriete):
             modif = "Modification de l'intitulé du Support"
             
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = True, verif = False)
             else:
                 if not self.eventAttente:
-                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
                     self.eventAttente = True
         
 #    #############################################################################            
@@ -12855,7 +12906,7 @@ class PanelPropriete_Support(PanelPropriete):
 #        print "MiseAJour panelPropriete Support"
         self.textctrl.ChangeValue(self.support.nom)
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = True, verif = True)
         self.MiseAJourLien()
         self.SetImage()
         
@@ -13026,7 +13077,7 @@ class PanelPropriete_Modele(PanelPropriete):
             modif = "Modification de l'intitulé du Modèle"
             
             if self.onUndoRedo():
-                self.sendEvent(modif = modif)
+                self.sendEvent(modif = modif, draw = False, verif = False)
             else:
                 if not self.eventAttente:
                     wx.CallLater(DELAY, self.sendEvent, modif = modif)
@@ -13041,7 +13092,7 @@ class PanelPropriete_Modele(PanelPropriete):
         
         
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(draw = False, verif = False)
         self.MiseAJourLien()
         self.SetImage()
         
@@ -13062,7 +13113,7 @@ class PanelPropriete_Modele(PanelPropriete):
         self.modele.logiciels = self.cb_type.GetAllChecked()
 #         print self.modele.logiciels
         self.sendEvent(modif = "Modification du logiciel du Modèle",
-                       obj = self.modele)
+                       obj = self.modele, draw = False, verif = False)
         
 
 ####################################################################################
@@ -13575,7 +13626,7 @@ class ArbreSequence(ArbreDoc):
                 
                 self.sequence.OrdonnerSeances()
                 self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
             
             elif a == 2:
                 lst = dataSource.parent.seances
@@ -13587,7 +13638,7 @@ class ArbreSequence(ArbreDoc):
                     self.SortChildren(self.item)
                 else:
                     self.SortChildren(self.GetItemParent(self.item))
-                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
             
             elif a == 3:
                 lstT = dataTarget.parent.seances
@@ -13601,7 +13652,7 @@ class ArbreSequence(ArbreDoc):
                 
                 self.sequence.OrdonnerSeances()
                 self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
             
             elif a == 4:
                 lst = dataTarget.parent.seances
@@ -13615,7 +13666,7 @@ class ArbreSequence(ArbreDoc):
                    
                 self.sequence.OrdonnerSeances() 
                 self.SortChildren(self.GetItemParent(self.item))
-                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
                     
         self.itemDrag = None
         event.Skip()
@@ -13779,7 +13830,8 @@ class ArbreProjet(ArbreDoc):
                         lst.insert(t+1, lst.pop(s))
                     dataTarget.projet.SetOrdresTaches()
                     self.SortChildren(self.GetItemParent(self.item))
-                    self.GetApp().sendEvent(self.projet, modif = "Changement de position de la Tâche") # Solution pour déclencher un "redessiner"
+                    self.GetApp().sendEvent(self.projet, modif = "Changement de position de la Tâche", 
+                                            draw = True, verif = True) # Solution pour déclencher un "redessiner"
     
                 else:
                     pass
@@ -13926,7 +13978,8 @@ class ArbreProgression(ArbreDoc):
                 else:
                     lst.insert(t+1, lst.pop(s))
                 
-                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur") # Solution pour déclencher un "redessiner"
+                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur", 
+                                        draw = True, verif = False) # Solution pour déclencher un "redessiner"
 
             elif dataTarget.GetPosition() <= dataSource.GetPosition():
                 lst = self.progression.sequences_projets
@@ -13938,9 +13991,11 @@ class ArbreProgression(ArbreDoc):
                     lst.insert(t+1, lst.pop(s))
                 
                 if isinstance(dataSource, pysequence.LienSequence):
-                    self.GetApp().sendEvent(self.progression, modif = "Changement de position d'une Séquence") # Solution pour déclencher un "redessiner"
+                    self.GetApp().sendEvent(self.progression, modif = "Changement de position d'une Séquence", 
+                                            draw = True, verif = True) # Solution pour déclencher un "redessiner"
                 else:
-                    self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un Projet") # Solution pour déclencher un "redessiner"
+                    self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un Projet", 
+                                            draw = True, verif = True) # Solution pour déclencher un "redessiner"
         
         
             self.SortChildren(self.GetItemParent(self.item))
@@ -15579,7 +15634,7 @@ class Panel_SelectEnseignement(wx.Panel):
         self.sizer.Layout()
         
         self.panelClasse.sendEvent(modif = "Modification de la spécialité",
-                                   obj = self.classe)
+                                   obj = self.classe, draw = True, verif = True)
         
         
     ######################################################################################  
@@ -16398,10 +16453,10 @@ class PanelProblematiques(wx.Panel):
         self.Parent.GetDocument().GererDependants(self.CI.parent, t)
             
         if self.Parent.onUndoRedo():
-            self.Parent.sendEvent(modif = t)
+            self.Parent.sendEvent(modif = t, draw = True, verif = False)
         else:
             if not self.Parent.eventAttente:
-                wx.CallLater(DELAY, self.Parent.sendEvent, modif = t)
+                wx.CallLater(DELAY, self.Parent.sendEvent, modif = t, draw = True, verif = False)
                 self.Parent.eventAttente = True
                 
         
@@ -16427,7 +16482,8 @@ class PanelProblematiques(wx.Panel):
             self.CI.Pb.remove(pb)
         else:
             self.CI.Pb.append(pb)
-        self.Parent.sendEvent(modif = "Modification de la %s" %getSingulier(ref.nomPb))
+        self.Parent.sendEvent(modif = "Modification %s" %ref._nomPb.du_(), 
+                              draw = True, verif = False)
 
     
 
@@ -18083,8 +18139,8 @@ class PopupInfo(wx.PopupWindow):
 
      
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = "", draw = True, obj = None):
-        self.GetDocument().GetApp().sendEvent(doc, modif, draw, obj)
+    def sendEvent(self, doc = None, modif = "", draw = False, obj = None, verif = False):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, obj = obj, verif = verif)
         self.eventAttente = False
         
         
@@ -18096,9 +18152,9 @@ class PopupInfo(wx.PopupWindow):
         
         modif = "Ajout/Suppression d'une compétence à la Tâche"
         if self.onUndoRedo():
-            self.sendEvent(modif = modif)
+            self.sendEvent(modif = modif, draw = True, verif = True)
         else:
-            wx.CallAfter(self.sendEvent, modif = modif)
+            wx.CallAfter(self.sendEvent, modif = modif, draw = True, verif = True)
         self.tache.projet.Verrouiller()
         
         ul = self.soup.find(id = "comp")

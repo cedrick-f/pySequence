@@ -2433,7 +2433,7 @@ class Sequence(BaseDoc):
 
     ######################################################################################  
     def VerifPb(self):
-#         print("\nVerifPb")
+        print("\nVerifPb Seq")
         ref = self.GetReferentiel()
         
         #
@@ -3037,6 +3037,7 @@ class Sequence(BaseDoc):
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche, simple = False):
+        print("ConstruireArbre Seq")
 #         print err
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, self.sing_(),#Titres[0] 
@@ -3114,11 +3115,7 @@ class Sequence(BaseDoc):
             for sy in self.systemes:
                 sy.ConstruireArbre(arbre, self.brancheSys)    
         
-        
-        
-        self.VerifPb()
-        
-        
+#         self.VerifPb()
         
 
     ####################################################################################
@@ -11280,7 +11277,7 @@ class Systeme(ElementAvecLien, ElementBase):
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
 #        self.SetNom(self.nom)
-        self.SetNombre()
+#         self.SetNombre()
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
