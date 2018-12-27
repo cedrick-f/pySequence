@@ -2853,23 +2853,55 @@ class FenetreSequence(FenetreDocument):
         
         
     ###############################################################################################
-    def finaliserOuverture(self):
+    def finaliserOuverture(self, dlg = None, message = "", count = 0):
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
-        self.classe.ConstruireArbre(self.arbre, root)
-        self.sequence.ConstruireArbre(self.arbre, root)
-        self.sequence.CI.SetNum()
-        self.sequence.SetCodes()
-        self.sequence.PubDescription()
-        self.sequence.SetLiens()
-        self.sequence.VerifPb()
-#         self.sequence.MiseAJourTypeEnseignement()
+        
+        liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
+                         "Construction de l'arborescence de la classe...\t"],
+                         [self.sequence.ConstruireArbre, [self.arbre, root], {},
+                          "Construction de l'arborescence de la séquence...\t"],
+                         [self.sequence.CI.SetNum, [], {},
+                          "Mise à jour des CI...\t"],
+                         [self.sequence.SetCodes, [], {},
+                          "Mise à jour diverses...\t"],
+                         [self.sequence.PubDescription, [], {}, # à garder ???
+                          "Traitement des descriptions...\t"],
+                         [self.sequence.SetLiens, [], {},
+                          "Construction des liens...\t"],
+                         [self.sequence.VerifPb, [], {},
+                          "Vérifications...\t"],
+                         
+                         ]
+        
+        for fct, arg, karg, msg in liste_actions:
+            message += msg
+            if dlg is not None:
+                dlg.update(count, message)
+            count += 1
+
+            try :
+                fct(*arg, **karg)
+                message += "Ok\n"
+            except:
+#                     Ok = False
+                message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + "\n"
+                if DEBUG:
+                    raise
+        
         self.sequence.Verrouiller()
         self.sequence.SetDefautExpansion()
-#         self.arbre.ExpandAll()
-#         self.arbre.SelectItem(self.classe.branche)
-        
+
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
         wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
+        
+        return message, count
+    
+
+        
+        
         
         
     ###############################################################################################
@@ -2878,7 +2910,19 @@ class FenetreSequence(FenetreDocument):
             :param nomFichier: encodé en FileEncoding
         """
         print("ouvrir sequence", nomFichier)
+        tps1 = time.clock()
+        Ok = True
+        Annuler = False
+        nbr_etapes = 10
         
+        # Pour le suivi de l'ouverture
+        message = nomCourt(nomFichier)+"\n\n"
+        dlg = myProgressDialog("Ouverture d'une séquence",
+                                   message,
+                                   nbr_etapes,
+                                   wx.GetTopLevelParent(self))
+        dlg.Show()
+
         root = pysequence.safeParse(nomFichier, wx.GetTopLevelParent(self))
         if root is None:
             return None, "", 0, False, True
@@ -2887,7 +2931,11 @@ class FenetreSequence(FenetreDocument):
 
         
         ###############################################################################################################
-        def ouvre():
+        def ouvre(message):
+            count = 1
+            Ok = True
+            Annuler = False
+
             # La séquence
             sequence = root.find("Sequence")
             if sequence == None: # Ancienne version , forcément STI2D-ETT !!
@@ -2895,56 +2943,115 @@ class FenetreSequence(FenetreDocument):
                 self.sequence.setBranche(root)
             else:
                 # La classe
+                message += "Construction de la structure de la classe...\t"
+                dlg.update(count, message)
+#                dlg.top()
+                count += 1
                 classe = root.find("Classe")
-                self.classe.setBranche(classe, reparer = reparer)
+                err = self.classe.setBranche(classe, reparer = reparer)
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
                 
-                self.sequence.setBranche(sequence)
-                self.sequence.MiseAJourTypeEnseignement()
+                if len(err) > 0 :
+                    Ok = False
+                    message += get_err_message(err) 
+                message += "\n"
                 
-            if reparer:
-                self.VerifierReparation()
-            
-            self.finaliserOuverture()
+                message += "Construction de la structure de la séquence...\t"
+                dlg.update(count, message)
+                count += 1
+                
+                err = self.sequence.setBranche(sequence)
+                if len(err) > 0 :
+                    Ok = False
+                    message += get_err_message(err)
+                message += "\n"
+                
+                self.sequence.MiseAJourTypeEnseignement()
            
+            return root, message, count, Ok, Annuler
 
 
+        #################################################################################################
+        def annuleTout(message):
+            message += "\n\nLa séquence n'a pas pu être ouverte !\n\n"
+            if len(err) > 0:
+                message += "\n   L'erreur concerne :"
+                message += get_err_message(err)
+                
+            self.fermer()
+            count = nbr_etapes
+            dlg.update(count, message)
+            return
+        
+        
         ###############################################################################################################
         ###############################################################################################################
         
-
+        err = []
         try:
-            ouvre()
+            root, message, count, Ok, Annuler = ouvre(message)
         except OldVersion:
-            messageWarning(self, "Ancienne version",
+            messageWarning(dlg, "Ancienne version",
                "La séquence pédagogique\n    %s\n a été créée avec une version ancienne de pySéquence !\n" \
                "Elle va être automatiquement convertie au format actuel." %nomCourt(nomFichier))
             reparer = True
-            ouvre()
+            root, message, count, Ok, Annuler = ouvre(message)
             
         except:
-            messageErreur(self, "Erreur d'ouverture",
+            messageErreur(dlg, "Erreur d'ouverture",
                           "La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !\n" \
                           "Essayez de faire Outils/Ouvrir et réparer." %nomCourt(nomFichier))
-
-            self.Close()
+#             self.Close()
+            count = 0
+            err = [constantes.Erreur(constantes.ERR_INCONNUE)]
+            message += err[0].getMessage() + "\n"
+            Annuler = True
+            
             if DEBUG:
                 raise
             return
         
         if reparer:
             self.MarquerFichierCourantModifie(True)
+            self.VerifierReparation()
             
-#        self.arbre.Layout()
-#        self.arbre.ExpandAll()
-#        self.arbre.CalculatePositions()
-#        self.arbre.SelectItem(self.arbre.classe.branche)
-
+        #
+        # Erreur fatale d'ouverture
+        #
+        if Annuler:
+            annuleTout(message)
+            return
         
-#         if redessiner:
-#             wx.CallAfter(self.fiche.Redessiner)
+        #
+        # Finalisation
+        #
+        try:
+            message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
+        except:
+            annuleTout(message)
+            if DEBUG:raise
+            return
+        
+        
+        message += "Tracé de la fiche...\t"
+        dlg.update(count, message)
+#        dlg.top()
+        count += 1
 
+        tps2 = time.clock() 
+        print("Ouverture :", tps2 - tps1)
+
+        if Ok:
+            dlg.Destroy()
+        else:
+            dlg.update(nbr_etapes, message)
+            dlg.Close() 
+            
+            
+        #
+        # Mise en liste undo/redo
+        #    
         self.classe.undoStack.do("Ouverture de la Classe")
         self.sequence.undoStack.do("Ouverture de la Séquence")
         self.parent.miseAJourUndo()
@@ -3306,16 +3413,10 @@ class FenetreProjet(FenetreDocument):
                     messageInfo(dlg, "Ancien programme", 
                                   "Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
                                   "Les indicateurs de compétence ne seront pas chargés.")
-                
-                
-                    
-                    
                     
                 # Le projet
                 message += "Construction de la structure du projet...\t"
-#                dlg.top()
                 dlg.update(count, message)
-                
                 count += 1
                 
                 self.projet.code = self.projet.GetReferentiel().getCodeProjetDefaut()
@@ -3334,17 +3435,13 @@ class FenetreProjet(FenetreDocument):
                         self.projet.GetProjetRef().normaliserPoidsComp(self.projet.GetProjetRef()._dicoCompetences['S']['O7'], reset = True)
 #                         print self.projet.GetProjetRef()._dicoCompetences['S']['O7'].sousComp.items()
                 
-                
-                
                 err = self.projet.setBranche(projet)
                 
                 if len(err) > 0 :
                     Ok = False
                     message += get_err_message(err)
                 message += "\n"
-                
-            
-                        
+                          
             return root, message, count, Ok, Annuler
         
         
@@ -3375,6 +3472,7 @@ class FenetreProjet(FenetreDocument):
         err = []
         try:
             root, message, count, Ok, Annuler = ouvre(message)
+            
         except OldVersion:
             messageWarning(dlg, "Ancienne version",
                                "Le projet\n    %s\n a été créé avec une version ancienne de pySéquence !\n" \
@@ -3401,7 +3499,9 @@ class FenetreProjet(FenetreDocument):
             annuleTout(message)
             return
         
-
+        #
+        # Finalisation
+        #
         try:
             message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
         except:
@@ -3416,15 +3516,6 @@ class FenetreProjet(FenetreDocument):
         dlg.update(count, message)
 #        dlg.top()
         count += 1
-
-#        self.arbre.SelectItem(self.classe.branche)
-
-#         self.arbre.Layout()
-#         self.arbre.ExpandAll()
-#         self.arbre.CalculatePositions()
-#         self.arbre.SelectItem(self.arbre.classe.branche)
-        
-        
     
         #
         # Vérification de la version des grilles
@@ -3437,11 +3528,9 @@ class FenetreProjet(FenetreDocument):
 #         self.fiche.Redessiner() #!!!
 
         if Ok:
-            
             dlg.Destroy()
         else:
             dlg.update(nbr_etapes, message)
-#            dlg.top()
             dlg.Close() 
     
 #        self.SetTitre()

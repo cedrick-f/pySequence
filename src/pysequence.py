@@ -2250,6 +2250,8 @@ class Sequence(BaseDoc):
         """
 #         print "setBranche séquence"
 #        t0 = time.time()
+        err = []
+        
         self.intitule = branche.get("Intitule", "")
 #         print self.intitule
         self.lien.setBranche(branche, self.GetPath())
@@ -2342,7 +2344,7 @@ class Sequence(BaseDoc):
         
         self.OrdonnerSeances()
         
-        
+        return err
         
 #        self.GetPanelPropriete().MiseAJour()
 
