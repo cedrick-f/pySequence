@@ -42,6 +42,7 @@ Module de base de **pySéquence**.
 
 import wx
 from wx.lib.embeddedimage import PyEmbeddedImage
+import time
 
 import glob
 
@@ -2437,6 +2438,7 @@ class Sequence(BaseDoc):
     def VerifPb(self):
         print("\nVerifPb Seq")
         ref = self.GetReferentiel()
+        tps = time.clock()
         
         #
         # On récupère les objectifs abordés dans les séances
@@ -2455,6 +2457,10 @@ class Sequence(BaseDoc):
                     ss.VerifPb()
         cv = set(cv)
         sv = set(sv)
+         
+        print("1 :", time.clock() - tps)
+        tps = time.clock()
+        
         
         # Tri par type
         def tri(v):
@@ -2466,7 +2472,8 @@ class Sequence(BaseDoc):
         dcv = tri(cv)
         dsv = tri(sv)
         
-        
+        print("2 :", time.clock() - tps)
+        tps = time.clock()
 #         print("Séances :")
 #         print("  ", dcv, dsv)
                 
@@ -2508,6 +2515,7 @@ class Sequence(BaseDoc):
                 recup_bout(k, c, setc, getDicElem(c, ttcmp[k].GetDicFiltre(filtre)))
             
         
+        
         ttsav = ref.getTousSavoirsDict()
         dic_f_s = {}
         sets = set()
@@ -2521,7 +2529,8 @@ class Sequence(BaseDoc):
         
         
 #         print("  ", setc, sets)
-        
+        print("3 :", time.clock() - tps)
+        tps = time.clock()
         
         #
         # Objectifs de la séquence
@@ -2540,7 +2549,8 @@ class Sequence(BaseDoc):
             
 #         print("Séquence :")
 #         print("   ", cvseq, svseq)
-
+        print("4 :", time.clock() - tps)
+        tps = time.clock()
         
         # On compare
         difc = set(cvseq).difference(setc)
@@ -2549,151 +2559,8 @@ class Sequence(BaseDoc):
 #         print("Différence :")
 #         print("   ", difc, difs)
         self.SignalerPb(difc, difs)
-
-#     ######################################################################################  
-#     def VerifPb(self):
-# #         print("\nVerifPb")
-#         ref = self.GetReferentiel()
-#         
-#         #
-#         # On récupère les objectifs abordés dans les séances
-#         #
-#         sv = [] # Ensemble des savoirs visées par les Séances
-#         cv = [] # Ensemble des compétences visées par les Séances
-#         for s in self.seances:
-#             cv.extend(s.compVisees)
-#             sv.extend(s.savVises)
-#             s.VerifPb()
-#         cv = set(cv)
-#         sv = set(sv)
-#         
-#         # Tri par type
-#         dcv = {}
-#         for d in cv:
-#             if d[0] in dcv.keys():
-#                 dcv[d[0]].append(d[1:])
-#             else:
-#                 dcv[d[0]] = [d[1:]]
-#         
-#         dsv = {}
-#         for d in sv:
-#             if d[0] in dsv.keys():
-#                 dsv[d[0]].append(d[1:])
-#             else:
-#                 dsv[d[0]] = [d[1:]]
-#         
-#         
-# #         print("Séances :")
-# #         print("  ", dcv, dsv)
-#                 
-#                 
-#                 
-#         #     
-#         # On ajoute les "parents" (lorsque tous les enfants sont présents)
-#         #
-#         def compacterListeCodes(lst, dic_f):
-#             if isinstance(dic_f, dict):
-#                 for k, s in dic_f.items():
-#                     compacterListeCodes(lst, s[1])
-#                     if isinstance( s[1], dict):
-#                         if set(s[1].keys()).issubset(lst):
-#                             lst.difference_update(dic_f.keys())
-#                             lst.add(k)
-#                     
-#         ttcmp = ref.getToutesCompetencesDict()
-#         pcv = []
-#         dic_f_c = {}
-#         for k, l in dcv.items():
-#             # Compétences possibles comme objectif (à l'image de l'arbre)
-#             filtre = self.GetFiltre(ttcmp[k], "O")
-#             dic_f_c[k] = ttcmp[k].GetDicFiltre(filtre)
-# #             print("  c", dic_f)
-#             l = set(l)
-#             compacterListeCodes(l, dic_f_c[k])
-#             pcv.extend([k+ll for ll in l])
-#         
-#         ttsav = ref.getTousSavoirsDict()
-#         psv = []
-#         dic_f_s = {}
-#         for k, l in dsv.items():
-#             filtre = self.GetFiltre(ttsav[k], "O")
-#             dic_f_s[k] = ttsav[k].GetDicFiltre(filtre)
-# #             print("  s", dic_f)
-#             l = set(l)
-#             compacterListeCodes(l, dic_f_s[k])
-#             psv.extend([k+ll for ll in l])
-#         
-#         
-# #         print("  ", pcv, psv)
-#         
-#         cv.update(pcv)
-#         sv.update(psv)
-#         
-# #         print("   ", cv, sv)
-#         
-#         
-#         # On ajoute les sous éléments
-#         def getSousElem(code, dic_f):
-#             lst = [code]
-#             if isinstance(dic_f, dict):
-#                 for sc in dic_f.keys():
-#                     lst.extend(getSousElem(sc, dic_f[sc][1]))
-#             return lst
-#         
-#         def getDicElem(code, dic_f):
-#             if isinstance(dic_f, dict):
-#                 if code in dic_f.keys():
-#                     return dic_f[code][1]
-#                 for sc in dic_f.keys():
-#                     d = getDicElem(code, dic_f[sc][1])
-#                     if d is not None:
-#                         return d
-# 
-#     
-#         cvs = []
-#         for c in cv:
-#             dic_f = getDicElem(c[1:], dic_f_c[c[0]])
-#             if dic_f is not None:
-# #                 print("     ", dic_f)
-#                 cvs.extend([c[0]+cc for cc in getSousElem(c[1:], dic_f)])
-#         cvs = set(cvs)
-#         
-#         svs = []
-#         for c in sv:
-#             dic_f = getDicElem(c[1:], dic_f_s[c[0]])
-#             if dic_f is not None:
-#                 svs.extend([c[0]+cc for cc in getSousElem(c[1:], dic_f)])
-#         svs = set(svs)
-#         
-# #         print("   ", cvs, svs)
-#         
-#         
-#         
-#         #
-#         # Objectifs de la séquence
-#         #
-#         cvseq = []
-#         for c in self.obj["C"].competences:
-#             filtre = self.GetFiltre(ttcmp[c[0]], "O")
-#             cvseq.extend([c[0]+cc for cc in getSousElem(c[1:], getDicElem(c[1:], ttcmp[c[0]].GetDicFiltre(filtre)))])
-#         cvseq = list(set(cvseq))
-#         
-#         svseq = []
-#         for c in self.obj["S"].savoirs:
-#             filtre = self.GetFiltre(ttsav[c[0]], "O")
-#             svseq.extend([c[0]+cc for cc in getSousElem(c[1:], getDicElem(c[1:], ttsav[c[0]].GetDicFiltre(filtre)))])
-#         svseq = list(set(svseq))
-# #         print("Séquence :")
-# #         print("   ", cvseq, svseq)
-# 
-#         
-#         # On compare
-#         difc = set(cvseq).difference(cvs)
-#         difs = set(svseq).difference(svs)
-#         
-# #         print("Différence :")
-# #         print("   ", difc, difs)
-#         self.SignalerPb(difc, difs)
+        
+        print("5 :", time.clock() - tps)
         
         
     ######################################################################################  
@@ -7916,7 +7783,7 @@ class CentreInteret(ElementBase):
 class Competences(ElementBase):
     def __init__(self, parent, numComp = None, prerequis = False):
         self.parent = parent
-        ElementBase.__init__(self)
+        ElementBase.__init__(self, tipWidth = 600*SSCALE)
         
         self.num = numComp
         self.competences = []       # Liste des compétences (prérequis ou objectif) de la Séquence
@@ -8344,40 +8211,45 @@ class Competences(ElementBase):
         return t
     
     ######################################################################################  
-    def GetBulleHTML(self, i, css = False):
+    def GetBulleHTML(self, i = None, css = False):
         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         if css:
-            t = Template(constantes.TEMPLATE_CMP_CSS)
+            t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
         else:
-            t = Template(constantes.TEMPLATE_CMP)
+            t = Template(constantes.TEMPLATE_CMP_SAV)
         
-        lst_cmp = []
+        dic = {}
         for i, c in enumerate(sorted(self.competences)):
-            lst_cmp.append((self.GetDiscipline(c[0]) +" " + c[1:], 
-                                 self.GetReferentiel().getCompetence(c).intitule))
-         
-        html = t.render(titre = self.GetNomGenerique(),
-                        lst_cmp = lst_cmp)
+            titre = self.GetNomGenerique(c[0])
+            if not (titre in dic):
+                dic[titre] = []
+            dic[titre].append((c[1:], ref.getCompetence(c).intitule))
+        
+        html = t.render(dic = dic)
+        
         return html
     
     ######################################################################################  
     def SetTip(self):
-#         print "SetTip Comp"
-        self.tip.SetHTML(self.GetFicheHTML())
-        nc = self.GetNomGenerique()
-        self.tip.SetWholeText("titre", nc)
-#         print self.competences
-#         print sorted(self.competences)
-        for c in sorted(self.competences):
-            self.tip.AjouterElemListeDL("list", 
-                                 self.GetDiscipline(c[0]) +" " + c[1:], 
-                                 self.GetReferentiel().getCompetence(c).intitule  )
-#             self.tip.AjouterElemListeDL("list", 
-#                                  self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[1], 
-#                                  self.GetIntit(i))
-      
+        self.tip.SetHTML(self.GetBulleHTML())
         self.tip.SetPage()
+        
+# #         print "SetTip Comp"
+#         self.tip.SetHTML(self.GetBHTML())
+#         nc = self.GetNomGenerique()
+#         self.tip.SetWholeText("titre", nc)
+# #         print self.competences
+# #         print sorted(self.competences)
+#         for c in sorted(self.competences):
+#             self.tip.AjouterElemListeDL("list", 
+#                                  self.GetDiscipline(c[0]) +" " + c[1:], 
+#                                  self.GetReferentiel().getCompetence(c).intitule  )
+# #             self.tip.AjouterElemListeDL("list", 
+# #                                  self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[1], 
+# #                                  self.GetIntit(i))
+#       
+#         self.tip.SetPage()
 
             
             
@@ -8389,7 +8261,7 @@ class Competences(ElementBase):
 class Savoirs(ElementBase):
     def __init__(self, parent, num = None, prerequis = False):
         self.parent = parent        # la séquence
-        ElementBase.__init__(self)
+        ElementBase.__init__(self, tipWidth = 600*SSCALE)
         
         self.prerequis = prerequis  # Indique que ce sont des savoirs prérequis
         self.savoirs = []       # Liste des savoirs (prérequis ou objectif) de la Séquence
@@ -8671,36 +8543,57 @@ class Savoirs(ElementBase):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i, css = False):
+    def GetBulleHTML(self, i = None, css = False):
         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         if css:
-            t = Template(constantes.TEMPLATE_SAV_CSS)
+            t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
         else:
-            t = Template(constantes.TEMPLATE_SAV)
-        lst_sav = []
+            t = Template(constantes.TEMPLATE_CMP_SAV)
+        
+        dic = {}
         for i, c in enumerate(sorted(self.savoirs)):
-            lst_sav.append((self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
-                                 self.GetIntit(i)))
-         
-        html = t.render(titre = self.GetNomGenerique(),
-                        lst_sav = lst_sav)
+            titre = self.GetNomGenerique(c[0])
+            if not (titre in dic):
+                dic[titre] = []
+            dic[titre].append((self.GetTypCode(i)[1], self.GetIntit(i)))
+        
+        html = t.render(dic = dic)
+        
         return html
+    
+    
+#         ref = self.GetReferentiel()
+#         if css:
+#             t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
+#         else:
+#             t = Template(constantes.TEMPLATE_CMP_SAV)
+#         lst_sav = []
+#         for i, c in enumerate(sorted(self.savoirs)):
+#             lst_sav.append((self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
+#                                  self.GetIntit(i)))
+#          
+#         html = t.render(titre = self.GetNomGenerique(),
+#                         lst_sav = lst_sav)
+#         return html
     
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
-        nc = self.GetNomGenerique()
-        self.tip.SetWholeText("titre", nc)
-        
-        for i, c in enumerate(sorted(self.savoirs)):
-            self.tip.AjouterElemListeDL("list", 
-                                 self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
-                                 self.GetIntit(i))
-      
+        self.tip.SetHTML(self.GetBulleHTML())
         self.tip.SetPage()
         
+#         self.tip.SetHTML(self.GetFicheHTML())
+#         nc = self.GetNomGenerique()
+#         self.tip.SetWholeText("titre", nc)
+#         
+#         for i, c in enumerate(sorted(self.savoirs)):
+#             self.tip.AjouterElemListeDL("list", 
+#                                  self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
+#                                  self.GetIntit(i))
+#       
+#         self.tip.SetPage()
+#         
          
             
 

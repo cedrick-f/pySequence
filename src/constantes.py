@@ -1159,7 +1159,11 @@ BASE_FICHE_HTML_CI = """
 """
 
 
-TEMPLATE_CMP_CSS = ""
+TEMPLATE_CMP_SAV_CSS = ""
+
+TEMPLATE_CMP_SAV = ""
+
+
 #     <h1>{{ titre }}</h1>
 #     <dl>
 #     {% for i, n in lst_cmp %}
@@ -1167,7 +1171,6 @@ TEMPLATE_CMP_CSS = ""
 #     {% endfor %}
 #     </dl> 
 # """
-
 
 BASE_FICHE_HTML_COMP = """
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
@@ -1876,8 +1879,8 @@ def charger_icones():
     
     
 def charger_templates():
-    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, TEMPLATE_SAV_CSS, \
-           TEMPLATE_CMP_CSS
+    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, \
+           TEMPLATE_CMP_SAV_CSS, TEMPLATE_CMP_SAV
     
     def charge(nf):
         f = open(nf, encoding = "utf-8")
@@ -1888,9 +1891,8 @@ def charger_templates():
     TEMPLATE_SEANCE_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_activite_css.html"))
     TEMPLATE_SEANCE = charge(os.path.join(TEMPLATE_PATH, "popup_activite.html"))
     TEMPLATE_CI_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_ci_css.html"))
-    TEMPLATE_SAV_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_sav_css.html"))
-    TEMPLATE_CMP_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_cmp_css.html"))
-    
+    TEMPLATE_CMP_SAV_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp_css.html"))
+    TEMPLATE_CMP_SAV = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp.html"))
     
 #import array
 #from ctypes import *
