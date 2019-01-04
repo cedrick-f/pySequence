@@ -10619,7 +10619,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour PP séance"
+#         print("MiseAJour PP séance")
 #         self.AdapterAuType()
         ref = self.GetReferentiel()
         if self.seance.typeSeance != "" and ref.seances[self.seance.typeSeance][1] in self.cbType.GetStrings():
@@ -10639,6 +10639,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #            print ref.demarches[self.seance.demarche][1]
 #            print self.cbDem.GetStrings()
 #            print self.seance
+#         print("   ", self.seance.demarche)
         if hasattr(self, 'cbDem'):
             if ref.multiDemarches:
                 for cb in self.cbDem:

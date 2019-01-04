@@ -9531,10 +9531,17 @@ class Seance(ElementAvecLien, ElementBase):
             for s in self.seances:
                 s.MiseAJourTypeEnseignement()
         else:
-            if self.GetReferentiel().multiDemarches:
-                self.demarche = ""
-            else:
-                self.demarche = "I"  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
+            if not self.GetReferentiel().multiDemarches:
+                if len(self.demarche) == 0:
+                    self.demarche = "I"
+                elif len(self.demarche.split()) > 0:
+                    self.demarche = self.demarche.split()[0]
+                
+                
+#             if self.GetReferentiel().multiDemarches:
+#                 self.demarche = ""
+#             else:
+                  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
 #         print("MiseAJourTypeEnseignement", self.demarche)
 #         self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
         
