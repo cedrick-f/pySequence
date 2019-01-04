@@ -319,7 +319,8 @@ def getPts(lst_rect):
         return lst
     
 ######################################################################################  
-def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = False):
+def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, 
+         entete = False, surRect = None):
     """ Dessine une fiche de projet du projet <prj>
         dans un contexte cairo <ctx>
     """

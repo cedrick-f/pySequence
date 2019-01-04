@@ -498,7 +498,7 @@ def getPts(lst_rect):
         return lst
     
 ######################################################################################  
-def Draw(ctx, prg, mouchard = False):
+def Draw(ctx, prg, mouchard = False, surRect = None):
     """ Dessine une fiche de progression <prg>
         dans un contexte cairo <ctx>
     """

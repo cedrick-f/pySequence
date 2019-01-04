@@ -8648,6 +8648,8 @@ class Seance(ElementAvecLien, ElementBase):
         self.compVisees = [] # Liste de codes de compétences (code famille + code) visées par la séances
         self.savVises = []  # Liste de codes de savoirs (code famille + code) visés par la séances
         
+        self.indicateurs = {} # dictionnaire {code_comp : indicateur de performance
+        
         self.code = ""
         self.couleur = (0,0,0,1)
         
@@ -8806,6 +8808,13 @@ class Seance(ElementAvecLien, ElementBase):
         if len(self.compVisees) > 0:
             root.set("CompVisees", " ".join(self.compVisees))    
             
+        # Indicateurs de performance
+        brancheIndic = ET.Element("Indicateurs")
+        root.append(brancheIndic)
+        for c, i in self.indicateurs.items():
+            brancheIndic.set(c, i)
+            
+            
         # Savoirs visés
         if len(self.savVises) > 0:
             root.set("SavVises", " ".join(self.savVises))    
@@ -8879,6 +8888,14 @@ class Seance(ElementAvecLien, ElementBase):
         
         # Compétences visées
         self.compVisees = branche.get("CompVisees", "").split()
+        
+        # Indicateurs de performance
+        brancheIndic = branche.find("Indicateurs")
+        self.indicateurs = {}
+        if brancheIndic is not None:
+            for c, i in brancheIndic.items():
+                self.indicateurs[c] = i
+        
         
         # Savoirs visés
         self.savVises = branche.get("SavVises", "").split()

@@ -70,6 +70,9 @@ try:
 except:
     pass
    
+from wx.lib.expando import ExpandoTextCtrl
+
+
 import version
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
@@ -2197,9 +2200,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             pourDossierValidation : concerne uniquement les Projets = pour anonymiser la fiche
         """
         # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
-        tf = tempfile.mkstemp()[1]+".pdf"
-        PDFsurface = cairo.PDFSurface(nomFichier, 595, 842)#.decode(SYSTEM_ENCODING).encode(FILE_ENCODING)
-
+        tf = tempfile.mkstemp(suffix = "pdf")#+".pdf"
+        PDFsurface = cairo.PDFSurface(tf[1], 595, 842)#.decode(SYSTEM_ENCODING).encode(FILE_ENCODING)
+        print(tf[1])
         ctx = cairo.Context(PDFsurface)
         ctx.scale(820 / draw_cairo.COEF, 820/ draw_cairo.COEF) 
         if self.typ == 'seq':
@@ -2212,8 +2215,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         PDFsurface.finish()
         
         try:
-            shutil.copy(tf, nomFichier)
-            os.remove(tf)
+            shutil.copy(tf[1], nomFichier)
+            os.close(tf[0])
+            os.remove(tf[1])
         except IOError:
             Dialog_ErreurAccesFichier(nomFichier)
 #             wx.EndBusyCursor()
@@ -10593,6 +10597,18 @@ class PanelPropriete_Seance(PanelPropriete):
         pass
     
     ######################################################################################  
+    def SetIndicateurs(self):
+        self.seance.indicateurs = {}
+        if len(self.arbreCmp) > 0:
+            for arbre in self.arbreCmp.values():
+                self.seance.indicateurs.update(arbre.getDictIndicateurs())
+                n = arbre.competencesRef._nomIndic.un_()
+            ref = self.GetReferentiel()
+            self.sendEvent(modif = "Modification d'%s de %s" %(n, ref._nomActivites.au_()), 
+                           draw = False, verif = False) 
+        
+        
+    ######################################################################################  
     def SetSavoirs(self):
         pass
         
@@ -10648,8 +10664,13 @@ class PanelPropriete_Seance(PanelPropriete):
                 for cmp in self.seance.compVisees:
                     if typ == cmp[0]:
                         if cmp[1:] in arbre.items.keys():
-                            arbre.CheckItem2(arbre.items[cmp[1:]])
-                            arbre.AutoCheckChild(arbre.items[cmp[1:]], True)
+                            i = arbre.items[cmp[1:]]
+                            arbre.CheckItem2(i)
+                            arbre.AutoCheckChild(i, True)
+                            wnd = arbre.GetItemWindow(i, 1)
+                            if wnd is not None:
+                                wnd.SetValue(self.seance.indicateurs[cmp])
+                                
                         
         # Arbres de savoirs
         if hasattr(self, 'arbreSav'):
@@ -10658,8 +10679,9 @@ class PanelPropriete_Seance(PanelPropriete):
                 for cmp in self.seance.savVises:
                     if typ == cmp[0]:
                         if cmp[1:] in arbre.items.keys():
-                            arbre.CheckItem2(arbre.items[cmp[1:]])
-                            arbre.AutoCheckChild(arbre.items[cmp[1:]], True)
+                            i = arbre.items[cmp[1:]]
+                            arbre.CheckItem2(i)
+                            arbre.AutoCheckChild(i, True)
             
         self.vcTaille.mofifierValeursSsEvt()
         
@@ -14600,7 +14622,11 @@ class ArbreCompetences(HTL.HyperTreeList):
       
         self.AddColumn(competencesRef.nomDiscipline)
         self.SetMainColumn(0) # the one with the tree in it...
-        self.CreerColonnes()
+        self.CreerColonnes() # Pour projet uniquement
+        
+        # Séance ==> colonne pour Indicateurs
+        if isinstance(self.pp, PanelPropriete_Seance):
+            self.AddColumn(competencesRef._nomIndic.Plur_())
         
         self.root = self.AddRoot(competencesRef.nomDiscipline)
         self.MiseAJourTypeEnseignement(self.compFiltre)
@@ -14677,6 +14703,14 @@ class ArbreCompetences(HTL.HyperTreeList):
             else:
                 ct_type = 0
             b = self.AppendItem(branche, k+" "+dic[k][0].intitule, ct_type = ct_type, data = k)
+            
+            # Séance ==> Indicateurs
+#             if isinstance(self.pp, PanelPropriete_Seance):
+#                 wnd = ExpandoTextCtrl(self.GetMainWindow())
+#                 wnd.Hide()
+#                 self.SetItemWindow(b, wnd, 1)
+#                 self.Bind(wx.EVT_TEXT, self.OnTextIndic)
+            
             if dic[k][1] is not None:
                 self.Construire(b, dic[k][1], niveau = niveau+1)
             
@@ -14732,16 +14766,30 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     
     ####################################################################################
+    def OnTextIndic(self, event):
+        event.Skip()
+        wx.CallAfter(self.pp.SetIndicateurs)
+        
+    ####################################################################################
     def OnItemCheck(self, event):
+        print("OnItemCheck")
         event.Skip()
         
         self.uncheckParentsPasPleins(self.root)
 
         lstc, lstu = [], []
         self.getListItemCheckedUnchecked(self.root, lstc, lstu)
-
         self.pp.AjouterEnleverCompetences(lstc, lstu, self.competencesRef)
         
+        self.gererAffichageTxtCtrl()
+#         lstc, lstu = [], []
+#         self.getListItemCheckedUnchecked2(self.root, lstc, lstu)
+#         for i in lstc:
+#             self.GetItemWindow(i).Show(True)
+#         for i in lstu:
+#             self.GetItemWindow(i).Show(False)
+            
+            
         self.Refresh()                
         wx.CallAfter(self.pp.SetCompetences)
         
@@ -14813,6 +14861,51 @@ class ArbreCompetences(HTL.HyperTreeList):
                 lstu.append(self.getCode(i))
             self.getListItemCheckedUnchecked(i, lstc, lstu)
         
+    
+    ###################################################################################
+    def getListItemCheckedUnchecked2(self, branche, lstc, lstu):
+        """ Rempli 2 listes :
+             - une avec les  items cochés
+             - une autre avec les items décochés
+             
+            fonction récursive
+        """
+        for i in branche.GetChildren():
+            if i.IsChecked() and not branche.IsChecked():
+                lstc.append(i)
+            else:
+                lstu.append(i)
+            self.getListItemCheckedUnchecked2(i, lstc, lstu)
+            
+    
+    ###################################################################################
+    def gererAffichageTxtCtrl(self):
+        if isinstance(self.pp, PanelPropriete_Seance):
+            lstc, lstu = [], []
+            self.getListItemCheckedUnchecked2(self.root, lstc, lstu)
+            for i in lstc:
+                if self.GetItemWindow(i, 1) is None:
+                    wnd = ExpandoTextCtrl(self.GetMainWindow())
+                    self.SetItemWindow(i, wnd, 1)
+                    self.Bind(wx.EVT_TEXT, self.OnTextIndic)
+                
+            for i in lstu:
+                i.DeleteWindow(1)
+#                 wnd = self.GetItemWindow(i, 1)
+#                 self.SetItemWindow(i, None, 1)
+#                 wnd.Destroy()
+#                 self.DeleteItemWindow(i, 1)
+        
+        
+    ###################################################################################
+    def getDictIndicateurs(self):
+        lstc, lstu = [], []
+        self.getListItemCheckedUnchecked2(self.root, lstc, lstu)
+        d = {}
+        for i in lstc:
+            d[self.getCode(i)] = self.GetItemWindow(i, 1).GetValue()
+        return d
+    
     
     ###################################################################################
     def uncheckParentsPasPleins(self, branche):
