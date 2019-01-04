@@ -2436,9 +2436,9 @@ class Sequence(BaseDoc):
 
     ######################################################################################  
     def VerifPb(self):
-        print("\nVerifPb Seq")
+#         print("\nVerifPb Seq")
         ref = self.GetReferentiel()
-        tps = time.clock()
+#         tps = time.clock()
         
         #
         # On récupère les objectifs abordés dans les séances
@@ -2458,7 +2458,7 @@ class Sequence(BaseDoc):
         cv = set(cv)
         sv = set(sv)
          
-        print("1 :", time.clock() - tps)
+#         print("1 :", time.clock() - tps)
         tps = time.clock()
         
         
@@ -2472,7 +2472,7 @@ class Sequence(BaseDoc):
         dcv = tri(cv)
         dsv = tri(sv)
         
-        print("2 :", time.clock() - tps)
+#         print("2 :", time.clock() - tps)
         tps = time.clock()
 #         print("Séances :")
 #         print("  ", dcv, dsv)
@@ -2529,7 +2529,7 @@ class Sequence(BaseDoc):
         
         
 #         print("  ", setc, sets)
-        print("3 :", time.clock() - tps)
+#         print("3 :", time.clock() - tps)
         tps = time.clock()
         
         #
@@ -2549,8 +2549,8 @@ class Sequence(BaseDoc):
             
 #         print("Séquence :")
 #         print("   ", cvseq, svseq)
-        print("4 :", time.clock() - tps)
-        tps = time.clock()
+#         print("4 :", time.clock() - tps)
+#         tps = time.clock()
         
         # On compare
         difc = set(cvseq).difference(setc)
@@ -2560,7 +2560,7 @@ class Sequence(BaseDoc):
 #         print("   ", difc, difs)
         self.SignalerPb(difc, difs)
         
-        print("5 :", time.clock() - tps)
+#         print("5 :", time.clock() - tps)
         
         
     ######################################################################################  
@@ -2906,7 +2906,7 @@ class Sequence(BaseDoc):
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche, simple = False):
-        print("ConstruireArbre Seq")
+#         print("ConstruireArbre Seq")
 #         print err
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, self.sing_(),#Titres[0] 
@@ -8825,7 +8825,7 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print("setBranche séance", self)
+#         print("setBranche séance", self)
 #        t0 = time.time()
         ref = self.GetReferentiel()
         

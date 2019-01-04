@@ -737,7 +737,7 @@
         </Competence_O7>
       </d_dicCompetences>
     </Competences_S>
-    <Competences_P B_obj="True" B_pre="True" I_nivObj="0" S_abrDiscipline="Phy Ch" S_codeDiscipline="Phy" S_nomDiscipline="STI2D" S_nomGenerique="Compétence(s) - capacité(s)$f" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_P B_obj="True" B_pre="True" I_nivObj="0" S_abrDiscipline="Phy Ch" S_codeDiscipline="Phy" S_nomDiscipline="STI2D" S_nomGenerique="Compétence(s) - capacité(s)$f" S_nomGeneriqueIndic="Indicateur(s) de performance$m">
       <l_asso_contexte S_00="O" />
       <l_asso_type S_00="Spe" />
       <d_dicCompetences>
@@ -2055,7 +2055,7 @@
             </Savoir_2.2>
             <Savoir_2.3 S_intitule="Approche fonctionnelle et structurelle des chaînes de puissance">
               <l_elemAssocies>
-                <l_00 S_00="I2D" />
+                <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 S_00="CO3.1" S_01="CO3.2" S_02="CO3.3" S_03="CO3.4" S_04="CO4.1" S_05="CO4.2" S_06="CO5.3" S_07="CO5.7" S_08="CO6.1" S_09="CO7.3.EE2" />
               </l_elemAssocies>
               <l_infos />
@@ -2066,7 +2066,7 @@
               <d_sousSav>
                 <Savoir_2.3.1 S_intitule="Typologie des chaînes de puissance">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2077,7 +2077,7 @@
                   <d_sousSav>
                     <Savoir_2.3.1.1 S_intitule="Notion de chaine de puissance.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2089,7 +2089,7 @@
                     </Savoir_2.3.1.1>
                     <Savoir_2.3.1.2 S_intitule="Principales fonctions relatives à la chaine de puissance :">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2101,7 +2101,7 @@
                     </Savoir_2.3.1.2>
                     <Savoir_2.3.1.3 S_intitule="Caractérisation des fonctions.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2113,7 +2113,7 @@
                     </Savoir_2.3.1.3>
                     <Savoir_2.3.1.4 S_intitule="Représentation graphique d’une chaine de puissance.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2177,7 +2177,7 @@
                 </Savoir_2.3.3>
                 <Savoir_2.3.4 S_intitule="Modulation de puissance">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2188,7 +2188,7 @@
                   <d_sousSav>
                     <Savoir_2.3.4.1 S_intitule="Types de modulation électrique commandée (AC/AC, AC/DC,  DC/AC, DC/DC).">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2202,7 +2202,7 @@
                 </Savoir_2.3.4>
                 <Savoir_2.3.5 S_intitule="Adaptation de puissance">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2213,7 +2213,7 @@
                   <d_sousSav>
                     <Savoir_2.3.5.1 S_intitule="Types d’adaptation : électrique non commandée (AC/AC, AC/DC, DC/AC, DC/DC).">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2227,7 +2227,7 @@
                 </Savoir_2.3.5>
                 <Savoir_2.3.6 S_intitule="Transmission de puissance">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2238,7 +2238,7 @@
                   <d_sousSav>
                     <Savoir_2.3.6.1 S_intitule="Représentation plane et spatiale des liaisons élémentaires parfaites.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2250,7 +2250,7 @@
                     </Savoir_2.3.6.1>
                     <Savoir_2.3.6.2 S_intitule="Classes d’équivalences cinématiques, graphe de liaison.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2262,7 +2262,7 @@
                     </Savoir_2.3.6.2>
                     <Savoir_2.3.6.3 S_intitule="Schéma cinématique, schéma cinématique minimal.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2278,7 +2278,7 @@
             </Savoir_2.3>
             <Savoir_2.4 S_intitule="Approche fonctionnelle et structurelle des chaînes d'information">
               <l_elemAssocies>
-                <l_00 S_00="I2D" />
+                <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 S_00="CO3.1" S_01="CO3.2" S_02="CO3.3" S_03="CO3.4" S_04="CO4.1" S_05="CO4.2" S_06="CO5.3" S_07="CO5.7" S_08="CO6.1" />
               </l_elemAssocies>
               <l_infos />
@@ -2289,7 +2289,7 @@
               <d_sousSav>
                 <Savoir_2.4.1 S_intitule="Typologie des chaînes d'information">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2300,7 +2300,7 @@
                   <d_sousSav>
                     <Savoir_2.4.1.1 S_intitule="Notion de chaine d'information.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2312,7 +2312,7 @@
                     </Savoir_2.4.1.1>
                     <Savoir_2.4.1.2 S_intitule="Principales fonctions relatives à la chaine d’information : acquérir, traiter, communiquer.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2324,7 +2324,7 @@
                     </Savoir_2.4.1.2>
                     <Savoir_2.4.1.3 S_intitule="Caractérisation des fonctions.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2336,7 +2336,7 @@
                     </Savoir_2.4.1.3>
                     <Savoir_2.4.1.4 S_intitule="Représentation graphique d’une chaine d'information.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2350,7 +2350,7 @@
                 </Savoir_2.4.1>
                 <Savoir_2.4.2 S_intitule="Acquisition et restitution de l'information">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2361,7 +2361,7 @@
                   <d_sousSav>
                     <Savoir_2.4.2.1 S_intitule="Acquisition d’une grandeur physique (principe, démarches et méthodes, notions requises).">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2373,7 +2373,7 @@
                     </Savoir_2.4.2.1>
                     <Savoir_2.4.2.2 S_intitule="Conditionnement d’une grandeur électrique (mise en forme, amplification, filtrage).">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2385,7 +2385,7 @@
                     </Savoir_2.4.2.2>
                     <Savoir_2.4.2.3 S_intitule="Conversion Analogique/Numérique (CAN).">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2399,7 +2399,7 @@
                 </Savoir_2.4.2>
                 <Savoir_2.4.3 S_intitule="Codage et traitement de l'information">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2410,7 +2410,7 @@
                   <d_sousSav>
                     <Savoir_2.4.3.1 S_intitule="Encodage de l’information : binaire, hexadécimal, ASCII.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2422,7 +2422,7 @@
                     </Savoir_2.4.3.1>
                     <Savoir_2.4.3.2 S_intitule="Algorithmique.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2434,7 +2434,7 @@
                     </Savoir_2.4.3.2>
                     <Savoir_2.4.3.3 S_intitule="Traitement numérique.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2446,7 +2446,7 @@
                     </Savoir_2.4.3.3>
                     <Savoir_2.4.3.4 S_intitule="Compression de données.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2460,7 +2460,7 @@
                 </Savoir_2.4.3>
                 <Savoir_2.4.4 S_intitule="Transmission de l'information">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2471,7 +2471,7 @@
                   <d_sousSav>
                     <Savoir_2.4.4.1 S_intitule="Typologie des transmissions.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2483,7 +2483,7 @@
                     </Savoir_2.4.4.1>
                     <Savoir_2.4.4.2 S_intitule="Architecture d’un réseau informatique.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2495,7 +2495,7 @@
                     </Savoir_2.4.4.2>
                     <Savoir_2.4.4.3 S_intitule="Architecture Client/Serveur.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2509,7 +2509,7 @@
                 </Savoir_2.4.4>
                 <Savoir_2.4.5 S_intitule="Structure d'une application logicielle">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2520,7 +2520,7 @@
                   <d_sousSav>
                     <Savoir_2.4.5.1 S_intitule="Organisation structurelle d’une application logicielle : (programme principal, interfaces, entrées-sorties, sous programmes, procédures, fonctions).">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2549,7 +2549,7 @@
           <d_sousSav>
             <Savoir_3.1 S_intitule="Modélisations et simulations">
               <l_elemAssocies>
-                <l_00 S_00="I2D" />
+                <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 S_00="CO1.3" S_01="CO6.1" S_02="CO6.2" S_03="CO6.3" S_04="CO6.4" S_05="CO6.5.AC1" S_06="CO6.5.AC2" S_07="CO6.5.EE1" S_08="CO6.5.EE2" S_09="CO6.5.ITEC1" S_10="CO6.5.ITEC2" S_11="CO6.5.SIN1" />
               </l_elemAssocies>
               <l_infos />
@@ -2560,7 +2560,7 @@
               <d_sousSav>
                 <Savoir_3.1.1 S_intitule="Progiciel de simulation">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2571,7 +2571,7 @@
                   <d_sousSav>
                     <Savoir_3.1.1.1 S_intitule="Typologie des progiciels.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2583,7 +2583,7 @@
                     </Savoir_3.1.1.1>
                     <Savoir_3.1.1.2 S_intitule="Critères de choix.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2597,7 +2597,7 @@
                 </Savoir_3.1.1>
                 <Savoir_3.1.2 S_intitule="Paramétrage d'un modèle">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2608,7 +2608,7 @@
                   <d_sousSav>
                     <Savoir_3.1.2.1 S_intitule="Variables internes, variables externes.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2620,7 +2620,7 @@
                     </Savoir_3.1.2.1>
                     <Savoir_3.1.2.2 S_intitule="Notion de grandeur flux, grandeur effort.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2632,7 +2632,7 @@
                     </Savoir_3.1.2.2>
                     <Savoir_3.1.2.3 S_intitule="Entrées, sources de simulation.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2644,7 +2644,7 @@
                     </Savoir_3.1.2.3>
                     <Savoir_3.1.2.4 S_intitule="Sorties, rendus des résultats.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2695,7 +2695,7 @@
                 </Savoir_3.1.3>
                 <Savoir_3.1.4 S_intitule="Post-traitement et analyse des résultats">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2706,7 +2706,7 @@
                   <d_sousSav>
                     <Savoir_3.1.4.1 S_intitule="Principaux traitements de données postérieurs aux résultats issus de simulation.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2718,7 +2718,7 @@
                     </Savoir_3.1.4.1>
                     <Savoir_3.1.4.2 S_intitule="Interprétation des résultats d’une simulation : courbe, tableau, graphe, unités associées.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2734,7 +2734,7 @@
             </Savoir_3.1>
             <Savoir_3.2 S_intitule="Comportement mécanique des produits">
               <l_elemAssocies>
-                <l_00 S_00="I2D" />
+                <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 S_00="CO5.8.AC1" S_01="CO5.8.ITEC1" S_02="CO5.8.ITEC2" S_03="CO6.1" S_04="CO6.2" S_05="CO6.3" S_06="CO6.4" S_07="CO6.5.AC1" S_08="CO6.5.AC2" S_09="CO6.5.EE1" S_10="CO6.5.ITEC2" S_11="CO6.5.ITEC2" S_12="CO7.3.AC1" S_13="CO7.3.ITEC2" />
               </l_elemAssocies>
               <l_infos />
@@ -2745,7 +2745,7 @@
               <d_sousSav>
                 <Savoir_3.2.1 S_intitule="Concept de mouvement">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2768,7 +2768,7 @@
                     </Savoir_3.2.1.1>
                     <Savoir_3.2.1.2 S_intitule="Mouvements des mécanismes (en lien avec la modélisation des liaisons) :">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2780,7 +2780,7 @@
                     </Savoir_3.2.1.2>
                     <Savoir_3.2.1.3 S_intitule="Comportement des liaisons élémentaires en relation avec les mouvements et les efforts.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2794,7 +2794,7 @@
                 </Savoir_3.2.1>
                 <Savoir_3.2.2 S_intitule="Concept d'équilibre">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2805,7 +2805,7 @@
                   <d_sousSav>
                     <Savoir_3.2.2.1 S_intitule="Équilibre des solides :">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2817,7 +2817,7 @@
                     </Savoir_3.2.2.1>
                     <Savoir_3.2.2.2 S_intitule="Concept de stabilité et d’instabilité d’un composant ou d’une structure mécanique :">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2829,7 +2829,7 @@
                     </Savoir_3.2.2.2>
                     <Savoir_3.2.2.3 S_intitule="Transmission des efforts.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2843,7 +2843,7 @@
                 </Savoir_3.2.2>
                 <Savoir_3.2.3 S_intitule="Concept de résistance">
                   <l_elemAssocies>
-                    <l_00 S_00="I2D" />
+                    <l_00 S_00="I2D" S_01="2I2D" />
                     <l_01 />
                   </l_elemAssocies>
                   <l_infos />
@@ -2854,7 +2854,7 @@
                   <d_sousSav>
                     <Savoir_3.2.3.1 S_intitule="Résistance à la rupture, résistance à la déformation.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2866,7 +2866,7 @@
                     </Savoir_3.2.3.1>
                     <Savoir_3.2.3.2 S_intitule="Résistance des matériaux :">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2878,7 +2878,7 @@
                     </Savoir_3.2.3.2>
                     <Savoir_3.2.3.3 S_intitule="Simulations par éléments finis.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2890,7 +2890,7 @@
                     </Savoir_3.2.3.3>
                     <Savoir_3.2.3.4 S_intitule="Déformation et contraintes normales dans une structure isostatique :">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -2902,7 +2902,7 @@
                     </Savoir_3.2.3.4>
                     <Savoir_3.2.3.5 S_intitule="Scénario de simulation pour comparer et valider une solution, modifier une pièce ou un sous-ensemble.">
                       <l_elemAssocies>
-                        <l_00 S_00="I2D" />
+                        <l_00 S_00="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
@@ -3184,7 +3184,7 @@
                   <d_sousSav>
                     <Savoir_3.4.4.1 S_intitule="Représentation d’une boucle de régulation ou d’asservissement.">
                       <l_elemAssocies>
-                        <l_00 S_00="2I2D" />
+                        <l_00 S_00="I2D" S_01="2I2D" />
                         <l_01 />
                       </l_elemAssocies>
                       <l_infos />
