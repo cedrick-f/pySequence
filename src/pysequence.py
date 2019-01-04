@@ -8825,7 +8825,7 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def setBranche(self, branche):
-#         print("setBranche séance", self)
+        print("setBranche séance", self)
 #        t0 = time.time()
         ref = self.GetReferentiel()
         
@@ -8850,9 +8850,10 @@ class Seance(ElementAvecLien, ElementBase):
         if self.typeSeance in ["R", "S"]:
             self.seances = []
             for sce in list(branche):
-                seance = Seance(self)
-                self.seances.append(seance)
-                seance.setBranche(sce)
+                if sce.tag[:6] == "Seance":
+                    seance = Seance(self)
+                    self.seances.append(seance)
+                    seance.setBranche(sce)
             self.duree.v[0] = self.GetDuree()
             if self.typeSeance == "R":
                 self.nbrRotations.v[0] = eval(branche.get("nbrRotations", str(len(self.seances))))
@@ -8871,7 +8872,7 @@ class Seance(ElementAvecLien, ElementBase):
                             # liée à la liste des systèmes de la Séquence
                             # Nouveau depuis v7.1
             for s in list(branche):
-                lstNSys.append(int(s.get("Nombre", "")))  
+                lstNSys.append(int(s.get("Nombre", "0")))  
                     
                 
             self.AjouterListeSystemes(lstNSys)#lstSys, 

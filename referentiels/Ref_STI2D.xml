@@ -37,7 +37,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S B_obj="True" B_pre="True" I_nivObj="1" S_abrDiscipline="STI2D" S_codeDiscipline="SII" S_nomDiscipline="STI2D" S_nomGenerique="Compétence(s)$f" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="True" I_nivObj="1" S_abrDiscipline="STI2D" S_codeDiscipline="SII" S_nomDiscipline="STI2D" S_nomGenerique="Compétence(s)$f" S_nomGeneriqueIndic="Indicateur(s) de performance$m">
       <l_asso_contexte S_00="O" S_01="O" />
       <l_asso_type S_00="Spe" S_01="EnsSpe" />
       <d_dicCompetences>

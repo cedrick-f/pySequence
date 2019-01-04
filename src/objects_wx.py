@@ -2200,9 +2200,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             pourDossierValidation : concerne uniquement les Projets = pour anonymiser la fiche
         """
         # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
-        tf = tempfile.mkstemp(suffix = "pdf")#+".pdf"
+        tf = tempfile.mkstemp(suffix = ".pdf")#+".pdf"
         PDFsurface = cairo.PDFSurface(tf[1], 595, 842)#.decode(SYSTEM_ENCODING).encode(FILE_ENCODING)
-        print(tf[1])
+
         ctx = cairo.Context(PDFsurface)
         ctx.scale(820 / draw_cairo.COEF, 820/ draw_cairo.COEF) 
         if self.typ == 'seq':
@@ -10657,7 +10657,7 @@ class PanelPropriete_Seance(PanelPropriete):
             if hasattr(self, 'vcNombreRot'):
                 self.vcNombreRot.mofifierValeursSsEvt()
         
-        # Arbres de compétence
+        # Arbres de compétences
         if hasattr(self, 'arbreCmp'):
             for typ, arbre in self.arbreCmp.items():
                 arbre.UnselectAll()
@@ -10667,11 +10667,11 @@ class PanelPropriete_Seance(PanelPropriete):
                             i = arbre.items[cmp[1:]]
                             arbre.CheckItem2(i)
                             arbre.AutoCheckChild(i, True)
-                            wnd = arbre.GetItemWindow(i, 1)
-                            if wnd is not None:
-                                wnd.SetValue(self.seance.indicateurs[cmp])
-                                
-                        
+                
+                arbre.gererAffichageTxtCtrl()
+                arbre.MiseAJour(typ, self.seance)
+                            
+                            
         # Arbres de savoirs
         if hasattr(self, 'arbreSav'):
             for typ, arbre in self.arbreSav.items():
@@ -14627,6 +14627,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         # Séance ==> colonne pour Indicateurs
         if isinstance(self.pp, PanelPropriete_Seance):
             self.AddColumn(competencesRef._nomIndic.Plur_())
+            self.Bind(wx.EVT_TEXT, self.OnTextIndic)
         
         self.root = self.AddRoot(competencesRef.nomDiscipline)
         self.MiseAJourTypeEnseignement(self.compFiltre)
@@ -14767,6 +14768,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     ####################################################################################
     def OnTextIndic(self, event):
+        print("OnTextIndic")
         event.Skip()
         wx.CallAfter(self.pp.SetIndicateurs)
         
@@ -14871,7 +14873,7 @@ class ArbreCompetences(HTL.HyperTreeList):
             fonction récursive
         """
         for i in branche.GetChildren():
-            if i.IsChecked() and not branche.IsChecked():
+            if i.IsChecked():# and not branche.IsChecked():
                 lstc.append(i)
             else:
                 lstu.append(i)
@@ -14883,18 +14885,36 @@ class ArbreCompetences(HTL.HyperTreeList):
         if isinstance(self.pp, PanelPropriete_Seance):
             lstc, lstu = [], []
             self.getListItemCheckedUnchecked2(self.root, lstc, lstu)
+            
             for i in lstc:
                 if self.GetItemWindow(i, 1) is None:
                     wnd = ExpandoTextCtrl(self.GetMainWindow())
                     self.SetItemWindow(i, wnd, 1)
-                    self.Bind(wx.EVT_TEXT, self.OnTextIndic)
-                
+            
+            
+                          
             for i in lstu:
                 i.DeleteWindow(1)
 #                 wnd = self.GetItemWindow(i, 1)
 #                 self.SetItemWindow(i, None, 1)
 #                 wnd.Destroy()
 #                 self.DeleteItemWindow(i, 1)
+        
+    ###################################################################################
+    def MiseAJour(self, typ, seance):
+        for cmp, item in self.items.items():
+            wnd = self.GetItemWindow(item, 1)
+            if wnd is not None and typ+cmp in seance.indicateurs:
+                self.setIndicateur(item, seance.indicateurs[typ+cmp])
+                            
+                            
+                            
+    ###################################################################################
+    def setIndicateur(self, item, indic):
+        print("setIndicateur", indic)
+        wnd = self.GetItemWindow(item, 1)
+        if wnd is not None:
+            wnd.SetValue(indic)
         
         
     ###################################################################################
