@@ -578,7 +578,11 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     
     wx.BeginBusyCursor()
     dosstemp = tempfile.mkdtemp()
-    merger = PdfFileMerger()
+    
+    doc = fitz.open()
+    
+    
+#     merger = PdfFileMerger()
 #     print "temp :", dosstemp
     
     Ok = True
@@ -605,10 +609,15 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
         except:
             Ok = False
             print("Erreur save_pdf 1")
+        
         try:
-            f = open(fichertempV, "rb")
-            merger.append(f)
-            f.close()
+            doc1 = fitz.open(fichertempV)
+            doc.insertPDF(doc1) 
+            doc1.close()
+            
+#             f = open(fichertempV, "rb")
+#             merger.append(f)
+#             f.close()
         except:
             Ok = False
             print("Erreur save_pdf 2")  
@@ -628,8 +637,10 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
                             "Impossible de générer le fichier PDF des grilles")
         return False
     
-    output = open(nomFichier, "wb")
-    merger.write(output)
+    doc.save(nomFichier)
+    doc.close()
+#     output = open(nomFichier, "wb")
+#     merger.write(output)
     
     try:
         shutil.rmtree(dosstemp)

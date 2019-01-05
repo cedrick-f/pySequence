@@ -2352,11 +2352,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def exporterDetails(self, event = None):
-        if hasattr(self, 'projet'):
-            for e in self.projet.eleves:
-                win = FrameRapport(self, self.fichierCourant, self.projet, 'prj', e)
-                win.Show()
-        elif hasattr(self, 'sequence'):
+#         if hasattr(self, 'projet'):
+#             for e in self.projet.eleves:
+#                 win = FrameRapport(self, self.fichierCourant, self.projet, 'prj', e)
+#                 win.Show()
+        
+        if hasattr(self, 'sequence'):
             win = FrameRapport(self, self.fichierCourant, self.sequence, 'seq')
             win.Show()
 #            win.Destroy()
@@ -3555,7 +3556,91 @@ class FenetreProjet(FenetreDocument):
         
         return self.projet
 
+    #############################################################################
+    def exporterDetails(self, event = None):
+        """ Génération de toutes les fichier des tâches élève
+             - demande d'un dossier -
 
+            :return: la liste des codes d'erreur
+            :rtype: list
+        """
+
+        log = []
+        
+        dlg = wx.DirDialog(self, message = "Emplacement des fichiers", 
+                           defaultPath = "",
+                            style=wx.DD_DEFAULT_STYLE|wx.DD_CHANGE_DIR
+                            )
+#        dlg.SetFilterIndex(0)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            dirpath = dlg.GetPath()
+            dlg.Destroy()
+            
+            message = "Génération des fichiers de détails des tâches\n\n"
+            dlgb = myProgressDialog   ("Génération des fichiers de détail des tâches",
+                                        message,
+                                        maximum = len(self.projet.eleves) + 1,
+                                        parent = wx.GetTopLevelParent(self),
+                                        style = 0
+                                        | wx.PD_APP_MODAL
+                                        | wx.PD_CAN_ABORT
+                                        #| wx.PD_CAN_SKIP
+                                        #| wx.PD_ELAPSED_TIME
+    #                                    | wx.PD_ESTIMATED_TIME
+    #                                    | wx.PD_REMAINING_TIME
+                                        #| wx.PD_AUTO_HIDE
+                                        )
+
+            dlgb.Show()
+            count = 0
+            message += "Vérification des noms de fichier\n"
+            dlgb.update(count, message)
+                
+            nomFichiers = {}
+            for e in self.projet.eleves:
+                nomFichiers[e.id] = e.GetNomDetails(dirpath)
+#            print "nomFichiers", nomFichiers
+            
+            if not self.projet.TesterExistanceDetails(nomFichiers, dirpath, dlgb):
+                dlgb.Destroy()
+                return
+            
+            
+            count += 1
+            message += "Traitement du fichier de :\n"
+            
+            for e in self.projet.eleves:
+                message += "  "+e.GetNomPrenom()+"\n"
+                dlgb.update(count, message)
+                win = FrameRapport(self, self.fichierCourant, self.projet, 'prj', e, hide = True)
+                win.rtc.Enregistrer("", dialog = False)
+                win.Close()
+                count += 1
+
+           
+            t = "Génération des fichiers de description détaillée des tâches terminée "
+            if len(log) == 0:
+                t += "avec succès !\n\n"
+            else:
+                t += "avec des erreurs :\n\n"
+                t += "\n".join(log)
+            
+            t += "Dossier des fichiers :\n  " + dirpath
+            message += t
+            dlgb.update(count, message)
+#             dlgb.Destroy() 
+                
+                
+        else:
+            dlg.Destroy()
+        
+        return list(set(log))
+    
+    
+    
+    
+                
     #############################################################################
     def genererGrilles(self, event = None):
         """ Génération de toutes les grilles d'évaluation
@@ -15942,7 +16027,7 @@ class Panel_SelectEnseignement(wx.Panel):
 
     ######################################################################################  
     def OnTreeTooltip(self, event):
-         #debug
+
         itemtext = self.ctb_type.GetString(event.GetItem())
 #         event.SetToolTip(self.Tooltips[itemtext])
 #         tree = event.GetClientObject()
@@ -15953,18 +16038,19 @@ class Panel_SelectEnseignement(wx.Panel):
         
     ######################################################################################  
     def MiseAJour(self):
-        print("MiseAJour ens", self.classe.referentiel.Enseignement[0])
+#         print("MiseAJour ens", self.classe.referentiel.Enseignement[0])
         self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
 #         self.st_type.SetLabel(self.classe.GetLabel())
         self.rb_spe.Clear()
         for s in self.classe.referentiel.listeSpecialites:
-            if (isinstance(self.classe.GetDocument(), pysequence.Sequence) \
+            doc = self.classe.GetDocument()
+            if (isinstance(doc, pysequence.Sequence) \
                 and "S" in self.classe.referentiel.specialite[s][5]) \
                or \
-               (isinstance(self.classe.GetDocument(), pysequence.Projet) \
+               (isinstance(doc, pysequence.Projet) \
                 and "P" in self.classe.referentiel.specialite[s][5]) \
                or \
-               isinstance(self.classe.GetDocument(), pysequence.Progression):
+               isinstance(doc, pysequence.Progression):
                 self.rb_spe.Append(s)
                 
         self.rb_spe.SetStringSelection(self.classe.specialite)
@@ -17682,34 +17768,34 @@ class myStaticBox(wx.StaticBox):
 # ProgressDialog personnalisé
 # 
 #############################################################################################################
-class MyProgressDialog2(wx.Dialog):
-    """"""
- 
-    #----------------------------------------------------------------------
-    def __init__(self):
-        """Constructor"""
-        wx.Dialog.__init__(self, None, title="Progress")
-        self.count = 0
- 
-        self.progress = wx.Gauge(self, range=20)
- 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.progress, 0, wx.EXPAND)
-        self.SetSizer(sizer)
- 
-        # create a pubsub receiver
-        pub.subscribe(self.update, "update")
- 
-    #----------------------------------------------------------------------
-    def update(self, msg):
-        """"""
-        self.count += 1
- 
-        if self.count >= 20:
-            self.Destroy()
- 
-        self.progress.SetValue(self.count)
- 
+# class MyProgressDialog2(wx.Dialog):
+#     """"""
+#  
+#     #----------------------------------------------------------------------
+#     def __init__(self):
+#         """Constructor"""
+#         wx.Dialog.__init__(self, None, title="Progress")
+#         self.count = 0
+#  
+#         self.progress = wx.Gauge(self, range=20)
+#  
+#         sizer = wx.BoxSizer(wx.VERTICAL)
+#         sizer.Add(self.progress, 0, wx.EXPAND)
+#         self.SetSizer(sizer)
+#  
+#         # create a pubsub receiver
+#         pub.subscribe(self.update, "update")
+#  
+#     #----------------------------------------------------------------------
+#     def update(self, msg):
+#         """"""
+#         self.count += 1
+#  
+#         if self.count >= 20:
+#             self.Destroy()
+#  
+#         self.progress.SetValue(self.count)
+#  
  
  
  

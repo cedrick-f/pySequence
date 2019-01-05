@@ -5036,7 +5036,7 @@ class Projet(BaseDoc, Grammaire):
         if win is None:
             win = self.GetApp()
         existe = []
-        for fe in list(nomFichiers.values()):
+        for fe in nomFichiers.values():
             for f in list(fe.values()):
                 if os.path.isfile(f[1]):
                     existe.append(f[1])
@@ -5050,6 +5050,44 @@ class Projet(BaseDoc, Grammaire):
                     "Voulez-vous la remplacer ?" %existe[0]
             else:
                 m = "Les grilles d'évaluation existent déja !\n\n" \
+                    "\t%s\n\n" \
+                    "dans le dossier :\n" \
+                    "\t%s\n\n" \
+                    "Voulez-vous les remplacer ?" %("\n".join(nf), dirpath)
+        
+            res = messageYesNo(win, "Fichier existant", 
+                                      m, wx.ICON_WARNING)
+            
+            if res:
+                for nf in existe:
+                    try:
+                        os.remove(nf)
+                    except:
+                        pass
+            return res
+            
+        return True
+    
+    
+    ######################################################################################  
+    def TesterExistanceDetails(self, nomFichiers, dirpath, win = None):
+        
+        if win is None:
+            win = self.GetApp()
+        existe = []
+        for fe in nomFichiers.values():
+            if os.path.isfile(fe):
+                existe.append(fe)
+        
+        if len(existe) > 0:
+            
+            nf = [testRel(path, dirpath) for path in existe]
+            if len(existe) == 1:
+                m = "Le fichier de description détaillée des tâches existe déja !\n\n" \
+                    "\t%s\n\n" \
+                    "Voulez-vous le remplacer ?" %existe[0]
+            else:
+                m = "Les fichiers de description détaillée des tâches existent déja !\n\n" \
                     "\t%s\n\n" \
                     "dans le dossier :\n" \
                     "\t%s\n\n" \
@@ -12270,7 +12308,27 @@ class Eleve(Personne, ElementBase):
 #         print "   >", nomFichiers
         return nomFichiers
     
-
+    
+    
+    ######################################################################################################
+    def GetNomDetails(self, dirpath = None):
+        """ Renvoie les noms des fichiers de description détaillée des tâches
+        
+            :param dirpath: chemin du dossier où doivent se trouver les grilles
+            :type dirpath: string
+            
+            :return: Les noms des fichiers sous la forme :
+                        {chemin_absolu_du_fichier_grille_original : ([partie(s)_du_projet] , chemin_absolu_du_fichier_grille)}
+            :rtype: dict
+        """
+        # Par défaut = chemin du fichier .prj
+        if dirpath == None:
+            dirpath = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
+        
+        f = "Tâches détaillées _ " + self.GetNomPrenom() + ".rtf"
+        return os.path.join(dirpath, f)
+    
+    
 
     ######################################################################################  
     def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, 

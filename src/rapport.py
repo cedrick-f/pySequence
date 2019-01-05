@@ -180,11 +180,13 @@ class StyleDeTexte:
 
 #########################################################################################
 class FrameRapport(wx.Frame):
-    def __init__(self, parent, fichierCourant, doc, typ, eleve = None):
+    def __init__(self, parent, fichierCourant, doc, typ, eleve = None, hide = False):
         wx.Frame.__init__(self, parent, -1, "Tâches élèves détaillées",
                             size=(700, 500))#,
 #                            style = wx.DEFAULT_FRAME_STYLE)
-        
+        if hide:
+            self.Hide()
+            
         self.SetMinSize((700, -1))
 
         self.parent = parent
@@ -2173,11 +2175,13 @@ class RapportRTF(rt.RichTextCtrl):
     
     ######################################################################################################
     def getNomFichierDefaut(self):
-        f = "Tâches détaillées _ " + self.eleve.GetNomPrenom() + ".rtf"
-        return os.path.join(self.projet.GetPath(), f)
+        return self.eleve.GetNomDetails()
+#         f = "Tâches détaillées _ " + self.eleve.GetNomPrenom() + ".rtf"
+#         return os.path.join(self.projet.GetPath(), f)
+    
     
     ######################################################################################################
-    def Enregistrer(self, titre, nomFichierDefaut = ""): 
+    def Enregistrer(self, titre, nomFichierDefaut = "", dialog = True): 
         if nomFichierDefaut == "":
             nomFichierDefaut = self.getNomFichierDefaut()
 #         print("Enregistrer", nomFichierDefaut)
@@ -2220,18 +2224,19 @@ class RapportRTF(rt.RichTextCtrl):
             handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
         
 
-        dlg = wx.MessageDialog(self, "Le fichier a bien été enregistré\n\n%s\n\n"\
-                                   "Voulez-vous l'ouvrir ?" %self.GetFilename(), 
-                                   "Fichier enregistré",
-                                   wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
-        res = dlg.ShowModal()
-        if res == wx.ID_YES:
-            try:
-                os.startfile(self.GetFilename())
-            except:
-                messageErreur(None, "Ouverture impossible",
-                              "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
-        dlg.Destroy()
+        if dialog:
+            dlg = wx.MessageDialog(self, "Le fichier a bien été enregistré\n\n%s\n\n"\
+                                       "Voulez-vous l'ouvrir ?" %self.GetFilename(), 
+                                       "Fichier enregistré",
+                                       wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
+            res = dlg.ShowModal()
+            if res == wx.ID_YES:
+                try:
+                    os.startfile(self.GetFilename())
+                except:
+                    messageErreur(None, "Ouverture impossible",
+                                  "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
+            dlg.Destroy()
 
 
 
