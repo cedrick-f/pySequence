@@ -2377,7 +2377,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 
             except:
                 message += "  ... ERREUR\n"
-            dlg.Update(dlg.count+1, message)
+            dlg.update(dlg.count+1, message)
             
         
         
@@ -2423,7 +2423,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                                    "Fichiers enregistrés dans l'archive :\n\n",
                                    maxCount,
                                    wx.GetTopLevelParent(self))
-
+            dlg.Show()
+            
             try:
                 os.mkdir(dir)
             except:
@@ -2452,7 +2453,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             
             shutil.make_archive(dir, 'zip', dir)
             
-            dlg.Update(maxCount, dlg.GetMessage()+"Terminé !")
+            dlg.update(maxCount, dlg.GetMessage()+"Terminé !")
 #             shutil.rmtree(dir)
                 
             wx.EndBusyCursor()
@@ -3349,6 +3350,7 @@ class FenetreProjet(FenetreDocument):
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
+        wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
 #         self.arbre.SelectItem(self.arbre.classe.branche)
         
         return message, count
@@ -3573,10 +3575,12 @@ class FenetreProjet(FenetreDocument):
         if dlg.ShowModal() == wx.ID_OK:
             dirpath = dlg.GetPath()
             dlg.Destroy()
+            
+            message = "Génération des grilles d'évaluation\n\n"
             dlgb = myProgressDialog   ("Génération des grilles",
-                                        "",
+                                        message,
                                         maximum = len(self.projet.eleves) + 1,
-                                        parent = self,
+                                        parent = wx.GetTopLevelParent(self),
                                         style = 0
                                         | wx.PD_APP_MODAL
                                         | wx.PD_CAN_ABORT
@@ -3587,10 +3591,10 @@ class FenetreProjet(FenetreDocument):
                                         #| wx.PD_AUTO_HIDE
                                         )
 
-            
+            dlgb.Show()
             count = 0
-            
-            dlgb.Update(count, "Vérification des noms de fichier\n\n")
+            message += "Vérification des noms de fichier\n"
+            dlgb.update(count, message)
             
                 
             nomFichiers = {}
@@ -3602,9 +3606,11 @@ class FenetreProjet(FenetreDocument):
                 dlgb.Destroy()
                 return
             count += 1
+            message += "Traitement de la grille de :\n"
             
             for e in self.projet.eleves:
-                dlgb.Update(count, "Traitement de la grille de \n\n"+e.GetNomPrenom())
+                message += "  "+e.GetNomPrenom()+"\n"
+                dlgb.update(count, message)
                 log.extend(e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False, win = dlgb))
                 
 #                 dlgb.Refresh()
@@ -3618,8 +3624,9 @@ class FenetreProjet(FenetreDocument):
                 t += "avec des erreurs :\n\n"
                 t += "\n".join(log)
             
-            t += "\n\nDossier des grilles :\n" + dirpath
-            dlgb.Update(count, t)
+            t += "Dossier des grilles :\n  " + dirpath
+            message += t
+            dlgb.update(count, message)
 #             dlgb.Destroy() 
                 
                 
@@ -3649,10 +3656,12 @@ class FenetreProjet(FenetreDocument):
         if dlg.ShowModal() == wx.ID_OK:
             nomFichier = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
+            
+            message = "Génération des grilles d'évaluation en PDF\n\n"
             dlgb = myProgressDialog("Génération des grilles",
-                                        "",
+                                        message,
                                         maximum = len(self.projet.eleves)+1,
-                                        parent=self
+                                        parent = wx.GetTopLevelParent(self)
 #                                         style = 0
 #                                         | wx.PD_APP_MODAL
 #                                         | wx.PD_CAN_ABORT
@@ -3664,7 +3673,7 @@ class FenetreProjet(FenetreDocument):
                                         #| wx.PD_AUTO_HIDE
                                         )
             
-            
+            dlgb.Show()
             count = 1
             
             pathprj = self.projet.GetPath()
@@ -3698,8 +3707,10 @@ class FenetreProjet(FenetreDocument):
             
             # Elaboration de la liste des fichiers/feuilles à exporter en PDF
             lst_grilles = []
+            message += "Traitement de la grille de :\n"
             for e in self.projet.eleves:
-                dlgb.Update(count, "Traitement de la grille de \n\n"+e.GetNomPrenom())
+                message += "  "+e.GetNomPrenom()+"\n"
+                dlgb.update(count, message)
 #                dlgb.top()
 #                 dlgb.Refresh()
                     
@@ -3725,14 +3736,16 @@ class FenetreProjet(FenetreDocument):
                 count += 1
 #                 dlgb.Refresh()
             
-            dlgb.Update(count, "Compilation des grilles ...\n\n")
+            message += "Compilation des grilles ...\n\n"
+            dlgb.update(count, message)
 #            dlgb.top()
 #             count += 1
 #             dlgb.Refresh()
                 
             genpdf.genererGrillePDF(nomFichier, lst_grilles)
             
-            dlgb.Update(count, "Les grilles ont été créées avec succés dans le fichier :\n\n"+nomFichier)
+            message += "Les grilles ont été créées avec succés dans le fichier :\n\n"+nomFichier
+            dlgb.update(count, message)
 #            dlgb.top()
             try:
                 os.startfile(nomFichier)
@@ -4221,7 +4234,8 @@ class FenetreProgression(FenetreDocument):
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
-        self.arbre.SelectItem(self.arbre.classe.branche)
+        wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
+#         self.arbre.SelectItem(self.arbre.classe.branche)
 
 
         if Ok:
@@ -15939,7 +15953,7 @@ class Panel_SelectEnseignement(wx.Panel):
         
     ######################################################################################  
     def MiseAJour(self):
-#         print("MiseAJour")
+        print("MiseAJour ens", self.classe.referentiel.Enseignement[0])
         self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
 #         self.st_type.SetLabel(self.classe.GetLabel())
         self.rb_spe.Clear()

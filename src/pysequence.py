@@ -12273,7 +12273,8 @@ class Eleve(Personne, ElementBase):
 
 
     ######################################################################################  
-    def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, messageFin = True, win = None):
+    def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, 
+                      messageFin = True, win = None):
         """ Génération des grilles d'évaluation de l'élève
         
             Génère un dictionnaire "tableaux" :
