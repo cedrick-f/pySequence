@@ -1,4 +1,5 @@
-#![](Logo.png)Installation de pySéquence
+# ![](Logo_60.png)  Installation de pySéquence
+
 ## Versions publiées (Windows)
 _testé sur XP, 7 et 10, 32 et 64 bits_
 
