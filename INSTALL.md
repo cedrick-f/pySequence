@@ -1,5 +1,5 @@
 #![](Logo.png)Installation de pySéquence
-## Sous Windows
+## Versions publiées (Windows)
 _testé sur XP, 7 et 10, 32 et 64 bits_
 
 Il suffit de télécharger un pack parmi les [versions disponibles](https://github.com/cedrick-f/pySequence/releases).
@@ -8,35 +8,13 @@ Il suffit de télécharger un pack parmi les [versions disponibles](https://gith
 
 ---
 
-##Sous Linux
-_testé sous Ubuntu, avec un pcDuino3B :)_
+## A partir des sources (Windows, Linux*, MACOS*)
 
-###Installation des modules
-####wxpython 3.0.2.0 :
+Les sources de toutes les [versions disponibles](https://github.com/cedrick-f/pySequence/releases) sont fournies au format .zip ou .tar.gz
 
-http://wiki.wxpython.org/CheckInstall
+[Procédure d'installation](https://github.com/cedrick-f/pySequence/installation_Windows_py3.md)
 
 
-####A partir de Synaptic Package Installer :
-
- * python-pip
- * python-pisa
- * python-reportlab
- * python-html5lib
- * python-xlrd
- * python-xlwt
- * python-bs4
- * (xclip)
- * (python-pypdf)
-
-####Depuis un terminal :
-
-  $ sudo pip install wxpython
-
-  $ sudo pip install pyperclip
-  
-  $ sudo pip install pypdf2
 
 
-### Sources de **_pySéquence_**
-Les sources de toutes les [versions disponibles](https://github.com/cedrick-f/pySequence/releases) sont fournies au format .zip ou .tar.gz .
+ .
