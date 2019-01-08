@@ -1,8 +1,9 @@
 ﻿{% for t, l in dic.items() %}
-<font size="12" color="green"><b><h1>{{ t }}</h1></b></font>
+<font size="6" color="green"><b><h1>{{ t }}</h1></b></font>
 <dl>
 {% for i, n in l %}
-	<dt>{{ i }}</dt> <dd>{{ n }}</dd>
+	<dt><b>{{ i }}</b></dt>
+	<dd>{{ n }}</dd>
 {% endfor %}
 </dl> 
 {% endfor %}

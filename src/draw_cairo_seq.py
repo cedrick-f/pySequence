@@ -858,7 +858,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     lstSav = []
     lstTyp = []
-    for c in seq.obj["S"].savoirs:
+    for c in sorted(seq.obj["S"].savoirs):
         typ, cod = c[0], c[1:]
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             savoir = ref_tc.dicoSavoirs["S"]

@@ -3020,7 +3020,8 @@ class Sequence(BaseDoc):
             
 #             print(i, path)
             lst.append(cmp[0]+path[i])
-        return list(set(lst))
+#         print("GetObjAffiches", list(set(lst)))
+        return sorted(list(set(lst)))
     
     
     #########################################################################

@@ -4715,7 +4715,8 @@ class BaseFiche(wx.ScrolledWindow):
         self.surRect = None
         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
             self.surRect = obj.rect
-            self.Redessiner()
+#         if self.surRect is not None:
+        self.Redessiner()
             
     
     #############################################################################            
@@ -13492,8 +13493,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         """
 #         tps1 = time.clock()
         
-        
-        
+        self.panelProp.Freeze()
+        wx.BeginBusyCursor()
         
         #
         # On ferme l'éventuelle fenêtre d'aide ...
@@ -13541,6 +13542,9 @@ class ArbreDoc(CT.CustomTreeCtrl):
             print("rien", panelPropriete)
 #         tps3 = time.clock() 
         
+        
+        wx.CallAfter(self.panelProp.Thaw)
+        wx.CallAfter(wx.EndBusyCursor)
         
         if event is not None:
             event.Skip()
