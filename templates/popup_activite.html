@@ -1,5 +1,5 @@
 ﻿<font size="12" color="{{ coul_type }}"><b><h1 style="text-align: center;">{{ titre }}</h1></b></font>
-<table border="0" width="500">
+<table border="0" width="100%">
 	<tbody>
 	<tr valign="top">
 		<td><img src="{{ icon_type }}" alt=" "></td>
@@ -23,7 +23,7 @@
 	</tbody>
 </table>
 
-<table border="0" width="500">
+<table border="0" width="100%">
 	<tr>
 		<td colspan={% if lst_ensSpe|length > 0 %}2{% else %}3{% endif %}><i>Durée : {{ duree }}</br>Effectif : <font color="{{ coul_eff }}">{{effectif}}</font></i></td>
 		{% if lst_ensSpe|length > 0 %}
@@ -65,19 +65,20 @@
 {% if compVisees|length > 0 %}
 <h2>{{ nomCompVisees }}</h2>
 <dl>
-	{% for n, c in compVisees %}
-	<dt>{{ n }}</dt>
-	<dd>{{ c }}</dd>
+	{% for n, c, i in compVisees %}
+	<dt><b>{{ n }}</b></dt>
+	<dd><p>{{ c }}</p><p align="right"><i><font size="3" color="{{ coul_type }}">{{ i }}</br></font></i></p></dd>
 	{% endfor %}
 </dl>
 {% endif %}
+
 
 
 {% if savVises|length > 0 %}
 <h2>{{ nomSavVises }}</h2>
 <dl>
 	{% for n, c in savVises %}
-	<dt>{{ n }}</dt>
+	<dt><b>{{ n }}</b></dt>
 	<dd>{{ c }}</dd>
 	{% endfor %}
 </dl>

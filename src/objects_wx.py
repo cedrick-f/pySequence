@@ -9463,7 +9463,7 @@ class PanelPropriete_Competences(PanelPropriete):
                                            self, agwStyle = HTL.TR_NO_HEADER)
             
         else:
-            self.arbre = ArbreCompetences(self, self.code, self.compFiltre, compRef,
+            self.arbre = ArbreCompetences(self, self.code, self.compFiltre, compRef, None, 
                                           self, agwStyle = HTL.TR_NO_HEADER)
         
         
@@ -10325,8 +10325,9 @@ class PanelPropriete_Seance(PanelPropriete):
                 filtre = intersection(f1, fcomp)
                 
                 dic_f = ref.dicoCompetences[cod].GetDicFiltre(filtre)
-                
+#                 print("ArbreCompetences", cod, dic_f, ref.dicoCompetences[cod])
                 self.arbreCmp[cod] = ArbreCompetences(self.pageCmp, cod, dic_f, ref.dicoCompetences[cod],
+                                                      lstCases = self.seance.GetDocument().obj["C"].competences, 
                                                       pp = self, agwStyle = HTL.TR_NO_HEADER)
                 # parent, typ, dicCompetences, competences, pptache = None, filtre = None, agwStyle = 0
                 self.cmpSizer.Add(self.arbreCmp[cod], 1, flag = wx.EXPAND)
@@ -14690,7 +14691,7 @@ class ArbreSavoirs(HTL.HyperTreeList):
 ####################################################################################
     
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, typ, compFiltre, competencesRef, 
+    def __init__(self, parent, typ, compFiltre, competencesRef, lstCases = None,
                  pp = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         """    
             :parent: 
@@ -14712,7 +14713,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
         self.typ = typ
         self.competencesRef = competencesRef # Objet Referentiel.Competences
-     
+        self.lstCases = lstCases
         
 #         if dicCompetences is None:
 #             dicCompetences = competencesRef.dicCompetences
@@ -14800,7 +14801,10 @@ class ArbreCompetences(HTL.HyperTreeList):
         clefs = constantes.trier(list(dic.keys()))
         for k in clefs:
             if dic[k][1] is None or len(dic[k][1]) > 1:
-                ct_type = 1
+                if self.lstCases is None or self.typ+k in self.lstCases:
+                    ct_type = 1
+                else:
+                    ct_type = 0
             else:
                 ct_type = 0
             b = self.AppendItem(branche, k+" "+dic[k][0].intitule, ct_type = ct_type, data = k)

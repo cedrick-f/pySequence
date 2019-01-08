@@ -8657,7 +8657,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         self.parent = parent
         ElementAvecLien.__init__(self)
-        ElementBase.__init__(self)
+        ElementBase.__init__(self, tipWidth = 800*SSCALE)
         
         
         ref = self.GetReferentiel()
@@ -9804,8 +9804,14 @@ class Seance(ElementAvecLien, ElementBase):
         lstCompVisees = []
         comp = self.GetDocument().obj["C"]
         for i, c in enumerate(sorted(comp.competences)):
+#             print("   ", c)
             if c in self.compVisees:
-                lstCompVisees.append((c[1:], ref.getCompetence(c).intitule))
+                for sc in ref.getSousElem(c, "Comp_"+c[0]):
+                    if sc in self.indicateurs:
+                        lstCompVisees.append((sc[1:], 
+                                              ref.getCompetence(sc).intitule,
+                                              self.indicateurs[sc]))
+        
 #         print("lstCompVisees", lstCompVisees)
         
         lstSavVises = []
