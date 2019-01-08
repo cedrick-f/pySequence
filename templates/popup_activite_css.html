@@ -65,9 +65,9 @@
 {% if compVisees|length > 0 %}
 <h2>{{ nomCompVisees }}</h2>
 <dl>
-	{% for n, c in compVisees %}
+	{% for n, c, i in compVisees %}
 	<dt>{{ n }}</dt>
-	<dd>{{ c }}</dd>
+	<dd><p>{{ c }}</p><p class="indicateur">{{ i }}</br></p></dd>
 	{% endfor %}
 </dl>
 {% endif %}

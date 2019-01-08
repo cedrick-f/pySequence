@@ -760,18 +760,18 @@ class ElementBase(Grammaire):
              - liens 
              - ...
         """
-        print("EnrichiHTML", self, seance, self.cadre)
+#         print("EnrichiHTML", self, seance, self.cadre)
         
         for i, (p, f, c) in enumerate(self.cadre):
             div = doc.new_tag('div')
             div['class'] = "mouse tooltip"
-            div['id'] = self.GetCode(i).replace('.', '_')
+            div['id'] = self.GetCode(i).replace('.', '_').replace(' ', '_')
             bulle = BeautifulSoup(self.GetBulleHTML(i, css = True), "html5lib")
             div.append(bulle)
             doc.body.insert(0, div)
             
             p['class'] = "sensible"
-            p['id'] = self.GetCode(i).replace('.', '_')
+            p['id'] = self.GetCode(i).replace('.', '_').replace(' ', '_')
             p['x'] = c[0]
             p['y'] = c[1]
         
@@ -9067,7 +9067,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         ok = 0 # pas de problème
         if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
-            print("IsEffectifOk", self)
+#             print("IsEffectifOk", self)
 #            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
             eff = round(self.GetEffectif(), 4)
             effN = round(self.GetClasse().GetEffectifNorm('G'), 4)
