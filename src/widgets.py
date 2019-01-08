@@ -875,7 +875,8 @@ class VariableCtrl(wx.Panel):
         #
         # Valeur de la variable
         #
-        self.text = wx.TextCtrl(self, -1, self.lstToText(self.variable.v), size = (sizeh, -1))#,
+        self.text = wx.TextCtrl(self, -1, self.lstToText(self.variable.v), 
+                                size = (sizeh, -1))#,
         
         if len(help) > 0:
             self.text.SetToolTip(help)
@@ -909,7 +910,11 @@ class VariableCtrl(wx.Panel):
         # Unité
         #
         self.unite = wx.StaticText(self, -1, unite)#,
-        
+        self.unite.SetForegroundColour(color)
+        if len(help) > 0:
+            self.unite.SetToolTip(help)
+            
+        # Mise en place
         sizer = wx.BoxSizer( wx.HORIZONTAL)
         sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 3)
         if sliderAGauche:

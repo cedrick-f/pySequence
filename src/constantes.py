@@ -381,22 +381,28 @@ Effectifs = {"C" : 36,
              "G" : None,
              "D" : None, 
              "S" : None, 
+             "T" : None, 
+             "U" : None, 
              "E" : None, 
              "P" : None,
              }
 
 
 
-NbrGroupes = {"G" : 2, # Par classe
-              "D" : 2, # Par classe
-              "S" : 4, # Par classe
-              "E" : 4, # Par grp Eff réduit
-              "P" : 8, # Par grp Eff réduit
+NbrGroupes = {"G" : 2, 
+              "D" : 2, 
+              "S" : 4, 
+              "T" : 0, 
+              "U" : 0, 
+              "E" : 4, 
+              "P" : 8, 
               }
 
 SubdivGrp  = {"G" : "C", # Par classe
               "D" : "G", # Par classe
               "S" : "C", # Par classe
+              "T" : "C", # Par classe
+              "U" : "C", # Par classe
               "E" : "G", # Par grp Eff réduit
               "P" : "G", # Par grp Eff réduit
               }
@@ -404,6 +410,8 @@ SubdivGrp  = {"G" : "C", # Par classe
 MmActiv    = {"G" : "O", 
               "D" : "N", 
               "S" : "N", 
+              "T" : "N", 
+              "U" : "N", 
               "E" : "N", 
               "P" : "N", 
               }
@@ -412,6 +420,8 @@ CouleursGroupes = {"C" : (77 , 77 , 179),
                    "G" : (102, 127, 102),
                    "D" : (179, 77 , 77),
                    "S" : (226 , 107, 10),
+                   "T" : (77 , 127, 127), 
+                   "U" : (127, 77 , 127), 
                    "E" : (77 , 127, 127), 
                    "P" : (127, 77 , 127), 
                    "I" : (0  , 0  , 0), 
@@ -483,7 +493,7 @@ def calculerEffectifs(classe):
 
     
     
-    for k in 'GDSEP':
+    for k in 'GDSTUEP':
 #         print("   ", k, ref.effectifs[k])
         if classe.nbrGroupes[k] > 0:
             classe.effectifs[k] = partitionne(classe.effectifs[ref.effectifs[k][4]], 

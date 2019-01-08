@@ -603,14 +603,16 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         rEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
                                  tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
                            seq.classe, complet = False)
-        
-        seq.zones_sens.append(Zone(rects, obj = seq.classe))
+        r = []
+        for v in rects.values():
+            r.extend(v)
+        seq.zones_sens.append(Zone(r, obj = seq.classe))
         
         # Lignes verticales
         x = posZSeances[0]
         h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
         y = posZDemarche[1] + 4 * h
-        for e in "CGDSEP":
+        for e in "CGDSTUEP":
             if e in rEff:
                 w = rEff[e][2]
                 DrawLigneEff(ctx, rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
@@ -647,7 +649,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         
     lstComp = []
     lstTyp = []
-    for c in seq.prerequis["C"].competences:
+    for c in sorted(seq.prerequis["C"].competences):
         typ, cod = c[0], c[1:]
         
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
@@ -686,7 +688,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         
     lstSav = []
     lstTyp = []
-    for c in seq.prerequis["S"].savoirs:
+    for c in sorted(seq.prerequis["S"].savoirs):
         typ, cod = c[0], c[1:]
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             savoir = ref_tc.dicoSavoirs["S"]
@@ -760,7 +762,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis["C"].pts_caract = getPts(r)
 #         print("prerequis C", getPts(r))
-        for i, c in enumerate(seq.prerequis["C"].competences): 
+        for i, c in enumerate(sorted(seq.prerequis["C"].competences)): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["C"]))
 #             seq.prerequis["C"].pt_caract = (r[i][:2], i)
 
@@ -775,7 +777,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis["S"].pts_caract = getPts(r)
 #         print("prerequis S", getPts(r))
-        for i, c in enumerate(seq.prerequis["S"].savoirs): 
+        for i, c in enumerate(sorted(seq.prerequis["S"].savoirs)): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["S"]))
 #             seq.prerequis["S"].pt_caract = (r[i][:2], i)
         
@@ -1223,7 +1225,7 @@ class Cadre():
         """ Dessine le cadre à la position (x,y)
         """
         if self.filigrane:
-            alpha = 0.2
+            alpha = 1.4#0.2
         else:
             alpha = 1
             self.seance.pts_caract.append((x, y))

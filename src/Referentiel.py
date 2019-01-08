@@ -1734,16 +1734,18 @@ class Referentiel(XMLelem):
                 l.append(Grammaire(l[0]))
 
         # Valeurs par défaut pour effectifs (version >= 8)
-        for code in 'GDSEP':
+        for code in 'GDSTUEP':
             if not code in self.effectifs.keys():
                 self.effectifs['S'] = [*self.effectifs['G']]
+                self.effectifs['T'] = None
+                self.effectifs['U'] = None
 #                 if len(self.effectifs[code]) == 4:
 #                     self.effectifs['S'].append(constantes.SubdivGrp['S'])
 #                     self.effectifs['S'].append(constantes.MmActiv['S'])
 #                 else:
 #                     self.effectifs['S'][4] = constantes.SubdivGrp['S']
 #                     self.effectifs['S'][5] = constantes.MmActiv['S']
-            if len(self.effectifs[code]) == 4:
+            if self.effectifs[code] is not None and len(self.effectifs[code]) == 4:
                 self.effectifs[code].append(constantes.SubdivGrp[code])
                 self.effectifs[code].append(constantes.MmActiv[code])
 #             print(code, self.effectifs[code])
@@ -1757,7 +1759,7 @@ class Referentiel(XMLelem):
         self._effectifs = []
         def eff(l, k0):
             for k, e in self.effectifs.items():
-                if k != "I" and len(e) > 4 and e[4] == k0:
+                if e is not None and k != "I" and len(e) > 4 and e[4] == k0:
                     ll = []
                     eff(ll, k)
                     l.append({k: ll})

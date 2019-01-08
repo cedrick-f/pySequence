@@ -7825,7 +7825,7 @@ class PanelEffectifsClasse(wx.Panel):
         ref = self.classe.GetReferentiel()
         
         # couleurs
-        coulGrp = {k : couleur.GetCouleurWx(ref.effectifs[k][3], bytes = True) for k in ref.effectifs.keys()}
+        coulGrp = {k : couleur.GetCouleurWx(ref.effectifs[k][3], bytes = True) for k in ref.effectifs.keys() if ref.effectifs[k] is not None}
         
         self.tClasse.SetLabel(ref.effectifs["C"][1])
         self.boxClasse.SetBackgroundColour(coulGrp["C"].ChangeLightness(180))
@@ -7859,20 +7859,21 @@ class PanelEffectifsClasse(wx.Panel):
             for dic in lst:
                 k, g = list(dic.items())[0]
                 sb = wx.Panel(pnl, -1, style = wx.BORDER_RAISED)
-                st = wx.StaticText(sb, -1, ref.effectifs[k][1])
+#                 st = wx.StaticText(sb, -1, ref.effectifs[k][1])
                 sb.SetOwnBackgroundColour(coulGrp[k].ChangeLightness(180))
                 sb.SetForegroundColour(coulGrp[k])
                 bs = wx.BoxSizer(wx.VERTICAL)
-                bs.Add(st, flag = wx.ALL|wx.EXPAND, border = 2)
+#                 bs.Add(st, flag = wx.ALL|wx.EXPAND, border = 2)
                 
-                self.vNbGrp[k] = Variable("Nbr de groupes",  
+                self.vNbGrp[k] = Variable("",  
                                           lstVal = self.classe.nbrGroupes[k], 
                                           typ = VAR_ENTIER_POS, bornes = [0,40],
                                           data = k)
                 self.cNbGrp[k] = VariableCtrl(sb, self.vNbGrp[k], coef = 1, signeEgal = False,
                                               help = "Nombre de groupes %s au sein du groupe %s" %(ref.effectifs[k][1], ref.effectifs[k0][1]), 
                                               sizeh = 20*SSCALE, color = coulGrp[k],
-                                              scale = SSCALE)
+                                              unite = "groupes "+"\""+ref.effectifs[k][1]+"\"",
+                                              scale = SSCALE, sliderAGauche = True)
                 self.cNbGrp[k].SetBackgroundColour(coulGrp[k].ChangeLightness(180))
                 self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbGrp[k])
                 bs.Add(self.cNbGrp[k], flag = wx.BOTTOM|wx.LEFT|wx.RIGHT|wx.EXPAND, border = 5)
@@ -7950,253 +7951,253 @@ class PanelEffectifsClasse(wx.Panel):
         self.MiseAJourNbrEleve()
     
     
-
-
-class PanelEffectifsClasse2(wx.Panel):
-    """Classe définissant le panel de réglage des effectifs
-        Rappel :
-        
-        :Example:
-        
-        listeEffectifs = ["C", "G", "D" ,"S", "E" ,"P"]
-        NbrGroupes = {"G" : 2, # Par classe
-        "E" : 2, # Par grp Eff réduit
-        "S" : 3, # Par classe
-        "P" : 4, # Par grp Eff réduit
-        }
-                      
-    """
-    def __init__(self, parent, classe):
-        wx.Panel.__init__(self, parent, -1)
-        self.classe = classe
-        ref = self.classe.GetReferentiel()
-        
-        #
-        # Box "Classe"
-        #
-        boxClasse = myStaticBox(self, -1, ref.effectifs["C"][1])
-
-#         coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
-        coulClasse = couleur.GetCouleurWx(ref.effectifs["C"][3], bytes = True)
-#        boxClasse.SetOwnForegroundColour(coulClasse)
-        
-#         self.coulEffRed = couleur.GetCouleurWx(constantes.CouleursGroupes['G'])
-        self.coulEffRed = couleur.GetCouleurWx(ref.effectifs["G"][3], bytes = True)
-        
-#         self.coulEP = couleur.GetCouleurWx(constantes.CouleursGroupes['E'])
-        self.coulEP = couleur.GetCouleurWx(ref.effectifs["E"][3], bytes = True)
-    
-#         self.coulAP = couleur.GetCouleurWx(constantes.CouleursGroupes['P'])
-        self.coulAP = couleur.GetCouleurWx(ref.effectifs["P"][3], bytes = True)
-        
-#        self.boxClasse = boxClasse
-        bsizerClasse = wx.StaticBoxSizer(boxClasse, wx.VERTICAL)
-        sizerClasse_h = wx.BoxSizer(wx.HORIZONTAL)
-        sizerClasse_b = wx.BoxSizer(wx.HORIZONTAL)
-        self.sizerClasse_b = sizerClasse_b
-        bsizerClasse.Add(sizerClasse_h)
-        bsizerClasse.Add(sizerClasse_b)
-        
-        # Effectif de la classe
-        self.vEffClas = Variable("Nombre %s" %ref.labels["ELEVES"][2].de_plur_(),  
-                            lstVal = classe.effectifs['C'], 
-                            typ = VAR_ENTIER_POS, bornes = [4,80])
-        self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = "Nombre %s dans la %s" %(ref.labels["ELEVES"][2].de_plur_(),ref.effectifs["C"][1]), 
-                                sizeh = 30*SSCALE, 
-                                color = coulClasse, scale = SSCALE)
-        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
-        sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
-        
-        # Nombre de groupes à effectif réduits
-        self.vNbERed = Variable("Nbr de groupes\n%s" %ref.effectifs["G"][1],  
-                                lstVal = classe.nbrGroupes['G'], 
-                                typ = VAR_ENTIER_POS, bornes = [1,4])
-        self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
-                                    help = "Nombre de groupes %s dans la %s" %(ref.effectifs["G"][1],ref.effectifs["C"][1]), sizeh = 20*SSCALE, 
-                                    color = self.coulEffRed, scale = SSCALE)
-        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
-        sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
-        
-        
-        #
-        # Boxes Effectif Réduit
-        #
-        boxEffRed = myStaticBox(self, -1, "")
-        boxEffRed.SetBackgroundColour('white')
-        boxEffRed.SetOwnBackgroundColour('white')
-        boxEffRed.SetOwnForegroundColour(self.coulEffRed)
-        self.boxEffRed = boxEffRed
-        bsizerEffRed = wx.StaticBoxSizer(boxEffRed, wx.HORIZONTAL)
-        self.sizerEffRed_g = wx.BoxSizer(wx.VERTICAL)
-        self.sizerEffRed_d = wx.BoxSizer(wx.VERTICAL)
-        bsizerEffRed.Add(self.sizerEffRed_g, flag = wx.EXPAND)
-        bsizerEffRed.Add(wx.StaticLine(self, -1, style = wx.VERTICAL), flag = wx.EXPAND)
-        bsizerEffRed.Add(self.sizerEffRed_d, flag = wx.EXPAND)
-        sizerClasse_b.Add(bsizerEffRed)
-        
-        # Nombre de groupes d'étude/projet
-        self.vNbEtPr = Variable("Nbr de groupes\n%s" %ref.effectifs["E"][1],  
-                            lstVal = classe.nbrGroupes['E'], 
-                            typ = VAR_ENTIER_POS, bornes = [1,10])
-        self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
-                                help = "Nombre de groupes %s par groupe %s" %(ref.effectifs["E"][1], ref.effectifs["G"][1]), 
-                                sizeh = 20*SSCALE, 
-                                color = self.coulEP, scale = SSCALE)
-        self.cNbEtPr.SetBackgroundColour('white')
-        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
-        self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
-        
-#        self.BoxEP = myStaticBox(self, -1, u"", size = (30, -1))
-#        self.BoxEP.SetOwnForegroundColour(self.coulEP)
-#        self.BoxEP.SetMinSize((30, -1))     
-#        bsizer = wx.StaticBoxSizer(self.BoxEP, wx.VERTICAL)
-#        self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
-            
-        # Nombre de groupes d'activité pratique
-        self.vNbActP = Variable("Nbr de groupes\n%s" %ref.effectifs["P"][1],  
-                            lstVal = classe.nbrGroupes['P'], 
-                            typ = VAR_ENTIER_POS, bornes = [2,20])
-        self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
-                                help = "Nombre de groupes %s par groupe %s" %(ref.effectifs["P"][1], ref.effectifs["G"][1]), 
-                                sizeh = 20*SSCALE, 
-                                color = self.coulAP, scale = SSCALE)
-        self.cNbActP.SetBackgroundColour('white')
-        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
-        self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
-        
-#        self.BoxAP = myStaticBox(self, -1, u"", size = (30, -1))
-#        self.BoxAP.SetOwnForegroundColour(self.coulAP)
-#        self.BoxAP.SetMinSize((30, -1))     
-#        bsizer = wx.StaticBoxSizer(self.BoxAP, wx.VERTICAL)
-#        self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
-        
-        
-        # Illustration de la répartition
-#         self.bmp = StaticBitmapZoom(self, -1, size = (400*SSCALE, 80*SSCALE))
-        self.bmp = wx.StaticBitmap(self, -1, size = (400*SSCALE, 80*SSCALE))
-        
-        self.lstBoxEffRed = []
-        self.lstBoxEP = []
-        self.lstBoxAP = []
-        
-#        self.AjouterGroupesVides()
-        
-        self.MiseAJourNbrEleve()
-
-        border = wx.BoxSizer(wx.HORIZONTAL)
-        border.Add(bsizerClasse, flag = wx.EXPAND)
-        border.Add(self.bmp, 1, flag = wx.EXPAND|wx.ALL, border = 3)
-        
-        self.SetSizer(border)
-
-    
-    #############################################################################            
-    def getBitmapClasse(self, larg):
-#         return wx.Bitmap(larg, larg)
-        imagesurface = draw_cairo.getBitmapClasse(larg, self.classe)
-
-        return getBitmapFromImageSurface(imagesurface)
-    
-    
-    #############################################################################            
-    def EvtVariableEff(self, event):
-        var = event.GetVar()
-        if var == self.vEffClas:
-            self.classe.effectifs['C'] = var.v[0]
-        elif var == self.vNbERed:
-            self.classe.nbrGroupes['G'] = var.v[0]
-        elif var == self.vNbEtPr:
-            self.classe.nbrGroupes['E'] = var.v[0]
-        elif var == self.vNbActP:
-            self.classe.nbrGroupes['P'] = var.v[0]
-        calculerEffectifs(self.classe)
-            
-        self.classe.GetApp().sendEvent(self.classe, modif = "Modification du découpage de la Classe",
-                              obj = self.classe, draw = True, verif = True)
-#        self.AjouterGroupesVides()
-        self.MiseAJourNbrEleve()
-        
-#    def AjouterGroupesVides(self):
-#        return
-#        for g in self.lstBoxEP:
-#            self.sizerEffRed_g.Remove(g)
-#        for g in self.lstBoxAP:
-#            self.sizerEffRed_d.Remove(g)    
-#        for g in self.lstBoxEffRed:
-#            self.sizerClasse_b.Remove(g)
-#        
-#        self.lstBoxEffRed = []
-#        self.lstBoxEP = []
-#        self.lstBoxAP = []    
-#        
-#        for g in range(self.classe.nbrGroupes['G'] - 1):
-#            box = myStaticBox(self, -1, u"Eff Red", size = (30, -1))
-#            box.SetOwnForegroundColour(self.coulEffRed)
-#            box.SetMinSize((30, -1))
-#            self.lstBoxEffRed.append(box)
-#            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
-#            self.sizerClasse_b.Add(bsizer, flag = wx.EXPAND)
-#        
-#        for g in range(self.classe.nbrGroupes['E']):
-#            box = myStaticBox(self, -1, u"E/P", size = (30, -1))
-#            box.SetOwnForegroundColour(self.coulEP)
-#            box.SetMinSize((30, -1))
-#            self.lstBoxEP.append(box)
-#            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-##            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
-#            self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
-#            
-#        
-#        for g in range(self.classe.nbrGroupes['P']):
-#            box = myStaticBox(self, -1, u"AP", size = (30, -1))
-#            box.SetOwnForegroundColour(self.coulAP)
-#            box.SetMinSize((30, -1))
-#            self.lstBoxAP.append(box)
-#            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-##            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
-#            self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
-#        
-#        self.Layout()
-        
-    
-    def MiseAJourNbrEleve(self):
-        if int(wx.version()[0]) > 2:
-            self.boxEffRed.SetLabelText(self.classe.GetStrEffectifComplet('G', -1))
-        else:
-            self.boxEffRed.SetLabel(self.classe.GetStrEffectifComplet('G', -1))
-        
-        try: # py3 : pas trouvé mieux pour éviter les MemoryError
-#             self.bmp.SetLargeBitmap(self.getBitmapClasse(1200))
-            self.bmp.SetBitmap(self.getBitmapClasse(900))
-        except:
-            pass
-        
-         
-#        t = u"groupes de "
-#        self.BoxEP.SetLabelText(t+strEffectif(self.classe, 'E', -1))
-#        self.BoxAP.SetLabelText(t+strEffectif(self.classe, 'P', -1))
-
-#        self.Refresh()
-        
-        
-    def MiseAJour(self):
-        self.vEffClas.v[0] = self.classe.effectifs['C']
-        self.vNbERed.v[0] = self.classe.nbrGroupes['G']
-        self.vNbEtPr.v[0] = self.classe.nbrGroupes['E']
-        self.vNbActP.v[0] = self.classe.nbrGroupes['P']
-        
-        self.cEffClas.mofifierValeursSsEvt()
-        self.cNbERed.mofifierValeursSsEvt()
-        self.cNbEtPr.mofifierValeursSsEvt()
-        self.cNbActP.mofifierValeursSsEvt()
-        
-#        self.AjouterGroupesVides()
-        self.MiseAJourNbrEleve()
-        
-
-        
+# 
+# 
+# class PanelEffectifsClasse2(wx.Panel):
+#     """Classe définissant le panel de réglage des effectifs
+#         Rappel :
+#         
+#         :Example:
+#         
+#         listeEffectifs = ["C", "G", "D" ,"S", "E" ,"P"]
+#         NbrGroupes = {"G" : 2, # Par classe
+#         "E" : 2, # Par grp Eff réduit
+#         "S" : 3, # Par classe
+#         "P" : 4, # Par grp Eff réduit
+#         }
+#                       
+#     """
+#     def __init__(self, parent, classe):
+#         wx.Panel.__init__(self, parent, -1)
+#         self.classe = classe
+#         ref = self.classe.GetReferentiel()
+#         
+#         #
+#         # Box "Classe"
+#         #
+#         boxClasse = myStaticBox(self, -1, ref.effectifs["C"][1])
+# 
+# #         coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
+#         coulClasse = couleur.GetCouleurWx(ref.effectifs["C"][3], bytes = True)
+# #        boxClasse.SetOwnForegroundColour(coulClasse)
+#         
+# #         self.coulEffRed = couleur.GetCouleurWx(constantes.CouleursGroupes['G'])
+#         self.coulEffRed = couleur.GetCouleurWx(ref.effectifs["G"][3], bytes = True)
+#         
+# #         self.coulEP = couleur.GetCouleurWx(constantes.CouleursGroupes['E'])
+#         self.coulEP = couleur.GetCouleurWx(ref.effectifs["E"][3], bytes = True)
+#     
+# #         self.coulAP = couleur.GetCouleurWx(constantes.CouleursGroupes['P'])
+#         self.coulAP = couleur.GetCouleurWx(ref.effectifs["P"][3], bytes = True)
+#         
+# #        self.boxClasse = boxClasse
+#         bsizerClasse = wx.StaticBoxSizer(boxClasse, wx.VERTICAL)
+#         sizerClasse_h = wx.BoxSizer(wx.HORIZONTAL)
+#         sizerClasse_b = wx.BoxSizer(wx.HORIZONTAL)
+#         self.sizerClasse_b = sizerClasse_b
+#         bsizerClasse.Add(sizerClasse_h)
+#         bsizerClasse.Add(sizerClasse_b)
+#         
+#         # Effectif de la classe
+#         self.vEffClas = Variable("Nombre %s" %ref.labels["ELEVES"][2].de_plur_(),  
+#                             lstVal = classe.effectifs['C'], 
+#                             typ = VAR_ENTIER_POS, bornes = [4,80])
+#         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
+#                                 help = "Nombre %s dans la %s" %(ref.labels["ELEVES"][2].de_plur_(),ref.effectifs["C"][1]), 
+#                                 sizeh = 30*SSCALE, 
+#                                 color = coulClasse, scale = SSCALE)
+#         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
+#         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
+#         
+#         # Nombre de groupes à effectif réduits
+#         self.vNbERed = Variable("Nbr de groupes\n%s" %ref.effectifs["G"][1],  
+#                                 lstVal = classe.nbrGroupes['G'], 
+#                                 typ = VAR_ENTIER_POS, bornes = [1,4])
+#         self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
+#                                     help = "Nombre de groupes %s dans la %s" %(ref.effectifs["G"][1],ref.effectifs["C"][1]), sizeh = 20*SSCALE, 
+#                                     color = self.coulEffRed, scale = SSCALE)
+#         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
+#         sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
+#         
+#         
+#         #
+#         # Boxes Effectif Réduit
+#         #
+#         boxEffRed = myStaticBox(self, -1, "")
+#         boxEffRed.SetBackgroundColour('white')
+#         boxEffRed.SetOwnBackgroundColour('white')
+#         boxEffRed.SetOwnForegroundColour(self.coulEffRed)
+#         self.boxEffRed = boxEffRed
+#         bsizerEffRed = wx.StaticBoxSizer(boxEffRed, wx.HORIZONTAL)
+#         self.sizerEffRed_g = wx.BoxSizer(wx.VERTICAL)
+#         self.sizerEffRed_d = wx.BoxSizer(wx.VERTICAL)
+#         bsizerEffRed.Add(self.sizerEffRed_g, flag = wx.EXPAND)
+#         bsizerEffRed.Add(wx.StaticLine(self, -1, style = wx.VERTICAL), flag = wx.EXPAND)
+#         bsizerEffRed.Add(self.sizerEffRed_d, flag = wx.EXPAND)
+#         sizerClasse_b.Add(bsizerEffRed)
+#         
+#         # Nombre de groupes d'étude/projet
+#         self.vNbEtPr = Variable("Nbr de groupes\n%s" %ref.effectifs["E"][1],  
+#                             lstVal = classe.nbrGroupes['E'], 
+#                             typ = VAR_ENTIER_POS, bornes = [1,10])
+#         self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
+#                                 help = "Nombre de groupes %s par groupe %s" %(ref.effectifs["E"][1], ref.effectifs["G"][1]), 
+#                                 sizeh = 20*SSCALE, 
+#                                 color = self.coulEP, scale = SSCALE)
+#         self.cNbEtPr.SetBackgroundColour('white')
+#         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
+#         self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
+#         
+# #        self.BoxEP = myStaticBox(self, -1, u"", size = (30, -1))
+# #        self.BoxEP.SetOwnForegroundColour(self.coulEP)
+# #        self.BoxEP.SetMinSize((30, -1))     
+# #        bsizer = wx.StaticBoxSizer(self.BoxEP, wx.VERTICAL)
+# #        self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+#             
+#         # Nombre de groupes d'activité pratique
+#         self.vNbActP = Variable("Nbr de groupes\n%s" %ref.effectifs["P"][1],  
+#                             lstVal = classe.nbrGroupes['P'], 
+#                             typ = VAR_ENTIER_POS, bornes = [2,20])
+#         self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
+#                                 help = "Nombre de groupes %s par groupe %s" %(ref.effectifs["P"][1], ref.effectifs["G"][1]), 
+#                                 sizeh = 20*SSCALE, 
+#                                 color = self.coulAP, scale = SSCALE)
+#         self.cNbActP.SetBackgroundColour('white')
+#         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
+#         self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
+#         
+# #        self.BoxAP = myStaticBox(self, -1, u"", size = (30, -1))
+# #        self.BoxAP.SetOwnForegroundColour(self.coulAP)
+# #        self.BoxAP.SetMinSize((30, -1))     
+# #        bsizer = wx.StaticBoxSizer(self.BoxAP, wx.VERTICAL)
+# #        self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+#         
+#         
+#         # Illustration de la répartition
+# #         self.bmp = StaticBitmapZoom(self, -1, size = (400*SSCALE, 80*SSCALE))
+#         self.bmp = wx.StaticBitmap(self, -1, size = (400*SSCALE, 80*SSCALE))
+#         
+#         self.lstBoxEffRed = []
+#         self.lstBoxEP = []
+#         self.lstBoxAP = []
+#         
+# #        self.AjouterGroupesVides()
+#         
+#         self.MiseAJourNbrEleve()
+# 
+#         border = wx.BoxSizer(wx.HORIZONTAL)
+#         border.Add(bsizerClasse, flag = wx.EXPAND)
+#         border.Add(self.bmp, 1, flag = wx.EXPAND|wx.ALL, border = 3)
+#         
+#         self.SetSizer(border)
+# 
+#     
+#     #############################################################################            
+#     def getBitmapClasse(self, larg):
+# #         return wx.Bitmap(larg, larg)
+#         imagesurface = draw_cairo.getBitmapClasse(larg, self.classe)
+# 
+#         return getBitmapFromImageSurface(imagesurface)
+#     
+#     
+#     #############################################################################            
+#     def EvtVariableEff(self, event):
+#         var = event.GetVar()
+#         if var == self.vEffClas:
+#             self.classe.effectifs['C'] = var.v[0]
+#         elif var == self.vNbERed:
+#             self.classe.nbrGroupes['G'] = var.v[0]
+#         elif var == self.vNbEtPr:
+#             self.classe.nbrGroupes['E'] = var.v[0]
+#         elif var == self.vNbActP:
+#             self.classe.nbrGroupes['P'] = var.v[0]
+#         calculerEffectifs(self.classe)
+#             
+#         self.classe.GetApp().sendEvent(self.classe, modif = "Modification du découpage de la Classe",
+#                               obj = self.classe, draw = True, verif = True)
+# #        self.AjouterGroupesVides()
+#         self.MiseAJourNbrEleve()
+#         
+# #    def AjouterGroupesVides(self):
+# #        return
+# #        for g in self.lstBoxEP:
+# #            self.sizerEffRed_g.Remove(g)
+# #        for g in self.lstBoxAP:
+# #            self.sizerEffRed_d.Remove(g)    
+# #        for g in self.lstBoxEffRed:
+# #            self.sizerClasse_b.Remove(g)
+# #        
+# #        self.lstBoxEffRed = []
+# #        self.lstBoxEP = []
+# #        self.lstBoxAP = []    
+# #        
+# #        for g in range(self.classe.nbrGroupes['G'] - 1):
+# #            box = myStaticBox(self, -1, u"Eff Red", size = (30, -1))
+# #            box.SetOwnForegroundColour(self.coulEffRed)
+# #            box.SetMinSize((30, -1))
+# #            self.lstBoxEffRed.append(box)
+# #            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+# #            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
+# #            self.sizerClasse_b.Add(bsizer, flag = wx.EXPAND)
+# #        
+# #        for g in range(self.classe.nbrGroupes['E']):
+# #            box = myStaticBox(self, -1, u"E/P", size = (30, -1))
+# #            box.SetOwnForegroundColour(self.coulEP)
+# #            box.SetMinSize((30, -1))
+# #            self.lstBoxEP.append(box)
+# #            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+# ##            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
+# #            self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+# #            
+# #        
+# #        for g in range(self.classe.nbrGroupes['P']):
+# #            box = myStaticBox(self, -1, u"AP", size = (30, -1))
+# #            box.SetOwnForegroundColour(self.coulAP)
+# #            box.SetMinSize((30, -1))
+# #            self.lstBoxAP.append(box)
+# #            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+# ##            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
+# #            self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+# #        
+# #        self.Layout()
+#         
+#     
+#     def MiseAJourNbrEleve(self):
+#         if int(wx.version()[0]) > 2:
+#             self.boxEffRed.SetLabelText(self.classe.GetStrEffectifComplet('G', -1))
+#         else:
+#             self.boxEffRed.SetLabel(self.classe.GetStrEffectifComplet('G', -1))
+#         
+#         try: # py3 : pas trouvé mieux pour éviter les MemoryError
+# #             self.bmp.SetLargeBitmap(self.getBitmapClasse(1200))
+#             self.bmp.SetBitmap(self.getBitmapClasse(900))
+#         except:
+#             pass
+#         
+#          
+# #        t = u"groupes de "
+# #        self.BoxEP.SetLabelText(t+strEffectif(self.classe, 'E', -1))
+# #        self.BoxAP.SetLabelText(t+strEffectif(self.classe, 'P', -1))
+# 
+# #        self.Refresh()
+#         
+#         
+#     def MiseAJour(self):
+#         self.vEffClas.v[0] = self.classe.effectifs['C']
+#         self.vNbERed.v[0] = self.classe.nbrGroupes['G']
+#         self.vNbEtPr.v[0] = self.classe.nbrGroupes['E']
+#         self.vNbActP.v[0] = self.classe.nbrGroupes['P']
+#         
+#         self.cEffClas.mofifierValeursSsEvt()
+#         self.cNbERed.mofifierValeursSsEvt()
+#         self.cNbEtPr.mofifierValeursSsEvt()
+#         self.cNbActP.mofifierValeursSsEvt()
+#         
+# #        self.AjouterGroupesVides()
+#         self.MiseAJourNbrEleve()
+#         
+# 
+#         
         
         
 ####################################################################################
@@ -9519,7 +9520,7 @@ class PanelPropriete_Competences(PanelPropriete):
         
     ######################################################################################  
     def SetCompetences(self): 
-        
+        self.competences.GererElementsDependants()
         self.competences.parent.Verrouiller()
         self.sendEvent(modif = "Ajout/suppression d'une compétence", 
                        draw = True, verif = True)

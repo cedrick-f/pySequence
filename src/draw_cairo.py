@@ -1376,7 +1376,7 @@ def DrawClasse(ctx, rect, classe, complet = True):
     # Tracé
     
     # Les rectangles à cliquer
-    rects = []
+    rects = {}
     
     # Les premiers rectangles des effectifs
     
@@ -1391,7 +1391,7 @@ def DrawClasse(ctx, rect, classe, complet = True):
     # Taille de la police
     f = htxt * scale[1]
     
-    coulGrp = {k : couleur.CouleurInt2Float(ref.effectifs[k][3]) for k in ref.effectifs.keys()}
+    coulGrp = {k : couleur.CouleurInt2Float(ref.effectifs[k][3]) for k in ref.effectifs.keys() if ref.effectifs[k] is not None}
 #     print("coulGrp", coulGrp)
     def tracRect(lst):
         for dic in lst:
@@ -1405,7 +1405,7 @@ def DrawClasse(ctx, rect, classe, complet = True):
             R = (x + r0[0]*scale[0],     y + (r0[1]-htxt)*scale[1], 
                  (r1[0]+r1[2])*scale[0], htxt*scale[1])
             
-                
+            rects[k] = [] 
             if complet:
                 ctx.set_source_rgb(*coulGrp[k][:3])
                 eff = classe.effectifs[k]
@@ -1426,7 +1426,7 @@ def DrawClasse(ctx, rect, classe, complet = True):
                     rEff[k] = (R[0], R[1], R[2], R[3])
                     
                 rectanglePlein(*R, coulGrp[k])
-                rects.append(R)
+                rects[k].append(R)
                 if complet and len(g) == 0:
                     ctx.set_source_rgb(*coulGrp[k][:3])
                     show_text_rect_fix(ctx, str(lab), *R, f*0.8, Nlignes = 1)
@@ -1434,16 +1434,6 @@ def DrawClasse(ctx, rect, classe, complet = True):
             tracRect(g)
             
     tracRect(rectangles)
-    
-    
-    
-#     for k in 'GDSEP':
-#         if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] == "O":
-#             wEff[k] = wt * classe.GetEffectifNorm(ref.effectifs[k][4]) * 0.9
-#         else:
-#             wEff[k] = wt * classe.GetEffectifNorm(k) * classe.nbrGroupes[k]
-#     
-    
     
     return rEff, rects
 
@@ -1879,9 +1869,11 @@ def surbrillance(ctx, x, y, w, h):
     
 def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.rectangle(x, y, w, h)
-    ctx.set_source_rgba (*coulInter[:3], alpha)
+#     ctx.set_source_rgba (*coulInter[:3], alpha)
+    ctx.set_source_rgba (*[c*alpha for c in coulInter[:3]], 1)
     ctx.fill_preserve ()
-    ctx.set_source_rgba (*coulBord[:3], alpha)
+#     ctx.set_source_rgba (*coulBord[:3], alpha)
+    ctx.set_source_rgba (*[c*alpha for c in coulBord[:3]], 1)
     ctx.stroke ()
 
 

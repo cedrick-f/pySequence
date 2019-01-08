@@ -1064,6 +1064,8 @@ class Classe(ElementBase):
         self.nbrGroupes = { "C" : 1,
                             "G" : constantes.NbrGroupes["G"],
                             "S" : constantes.NbrGroupes["S"],
+                            "T" : constantes.NbrGroupes["T"],
+                            "U" : constantes.NbrGroupes["U"],
                             "E" : constantes.NbrGroupes["E"],
                             "P" : constantes.NbrGroupes["P"],
                             "D" : 2}
@@ -1157,6 +1159,8 @@ class Classe(ElementBase):
         eff.set('eC', str(self.effectifs['C']))
         eff.set('nG', str(self.nbrGroupes['G']))
         eff.set('nS', str(self.nbrGroupes['S']))
+        eff.set('nT', str(self.nbrGroupes['T']))
+        eff.set('nU', str(self.nbrGroupes['U']))
         eff.set('nE', str(self.nbrGroupes['E']))
         eff.set('nP', str(self.nbrGroupes['P']))
                      
@@ -1328,6 +1332,8 @@ class Classe(ElementBase):
             self.effectifs['C'] = eval(brancheEff.get('eC', "1"))
             self.nbrGroupes['G'] = eval(brancheEff.get('nG', "1"))
             self.nbrGroupes['S'] = eval(brancheEff.get('nS', "1"))
+            self.nbrGroupes['T'] = eval(brancheEff.get('nT', "0"))
+            self.nbrGroupes['U'] = eval(brancheEff.get('nU', "0"))
             self.nbrGroupes['E'] = eval(brancheEff.get('nE', "1"))
             self.nbrGroupes['P'] = eval(brancheEff.get('nP', "1"))
             calculerEffectifs(self)
@@ -1488,28 +1494,7 @@ class Classe(ElementBase):
             else:
                 return 0
         
-        
-#         elif eff == 'G':
-#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['G']
-#         
-#         elif eff == 'D':
-#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['D']
-#         
-#         elif eff == 'S':
-#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['S']
-#         
-#         elif eff == 'E':
-#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['E']
-#         
-#         elif eff == 'P':
-#             return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes['P']
-#         
-#         elif eff == 'I':
-#             return 1.0 / self.effectifs['C']
-        
-        
-        
-        
+    
     ######################################################################################  
     def GetReferentiel(self):
         return self.referentiel
@@ -8177,7 +8162,7 @@ class Competences(ElementBase):
     
     
     #########################################################################
-    def GererElementsDependants(self, codeComp):
+    def GererElementsDependants(self, codeComp = None):
         """ Gestion des éléments (Competences, Savoirs, Th, Dom, Spe)
             qui dépendent de la compétence <codeComp>
         """
@@ -8251,7 +8236,7 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False):
-        print("GetBulleHTML", self, i)
+#         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         if css:
             t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
@@ -8583,7 +8568,7 @@ class Savoirs(ElementBase):
     
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False):
-        print("GetBulleHTML", self, i)
+#         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         if css:
             t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
@@ -9024,7 +9009,7 @@ class Seance(ElementAvecLien, ElementBase):
             8 = G
             16 = C
         """
-#         print "SetEffectif", val, self.GetReferentiel().effectifs.keys()
+#         print("SetEffectif", val, self.GetReferentiel().effectifs.keys())
         codeEff = None
         if type(val) == int:
             if self.typeSeanc == "R":
@@ -9047,7 +9032,7 @@ class Seance(ElementAvecLien, ElementBase):
                 else:
                     codeEff = ""
         else:
-            for k, v in list(self.GetReferentiel().effectifs.items()):
+            for k, v in self.GetReferentiel().effectifs.items():
                 if v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
                     codeEff = k
         

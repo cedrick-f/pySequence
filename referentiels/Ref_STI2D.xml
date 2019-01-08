@@ -5855,12 +5855,18 @@
     <l_G S_00="Division" S_01="Division" S_02="" S_04="C" S_05="O">
       <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_G>
-    <l_D S_00="Groupe" S_01="Groupe" S_02="" S_04="C" S_05="O">
+    <l_D S_00="Effectif allégé" S_01="Effectif allégé" S_02="" S_04="C" S_05="O">
       <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
     <l_S S_00="Ens. Spécifique" S_01="Enseignement Spécifique" S_02="" S_04="C" S_05="N">
       <l_03 F_00="188.0" F_01="154.0" F_02="0.0" />
     </l_S>
+    <l_T S_00="E/P (E.Spé)" S_01="Étude et Projet (E.Spé)" S_02="" S_04="S" S_05="N">
+      <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
+    </l_T>
+    <l_U S_00="A.P. (E.Spé)" S_01="Activité Pratique (E.Spé)" S_02="" S_04="S" S_05="N">
+      <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
+    </l_U>
     <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="" S_04="D" S_05="N">
       <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
     </l_E>
@@ -5872,15 +5878,15 @@
     </l_I>
   </d_effectifs>
   <d_effectifsSeance>
-    <l_ED S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
-    <l_AP S_00="S" S_01="E" S_02="P" />
-    <l_P S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
+    <l_AP S_00="S" S_01="T" S_02="U" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
     <l_DM S_00="I" />
-    <l_C S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
-    <l_TD S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
-    <l_SA S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
-    <l_SS S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
-    <l_E S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" />
+    <l_C S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
+    <l_SA S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" />
+    <l_SS S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" />
+    <l_E S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" />
     <l_R />
     <l_S />
   </d_effectifsSeance>
@@ -5927,7 +5933,7 @@
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeDomaines />
-  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="S" S_04="E" S_05="P" S_06="I" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
   <l_listeEnsSpecif S_00="AC" S_01="EE" S_02="ITEC" S_03="SIN" />
   <l_listeNivTaxo S_00="1.0" S_01="2.0" S_02="3.0" S_03="4.0" />
   <l_listeSpecialites S_00="I2D" S_01="IT" S_02="2I2D" S_03="PCM" />
@@ -5971,7 +5977,7 @@
         <l_PRX S_00="Montant estimé du projet" S_01="" S_02="" S_03="" />
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
-        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Description détaillée des tâches" S_01="" S_02="" S_03="" />
         <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
