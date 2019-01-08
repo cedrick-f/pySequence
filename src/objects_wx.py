@@ -4351,7 +4351,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4608,7 +4608,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -7366,6 +7366,7 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def Verrouiller(self):
         self.sel_type.Verrouiller()
+        self.ec.Verrouiller()
         etat = not self.classe.verrouillee
 #         self.cb_type.Show(etat)
 #         self.st_type.Show(not etat)
@@ -7905,12 +7906,15 @@ class PanelEffectifsClasse(wx.Panel):
     def EvtVariableEff(self, event):
         
         var = event.GetVar()
+        
         if var == self.vEffClas:
+            if self.classe.effectifs['C'] == var.v[0]:
+                return
             self.classe.effectifs['C'] = var.v[0]
         else:
-            k = var.GetData()
-#             print("EvtVariableEff", k, var.v[0])
-            self.classe.nbrGroupes[k] = var.v[0]
+            if self.classe.nbrGroupes[var.GetData()] == var.v[0]:
+                return
+            self.classe.nbrGroupes[var.GetData()] = var.v[0]
         
         calculerEffectifs(self.classe)
             
@@ -7951,6 +7955,13 @@ class PanelEffectifsClasse(wx.Panel):
         self.MiseAJourNbrEleve()
     
     
+    ########################################################################
+    def Verrouiller(self):
+        for s in self.cNbGrp.values():
+            if not self.classe.verrouillee:
+                s.SetMin(0)
+            else:
+                s.SetMin(1)
 # 
 # 
 # class PanelEffectifsClasse2(wx.Panel):
@@ -14878,13 +14889,13 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     ####################################################################################
     def OnTextIndic(self, event):
-        print("OnTextIndic")
+#         print("OnTextIndic")
         event.Skip()
         wx.CallAfter(self.pp.SetIndicateurs)
         
     ####################################################################################
     def OnItemCheck(self, event):
-        print("OnItemCheck")
+#         print("OnItemCheck")
         event.Skip()
         
         self.uncheckParentsPasPleins(self.root)

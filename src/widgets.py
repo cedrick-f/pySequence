@@ -940,7 +940,11 @@ class VariableCtrl(wx.Panel):
     def SetForegroundColour(self, color):
         self.txtnom.SetForegroundColour(color)
         
-        
+    #########################################################################################################
+    def SetMin(self, m):
+        self.spin.SetMin(m)
+        self.variable.bornes[0] = m
+         
     #########################################################################################################
     def SetVariable(self, variable):
         self.multiple = variable.multiple

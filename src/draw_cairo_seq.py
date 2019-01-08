@@ -603,6 +603,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         rEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
                                  tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
                            seq.classe, complet = False)
+#         print("rEff", rEff)
         r = []
         for v in rects.values():
             r.extend(v)
@@ -1179,6 +1180,9 @@ class Cadre():
     def __init__(self, ctx, seance, h, filigrane = False, signEgal = False): 
         self.seance = seance
         self.ctx = ctx
+        if not seance.effectif in rEff:
+            print("CONFLIT Effectif !")
+            return
         self.w = rEff[seance.effectif][2]
         self.h = h
         

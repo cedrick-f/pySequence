@@ -1736,9 +1736,9 @@ class Referentiel(XMLelem):
         # Valeurs par défaut pour effectifs (version >= 8)
         for code in 'GDSTUEP':
             if not code in self.effectifs.keys():
-                self.effectifs['S'] = [*self.effectifs['G']]
-                self.effectifs['T'] = None
-                self.effectifs['U'] = None
+#                 self.effectifs['S'] = [*self.effectifs['G']]
+#                 self.effectifs['T'] = None
+                self.effectifs[code] = [*self.effectifs['C']]
 #                 if len(self.effectifs[code]) == 4:
 #                     self.effectifs['S'].append(constantes.SubdivGrp['S'])
 #                     self.effectifs['S'].append(constantes.MmActiv['S'])

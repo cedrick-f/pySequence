@@ -9793,17 +9793,24 @@ class Seance(ElementAvecLien, ElementBase):
             image = self.tip.GetImgURL(self.image, width = 200)
             
 #         print(lst_ensSpe)    
-#         print("self.compVisees", self.compVisees)
+#         print("   self.compVisees", self.compVisees)
         lstCompVisees = []
         comp = self.GetDocument().obj["C"]
         for i, c in enumerate(sorted(comp.competences)):
 #             print("   ", c)
             if c in self.compVisees:
+#                 lstCompVisees.append((c[1:], 
+#                                       ref.getCompetence(c).intitule,
+#                                       self.indicateurs[c]))
+                
                 for sc in ref.getSousElem(c, "Comp_"+c[0]):
                     if sc in self.indicateurs:
-                        lstCompVisees.append((sc[1:], 
-                                              ref.getCompetence(sc).intitule,
-                                              self.indicateurs[sc]))
+                        indic = self.indicateurs[sc]
+                    else:
+                        indic = ""
+                    lstCompVisees.append((sc[1:], 
+                                          ref.getCompetence(sc).intitule,
+                                          indic))
         
 #         print("lstCompVisees", lstCompVisees)
         
