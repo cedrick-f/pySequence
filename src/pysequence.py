@@ -1490,7 +1490,10 @@ class Classe(ElementBase):
         
         else:
             if self.nbrGroupes[eff] > 0:
-                return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes[eff]
+                if ref.effectifs[eff][5] == "N":
+                    return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes[eff]
+                else:
+                    return self.GetEffectifNorm(ref.effectifs[eff][4])
             else:
                 return 0
         
@@ -9061,9 +9064,10 @@ class Seance(ElementAvecLien, ElementBase):
             2 : effectif de la séance supperieur à celui du groupe "effectif réduit"
             3 : séances en rotation d'effectifs différents !!
         """
-#        print "IsEffectifOk", self, 
+        
         ok = 0 # pas de problème
         if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
+            print("IsEffectifOk", self)
 #            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
             eff = round(self.GetEffectif(), 4)
             effN = round(self.GetClasse().GetEffectifNorm('G'), 4)
