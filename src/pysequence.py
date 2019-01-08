@@ -3124,16 +3124,23 @@ class Sequence(BaseDoc):
         else:
             d = self.obj
         
+        maj = False
         for cc in d["C"].competences:
             filtre = self.GetFiltre(ref.dicoCompetences[cc[0]], contexte)
             if filtre is not None and not (cc[1:] in filtre):
                 d["C"].competences.remove(cc)
-                
+                maj = True
+        if maj:
+            d["C"].SetCodeBranche()
+            
+        maj = False
         for cs in d["S"].savoirs:
             filtre = self.GetFiltre(ref.dicoSavoirs[cs[0]], contexte)
             if filtre is not None and not (cs[1:] in filtre):
-                d["S"].savoirs.remove(cs)   
-    
+                d["S"].savoirs.remove(cs)
+                maj = True
+        if maj:
+            d["S"].SetCodeBranche()
     
     ######################################################################################  
     def Rafraichir(self):

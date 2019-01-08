@@ -9496,7 +9496,7 @@ class PanelPropriete_Competences(PanelPropriete):
         for s in rem:
             if s in self.competences.competences:
                 self.competences.competences.remove(s)
-        self.competences.SetCodeBranche()
+#         self.competences.SetCodeBranche()
         
         
     ######################################################################################  
@@ -9521,6 +9521,7 @@ class PanelPropriete_Competences(PanelPropriete):
     ######################################################################################  
     def SetCompetences(self): 
         self.competences.GererElementsDependants()
+        self.competences.SetCodeBranche()
         self.competences.parent.Verrouiller()
         self.sendEvent(modif = "Ajout/suppression d'une compétence", 
                        draw = True, verif = True)
