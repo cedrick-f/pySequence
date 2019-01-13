@@ -4856,7 +4856,8 @@ class BaseFiche(wx.ScrolledWindow):
     #-------------------------------------------------------------------------
     def Compute(self):
 #         print("Compute")
-        
+        curs = self.GetCursor()
+        self.SetCursor(wx.Cursor(wx.HOURGLASS_CURSOR))
         imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         self.ctx = cairo.Context(imagesurface)
         self.normalize(self.ctx)
@@ -4864,7 +4865,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.ctx.paint()
         self.Draw(self.ctx)
         self.buffer = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
-        
+        self.SetCursor(curs)
         return self.buffer
 
 

@@ -1185,7 +1185,7 @@ class Cadre():
             print("CONFLIT Effectif !")
             return
         r = rEff[seance.effectif]
-        self.w = r[0][2]
+#         self.w = r[0][2]
         self.w = (r[-1][0]+r[-1][2] - r[0][0])/len(r)
         self.h = h
         
