@@ -13528,7 +13528,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             self.item = item
         data = self.GetItemPyData(self.item)
-        print("OnSelChanged", data)
+#         print("OnSelChanged", data)
         if isinstance(data, tuple) and hasattr(data[0], 'GetPanelPropriete'):
             panelPropriete = data[0].GetPanelPropriete(self.panelProp, data[1], data[2])
         elif hasattr(data, 'GetPanelPropriete'):
@@ -15191,7 +15191,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #         print "ArbreCompetencesPrj", pptache
         
         ArbreCompetences.__init__(self, parent, typ, dicComp, compRef, 
-                                  pptache, agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+                                  pp = pptache, agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
 #         print self.pptache
 #         """    
 #             :parent: 
