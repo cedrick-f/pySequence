@@ -603,7 +603,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         rEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
                                  tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
                            seq.classe, complet = False)
-        print("rEff", rEff)
+#         print("rEff", rEff)
         r = []
         for v in rects.values():
             r.extend(v)
@@ -615,9 +615,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         y = posZDemarche[1] + 4 * h
         for e in "CGDSTUEP":
             if e in rEff:
-                w = rEff[e][2]
-                DrawLigneEff(ctx, rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
-                DrawLigneEff(ctx, w+rEff[e][0], rEff[e][1]+rEff[e][3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
+                r0 = rEff[e][0] # le premier rectangle
+                w = r0[2]
+                DrawLigneEff(ctx, r0[0], r0[1]+r0[3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
+                DrawLigneEff(ctx, w+r0[0], r0[1]+r0[3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
 
 
     def taille(lstTxt):
@@ -1183,7 +1184,9 @@ class Cadre():
         if not seance.effectif in rEff:
             print("CONFLIT Effectif !")
             return
-        self.w = rEff[seance.effectif][2]
+        r = rEff[seance.effectif]
+        self.w = r[0][2]
+        self.w = (r[-1][0]+r[-1][2] - r[0][0])/len(r)
         self.h = h
         
 #         self.d = 0
@@ -1302,7 +1305,7 @@ class Cadre():
             # Le signe "égal"
             #
             if  self.signEgal:# not self.filigrane and
-                dx = rEff["P"][2]/16
+                dx = rEff["P"][0][2]/16
     #            dy = hHoraire/32
                 dy = ecartY/4
                 self.ctx.set_source_rgba (0, 0.0, 0.2, alpha)
@@ -1606,7 +1609,7 @@ def DrawSeanceRacine(ctx, seance):
 #     x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
 #     if seance.typeSeance in "RS":
          
-    x0 = rEff[seance.GetCodeEffectif()][0]
+    x0 = rEff[seance.GetCodeEffectif()][0][0]
     
     # Gestion des séances à effectif dont tous les sous-groupes font les mêmes activités
     classe = seance.GetDocument().classe

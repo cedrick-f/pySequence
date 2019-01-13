@@ -4,7 +4,7 @@
     <l_01 S_00="Programme I2D" S_01="http://cache.media.education.gouv.fr/file/CSP/17/5/1e_STI2D_IT_I2D_2I2D_1021175.pdf" />
   </l_BO_URL>
   <l_BO_dossier />
-  <l_CentresInterets S_00="Mobilité" S_01="Transport" />
+  <l_CentresInterets />
   <l_Enseignement S_00="STI2D" S_01="Sciences et Technologies de l'Industrie et du Développement Durable" S_02="STI2D" S_03="Sciences et Technologies de l'Industrie et du Développement Durable" />
   <d_aColNon />
   <d_activites>
@@ -5892,16 +5892,16 @@
   </d_effectifsSeance>
   <d_ensSpecif>
     <l_AC S_00="Architecture et Construction" S_01="Architecture et Construction" S_02="">
-      <l_03 F_00="89.0" F_01="89.0" F_02="89.0" />
+      <l_03 F_00="228.0" F_01="108.0" F_02="10.0" />
     </l_AC>
     <l_EE S_00="Energie et Environnement" S_01="Energie et Environnement" S_02="">
-      <l_03 F_00="192.0" F_01="0.0" F_02="0.0" />
+      <l_03 F_00="0.0" F_01="176.0" F_02="80.0" />
     </l_EE>
     <l_ITEC S_00="Innovation Technologique et Eco-Conception" S_01="Innovation Technologique et Eco-Conception" S_02="">
-      <l_03 F_00="0.0" F_01="32.0" F_02="96.0" />
+      <l_03 F_00="192.0" F_01="0.0" F_02="0.0" />
     </l_ITEC>
     <l_SIN S_00="Systèmes d'Information et Numérique" S_01="Systèmes d'Information et Numérique" S_02="">
-      <l_03 F_00="0.0" F_01="108.0" F_02="49.0" />
+      <l_03 F_00="147.0" F_01="205.0" F_02="221.0" />
     </l_SIN>
   </d_ensSpecif>
   <d_ensSpecifSeance>
@@ -5962,7 +5962,7 @@
     <l_00 I_01="5" S_00="1_ère" />
     <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
-  <l_positions_CI S_00="   _   " S_01="   _   " />
+  <l_positions_CI />
   <d_projets>
     <Projet_P1 B_tachesOnce="False" I_duree="36" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin de 1ère">
       <d_attributs>

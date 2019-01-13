@@ -1381,7 +1381,7 @@ def DrawClasse(ctx, rect, classe, complet = True):
     # Les premiers rectangles des effectifs
     
     rEff = {#"C" : (dx, y+dy, wt, ht),
-            "I" : (x+dx, y+dy, wt, ht)
+            "I" : [(x+dx, y+dy, wt, ht)]
              }
     
     
@@ -1421,9 +1421,14 @@ def DrawClasse(ctx, rect, classe, complet = True):
             for lab, r in lstrl: # label + rectangle
                 R = (r[0]*scale[0]+x, r[1]*scale[1]+y, 
                      r[2]*scale[0],   r[3]*scale[1])
+                
                 # On récupère les premiers rectangles
+                
                 if not k in rEff:
-                    rEff[k] = (R[0], R[1], R[2], R[3])
+                    rEff[k] = [(R[0], R[1], R[2], R[3])]
+                else:
+                    if len(ref.effectifs[k]) >= 6 and ref.effectifs[k][5] != "O":
+                        rEff[k].append((R[0], R[1], R[2], R[3]))
                     
                 rectanglePlein(*R, coulGrp[k])
                 rects[k].append(R)
