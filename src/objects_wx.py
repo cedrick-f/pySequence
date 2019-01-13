@@ -2742,7 +2742,7 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def OnPageChanged(self, event):
-        print("OnPageChanged")
+#         print("OnPageChanged")
         new = event.GetSelection()
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
@@ -2967,7 +2967,7 @@ class FenetreSequence(FenetreDocument):
                 dlg.update(count, message)
                 count += 1
                 
-                err = self.sequence.setBranche(sequence)
+                err = self.sequence.setBranche(sequence, reparer = reparer)
                 if len(err) > 0 :
                     Ok = False
                     message += get_err_message(err)
@@ -4351,7 +4351,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4608,7 +4608,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5381,9 +5381,13 @@ class PanelPropriete(scrolled.ScrolledPanel):
 ####################################################################################
 
 class PanelPropriete_Racine(wx.Panel):
-    def __init__(self, parent, texte):
+    def __init__(self, parent, texte = None):
+        print("PanelPropriete_Racine", texte)
         wx.Panel.__init__(self, parent, -1)
+        if texte is not None:
+            wx.StaticText(self, -1, "message" + texte)
         return
+    
         self.Hide() # Sans ça cela provoque des problèmes d'affichage
         
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
@@ -13478,7 +13482,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         
     ######################################################################################  
-    def GetPanelPropriete(self, parent, code):
+    def GetPanelPropriete(self, parent, code, texte = ""):
 #         if code == "Sea":
 #             return PanelPropriete_Racine(parent, constantes.TxtRacineSeance)
 #         elif code == "Obj":
@@ -13494,7 +13498,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 #         elif code == "Ele":
 #             return PanelPropriete_Racine(parent, constantes.TxtRacineEleve)
 #         elif code == "Seq":
-        return PanelPropriete_Racine(parent, constantes.xmlVide)
+        return PanelPropriete_Racine(parent, texte)
 #         
 #         return 
     
@@ -13523,7 +13527,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             self.item = item
         data = self.GetItemPyData(self.item)
-        
+        print("OnSelChanged", data)
         if isinstance(data, tuple) and hasattr(data[0], 'GetPanelPropriete'):
             panelPropriete = data[0].GetPanelPropriete(self.panelProp, data[1], data[2])
         elif hasattr(data, 'GetPanelPropriete'):
@@ -13533,6 +13537,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             print("err : ", data)
         
+        if panelPropriete is None:
+            panelPropriete = self.GetPanelPropriete(self.panelProp, data.toolTip)
         
         #
         # On centre la fiche sur l'objet
@@ -13578,15 +13584,22 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
     ######################################################################################              
     def OnToolTip(self, event):
-#         print "OnToolTip"
         node = event.GetItem()
         data = self.GetPyData(node)
-        if (hasattr(data, 'toolTip') and isstring(data.toolTip)):
-            event.SetToolTip(wx.ToolTip(data.toolTip))
+#         print("OnToolTip", data)
+        if hasattr(data, 'toolTip'):
+            if isstring(data.toolTip):
+#                 print("   1:", data.toolTip)
+                event.SetToolTip(wx.ToolTip(data.toolTip))
+            else:
+#                 print("   2:", self.GetItemText(node))
+                event.SetToolTip(wx.ToolTip(self.GetItemText(node)))
         elif isstring(data):
-            if data == "Seq":
+            if data == "Seq" and self.doc.toolTip is not None:
+#                 print("   3:", self.doc.toolTip)
                 event.SetToolTip(wx.ToolTip(self.doc.toolTip))
             else:
+#                 print("   4:", self.GetItemText(node))
                 event.SetToolTip(wx.ToolTip(self.GetItemText(node)))
         else:
             event.Skip()
@@ -13901,12 +13914,12 @@ class ArbreSequence(ArbreDoc):
         event.Skip()
         
     
-    ####################################################################################
-    def OnToolTip(self, event):
-
-        item = event.GetItem()
-        if item:
-            event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
+#     ####################################################################################
+#     def OnToolTip(self, event):
+# 
+#         item = event.GetItem()
+#         if item:
+#             event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 
 
 

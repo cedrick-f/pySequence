@@ -603,7 +603,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         rEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
                                  tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
                            seq.classe, complet = False)
-#         print("rEff", rEff)
+        print("rEff", rEff)
         r = []
         for v in rects.values():
             r.extend(v)
@@ -733,7 +733,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         
         wC = rect_width*taille(lstTexteC)/(ltot)
         wS = rect_width*taille(lstTexteS)/(ltot)
-        wSe = rect_width*len(lstTexteSe)/(ltot)
+        wSe = rect_width*taille(lstTexteSe)/(ltot)
         
         # Création des deux zones
         maxFontSize = 0.011 * COEF

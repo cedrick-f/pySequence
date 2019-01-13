@@ -736,6 +736,7 @@ class ElementBase(Grammaire):
         
     ######################################################################################  
     def SetToolTip(self, toolTip):
+#         print("SetToolTip", toolTip)
         self.toolTip = toolTip
         
     ######################################################################################  
@@ -785,7 +786,7 @@ class ElementBase(Grammaire):
              - liens 
              - ...
         """
-        print("EnrichiSVG", self, doc, seance, self.cadre)
+#         print("EnrichiSVG", self, doc, seance, self.cadre)
         # 
         # Le titre de la page
         #
@@ -2234,7 +2235,7 @@ class Sequence(BaseDoc):
 
 
     ######################################################################################  
-    def setBranche(self, branche):
+    def setBranche(self, branche, reparer = False):
         """ Lecture d'une branche XML de séquence
         """
 #         print "setBranche séquence"
@@ -2280,18 +2281,22 @@ class Sequence(BaseDoc):
         if branchePre != None:
             savoirs = branchePre.find("Savoirs")
             self.prerequis["S"].setBranche(savoirs)
+            
             comp = branchePre.find("Competences")
             if comp != None:
                 self.prerequis["C"].setBranche(comp)
+                
             lst = list(branchePre)
             lst.remove(savoirs)
             if comp in lst:
                 lst.remove(comp)
+                
             self.prerequisSeance = []
             for bsp in lst:
                 sp = LienSequence(self)
                 sp.setBranche(bsp)
                 self.prerequisSeance.append(sp)
+                sp.ChargerSequence(reparer = reparer)
         
 #        t2 = time.time()
 #        print "  t2", t2-t1
@@ -2693,30 +2698,31 @@ class Sequence(BaseDoc):
             self.SupprimerLienSequence(item = item)           
         
     
-    ######################################################################################  
+    ###################################################################################### 
     def SupprimerLienSequence(self, event = None, item = None):
         ps = self.arbre.GetItemPyData(item)
         self.prerequisSeance.remove(ps)
         self.arbre.Delete(item)
         self.GetApp().sendEvent(modif = "Suppression d'une Séquence prérequise")
-        
+    
+    
     ########################################################################################################
-    def OuvrirFichierSeq(self, nomFichier):
+    def OuvrirFichierSeq(self, nomFichier, reparer = False):
 
-#        print "///", nomFichier
-        fichier = open(nomFichier,'r')
+        root = safeParse(nomFichier, None)
+        if root is None:
+            return None, None
+        
         classe = Classe(self.GetApp())
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
-#         try:
-        root = ET.parse(fichier).getroot()
         rsequence = root.find("Sequence")
         rclasse = root.find("Classe")
         if rclasse is not None:
-            classe.setBranche(rclasse)
+            classe.setBranche(rclasse, reparer = reparer)
         if rsequence is not None:
-            sequence.setBranche(rsequence)
+            sequence.setBranche(rsequence, reparer = reparer)
         else:   # Ancienne version , forcément STI2D-ETT !!
             classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
             classe.referentiel = REFERENTIELS[classe.typeEnseignement]
@@ -6268,7 +6274,7 @@ class Progression(BaseDoc, Grammaire):
                 self.SetToolTip(self.intitule)
             else:
                 self.arbre.SetItemBackgroundColour(self.brancheSeq, wx.Colour("LIGHT PINK"))
-                message = "La réparttion des Séquences et des Projets pendant l'année\n" \
+                message = "La répartition des Séquences et des Projets pendant l'année\n" \
                           "présente des anomalies :\n"
                 self.SetToolTip(message + "\n".join([" - "+p for p in pb]))
   
@@ -6825,8 +6831,11 @@ class ElementProgression():
 #        print "setBranche LienSequence", self
         self.path = toFileEncoding(branche.get("dir", ""))
         
-        
-        sp = branche.get("creneaux", "0_"+str(self.GetDocument().nbrCreneaux-1))
+        if isinstance(self.GetDocument(), Progression):
+            nc = self.GetDocument().nbrCreneaux
+        else:
+            nc = 1
+        sp = branche.get("creneaux", "0_"+str(nc-1))
         sp = sp.split("_")
         if len(sp) == 1:
             sp = [sp[0], sp[0]]
@@ -6842,10 +6851,6 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     def __init__(self, parent, path = r""):
         Grammaire.__init__(self, "Séquence(s)$f")
         
-#         self.nom_obj = "Séquence"
-#         self.article_c_obj = "de la"
-#         self.article_obj = "la"
-        
         self.codeXML = "Sequence"
         self.parent = parent
         ElementBase.__init__(self)
@@ -6853,26 +6858,16 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
         
         self.sequence = None
         
-        #
-        # Création du Tip (PopupInfo)
-        #
-#         self.tip = PopupInfo(self.GetApp().parent, "")
-#        self.ficheHTML = self.GetFicheHTML()
-#        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
     ######################################################################################  
     def __repr__(self):
         return "Seq :"+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
-    
-
-        
-    
-    
 
     
     ######################################################################################  
     def GetPanelPropriete(self, parent):
-        return PanelPropriete_LienSequence(parent, self)
+        if self.sequence is not None:
+            return PanelPropriete_LienSequence(parent, self)
     
     ######################################################################################  
     def GetDoc(self):
@@ -6883,34 +6878,35 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
         return self.sequence.position
     
     
-
     ######################################################################################  
     def MiseAJourArbre(self):
-        self.arbre.SetItemText(self.branche, self.sequence.intitule)
+        self.arbre.SetItemText(self.branche, self.GetNomFichier())
         
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
-        if self.sequence is None:
-            return
+#         if self.sequence is None:
+#             return
 #        print "ConstruireArbre"
         self.arbre = arbre
             
-        coul = draw_cairo.BcoulPos[self.sequence.position[0]]
-        coul = [int(200*c) for c in coul]
+        
 #         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
-        self.branche = arbre.AppendItem(branche, self.sequence.intitule, #wnd = self.codeBranche, 
+        self.branche = arbre.AppendItem(branche, self.GetNomFichier(), #wnd = self.codeBranche, 
                                         data = self,
                                         image = self.arbre.images["Seq"])
 #         self.codeBranche.SetBranche(self.branche)
-        self.arbre.SetItemTextColour(self.branche, wx.Colour(*coul))
-
-#        self.codeBranche.SetBranche(self.branche)
-        
-#        if hasattr(self, 'tip'):
-#            self.tip.SetBranche(self.branche)
-
+        if self.sequence is not None:
+            coul = draw_cairo.BcoulPos[self.sequence.position[0]]
+            coul = [int(200*c) for c in coul]
+            self.arbre.SetItemTextColour(self.branche, wx.Colour(*coul))
+        else:
+            self.arbre.SetItemBackgroundColour(self.branche, wx.Colour("TOMATO1"))
+            if self.path is not None:
+                t = "Le fichier\n %s\nn'a pas été trouvé !" %self.path
+            self.SetToolTip(self.GetNomFichier() + "\n" + t)
+    
     
     ######################################################################################  
     def ChargerSequence(self, reparer = False):
@@ -6918,8 +6914,8 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
         classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path, reparer = reparer)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.sequence = sequence
-
-
+        
+    
     ######################################################################################  
     def SignalerPb(self, pb):
         if hasattr(self, 'branche'):
@@ -6936,13 +6932,20 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([["Supprimer", 
-                                                     functools.partial(self.parent.SupprimerLien, item = itemArbre), 
-                                                     scaleImage(images.Icone_suppr_seq.GetBitmap())],
-                                                    ["Ouvrir", 
-                                                     functools.partial(self.parent.OuvrirSequence, item = itemArbre), 
-                                                     scaleImage(images.Icone_open.GetBitmap())]
-                                                    ])
+            doc = self.parent
+            if isinstance(doc, Progression):
+                doc.app.AfficherMenuContextuel([["Supprimer", 
+                                                 functools.partial(doc.SupprimerLien, item = itemArbre), 
+                                                 scaleImage(images.Icone_suppr_seq.GetBitmap())],
+                                                ["Ouvrir", 
+                                                 functools.partial(doc.OuvrirSequence, item = itemArbre), 
+                                                 scaleImage(images.Icone_open.GetBitmap())]
+                                                ])
+            else:
+                doc.app.AfficherMenuContextuel([["Supprimer", 
+                                                 functools.partial(doc.SupprimerLienSequence, item = itemArbre), 
+                                                 scaleImage(images.Icone_suppr_seq.GetBitmap())],
+                                                ])
 
 
     ######################################################################################  
@@ -6953,6 +6956,11 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
 
     ######################################################################################  
     def GetNomFichier(self):
+        """ Renvoie le nom affiché sur la fiche de Sequence
+            quand la Séquence est un prérequis à une autre
+        """
+        if self.sequence is not None and len(self.sequence.intitule) > 0:
+            return self.sequence.intitule
         return os.path.splitext(os.path.basename(self.path))[0]
 
 
