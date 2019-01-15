@@ -152,7 +152,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
                 j += 1
 #    print texte
 #    print "-->", ll
-    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    fascent, fdescent, fheight, fxadvance, fyadvance = font_extents(ctx, taille)
     return (fascent+fdescent)*len(ll), ll
 #    #
 #    # On dessine toutes les lignes de texte
@@ -317,7 +317,7 @@ def show_text_rect(ctx, texte, rect, \
             return fontsizeMin, (x, y, 0, 0)
         
         ctx.set_font_size(fontsizeMin)
-        fheight = ctx.font_extents()[2]
+        fheight = font_extents(ctx, fontsizeMin)[2]
         x, y, w, h = reduire_rect(x, y, w, h, fheight, b)
         
         rect_eff = show_text_rect_fix(ctx, texte, x, y, w, h, 
@@ -332,7 +332,7 @@ def show_text_rect(ctx, texte, rect, \
     # "réduction" du rectangle (rectangle - bordure)
     #
     ctx.set_font_size(fontSize)
-    fheight = ctx.font_extents()[2]
+    fheight = font_extents(ctx, fontSize)[2]
     # Période entre 2 lignes
     hl = fheight * le
     x, y, w, h = reduire_rect(x, y, w, h, fheight, b)
@@ -508,7 +508,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize,
 
     ctx.set_font_size(fontSize)
     
-    fheight = ctx.font_extents()[2]
+    fheight = font_extents(ctx, fontSize)[2]
     # Période entre 2 lignes
     hl = fheight * le
     
@@ -1513,7 +1513,7 @@ def curve_rect_titre(ctx, titre, rect,
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
     ctx.set_font_size(taille_font)
-    fheight = ctx.font_extents()[2]
+    fheight = font_extents(ctx, taille_font)[2]
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(titre)
       
     c = curve_rect_coin(ctx, x0, y0, rect_width, rect_height, rayon, 
@@ -1832,7 +1832,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
     _y = y
     _x = x+wt
     ctx.set_font_size(taille)
-    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    fascent, fdescent, fheight, fxadvance, fyadvance = font_extents(ctx, taille)
 #    print
     for c in contenu:
 #        print "    ", c
@@ -1844,7 +1844,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
 #            h = (fascent+fdescent)*len(ll)
             for i, t in enumerate(l):
         #        print "  ",t
-                xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+                xbearing, ybearing, width, height, xadvance, yadvance = ctx, text_extents(t)
                 xt, yt = _x+xbearing+(wc-width)/2, _y + (fascent+fdescent)*i - fdescent + fheight
         #        print "  ",xt, yt
                 if ha == 'c':
@@ -2153,12 +2153,12 @@ def liste_code_texte2(ctx, lstCodes, lstTexte, rect,
 #    nt = [len(t) for t in lstTexte]
     
     ctx.set_font_size(minFont)
-    minfheight = ctx.font_extents()[2]
+    minfheight = font_extents(ctx, minFont)[2]
     
     # Hauteur des codes
     maxFontSize = 0.011 * COEF
     ctx.set_font_size(maxFontSize)
-    hc = ctx.font_extents()[2]
+    hc = font_extents(ctx, maxFontSize)[2]
     
 #     print "   min-max", minfheight, "-", hc
     
@@ -2494,27 +2494,85 @@ CACHE = maxdict(500)
 ##########################################################################################
 import functools
 
-class memoized(object):
+# class memoized(object):
+#     '''Decorator. Caches a function's return value each time it is called.
+#        If called later with the same arguments, the cached value is returned
+#        (not reevaluated).
+#     '''
+#     def __init__(self, func):
+#         self.func = func
+#         self.cache = {}
+#     
+#     def __call__(self, ctx, texte, w, break_long_words):
+#         
+#         if texte in self.cache.keys() \
+#                 and w >= max(self.cache[texte][0]) and w <= self.cache[texte][1] \
+#                 and self.cache[texte][3] == break_long_words :
+#             if texte[:3] =='Syn': print("CACHE", self.cache[texte])
+#             return self.cache[texte][2], self.cache[texte][0]
+#         
+#         else:
+#             ll, lw = self.func(ctx, texte, w, break_long_words)
+#             self.cache[texte] = (lw, w, ll, break_long_words)
+#             return ll, lw
+#     
+#     def __repr__(self):
+#         '''Return the function's docstring.'''
+#         return self.func.__doc__
+#     
+#     def __get__(self, obj, objtype):
+#         '''Support instance methods.'''
+#         return functools.partial(self.__call__, obj)
+# 
+# 
+# @memoized
+# def decoupe_ligne(ctx, texte, w = None, couper = True):
+#     """ Découpe une ligne de texte en une liste de lignes
+#         de telle sorte qu'il rentre dans la largeur w
+#     """
+#     ll = []
+#     lw = []
+#     wrap = len(texte)
+#     continuer = wrap > 1
+#     while continuer:
+#         ll = textwrap.wrap(texte, wrap, break_long_words = couper)
+#         lw = [ctx.text_extents(t)[2] for t in ll]
+#         wmin = max(lw)
+# 
+#         if w == None or wmin <= w:
+#             continuer = False
+#         else:
+#             wrap -= 1#int((wmin-w)/2)
+#             if wrap <= 1:
+#                 continuer = False
+#     return ll, lw
+
+
+    
+
+
+
+# Une autre cache pour les méthodes text_extent et font_extent qui provoquent des 'out of memory'
+# CACHE_EXTENTS = maxdict(200)
+
+
+class memoized_extents(object):
     '''Decorator. Caches a function's return value each time it is called.
        If called later with the same arguments, the cached value is returned
        (not reevaluated).
     '''
     def __init__(self, func):
         self.func = func
-        self.cache = {}
+        self.cache = {} #maxdict(200)
     
-    def __call__(self, ctx, texte, w, break_long_words):
+    def __call__(self, ctx, texte):
         
-        if texte in list(self.cache.keys()) \
-                and w >= max(self.cache[texte][0]) and w <= self.cache[texte][1] \
-                and self.cache[texte][3] == break_long_words :
-            if texte[:3] =='Syn': print("CACHE", self.cache[texte])
-            return self.cache[texte][2], self.cache[texte][0]
-        
+        if texte in self.cache.keys():
+#             print("CACHE", texte)
+            return self.cache[texte]
         else:
-            ll, lw = self.func(ctx, texte, w, break_long_words)
-            self.cache[texte] = (lw, w, ll, break_long_words)
-            return ll, lw
+            self.cache[texte] = self.func(ctx, texte)
+            return self.cache[texte]
     
     def __repr__(self):
         '''Return the function's docstring.'''
@@ -2525,31 +2583,15 @@ class memoized(object):
         return functools.partial(self.__call__, obj)
 
 
-@memoized
-def decoupe_ligne(ctx, texte, w = None, couper = True):
-    """ Découpe une ligne de texte en une liste de lignes
-        de telle sorte qu'il rentre dans la largeur w
-    """
-    ll = []
-    lw = []
-    wrap = len(texte)
-    continuer = wrap > 1
-    while continuer:
-        ll = textwrap.wrap(texte, wrap, break_long_words = couper)
-        lw = [ctx.text_extents(t)[2] for t in ll]
-        wmin = max(lw)
-
-        if w == None or wmin <= w:
-            continuer = False
-        else:
-            wrap -= 1#int((wmin-w)/2)
-            if wrap <= 1:
-                continuer = False
-    return ll, lw
+@memoized_extents
+def text_extents(ctx, t):
+    return ctx.text_extents(t)
 
 
-    
-    
+@memoized_extents
+def font_extents(ctx, fontSize):
+    return ctx.font_extents()
+
 #def ajuster_texte3(ctx, texte, w, h, le = 0.8, pe = 1.0, wrap = True, couper = True):
 #    """ Renvoie la liste des lignes et la taille de police et la longueur de la plus longue ligne
 #        pour que <texte> rentre dnas le rectangle (w,h)
@@ -2856,6 +2898,8 @@ def decoupe_ligne(ctx, texte, w = None, couper = True):
 #    return lt, fontSize, maxw
 
 
+def egal(x, y, epsilon = 0.1):
+    return abs(y-x) < epsilon
 
 
 def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, 
@@ -2880,9 +2924,11 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     #
     # On vérifie dans le cache qu'on n'a pas déja fait le boulot
     #
-    if texte in list(CACHE.keys()):
+    if texte in CACHE.keys():
         www, hhh, bbb, lee, pee, lt, fontSize, wh = CACHE[texte]
-        if www == w and hhh == h and lee == le and pee == pe and bbb == b:
+#         if www == w and hhh == h and lee == le and pee == pe and bbb == b:
+        if egal(www, w) and egal(hhh, h) and egal(lee, le) and egal(pee, pe) and egal(bbb, b):
+#             print("CACHE", www, hhh, bbb, lee, pee)
             return lt, fontSize, wh
             
     #
@@ -2897,7 +2943,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
     ctx.set_font_size(1.0 * COEF)
-    fheight = ctx.font_extents()[2]
+    fheight = font_extents(ctx, 1.0 * COEF)[2]
 
     hl = fheight * le
     if debug: print("  hl", hl)
@@ -3042,7 +3088,7 @@ def ajuster_texte_fixe(ctx, texte, w, h,
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
     ctx.set_font_size(fontSize)
-    fheight = ctx.font_extents()[2]
+    fheight = font_extents(ctx, fontSize)[2]
 
     hl = fheight * le
     if debug: print("  hl", hl)
@@ -3053,17 +3099,17 @@ def ajuster_texte_fixe(ctx, texte, w, h,
     if wrap:
         lignes = texte.splitlines()
 #         print(lignes)
-        ptes = [[ctx.text_extents(l[:i+1])[2] for i in range(len(l))] for l in lignes]
-#         ptes = []
-#         for l in lignes:
-#             ll = []
-#             for i in range(len(l)):
-#                 try:
-#                     ll.append(ctx.text_extents(l[:i+1])[2])
-#                 except:
-#                     ll.append(0)
+#         ptes = [[ctx.text_extents(l[:i+1])[2] for i in range(len(l))] for l in lignes]
+        ptes = []
+        for l in lignes:
+            ll = []
+            for i in range(len(l)):
+                try:
+                    ll.append(ctx.text_extents(l[:i+1])[2])
+                except:
+                    ll.append(0)
 #                     print("E", l[:i+1])
-#             ptes.append(ll)
+            ptes.append(ll)
 #         print(ptes)
         lt = []
         for l, pte in zip(lignes, ptes):

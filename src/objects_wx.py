@@ -4671,7 +4671,10 @@ class BaseFiche(wx.ScrolledWindow):
         self.GetDoc().HideTip()
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
+        try:
+            xx, yy = self.ctx.device_to_user(_x, _y)
+        except:
+            return
         
         #
         # Cas général
@@ -4816,7 +4819,8 @@ class BaseFiche(wx.ScrolledWindow):
         self.Refresh()
         self.Update()
         # After drawing empty bitmap start update
-        self.SizeUpdate()
+        wx.CallAfter(self.SizeUpdate)
+#         self.SizeUpdate()
         
 
 #     #############################################################################            
@@ -4856,16 +4860,28 @@ class BaseFiche(wx.ScrolledWindow):
     #-------------------------------------------------------------------------
     def Compute(self):
 #         print("Compute")
-        curs = self.GetCursor()
         self.SetCursor(wx.Cursor(wx.HOURGLASS_CURSOR))
-        imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
-        self.ctx = cairo.Context(imagesurface)
+#         if hasattr(self, "imagesurface"):
+#             self.imagesurface.flush()
+#             self.imagesurface.mark_dirty()
+        if hasattr(self, "ctx"):
+            del self.ctx
+        self.imagesurface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+        self.ctx = cairo.Context(self.imagesurface)
         self.normalize(self.ctx)
         self.ctx.set_source_rgba(1,1,1,1)
         self.ctx.paint()
-        self.Draw(self.ctx)
-        self.buffer = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
-        self.SetCursor(curs)
+#         print("Status", cairo.cairo.cairo_status_to_string(cairo.cairo.cairo_status(self.ctx)))
+        try:
+            self.Draw(self.ctx)
+        except MemoryError:
+            print("MemoryError")
+            
+        self.buffer = wx.lib.wxcairo.BitmapFromImageSurface(self.imagesurface)
+        
+#         self.imagesurface.flush()
+#         temp_buffer = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+        self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         return self.buffer
 
 
@@ -7815,12 +7831,13 @@ class PanelEffectifsClasse(wx.Panel):
 
     #############################################################################            
     def Onsize(self, event = None):
-        wp, hp = self.pnlImg.GetSize()
-#         print("Onsize", wp, hp)
-        if wp > 0 and hp > 0:
-            self.bmp.SetBitmap(self.classe.getBitmapEffectifs(wp, hp))
-        
-        self.Refresh()
+        if self.IsShownOnScreen():
+            wp, hp = self.pnlImg.GetSize()
+    #         print("Onsize", wp, hp)
+            if wp > 0 and hp > 0:
+                self.bmp.SetBitmap(self.classe.getBitmapEffectifs(wp, hp))
+            
+            self.Refresh()
         
         if event is not None:
             event.Skip()
@@ -10564,7 +10581,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtComboBox(self, event):
-        print("EvtComboBox type")
+#         print("EvtComboBox type")
         ref = self.GetReferentiel()
         event.Skip()
         # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
@@ -11844,7 +11861,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         """
         
         sel = evt.GetSelection()
-        print("EvtComboBox", sel)
+#         print("EvtComboBox", sel)
         if sel > 0: # Système lié à la Classe
             classe = self.systeme.GetDocument().classe
             s = classe.systemes[sel-1]
