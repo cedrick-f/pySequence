@@ -6926,7 +6926,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Verrouiller()
         self.MiseAJourBoutonsSystem()
         
-#         self.Bind(wx.EVT_SIZE, self.OnResize)
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.ec.Onsize)
         
         self.Layout()
         
