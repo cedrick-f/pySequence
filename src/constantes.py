@@ -54,7 +54,7 @@ from util_path import DOSSIER_ICONES, TEMPLATE_PATH
 from widgets import rognerImage
 
     
-
+DUREE_AUTOSAVE = 1000*60*5 # 5 minutes
 
 ####################################################################################
 #

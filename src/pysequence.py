@@ -3442,7 +3442,7 @@ class Sequence(BaseDoc):
 
 
     #############################################################################
-    def enregistrer(self, nomFichier):
+    def enregistrer(self, nomFichier, dialog = True):
 #         print "enregistrer", nomFichier, self.GetPath()
                 # La séquence
         sequence = self.getBranche()
@@ -3454,7 +3454,7 @@ class Sequence(BaseDoc):
         root.append(classe)
         constantes.indent(root)
         
-        enregistrer_root(root, nomFichier)
+        return enregistrer_root(root, nomFichier, dialog = dialog)
 
 
 ####################################################################################################
@@ -5266,7 +5266,7 @@ class Projet(BaseDoc, Grammaire):
 
 
     #############################################################################
-    def enregistrer(self, nomFichier):
+    def enregistrer(self, nomFichier, dialog = True):
         # Le projet
         projet = self.getBranche()
         classe = self.classe.getBranche()
@@ -5277,7 +5277,7 @@ class Projet(BaseDoc, Grammaire):
         root.append(classe)
         constantes.indent(root)
         
-        enregistrer_root(root, nomFichier)
+        return enregistrer_root(root, nomFichier, dialog = dialog)
 #                        
 
 
@@ -6709,7 +6709,7 @@ class Progression(BaseDoc, Grammaire):
     
     
     ##################################################################################################    
-    def enregistrer(self, nomFichier):
+    def enregistrer(self, nomFichier, dialog = True):
         
         print("enregistrer", nomFichier, end=' ') 
         print("   ", self.dependants)
@@ -6723,21 +6723,22 @@ class Progression(BaseDoc, Grammaire):
         root.append(classe)
         constantes.indent(root)
         
-        enregistrer_root(root, nomFichier)
+        ok = enregistrer_root(root, nomFichier, dialog = dialog)
 
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence in self.dependants:
                 nomFichier = os.path.join(self.GetPath(), lienSeq.path)
                 print("++", self.GetPath(), lienSeq.path)
-                lienSeq.sequence.enregistrer(nomFichier)
+                ok = ok and lienSeq.sequence.enregistrer(nomFichier, dialog = dialog)
         
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
             if lienPrj.projet in self.dependants:
                 nomFichier = os.path.join(self.GetPath(), lienPrj.path)
-                lienPrj.projet.enregistrer(nomFichier)
+                ok = ok and lienPrj.projet.enregistrer(nomFichier, dialog = dialog)
 
         del self.dependants[:]
 
+        return ok
 
 
 

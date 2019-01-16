@@ -50,6 +50,7 @@ Les principaux éléments du GUI de **pySéquence**.
 import os, sys
 import util_path
 import shutil
+import uuid # Pour autosave
 
 # print(sys.version_info)
 
@@ -140,7 +141,7 @@ from constantes import calculerEffectifs, \
                         getElementFiltre, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
-                        _S, _Rev, _R1, _R2, _R3, \
+                        _S, _Rev, _R1, _R2, _R3, DUREE_AUTOSAVE, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, WMIN_PROP, HMIN_PROP, \
                         WMIN_STRUC, HMIN_STRUC, LOGICIELS, IMG_LOGICIELS, \
@@ -419,6 +420,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
 
+
+        # Timer pour autosave
+        self.timerAutosave = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.OnTimer, self.timerAutosave)
+        
         #
         # le fichier de configuration de la fiche
         #
@@ -602,6 +608,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         a = threading.Thread(None, version.GetNewVersion, None,  (self,) )
         a.start()
 
+        self.timerAutosave.Start(DUREE_AUTOSAVE)
+        
         self.Thaw()
         
 #     ###############################################################################################
@@ -1295,6 +1303,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                           "Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
 
         
+    #############################################################################
+    def OnTimer(self, event = None):
+        for page in [self.GetNotebook().GetPage(i) for i in range(self.GetNotebook().GetPageCount())]:
+            try:
+                page.autoSave(event)
+            except:
+                pass
+        
+        self.timerAutosave.Start(DUREE_AUTOSAVE)
+        
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None, ouverture = False):
@@ -1903,6 +1921,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.fichierCourant = ""
         self.DossierSauvegarde = ""
         self.fichierCourantModifie = False
+        self.fichierSauvegarde = ""
             
         #
         # Un NoteBook comme conteneur de la fiche
@@ -2062,6 +2081,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def fermer(self):
         print("Fermer", self)
+        self.delFichierSauvegarde()
+        
+        
         # Pour mettre à jour la barre d'outils
         self.CleanClose()
         self.parent.OnDocClosed()
@@ -2125,6 +2147,34 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             dlg.Destroy()
     
     
+    ###############################################################################################
+    def enregistrer(self, nomFichier):
+        """Enregistrement
+            :param nomFichier: encodé en FileEncoding
+        """
+        wx.BeginBusyCursor()
+        
+        ok = self.GetDocument().enregistrer(nomFichier)
+
+        if ok:
+            self.definirNomFichierCourant(nomFichier)
+            self.MarquerFichierCourantModifie(False)
+            self.delFichierSauvegarde()
+            
+        wx.EndBusyCursor()
+        return ok
+    
+    
+    #############################################################################
+    def delFichierSauvegarde(self):
+        if self.fichierSauvegarde != "":
+            try:
+                os.remove(self.fichierSauvegarde)
+                self.fichierSauvegarde = ""
+            except:
+                pass
+            
+    
     #############################################################################
     def commandeRedo(self, event = None):
         wx.BeginBusyCursor()
@@ -2161,12 +2211,34 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.GetDocument().classe.undoStack.resetOnUndoRedo()
         wx.EndBusyCursor()
     
+    
+    #############################################################################
+    def autoSave(self, event):
+        print("autoSave")
+        if self.fichierCourantModifie:
+            wx.BeginBusyCursor()
+            
+            if self.fichierCourant != '':
+                nf = self.fichierCourant+".bak"
+            else:
+                wx.EndBusyCursor()
+                return
+#                 nf = "tmp_"+str(uuid.uuid4())+".bak"
+            
+            if self.GetDocument().enregistrer(nf, dialog = False):
+                self.fichierSauvegarde = nf
+                print("   ", nf)
+                
+            wx.EndBusyCursor()
+            
+    
     #############################################################################
     def commandeEnregistrer(self, event = None):
         if self.fichierCourant != '':
             self.enregistrer(self.fichierCourant)
         else:
             self.dialogEnregistrer()        
+            
             
     #############################################################################
     def commandeEnregistrerSous(self, event = None):
@@ -2779,19 +2851,21 @@ class FenetreSequence(FenetreDocument):
         self.parent.miseAJourUndo()
         
         
-    ###############################################################################################
-    def enregistrer(self, nomFichier):
-        """Enregistrement
-            :param nomFichier: encodé en FileEncoding
-        """
-        wx.BeginBusyCursor()
-        
-        self.sequence.enregistrer(nomFichier)
-
-        self.definirNomFichierCourant(nomFichier)
-        self.MarquerFichierCourantModifie(False)
-        
-        wx.EndBusyCursor()
+#     ###############################################################################################
+#     def enregistrer(self, nomFichier):
+#         """Enregistrement
+#             :param nomFichier: encodé en FileEncoding
+#         """
+#         wx.BeginBusyCursor()
+#         
+#         ok = self.sequence.enregistrer(nomFichier)
+# 
+#         if ok:
+#             self.definirNomFichierCourant(nomFichier)
+#             self.MarquerFichierCourantModifie(False)
+#         
+#         wx.EndBusyCursor()
+#         return ok
         
         
     ###############################################################################################
@@ -3254,18 +3328,21 @@ class FenetreProjet(FenetreDocument):
         self.parent.miseAJourUndo()
         
         
-    ###############################################################################################
-    def enregistrer(self, nomFichier):
-        """Enregistrement
-            :param nomFichier: encodé en FileEncoding
-        """
-        wx.BeginBusyCursor()
-        
-        self.projet.enregistrer(nomFichier)
-        
-        self.definirNomFichierCourant(nomFichier)
-        self.MarquerFichierCourantModifie(False)
-        wx.EndBusyCursor()
+#     ###############################################################################################
+#     def enregistrer(self, nomFichier):
+#         """Enregistrement
+#             :param nomFichier: encodé en FileEncoding
+#         """
+#         wx.BeginBusyCursor()
+#         
+#         ok = self.projet.enregistrer(nomFichier)
+#         
+#         if ok:
+#             self.definirNomFichierCourant(nomFichier)
+#             self.MarquerFichierCourantModifie(False)
+#             
+#         wx.EndBusyCursor()
+#         return ok
         
         
     ###############################################################################################
@@ -4145,18 +4222,19 @@ class FenetreProgression(FenetreDocument):
         return 3, ""
         
         
-    ###############################################################################################
-    def enregistrer(self, nomFichier):
-        """ Enregistrement
-            :param nomFichier: encodé en FileEncoding
-        """
-        wx.BeginBusyCursor()
-        
-        self.progression.enregistrer(nomFichier)
-        
-        self.definirNomFichierCourant(nomFichier)
-        self.MarquerFichierCourantModifie(False)
-        wx.EndBusyCursor()
+#     ###############################################################################################
+#     def enregistrer(self, nomFichier):
+#         """ Enregistrement
+#             :param nomFichier: encodé en FileEncoding
+#         """
+#         wx.BeginBusyCursor()
+#         
+#         ok = self.progression.enregistrer(nomFichier)
+#         
+#         self.definirNomFichierCourant(nomFichier)
+#         self.MarquerFichierCourantModifie(False)
+#         wx.EndBusyCursor()
+#         return ok
         
         
     ###############################################################################################

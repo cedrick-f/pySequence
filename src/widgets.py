@@ -2053,19 +2053,25 @@ class CustomComboBox(combo.BitmapComboBox):
 import xml.etree.ElementTree as ET
 from util_path import SYSTEM_ENCODING
 ##################################################################################################    
-def enregistrer_root(root, nomFichier):
+def enregistrer_root(root, nomFichier, dialog = True):
 #     fichier = open(nomFichier, 'w')
     try:
         ET.ElementTree(root).write(nomFichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
+        return True
+    
     except IOError:
-        messageErreur(None, "Accès refusé", 
-                              "L'accès au fichier %s a été refusé !\n\n"\
-                              "Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+        if dialog:
+            messageErreur(None, "Accès refusé", 
+                                  "L'accès au fichier %s a été refusé !\n\n"\
+                                  "Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+    
     except UnicodeDecodeError:
-        messageErreur(None, "Erreur d'encodage", 
-                              "Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
-                              "Essayer de le localiser et de le supprimer.\n"\
-                              "Merci de reporter cette erreur au développeur.")
+        if dialog:
+            messageErreur(None, "Erreur d'encodage", 
+                                  "Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
+                                  "Essayer de le localiser et de le supprimer.\n"\
+                                  "Merci de reporter cette erreur au développeur.")
+    return False
 #     fichier.close()
     
 #############################################################################################################
