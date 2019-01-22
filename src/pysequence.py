@@ -9340,6 +9340,14 @@ class Seance(ElementAvecLien, ElementBase):
     ######################################################################################  
     def SetEnsSpecif(self, lstCode):   
         self.ensSpecif = lstCode
+        # On supprime les compétences visées qui ne sont pas visables
+        for typ in self.GetDocument().GetTypesCompetencesVisees():
+            l = self.GetCompetencesVisables(typ)
+            for c in self.compVisees:
+                if c[0] == typ and not c[1:] in l:
+                    self.compVisees.remove(c)
+                    
+                    
         if hasattr(self, 'arbre'):
             self.SetCode()
         
