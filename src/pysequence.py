@@ -3232,7 +3232,7 @@ class Sequence(BaseDoc):
             self.app.AfficherMenuContextuel([["Ajouter %s" %et2ou(ref._nomSystemes.un_()), 
                                               self.AjouterSysteme,
                                               scaleImage(images.Icone_ajout_systeme.GetBitmap())], 
-                                             ["Selectionner depuis un fichier", 
+                                             ["Sélectionner depuis un fichier", 
                                               self.SelectSystemes, 
                                               scaleImage(images.Icone_import_systeme.GetBitmap())],
 #                                             [u"Sauvegarder la liste dans les préférences", self.SauvSystemes]
@@ -3269,7 +3269,16 @@ class Sequence(BaseDoc):
             
         return l
 
-
+    
+    ######################################################################################       
+    def GetTypesCompetencesVisees(self):
+        """ Renvoie la liste des types de compétences visées (objectifs)
+            "S", ...
+        """
+        lstTypComp = [c[0] for c in self.obj["C"].competences]
+        return list(set(lstTypComp))
+    
+    
     ######################################################################################       
     def GetSavoirsVises(self):
         """ Renvoie la liste des Savoirs visés (objectifs) 
@@ -8932,6 +8941,14 @@ class Seance(ElementAvecLien, ElementBase):
         
         # Compétences visées
         self.compVisees = branche.get("CompVisees", "").split()
+        # On vérifie qu'il n'y en a pas de trop : (BUGFIX)
+#         print(self.typeSeance, self.ensSpecif, ":")
+        for typ in self.GetDocument().GetTypesCompetencesVisees():
+            l = self.GetCompetencesVisables(typ)
+#             print("  ", typ, l)
+            for c in self.compVisees:
+                if c[0] == typ and not c[1:] in l:
+                    self.compVisees.remove(c)
         
         # Indicateurs de performance
         brancheIndic = branche.find("Indicateurs")
@@ -9659,6 +9676,16 @@ class Seance(ElementAvecLien, ElementBase):
                 
                 
     
+    ######################################################################################  
+    def GetCompetencesVisables(self, typ):
+        """ Renvoie l'ensemble des compétences qui sont "visables" par la séance
+            sous forme de liste de codes de compétences
+            (liste complète, avec tous les enfants "visables" des parents)
+            :typ: la famille de compétences : "S", ...
+        """
+        ref = self.GetReferentiel()
+        return  self.GetDocument().GetFiltre(ref.dicoCompetences[typ], "O", self)
+
     
     ######################################################################################  
     def GetReferentiel(self):

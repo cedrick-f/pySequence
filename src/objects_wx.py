@@ -10433,7 +10433,8 @@ class PanelPropriete_Seance(PanelPropriete):
                     f1.append(f)
                     f1.extend(ref.getSousElem(f, "Comp_"+cod))
                     
-                fcomp = self.seance.GetDocument().GetFiltre(ref.dicoCompetences[cod], "O", self.seance)
+#                 fcomp = self.seance.GetDocument().GetFiltre(ref.dicoCompetences[cod], "O", self.seance)
+                fcomp = self.seance.GetCompetencesVisables(cod)
                 
     #             print("filtres comp", cod, fcomp, f1)
                 filtre = intersection(f1, fcomp)
