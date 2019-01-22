@@ -873,7 +873,8 @@ IMG_LOGICIELS = {"Solidworks" : images.Logiciel_SW,
 # Nombre de créneaux dans les Progressions
 NBR_CRENEAUX_DEFAUT = 3
 
-
+# Nombre maxi de systèmes disponibles
+NBR_SYSTEMES_MAXI = 50
 
 
 #

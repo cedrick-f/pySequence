@@ -1,18 +1,18 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SI" S_Famille="SI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SI" S_Famille="SI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thématique(s)$f" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)$f">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://cache.media.education.gouv.fr/file/CSP/82/8/Cycle_terminal_Sciences_ingenieur_Specialite_Voie_generale_1023828.pdf" />
     <l_01 S_00="Epreuves" S_01="" />
     <l_02 S_00="Ressources" S_01="" />
   </l_BO_URL>
   <l_BO_dossier S_00="Spe_SI" />
-  <l_CentresInterets S_00="Analyser un système fonctionnellement et structurellement" S_01="Expérimenter et mesurer sur un système réel pour évaluer ses performances" S_02="Analyser des constituants d’un système réel d’un point de vue structurel et comportemental" S_03="Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’information" S_04="Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’énergie" />
+  <l_CentresInterets S_00="Les territoires et les produits intelligents, la mobilité des personnes et des biens" S_01="L’homme assisté, réparé, augmenté : les produits d’assistance pour la santé et la sécurité" S_02="Le design responsable et le prototypage de produits innovants" />
   <l_Enseignement S_00="Spé SI" S_01="Baccalauréat Général : Spécialité Sciences de l'ingénieur" S_02="Spé SI" S_03="Sciences de l'ingénieur" />
   <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_ED>
-    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+    <l_AP S_00="A. pratique" S_01="Activité pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
     <l_P S_00="Projet" S_01="Activité de projet" S_02="">
@@ -7289,24 +7289,33 @@
     </l_I>
   </d_domaines>
   <d_effectifs>
-    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
-      <l_03 I_00="77" I_01="77" I_02="179" />
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
     </l_C>
-    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
-      <l_03 I_00="102" I_01="127" I_02="102" />
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="C" S_05="O">
+      <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_G>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
-      <l_03 I_00="179" I_01="77" I_02="77" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="C" S_05="O">
+      <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
-      <l_03 I_00="77" I_01="127" I_02="127" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="C" S_05="N">
+      <l_03 F_00="188.0" F_01="154.0" F_02="0.0" />
     </l_E>
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
-      <l_03 I_00="127" I_01="77" I_02="127" />
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="D" S_05="N">
+      <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
     </l_P>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
+    <l_S S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
+    </l_S>
+    <l_T S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
+    </l_T>
+    <l_U S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
+    </l_U>
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
@@ -7348,8 +7357,8 @@
   <l_listeEnsSpecif />
   <l_listeNivTaxo />
   <l_listeSpecialites />
-  <l_listeSystemes />
-  <l_listeThematiques />
+  <l_listeSystemes S_00="PE" S_01="SE" S_02="SC" />
+  <l_listeThematiques S_00="A1" S_01="A2" S_02="A3" S_03="A4" S_04="B1" S_05="B2" S_06="B3" S_07="C1" S_08="C2" S_09="C3" />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
   <l_listeTypeHorsClasse />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
@@ -7360,7 +7369,7 @@
     <l_00 I_01="5" S_00="1_ère" />
     <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
-  <l_positions_CI S_00="MEI_FS " S_01="MEI_  C" S_02="M  _ SC" S_03="  I_  C" S_04=" E _  C" />
+  <l_positions_CI />
   <d_projets>
     <Projet_PRJ B_tachesOnce="False" I_duree="48" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de terminale">
       <d_attributs>
@@ -7407,7 +7416,7 @@
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_ED>
-    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+    <l_AP S_00="A. pratique" S_01="Activité pratique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_AP>
     <l_P S_00="Projet" S_01="Activité de projet" S_02="">
@@ -7416,7 +7425,7 @@
     <l_C S_00="Cours" S_01="Cours" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_C>
-    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+    <l_TD S_00="A. Dirigée" S_01="Activité Dirigée" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_TD>
     <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
@@ -7436,7 +7445,48 @@
     </l_S>
   </d_seances>
   <d_specialite />
-  <d_systemes />
-  <d_thematiques />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+    <l_SE I_04="1" S_00="Support experimental" S_01="Support experimental" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SE>
+    <l_SC I_04="0" S_00="Solution constructive" S_01="Solution constructive" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SC>
+  </d_systemes>
+  <d_thematiques>
+    <l_A1 S_00="les structures et les enveloppes" S_01="Les territoires et les produits intelligents, la mobilité des personnes et des biens : les structures et les enveloppes" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_A1>
+    <l_A2 S_00="les réseaux de communication et d’énergie" S_01="Les territoires et les produits intelligents, la mobilité des personnes et des biens : les réseaux de communication et d’énergie" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_A2>
+    <l_A3 S_00="les objets connectés, l’internet des objets" S_01="Les territoires et les produits intelligents, la mobilité des personnes et des biens : les objets connectés, l’internet des objets" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_A3>
+    <l_A4 S_00="les mobilités des personnes et des biens" S_01="Les territoires et les produits intelligents, la mobilité des personnes et des biens : les mobilités des personnes et des biens" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_A4>
+    <l_B1 S_00="les produits d’assistance pour la santé et la sécurité" S_01="L’homme assisté, réparé, augmenté : les produits d’assistance pour la santé et la sécurité" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_B1>
+    <l_B2 S_00="l’aide et la compensation du handicap" S_01="L’homme assisté, réparé, augmenté : l’aide et la compensation du handicap" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_B2>
+    <l_B3 S_00="l’augmentation des performances du corps humain" S_01="L’homme assisté, réparé, augmenté : l’augmentation des performances du corps humain" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_B3>
+    <l_C1 S_00="l’ingénierie design de produits innovants" S_01="Le design responsable et le prototypage de produits innovants : l’ingénierie design de produits innovants" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C1>
+    <l_C2 S_00="le prototypage d’une solution imaginée en réalité matérielle ou virtuelle" S_01="Le design responsable et le prototypage de produits innovants : le prototypage d’une solution imaginée en réalité matérielle ou virtuelle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C2>
+    <l_C3 S_00="les applications numériques nomades" S_01="Le design responsable et le prototypage de produits innovants : les applications numériques nomades" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C3>
+  </d_thematiques>
   <l_tr_com />
 </Referentiel>

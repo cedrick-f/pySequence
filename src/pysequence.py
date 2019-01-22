@@ -92,7 +92,7 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, COUL_DISCIPLINES
+                        toList, COUL_COMPETENCES, COUL_DISCIPLINES, NBR_SYSTEMES_MAXI
 import constantes
 
 import proprietes
@@ -11055,7 +11055,7 @@ class Systeme(ElementAvecLien, ElementBase):
         self.nom = nom
         self.typ = typ
         self.nbrDispo = Variable("Nombre dispo", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
-                              bornes = [0,20], modeLog = False,
+                              bornes = [0,NBR_SYSTEMES_MAXI], modeLog = False,
                               expression = None, multiple = False)
         self.image = None
         self.lienClasse = None
