@@ -35,10 +35,10 @@ Module Setup
 ************
 
 Script pour générer un pack avec executable :
-    C:/Users/Cedrick/AppData/Local/Programs/Python/Python37-32/python setup.py build
+    C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/python setup.py build
 """
     
-PATH_PYTHON36 = "C:/Users/Cedrick/AppData/Local/Programs/Python/Python37-32"
+PATH_PYTHON36 = "C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32"
 
 import sys, os
 # if hasattr(sys, 'setdefaultencoding'):
@@ -241,6 +241,6 @@ def supprimer(racine, nomFichier, parent = "", niveau = 0):
     elif os.path.split(abspath)[1] == nomFichier:
         os.remove(abspath)
         print(abspath)
-supprimer('build/bin/lib', 'python37.dll')
+supprimer('build/bin/lib', 'python36.dll')
 supprimer('build/bin/lib', 'VCRUNTIME140.dll')
             

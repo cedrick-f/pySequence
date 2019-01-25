@@ -844,11 +844,11 @@
   </d_dicoCompetences>
   <d_dicoSavoirs>
     <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Connaissance(s) &amp; Capacité(s)">
-      <l_asso_contexte />
-      <l_asso_type />
+      <l_asso_contexte S_00="O" />
+      <l_asso_type S_00="Comp_S" />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_A1 S_intitule="Analyser le besoin">
+        <Savoir_A S_intitule="Innover">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -859,9 +859,21 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_A1.1 S_intitule="Besoin, finalités, contraintes, cahier des charges">
+            <Savoir_A1 S_intitule="Éléments d'histoire des innovations et des produits">
               <l_elemAssocies>
+                <l_00 S_00="A1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
                 <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_A1>
+            <Savoir_A2 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="A2" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -870,7 +882,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A1.1.1 S_intitule="Décrire le besoin">
+                <Savoir_A2.1 S_intitule="Méthode agiles">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -881,8 +893,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A1.1.1>
-                <Savoir_A1.1.2 S_intitule="Présenter la fonction globale">
+                </Savoir_A2.1>
+                <Savoir_A2.2 S_intitule="Approche design, apports et limites">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -893,8 +905,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A1.1.2>
-                <Savoir_A1.1.3 S_intitule="Identifier les contraintes (fonctionnelles, sociétales, environnementales, etc.)">
+                </Savoir_A2.2>
+                <Savoir_A2.3 S_intitule="Veille technologique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -905,24 +917,12 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A1.1.3>
-                <Savoir_A1.1.4 S_intitule="Ordonner les contraintes (critère, niveau, flexibilité)">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A1.1.4>
+                </Savoir_A2.3>
               </d_sousSav>
-            </Savoir_A1.1>
-            <Savoir_A1.2 S_intitule="Analyse fonctionnelle externe - Expression fonctionnelle du besoin">
+            </Savoir_A2>
+            <Savoir_A3 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="A3" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -931,7 +931,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A1.2.1 S_intitule="Présenter à l’aide d’un diagramme des interacteurs une réponse technique à un besoin">
+                <Savoir_A3.1 S_intitule="Cartes heuristiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -942,12 +942,60 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A1.2.1>
+                </Savoir_A3.1>
+                <Savoir_A3.2 S_intitule="Méthodes de brainstorming, d'analogies, de détournement d'usage">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A3.2>
+                <Savoir_A3.3 S_intitule="Scénarios d'usage et expériences utilisateurs">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A3.3>
+                <Savoir_A3.4 S_intitule="Design d'interface et d'interaction">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A3.4>
+                <Savoir_A3.5 S_intitule="Éléments d'ergonomie">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A3.5>
               </d_sousSav>
-            </Savoir_A1.2>
-            <Savoir_A1.3 S_intitule="Fonctions d’usage, de service, d’estime">
+            </Savoir_A3>
+            <Savoir_A4 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="A4" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -956,7 +1004,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A1.3.1 S_intitule="Identifier et caractériser les fonctions de service">
+                <Savoir_A4.1 S_intitule="Outil numérique et graphique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -967,12 +1015,98 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A1.3.1>
+                </Savoir_A4.1>
+                <Savoir_A4.2 S_intitule="Modeleur volumique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A4.2>
               </d_sousSav>
-            </Savoir_A1.3>
+            </Savoir_A4>
+            <Savoir_A5 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="A5" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_A5.1 S_intitule="Mise en œuvre d'outils de prototypage rapide">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A5.1>
+                <Savoir_A5.2 S_intitule="Prototypage de la commande">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A5.2>
+              </d_sousSav>
+            </Savoir_A5>
+            <Savoir_A6 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="A6" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_A6.1 S_intitule="Mesures et tests des performances de tout ou partie de la solution innovante">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A6.1>
+                <Savoir_A6.2 S_intitule="Amélioration continue">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A6.2>
+              </d_sousSav>
+            </Savoir_A6>
           </d_sousSav>
-        </Savoir_A1>
-        <Savoir_A2 S_intitule="Analyser le système">
+        </Savoir_A>
+        <Savoir_B S_intitule="Analyser">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -983,9 +1117,21 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_A2.1 S_intitule="Système - Frontière d’étude - Environnement">
+            <Savoir_B1 S_intitule="Outils d'ingénierie-système : diagrammes fonctionnels, définition des exigences et des critères asociés, cas d'utilisation, analyse structurelle">
               <l_elemAssocies>
+                <l_00 S_00="B1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
                 <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_B1>
+            <Savoir_B2 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="B2" S_01="B3" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -994,7 +1140,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.1.1 S_intitule="Définir le système et sa frontière d’étude">
+                <Savoir_B2.1 S_intitule="Grandeur physiques (mécanique, électrique, thermique, …) mobilisées par le fonctionnement d'un produit">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1005,8 +1151,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.1.1>
-                <Savoir_A2.1.2 S_intitule="Analyser l’environnement d’un système, ses contraintes">
+                </Savoir_B2.1>
+                <Savoir_B2.2 S_intitule="Grandeurs d'effort et de flux liées à la nature des procédés">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1017,8 +1163,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.1.2>
-                <Savoir_A2.1.3 S_intitule="Décrire le fonctionnement d’un système">
+                </Savoir_B2.2>
+                <Savoir_B2.3 S_intitule="Rendement et pertes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1029,24 +1175,12 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.1.3>
-                <Savoir_A2.1.4 S_intitule="Identifier des évolutions possibles d’un système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.1.4>
+                </Savoir_B2.3>
               </d_sousSav>
-            </Savoir_A2.1>
-            <Savoir_A2.2 S_intitule="Architectures fonctionnelle et organique d’un système">
+            </Savoir_B2>
+            <Savoir_B3 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B4" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1055,7 +1189,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.2.1 S_intitule="Identifier les fonctions techniques">
+                <Savoir_B3.1 S_intitule="Sens des transmissions de puissance">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1066,8 +1200,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.2.1>
-                <Savoir_A2.2.2 S_intitule="Déterminer les constituants dédiés aux fonctions d’un système et en justifier le choix">
+                </Savoir_B3.1>
+                <Savoir_B3.2 S_intitule="Stockage de l'énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1078,8 +1212,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.2.2>
-                <Savoir_A2.2.3 S_intitule="Identifier les niveaux fonctionnels et organiques d’un système">
+                </Savoir_B3.2>
+                <Savoir_B3.3 S_intitule="Réversibilité/irréversibilité des constituants d'une chaîne de puissance">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1090,48 +1224,12 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.2.3>
-                <Savoir_A2.2.4 S_intitule="Présenter les architectures fonctionnelle et organique d’un système à l’aide d’un diagramme FAST">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.2.4>
-                <Savoir_A2.2.5 S_intitule="Proposer des évolutions sous forme fonctionnelle">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.2.5>
-                <Savoir_A2.2.6 S_intitule="Relier le coût d’une solution technique au besoin exprimé">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.2.6>
+                </Savoir_B3.3>
               </d_sousSav>
-            </Savoir_A2.2>
-            <Savoir_A2.3 S_intitule="Impact environnemental">
+            </Savoir_B3>
+            <Savoir_B4 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B5" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1140,7 +1238,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.3.1 S_intitule=" Évaluer l’impact environnemental (matériaux, énergie, nuisances)">
+                <Savoir_B4.1 S_intitule="Algorithme, programme">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1151,12 +1249,36 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.3.1>
+                </Savoir_B4.1>
+                <Savoir_B4.2 S_intitule="Langage informatique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B4.2>
+                <Savoir_B4.3 S_intitule="Notions sur l'intelligence artificielle">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B4.3>
               </d_sousSav>
-            </Savoir_A2.3>
-            <Savoir_A2.4 S_intitule="Matière d’oeuvre, valeur ajoutée, flux">
+            </Savoir_B4>
+            <Savoir_B5 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B6" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1165,7 +1287,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.4.1 S_intitule=" Identifier la matière d’oeuvre et la valeur ajoutée">
+                <Savoir_B5.1 S_intitule="Diagramme états-transitions">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1176,8 +1298,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.4.1>
-                <Savoir_A2.4.2 S_intitule=" Représenter les flux (matière, énergie, information) à l’aide d’un actigramme A-0 de la méthode SADT">
+                </Savoir_B5.1>
+                <Savoir_B5.2 S_intitule="Algorithmes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1188,12 +1310,12 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.4.2>
+                </Savoir_B5.2>
               </d_sousSav>
-            </Savoir_A2.4>
-            <Savoir_A2.5 S_intitule="Chaîne d’information">
+            </Savoir_B5>
+            <Savoir_B6 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B7" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1202,7 +1324,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.5.1 S_intitule=" Identifier et décrire la chaîne d’information du système">
+                <Savoir_B6.1 S_intitule="Architecture Client/Serveur, cloud">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1213,12 +1335,36 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.5.1>
+                </Savoir_B6.1>
+                <Savoir_B6.2 S_intitule="Architecture des réseaux de communication">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B6.2>
+                <Savoir_B6.3 S_intitule="Débit/vitesse de transmission">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B6.3>
               </d_sousSav>
-            </Savoir_A2.5>
-            <Savoir_A2.6 S_intitule="Chaîne d’énergie">
+            </Savoir_B6>
+            <Savoir_B7 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B8" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1227,7 +1373,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.6.1 S_intitule=" Identifier et décrire la chaîne d’énergie du système">
+                <Savoir_B7.1 S_intitule="Internet des objets">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1238,8 +1384,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.6.1>
-                <Savoir_A2.6.2 S_intitule=" Analyser les apports d’énergie, les transferts, le stockage, les pertes énergétiques">
+                </Savoir_B7.1>
+                <Savoir_B7.2 S_intitule="Notions de modulation-démodulation de signaux numériques en amplitude, en fréquence">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1250,24 +1396,12 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.6.2>
-                <Savoir_A2.6.3 S_intitule=" Réaliser le bilan énergétique d’un système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.6.3>
+                </Savoir_B7.2>
               </d_sousSav>
-            </Savoir_A2.6>
-            <Savoir_A2.7 S_intitule="Systèmes logiques évènementiels - Langage de description : graphe d’états, logigramme, GRAFCET, algorigramme">
+            </Savoir_B7>
+            <Savoir_B8 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B9" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1276,7 +1410,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.7.1 S_intitule=" Décrire et analyser le comportement d’un système">
+                <Savoir_B8.1 S_intitule="Protocoles, trames, encapsulation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1287,12 +1421,48 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.7.1>
+                </Savoir_B8.1>
+                <Savoir_B8.2 S_intitule="Support filaire et sans fil">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B8.2>
               </d_sousSav>
-            </Savoir_A2.7>
-            <Savoir_A2.8 S_intitule="Systèmes asservis">
+            </Savoir_B8>
+            <Savoir_B9 S_intitule="Systèmes asservis linéaires en régime permanent : structures par chaîne directe ou bouclée, perturbation, comparateur, correcteur proportionnel, précision (erreur statique)">
               <l_elemAssocies>
+                <l_00 S_00="B10" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
                 <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_B9>
+            <Savoir_B10 S_intitule="Charge permanente, charge d'exploitation">
+              <l_elemAssocies>
+                <l_00 S_00="B11" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_B10>
+            <Savoir_B11 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="B12" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1301,7 +1471,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.8.1 S_intitule=" Différencier un système asservi d’un système non asservi">
+                <Savoir_B11.1 S_intitule="Lois physiques associées au fonctionnement d'un produit">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1312,12 +1482,36 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.8.1>
+                </Savoir_B11.1>
+                <Savoir_B11.2 S_intitule="Description qualitative et quantitative des grandeurs physiques caractéristiques du fonctionnement d'un produit">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B11.2>
+                <Savoir_B11.3 S_intitule="Critères de performances">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B11.3>
               </d_sousSav>
-            </Savoir_A2.8>
-            <Savoir_A2.9 S_intitule="Composants réalisant les fonctions de la chaîne d’énergie">
+            </Savoir_B11>
+            <Savoir_B12 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B13" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1326,7 +1520,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A2.9.1 S_intitule=" Identifier les composants réalisant les fonctions Alimenter, Distribuer, Convertir, Transmettre">
+                <Savoir_B12.1 S_intitule="Écarts de performance absolu ou relatif, et interprétations possibles">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1337,8 +1531,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.9.1>
-                <Savoir_A2.9.2 S_intitule=" Justifier la solution choisie">
+                </Savoir_B12.1>
+                <Savoir_B12.2 S_intitule="Erreur et précision des mesures expérimentales ou simulées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1349,12 +1543,36 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A2.9.2>
+                </Savoir_B12.2>
+                <Savoir_B12.3 S_intitule="Traitement des données : tableaux, graphiques, valeurs moyennes, écarts types, incertitude de mesure">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B12.3>
+                <Savoir_B12.4 S_intitule="Choix pertinent d'un ou plusieurs critères de comparaison">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_B12.4>
               </d_sousSav>
-            </Savoir_A2.9>
-            <Savoir_A2.10 S_intitule="Composants réalisant les fonctions de la chaîne d’information">
+            </Savoir_B12>
+            <Savoir_B13 S_intitule="Analyse des écarts de performances">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="B14" S_01="B15" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1362,283 +1580,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.10.1 S_intitule=" Identifier les composants réalisant les fonctions Acquérir, Traiter, Communiquer">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.10.1>
-                <Savoir_A2.10.2 S_intitule=" Justifier la solution choisie">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.10.2>
-              </d_sousSav>
-            </Savoir_A2.10>
-            <Savoir_A2.11 S_intitule="Réversibilité d’une source, d’un actionneur, d’une chaîne de transmission">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.11.1 S_intitule=" Analyser la réversibilité d’un composant dans une chaîne d’énergie">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.11.1>
-              </d_sousSav>
-            </Savoir_A2.11>
-            <Savoir_A2.12 S_intitule="Système de numération, codage">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.12.1 S_intitule=" Analyser et interpréter une information numérique">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.12.1>
-              </d_sousSav>
-            </Savoir_A2.12>
-            <Savoir_A2.13 S_intitule="Modèle OSI">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.13.1 S_intitule=" Décrire l’organisation des principaux protocoles">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.13.1>
-              </d_sousSav>
-            </Savoir_A2.13>
-            <Savoir_A2.14 S_intitule="Réseaux de communication - Support de communication - Notion de protocole, paramètres de configuration - Notion de trame, liaisons série et parallèle">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.14.1 S_intitule=" Analyser les formats et les flux d’information">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.14.1>
-                <Savoir_A2.14.2 S_intitule=" Identifier les architectures fonctionnelle et matérielle">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.14.2>
-                <Savoir_A2.14.3 S_intitule=" Identifier les supports de communication">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.14.3>
-                <Savoir_A2.14.4 S_intitule=" Identifier et analyser le message transmis, notion de protocole, paramètres de configuration">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.14.4>
-              </d_sousSav>
-            </Savoir_A2.14>
-            <Savoir_A2.15 S_intitule="Architecture d’un réseau (topologie, mode de communication, type de transmission, méthode d’accès au support, techniques de commutation)">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.15.1 S_intitule=" Identifier les architectures fonctionnelle et matérielle d’un réseau">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.15.1>
-              </d_sousSav>
-            </Savoir_A2.15>
-            <Savoir_A2.16 S_intitule="Matériaux">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.16.1 S_intitule=" Identifier la famille d’un matériau">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.16.1>
-                <Savoir_A2.16.2 S_intitule=" Mettre en relation les propriétés du matériau avec les performances du système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.16.2>
-              </d_sousSav>
-            </Savoir_A2.16>
-            <Savoir_A2.17 S_intitule="Comportement du solide déformable">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_A2.17.1 S_intitule=" Analyser les sollicitations dans les composants">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.17.1>
-                <Savoir_A2.17.2 S_intitule=" Analyser les déformations des composants">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.17.2>
-                <Savoir_A2.17.3 S_intitule=" Analyser les contraintes mécaniques dans un composant">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A2.17.3>
-              </d_sousSav>
-            </Savoir_A2.17>
+              <d_sousSav />
+            </Savoir_B13>
           </d_sousSav>
-        </Savoir_A2>
-        <Savoir_A3 S_intitule="Caractériser des écarts">
+        </Savoir_B>
+        <Savoir_C S_intitule="Modéliser">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1649,9 +1595,9 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_A3.1 S_intitule="Analyse des écarts">
+            <Savoir_C1 S_intitule="">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="C1" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1660,7 +1606,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_A3.1.1 S_intitule="Traiter des données de mesures (valeur moyenne, médiane, caractéristique, etc.)">
+                <Savoir_C1.1 S_intitule="Hypothèses simplificatrices">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1671,8 +1617,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A3.1.1>
-                <Savoir_A3.1.2 S_intitule="Identifier des valeurs erronées">
+                </Savoir_C1.1>
+                <Savoir_C1.2 S_intitule="Modélisation plane">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1683,60 +1629,599 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_A3.1.2>
-                <Savoir_A3.1.3 S_intitule="Quantifier des écarts entre des valeurs attendues et des valeurs mesurées">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A3.1.3>
-                <Savoir_A3.1.4 S_intitule="Quantifier des écarts entre des valeurs attendues et des valeurs obtenues par simulation">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A3.1.4>
-                <Savoir_A3.1.5 S_intitule="Quantifier des écarts entre des valeurs mesurées et des valeurs obtenues par simulation">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A3.1.5>
-                <Savoir_A3.1.6 S_intitule="Rechercher et proposer des causes aux écarts constatés">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_A3.1.6>
+                </Savoir_C1.2>
               </d_sousSav>
-            </Savoir_A3.1>
+            </Savoir_C1>
+            <Savoir_C2 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C2.1 S_intitule="Grandeurs effort, grandeur flux">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C2.1>
+                <Savoir_C2.2 S_intitule="Énergie">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C2.2>
+                <Savoir_C2.3 S_intitule="Puissance instantanée, moyenne">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C2.3>
+                <Savoir_C2.4 S_intitule="Réversibilité de la chaîne de puissance">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C2.4>
+              </d_sousSav>
+            </Savoir_C2>
+            <Savoir_C3 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C3" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C3.1 S_intitule="Sources parfaites de flux et d'effort">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C3.1>
+                <Savoir_C3.2 S_intitule="Interruptaur parfait">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C3.2>
+                <Savoir_C3.3 S_intitule="Modèle associé aux composants élémentaires de transformation, de modulation, de conservation ou de stockage de l'énergie">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C3.3>
+              </d_sousSav>
+            </Savoir_C3>
+            <Savoir_C4 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C4" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C4.1 S_intitule="Comportement séquentiel">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C4.1>
+                <Savoir_C4.2 S_intitule="Structures algorithmiques (variables, fonctions, structures séquentielles, itératives, répétitives, conditionnelles)">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C4.2>
+                <Savoir_C4.3 S_intitule="Diagramme d'états-transitions">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C4.3>
+              </d_sousSav>
+            </Savoir_C4>
+            <Savoir_C5 S_intitule="Langage de programmation">
+              <l_elemAssocies>
+                <l_00 S_00="C5" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_C5>
+            <Savoir_C6 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C6" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C6.1 S_intitule="Circuit électrique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C6.1>
+                <Savoir_C6.2 S_intitule="Schéma cinématique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C6.2>
+                <Savoir_C6.3 S_intitule="Graphe de liaisons et actions mécaniques">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C6.3>
+              </d_sousSav>
+            </Savoir_C6>
+            <Savoir_C7 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C7" S_01="C8" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C7.1 S_intitule="Trajectoires et mouvements">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C7.1>
+                <Savoir_C7.2 S_intitule="Liaisons">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C7.2>
+                <Savoir_C7.3 S_intitule="Torseurs cinématiques et d'actions mécaniques transmissibles, de contact ou à distance">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C7.3>
+                <Savoir_C7.4 S_intitule="Réciprocité, mouvement relatif/actions mécaniques associées">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C7.4>
+              </d_sousSav>
+            </Savoir_C7>
+            <Savoir_C8 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C9" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C8.1 S_intitule="Natures et caractéristiques des signaux, des données, des supports de communication">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C8.1>
+                <Savoir_C8.2 S_intitule="Protocole, trame">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C8.2>
+                <Savoir_C8.3 S_intitule="Débit maximal, débit utile">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C8.3>
+              </d_sousSav>
+            </Savoir_C8>
+            <Savoir_C9 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C10" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C9.1 S_intitule="Capteurs">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C9.1>
+                <Savoir_C9.2 S_intitule="Notions de système asservi : consigne d'entrée, grandeur de sortie, perturbation, erreur, correcteur proportionnel">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C9.2>
+              </d_sousSav>
+            </Savoir_C9>
+            <Savoir_C10 S_intitule="Modèle de connaissance sur des systèmes d'ordre 0, 1 ou 2 : gain pur, intégrateur, dérivateur">
+              <l_elemAssocies>
+                <l_00 S_00="C11" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_C10>
+            <Savoir_C11 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C12" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C11.1 S_intitule="Lois de Kirchhoff">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C11.1>
+                <Savoir_C11.2 S_intitule="Lois de comportement">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C11.2>
+              </d_sousSav>
+            </Savoir_C11>
+            <Savoir_C12 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C13" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C12.1 S_intitule="Principe fondamental de la statique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C12.1>
+                <Savoir_C12.2 S_intitule="Modèle de frottement - loi de Coulomb">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C12.2>
+              </d_sousSav>
+            </Savoir_C12>
+            <Savoir_C13 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C14" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C13.1 S_intitule="Position, vitesse et accélération linéaire et angulaire sous forme vectorielle">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C13.1>
+                <Savoir_C13.2 S_intitule="Champ des viresses">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C13.2>
+                <Savoir_C13.3 S_intitule="Composition des vitesses dans le cas d'une chaîne ouverte">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C13.3>
+                <Savoir_C13.4 S_intitule="Loi d'entrée/sortie d'un mécanisme dans le cas d'une chaîne fermée (fermeture géométrique)">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C13.4>
+              </d_sousSav>
+            </Savoir_C13>
+            <Savoir_C14 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="C15" S_01="C16" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_C14.1 S_intitule="Principe fondamental de la dynamique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C14.1>
+                <Savoir_C14.2 S_intitule="Solide en rotation autour d'un axe fixe dont le centre de gravité est sur l'axe de rotation">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C14.2>
+                <Savoir_C14.3 S_intitule="Notion d'inertie et d'inertie équivalente">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C14.3>
+                <Savoir_C14.4 S_intitule="Solide en translation rectiligne">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_C14.4>
+              </d_sousSav>
+            </Savoir_C14>
+            <Savoir_C15 S_intitule="Méthodes de résolution analytique et numérique">
+              <l_elemAssocies>
+                <l_00 S_00="C17" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_C15>
           </d_sousSav>
-        </Savoir_A3>
-        <Savoir_B1 S_intitule="Identifier et caractériser les grandeurs agissant sur un système">
+        </Savoir_C>
+        <Savoir_D S_intitule="Expérimenter et Simuler">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1747,9 +2232,33 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_B1.1 S_intitule="Frontière de l’étude">
+            <Savoir_D1 S_intitule="Gamme d'appareils de mesure et capteurs">
               <l_elemAssocies>
+                <l_00 S_00="D1" S_01="D2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
                 <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_D1>
+            <Savoir_D2 S_intitule="Règle de raccordement des appareils de mesure et des capteurs">
+              <l_elemAssocies>
+                <l_00 S_00="D3" S_01="D4" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_D2>
+            <Savoir_D3 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="D5" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1758,7 +2267,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_B1.1.1 S_intitule="Isoler un système et justifier l’isolement">
+                <Savoir_D3.1 S_intitule="Capteurs, composants d'une chaîne d'acquisition">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1769,8 +2278,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_B1.1.1>
-                <Savoir_B1.1.2 S_intitule="Identifier les grandeurs traversant la frontière d’étude">
+                </Savoir_D3.1>
+                <Savoir_D3.2 S_intitule="Paramétrage d'une chaîne d'acquisition">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1781,12 +2290,36 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_B1.1.2>
+                </Savoir_D3.2>
+                <Savoir_D3.3 S_intitule="Carte micro-contrôleur">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_D3.3>
               </d_sousSav>
-            </Savoir_B1.1>
-            <Savoir_B1.2 S_intitule="Caractéristiques des grandeurs physiques (mécaniques, électriques, thermiques, acoustiques, lumineuses, etc.)">
+            </Savoir_D3>
+            <Savoir_D4 S_intitule="Paramètres deconfiguration d'un réseau">
               <l_elemAssocies>
+                <l_00 S_00="D6" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
                 <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_D4>
+            <Savoir_D5 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="D7" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1795,7 +2328,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_B1.2.1 S_intitule="Qualifier les grandeurs d’entrée et de sortie d’un système isolé">
+                <Savoir_D5.1 S_intitule="Caractéristiques des signaux">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1806,8 +2339,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_B1.2.1>
-                <Savoir_B1.2.2 S_intitule="Identifier la nature (grandeur effort, grandeur flux)">
+                </Savoir_D5.1>
+                <Savoir_D5.2 S_intitule="Protocole, trame">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1818,8 +2351,8 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_B1.2.2>
-                <Savoir_B1.2.3 S_intitule="Décrire les lois d’évolution des grandeurs">
+                </Savoir_D5.2>
+                <Savoir_D5.3 S_intitule="Débit maximal, débit utile">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1830,24 +2363,36 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_B1.2.3>
-                <Savoir_B1.2.4 S_intitule="Utiliser les lois et relations entre les grandeurs">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B1.2.4>
+                </Savoir_D5.3>
               </d_sousSav>
-            </Savoir_B1.2>
-            <Savoir_B1.3 S_intitule="Matériaux">
+            </Savoir_D5>
+            <Savoir_D6 S_intitule="Processus itératif d'amélioration des performances">
               <l_elemAssocies>
+                <l_00 S_00="D8" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
                 <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_D6>
+            <Savoir_D7 S_intitule="Paramètres de simulation : durée, incrément temporel, choix des grandeurs affichées, échelles adaptées à l'amplitude et la dynamique des grandeurs simulées">
+              <l_elemAssocies>
+                <l_00 S_00="D9" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_D7>
+            <Savoir_D8 S_intitule="">
+              <l_elemAssocies>
+                <l_00 S_00="D10" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1856,7 +2401,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_B1.3.1 S_intitule=" Identifier les propriétés des matériaux des composants qui influent sur le système">
+                <Savoir_D8.1 S_intitule="Écarts entre les performances simulées et mesurées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1867,99 +2412,24 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_B1.3.1>
+                </Savoir_D8.1>
+                <Savoir_D8.2 S_intitule="Limites de validité d'un modèle">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_D8.2>
               </d_sousSav>
-            </Savoir_B1.3>
-            <Savoir_B1.4 S_intitule="Énergie et puissances - Notion de pertes">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B1.4.1 S_intitule=" Associer les grandeurs physiques aux échanges d’énergie et à la transmission de puissance">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B1.4.1>
-                <Savoir_B1.4.2 S_intitule=" Identifier les pertes d’énergie">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B1.4.2>
-              </d_sousSav>
-            </Savoir_B1.4>
-            <Savoir_B1.5 S_intitule="Flux d’information">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B1.5.1 S_intitule=" Identifier la nature de l’information et la nature du signal">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B1.5.1>
-              </d_sousSav>
-            </Savoir_B1.5>
-            <Savoir_B1.6 S_intitule="Flux de matière">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B1.6.1 S_intitule=" Qualifier la nature des matières, quantifier les volumes et les masses">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B1.6.1>
-              </d_sousSav>
-            </Savoir_B1.6>
+            </Savoir_D8>
           </d_sousSav>
-        </Savoir_B1>
-        <Savoir_B2 S_intitule="Proposer ou justifier un modèle">
+        </Savoir_D>
+        <Savoir_E S_intitule="Communiquer">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1970,9 +2440,9 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_B2.1 S_intitule="Chaîne d’énergie">
+            <Savoir_E1 S_intitule="Diagrammes fonctionnels, schémas, croquis">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E1" S_01="E2" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -1980,48 +2450,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.1.1 S_intitule="Associer un modèle à une source d’énergie">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.1.1>
-                <Savoir_B2.1.2 S_intitule="Associer un modèle aux composants d’une chaîne d’énergie">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.1.2>
-                <Savoir_B2.1.3 S_intitule="Déterminer les points de fonctionnement du régime permanent d’un actionneur au sein d’un procédé">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.1.3>
-              </d_sousSav>
-            </Savoir_B2.1>
-            <Savoir_B2.2 S_intitule="Chaîne d’information">
+              <d_sousSav />
+            </Savoir_E1>
+            <Savoir_E2 S_intitule="Tableau, graphique, diaporama, carte mentale">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E3" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2029,24 +2462,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.2.1 S_intitule="Associer un modèle aux composants d’une chaîne d’information">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.2.1>
-              </d_sousSav>
-            </Savoir_B2.2>
-            <Savoir_B2.3 S_intitule="Ordre d’un système">
+              <d_sousSav />
+            </Savoir_E2>
+            <Savoir_E3 S_intitule="ENT, moteurs de recherche, Internet, bolg, base de données, dossiers techniques">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E4" S_01="E5" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2054,36 +2474,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.3.1 S_intitule=" Identifier les paramètres à partir d’une réponse indicielle">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.3.1>
-                <Savoir_B2.3.2 S_intitule=" Associer un modèle de comportement (1er et 2nd ordre) à une réponse indicielle">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.3.2>
-              </d_sousSav>
-            </Savoir_B2.3>
-            <Savoir_B2.4 S_intitule="Systèmes logiques à évènements discrets - Langage de description : graphe d’états, logigramme, GRAFCET, algorigramme">
+              <d_sousSav />
+            </Savoir_E3>
+            <Savoir_E4 S_intitule="Commentaires de programmes">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E6" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2091,24 +2486,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.4.1 S_intitule=" Traduire le comportement d’un système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.4.1>
-              </d_sousSav>
-            </Savoir_B2.4>
-            <Savoir_B2.5 S_intitule="Liaisons">
+              <d_sousSav />
+            </Savoir_E4>
+            <Savoir_E5 S_intitule="Montage audio/vidéo">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E7" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2116,48 +2498,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.5.1 S_intitule=" Construire un modèle et le représenter à l’aide de schémas">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.5.1>
-                <Savoir_B2.5.2 S_intitule=" Préciser les paramètres géométriques">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.5.2>
-                <Savoir_B2.5.3 S_intitule=" Établir la réciprocité mouvement relatif/actions mécaniques associées">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.5.3>
-              </d_sousSav>
-            </Savoir_B2.5>
-            <Savoir_B2.6 S_intitule="Graphe de liaisons">
+              <d_sousSav />
+            </Savoir_E5>
+            <Savoir_E6 S_intitule="Espaces partagés et de stockage, ENT">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E8" S_01="E9" S_02="E10" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2165,24 +2510,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.6.1 S_intitule=" Construire un graphe de liaisons (avec ou sans les efforts)">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.6.1>
-              </d_sousSav>
-            </Savoir_B2.6>
-            <Savoir_B2.7 S_intitule="Modèle du solide">
+              <d_sousSav />
+            </Savoir_E6>
+            <Savoir_E7 S_intitule="Média, outils multimédia, outils bureautiques, cartes mentales, diagramme de l'ingéniérie-système, schéma, croquis, prototype">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E11" S_01="E12" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2190,36 +2522,11 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.7.1 S_intitule=" Choisir le modèle de solide, déformable ou indéformable selon le point de vue">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.7.1>
-                <Savoir_B2.7.2 S_intitule=" Modéliser et représenter géométriquement le réel">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.7.2>
-              </d_sousSav>
-            </Savoir_B2.7>
-            <Savoir_B2.8 S_intitule="Action mécanique">
+              <d_sousSav />
+            </Savoir_E7>
+            <Savoir_E8 S_intitule="Placement de la voix, qualité de l'expression, gestion du temps">
               <l_elemAssocies>
-                <l_00 />
+                <l_00 S_00="E13" />
                 <l_01 />
               </l_elemAssocies>
               <l_infos />
@@ -2227,1002 +2534,10 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.8.1 S_intitule=" Modéliser les actions mécaniques de contact ou à distance">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.8.1>
-              </d_sousSav>
-            </Savoir_B2.8>
-            <Savoir_B2.9 S_intitule="Modèle de matériau">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.9.1 S_intitule=" Choisir ou justifier un modèle comportemental de matériau">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.9.1>
-              </d_sousSav>
-            </Savoir_B2.9>
-            <Savoir_B2.10 S_intitule="Comportement du solide déformable">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.10.1 S_intitule=" Caractériser les sollicitations dans les composants">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.10.1>
-                <Savoir_B2.10.2 S_intitule=" Caractériser les déformations des composants">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.10.2>
-                <Savoir_B2.10.3 S_intitule=" Caractériser les contraintes mécaniques dans un composant">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.10.3>
-              </d_sousSav>
-            </Savoir_B2.10>
-            <Savoir_B2.11 S_intitule="Modélisation plane">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B2.11.1 S_intitule=" Justifier la pertinence de la modélisation plane">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B2.11.1>
-              </d_sousSav>
-            </Savoir_B2.11>
+              <d_sousSav />
+            </Savoir_E8>
           </d_sousSav>
-        </Savoir_B2>
-        <Savoir_B3 S_intitule="Résoudre et simuler">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_B3.1 S_intitule="Principe fondamental de la dynamique (PFD) - Principes fondamentaux d’étude des circuits">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B3.1.1 S_intitule="Établir de façon analytique les expressions d’efforts (force, couple, pression, tension, etc.) et de flux (vitesse, fréquence de rotation, débit, intensité du courant, etc.)">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.1.1>
-                <Savoir_B3.1.2 S_intitule="Traduire de façon analytique le comportement d’un système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.1.2>
-              </d_sousSav>
-            </Savoir_B3.1>
-            <Savoir_B3.2 S_intitule="Paramètres d’une simulation">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B3.2.1 S_intitule="Adapter les paramètres de simulation, durée, incrément temporel, choix des grandeurs affichées, échelles, à l’amplitude et la dynamique de grandeurs simulées">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.2.1>
-              </d_sousSav>
-            </Savoir_B3.2>
-            <Savoir_B3.3 S_intitule="Ordre d’un système">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B3.3.1 S_intitule=" Interpréter les résultats d’une simulation fréquentielle des systèmes du 1er et du 2nd ordre&quot;">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.3.1>
-              </d_sousSav>
-            </Savoir_B3.3>
-            <Savoir_B3.4 S_intitule="Comportement du solide déformable">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B3.4.1 S_intitule=" Déterminer les parties les plus sollicitées dans un composant">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.4.1>
-                <Savoir_B3.4.2 S_intitule=" Déterminer les valeurs extrêmes des déformations">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.4.2>
-                <Savoir_B3.4.3 S_intitule=" Déterminer des concentrations de contraintes dans un composant">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.4.3>
-              </d_sousSav>
-            </Savoir_B3.4>
-            <Savoir_B3.5 S_intitule="Modélisation plane">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B3.5.1 S_intitule=" Déterminer le champ des vecteurs vitesses des points d’un solide">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B3.5.1>
-              </d_sousSav>
-            </Savoir_B3.5>
-          </d_sousSav>
-        </Savoir_B3>
-        <Savoir_B4 S_intitule="Valider un modèle">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_B4.1 S_intitule="Modèle de connaissance">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B4.1.1 S_intitule="Vérifier la compatibilité des résultats obtenus (amplitudes et variations) avec les lois et principes physiques d’évolution des grandeurs">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.1.1>
-                <Savoir_B4.1.2 S_intitule="Comparer les résultats obtenus (amplitudes et variations) avec les données du cahier des charges fonctionnel">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.1.2>
-              </d_sousSav>
-            </Savoir_B4.1>
-            <Savoir_B4.2 S_intitule="Matériaux">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B4.2.1 S_intitule="Adapter les paramètres de simulation, durée, incrément temporel, choix des grandeurs affichées, échelles, à l’amplitude et la dynamique de grandeurs simuléesIdentifier l’influence des propriétés des matériaux sur les performances du système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.2.1>
-                <Savoir_B4.2.2 S_intitule="Proposer des matériaux de substitution pour améliorer les performances du système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.2.2>
-              </d_sousSav>
-            </Savoir_B4.2>
-            <Savoir_B4.3 S_intitule="Structures">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B4.3.1 S_intitule=" Valider l’influence de la structure sur les performances du système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.3.1>
-                <Savoir_B4.3.2 S_intitule=" Proposer des modifications structurelles pour améliorer les performances du système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.3.2>
-              </d_sousSav>
-            </Savoir_B4.3>
-            <Savoir_B4.4 S_intitule="Grandeurs influentes d’un modèle">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_B4.4.1 S_intitule=" Modifier les paramètres d’un modèle">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_B4.4.1>
-              </d_sousSav>
-            </Savoir_B4.4>
-          </d_sousSav>
-        </Savoir_B4>
-        <Savoir_C1 S_intitule="Justifier le choix d’un protocole expérimental">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_C1.1 S_intitule="Capteurs">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C1.1.1 S_intitule="Qualifier les caractéristiques d’entrée - sortie d’un capteur">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.1.1>
-                <Savoir_C1.1.2 S_intitule="Justifier le choix d’un capteur ou d’un appareil de mesure vis-à-vis de la grandeur physique à mesurer">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.1.2>
-                <Savoir_C1.1.3 S_intitule="Justifier les caractéristiques (calibre, position, etc.) d’un appareil de mesure">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.1.3>
-              </d_sousSav>
-            </Savoir_C1.1>
-            <Savoir_C1.2 S_intitule="Prévision quantitative de la réponse du système">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C1.2.1 S_intitule=" Identifier le comportement des composants du système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.2.1>
-                <Savoir_C1.2.2 S_intitule=" Prévoir l’ordre de grandeur de la mesure">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.2.2>
-              </d_sousSav>
-            </Savoir_C1.2>
-            <Savoir_C1.3 S_intitule="Chaîne d’information, structure et fonctionnement">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C1.3.1 S_intitule=" Identifier la nature et les caractéristiques des grandeurs en divers points de la chaîne d’information">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.3.1>
-                <Savoir_C1.3.2 S_intitule=" Maîtriser les fonctions des appareils de mesures et leurs mises en œuvre">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C1.3.2>
-              </d_sousSav>
-            </Savoir_C1.3>
-          </d_sousSav>
-        </Savoir_C1>
-        <Savoir_C2 S_intitule="Mettre en oeuvre un protocole expérimental">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_C2.1 S_intitule="Appareils de mesures, règles d’utilisation">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C2.1.1 S_intitule="Mettre en oeuvre un appareil de mesure">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.1.1>
-                <Savoir_C2.1.2 S_intitule="Paramétrer une chaîne d’acquisition">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.1.2>
-              </d_sousSav>
-            </Savoir_C2.1>
-            <Savoir_C2.2 S_intitule="Paramètres de configuration du système">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C2.2.1 S_intitule="Régler les paramètres de fonctionnement d’un système">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.2.1>
-              </d_sousSav>
-            </Savoir_C2.2>
-            <Savoir_C2.3 S_intitule="Paramètres de configuration d’un réseau">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C2.3.1 S_intitule=" Paramétrer un protocole de communication">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.3.1>
-              </d_sousSav>
-            </Savoir_C2.3>
-            <Savoir_C2.4 S_intitule="Routines, procédures, etc. - Systèmes logiques à évènements discrets">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C2.4.1 S_intitule=" Générer un programme et l’implanter dans le système cible">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.4.1>
-              </d_sousSav>
-            </Savoir_C2.4>
-            <Savoir_C2.5 S_intitule="Modèles de comportement">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_C2.5.1 S_intitule=" Analyser les résultats expérimentaux">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.5.1>
-                <Savoir_C2.5.2 S_intitule=" Traiter les résultats expérimentaux, et extraire la ou les grandeurs désirée(s)">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_C2.5.2>
-              </d_sousSav>
-            </Savoir_C2.5>
-          </d_sousSav>
-        </Savoir_C2>
-        <Savoir_D1 S_intitule="Rechercher et traiter des informations">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_D1.1 S_intitule="Dossier technique">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_D1.1.1 S_intitule="Rechercher une information dans un dossier technique">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.1.1>
-                <Savoir_D1.1.2 S_intitule="Effectuer la synthèse des informations disponibles dans un dossier technique">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.1.2>
-              </d_sousSav>
-            </Savoir_D1.1>
-            <Savoir_D1.2 S_intitule="Bases de données, sélection, tri, classement de données">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_D1.2.1 S_intitule="Optimiser les paramètres et les critères de recherche en vue de répondre au problème posé">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.2.1>
-              </d_sousSav>
-            </Savoir_D1.2>
-            <Savoir_D1.3 S_intitule="Internet, outil de travail collaboratif, blogs, forums, moteur de recherche">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_D1.3.1 S_intitule=" Rechercher des informations">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.3.1>
-                <Savoir_D1.3.2 S_intitule=" Vérifier la nature de l’information">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.3.2>
-                <Savoir_D1.3.3 S_intitule=" Trier des informations selon des critères">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.3.3>
-                <Savoir_D1.3.4 S_intitule=" Utiliser des outils adaptés pour rechercher l’information">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.3.4>
-                <Savoir_D1.3.5 S_intitule=" Mettre à jour l’information">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D1.3.5>
-              </d_sousSav>
-            </Savoir_D1.3>
-          </d_sousSav>
-        </Savoir_D1>
-        <Savoir_D2 S_intitule="Mettre en oeuvre une communication">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_D2.1 S_intitule="Croquis, schémas">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_D2.1.1 S_intitule="Réaliser un croquis ou un schéma dans un objectif de communication">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D2.1.1>
-              </d_sousSav>
-            </Savoir_D2.1>
-            <Savoir_D2.2 S_intitule="Production de documents">
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_infos />
-              <l_nivTaxo>
-                <l_00 />
-                <l_01 />
-              </l_nivTaxo>
-              <d_sousSav>
-                <Savoir_D2.2.1 S_intitule="Distinguer les différents types de documents en fonction de leurs usages">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D2.2.1>
-                <Savoir_D2.2.2 S_intitule="Choisir l’outil bureautique adapté à l’objectif">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D2.2.2>
-                <Savoir_D2.2.3 S_intitule="Réaliser un document numérique">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D2.2.3>
-                <Savoir_D2.2.4 S_intitule="Réaliser et scénariser un document multimédia">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D2.2.4>
-                <Savoir_D2.2.5 S_intitule="                          ">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_D2.2.5>
-              </d_sousSav>
-            </Savoir_D2.2>
-          </d_sousSav>
-        </Savoir_D2>
+        </Savoir_E>
       </d_dicSavoirs>
       <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
     </Savoirs_S>
@@ -7298,7 +6613,7 @@
     <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="C" S_05="O">
       <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_D>
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="C" S_05="N">
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="D" S_05="N">
       <l_03 F_00="188.0" F_01="154.0" F_02="0.0" />
     </l_E>
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="D" S_05="N">

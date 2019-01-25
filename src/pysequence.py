@@ -8560,7 +8560,7 @@ class Savoirs(ElementBase):
                         self.arbre.SetItemTextColour(self.branches[k], 
                                                      couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetDiscipline(k)]))
             
-        self.SetCodeBranche()
+            self.SetCodeBranche()
         
         
     #############################################################################
