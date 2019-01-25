@@ -1,12 +1,12 @@
 
 
-# ![](Logo_60.png)  pySéquence
+# ![](Logo_60.png)  pySéquence 8
 
-_**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui fournit une aide pour :
+_**pySequence 8**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui fournit une aide pour :
   * élaborer des **Séquences** et des **Progressions** pédagogiques
   * décrire et valider des **Projets**
 
-_**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
+_**pySequence 8**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
   * **STI2D** (_ancien et nouveau programme 2021 en travaux_)
   * **S-SI** (_Sciences de l'ingénieur_ du bac S)
   * **Spécialité SI** (_Sciences de l'ingénieur_ bac 2021)
@@ -88,7 +88,7 @@ _**pySequence**_ existe :
 
 
 ## Développement ##
-_**pySequence**_ est développé par _Cédrick FAURY_ et _Jean-Claude FRICOU_
+_**pySequence 8**_ est développé par _Cédrick FAURY_ et _Jean-Claude FRICOU_
 
 Toutes les bonnes volontés pour le développement de _**pySequence**_ sont les bienvenues.
 Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence/wiki/LangageEtDependances)
