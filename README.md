@@ -68,7 +68,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
  * Anciennes versions : [https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list](https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list)
 
-_**pySequence**_ existe :
+_**pySequence 8**_ existe :
  * pour Windows :
    * en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)
    * en version "installable"
@@ -80,7 +80,7 @@ _**pySequence**_ existe :
 
 
 ## Documentation ##
-  * [Aide (pas à jour !)](https://github.com/cedrick-f/pySequence/wiki/Aide) en ligne de pySequence (avis aux volontaires pour participer à la rédaction et/ou la mise à jour des pages d'aide)
+  * [Aide (pas à jour !)](https://github.com/cedrick-f/pySequence/wiki/Aide) en ligne de pySequence 8 (avis aux volontaires pour participer à la rédaction et/ou la mise à jour des pages d'aide)
   * Quelques [exemples](https://github.com/cedrick-f/pySequence/blob/master/exemples/README.md) seraient les bienvenus !!
 
 
@@ -90,7 +90,7 @@ _**pySequence**_ existe :
 ## Développement ##
 _**pySequence 8**_ est développé par _Cédrick FAURY_ et _Jean-Claude FRICOU_
 
-Toutes les bonnes volontés pour le développement de _**pySequence**_ sont les bienvenues.
+Toutes les bonnes volontés pour le développement de _**pySequence 8**_ sont les bienvenues.
 Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence/wiki/LangageEtDependances)
 
 
