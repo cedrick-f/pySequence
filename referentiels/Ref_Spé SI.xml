@@ -1,10 +1,8 @@
 <Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SI" S_Famille="SI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thématique(s)$f" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)$f">
   <l_BO_URL>
-    <l_00 S_00="Programme" S_01="http://cache.media.education.gouv.fr/file/CSP/82/8/Cycle_terminal_Sciences_ingenieur_Specialite_Voie_generale_1023828.pdf" />
-    <l_01 S_00="Epreuves" S_01="" />
-    <l_02 S_00="Ressources" S_01="" />
+    <l_00 S_00="Programme" S_01="http://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/43/6/spe640_annexe_1063436.pdf" />
   </l_BO_URL>
-  <l_BO_dossier S_00="Spe_SI" />
+  <l_BO_dossier />
   <l_CentresInterets S_00="Les territoires et les produits intelligents, la mobilité des personnes et des biens" S_01="L’homme assisté, réparé, augmenté : les produits d’assistance pour la santé et la sécurité" S_02="Le design responsable et le prototypage de produits innovants" />
   <l_Enseignement S_00="Spé SI" S_01="Baccalauréat Général : Spécialité Sciences de l'ingénieur" S_02="Spé SI" S_03="Sciences de l'ingénieur" />
   <d_aColNon B_C="True" />

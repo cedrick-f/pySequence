@@ -129,7 +129,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
     w = w-2*ecart
     
     ctx.set_font_size(taille)
-    
+    fascent, fdescent = font_extents(ctx, taille)[:2]
     ll = []
     lt = texte.split()
     i = 0
@@ -152,7 +152,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
                 j += 1
 #    print texte
 #    print "-->", ll
-    fascent, fdescent, fheight, fxadvance, fyadvance = font_extents(ctx, taille)
+    
     return (fascent+fdescent)*len(ll), ll
 #    #
 #    # On dessine toutes les lignes de texte
@@ -261,7 +261,7 @@ def show_text_rect(ctx, texte, rect, \
     if debug: print("   fontsizeMinMax :", fontsizeMinMax)
     
     ctx.set_font_size(fontsizeMinMax[0])
-    fheight = ctx.font_extents()[2]
+    fheight = font_extents(ctx, fontsizeMinMax[0])[2]
     hf = fheight * le
 #     fontsizeMinMax[0] = min(fontsizeMinMax[0], fontsizeMinMax[0]*(h/hf))
     nLignesMaxi = max(1, h // hf)
@@ -300,7 +300,7 @@ def show_text_rect(ctx, texte, rect, \
             return fontSize, (x, y, 0, 0)
         
         ctx.set_font_size(fontSize)
-        fheight = ctx.font_extents()[2]
+        fheight = font_extents(ctx, fontSize)[2]
         x, y, w, h = reduire_rect(x, y, w, h, fheight, b)
         
         rect_eff = show_text_rect_fix(ctx, texte, x, y, w, h, 
@@ -507,7 +507,6 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize,
         return 0.0, 0.0
 
     ctx.set_font_size(fontSize)
-    
     fheight = font_extents(ctx, fontSize)[2]
     # Période entre 2 lignes
     hl = fheight * le
@@ -1832,7 +1831,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
     _y = y
     _x = x+wt
     ctx.set_font_size(taille)
-    fascent, fdescent, fheight, fxadvance, fyadvance = font_extents(ctx, taille)
+    fascent, fdescent, fheight = font_extents(ctx, taille)[:3]
 #    print
     for c in contenu:
 #        print "    ", c
@@ -1853,10 +1852,6 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
                     ctx.move_to(_x, yt)
                 
                 ctx.show_text(t)
-            
-            
-            
-            
 #            show_text_rect(ctx, l, _x, _y, wc, hl[c], va = va, ha = ha, orient = orient, max_font = taille)
             _y += hl[j]
         _x += wc
@@ -2590,6 +2585,7 @@ def text_extents(ctx, t):
 
 @memoized_extents
 def font_extents(ctx, fontSize):
+    ctx.set_font_size(fontSize)
     return ctx.font_extents()
 
 #def ajuster_texte3(ctx, texte, w, h, le = 0.8, pe = 1.0, wrap = True, couper = True):

@@ -889,57 +889,75 @@ class RichTextPanel(wx.Panel):
         
     def OnBold(self, evt):
         self.ApplyBoldToSelection()
+        self.Sauver()
         
     def OnItalic(self, evt): 
         self.ApplyItalicToSelection()
+        self.Sauver()
         
     def OnUnderline(self, evt):
         self.ApplyUnderlineToSelection()
+        self.Sauver()
         
     def OnAlignLeft(self, evt):
         self.ApplyAlignmentLeftToSelection()
+        self.Sauver()
         
     def OnAlignRight(self, evt):
         self.ApplyAlignmentRightToSelection()
+        self.Sauver()
         
     def OnAlignCenter(self, evt):
         self.ApplyAlignmentCenterToSelection()
+        self.Sauver()
         
     def OnIndentMore(self, evt):
         self.IndentMore()
+        self.Sauver()
        
     def OnIndentLess(self, evt):
         self.IndentLess()
+        self.Sauver()
         
     def OnListPuce(self, evt):
         self.ListPuce()
+        self.Sauver()
         
     def OnHeaderLess(self, evt):
         self.HeaderLess()
+        self.Sauver()
         
     def OnHeaderMore(self, evt):
         self.HeaderMore()
+        self.Sauver()
         
     def OnParagraphSpacingMore(self, evt):
         self.ParagraphSpacingMore()
+        self.Sauver()
         
     def OnParagraphSpacingLess(self, evt):
         self.ParagraphSpacingLess()
+        self.Sauver()
 
     def OnLineSpacingSingle(self, evt): 
         self.LineSpacingSingle()
+        self.Sauver()
  
     def OnLineSpacingHalf(self, evt):
         self.LineSpacingHalf()
+        self.Sauver()
         
     def OnLineSpacingDouble(self, evt):
         self.LineSpacingDouble()
+        self.Sauver()
 
     def OnFont(self, evt):
         self.Font()
+        self.Sauver()
         
     def OnColour(self, evt):
         self.Colour()
+        self.Sauver()
         
     def OnUpdateBold(self, evt):
         evt.Check(self.rtc.IsSelectionBold())
@@ -964,9 +982,11 @@ class RichTextPanel(wx.Panel):
          
     def OnImage(self, evt):
         self.InsertImage()
+        self.Sauver()
         
     def OnURL(self, evt):
         self.InsertURL()
+        self.Sauver()
 
 
 

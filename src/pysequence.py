@@ -9667,14 +9667,14 @@ class Seance(ElementAvecLien, ElementBase):
     def AjouterListeSystemes(self, lstNSys = None):
         """
         """
-#         print "  AjouterListeSystemes", self.typeSeance, lstNSys
+        print("  AjouterListeSystemes", self.typeSeance, lstNSys)
         lstSys = self.GetDocument().systemes
-#         print "    ", lstSys
+        print("    ", lstSys)
         if self.typeSeance in ACTIVITES:
             if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
-#                 print "    ", s.nom
+                print("    ", s.nom)
                 self.AjouterSysteme(s, lstNSys[i], construire = False)
 #            self.GetPanelPropriete().ConstruireListeSystemes()
             
@@ -9692,8 +9692,10 @@ class Seance(ElementAvecLien, ElementBase):
             :typ: la famille de compétences : "S", ...
         """
         ref = self.GetReferentiel()
-        return  self.GetDocument().GetFiltre(ref.dicoCompetences[typ], "O", self)
-
+        if typ in ref.dicoCompetences:
+            return  self.GetDocument().GetFiltre(ref.dicoCompetences[typ], "O", self)
+        return []
+    
     
     ######################################################################################  
     def GetReferentiel(self):
