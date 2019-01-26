@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_SN_IR" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_SN_IR" S_Famille="STS" S_FichierLogo="Logo_STS_SN_IR.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-systemes-numeriques/3321-referentiel-bts-systemes-numeriques.pdf" />
   </l_BO_URL>
@@ -6664,24 +6664,33 @@
   </d_dicoSavoirs>
   <d_domaines />
   <d_effectifs>
-    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
       <l_03 I_00="77" I_01="77" I_02="179" />
     </l_C>
-    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="" S_05="">
       <l_03 I_00="102" I_01="127" I_02="102" />
     </l_G>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="" S_05="">
       <l_03 I_00="179" I_01="77" I_02="77" />
     </l_D>
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="" S_05="">
       <l_03 I_00="77" I_01="127" I_02="127" />
     </l_E>
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="" S_05="">
       <l_03 I_00="127" I_01="77" I_02="127" />
     </l_P>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="" S_05="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
+    <l_S S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 I_00="77" I_01="77" I_02="179" />
+    </l_S>
+    <l_T S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 I_00="77" I_01="77" I_02="179" />
+    </l_T>
+    <l_U S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 I_00="77" I_01="77" I_02="179" />
+    </l_U>
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />

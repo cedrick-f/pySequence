@@ -1280,7 +1280,7 @@ class Referentiel(XMLelem):
             for l in lig:
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
-        self.FichierLogo = sh_g.cell(19,1).value
+        self.FichierLogo = sh_g.cell(17,1).value
         
         
         #
