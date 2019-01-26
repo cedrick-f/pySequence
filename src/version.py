@@ -46,7 +46,7 @@ import wx
 
 
 
-__appname__= "pySequence"
+__appname__= "pySéquence 8"
 __author__ = "Cédrick FAURY"
 __version__ = "8.1.0"
 __urlapi__ = "https://api.github.com/repos/cedrick-f/pySequence"
@@ -65,7 +65,7 @@ def GetVersion_short():
 
 ###############################################################################################
 def GetAppnameVersion():
-    return __appname__+" "+GetVersion_short()
+    return __appname__#+" "+GetVersion_short()
 
 ################################################################################################
 #def GetNewVersion_old(win):  

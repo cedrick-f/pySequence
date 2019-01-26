@@ -49,7 +49,7 @@ import sys, os
 print(sys.getdefaultencoding())
 
 
-from version import __version__, GetVersion_cxFreeze, __mail__    
+from version import __version__, GetVersion_cxFreeze, __mail__, __appname__
     
     
 ## Remove the build folder, a bit slower but ensures that build contains the latest
@@ -166,7 +166,7 @@ if not "beta" in __version__:
         base = "Win32GUI"
 
 
-name = "pySequence"
+name = __appname__
 version = GetVersion_cxFreeze()
 author = "Cédrick FAURY & Jean-Claude FRICOU"
 author_email = __mail__.replace("#", '@')

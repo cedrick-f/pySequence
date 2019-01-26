@@ -1252,7 +1252,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if not ok:
             messageErreur(self, "Accès refusé",
                           "Accès à la base de registre refusé !\n\n" \
-                          "Redémarrer pySequence en tant qu'administrateur.")
+                          "Redémarrer %s en tant qu'administrateur." %version.__appname__)
         else:
             self.MiseAJourMenu()
          
@@ -1265,7 +1265,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def OnBug(self, event):
         import platform
         recipient = version.__mail__.replace("#", "@")
-        subject = "Rapport de Bug pySéquence"
+        subject = "Rapport de Bug %s" %version.__appname__
         body = "Bonjour,\n\n J'ai (ou je crois avoir) constaté un bug !\n\n"
         body += "Version %s : %s\n" %(version.__appname__, version.__version__)
         body += "Système : %s\n" %platform.platform()
@@ -17821,7 +17821,7 @@ class A_propos(wx.Dialog):
             txt.close()
         except:
             lictext = "Le fichier de licence (LICENSE.txt) est introuvable !\n\n" \
-                      "Veuillez réinstaller pySequence !"
+                      "Veuillez réinstaller %s !" %version.__appname__
             messageErreur(self, 'Licence introuvable',
                           lictext)
             
@@ -17838,11 +17838,11 @@ class A_propos(wx.Dialog):
         t = wx.StaticText(descrip, -1,"",
                           size = (400, -1))#,
 #                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        txt = wordwrap("<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences et progressions pédagogiques et à la validation de projets,\n"
+        txt = wordwrap("<b>%s</b> est un logiciel d'aide à l'élaboration de séquences et progressions pédagogiques et à la validation de projets,\n"
                                           "sous forme de fiches exportables au format PDF ou SVG.\n"
                                           "Il est élaboré en relation avec les programmes et les documents d'accompagnement\n"
                                           "des enseignements des filières :\n"
-                                          " STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde.", 500, wx.ClientDC(self))
+                                          " STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde." %version.__appname__, 500, wx.ClientDC(self))
         if hasattr(t, 'SetLabelMarkup'): # wxpython 3.0
             t.SetLabelMarkup(txt )
         else:
