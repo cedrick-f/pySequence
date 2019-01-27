@@ -1799,7 +1799,7 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
         """
         
-        debug = True#False#self.Code == "SSI"
+        debug = False#self.Code == "SSI"
         if debug: print("completer", self.Code, self.tr_com)
 
         # C'est une option (il y a un tronc commun) ==> on complète plus tard

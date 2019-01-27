@@ -2351,8 +2351,8 @@ class Sequence(BaseDoc):
 #        self.CI.SetNum()
 #        for comp in self.obj:
 #            comp.SetCode()
-#        self.obj["C"].SetCode()
-#        self.obj["S"].SetCode()
+#         self.obj["C"].SetCode()
+#         self.obj["S"].SetCode()
         
         for sce in self.seances:
             sce.SetCode()    
@@ -3006,10 +3006,10 @@ class Sequence(BaseDoc):
         lst = []
         ref = self.GetReferentiel()
         
-        if ref.tr_com != []:  # Tronc commun
-            ref_tc = REFERENTIELS[ref.tr_com[0]]
-        
-        
+#         if ref.tr_com != []:  # Tronc commun
+#             ref_tc = REFERENTIELS[ref.tr_com[0]]
+#         
+#         print("GetObjAffiches")
         for cmp in self.obj["C"].competences: # liste de codes depuis pysequence.Competences
             typ, cod = cmp[0], cmp[1:]
             comp = ref.getToutesCompetencesDict()[typ]
@@ -3030,7 +3030,7 @@ class Sequence(BaseDoc):
                 
             i = -comp.nivObj
             
-#             print(i, path)
+#             print(cmp, i, path)
             lst.append(cmp[0]+path[i])
 #         print("GetObjAffiches", list(set(lst)))
         return sorted(list(set(lst)))
@@ -7863,9 +7863,9 @@ class Competences(ElementBase):
         
         
 
-    ######################################################################################  
-    def __repr__(self):
-        return "Compétences : "+" ".join(self.competences)
+#     ######################################################################################  
+#     def __repr__(self):
+#         return "Compétences : "+" ".join(self.competences)
     
     
     ######################################################################################  
@@ -8154,7 +8154,7 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche, prerequis = False):
-#         print("ConstruireArbre Compétences", prerequis)
+#         print("ConstruireArbre Compétences", prerequis, self)
         ref = self.GetReferentiel()
         doc = self.GetDocument()
         self.branche = branche
@@ -8339,9 +8339,9 @@ class Savoirs(ElementBase):
         
         
                 
-    ######################################################################################  
-    def __repr__(self):
-        return "Savoirs : "+" ".join(self.savoirs)
+#     ######################################################################################  
+#     def __repr__(self):
+#         return "Savoirs : "+" ".join(self.savoirs)
         
     ######################################################################################  
     def GetApp(self):
@@ -8486,6 +8486,7 @@ class Savoirs(ElementBase):
                 return savoirs.abrDiscipline
 #         return ref.dicoSavoirs[self.savoirs[num][0]].abrDiscipline
     
+    
     ######################################################################################  
     def GetIntit(self, num):
         return self.GetReferentiel().getSavoir(self.GetCode(num)).intitule
@@ -8533,12 +8534,13 @@ class Savoirs(ElementBase):
                 message = "Tous les objectifs visés" \
                           "sont abordés aux cours des %s" %ref._nomActivites.plur_()
                 couleur = COUL_OK
-            
+#                 print('   ', self.codeBranche)
                 for cb in self.codeBranche.values():
                     cb.SetBackgroundColour(couleur)
                     cb.SetToolTip(message)
                     cb.Refresh()
-            
+    
+    
     ######################################################################################  
     def SetCodeBranche(self):
         if hasattr(self, 'codeBranche'):
@@ -8548,7 +8550,7 @@ class Savoirs(ElementBase):
             
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche, prerequis = False):
-#         print "ConstruireArbre Savoirs"
+#         print("ConstruireArbre Savoirs", prerequis, self)
         self.branche = branche
         ref = self.GetReferentiel()
         doc = self.GetDocument()
@@ -8561,10 +8563,11 @@ class Savoirs(ElementBase):
             ctx = "O"
         
 #         print "  pre:", [d.pre for k, d in lst], "   obj:", [d.obj for k, d in lst]
+        self.codeBranche = {}
+        self.branches = {}
         if aff:
             self.arbre = arbre
-            self.codeBranche = {}
-            self.branches = {}
+            
             for k, d in lst:
                 if (prerequis and d.pre) or (not prerequis and d.obj):
                     f = doc.GetFiltre(d, ctx,  niveau = 1)
@@ -8602,7 +8605,7 @@ class Savoirs(ElementBase):
     
     ######################################################################################  
     def GetBulleSVG(self, i):
-        print("GetBulleSVG", self, i)
+#         print("GetBulleSVG", self, i)
 
         c = sorted(self.savoirs)[i]
         t = self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1] + " :\n" + self.GetIntit(i)

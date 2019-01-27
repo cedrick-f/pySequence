@@ -53,7 +53,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S B_obj="True" B_pre="False" I_nivObj="3" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte S_00="O" />
       <l_asso_type S_00="Comp_A" />
       <d_dicCompetences>
@@ -1101,7 +1101,7 @@
   <l_listeEnsSpecif />
   <l_listeNivTaxo />
   <l_listeSpecialites />
-  <l_listeSystemes />
+  <l_listeSystemes S_00="PE" />
   <l_listeThematiques S_00="DIC" S_01="OTSCIS" S_02="MSOST" S_03="IP" />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="EPI" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" />
   <l_listeTypeHorsClasse />
@@ -1152,7 +1152,11 @@
     </l_S>
   </d_seances>
   <d_specialite />
-  <d_systemes />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+  </d_systemes>
   <d_thematiques>
     <l_DIC S_00="Design, innovation et créativité" S_01="Design, innovation et créativité" S_02="">
       <l_03 I_00="255" I_01="255" I_02="0" />

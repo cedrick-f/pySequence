@@ -5484,7 +5484,7 @@ class PanelPropriete_Racine(wx.Panel):
 #         print("PanelPropriete_Racine", texte)
         wx.Panel.__init__(self, parent, -1)
         if texte is not None:
-            wx.StaticText(self, -1, "message" + texte)
+            wx.StaticText(self, -1, "" + texte)
         return
 #     
 #         self.Hide() # Sans ça cela provoque des problèmes d'affichage
@@ -13584,7 +13584,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
     ######################################################################################  
     def GetPanelPropriete(self, parent, code, texte = ""):
-        print(parent)
+#         print(code)
 #         if code == "Sea":
 #             return PanelPropriete_Racine(parent, constantes.TxtRacineSeance)
 #         elif code == "Obj":
