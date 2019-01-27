@@ -2981,7 +2981,7 @@ class FenetreSequence(FenetreDocument):
     
 
         
-        
+    
         
         
     ###############################################################################################
@@ -3008,7 +3008,9 @@ class FenetreSequence(FenetreDocument):
             return None, "", 0, False, True
 
         
-
+        #################################################################################################
+        def get_err_message(err):
+            return ("\n  "+CHAR_POINT).join([e.getMessage() for e in err])
         
         ###############################################################################################################
         def ouvre(message):
@@ -3018,6 +3020,7 @@ class FenetreSequence(FenetreDocument):
 
             # La séquence
             sequence = root.find("Sequence")
+#             print("ouvre", sequence)
             if sequence == None: # Ancienne version , forcément STI2D-ETT !!
 #                self.classe.GetPanelPropriete().EvtRadioBox(CodeFam = ('ET', 'STI'))
                 self.sequence.setBranche(root)
@@ -3062,6 +3065,7 @@ class FenetreSequence(FenetreDocument):
             self.fermer()
             count = nbr_etapes
             dlg.update(count, message)
+            dlg.Close()
             return
         
         
@@ -3090,7 +3094,7 @@ class FenetreSequence(FenetreDocument):
             
             if DEBUG:
                 raise
-            return
+#             return
         
         if reparer:
             self.MarquerFichierCourantModifie(True)
@@ -4429,7 +4433,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4686,7 +4690,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5477,33 +5481,33 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
 class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte = None):
-        print("PanelPropriete_Racine", texte)
+#         print("PanelPropriete_Racine", texte)
         wx.Panel.__init__(self, parent, -1)
         if texte is not None:
             wx.StaticText(self, -1, "message" + texte)
         return
-    
-        self.Hide() # Sans ça cela provoque des problèmes d'affichage
-        
-        self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
-        wx.CallAfter(self.rtc.SetFocus)
-        
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.rtc, 1,flag = wx.EXPAND)
-        self.SetSizer(sizer)
-
-        out = io.StringIO()
-        handler = rt.RichTextXMLHandler()
-        buff = self.rtc.GetBuffer()
-#        buff.AddHandler(handler)
-        out.write(texte)
-        out.seek(0)
-        handler.LoadStream(buff, out)
-        self.rtc.Refresh()
-        
-        sizer.Layout()
-        self.Layout()
-        
+#     
+#         self.Hide() # Sans ça cela provoque des problèmes d'affichage
+#         
+#         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
+#         wx.CallAfter(self.rtc.SetFocus)
+#         
+#         sizer = wx.BoxSizer(wx.VERTICAL)
+#         sizer.Add(self.rtc, 1,flag = wx.EXPAND)
+#         self.SetSizer(sizer)
+# 
+#         out = io.StringIO()
+#         handler = rt.RichTextXMLHandler()
+#         buff = self.rtc.GetBuffer()
+# #        buff.AddHandler(handler)
+#         out.write(texte)
+#         out.seek(0)
+#         handler.LoadStream(buff, out)
+#         self.rtc.Refresh()
+#         
+#         sizer.Layout()
+#         self.Layout()
+#         
 #        wx.CallAfter(self.Show)
         
 #    def GetNiveau(self):
@@ -10439,9 +10443,9 @@ class PanelPropriete_Seance(PanelPropriete):
     #             print("filtres comp", cod, fcomp, f1)
                 filtre = intersection(f1, fcomp)
                 
-                dic_f = ref.dicoCompetences[cod].GetDicFiltre(filtre)
+                dic_f = ref.getToutesCompetencesDict()[cod].GetDicFiltre(filtre)
 #                 print("ArbreCompetences", cod, dic_f, ref.dicoCompetences[cod])
-                self.arbreCmp[cod] = ArbreCompetences(self.pageCmp, cod, dic_f, ref.dicoCompetences[cod],
+                self.arbreCmp[cod] = ArbreCompetences(self.pageCmp, cod, dic_f, ref.getToutesCompetencesDict()[cod],
                                                       lstCases = self.seance.GetDocument().obj["C"].competences, 
                                                       pp = self, agwStyle = HTL.TR_NO_HEADER)
                 # parent, typ, dicCompetences, competences, pptache = None, filtre = None, agwStyle = 0
@@ -10488,13 +10492,13 @@ class PanelPropriete_Seance(PanelPropriete):
                     f1.append(f)
                     f1.extend(ref.getSousElem(f, "Sav_"+cod))
                     
-                fcomp = self.seance.GetDocument().GetFiltre(ref.dicoSavoirs[cod], "O", self.seance)
+                fcomp = self.seance.GetDocument().GetFiltre(ref.getTousSavoirsDict()[cod], "O", self.seance)
                 filtre = intersection(fcomp, f1)
     #             print("filtres sav", cod, filtre)
-                dic_f = ref.dicoSavoirs[cod].GetDicFiltre(filtre)
+                dic_f = ref.getTousSavoirsDict()[cod].GetDicFiltre(filtre)
                 
                 
-                self.arbreSav[cod] = ArbreSavoirs(self.pageSav, cod, dic_f, ref.dicoSavoirs[cod],
+                self.arbreSav[cod] = ArbreSavoirs(self.pageSav, cod, dic_f, ref.getTousSavoirsDict()[cod],
                                                   pp = self, filtre = filtre, agwStyle = HTL.TR_NO_HEADER)
                 # parent, typ, savoirsRef, savoirs, prerequis, filtre = None, et = False, agwStyle = 0
                 self.savSizer.Add(self.arbreSav[cod], 1, flag = wx.EXPAND)
@@ -11368,7 +11372,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #             print(prj._dicoCompetences)
             for code, dicComp in prj._dicoCompetences.items():
                 self.pagesComp.append(wx.Panel(self.nb, -1))
-                compRef = ref.dicoCompetences[code]
+                compRef = ref.getToutesCompetencesDict()[code]
                 pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
                 
                 self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, 
@@ -13580,6 +13584,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
     ######################################################################################  
     def GetPanelPropriete(self, parent, code, texte = ""):
+        print(parent)
 #         if code == "Sea":
 #             return PanelPropriete_Racine(parent, constantes.TxtRacineSeance)
 #         elif code == "Obj":

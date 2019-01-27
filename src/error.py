@@ -40,7 +40,7 @@ Gestion des erreurs
 
 import traceback
 
-import sys
+import sys, os
 import util_path
 
 from widgets import messageInfo
@@ -140,7 +140,7 @@ def SendBugReport(traceb = ""):
                     "Votre logiciel de messagerie va s'ouvrir\n" \
                     "pour rédiger un courrier de rapport d'erreur.\n\n" \
                     "Merci d'y indiquer le plus précisément possible\n" \
-                    "comment s'est produit cette erreur\n" \
+                    "comment s'est produite cette erreur\n" \
                     "ainsi que le moyen de la reproduire.\n" \
                     "Ne pas hesiter à joindre un fichier .prj, .seq ou .prg.\n\n" \
                     "L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__)

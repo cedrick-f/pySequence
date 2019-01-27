@@ -654,13 +654,15 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     for c in sorted(seq.prerequis["C"].competences):
         typ, cod = c[0], c[1:]
         
-        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
-            comp = ref_tc.dicoCompetences["S"]
-        else:
-            if typ in list(ref.dicoCompetences.keys()):
-                comp = ref.dicoCompetences[typ]
-            elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
-                comp = ref_tc.dicoCompetences[typ]
+        comp = ref.getToutesCompetencesDict()[typ]
+        
+#         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+#             comp = ref_tc.dicoCompetences["S"]
+#         else:
+#             if typ in list(ref.dicoCompetences.keys()):
+#                 comp = ref.dicoCompetences[typ]
+#             elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
+#                 comp = ref_tc.dicoCompetences[typ]
         lstComp.append([cod,comp])
         if not typ in lstTyp:
             lstTyp.append(typ)
@@ -692,13 +694,14 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstTyp = []
     for c in sorted(seq.prerequis["S"].savoirs):
         typ, cod = c[0], c[1:]
-        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
-            savoir = ref_tc.dicoSavoirs["S"]
-        else:
-            if typ in list(ref.dicoSavoirs.keys()):
-                savoir = ref.dicoSavoirs[typ]
-            elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
-                savoir = ref_tc.dicoSavoirs[typ]
+        savoir = ref.getTousSavoirsDict()[typ]
+#         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+#             savoir = ref_tc.dicoSavoirs["S"]
+#         else:
+#             if typ in list(ref.dicoSavoirs.keys()):
+#                 savoir = ref.dicoSavoirs[typ]
+#             elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
+#                 savoir = ref_tc.dicoSavoirs[typ]
         lstSav.append([cod,savoir])
         if not typ in lstTyp:
             lstTyp.append(typ)
@@ -828,15 +831,17 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstTyp = []
     for c in seq.GetObjAffiches():#obj["C"].competences:
         typ, cod = c[0], c[1:]
-        comp = None
-#         print "typ, cod =", typ, cod
-        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
-            comp = ref_tc.dicoCompetences["S"]
-        else:
-            if typ in list(ref.dicoCompetences.keys()):
-                comp = ref.dicoCompetences[typ]
-            elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
-                comp = ref_tc.dicoCompetences[typ]
+        comp = ref.getToutesCompetencesDict()[typ]
+        
+#         comp = None
+# #         print "typ, cod =", typ, cod
+#         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+#             comp = ref_tc.dicoCompetences["S"]
+#         else:
+#             if typ in list(ref.dicoCompetences.keys()):
+#                 comp = ref.dicoCompetences[typ]
+#             elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
+#                 comp = ref_tc.dicoCompetences[typ]
         lstComp.append([cod,comp])
         if not typ in lstTyp:
             lstTyp.append(typ)
@@ -864,13 +869,15 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstTyp = []
     for c in sorted(seq.obj["S"].savoirs):
         typ, cod = c[0], c[1:]
-        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
-            savoir = ref_tc.dicoSavoirs["S"]
-        else:
-            if typ in list(ref.dicoSavoirs.keys()):
-                savoir = ref.dicoSavoirs[typ]
-            elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
-                savoir = ref_tc.dicoSavoirs[typ]
+        savoir = ref.getTousSavoirsDict()[typ]
+        
+#         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+#             savoir = ref_tc.dicoSavoirs["S"]
+#         else:
+#             if typ in list(ref.dicoSavoirs.keys()):
+#                 savoir = ref.dicoSavoirs[typ]
+#             elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
+#                 savoir = ref_tc.dicoSavoirs[typ]
         lstSav.append([cod,savoir])
         if not typ in lstTyp:
             lstTyp.append(typ)
@@ -1182,7 +1189,7 @@ class Cadre():
         self.seance = seance
         self.ctx = ctx
         if not seance.effectif in rEff:
-            print("CONFLIT Effectif !")
+            print("CONFLIT Effectif !", seance.effectif, rEff.keys())
             return
         r = rEff[seance.effectif]
 #         self.w = r[0][2]

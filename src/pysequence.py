@@ -1176,7 +1176,7 @@ class Classe(ElementBase):
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
         err = []
-#         print "setBranche classe"
+#         print("setBranche classe")
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
         self.version = branche.get("Version", "0")       # A partir de la version 6 !
@@ -1188,7 +1188,7 @@ class Classe(ElementBase):
 #             print("Réparation = pas référentiel intégré !")
             if self.GetVersionNum() >= 5:
                 code = self.referentiel.setBrancheCodeV5(brancheRef)
-                print("   Code trouvé dans référentiel :", code)
+#                 print("   Code trouvé dans référentiel :", code)
                 if code != self.typeEnseignement:
                     self.typeEnseignement = code
                 
@@ -1270,7 +1270,7 @@ class Classe(ElementBase):
             # Ouverture du référentiel intrégré
             #
             else:
-#                print "VersionNum", self.GetVersionNum()
+#                 print("VersionNum", self.GetVersionNum())
 #                versionNum = self.GetVersionNum()
                 if self.GetVersionNum() <= 6:
                     ChargerRefOriginal()
@@ -1279,7 +1279,7 @@ class Classe(ElementBase):
 #                     try:
                     self.referentiel.initParam()
                     errr = self.referentiel.setBranche(brancheRef)[1]
-#                     print "errr", errr
+#                     print("errr", errr)
                     self.referentiel.corrigerVersion(errr)
                     self.referentiel.postTraiter()
                     self.referentiel.completer(forcer = True)
@@ -3005,12 +3005,30 @@ class Sequence(BaseDoc):
         """
         lst = []
         ref = self.GetReferentiel()
+        
+        if ref.tr_com != []:  # Tronc commun
+            ref_tc = REFERENTIELS[ref.tr_com[0]]
+        
+        
         for cmp in self.obj["C"].competences: # liste de codes depuis pysequence.Competences
+            typ, cod = cmp[0], cmp[1:]
+            comp = ref.getToutesCompetencesDict()[typ]
             # Chemin de la compétence, jusqu'à la racine.
             path = ref.getPathCompetence(cmp)
+
             
-            
-            i = -ref.dicoCompetences[cmp[0]].nivObj
+#             if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+#                 # Chemin de la compétence, jusqu'à la racine.
+#                 path = ref_tc.getPathCompetence("S"+cod)
+#             else:
+#                 if typ in list(ref.dicoCompetences.keys()):
+#                     # Chemin de la compétence, jusqu'à la racine.
+#                     path = ref.getPathCompetence(cmp)
+#                 elif ref_tc and typ in list(ref_tc.dicoCompetences.keys()):
+#                     # Chemin de la compétence, jusqu'à la racine.
+#                     path = ref_tc.getPathCompetence(cmp)
+                
+            i = -comp.nivObj
             
 #             print(i, path)
             lst.append(cmp[0]+path[i])
@@ -3135,7 +3153,7 @@ class Sequence(BaseDoc):
         
         maj = False
         for cc in d["C"].competences:
-            filtre = self.GetFiltre(ref.dicoCompetences[cc[0]], contexte)
+            filtre = self.GetFiltre(ref.getToutesCompetencesDict()[cc[0]], contexte)
             if filtre is not None and not (cc[1:] in filtre):
                 d["C"].competences.remove(cc)
                 maj = True
@@ -3144,7 +3162,7 @@ class Sequence(BaseDoc):
             
         maj = False
         for cs in d["S"].savoirs:
-            filtre = self.GetFiltre(ref.dicoSavoirs[cs[0]], contexte)
+            filtre = self.GetFiltre(ref.getTousSavoirsDict()[cs[0]], contexte)
             if filtre is not None and not (cs[1:] in filtre):
                 d["S"].savoirs.remove(cs)
                 maj = True
@@ -7913,14 +7931,14 @@ class Competences(ElementBase):
                     if c is not None:
                         lstComp.append("B")
                     
-                for typ in list(ref.dicoCompetences.keys()):
+                for typ in ref.dicoCompetences:
                     comp = ref.dicoCompetences[typ]
                     c = comp.getCompetence(codeindic)
                     if c is not None:
                         lstComp.append(typ)
                 
                 if ref_tc is not None:
-                    for typ in [k for k in list(ref_tc.dicoCompetences.keys()) if k != "S"]:
+                    for typ in [k for k in ref_tc.dicoCompetences if k != "S"]:
                         comp = ref.dicoCompetences[typ]
                         c = comp.getCompetence(codeindic)
                         if c is not None:
@@ -7995,18 +8013,18 @@ class Competences(ElementBase):
         def condense(d, k, comp):
             if len(comp.sousComp) > 0:
 #                 print " +++ ", comp.sousComp.keys()
-                lk = [d+kk for kk in list(comp.sousComp.keys())]
+                lk = [d+kk for kk in comp.sousComp]
                 if set(lk).issubset(s):
                     for sk in lk:
                         s.remove(sk)
                     s.add(d+k)
                     
-                for k1, v1 in list(comp.sousComp.items()):
+                for k1, v1 in comp.sousComp.items():
                     condense(d, k1, v1)
                 
-        for d, competences in list(ref.dicoCompetences.items()):
+        for d, competences in ref.dicoCompetences.items():
             dicCompetences = competences.dicCompetences
-            for k, v in list(dicCompetences.items()):
+            for k, v in dicCompetences.items():
                 condense(d, k, v)
             
         self.competences = list(s)
@@ -9069,7 +9087,7 @@ class Seance(ElementAvecLien, ElementBase):
                     codeEff = ""
         else:
             for k, v in self.GetReferentiel().effectifs.items():
-                if v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
+                if v is not None and v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
                     codeEff = k
         
         self.effectif = codeEff
@@ -9092,11 +9110,12 @@ class Seance(ElementAvecLien, ElementBase):
         """
         
         ok = 0 # pas de problème
+        
         if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
 #             print("IsEffectifOk", self)
 #            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
             eff = round(self.GetEffectif(), 4)
-            effN = round(self.GetClasse().GetEffectifNorm('G'), 4)
+            effN = round(self.GetClasse().GetEffectifNorm('G'), 4)  # TODO : revoir ce calcul
             if eff < effN:
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
             elif eff > effN:
@@ -9667,14 +9686,14 @@ class Seance(ElementAvecLien, ElementBase):
     def AjouterListeSystemes(self, lstNSys = None):
         """
         """
-        print("  AjouterListeSystemes", self.typeSeance, lstNSys)
+#         print("  AjouterListeSystemes", self.typeSeance, lstNSys)
         lstSys = self.GetDocument().systemes
-        print("    ", lstSys)
+#         print("    ", lstSys)
         if self.typeSeance in ACTIVITES:
             if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
-                print("    ", s.nom)
+#                 print("    ", s.nom)
                 self.AjouterSysteme(s, lstNSys[i], construire = False)
 #            self.GetPanelPropriete().ConstruireListeSystemes()
             
@@ -9692,9 +9711,8 @@ class Seance(ElementAvecLien, ElementBase):
             :typ: la famille de compétences : "S", ...
         """
         ref = self.GetReferentiel()
-        if typ in ref.dicoCompetences:
-            return  self.GetDocument().GetFiltre(ref.dicoCompetences[typ], "O", self)
-        return []
+        return  self.GetDocument().GetFiltre(ref.getToutesCompetencesDict()[typ], "O", self)
+   
     
     
     ######################################################################################  

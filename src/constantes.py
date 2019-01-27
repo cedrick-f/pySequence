@@ -493,7 +493,7 @@ def calculerEffectifs(classe):
 
     
     
-    for k in 'GDSTUEP':
+    for k in ref._lstEffectifs:#'GDSTUEP':
 #         print("   ", k, ref.effectifs[k])
         if classe.nbrGroupes[k] > 0 and ref.effectifs[k][4] in classe.effectifs:
             classe.effectifs[k] = partitionne(classe.effectifs[ref.effectifs[k][4]], 

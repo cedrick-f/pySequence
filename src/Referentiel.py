@@ -1734,11 +1734,15 @@ class Referentiel(XMLelem):
                 l.append(Grammaire(l[0]))
 
         # Valeurs par défaut pour effectifs (version >= 8)
-        for code in 'GDSTUEP':
-            if not code in self.effectifs.keys():
-#                 self.effectifs['S'] = [*self.effectifs['G']]
-#                 self.effectifs['T'] = None
-                self.effectifs[code] = self.effectifs['C'][:]
+        self._lstEffectifs = list(self.effectifs.keys())
+        self._lstEffectifs.remove('C')
+        self._lstEffectifs.remove('I')
+        self._lstEffectifs = "".join(self._lstEffectifs)
+        for code in self._lstEffectifs:#'GDSTUEP':
+#             if not code in self.effectifs.keys():
+# #                 self.effectifs['S'] = [*self.effectifs['G']]
+# #                 self.effectifs['T'] = None
+#                 self.effectifs[code] = ["", "", "", "", "", ""]#self.effectifs['C'][:]##
 #                 if len(self.effectifs[code]) == 4:
 #                     self.effectifs['S'].append(constantes.SubdivGrp['S'])
 #                     self.effectifs['S'].append(constantes.MmActiv['S'])
@@ -1748,6 +1752,13 @@ class Referentiel(XMLelem):
             if self.effectifs[code] is not None and len(self.effectifs[code]) == 4:
                 self.effectifs[code].append(constantes.SubdivGrp[code])
                 self.effectifs[code].append(constantes.MmActiv[code])
+            if self.effectifs[code][0] != "":
+                if self.effectifs[code][4] == "":
+                    self.effectifs[code][4] = constantes.SubdivGrp[code]
+                if self.effectifs[code][5] == "":
+                    self.effectifs[code][5] = constantes.MmActiv[code]
+                
+                
 #             print(code, self.effectifs[code])
                     
         # Les effectifs sous forme arborescente
@@ -1773,6 +1784,11 @@ class Referentiel(XMLelem):
         for s in self.dicoSavoirs.values():
             s.postTraiter()
         
+        # Les systèmes
+        if len(self.systemes) == 0 :
+            self.systemes["PE"] = ["Produit d’étude", "Produit d’étude",
+                                   "", (0,0,0), 0]
+            self.listeSystemes.append("PE")
         
         
     #########################################################################
@@ -1783,7 +1799,7 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
         """
         
-        debug = False#self.Code == "SSI"
+        debug = True#False#self.Code == "SSI"
         if debug: print("completer", self.Code, self.tr_com)
 
         # C'est une option (il y a un tronc commun) ==> on complète plus tard
@@ -2093,6 +2109,7 @@ class Referentiel(XMLelem):
             
         return dicComp
     
+    
     #########################################################################
     def getDicTousSavoirs(self):
         """ Renvoie sous la forme {code : Referentiel.Savoirs), ...}
@@ -2106,6 +2123,7 @@ class Referentiel(XMLelem):
             dicSavoirs.update({c : r.dicoSavoirs[c] for c in list(r.dicoSavoirs.keys()) if c != "S"})
              
         return dicSavoirs
+    
     
     #########################################################################
     def GetNomGeneriqueSav(self, code = "S"):
@@ -4008,7 +4026,7 @@ def chargerReferentiels():
                     dicOk[k] = True
                 
                 # REMPLACEMENT !! pour tests
-                REFERENTIELS[k] = ref
+                #REFERENTIELS[k] = ref
                 
             else:
                 enregistrer(r.Code, f)

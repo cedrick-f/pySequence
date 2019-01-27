@@ -6620,15 +6620,6 @@
     <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
-    <l_S S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
-      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
-    </l_S>
-    <l_T S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
-      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
-    </l_T>
-    <l_U S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
-      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
-    </l_U>
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
