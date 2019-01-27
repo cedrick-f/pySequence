@@ -1749,9 +1749,13 @@ class Referentiel(XMLelem):
 #                 else:
 #                     self.effectifs['S'][4] = constantes.SubdivGrp['S']
 #                     self.effectifs['S'][5] = constantes.MmActiv['S']
+            if self.effectifs[code] is not None and len(self.effectifs[code]) == 2:
+                self.effectifs[code].append("")
+                self.effectifs[code].append((0,0,0))
             if self.effectifs[code] is not None and len(self.effectifs[code]) == 4:
                 self.effectifs[code].append(constantes.SubdivGrp[code])
                 self.effectifs[code].append(constantes.MmActiv[code])
+#             print(self.effectifs[code])
             if self.effectifs[code][0] != "":
                 if self.effectifs[code][4] == "":
                     self.effectifs[code][4] = constantes.SubdivGrp[code]

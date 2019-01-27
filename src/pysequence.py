@@ -3060,7 +3060,7 @@ class Sequence(BaseDoc):
         if len(elem_asso) == 0: # Pas de filtrage
             return
         
-#         print("  ", elem_asso)
+#         print("  ", elem_asso[:niveau])
         filtres = []
 
         for code in elem_asso[:niveau]:
@@ -4987,9 +4987,10 @@ class Projet(BaseDoc, Grammaire):
 
     ######################################################################################  
     def DefinirCouleurs(self):
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.eleves + self.groupes))
+        if hasattr(self.GetReferentiel(), '_listesCompetences_simple'):
+            draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                       len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                       len(self.eleves + self.groupes))
         
      
     ######################################################################################  
@@ -7897,7 +7898,7 @@ class Competences(ElementBase):
 #         seq = self.parent
         self.filtre = self.parent.GetFiltre(compRef, contexte)#, self.filtre)
         dic_f = compRef.GetDicFiltre(self.filtre)
-#         print "GetPanelPropriete", filtre
+#         print("GetPanelPropriete", self.filtre)
         return PanelPropriete_Competences(parent, self, code, dic_f, compRef)
     
     ######################################################################################  
@@ -8175,6 +8176,7 @@ class Competences(ElementBase):
 #                     print("   ", d, doc)
 #                     print("   >>>", doc.GetFiltre(d, ctx))
                     f = doc.GetFiltre(d, ctx,  niveau = 1)
+#                     print("   ", f)
                     if f is None or len(f) > 0:
                         self.codeBranche[k] = CodeBranche(self.arbre, "")
                         self.branches[k] = arbre.AppendItem(branche, self.GetNomGenerique(k), 

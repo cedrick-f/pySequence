@@ -3005,6 +3005,7 @@ class FenetreSequence(FenetreDocument):
 
         root = pysequence.safeParse(nomFichier, wx.GetTopLevelParent(self))
         if root is None:
+            dlg.Close()
             return None, "", 0, False, True
 
         
@@ -3460,6 +3461,7 @@ class FenetreProjet(FenetreDocument):
 #         self.fiche.Hide()
         root = pysequence.safeParse(nomFichier, dlg)
         if root is None:
+            dlg.Close()
             return None, "", 0, False, True
         
 
@@ -4263,6 +4265,7 @@ class FenetreProgression(FenetreDocument):
         
         root = pysequence.safeParse(nomFichier, dlg)
         if root is None:
+            dlg.Close()
             return None, "", 0, False, True
          
         
@@ -14926,7 +14929,7 @@ class ArbreCompetences(HTL.HyperTreeList):
             :dic: 
             :ct_type: 0 = normal, 1 = check, 2 = radio
         """
-#         print(" "*niveau,"Construire", self.filtre)
+#         print(" "*niveau,"Construire", dic)
 #         if dic == None:
 #             dic = self.competences.dicCompetences
 

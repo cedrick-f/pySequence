@@ -462,7 +462,7 @@
         </Competence_CT7>
       </d_dicCompetences>
     </Competences_S>
-    <Competences_C B_obj="False" B_pre="False" I_nivObj="3" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) spécifique(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_C B_obj="False" B_pre="False" I_nivObj="0" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) spécifique(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences>
@@ -566,7 +566,7 @@
         </Competence_CS5>
       </d_dicCompetences>
     </Competences_C>
-    <Competences_A B_obj="True" B_pre="True" I_nivObj="3" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_A B_obj="True" B_pre="True" I_nivObj="0" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences>
