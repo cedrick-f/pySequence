@@ -4439,7 +4439,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4696,7 +4696,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -10257,13 +10257,13 @@ class PanelPropriete_Seance(PanelPropriete):
                                              parent, clientData = k)
                         r = self.cbEff.GetTree().GetBoundingRect(child)
                         if r is not None:
-                            m[0] = max(m[0], r.width)
+                            m[0] = max(m[0], r.GetRight())# + r.GetWidth())
                         construire(g, child, m)
             
 #             print("_effectifs", ref._effectifs)
             m = [0]
             construire(ref.getTreeEffectifs(), m = m)
-            print("m=", m[0])
+#             print("m=", m[0])
 #             self.cbEff.SetMinSize((m[0]+10, -1))
             
             self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff)

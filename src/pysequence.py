@@ -3842,7 +3842,7 @@ class Projet(BaseDoc, Grammaire):
         
         self.commentaires = branche.get("Commentaires", "")
         
-        ref = self.GetProjetRef()
+        
         
         sp = branche.get("Position", "0_0")
         sp = sp.split("_")
@@ -3850,21 +3850,24 @@ class Projet(BaseDoc, Grammaire):
             sp = [sp[0], sp[0]]
         self.position = [int(sp[0]), int(sp[1])]
         
-        if self.version == "": # Enregistré avec une version de pySequence > 5.7
-            if self.position[0] == 5:
-                print("Correction position")
-                self.position = ref.getPeriodeEval()
-#        print "position", self.position
-        self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
         
-        self.nbrRevues = eval(branche.get("NbrRevues", str(ref.getNbrRevuesDefaut())))
-        if not self.nbrRevues in list(ref.posRevues.keys()):
-            self.nbrRevues = ref.getNbrRevuesDefaut()
-        self.positionRevues = branche.get("PosRevues", 
-                                          '-'.join(list(ref.posRevues[self.nbrRevues]))).split('-')
-
-        if self.nbrRevues == 3: # Car par défaut c'est 2
-            self.MiseAJourNbrRevues()
+        ref = self.GetProjetRef()
+        if ref is not None:
+            if self.version == "": # Enregistré avec une version de pySequence > 5.7
+                if self.position[0] == 5:
+                    print("Correction position")
+                    self.position = ref.getPeriodeEval()
+    #        print "position", self.position
+            self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
+            
+            self.nbrRevues = eval(branche.get("NbrRevues", str(ref.getNbrRevuesDefaut())))
+            if not self.nbrRevues in list(ref.posRevues.keys()):
+                self.nbrRevues = ref.getNbrRevuesDefaut()
+            self.positionRevues = branche.get("PosRevues", 
+                                              '-'.join(list(ref.posRevues[self.nbrRevues]))).split('-')
+    
+            if self.nbrRevues == 3: # Car par défaut c'est 2
+                self.MiseAJourNbrRevues()
         
             
         self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
@@ -3983,7 +3986,8 @@ class Projet(BaseDoc, Grammaire):
         if adapterVersion:
             self.taches.extend(tachesRevue)
         
-        self.SetCompetencesRevuesSoutenance()
+        if ref is not None:
+            self.SetCompetencesRevuesSoutenance()
 
         if hasattr(self, 'panelPropriete'):
 #            if ancienneFam != self.classe.familleEnseignement:
@@ -9096,7 +9100,7 @@ class Seance(ElementAvecLien, ElementBase):
             8 = G
             16 = C
         """
-        print("SetEffectif", self, val)#, self.GetReferentiel().effectifs.keys())
+#         print("SetEffectif", self, val)#, self.GetReferentiel().effectifs.keys())
         codeEff = None
         if type(val) == int:
             if self.typeSeanc == "R":
@@ -10275,7 +10279,10 @@ class Tache(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def estPredeterminee(self):
-        return len(self.GetProjetRef().taches) > 0 
+        prj = self.GetProjetRef()
+        if prj is None:
+            return False
+        return len(prj.taches) > 0 
             
     
     ######################################################################################  
