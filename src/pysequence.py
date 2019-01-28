@@ -2620,13 +2620,14 @@ class Sequence(BaseDoc):
 
     ######################################################################################  
     def AjouterSeance(self, event = None):
+        ref = self.GetReferentiel()
         seance = Seance(self)
         self.seances.append(seance)
         self.OrdonnerSeances()
         
         seance.ConstruireArbre(self.arbre, self.brancheSce)
         self.VerifPb()
-        self.GetApp().sendEvent(modif = "Ajout d'une Séance")
+        self.GetApp().sendEvent(modif = "Ajout d'%s" %ref._nomActivites.un_())
         
         self.arbre.SelectItem(seance.branche)
         
@@ -2636,16 +2637,17 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
-#        print "SupprimerSeance depuis :", self.code
+        print("SupprimerSeance depuis :", self)
 #        print "   ", self.seances
         if len(self.seances) > 1: # On en laisse toujours une !!
+            ref = self.GetReferentiel()
             seance = self.arbre.GetItemPyData(item)
 #            print " ---",  seance
             self.seances.remove(seance)
             self.arbre.Delete(item)
             self.OrdonnerSeances()
             self.VerifPb()
-            self.GetApp().sendEvent(modif = "Suppression d'une Séance")
+            self.GetApp().sendEvent(modif = "Suppression d'%s" %ref._nomActivites.un_())
             return True
         return False
     
@@ -9123,6 +9125,7 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def VerifPb(self):
+        print("VerifPb séance", self)
         self.SignalerPb(self.IsEffectifOk(), self.IsNSystemesOk())
 #        if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
 #            for s in self.seances:
@@ -9137,7 +9140,7 @@ class Seance(ElementAvecLien, ElementBase):
             4 : séances en rotation/parallèle d'effectifs différents !!
         """
         
-        ok = 0 # pas de problème
+        ok = 0 # pas di problèm'
         
         # effectif séance (portion de Classe entière)
         e = self.GetEffectif()
@@ -9162,24 +9165,10 @@ class Seance(ElementAvecLien, ElementBase):
                 if ce != s.GetCodeEffectifParent():
                     ok |= 4
                     break
-                
-               
-#            if self.typeSeance == "R":
-#                continuer = True
-#                eff = self.seances[0].GetEffectif()
-#                i = 1
-#                while continuer:
-#                    if i >= len(self.seances):
-#                        continuer = False
-#                    else:
-#                        if self.seances[i].GetEffectif() != eff:
-#                            ok = 3 # séance en rotation d'effectifs différents !!
-#                            continuer = False
-#                        i += 1
             
         elif self.typeSeance in self.GetReferentiel().listeTypeActivite and not self.EstSousSeance():
             if e < ep:
-                ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
+                ok |= 1 # Tout le groupe "parent" n'est pas occupé
         
 #        print "   ", ok
         return ok
@@ -9195,7 +9184,8 @@ class Seance(ElementAvecLien, ElementBase):
             seq = self.GetApp().sequence
             for s in seq.systemes:
                 if s.nom in n and n[s.nom] > s.nbrDispo.v[0]:
-                    ok = 1
+                    ok |= 1
+                    break
         return ok
 
 
@@ -9632,6 +9622,7 @@ class Seance(ElementAvecLien, ElementBase):
                 self.seances.remove(seance)
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
+                self.parent.VerifPb()
                 self.GetApp().sendEvent(modif = "Suppression d'une Séance")
             if self.typeSeance == "R":  # Séances en Rotation
                 self.reglerNbrRotMaxi()

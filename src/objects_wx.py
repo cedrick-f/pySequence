@@ -2178,37 +2178,39 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def commandeRedo(self, event = None):
         wx.BeginBusyCursor()
-        self.GetDocument().undoStack.setOnUndoRedo()
-        self.GetDocument().classe.undoStack.setOnUndoRedo()
+        doc = self.GetDocument()
+        doc.undoStack.setOnUndoRedo()
+        doc.classe.undoStack.setOnUndoRedo()
         
-        self.GetDocument().undoStack.redo()
-        self.GetDocument().classe.undoStack.redo()
+        doc.undoStack.redo()
+        doc.classe.undoStack.redo()
         
         
         self.restaurer()
         
-        self.GetDocument().undoStack.resetOnUndoRedo()
-        self.GetDocument().classe.undoStack.resetOnUndoRedo()
+        doc.undoStack.resetOnUndoRedo()
+        doc.classe.undoStack.resetOnUndoRedo()
         
         wx.EndBusyCursor()
         
     #############################################################################
     def commandeUndo(self, event = None):
         wx.BeginBusyCursor()
-        self.GetDocument().undoStack.setOnUndoRedo()
-        self.GetDocument().classe.undoStack.setOnUndoRedo()
+        doc = self.GetDocument()
+        doc.undoStack.setOnUndoRedo()
+        doc.classe.undoStack.setOnUndoRedo()
 #        t0 = time.time()
-        self.GetDocument().undoStack.undo()
+        doc.undoStack.undo()
 #        t1 = time.time()
 #        print "  ", t1-t0
         
-        self.GetDocument().classe.undoStack.undo()
+        doc.classe.undoStack.undo()
 #        t2 = time.time()
 #        print "  ", t2-t1
         
         self.restaurer()
-        self.GetDocument().undoStack.resetOnUndoRedo()
-        self.GetDocument().classe.undoStack.resetOnUndoRedo()
+        doc.undoStack.resetOnUndoRedo()
+        doc.classe.undoStack.resetOnUndoRedo()
         wx.EndBusyCursor()
     
     
@@ -2919,8 +2921,8 @@ class FenetreSequence(FenetreDocument):
 
         self.sequence.Verrouiller()
 
-        
-        self.arbre.SelectItem(self.classe.branche)
+        wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
+#         self.arbre.SelectItem(self.classe.branche)
 
         self.arbre.Layout()
         self.sequence.SetDefautExpansion()
@@ -3382,6 +3384,7 @@ class FenetreProjet(FenetreDocument):
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
+        wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
         
 #        self.fiche.Redessiner()
 
@@ -10248,7 +10251,7 @@ class PanelPropriete_Seance(PanelPropriete):
             def construire(lst, parent = None, m = None):
                 for dic in lst:
                     k, g = list(dic.items())[0]
-                    print("N=",classe.nbrGroupes[k])
+#                     print("N=",classe.nbrGroupes[k])
                     if classe.nbrGroupes[k] > 0:
                         child = cbEff.Append(classe.GetStrEffectifComplet(k, -1), 
                                              parent, clientData = k)
@@ -17291,7 +17294,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
             return
         found = self.FindClientData(data, root)
         if found is not None:
-            print("   >", found)
+#             print("   >", found)
             self.value = found
             self.tree.SelectItem(found)
         
