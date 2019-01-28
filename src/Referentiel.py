@@ -2470,7 +2470,25 @@ class Referentiel(XMLelem):
 #                        return co
 #            return
                     
+    #########################################################################    
+    def getTreeEffectifs(self):
+        """ Renvoie les code d'effectifs
+            sous forme arborescente
+        """
+        return self._effectifs
     
+        
+    #########################################################################    
+    def getEffectifsContenant(self):
+        """ Renvoie la liste des code d'effectifs
+            qui sont subdivisés en sous effectifs
+            (qui peuvent convenir à des Rotations ou Parallèles)
+        """
+        l = []
+        for e in self._lstEffectifs:
+            if self.effectifs[5] == "N":
+                l.append(self.effectifs[4])
+        return list(set(l))
     
     
     #########################################################################    

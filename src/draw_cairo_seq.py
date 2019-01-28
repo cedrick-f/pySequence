@@ -1616,7 +1616,11 @@ def DrawSeanceRacine(ctx, seance):
 #     x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
 #     if seance.typeSeance in "RS":
          
-    x0 = rEff[seance.GetCodeEffectif()][0][0]
+    if seance.typeSeance in "RS" and len(seance.seances) > 0:
+        ce = seance.seances[0].effectif
+    else:
+        ce = seance.GetCodeEffectif()
+    x0 = rEff[ce][0][0]
     
     # Gestion des séances à effectif dont tous les sous-groupes font les mêmes activités
     classe = seance.GetDocument().classe

@@ -8805,14 +8805,18 @@ class Seance(ElementAvecLien, ElementBase):
             
     ######################################################################################  
     def GetCodeEffectif(self):
+        """ Renvoie le code de l'effectif de la séance
+            (pour R et S : estimation à partie de la 1ère sous séance)
+            (TODO : rajouter sélection effectif pour R et S)
+        """
 #         print("GetCodeEffectif", self, self.typeSeance)
         ref = self.GetReferentiel()
         if self.typeSeance in "RS" and len(self.seances) > 0:
-            return self.seances[0].GetCodeEffectif()
+            return ref.effectifs[self.seances[0].effectif][4]
+#             return self.seances[0].GetCodeEffectif()
 #             return ref.effectifs[self.seances[0].GetCodeEffectif()][4]
         else:
             return self.effectif
-    
     
     
     ######################################################################################  
@@ -9032,6 +9036,11 @@ class Seance(ElementAvecLien, ElementBase):
             self.EnrichiHTML(doc, seance = True)
             
             
+    
+
+
+    
+    
     ######################################################################################  
     def GetEffectif(self):
         """ Renvoie l'effectif de la séance
@@ -9091,9 +9100,10 @@ class Seance(ElementAvecLien, ElementBase):
                 else:
                     codeEff = ""
         else:
-            for k, v in self.GetReferentiel().effectifs.items():
-                if v is not None and v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
-                    codeEff = k
+            codeEff = val
+#             for k, v in self.GetReferentiel().effectifs.items():
+#                 if v is not None and v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
+#                     codeEff = k
         
         self.effectif = codeEff
         

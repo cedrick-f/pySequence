@@ -10228,20 +10228,51 @@ class PanelPropriete_Seance(PanelPropriete):
                 and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
             titre = wx.StaticText(self.pageGen, -1, "Effectif : ")
             
-            cbEff = wx.ComboBox(self.pageGen, -1, "",
-                             choices = [],
-                             style = wx.CB_DROPDOWN
-                             | wx.TE_PROCESS_ENTER
-                             | wx.CB_READONLY
-                             #| wx.CB_SORT
-                             )
-            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
+#             cbEff = wx.ComboBox(self.pageGen, -1, "",
+#                              choices = [],
+#                              style = wx.CB_DROPDOWN
+#                              | wx.TE_PROCESS_ENTER
+#                              | wx.CB_READONLY
+#                              #| wx.CB_SORT
+#                              )
+            cbEff = myComboTreeBox(self.pageGen, wx.ID_ANY, size=(300,-1))#,
+#                              style = wx.CB_DROPDOWN
+#                              | wx.TE_PROCESS_ENTER
+#                              | wx.CB_READONLY
+#                              #| wx.CB_SORT
+#                              )
             self.cbEff = cbEff
             self.cbEff.Clear()
-            listEff = ref.effectifsSeance[self.seance.typeSeance]
-            for s in listEff:
-                self.cbEff.Append(self.seance.GetDocument().classe.GetStrEffectifComplet(s, -1))
-            self.cbEff.SetSelection(0)
+            
+            classe = self.seance.GetDocument().classe
+            def construire(lst, parent = None, m = None):
+                for dic in lst:
+                    k, g = list(dic.items())[0]
+                    print("N=",classe.nbrGroupes[k])
+                    if classe.nbrGroupes[k] > 0:
+                        child = cbEff.Append(classe.GetStrEffectifComplet(k, -1), 
+                                             parent, clientData = k)
+                        r = self.cbEff.GetTree().GetBoundingRect(child)
+                        if r is not None:
+                            m[0] = max(m[0], r.width)
+                        construire(g, child, m)
+            
+#             print("_effectifs", ref._effectifs)
+            m = [0]
+            construire(ref.getTreeEffectifs(), m = m)
+            print("m=", m[0])
+#             self.cbEff.SetMinSize((m[0]+10, -1))
+            
+            self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff)
+            
+#             listEff = ref.effectifsSeance[self.seance.typeSeance]
+#             for s in listEff:
+#                 self.cbEff.Append(self.seance.GetDocument().classe.GetStrEffectifComplet(s, -1))
+#             self.cbEff.SetSelection(0)
+            self.cbEff.GetTree().SetWindowStyle(wx.TR_NO_BUTTONS)
+            self.cbEff.GetTree().ExpandAll()
+#             print("sel", list(ref.getTreeEffectifs()[0].keys())[0])
+            self.cbEff.SetClientDataSelection(list(ref.getTreeEffectifs()[0].keys())[0])
             
             self.titreEff = titre
             
@@ -10689,7 +10720,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         deja = self.seance.typeSeance in ACTIVITES
 #        print self.GetReferentiel().seances
-        print(self.cbType.GetStringSelection())
+#         print(self.cbType.GetStringSelection())
 
 
         self.seance.SetType(get_key(self.GetReferentiel().seances, 
@@ -10726,7 +10757,11 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtComboBoxEff(self, event):
-        self.seance.SetEffectif(event.GetString())  
+#         print("EvtComboBoxEff")
+        self.cbEff.SetClientDataSelection(self.cbEff.GetClientData())
+        self.seance.SetEffectif(self.cbEff.GetClientData())
+       
+#         self.seance.SetEffectif(event.GetString())  
         self.sendEvent(modif = "Modification de l'effectif %s" %self.GetReferentiel()._nomActivites.du_(), 
                        draw = True, verif = True)
 
@@ -10855,7 +10890,8 @@ class PanelPropriete_Seance(PanelPropriete):
         
 #         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
         if hasattr(self, 'cbEff'):
-            self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
+#             self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
+            self.cbEff.SetClientDataSelection(self.seance.effectif)
         
 #         if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
 #            print ref.demarches[self.seance.demarche][1]
@@ -15150,7 +15186,7 @@ class ArbreCompetences(HTL.HyperTreeList):
                             
     ###################################################################################
     def setIndicateur(self, item, indic):
-        print("setIndicateur", indic)
+#         print("setIndicateur", indic)
         wnd = self.GetItemWindow(item, 1)
         if wnd is not None:
             wnd.SetValue(indic)
@@ -17084,7 +17120,7 @@ class TreeCtrlComboPopup2(wx.PopupTransientWindow):
             if self.tree.ItemHasChildren(item):
                 item = self.FindItem(item, text)
             item, cookie = self.tree.GetNextChild(parentItem, cookie)
-        return wx.TreeItemId();
+        return wx.TreeItemId()
 
 
     def AddItem(self, value, parent = None):
@@ -17168,7 +17204,7 @@ class myComboTreeBox(wx.ComboCtrl):
         wx.ComboCtrl.__init__(self, *arg, **kargs)
         self.tcp = TreeCtrlComboPopup()
         self.SetPopupControl(self.tcp)
-        
+    
 #     def Append(self, itemText, parent = None, clientData=None):
 #         if parent is None:
 #             parent = self.tcp.GetRootItem()
@@ -17177,35 +17213,89 @@ class myComboTreeBox(wx.ComboCtrl):
     def Append(self, value, parent = None, clientData = None):
         return self.tcp.AddItem(value, parent, clientData)
 #         
-    def SetStringSelection(self, value):
-        self.tcp.SetStringValue(value)
-        self.SetValue(value)
+
+    def SetClientDataSelection(self, data):
+        self.tcp.SetClientDataSelection(data)
+#         print("value", self.GetStringSelection())
+        self.SetText(self.GetStringSelection())
+        
+    def GetClientData(self, item = None):
+        return self.tcp.GetClientData(item)
          
+    
+    def SetStringSelection(self, text):
+        self.tcp.SetStringValue(text)
+        self.SetValue(text)
+        
+        
+    def GetStringSelection(self):
+        return self.tcp.GetStringValue()
+    
+    
     def GetString(self, item):
         return self.tcp.GetString(item)
 
+
     def OnLeftDown(self, evt):
-        self.Parent.GetEventHandler().ProcessEvent(evt)
+        self.SetText(self.GetStringSelection())
+#         self.GetEventHandler().ProcessEvent(evt)
+#         print("OnLeftDown2")
+#         self.Parent.GetEventHandler().ProcessEvent(evt)
+        
 
+    def GetTree(self):
+        return self.tcp.tree
 
-    
+    def FindClientData(self, clientData, parentItem=None):
+        return self.tcp.FindClientData(clientData, parentItem)
+        
+        
+        
 class TreeCtrlComboPopup(wx.ComboPopup):
     def __init__(self):
         wx.ComboPopup.__init__(self)
         self.tree = None
     
+    def FindClientData(self, clientData, parentItem = None):
+        item, cookie = self.tree.GetFirstChild(parentItem)
+        while item:
+            if self.tree.GetItemData(item) == clientData:
+#                 print(" ", clientData, self.tree.GetItemData(item), clientData==self.tree.GetItemData(item))
+#                 print(item)
+                return item
+            if self.tree.ItemHasChildren(item):
+                item = self.FindClientData(clientData, item)
+                if item:
+                    return item
+            item, cookie = self.tree.GetNextChild(parentItem, cookie)
     
-    def FindItem(self, parentItem, text):        
+    
+    def FindItem(self, text, parentItem = None):       
+#         print(self, parentItem, text) 
         item, cookie = self.tree.GetFirstChild(parentItem)
         while item:
             if self.tree.GetItemText(item) == text:
                 return item
             if self.tree.ItemHasChildren(item):
-                item = self.FindItem(item, text)
+                item = self.FindItem(text, item)
+                if item:
+                    return item
             item, cookie = self.tree.GetNextChild(parentItem, cookie)
-#         return wx.TreeItemId()
+#         return wx.TreeItemId(), 
 
 
+    def SetClientDataSelection(self, data):
+#         print("SetClientDataSelection", data)
+        root = self.tree.GetRootItem()
+        if not root:
+            return
+        found = self.FindClientData(data, root)
+        if found is not None:
+            print("   >", found)
+            self.value = found
+            self.tree.SelectItem(found)
+        
+        
     def AddItem(self, value, parent = None, clientData = None):
         if not parent:
             root = self.tree.GetRootItem()
@@ -17233,6 +17323,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         
         
     def OnLeftDown(self, evt):
+        
         # do the combobox selection
         item, flags = self.tree.HitTest(evt.GetPosition())
         if item and flags & wx.TREE_HITTEST_ONITEMLABEL:
@@ -17242,8 +17333,13 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         
         ev = wx.CommandEvent(wx.EVT_COMBOBOX.typeId)
         ev.SetString(self.GetStringValue())
-        self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
+        ev.SetClientData(self.GetClientData(item))
+        
+#         print("   ", self.GetClientData(item))
 #         self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
+#         print("OnLeftDown", item)
+#         self.GetComboCtrl().OnLeftDown(ev)
+        self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
         evt.Skip()
         
     # The following methods are those that are overridable from the
@@ -17259,7 +17355,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
     # Create the popup child control.  Return true for success.
     def Create(self, parent):
         self.tree = wx.TreeCtrl(parent, style=wx.TR_HIDE_ROOT
-                                |wx.TR_HAS_BUTTONS
+                                |wx.TR_HAS_BUTTONS#wx.TR_NO_BUTTONS
                                 |wx.TR_SINGLE
                                 |wx.TR_LINES_AT_ROOT
                                 |wx.SIMPLE_BORDER)
@@ -17279,7 +17375,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         root = self.tree.GetRootItem()
         if not root:
             return
-        found = self.FindItem(root, value)
+        found = self.FindItem(value, root)
         
         if found is not None:
 #             print(">>", found)
@@ -17288,7 +17384,9 @@ class TreeCtrlComboPopup(wx.ComboPopup):
 
     # Return a string representation of the current item.
     def GetStringValue(self):
-        if self.value:
+#         print("GetStringValue", self.value)
+        if self.value is not None:
+#             print("  ", self.tree.GetItemText(self.value))
             return self.tree.GetItemText(self.value)
         return ""
     
@@ -17297,6 +17395,13 @@ class TreeCtrlComboPopup(wx.ComboPopup):
             return self.tree.GetItemText(item)
         return ""
 
+    def GetClientData(self, item = None):
+        if item is not None:
+            return self.tree.GetItemData(item)
+        elif self.value is not None:
+            return self.tree.GetItemData(self.value)
+        return ""
+    
     # Called immediately after the popup is shown
     def OnPopup(self):
         wx.ComboPopup.OnPopup(self)
@@ -18105,7 +18210,32 @@ class myHtmlWindow(html.HtmlWindow):
         return True
 
 
-
+# class myComboTreeBox(ComboTreeBox):
+#     def __init__(self, *arg, **karg):
+#         ComboTreeBox.__init__(self, *arg, **karg)
+#         
+#         
+#     def SetSizeP(self, s):
+#         self.w, self.h = s
+#         
+#     def GetSizeP(self):
+#         return self.w, self.h
+#         
+#     def Popup(self):
+#         """Pops up the frame with the tree."""
+#         comboBoxSize = self.GetSizeP()
+#         x, y = self.GetParent().ClientToScreen(self.GetPosition())
+#         y += comboBoxSize[1]
+#         width = comboBoxSize[0]
+#         height = comboBoxSize[1]
+#         self._popupFrame.SetSize(x, y, width, height)
+#         # On wxGTK, when the Combobox width has been increased a call
+#         # to SetMinSize is needed to force a resize of the popupFrame:
+#         self._popupFrame.SetMinSize((width, height))
+#         self._popupFrame.Show()
+    
+    
+    
 class PopupInfo(wx.PopupWindow):
     def __init__(self, parent, page = "", mode = "H", width = 400*SSCALE):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
