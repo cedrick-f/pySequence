@@ -5655,7 +5655,7 @@ class PanelPropriete_Sequence(PanelPropriete):
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print("Miseàjour", self, sendEvt)
+#         print("Miseàjour", self, sendEvt)
         
         self.textctrl.SetValue(self.sequence.intitule, False)
         self.commctrl.SetValue(self.sequence.commentaires, False)

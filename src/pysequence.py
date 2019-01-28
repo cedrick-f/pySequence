@@ -2623,7 +2623,9 @@ class Sequence(BaseDoc):
         seance = Seance(self)
         self.seances.append(seance)
         self.OrdonnerSeances()
+        
         seance.ConstruireArbre(self.arbre, self.brancheSce)
+        self.VerifPb()
         self.GetApp().sendEvent(modif = "Ajout d'une Séance")
         
         self.arbre.SelectItem(seance.branche)
@@ -2642,6 +2644,7 @@ class Sequence(BaseDoc):
             self.seances.remove(seance)
             self.arbre.Delete(item)
             self.OrdonnerSeances()
+            self.VerifPb()
             self.GetApp().sendEvent(modif = "Suppression d'une Séance")
             return True
         return False
@@ -8793,6 +8796,7 @@ class Seance(ElementAvecLien, ElementBase):
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
     
+    
     ######################################################################################  
     def GetTypeActivite(self):
         """ Renvoie le type de la première activité parmis les sous séances
@@ -8802,7 +8806,17 @@ class Seance(ElementAvecLien, ElementBase):
         else:
             return self.typeSeance
     
-            
+    ######################################################################################  
+    def GetCodeEffectifParent(self):
+        """ Renvoie le code de l'effectif groupe "parent" de la séance
+            (pour R et S : estimation à partie de la 1ère sous séance)
+            (TODO : rajouter sélection effectif pour R et S)
+        """
+        ref = self.GetReferentiel()
+        return ref.effectifs[self.GetCodeEffectif()][4]
+        
+        
+        
     ######################################################################################  
     def GetCodeEffectif(self):
         """ Renvoie le code de l'effectif de la séance
@@ -9044,7 +9058,7 @@ class Seance(ElementAvecLien, ElementBase):
     ######################################################################################  
     def GetEffectif(self):
         """ Renvoie l'effectif de la séance
-            n : portion de classe
+            :return: float = portion de Classe entière
         """
 #         print "GetEffectif", self, self.effectif
         eff = 0
@@ -9055,9 +9069,8 @@ class Seance(ElementAvecLien, ElementBase):
 #            for sce in self.seances:
 #                eff += sce.GetEffectif()
         else:
-            eff = self.GetClasse().GetEffectifNorm(self.effectif)
-            eff = eff * self.nombre.v[0]
-
+            eff = self.GetClasse().GetEffectifNorm(self.effectif) * self.nombre.v[0]
+        
         return eff
     
     
@@ -9121,20 +9134,36 @@ class Seance(ElementAvecLien, ElementBase):
             0 : pas de problème
             1 : tout le groupe "effectif réduit" n'est pas occupé
             2 : effectif de la séance supperieur à celui du groupe "effectif réduit"
-            3 : séances en rotation d'effectifs différents !!
+            4 : séances en rotation/parallèle d'effectifs différents !!
         """
         
         ok = 0 # pas de problème
         
+        # effectif séance (portion de Classe entière)
+        e = self.GetEffectif()
+        # effectif "parent" de la séance (portion de Classe entière)
+        ep = self.GetClasse().GetEffectifNorm(self.GetCodeEffectifParent())
+        
+        
         if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
 #             print("IsEffectifOk", self)
 #            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
-            eff = round(self.GetEffectif(), 4)
-            effN = round(self.GetClasse().GetEffectifNorm('G'), 4)  # TODO : revoir ce calcul
+            eff = round(e, 4)
+#             effN = round(self.GetClasse().GetEffectifNorm('G'), 4)  # TODO : revoir ce calcul
+            effN = round(ep, 4)
+            
             if eff < effN:
-                ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
+                ok |= 1 # Tout le groupe "parent" n'est pas occupé
             elif eff > effN:
-                ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"    
+                ok |= 2 # Effectif de la séance supperieur à celui du groupe "parent" 
+                
+            ce = self.seances[0].GetCodeEffectifParent()
+            for s in self.seances[1:]:
+                if ce != s.GetCodeEffectifParent():
+                    ok |= 4
+                    break
+                
+               
 #            if self.typeSeance == "R":
 #                continuer = True
 #                eff = self.seances[0].GetEffectif()
@@ -9149,7 +9178,7 @@ class Seance(ElementAvecLien, ElementBase):
 #                        i += 1
             
         elif self.typeSeance in self.GetReferentiel().listeTypeActivite and not self.EstSousSeance():
-            if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
+            if e < ep:
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
         
 #        print "   ", ok
@@ -9173,33 +9202,37 @@ class Seance(ElementAvecLien, ElementBase):
     ######################################################################################  
     def SignalerPb(self, etatEff, etatSys):
         if hasattr(self, 'codeBranche'):
+#             print("SignalerPb", self, ":", etatEff, etatSys)
             ref = self.GetReferentiel()
-            etat = max(etatEff, etatSys)
+#             etat = max(etatEff, etatSys)
+            etat = bin(etatEff).count("1") + bin(etatSys).count("1")
             if etat == 0:
                 couleur = 'white'
             elif etat == 1 :
                 couleur = COUL_BIEN
             elif etat == 2:
                 couleur = COUL_BOF
-            elif etat == 3:
+            elif etat >= 3:
                 couleur = "TOMATO1"
             
-            if etatEff == 0:
-                message = ""
-            elif etatEff == 1 :
-                message = "Tout le groupe \"%s\" n'est pas occupé" %ref.effectifs["G"][1]
-            elif etatEff == 2:
-                message = "Effectif %s supérieur à celui du groupe \"%s\"" %(ref._nomActivites.du_(), ref.effectifs["G"][1])
-            elif etatEff == 3:
-                message = "%s en rotation d'effectifs différents !!" %ref._nomActivites.Plur_()
+            ep = self.GetCodeEffectifParent()
+            
+            
+            message = ""
+            if etatEff & 1 :
+                message += "\nTout le groupe \"%s\" n'est pas occupé" %ref.effectifs[ep][1]
+            if etatEff & 2:
+                message += "\nEffectif %s supérieur à celui du groupe \"%s\"" %(ref._nomActivites.du_(), ref.effectifs[ep][1])
+            if etatEff & 4:
+                message += "\nLes effectifs sous-%s ne font pas partie du même groupe !!" %ref._nomActivites.plur_()
+            
+            
+            if etatSys & 1 :
+                message += "\nNombre de %s nécessaires supérieur au nombre de %s disponibles." %(ref._nomSystemes.plur_(), ref._nomSystemes.plur_())
                 
-            if etatSys == 0:
-                message += ""
-            elif etatSys == 1 :
-                message += "Nombre de %s nécessaires supérieur au nombre de %s disponibles." %(ref._nomSystemes.plur_(), ref._nomSystemes.plur_())
-                
+            
             self.codeBranche.SetBackgroundColour(couleur)
-            self.codeBranche.SetToolTip(message)
+            self.codeBranche.SetToolTip(message[1:])
             self.codeBranche.Refresh()
 
 
