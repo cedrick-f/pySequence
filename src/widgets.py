@@ -224,14 +224,14 @@ class Grammaire():
     
 
     def sing_(self):
-        return getSingulier(self.nom_obj)
+        return getSingulier(self.nom_obj.lower())
     
     def Sing_(self):
         return getSingulier(self.nom_obj.capitalize())
     
     
     def plur_(self):
-        return getPluriel(self.nom_obj)
+        return getPluriel(self.nom_obj.lower())
     
     def Plur_(self):
         return getPluriel(self.nom_obj.capitalize())

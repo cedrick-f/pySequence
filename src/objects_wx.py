@@ -10706,10 +10706,13 @@ class PanelPropriete_Seance(PanelPropriete):
         event.Skip()
         # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
         if self.seance.typeSeance in ["R", "S"] \
-          and self.GetReferentiel().listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
+          and ref.listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, "Cette %s contient des sous-%s !\n\n" \
-                                   "Modifier le type de cette %S entrainera la suppression de toutes les sous %s !\n" \
-                                         "Voulez-vous continuer ?" %(ref._nomActivites.sing_(), ref._nomActivites.plur_(), ref._nomActivites.sing_(),ref._nomActivites.plur_()),
+                                         "Modifier le type de cette %s entrainera la suppression de toutes les sous %s !\n" \
+                                         "Voulez-vous continuer ?" %(ref._nomActivites.sing_(), 
+                                                                     ref._nomActivites.plur_(), 
+                                                                     ref._nomActivites.sing_(),
+                                                                     ref._nomActivites.plur_()),
                                     "Modification du type de %s" %ref._nomActivites.de_(),
                                     wx.YES_NO | wx.ICON_EXCLAMATION
                                     #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
@@ -10726,7 +10729,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #         print(self.cbType.GetStringSelection())
 
 
-        self.seance.SetType(get_key(self.GetReferentiel().seances, 
+        self.seance.SetType(get_key(ref.seances, 
                                     self.cbType.GetStringSelection(), 1))
         self.seance.GetDocument().OrdonnerSeances()
         if not self.seance.typeSeance in ["R","S"]:
@@ -10740,8 +10743,10 @@ class PanelPropriete_Seance(PanelPropriete):
             self.seance.systemes = []
         
         if not self.seance.typeSeance in ["R","S"]:   
-            if self.cbEff.IsEnabled() and self.cbEff.IsShown():
+            if self.cbEff.IsEnabled() and self.cbEff.IsShown() and self.cbEff.GetStringSelection() != "":
                 self.seance.SetEffectif(self.cbEff.GetStringSelection())
+            else:
+                self.seance.SetEffectif("C")
 #         print(self.seance.typeSeance, ref.effectifsSeance)
 #         if self.seance.typeSeance in list(ref.effectifsSeance.keys())\
 #             and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
@@ -10753,7 +10758,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.ConstruireListeSystemes()
         self.Layout()
 #        print "ok"
-        self.sendEvent(modif = "Modification du type %s" %self.GetReferentiel()._nomActivites.de_(), 
+        self.sendEvent(modif = "Modification du type %s" %ref._nomActivites.de_(), 
                        draw = True, verif = True)
        
         

@@ -8815,7 +8815,11 @@ class Seance(ElementAvecLien, ElementBase):
             (TODO : rajouter sélection effectif pour R et S)
         """
         ref = self.GetReferentiel()
-        return ref.effectifs[self.GetCodeEffectif()][4]
+        c = ref.effectifs[self.GetCodeEffectif()][4]
+        if c =='':
+            return "C"
+        else:
+            return c
         
         
         
@@ -9092,7 +9096,7 @@ class Seance(ElementAvecLien, ElementBase):
             8 = G
             16 = C
         """
-#         print("SetEffectif", val, self.GetReferentiel().effectifs.keys())
+        print("SetEffectif", self, val)#, self.GetReferentiel().effectifs.keys())
         codeEff = None
         if type(val) == int:
             if self.typeSeanc == "R":
@@ -9125,7 +9129,7 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def VerifPb(self):
-        print("VerifPb séance", self)
+#         print("VerifPb séance", self)
         self.SignalerPb(self.IsEffectifOk(), self.IsNSystemesOk())
 #        if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
 #            for s in self.seances:
@@ -9593,7 +9597,7 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def AjouterSeance(self, event = None):
-        """ Ajoute une séance é la séance
+        """ Ajoute une séance à la séance
             !! Uniquement pour les séances de type "Rotation" ou "Serie" !!
         """
         seance = Seance(self)
@@ -9611,6 +9615,8 @@ class Seance(ElementAvecLien, ElementBase):
         else:
             seance.SetDuree(self.GetDuree())
         
+        self.GetDocument().VerifPb()
+        
         wx.CallAfter(self.arbre.SelectItem, seance.branche)
 
 
@@ -9622,12 +9628,20 @@ class Seance(ElementAvecLien, ElementBase):
                 self.seances.remove(seance)
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
-                self.parent.VerifPb()
+                self.GetDocument().VerifPb()
                 self.GetApp().sendEvent(modif = "Suppression d'une Séance")
+            
             if self.typeSeance == "R":  # Séances en Rotation
                 self.reglerNbrRotMaxi()
         return
     
+    
+    ######################################################################################  
+    def SupprimerSousSeances(self):
+        self.arbre.DeleteChildren(self.branche)
+        self.seances = []
+#         self.GetDocument().VerifPb()
+        
     
     ######################################################################################  
     def reglerNbrRotMaxi(self):
@@ -9644,12 +9658,6 @@ class Seance(ElementAvecLien, ElementBase):
         for s in self.seances:
             n += s.nombre.v[0]
         return n
-    
-    
-    ######################################################################################  
-    def SupprimerSousSeances(self):
-        self.arbre.DeleteChildren(self.branche)
-        self.seances = []
 
     
     #############################################################################
