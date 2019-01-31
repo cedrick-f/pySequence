@@ -1402,7 +1402,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
-        print("ouvrir", nomFichier, reparer)
+        print("ouvrir", nomFichier, reparer, os.getcwd())
         
         nomFichier = util_path.verifierPath(nomFichier)
         if len(nomFichier) == 0:
@@ -1511,7 +1511,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             # add it back to the history so it will be moved up the list
 #            print "Ajout2", path
             self.filehistory.AddFileToHistory(path)
-            
+            os.chdir(os.path.split(path)[0])
             self.commandeOuvrir(nomFichier = path)
             
 
@@ -2634,7 +2634,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         - liens 
         - ...
         """
-        
+        print("enrichirHTML")
         epsilon = 1.5
         def match(p0, p1):
             return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
@@ -2678,7 +2678,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #                 print("   ", l[0], l[1])
                 for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
-#                         print("    ", l, pt)
+                        print("    ", l, obj, flag)
                         obj.cadre.append((p, flag, (x,y)))
                         if type(flag) != str:
                             break
@@ -4369,9 +4369,9 @@ class FenetreProgression(FenetreDocument):
                          "Construction de l'arborescence de la classe...\t"],
                          [self.progression.ConstruireArbre, [self.arbre, root], {},
                           "Construction de l'arborescence de la progression...\t"],
-                        [self.progression.ChargerSequences, [], {"reparer" : reparer},
+                        [self.progression.ChargerSequences, [dlg], {"reparer" : reparer},
                          "Chargement des Séquences...\t"],
-                        [self.progression.ChargerProjets, [], {"reparer" : reparer},
+                        [self.progression.ChargerProjets, [dlg], {"reparer" : reparer},
                          "Chargement des Projets...\t"],
                         [self.progression.Ordonner, [], {},
                          "Classement...\t"],
@@ -4439,7 +4439,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4696,7 +4696,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)

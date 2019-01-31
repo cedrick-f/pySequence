@@ -769,10 +769,8 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
 #         print("prerequis C", getPts(r))
         for i, c in enumerate(sorted(seq.prerequis["C"].competences)): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["C"]))
-#             seq.prerequis["C"].pt_caract = (r[i][:2], i)
+            seq.prerequis["C"].pt_caract = (r[i][:2], i)
 
-        
-        
         
         r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
                              rectS, 
@@ -784,7 +782,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
 #         print("prerequis S", getPts(r))
         for i, c in enumerate(sorted(seq.prerequis["S"].savoirs)): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["S"]))
-#             seq.prerequis["S"].pt_caract = (r[i][:2], i)
+            seq.prerequis["S"].pt_caract = (r[i][:2], i)
         
             
         lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteSe), lstTexteSe, 

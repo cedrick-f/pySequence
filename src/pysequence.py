@@ -761,7 +761,7 @@ class ElementBase(Grammaire):
              - liens 
              - ...
         """
-#         print("EnrichiHTML", self, seance, self.cadre)
+        print("EnrichiHTML", self, seance, self.cadre)
         
         for i, (p, f, c) in enumerate(self.cadre):
             div = doc.new_tag('div')
@@ -2119,7 +2119,7 @@ class Sequence(BaseDoc):
              - ...
              :doc: beautifulsoup
         """
-#        print "EnrichiSVG sequence"
+#        print "EnrichiHTML sequence"
        
         self.obj["C"].EnrichiHTML(doc)
         self.obj["S"].EnrichiHTML(doc)
@@ -3624,13 +3624,37 @@ class Projet(BaseDoc, Grammaire):
     def getIconeDraw(self):
         return scaleImage(images.Icone_projet.GetBitmap(), 100, 100)
     
+    
+    ######################################################################################  
+    def creerTachesRevue(self):
+        lst = []
+        if self.nbrRevues == 2:
+            lr = [_R1, _R2, "S"]
+        else:
+            lr = TOUTES_REVUES_EVAL_SOUT
+        for p in lr:
+            lst.append(Tache(self, intitule = self.GetProjetRef().phases[p][1], 
+                             phaseTache = p, duree = 0))
+        return lst
+    
+    
+    
     ######################################################################################  
     def GetPtCaract(self): 
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
+            (pour l'animation SVG et HTML)
         """
         lst = []
         
+        # 
+        if hasattr(self, 'pts_caract' ):
+            for i, pt in enumerate(self.pts_caract):
+                lst.append((pt, self, i))
+        
+        if hasattr(self, 'pt_caract' ):
+            lst.append((self.pt_caract[0], self, self.pt_caract[1]))
+            
+            
         for i, pt in enumerate(self.pt_caract_comp):
             lst.append((pt, self, i))
             
@@ -3647,17 +3671,33 @@ class Projet(BaseDoc, Grammaire):
     
     
     ######################################################################################  
-    def creerTachesRevue(self):
-        lst = []
-        if self.nbrRevues == 2:
-            lr = [_R1, _R2, "S"]
-        else:
-            lr = TOUTES_REVUES_EVAL_SOUT
-        for p in lr:
-            lst.append(Tache(self, intitule = self.GetProjetRef().phases[p][1], 
-                             phaseTache = p, duree = 0))
-        return lst
+    def EnrichiHTMLdoc(self, doc):
+        """ Enrichissement de l'image HTML <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
+        for s in self.taches:
+            s.EnrichiHTML(doc)
+        self.support.EnrichiHTML(doc)
+        self.EnrichiHTML(doc)
+        return
     
+    
+    ######################################################################################  
+    def EnrichiSVGdoc(self, doc):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
+        for s in self.taches:
+            s.EnrichiSVG(doc)
+        self.support.EnrichiSVG(doc)
+        self.EnrichiSVG(doc)
+        return
     
     ######################################################################################  
     def areTachesPredeterminees(self):
@@ -3693,19 +3733,7 @@ class Projet(BaseDoc, Grammaire):
                 return t
         return None
         
-    ######################################################################################  
-    def EnrichiSVGdoc(self, doc):
-        """ Enrichissement de l'image SVG <doc> (format XML) avec :
-             - mise en surbrillance des éléments actifs
-             - infobulles sur les éléments actifs
-             - liens 
-             - ...
-        """
-        for s in self.taches:
-            s.EnrichiSVG(doc)
-        self.support.EnrichiSVG(doc)
-        self.EnrichiSVG(doc)
-        return
+    
             
     
     ######################################################################################  
@@ -5408,6 +5436,41 @@ class Progression(BaseDoc, Grammaire):
 
 
     ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+
+        if hasattr(self, 'pts_caract' ):
+            for i, pt in enumerate(self.pts_caract):
+                lst.append((pt, self, i))
+        
+        if hasattr(self, 'pt_caract' ):
+            lst.append((self.pt_caract[0], self, self.pt_caract[1]))
+        
+        ##################################### 
+            
+        for s in self.sequences_projets + self.eleves:
+            lst.extend(s.GetPtCaract())
+
+        return lst    
+    
+    ######################################################################################  
+    def EnrichiHTMLdoc(self, doc):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens
+             - ...
+             :doc: beautifulsoup
+        """
+#        print "EnrichiSVG Progression"
+        
+        for s in self.sequences_projets + self.eleves:
+            s.EnrichiHTML(doc)
+        
+    ######################################################################################  
     def GetNbrPeriodesEffectif(self):
         """ Renvoie le nombre de périodes occupées par les Séquences et le Projets
         """
@@ -5847,7 +5910,7 @@ class Progression(BaseDoc, Grammaire):
             for f in list(branchePrj):
                 if f.tag == "Projet":
                     sp = LienProjet(self)
-                else:
+                else: # Sequence !
                     sp = LienSequence(self)
                 sp.setBranche(f)
                 self.sequences_projets.append(sp)
@@ -5960,16 +6023,16 @@ class Progression(BaseDoc, Grammaire):
 #        l.sequence.app = app
 
     ######################################################################################  
-    def ChargerSequences(self, reparer = False):
-#        print "ChargerSequences", self.sequences_projets
+    def ChargerSequences(self, parent, reparer = False):
+        print("ChargerSequences", self.sequences_projets)
         aSupprimer = []
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence is None:
 #                print "   ", lienSeq.path
                 path = os.path.join(self.GetPath(), lienSeq.path)
-#                print "   ", path
+                print("   ", path)
                 if not os.path.isfile(path):
-                    dlg = wx.MessageDialog(self.GetApp(), "Le fichier Séquence suivant n'a pas été trouvé.\n\n"\
+                    dlg = wx.MessageDialog(parent, "Le fichier Séquence suivant n'a pas été trouvé.\n\n"\
                                                  "\t%s\n\n"
                                                  "Voulez-vous le chercher manuellement ?\n" %toSystemEncoding(lienSeq.path),
                                            "Fichier non trouvé",
@@ -5982,7 +6045,7 @@ class Progression(BaseDoc, Grammaire):
                         fichiers, sequences = list(zip(*fichiers_sequences))
                         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
                         
-                        dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n"\
+                        dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                    "celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
                                                     "Fichiers Séquences disponibles",
                                                     [toSystemEncoding(f) for f in fichiers], 
@@ -6016,7 +6079,7 @@ class Progression(BaseDoc, Grammaire):
 
     
     ######################################################################################  
-    def ChargerProjets(self, reparer = False):
+    def ChargerProjets(self, parent, reparer = False):
 #        print "ChargerProjets", self.sequences_projets
         aSupprimer = []
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
@@ -6025,7 +6088,7 @@ class Progression(BaseDoc, Grammaire):
                 path = os.path.join(self.GetPath(), lienPrj.path)
 #                print "   ", path
                 if not os.path.isfile(path):
-                    dlg = wx.MessageDialog(self.GetApp(), "Le fichier Projet suivant n'a pas été trouvé.\n\n"\
+                    dlg = wx.MessageDialog(parent, "Le fichier Projet suivant n'a pas été trouvé.\n\n"\
                                                  "\t%s\n\n"
                                                  "Voulez-vous le chercher manuellement ?\n" %toSystemEncoding(lienPrj.path),
                                            "Fichier non trouvé",
@@ -6038,7 +6101,7 @@ class Progression(BaseDoc, Grammaire):
                         fichiers, projets = list(zip(*fichiers_projets))
                         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
                         
-                        dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n"\
+                        dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                    "celui qui doit remplacer %s." %toSystemEncoding(lienPrj.path), 
                                                     "Fichiers Projet disponibles",
                                                     [toSystemEncoding(f) for f in fichiers], 

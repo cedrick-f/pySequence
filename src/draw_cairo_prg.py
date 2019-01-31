@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from cmath import rect
 
 ##This file is part of pySequence
 #############################################################################
@@ -633,8 +632,9 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #  Equipe
     #
     rectEqu = posEqu + tailleEqu
-    prg.pt_caract.append(curve_rect_titre(ctx, "Equipe pédagogique",  rectEqu, 
-                                          BcoulEqu, IcoulEqu, fontEqu))
+    prg.pt_caract.append((curve_rect_titre(ctx, "Equipe pédagogique",  rectEqu, 
+                                          BcoulEqu, IcoulEqu, fontEqu),
+                        'Equ'))
     
     lstTexte = []
     g = None
@@ -665,9 +665,9 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
     #  Calendrier
     #
-#    prg.pt_caract.append(posPro)
+#     prg.pt_caract.append((posPro, "Cal"))
     rectPro = posPro + taillePro
-    prg.pt_caract.append(curve_rect_titre(ctx, "Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro))
+    prg.pt_caract.append((curve_rect_titre(ctx, "Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro), "Cal"))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer("", constantes.LONG_MAX_PROBLEMATIQUE), 
@@ -688,8 +688,9 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
 #    prg.pt_caract = []
 #    prg.pts_caract = []
     rectNom = posNom+tailleNom
-    prg.pt_caract.append(curve_rect_titre(ctx, "Progression pédagogique",  
-                                          rectNom, BcoulNom, IcoulNom, fontNom))
+    prg.pt_caract.append((curve_rect_titre(ctx, "Progression pédagogique",  
+                                          rectNom, BcoulNom, IcoulNom, fontNom),
+                        'Ann'))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, "Années scolaires " + prg.GetAnnees(), 
@@ -794,6 +795,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #  Tableau des Thématiques
     #   
     lstTh = prg.GetListeTh()
+#     prg.pt_caract_th = []
     
     if len(lstTh) > 0:
         rectTh = (posZThH[0], posZThV[1], 
@@ -817,14 +819,14 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
         w, h = tailleZThH[0] - ecartX, tailleZThH[1] - ecartY
         
     
-    #    prg.pt_caract_eleve = []
+        
         if len(l) > 0:
             rec = tableauH(ctx, l, x, y, 
                          w, 0, h, 
                          va = 'c', ha = 'd', orient = 'h', coul = CoulAltern,
                          tailleFixe = True)
             
-    #        prj.pt_caract_eleve = getPts(rec)
+            
             
             #
             # Lignes horizontales
@@ -837,7 +839,10 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
                 ctx.set_line_width(0.003 * COEF)
                 ligne(ctx, posZThV[0]+tailleZThH[0]- ecartX /2, yTh[i]+ ecartY /2,
                       posZComp[0]+tailleZComp[0], yTh[i]+ ecartY /2, Ic)
-            
+                
+                prg.pt_caract.append((rec[i][:2], "Th"+str(i)))
+                
+                
             #
             # Lignes verticales
             #
@@ -872,6 +877,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #  Tableau des CI/Thèmes de séquence
     #   
     lstCI = prg.GetListeCI()
+#     prg.pt_caract_ci = []
     
     if len(lstCI) > 0:
         rectCI = (posZCIH[0], posZCIH[1], 
@@ -895,7 +901,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
         w, h = tailleZCIH[0] - ecartX, tailleZCIH[1] - ecartY
         
     
-    #    prg.pt_caract_eleve = []
+        
         if len(l) > 0:
             rec = tableauH(ctx, l, x, y, 
                          w, 0, h, 
@@ -903,7 +909,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
                          coul = CoulAltern,
                          tailleFixe = True)
             
-    #        prj.pt_caract_eleve = getPts(rec)
+            
             
             #
             # Lignes horizontales
@@ -915,7 +921,9 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
                 ligne(ctx, posZCIH[0]+tailleZCIH[0] - ecartX/2, yCI[i] + ecartY/2,
                            xCI[i], yCI[i] + ecartY/2,
                       CoulAltern[i][0][:-1])
-            
+                
+                prg.pt_caract.append((rec[i][:2], "CI"+str(i)))
+                
             #
             # Lignes verticales
             #
@@ -1567,7 +1575,8 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     
 #    lienSeq.rect.append([x, y, tailleZTaches[0], h])
     prg.zones_sens.append(Zone([rect], obj = lienDoc))
-        
+    lienDoc.pt_caract = (rect[:2], "")
+    
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
