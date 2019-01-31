@@ -1889,9 +1889,15 @@ def charger_icones():
                 pass
     
     
+TEMPLATE_EFF_CSS = ""
+
+TEMPLATE_EFF = ""
+
+
 def charger_templates():
     global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, \
-           TEMPLATE_CMP_SAV_CSS, TEMPLATE_CMP_SAV
+           TEMPLATE_CMP_SAV_CSS, TEMPLATE_CMP_SAV, \
+           TEMPLATE_EFF_CSS, TEMPLATE_EFF
     
     def charge(nf):
         f = open(nf, encoding = "utf-8")
@@ -1904,6 +1910,8 @@ def charger_templates():
     TEMPLATE_CI_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_ci_css.html"))
     TEMPLATE_CMP_SAV_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp_css.html"))
     TEMPLATE_CMP_SAV = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp.html"))
+    TEMPLATE_EFF_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_effectif_css.html"))
+    TEMPLATE_EFF = charge(os.path.join(TEMPLATE_PATH, "popup_effectif.html"))
     
 #import array
 #from ctypes import *

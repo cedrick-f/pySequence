@@ -343,9 +343,12 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
+    # Zones sensibles, depuis pySéquence
     prj.zones_sens = []
-    prj.pt_caract = []
-
+    # Points caractéristiques des rectangles
+    prj.pt_caract = []  # Contenu attendu : ((x,y), code)
+    # Points caractéristiques des rectangles (sans code)
+    prj.pts_caract = [] 
     
     #
     # Type d'enseignement
@@ -423,7 +426,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     rectEqu = posEqu + tailleEqu
     prj.pt_caract.append(curve_rect_titre(ctx, "Equipe pédagogique",  rectEqu, 
-                                          BcoulEqu, IcoulEqu, fontEqu))
+                                          BcoulEqu, IcoulEqu, fontEqu),
+                        "Equ")
     
     lstTexte = []
     g = None
@@ -451,9 +455,9 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     #  Problématique
     #
-    prj.pt_caract.append(posPro)
     rectPro = posPro + taillePro
-    prj.pt_caract.append(curve_rect_titre(ctx, "Problématique",  rectPro, BcoulPro, IcoulPro, fontPro))
+    pt = curve_rect_titre(ctx, "Problématique",  rectPro, BcoulPro, IcoulPro, fontPro)
+    prj.pt_caract.append(pt, "Pb")
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
@@ -467,8 +471,6 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     #  Projet
     #
-    prj.pt_caract = []
-    prj.pts_caract = []
     rectNom = posNom+tailleNom
     prj.pts_caract.append(curve_rect_titre(ctx, prj.GetCode(),  
                                                    rectNom, BcoulNom, IcoulNom, fontNom))
@@ -488,8 +490,9 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     prj.support.pt_caract = []
     rectSup = posSup+tailleSup
-    prj.support.pts_caract.append(curve_rect_titre(ctx, prj.support.GetCode(),  
-                                                   rectSup, BcoulSup, IcoulSup, fontSup))
+    pt = curve_rect_titre(ctx, prj.support.GetCode(),  
+                          rectSup, BcoulSup, IcoulSup, fontSup)
+    prj.support.pt_caract.append(pt, "Sup")
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, prj.support.GetNom(), 
@@ -497,7 +500,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
     prj.zones_sens.append(Zone([rectSup], obj = prj.support))
-    prj.support.pts_caract.append(posSup)
+#     prj.support.pts_caract.append(posSup)
 
 
 
@@ -507,7 +510,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     if not entete:
         competences = regrouperLst(prj.GetProjetRef(), prj.GetCompetencesUtil())
 #         print "competences", competences
-        prj.pt_caract_comp = []
+#         prj.pt_caract_comp = []
         
         if competences != []:
             
@@ -535,7 +538,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
                     tailleZComp[0], tailleZComp[1], 
                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = BCoulCompS)
 
-            prj.pt_caract_comp = getPts(p)
+            prj.pt_caract.append(getPts(p), "Cmp")
 
 #    print "compétences", time.time() - tps
 
@@ -573,7 +576,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
                            (posZElevesH[0], y, w, h), ha = ha, b = 0.1,
                            fontsizeMinMax = (-1, 0.016 * COEF))
         
-        prj.pt_caract_eleve = []
+#         prj.pt_caract_eleve = []
         if len(l) > 0:
             
             #
@@ -601,7 +604,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
                          tailleZElevesH[0], 0, tailleZElevesH[1], 
                          va = 'c', ha = 'd', orient = 'h', coul = CoulAltern)
             
-            prj.pt_caract_eleve = getPts(rec)
+            prj.pt_caract.append(getPts(rec), "Elv")
             
             #
             # Lignes horizontales

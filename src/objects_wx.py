@@ -2678,7 +2678,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #                 print("   ", l[0], l[1])
                 for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
-                        print("    ", l, obj, flag)
+#                         print("    ", l, obj, flag)
                         obj.cadre.append((p, flag, (x,y)))
                         if type(flag) != str:
                             break

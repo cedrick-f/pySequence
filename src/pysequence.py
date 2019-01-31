@@ -244,6 +244,7 @@ import re
 
 
 
+
 ####################################################################################
 #
 #   Objet lien vers un fichier, un dossier ou bien un site web
@@ -767,8 +768,17 @@ class ElementBase(Grammaire):
             div = doc.new_tag('div')
             div['class'] = "mouse tooltip"
             div['id'] = self.GetCode(i).replace('.', '_').replace(' ', '_')
-            bulle = BeautifulSoup(self.GetBulleHTML(i, css = True), "html5lib")
-            div.append(bulle)
+            bulle = BeautifulSoup(self.GetBulleHTML(f, css = True), "html5lib").body
+            div.extend(bulle.findChildren())
+#             div.append(bulle)
+            
+#             c = bulle.body
+#             print(c)
+#             for t in bulle.findChildren():
+#                 print(t, type(t))
+#                 div.append(t)
+            
+            
             doc.body.insert(0, div)
             
             p['class'] = "sensible"
@@ -860,18 +870,25 @@ class ElementBase(Grammaire):
     def GetPtCaract(self): 
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
-            Chaque points caractéristique est de la forme :
+            Chaque point caractéristique est de la forme :
             ((x, y), element, code ou indice)
         """
+        print("GetPtCaract base :", self)
         lst = []
+        
+        # Points caractéristiques des rectangles (sans code)
         if hasattr(self, 'pts_caract' ):
             for i, pt in enumerate(self.pts_caract):
                 lst.append((pt, self, i))
         
+        # Points caractéristiques des rectangles (avec code)
+        # Contenu de chaque "point" : ((x,y), code)
         if hasattr(self, 'pt_caract' ):
-            lst.append((self.pt_caract[0], self, self.pt_caract[1]))
+            for pt in self.pt_caract:
+                print("   ", pt)
+                lst.append((pt[0], self, pt[1]))
             
-        self.cadre = []
+        self.cadre = [] # ???
         return lst
     
     
@@ -1651,6 +1668,13 @@ class BaseDoc(ElementBase, ElementAvecLien):
         else:
             return self.GetPosition()[0] < doc.GetPosition()[0]
         
+    
+    ######################################################################################  
+    def GetCode(self, num = None):
+        """ Renvoie le code du Document à partir de son num'
+        """
+        return self.GetType()+str(num)
+        
         
     ######################################################################################  
     def GetApp(self):
@@ -2100,7 +2124,9 @@ class Sequence(BaseDoc):
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
         """
-        lst = []
+        print("GetPtCaract Seq")
+        lst = BaseDoc.GetPtCaract(self)
+        
         lst.extend(self.obj["C"].GetPtCaract())
         lst.extend(self.obj["S"].GetPtCaract())
         lst.extend(self.prerequis["S"].GetPtCaract())
@@ -2108,6 +2134,8 @@ class Sequence(BaseDoc):
         lst.extend(self.CI.GetPtCaract())
         for s in self.seances:
             lst.extend(s.GetPtCaract())
+            
+#         print(">>>", lst)
         return lst    
     
     ######################################################################################  
@@ -2120,7 +2148,8 @@ class Sequence(BaseDoc):
              :doc: beautifulsoup
         """
 #        print "EnrichiHTML sequence"
-       
+        ElementBase.EnrichiHTML(self, doc)
+        
         self.obj["C"].EnrichiHTML(doc)
         self.obj["S"].EnrichiHTML(doc)
         self.prerequis["C"].EnrichiHTML(doc)
@@ -3489,6 +3518,50 @@ class Sequence(BaseDoc):
         return enregistrer_root(root, nomFichier, dialog = dialog)
 
 
+
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+            :i:  code pour différentier ...
+        """
+        print("GetBulleHTML Seq", self, i)
+        ref = self.GetReferentiel()
+        
+        def b64(img):
+            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+        
+        if i == "Eff":
+            if css:
+                t = Template(constantes.TEMPLATE_EFF_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_EFF)
+            
+            
+            self.image = draw_cairo.getBase64PNG(draw_cairo_seq.getBitmapClasse(400, 300, self.GetClasse()))
+#             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
+            if css:
+                if self.image is not None:
+                    image = b64(self.image)
+                else:
+                    image = None
+                
+            else:
+                image = self.tip.GetImgURL(self.image, width = 200)
+            
+            
+            
+            
+            html = t.render(titre = "Découpage de la classe",
+                            image = image,
+                            )
+    
+            return html
+        return  ""
+    
+    
 ####################################################################################################
 #
 #        Projet
@@ -3644,22 +3717,8 @@ class Projet(BaseDoc, Grammaire):
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG et HTML)
         """
-        lst = []
-        
-        # 
-        if hasattr(self, 'pts_caract' ):
-            for i, pt in enumerate(self.pts_caract):
-                lst.append((pt, self, i))
-        
-        if hasattr(self, 'pt_caract' ):
-            lst.append((self.pt_caract[0], self, self.pt_caract[1]))
-            
-            
-        for i, pt in enumerate(self.pt_caract_comp):
-            lst.append((pt, self, i))
-            
-        for i, pt in enumerate(self.pt_caract_eleve):
-            lst.append((pt, self, -1-i))    
+        print("GetPtCaract prj")
+        lst = BaseDoc.GetPtCaract(self)  
             
         lst.extend(self.support.GetPtCaract())
         
@@ -5440,20 +5499,14 @@ class Progression(BaseDoc, Grammaire):
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
         """
-        lst = []
-
-        if hasattr(self, 'pts_caract' ):
-            for i, pt in enumerate(self.pts_caract):
-                lst.append((pt, self, i))
-        
-        if hasattr(self, 'pt_caract' ):
-            lst.append((self.pt_caract[0], self, self.pt_caract[1]))
-        
+        print("GetPtCaract prg")
+        lst = BaseDoc.GetPtCaract(self)
         ##################################### 
             
         for s in self.sequences_projets + self.eleves:
             lst.extend(s.GetPtCaract())
-
+            
+#         print(">>>", lst)
         return lst    
     
     ######################################################################################  
@@ -6024,13 +6077,13 @@ class Progression(BaseDoc, Grammaire):
 
     ######################################################################################  
     def ChargerSequences(self, parent, reparer = False):
-        print("ChargerSequences", self.sequences_projets)
+#         print("ChargerSequences", self.sequences_projets)
         aSupprimer = []
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence is None:
 #                print "   ", lienSeq.path
                 path = os.path.join(self.GetPath(), lienSeq.path)
-                print("   ", path)
+#                 print("   ", path)
                 if not os.path.isfile(path):
                     dlg = wx.MessageDialog(parent, "Le fichier Séquence suivant n'a pas été trouvé.\n\n"\
                                                  "\t%s\n\n"

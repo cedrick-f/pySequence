@@ -41,7 +41,7 @@ Fonctionnalités avancées de dessin avec cairo
 
 import textwrap
 from math import sqrt, pi, cos, sin
-import os
+import os, io
 import tempfile
 import cairo
 import time
@@ -1460,6 +1460,7 @@ def DrawClasse(ctx, rect, classe, complet = True):
 #     return imagesurface
 
 
+##########################################################################################
 def getBitmapClasse(W, H, classe):
 #     print("getBitmapClasse", W, H)
     w, h = 0.04*W * COEF, 0.04 *H* COEF
@@ -1474,6 +1475,13 @@ def getBitmapClasse(W, H, classe):
     DrawClasse(ctx, (0,0,w,h), classe)
     
     return imagesurface
+
+
+##########################################################################################
+def getBase64PNG(surface):
+    data = io.BytesIO()
+    surface.write_to_png(data)
+    return data.getvalue()
 
 
 ##########################################################################################

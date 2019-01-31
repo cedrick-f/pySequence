@@ -386,8 +386,13 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
-    seq.zones_sens = [] # zones sensibles pour fiche depuis pySequence
-    seq.pt_caract = []  # points caractéristiques pour fiche SVG
+    
+    # Zones sensibles, depuis pySéquence
+    seq.zones_sens = [] 
+    # Points caractéristiques des rectangles (avec code)
+    seq.pt_caract = [] 
+    # Points caractéristiques des rectangles (sans code)
+    seq.pts_caract = [] 
     
     
     #
@@ -607,7 +612,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         r = []
         for v in rects.values():
             r.extend(v)
+        for v in r:
+            seq.pt_caract.append((v[:2], "Eff"))
         seq.zones_sens.append(Zone(r, obj = seq.classe))
+#         seq.pt_caract.append((r[0][:2], "Eff"))
         
         # Lignes verticales
         x = posZSeances[0]
@@ -769,7 +777,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
 #         print("prerequis C", getPts(r))
         for i, c in enumerate(sorted(seq.prerequis["C"].competences)): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["C"]))
-            seq.prerequis["C"].pt_caract = (r[i][:2], i)
+#             seq.prerequis["C"].pt_caract = (r[i][:2], i)
 
         
         r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
@@ -782,7 +790,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
 #         print("prerequis S", getPts(r))
         for i, c in enumerate(sorted(seq.prerequis["S"].savoirs)): 
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["S"]))
-            seq.prerequis["S"].pt_caract = (r[i][:2], i)
+#             seq.prerequis["S"].pt_caract = (r[i][:2], i)
         
             
         lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteSe), lstTexteSe, 
@@ -1120,8 +1128,8 @@ def Draw_CI(ctx, CI, seq):
         t = ref._nomCI.Sing_()
     
     rect = (x0, y0, rect_width, rect_height)
-    CI.pt_caract = (curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
-                    'CI')
+    CI.pt_caract = [(curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
+                    'CI')]
     seq.zones_sens.append(Zone([rect], obj = CI))
     CI.rect.append(rect)
     

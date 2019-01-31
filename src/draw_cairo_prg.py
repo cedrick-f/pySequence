@@ -528,8 +528,14 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
+    
+    # Zones sensibles, depuis pySéquence
     prg.zones_sens = []
-    prg.pt_caract = []
+    # Points caractéristiques des rectangles
+    prg.pt_caract = []   # Contenu attendu : ((x,y), code)
+    # Points caractéristiques des rectangles (sans code)
+    prg.pts_caract = [] 
+    
 #    prg.rect = []
 #    prg.rectComp = {}
     
@@ -667,7 +673,8 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
 #     prg.pt_caract.append((posPro, "Cal"))
     rectPro = posPro + taillePro
-    prg.pt_caract.append((curve_rect_titre(ctx, "Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro), "Cal"))
+    pt = curve_rect_titre(ctx, "Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro)
+    prg.pt_caract.append((pt, "Cal"))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer("", constantes.LONG_MAX_PROBLEMATIQUE), 
@@ -685,12 +692,11 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
     #  Années
     #
-#    prg.pt_caract = []
 #    prg.pts_caract = []
     rectNom = posNom+tailleNom
-    prg.pt_caract.append((curve_rect_titre(ctx, "Progression pédagogique",  
-                                          rectNom, BcoulNom, IcoulNom, fontNom),
-                        'Ann'))
+    pt = curve_rect_titre(ctx, "Progression pédagogique",  
+                          rectNom, BcoulNom, IcoulNom, fontNom)
+    prg.pt_caract.append((pt, 'Ann'))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, "Années scolaires " + prg.GetAnnees(), 
@@ -795,7 +801,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #  Tableau des Thématiques
     #   
     lstTh = prg.GetListeTh()
-#     prg.pt_caract_th = []
+
     
     if len(lstTh) > 0:
         rectTh = (posZThH[0], posZThV[1], 
@@ -877,7 +883,6 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #  Tableau des CI/Thèmes de séquence
     #   
     lstCI = prg.GetListeCI()
-#     prg.pt_caract_ci = []
     
     if len(lstCI) > 0:
         rectCI = (posZCIH[0], posZCIH[1], 
@@ -1575,7 +1580,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     
 #    lienSeq.rect.append([x, y, tailleZTaches[0], h])
     prg.zones_sens.append(Zone([rect], obj = lienDoc))
-    lienDoc.pt_caract = (rect[:2], "")
+    lienDoc.pt_caract = [(rect[:2], "Seq")]
     
     #
     # Tracé des croisements "Tâches" et "Eleves"
