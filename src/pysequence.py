@@ -873,7 +873,7 @@ class ElementBase(Grammaire):
             Chaque point caractéristique est de la forme :
             ((x, y), element, code ou indice)
         """
-        print("GetPtCaract base :", self)
+#         print("GetPtCaract base :", self)
         lst = []
         
         # Points caractéristiques des rectangles (sans code)
@@ -885,7 +885,7 @@ class ElementBase(Grammaire):
         # Contenu de chaque "point" : ((x,y), code)
         if hasattr(self, 'pt_caract' ):
             for pt in self.pt_caract:
-                print("   ", pt)
+#                 print("   ", pt)
                 lst.append((pt[0], self, pt[1]))
             
         self.cadre = [] # ???
@@ -994,10 +994,10 @@ class ElementBase(Grammaire):
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
 
     
-    ######################################################################################  
-    def GetBulleHTML(self, i , css = False):
-        print("GetBulleHTML", self, i)
-        return self.GetFicheHTML()
+#     ######################################################################################  
+#     def GetBulleHTML(self, i , css = False):
+#         print("GetBulleHTML", self, i)
+#         return self.GetFicheHTML()
         
     ######################################################################################  
     def GetProfondeur(self):
@@ -3540,16 +3540,16 @@ class Sequence(BaseDoc):
                 t = Template(constantes.TEMPLATE_EFF)
             
             
-            self.image = draw_cairo.getBase64PNG(draw_cairo_seq.getBitmapClasse(400, 300, self.GetClasse()))
+            image = draw_cairo.getBase64PNG(draw_cairo_seq.getBitmapClasse(400, 200, self.GetClasse()))
 #             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
             if css:
-                if self.image is not None:
-                    image = b64(self.image)
+                if image is not None:
+                    image = b64(image)
                 else:
                     image = None
                 
             else:
-                image = self.tip.GetImgURL(self.image, width = 200)
+                image = self.tip.GetImgURL(image, width = 200)
             
             
             
@@ -5455,7 +5455,7 @@ class Progression(BaseDoc, Grammaire):
 
     ######################################################################################  
     def __repr__(self):
-        return "Projet "+ self.intitule
+        return "Progression "+ self.intitule
 
 
     ######################################################################################  
@@ -5499,7 +5499,7 @@ class Progression(BaseDoc, Grammaire):
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
         """
-        print("GetPtCaract prg")
+#         print("GetPtCaract prg")
         lst = BaseDoc.GetPtCaract(self)
         ##################################### 
             
@@ -5518,10 +5518,11 @@ class Progression(BaseDoc, Grammaire):
              - ...
              :doc: beautifulsoup
         """
-#        print "EnrichiSVG Progression"
+        print("EnrichiHTML Progression")
+        ElementBase.EnrichiHTML(self, doc)
         
-        for s in self.sequences_projets + self.eleves:
-            s.EnrichiHTML(doc)
+        for s in self.sequences_projets:# + self.eleves:
+            ElementBase.EnrichiHTML(s, doc)
         
     ######################################################################################  
     def GetNbrPeriodesEffectif(self):
@@ -6894,7 +6895,141 @@ class Progression(BaseDoc, Grammaire):
         return ok
 
 
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+            :i:  code pour différentier ...
+        """
+        print("GetBulleHTML Prg", self, i)
+        ref = self.GetReferentiel()
+        
+        def b64(img):
+            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+        
+        if i == "Equ":
+            if css:
+                t = Template(constantes.TEMPLATE_PROF_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PROF)
+            
+            lst_prf = [p.GetNomPrenom() for p in self.equipe]
+            
+            html = t.render(titre = "Équipe pédagogique",
+                            lst_prf = lst_prf,
+                            )
+    
+            return html
+        
+        
+        elif i == "Elv":
+            if css:
+                t = Template(constantes.TEMPLATE_ELEVE_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_ELEVE)
+            
+            lst_elv = [p.GetNomPrenom() for p in self.eleves]
+            
+            html = t.render(titre = ref.labels["ELEVES"][2].Plur_(),
+                            lst_elv = lst_elv,
+                            )
+    
+            return html
+        
+        
+        
+        elif i == "CI":
+        
+            if css:
+                t = Template(constantes.TEMPLATE_CI_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_CI_CSS)
+                
+                
+            html = t.render(titre = ref._nomCI.Plur_(),
+                            lst_pb = [],
+                            nomPb = "",
+                            lst_CI = [("CI"+str(i+1), ci) for i, ci in enumerate(self.GetListeCI())],
+                            )
+            return html
+        
+        
+        
+        
+        
+        elif i[:2] == "CI":  
+        
+            c = int(i[2:])
+#             ref._dicoCompetences
+            
+            if css:
+                t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_CMP_SAV)
+            
+            
+            dic = {}
+            dic[ref._nomCI.Sing_()] = [(i, self.GetListeCI()[c])]
+           
+            
+            html = t.render(dic = dic)
+            return html
+        
+        
+        
+        
+        
+        elif i[:2] == "C_":
+            c = i[2:]
+#             ref._dicoCompetences
+            
+            if css:
+                t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_CMP_SAV)
+            
+            
+#             for i, c in enumerate(sorted(self.competences)):
+            dic = ref.getDicToutesCompetences()
+            titre = dic['S']._nom.sing_()  + " ("+ dic['S'].abrDiscipline+ ")"
+            
+            dic = {}
+            dic[titre] = [(c, ref.getCompetence('S'+c).intitule)]
+           
+            
+            html = t.render(dic = dic)
+            return html
+        
+        
+        
+        elif i == "Cal":
+            if css:
+                t = Template(constantes.TEMPLATE_EFF_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_EFF)
+            
+            
+            image = draw_cairo.getBase64PNG(draw_cairo.getBitmapCalendrier(400, self.calendrier))
 
+            if css:
+                if image is not None:
+                    image = b64(image)
+                else:
+                    image = None
+                
+            else:
+                image = self.tip.GetImgURL(image, width = 200)
+            
+            
+            html = t.render(titre = "Calendrier de la formation",
+                            image = image,
+                            )
+    
+            return html
+        
+        return  ""
 
 
 #########################################################################################################
@@ -6937,7 +7072,16 @@ class ElementProgression():
 #         """
 #         return self.GetDoc().position[0] > lienSeq.GetDoc().position[0]
 
-
+    ######################################################################################  
+    def GetCode(self, num = None):
+        parent = self.GetDocument()
+        if isinstance(parent, Progression):
+            num = str(parent.sequences_projets.index(self))
+        elif isinstance(parent, Sequence):
+            num = str(parent.prerequisSeance.index(self))
+        return self.codeXML+num
+    
+    
     ######################################################################################  
     def GetApp(self):
         return self.parent.GetApp()
@@ -6998,7 +7142,60 @@ class ElementProgression():
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
+    
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+            :i:  code pour différentier ...
+        """
+        print("GetBulleHTML liendoc", self, i)
+        ref = self.GetReferentiel()
+        
+        def b64(img):
+            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+        
 
+        doc = self.GetDoc()
+        
+        if doc is None:
+            html = ""
+        
+        
+        elif isinstance(doc, Sequence) or isinstance(doc, Projet):
+            if css:
+                t = Template(constantes.TEMPLATE_LIENDOC_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_LIENDOC)
+            
+            image = draw_cairo.getBase64PNG(draw_cairo.get_apercu(doc, 600,
+                                                                  entete = True))
+           
+            if css:
+                if image is not None:
+                    image = b64(image)
+                else:
+                    image = None
+                
+            else:
+                image = self.tip.GetImgURL(image, width = 200)
+            
+            
+            html = t.render(titre = self.Sing_(),
+                            intitule = doc.intitule,
+                            creneaux = " - ".join([str(i+1) for i in range(*self.creneaux)]),
+                            image = image,
+                            path = self.path
+                            )
+        
+        
+        return html
+        
+
+        
+        
 #########################################################################################################
 #########################################################################################################
 class LienSequence(ElementBase, ElementProgression, Grammaire):
@@ -7015,7 +7212,7 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
 
     ######################################################################################  
     def __repr__(self):
-        return "Seq :"+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+        return "LienSeq : "+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
     
     ######################################################################################  
@@ -7026,6 +7223,7 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     ######################################################################################  
     def GetDoc(self):
         return self.sequence
+    
     
     ######################################################################################  
     def GetPosition(self):
@@ -7167,26 +7365,22 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
         
     ######################################################################################  
     def __repr__(self):
-        return "Prj :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
-
-
-
-        
-        
+        return "LienPrj :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
     
     ######################################################################################  
     def GetDoc(self):
         return self.projet
     
+    
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_LienProjet(parent, self)
     
+    
     ######################################################################################  
     def GetPosition(self):
         return self.projet.position
-    
     
 
     ######################################################################################  
@@ -7616,7 +7810,7 @@ class CentreInteret(ElementBase):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i, css = False):
+    def GetBulleHTML(self, i = None, css = False):
         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         

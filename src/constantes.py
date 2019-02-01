@@ -1369,23 +1369,25 @@ BASE_FICHE_HTML_PRJ = """
     <img id="ap" src=" " alt=" "> 
 """
 
-BASE_FICHE_HTML_PROF = """
-    <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
-
-
-    <table border="0" width="100%">
-        <tbody>
-        <tr align="right" valign="top">
-            <td width="200"><p id="nom"></p></td>
-            <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
-        </tr>
-        <tr align="right" valign="top">
-            <td><p id="spe"> </p></td>
-        </tr>
-        </tbody>
-    </table>
-"""
-
+BASE_FICHE_HTML_PROF = ""
+# "
+#     <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
+# 
+# 
+#     <table border="0" width="100%">
+#         <tbody>
+#         <tr align="right" valign="top">
+#             <td width="200"><p id="nom"></p></td>
+#             <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
+#         </tr>
+#         <tr align="right" valign="top">
+#             <td><p id="spe"> </p></td>
+#         </tr>
+#         </tbody>
+#     </table>
+# """
+TEMPLATE_PROF_CSS = ""
+TEMPLATE_PROF = ""
 
 BASE_FICHE_HTML_PERIODES = """
     <font size=11><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
@@ -1890,14 +1892,22 @@ def charger_icones():
     
     
 TEMPLATE_EFF_CSS = ""
-
 TEMPLATE_EFF = ""
+
+TEMPLATE_ELEVE_CSS = ""
+TEMPLATE_ELEVE = ""
+
+TEMPLATE_LIENDOC_CSS = ""
+TEMPLATE_LIENDOC = ""
 
 
 def charger_templates():
     global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, \
            TEMPLATE_CMP_SAV_CSS, TEMPLATE_CMP_SAV, \
-           TEMPLATE_EFF_CSS, TEMPLATE_EFF
+           TEMPLATE_EFF_CSS, TEMPLATE_EFF, \
+           TEMPLATE_PROF_CSS, TEMPLATE_PROF, \
+           TEMPLATE_ELEVE_CSS, TEMPLATE_ELEVE, \
+           TEMPLATE_LIENDOC_CSS, TEMPLATE_LIENDOC
     
     def charge(nf):
         f = open(nf, encoding = "utf-8")
@@ -1912,6 +1922,12 @@ def charger_templates():
     TEMPLATE_CMP_SAV = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp.html"))
     TEMPLATE_EFF_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_effectif_css.html"))
     TEMPLATE_EFF = charge(os.path.join(TEMPLATE_PATH, "popup_effectif.html"))
+    TEMPLATE_PROF_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_prof_css.html"))
+    TEMPLATE_PROF = charge(os.path.join(TEMPLATE_PATH, "popup_prof.html"))
+    TEMPLATE_ELEVE_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_eleve_css.html"))
+    TEMPLATE_ELEVE = charge(os.path.join(TEMPLATE_PATH, "popup_eleve.html"))
+    TEMPLATE_LIENDOC_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_liendoc_css.html"))
+    TEMPLATE_LIENDOC = charge(os.path.join(TEMPLATE_PATH, "popup_liendoc.html"))
     
 #import array
 #from ctypes import *

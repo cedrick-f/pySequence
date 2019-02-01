@@ -1309,7 +1309,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             try:
                 page.autoSave(event)
             except:
-                pass
+                if DEBUG:
+                    raise
         
         self.timerAutosave.Start(DUREE_AUTOSAVE)
         
@@ -8392,7 +8393,7 @@ class PanelPropriete_CI(PanelPropriete):
             
             if ref.CI_cible:
                 p = wx.TextCtrl(panelCI, -1, "1")
-                p.SetToolTip("Poids horaire relatif du "+ getSingulier(ref.nomCI))
+                p.SetToolTip("Poids horaire relatif "+ ref._nomCI.du_())
                 p.Show(False)
                 p.SetMinSize((30*SSCALE, -1))
 #                 hs.Add( p, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)

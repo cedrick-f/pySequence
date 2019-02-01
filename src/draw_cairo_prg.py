@@ -753,7 +753,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
             ctx.set_source_rgba(*coul)
             ctx.rectangle(*rect[:4])
             ctx.fill()
-                
+            prg.pt_caract.append((rect[:2], "C_"+k2))
             n += 1
             _x += wColComp
             
@@ -887,8 +887,9 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     if len(lstCI) > 0:
         rectCI = (posZCIH[0], posZCIH[1], 
                   tailleZCIH[0], tailleZCIH[1])
-        curve_rect_titre(ctx, getPluriel(ref.nomCI),
+        pt = curve_rect_titre(ctx, getPluriel(ref.nomCI),
                          rectCI, BcoulCI, IcoulCI, fontCI)
+        prg.pt_caract.append((pt, "CI"))
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
                              cairo.FONT_WEIGHT_NORMAL)
@@ -1537,7 +1538,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     
 
     
-#    lienSeq.pts_caract.append((x, y))
+    lienDoc.pts_caract = [(x, y)]
         
     ctx.set_line_width(e)
 #    print "BcoulPos", BcoulPos
@@ -1580,7 +1581,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     
 #    lienSeq.rect.append([x, y, tailleZTaches[0], h])
     prg.zones_sens.append(Zone([rect], obj = lienDoc))
-    lienDoc.pt_caract = [(rect[:2], "Seq")]
+#     lienDoc.pt_caract = [(rect[:2], "Seq")]
     
     #
     # Tracé des croisements "Tâches" et "Eleves"

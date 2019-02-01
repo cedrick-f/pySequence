@@ -1,0 +1,8 @@
+﻿<h1><font size="12"><b>{{ titre }/b></font></h1>
+{% if lst_prf|length > 0 %}
+<ul>
+{% for i in lst_prf %}
+	<li>{{ i }}</li>
+{% endfor %}
+</ul> 
+{% endif %}

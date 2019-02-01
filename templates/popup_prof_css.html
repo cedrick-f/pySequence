@@ -1,0 +1,9 @@
+﻿<h1>{{ titre }}</h1>
+{% if lst_prf|length > 0 %}
+<h2>{{ nomPrf }}</h2>
+<ul>
+{% for i in lst_prf %}
+	<li>{{ i }}</li>
+{% endfor %}
+</ul> 
+{% endif %}

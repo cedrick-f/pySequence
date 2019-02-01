@@ -1,0 +1,8 @@
+﻿<h1>{{ titre }}</h1>
+{% if lst_elv|length > 0 %}
+<ul>
+{% for i in lst_elv %}
+	<li>{{ i }}</li>
+{% endfor %}
+</ul> 
+{% endif %}
