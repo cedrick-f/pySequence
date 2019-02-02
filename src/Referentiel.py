@@ -3539,9 +3539,12 @@ class Competences(XMLelem):
             lst1 = []
             for k1, v1 in list(v0.sousComp.items()):
                 lst1.append(k1)
-            lst1.sort()
+#             lst1.sort()
+            lst1 = constantes.trier(lst1)
             lst0.append([k0, lst1])
+#         lst0 = constantes.trier(lst0)
         lst0.sort(key = lambda c:c[0])
+#         lst0.sort(key = lambda c:c[0])
         return lst0
             
     #########################################################################

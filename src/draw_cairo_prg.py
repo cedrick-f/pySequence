@@ -226,10 +226,13 @@ def DefinirZones(prg, ctx):
 #     competences = ref._listesCompetences_simple["S"]
     competences = ref.dicoCompetences["S"].get2Niveaux()
     
-    if ref.dicoCompetences["S"].getProfondeur() == 3:
-        wColComp = wColCompBase
-    else:
-        wColComp = wColCompBase/2
+#     if ref.dicoCompetences["S"].getProfondeur() == 3:
+#         wColComp = wColCompBase
+#     else:
+#         wColComp = wColCompBase/2
+    
+    wColComp = min(wColCompBase, 0.02/len(competences)* COEF)
+    
     
     tailleZComp[0] = 0
     for i, (k1, l1) in enumerate(competences):
@@ -728,12 +731,14 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     
 #     competences = ref._listesCompetences_simple["S"]
     competences = ref.dicoCompetences["S"].get2Niveaux()
+#     competences = regrouperLst(prj.GetProjetRef(), prj.GetCompetencesUtil())
+#     clefs = constantes.trier(list(ref.dicoCompetences["S"].keys()))
 #     print "competences", competences
-    
-    ctx.set_line_width(0.001 * COEF)
+    e = 0.0006 * COEF
+    ctx.set_line_width(e)
     _x = _x0 = posZComp[0]
     _y0, _y1 = posZComp[1], posZDeroul[1] + tailleZDeroul[1]
-    h = 1.5*wColComp
+#     h = 1.5*wColComp
     
     for i, g1 in enumerate(competences):
         k1, l1 = g1
@@ -764,7 +769,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001 * COEF)
+        ctx.set_line_width(e)
         
 #        # Titre famille de compétences
 #        ht = tailleZComp[1] / 4
@@ -790,7 +795,8 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
     dicComp, nbrComp = prg.GetCompetencesAbordees()
     DrawBoutonCompetence(ctx, prg, None, dicComp, posZOrganis[1] + htitre, 
-                         h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, nbr = nbrComp)
+                         h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, 
+                         nbr = nbrComp)
         
       
         
@@ -1716,7 +1722,8 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
         return
     
     if h == None: # Toujours sauf pour les revues
-        h = 0.6*wColComp
+#         h = 0.6*wColComp
+        h = 0.004 * COEF  # ne pas le faire dépendre de wColComp, qui va beaucoup varier !
         
     if nbr == None:
         nbr = [1] * (len(listComp)+1)
