@@ -1131,7 +1131,7 @@ def Draw_CI(ctx, CI, seq):
     CI.pt_caract = [(curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
                     'CI')]
     seq.zones_sens.append(Zone([rect], obj = CI))
-    CI.rect.append(rect)
+#     CI.rect.append(rect)
     
     
     

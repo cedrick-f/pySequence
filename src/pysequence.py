@@ -2180,6 +2180,10 @@ class Sequence(BaseDoc):
             svg = doc.getElementsByTagName("svg")[0]
             svg.insertBefore(t, svg.childNodes[0])
         
+        
+        ElementBase.EnrichiSVG(self, doc)
+        
+        
         self.obj["C"].EnrichiSVG(doc)
         self.obj["S"].EnrichiSVG(doc)
         self.prerequis["C"].EnrichiSVG(doc)
@@ -3604,13 +3608,16 @@ class Projet(BaseDoc, Grammaire):
         
         self.fct_serv = []   # Fonctions de service (développement en cours ...)
         
-        self.taches = self.creerTachesRevue()
-            
+        self.problematique = ""
+        
         self.equipe = []
         
         self.support = Support(self)
         
-        self.problematique = ""
+        
+        self.taches = self.creerTachesRevue()
+
+        
         
         #
         # Spécifiquement pour la fiche de validation
@@ -3752,10 +3759,24 @@ class Projet(BaseDoc, Grammaire):
              - liens 
              - ...
         """
+        
+        if hasattr(self, 'app'):
+            t = doc.createElement("title")
+            path = os.path.split(self.app.fichierCourant)[1]
+            path = str(path) # Conversion en unicode !!!
+            txt = doc.createTextNode(path)
+            
+            t.appendChild(txt)
+            svg = doc.getElementsByTagName("svg")[0]
+            svg.insertBefore(t, svg.childNodes[0])
+        
+        
+        ElementBase.EnrichiSVG(self, doc)
+        
         for s in self.taches:
             s.EnrichiSVG(doc)
         self.support.EnrichiSVG(doc)
-        self.EnrichiSVG(doc)
+
         return
     
     ######################################################################################  
@@ -5524,6 +5545,35 @@ class Progression(BaseDoc, Grammaire):
         for s in self.sequences_projets:# + self.eleves:
             ElementBase.EnrichiHTML(s, doc)
         
+    
+    ######################################################################################  
+    def EnrichiSVGdoc(self, doc):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens
+             - ...
+             :doc: xml.doc.minidom
+        """
+#        print "EnrichiSVG sequence"
+        if hasattr(self, 'app'):
+            t = doc.createElement("title")
+            path = os.path.split(self.app.fichierCourant)[1]
+            path = str(path) # Conversion en unicode !!!
+            txt = doc.createTextNode(path)
+            
+            t.appendChild(txt)
+            svg = doc.getElementsByTagName("svg")[0]
+            svg.insertBefore(t, svg.childNodes[0])
+        
+        
+        ElementBase.EnrichiSVG(self, doc)
+
+        
+        for s in self.sequences_projets:# + self.eleves:
+            ElementBase.EnrichiSVG(s, doc)
+            
+            
     ######################################################################################  
     def GetNbrPeriodesEffectif(self):
         """ Renvoie le nombre de périodes occupées par les Séquences et le Projets
@@ -6016,25 +6066,30 @@ class Progression(BaseDoc, Grammaire):
                                               scaleImage(images.Icone_ajout_prof.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[11]: # Séquence
-            self.app.AfficherMenuContextuel([["Créer une nouvelle Séquence", 
-                                              self.AjouterNouvelleSequence, 
-                                              scaleImage(images.Icone_ajout_seq.GetBitmap())],
-                                             ["Importer une Séquence existante", 
-                                              self.AjouterSequence, 
-                                              scaleImage(images.Icone_import_seq.GetBitmap())],
-                                             ["Importer toutes les Séquences compatibles du dossier", 
-                                              self.ImporterSequences, 
-                                              scaleImage(images.Icone_cherch_seq.GetBitmap())],
-                                             
-                                             ["Créer un nouveau Projet", 
-                                              self.AjouterNouveauProjet, 
-                                              scaleImage(images.Icone_ajout_prj.GetBitmap())],
-                                             ["Importer un Projet existant", 
-                                              self.AjouterProjet, 
-                                              scaleImage(images.Icone_import_prj.GetBitmap())],
-                                             ["Importer tous les Projets compatibles du dossier", 
-                                              self.ImporterProjets, 
-                                              scaleImage(images.Icone_cherch_prj.GetBitmap())]])
+            lst = [["Créer une nouvelle Séquence", 
+                    self.AjouterNouvelleSequence, 
+                    scaleImage(images.Icone_ajout_seq.GetBitmap())],
+                   ["Importer une Séquence existante", 
+                     self.AjouterSequence, 
+                     scaleImage(images.Icone_import_seq.GetBitmap())],
+                   ["Importer toutes les Séquences compatibles du dossier", 
+                     self.ImporterSequences, 
+                     scaleImage(images.Icone_cherch_seq.GetBitmap())],]
+            
+            coderef = self.GetReferentiel().Code
+            if len(REFERENTIELS[coderef].projets) > 0:
+                lst.extend([["Créer un nouveau Projet", 
+                             self.AjouterNouveauProjet, 
+                             scaleImage(images.Icone_ajout_prj.GetBitmap())],
+                            ["Importer un Projet existant", 
+                              self.AjouterProjet, 
+                              scaleImage(images.Icone_import_prj.GetBitmap())],
+                            ["Importer tous les Projets compatibles du dossier", 
+                              self.ImporterProjets, 
+                              scaleImage(images.Icone_cherch_prj.GetBitmap())]])
+
+                                            
+            self.app.AfficherMenuContextuel(lst)
 
 
     ######################################################################################  
@@ -7080,6 +7135,11 @@ class ElementProgression():
         elif isinstance(parent, Sequence):
             num = str(parent.prerequisSeance.index(self))
         return self.codeXML+num
+    
+    
+    ######################################################################################  
+    def GetIntit(self, i = 0):
+        return self.GetDoc().intitule
     
     
     ######################################################################################  
