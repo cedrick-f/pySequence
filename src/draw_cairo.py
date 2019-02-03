@@ -69,7 +69,7 @@ COEF = 1000.0
 # Données pour le tracé
 #
 
-minFont = 0.008 * COEF
+minFont = 0.006 * COEF
 maxFont = 0.1 * COEF
 
 LargeurTotale = 0.72414 * COEF# Pour faire du A4
@@ -313,7 +313,7 @@ def show_text_rect(ctx, texte, rect, \
     
     if fontSize < fontsizeMin:
         if debug: print("   fontSize mini !", fontSize, fontsizeMin, texte)
-        if not tracer:
+        if True:#not tracer:
             return fontsizeMin, (x, y, 0, 0)
         
         ctx.set_font_size(fontsizeMin)
@@ -1687,7 +1687,8 @@ def image(ctx, x, y, w, h, bmp, marge = 0):
     ctx.restore()
 
     
-def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):
+def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', 
+             orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):
     """    Dessine un tableau vertical (entêtes à l'horizontale)
             x, y = position du coin haut-gauche
             ht = hauteur de la ligne d'entête

@@ -225,13 +225,17 @@ def DefinirZones(prg, ctx):
     ref = prg.classe.referentiel
 #     competences = ref._listesCompetences_simple["S"]
     competences = ref.dicoCompetences["S"].get2Niveaux()
-    
+    N = 0
+    for i, g1 in enumerate(competences):
+        k1, l1 = g1
+        N += len(l1)
+        
 #     if ref.dicoCompetences["S"].getProfondeur() == 3:
 #         wColComp = wColCompBase
 #     else:
 #         wColComp = wColCompBase/2
-    
-    wColComp = min(wColCompBase, 0.02/len(competences)* COEF)
+    print("Ncomp :", N, wColCompBase, 0.2/N* COEF)
+    wColComp = min(wColCompBase, 0.2/N* COEF)
     
     
     tailleZComp[0] = 0
@@ -812,6 +816,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     if len(lstTh) > 0:
         rectTh = (posZThH[0], posZThV[1], 
                   tailleZThH[0], tailleZThH[1])
+#         print("nomTh", ref._nomTh.Plur_())
         curve_rect_titre(ctx, ref._nomTh.Plur_(),
                          rectTh, BcoulCI, IcoulCI, fontCI)
         
@@ -893,7 +898,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     if len(lstCI) > 0:
         rectCI = (posZCIH[0], posZCIH[1], 
                   tailleZCIH[0], tailleZCIH[1])
-        pt = curve_rect_titre(ctx, getPluriel(ref.nomCI),
+        pt = curve_rect_titre(ctx, ref._nomCI.Plur_(),
                          rectCI, BcoulCI, IcoulCI, fontCI)
         prg.pt_caract.append((pt, "CI"))
         
