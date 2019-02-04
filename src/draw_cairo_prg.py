@@ -234,7 +234,7 @@ def DefinirZones(prg, ctx):
 #         wColComp = wColCompBase
 #     else:
 #         wColComp = wColCompBase/2
-    print("Ncomp :", N, wColCompBase, 0.2/N* COEF)
+#     print("Ncomp :", N, wColCompBase, 0.2/N* COEF)
     wColComp = min(wColCompBase, 0.2/N* COEF)
     
     

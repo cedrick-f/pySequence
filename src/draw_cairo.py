@@ -756,14 +756,25 @@ def DrawCalendrier(ctx, rect, calendrier):
     dy_j = (ht-ha-hm) / 31
     
     # largueur des zones année
-    wa = {}
+    wa = {}   
     for ia, annee in enumerate(lannees):
-        if ia == 0:
-            wa[annee] = dx_m*len(lmois[annee])
-        elif ia == calendrier.GetNbrAnnees():
-            wa[annee] = dx_m*len(lmois[annee])
-        else:
-            wa[annee] = dx_m*len(lmois[annee])+ev
+        wa[annee] = 0
+        for per in lmois[annee]:
+                for mois in per:
+                    wa[annee] += dx_m
+                
+#         if ia == 0:
+#             wa[annee] = dx_m*len(lmois[annee])
+#         elif ia == calendrier.GetNbrAnnees():
+#             wa[annee] = dx_m*len(lmois[annee])
+#         else:
+        if ia != 0 and ia != calendrier.GetNbrAnnees():
+            wa[annee] += ev
+    
+    
+    # Coef polide
+    cp = 0.7
+    
     
     #
     # Les noms des années, mois et jours
@@ -798,25 +809,35 @@ def DrawCalendrier(ctx, rect, calendrier):
 #                 creneaux.extend(list_crenaux[zone])
 #         
             
+        show_text_rect_fix(ctx, str(annee), X+wj, y, wa[annee], ha,
+                           cp*ha, Nlignes = 1, ha = 'c', va = 'c')
         
-        show_text_rect(ctx, str(annee), 
-                       (X+wj, y, wa[annee], ha), 
-                       wrap = False,
-                       orient = 'h', ha = 'c', va = 'c', b = 0.1)
+#         
+#         show_text_rect(ctx, str(annee), 
+#                        (X+wj, y, wa[annee], ha), 
+#                        wrap = False,
+#                        orient = 'h', ha = 'c', va = 'c', b = 0.1)
         
         Y = y+ha+hm
         for jour in range(31):
-            show_text_rect(ctx, str(jour+1), 
-                           (X, Y, ea, dy_j), 
-                           wrap = False,
-                           orient = 'h', ha = 'd', va = 'c', b = 0.1)
+            show_text_rect_fix(ctx, str(jour+1), 
+                           X, Y, ea, dy_j, 
+                           cp*dy_j, 
+                           ha = 'd', va = 'c')
+#             show_text_rect(ctx, str(jour+1), 
+#                            (X, Y, ea, dy_j), 
+#                            wrap = False,
+#                            orient = 'h', ha = 'd', va = 'c', b = 0.1)
             Y += dy_j
         
         for per in lmois[annee]:
             for mois in per:
-                show_text_rect(ctx, constantes.MOIS[mois-1], 
-                               (X+wj, y+ha, dx_m, hm),
-                               orient = 'h', ha = 'c', va = 'c', b = 0.1, ext = "")
+                show_text_rect_fix(ctx, constantes.MOIS[mois-1], 
+                               X+wj, y+ha, dx_m, hm, cp*hm,
+                               ha = 'c', va = 'c')
+#                 show_text_rect(ctx, constantes.MOIS[mois-1], 
+#                                (X+wj, y+ha, dx_m, hm),
+#                                orient = 'h', ha = 'c', va = 'c', b = 0.1, ext = "")
                 X += dx_m
             X += ev
         
@@ -851,9 +872,12 @@ def DrawCalendrier(ctx, rect, calendrier):
                         
                         # Numéro de la semaine
                         ctx.set_source_rgba(0.4,  0.6,  0.4,  1)
-                        show_text_rect(ctx, str(S+1), 
-                                       rs, couper = False, wrap = False, ext = "",
-                                       orient = 'h', ha = 'c', va = 'c', b = 0.1)
+                        show_text_rect_fix(ctx, str(S+1), 
+                                           *rs, cp*hs, 
+                                           ha = 'c', va = 'c')
+#                         show_text_rect(ctx, str(S+1), 
+#                                        rs, couper = False, wrap = False, ext = "",
+#                                        orient = 'h', ha = 'c', va = 'c', b = 0.1)
                     
                     for jour in semaine:
                         if jour != 0:
@@ -880,7 +904,7 @@ def DrawCalendrier(ctx, rect, calendrier):
 def getBitmapCalendrier(larg, calendrier):
 
     prop = calendrier.GetNbrAnnees()
-    w, h = 0.04*prop * COEF, 0.04 * COEF
+    w, h = 0.04*larg*prop * COEF, 0.04 *larg* COEF
 #    print w, h
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)

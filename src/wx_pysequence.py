@@ -66,6 +66,9 @@ print(sys.version_info)
 #    wxversion.select('2.8')
 
 import wx
+locale = wx.Locale.GetSystemLanguage()
+print("Locale :", locale)
+
 
 import version
 
@@ -152,7 +155,8 @@ class SingleInstApp(wx.App):
     PORT = 27115
 
     def OnInit(self):
-        self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
+        self.locale = wx.Locale(locale)
+#         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
 #         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
         
         self.name = "pySéquence-%s" % wx.GetUserId()
@@ -397,8 +401,10 @@ class MySplashScreen(adv.SplashScreen):
     
     ######################################################################################  
     def GetSplash(self):
-        txt = "Version : "+version.__version__
-
+#         txt = "Version : "+version.__version__
+        
+#         wx.Locale.GetInfo()
+#         setlocale(LC_NUMERIC, "C")
         bmp = wx.Bitmap(os.path.join(util_path.PATH, "splash.png"), wx.BITMAP_TYPE_PNG)
         return bmp
     
