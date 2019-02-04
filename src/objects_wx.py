@@ -2642,7 +2642,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         
         
-        f = open(os.path.join(util_path.PATH, "fiche.html"))
+        f = open(os.path.join(util_path.TEMPLATE_PATH, "fiche.html"))
         soup = BeautifulSoup(f, "html5lib")
         f.close()
         
