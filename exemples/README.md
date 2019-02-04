@@ -7,4 +7,4 @@ Les fichiers présents aujourd'hui sont très anciens et depuis longtemps obsol�
 
 Si vous avez réalisé des documents que vous jugez représentatifs, **merci d'en faire profiter la communauté d'utilisateurs !!**
 
-Communniquer via la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues).
+Communiquer via la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues).
