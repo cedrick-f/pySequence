@@ -1202,22 +1202,22 @@ class Classe(ElementBase):
         # Référentiel
         #
         def ChargerRefOriginal():
-#             print("Réparation = pas référentiel intégré !")
+            print("Réparation = pas référentiel intégré !")
             if self.GetVersionNum() >= 5:
                 code = self.referentiel.setBrancheCodeV5(brancheRef)
 #                 print("   Code trouvé dans référentiel :", code)
-                if code != self.typeEnseignement:
+                if code is not None and code != self.typeEnseignement:
                     self.typeEnseignement = code
                 
-                    
-#             print("   TypeEnseignement :", self.typeEnseignement)
             if self.typeEnseignement in REFERENTIELS:
+                print("   TypeEnseignement :", self.typeEnseignement)
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
+                self.referentiel.postTraiter()
+                self.referentiel.completer(forcer = True)
             else:
                 err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
             
-            self.referentiel.postTraiter()
-            self.referentiel.completer(forcer = True)
+            
                 
                 
         def RecupCI():

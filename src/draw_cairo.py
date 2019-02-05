@@ -41,9 +41,10 @@ Fonctionnalités avancées de dessin avec cairo
 
 import textwrap
 from math import sqrt, pi, cos, sin
-import os, io
+import os, io, sys
 import tempfile
-import cairo
+# import cairo
+import cairocffi as cairo
 import time
 try:
     import constantes
@@ -56,8 +57,8 @@ import wx
 
 from widgets import getHoraireTxt
 
-
-
+import couleur
+import configparser
                                      
                                      
 #
@@ -3427,3 +3428,66 @@ class Zone():
 #                              cairo.FONT_WEIGHT_BOLD)
 
 
+
+def chargerParametres(lst, module, fichier):
+    """ Charge les paramètres depuis un fichier de configuration
+         - couleurs : nom en "*coul*", titre cfg - "Couleurs", format #FFFFFF
+    
+        :lst: liste des noms de variable
+        :module: module d'origine des variables (globales)
+        :fichier: nom du fichier de configuration
+    """
+#     print("chargerParametres", lst, module, fichier)
+    if os.path.isfile(fichier):
+        import importlib
+        importlib.import_module(module)
+        m = sys.modules[module]
+    
+        config = configparser.ConfigParser()
+        
+        with io.open(fichier, 'r', encoding="utf-8") as fp:
+            config.readfp(fp)
+            
+#         print(config["Couleurs"])
+        for nom in lst:
+            if nom.lower() in config["Couleurs"]:
+                c = couleur.CouleurCSS2Float(config.get("Couleurs", nom.lower()))
+                if c is not None:
+                    setattr(m, nom, c)
+#                 print("  ", nom, c)
+
+
+#########################################################################################################
+def sauverParametres(lst, module, fichier):
+    """ Sauvegarde des paramètres dans un fichier de configuration
+         - couleurs : nom en "*coul*", titre cfg - "Couleurs", format #FFFFFF
+    """
+    print("sauverParametres", lst, module, fichier)
+    
+    import importlib
+    importlib.import_module(module)
+    m = sys.modules[module]
+    
+    config = configparser.ConfigParser()
+    config.add_section("Couleurs")
+    
+    d = {}
+    for nom in lst:
+        print(nom)
+        if hasattr(m, nom):
+            l = getattr(m, nom)
+        else:
+            l = getattr(sys.modules[__name__], nom)
+
+        c = couleur.CouleurFloat2CSS(l)
+        print(l, ">>>", c)
+        
+        if len(l) != 3:
+            d[nom] = c
+        
+    config["Couleurs"] = d
+            
+    config.write(open(fichier,'w', encoding="utf-8"))
+        
+        
+        

@@ -32,12 +32,17 @@ Created on 26 oct. 2011
 @author: Cedrick
 '''
 
-from draw_cairo import *
+# from draw_cairo import *
+from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
+                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
+                        DrawPeriodes, COEF, info, \
+                        Zone, image, ligne, CoulAltern, \
+                        chargerParametres, sauverParametres
 #import textwrap
 #from math import sqrt, pi, cos, sin
 #import cairo
 
-
+import util_path
 #import ConfigParser
 
 from constantes import Effectifs,COUL_COMPETENCES, mergeDict
@@ -1866,4 +1871,19 @@ def gabarit():
     imagesurface.write_to_png('gabarit_seq.png')
 
 
+
+nom_module = os.path.splitext(os.path.basename(__file__))[0]
+nom_fichparam = "param_seq.cfg"
+
+if __name__ == '__main__':
+    sauverParametres([v for v in globals().keys() if "coul" in v], 
+                     nom_module, 
+                     nom_fichparam)
+    
+    
+##########################################################################################
+chargerParametres([v for v in globals().keys() if "coul" in v], 
+                  os.path.splitext(os.path.basename(__file__))[0], 
+                  os.path.join(util_path.PATH, nom_fichparam))
+    
 

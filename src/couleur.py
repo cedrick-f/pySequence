@@ -151,8 +151,22 @@ def CouleurCSS2Float(s, bytes = False):
     if len(s) > 1 and s[0] == "#":
         if len(s[1:]) == 3:
             return [int(c, 16)/d for c in s[1:]]
-        elif len(s[1:]) == 6:
+        elif len(s[1:]) == 6 or len(s[1:]) == 8:
             return [int(s[i:i+2], 16)/d for i in range(1, len(s)-1, 2)]
+
+
+def CouleurFloat2CSS(l, bytes = False):
+    """ (1.0, 1.0, 1.0)  -->  #FFFFFF   
+    """
+    if bytes:
+        d = 1
+    else:
+        d = 255
+    s = "#"
+    for rvb in l:#[:3]:
+        s += "{:02x}".format(int(rvb*d))
+    return s
+
 
 
 # main entry point

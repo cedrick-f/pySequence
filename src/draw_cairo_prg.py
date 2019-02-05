@@ -38,7 +38,9 @@ Created on 26 oct. 2011
 import sys
 
 #import rsvg
-import cairo
+# import cairo
+import cairocffi as cairo
+
 import wx.lib.wxcairo
 import images
 
@@ -46,10 +48,11 @@ from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_r
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
                         DrawPeriodes, DrawCalendrier, COEF, info, Zone, \
                         BcoulPos, IcoulPos, ICoulComp, CoulAltern, ligne, rectangle_plein_biseau, \
-                        rectangle_plein_fleche, rectangle_plein_doigt
+                        rectangle_plein_fleche, rectangle_plein_doigt, \
+                        chargerParametres, sauverParametres
 
 from math import log, pi
-
+import util_path
 
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
 #                        DemarchesCourt, estCompetenceRevue
@@ -1711,9 +1714,12 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
         y += dy
         
 
-    
+ 
 
-    
+
+
+
+
 ######################################################################################  
 def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
     """ Dessine les petits rectangles des compétences abordées dans la Séquence
@@ -1873,4 +1879,19 @@ def gabarit():
     
     imagesurface.write_to_png('gabarit_prg.png')
     
+    
+    
+nom_module = os.path.splitext(os.path.basename(__file__))[0]
+nom_fichparam = "param_prg.cfg"
+
+if __name__ == '__main__':
+    sauverParametres([v for v in globals().keys() if "coul" in v], 
+                     nom_module, 
+                     nom_fichparam)
+    
+    
+##########################################################################################
+chargerParametres([v for v in globals().keys() if "coul" in v], 
+                  nom_module, 
+                  os.path.join(util_path.PATH, nom_fichparam))
     
