@@ -1649,7 +1649,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
         
         self.path = ""
         
-        self.proprietes = proprietes.ProprietesDoc()
+        self.proprietes = proprietes.ProprietesDoc(self)
         
         #
         # Création du Tip (PopupInfo)
@@ -1692,6 +1692,32 @@ class BaseDoc(ElementBase, ElementAvecLien):
         else:
             return self.path
     
+    
+#     ######################################################################################  
+#     def getBranche(self):
+#         """ Renvoie la branche XML pour enregistrement
+#         """
+#         # Création de la racine
+#         prop = ET.Element("Proprietes")
+#         
+# 
+#         
+#         return prop
+# 
+# 
+#     ######################################################################################  
+#     def setBranche(self, branche, reparer = False):
+#         """ Lecture d'une branche XML
+#         """
+#         err = []
+#         
+# 
+#         
+#         return err
+        
+
+
+
     ######################################################################################  
     def GetAnnees(self):
         return "%s - %s" %(self.annee, self.annee+1)
@@ -3107,22 +3133,30 @@ class Sequence(BaseDoc):
             # Détermination de la liste de codes constituant le masque du filtre
             if code == "Spe":
                 ce = [self.classe.specialite]
-                
+                ef = None
             elif code == "EnsSpe":
                 if seance is not None:
                     ce = seance.ensSpecif
                 else:
                     continue
-            
+                ef = None
             elif code[:4] == "Comp":
                 ce = [e[1:] for e in d["C"].competences]
-                
+                ef = d["C"]
             elif code[:3] == "Sav":
                 ce = d["S"].savoirs
+                ef = d["S"]
 
             
             filtres.append(filtre)
-#             print("   ce =", ce)
+
+            
+            ce2 = ce[:]
+            if ef is not None and hasattr(ef, 'filtre'):
+                for e in ce:
+                    ce2.extend([c for c in ref.getSousElem(e, code) if c in ef.filtre])
+#             print("   ce =", ce, "-->", ce2)
+            
 #             if isinstance(elem, Referentiel.Competences):
 #                 dic = ref.getDicToutesCompetences()
 #             elif isinstance(elem, Referentiel.Savoirs):
@@ -3136,12 +3170,12 @@ class Sequence(BaseDoc):
                 v = []
                 for c in val:
                     v.extend(ref.getSousElem(c, code))
-#                 print("   v =", v, val)
-                if val == []:
+#                 print("   v =", v)
+                if val == []:  # Liste vide = pas de filtrage
                     filtre.append(cd)
                 else:
-                    for e in ce:
-                        if e in v: # Liste vide = pas de filtrage
+                    for e in ce2:
+                        if e in v: 
                             filtre.append(cd)
 #                     else:
 #                         ssval = 
@@ -3443,18 +3477,18 @@ class Sequence(BaseDoc):
     #############################################################################            
     def drawPeriode(self, ctx, larg):
         prop = 7
-        w, h = 0.04*prop * draw_cairo_seq.COEF, 0.04 * draw_cairo_seq.COEF
+        w, h = 0.04*prop * draw_cairo.COEF, 0.04 * draw_cairo.COEF
         ctx.scale(larg/w, larg/w) 
     #     ctx.set_source_rgba(1,1,1,1)
     #     ctx.paint()
-        draw_cairo_seq.DrawPeriodes(ctx, (0,0,w,h), 
+        draw_cairo.DrawPeriodes(ctx, (0,0,w,h), 
                                     self.getRangePeriode(), 
                                     self.GetReferentiel().periodes)
     
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.getRangePeriode(),
+        imagesurface = draw_cairo.getBitmapPeriode(larg, self.getRangePeriode(),
                                                        self.GetReferentiel().periodes, 
                                                        prop = 7)
         return getBitmapFromImageSurface(imagesurface)
@@ -3512,11 +3546,13 @@ class Sequence(BaseDoc):
                 # La séquence
         sequence = self.getBranche()
         classe = self.classe.getBranche()
+        proprietes = self.proprietes.getBranche()
         
         # La racine
         root = ET.Element('Sequence_Classe')
         root.append(sequence)
         root.append(classe)
+        root.append(proprietes)
         constantes.indent(root)
         
         return enregistrer_root(root, nomFichier, dialog = dialog)
@@ -9191,7 +9227,7 @@ class Seance(ElementAvecLien, ElementBase):
         ref = self.GetReferentiel()
         c = ref.effectifs[self.GetCodeEffectif()][4]
         if c =='':
-            return "C"
+            return 'C'
         else:
             return c
         
@@ -9203,10 +9239,13 @@ class Seance(ElementAvecLien, ElementBase):
             (pour R et S : estimation à partie de la 1ère sous séance)
             (TODO : rajouter sélection effectif pour R et S)
         """
-#         print("GetCodeEffectif", self, self.typeSeance)
+        print("GetCodeEffectif", self, self.typeSeance)
         ref = self.GetReferentiel()
         if self.typeSeance in "RS" and len(self.seances) > 0:
-            return ref.effectifs[self.seances[0].effectif][4]
+            e = ref.effectifs[self.seances[0].effectif][4]
+            if e == "":
+                return 'C'
+            return e
 #             return self.seances[0].GetCodeEffectif()
 #             return ref.effectifs[self.seances[0].GetCodeEffectif()][4]
         else:

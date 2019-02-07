@@ -52,6 +52,9 @@ from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_r
                         chargerParametres, sauverParametres
 
 from math import log, pi
+from couleur import CouleurFloat2CSS
+
+
 import util_path
 
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
@@ -1879,19 +1882,28 @@ def gabarit():
     
     imagesurface.write_to_png('gabarit_prg.png')
     
-    
+
+#######################################################################################
+# Gestion des paramètres sauvegardables
+#####################################################################################
+def getParametres():
+    """ Renvoi un dict {nom: valeur} des paramètres à sauvegarder
+         - couleurs
+         - ...
+    """
+    return {n : CouleurFloat2CSS(v) for n, v in globals().items() if "coul" in n}
     
 nom_module = os.path.splitext(os.path.basename(__file__))[0]
 nom_fichparam = "param_prg.cfg"
 
 if __name__ == '__main__':
-    sauverParametres([v for v in globals().keys() if "coul" in v], 
+    sauverParametres(getParametres().keys(), 
                      nom_module, 
                      nom_fichparam)
     
     
 ##########################################################################################
-chargerParametres([v for v in globals().keys() if "coul" in v], 
+chargerParametres(getParametres().keys(), 
                   nom_module, 
                   os.path.join(util_path.PATH, nom_fichparam))
     

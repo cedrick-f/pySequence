@@ -33,11 +33,17 @@ Created on 26 oct. 2011
 '''
 
 # from draw_cairo import *
+import cairocffi as cairo
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info, \
-                        Zone, image, ligne, CoulAltern, \
-                        chargerParametres, sauverParametres
+                        DrawPeriodes, COEF, info, getPts, tableauH_var, reduire_rect, \
+                        Zone, image, ligne, CoulAltern, liste_code_texte2, DrawClasse, \
+                        chargerParametres, sauverParametres, permut, fleche_verticale, \
+                        surbrillance, calc_h_texte, fleche_ronde
+
+from math import sqrt, pi, cos, sin
+from couleur import CouleurFloat2CSS, CouleurInt2Float
+
 #import textwrap
 #from math import sqrt, pi, cos, sin
 #import cairo
@@ -630,8 +636,8 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
             if e in rEff:
                 r0 = rEff[e][0] # le premier rectangle
                 w = r0[2]
-                DrawLigneEff(ctx, r0[0], r0[1]+r0[3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
-                DrawLigneEff(ctx, w+r0[0], r0[1]+r0[3], couleur.CouleurInt2Float(ref.effectifs[e][3]))
+                DrawLigneEff(ctx, r0[0], r0[1]+r0[3], CouleurInt2Float(ref.effectifs[e][3]))
+                DrawLigneEff(ctx, w+r0[0], r0[1]+r0[3], CouleurInt2Float(ref.effectifs[e][3]))
 
 
     def taille(lstTxt):
@@ -1871,18 +1877,30 @@ def gabarit():
     imagesurface.write_to_png('gabarit_seq.png')
 
 
+#######################################################################################
+# Gestion des paramètres sauvegardables
+#####################################################################################
+def getParametres():
+    """ Renvoi un dict {nom: valeur} des paramètres à sauvegarder
+         - couleurs
+         - ...
+    """
+    return {n : CouleurFloat2CSS(v) for n, v in globals().items() if "coul" in n}
+
 
 nom_module = os.path.splitext(os.path.basename(__file__))[0]
 nom_fichparam = "param_seq.cfg"
 
 if __name__ == '__main__':
-    sauverParametres([v for v in globals().keys() if "coul" in v], 
+    sauverParametres(getParametres().keys(), 
                      nom_module, 
                      nom_fichparam)
     
-    
+def setParametres(doc):
+    pass
+
 ##########################################################################################
-chargerParametres([v for v in globals().keys() if "coul" in v], 
+chargerParametres(getParametres().keys(), 
                   os.path.splitext(os.path.basename(__file__))[0], 
                   os.path.join(util_path.PATH, nom_fichparam))
     

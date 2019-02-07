@@ -3055,7 +3055,12 @@ class FenetreSequence(FenetreDocument):
                 message += "\n"
                 
                 self.sequence.MiseAJourTypeEnseignement()
-           
+            
+            # Les propriétés
+            prop = root.find("ProprietesDoc")
+            if prop is not None:
+                self.sequence.proprietes.setBranche(prop)
+            
             return root, message, count, Ok, Annuler
 
 
@@ -3536,6 +3541,11 @@ class FenetreProjet(FenetreDocument):
                     message += get_err_message(err)
                 message += "\n"
                           
+            # Les propriétés
+            prop = root.find("ProprietesDoc")
+            if prop is not None:
+                self.projet.proprietes.setBranche(prop)
+            
             return root, message, count, Ok, Annuler
         
         
@@ -4319,6 +4329,13 @@ class FenetreProgression(FenetreDocument):
                     message += get_err_message(err)
                 message += "\n"
             
+            
+            # Les propriétés
+            prop = root.find("ProprietesDoc")
+            if prop is not None:
+                self.progression.proprietes.setBranche(prop)
+            
+            
             return root, message, count, Ok, Annuler
 
 
@@ -4440,7 +4457,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4697,7 +4714,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -7524,7 +7541,7 @@ class ListeCI(wx.Panel):
         tsize = (IMG_SIZE_TB[0]*SSCALE, IMG_SIZE_TB[1]*SSCALE)
         self.toolbar = wx.ToolBar(self,-1)
         self.newtool= self.toolbar.AddTool(1, 'Ajouter', scaleImage(images.Icone_new.GetBitmap(), *tsize))
-        self.edittool= self.toolbar.AddTool(2, 'Editer', scaleImage(images.document_edit.GetBitmap(), *tsize))
+        self.edittool= self.toolbar.AddTool(2, 'Éditer', scaleImage(images.document_edit.GetBitmap(), *tsize))
         self.deltool= self.toolbar.AddTool(3, 'Supprimer', scaleImage(images.document_delete.GetBitmap(), *tsize))
         self.uptool= self.toolbar.AddTool(4, 'Remonter', scaleImage(images.go_up.GetBitmap(), *tsize))
         self.downtool= self.toolbar.AddTool(5, 'Descendre', scaleImage(images.go_down.GetBitmap(), *tsize))
@@ -7668,7 +7685,7 @@ class ListeCI(wx.Panel):
     
     
     def SetMEIFSC(self, num, meifsc):
-        print("SetMEIFSC", num, meifsc, self.list.GetItemCount())
+#         print("SetMEIFSC", num, meifsc, self.list.GetItemCount())
         for c in range(1,7):
             if self.lstCb[c-1] in meifsc:
                 temp = self.list.GetItem(num, c)

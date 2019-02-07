@@ -155,7 +155,8 @@ class SingleInstApp(wx.App):
     PORT = 27115
 
     def OnInit(self):
-        self.locale = wx.Locale(locale)
+#         self.locale = wx.Locale(locale)
+        self.locale = wx.Locale(wx.LANGUAGE_ENGLISH) # !!! obligé pour certains PC ???
 #         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
         # Problème avec les PNG ??? Suppression des warning
         # https://github.com/wxWidgets/Phoenix/issues/769

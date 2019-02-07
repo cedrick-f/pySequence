@@ -11,11 +11,11 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2014 C�drick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
 ##
-## pyS�quence : aide � la construction
-## de S�quences et Progressions p�dagogiques
-## et � la validation de Projets
+## pySéquence : aide à la construction
+## de Séquences et Progressions pédagogiques
+## et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ from widgets import XMLelem
 ####################################################################################################
 class PropPropriete(XMLelem):
     def __init__(self, nom, value, ptype = None, cat = None, grp = None):
-        """ D�finition d'une propriété de document
+        """ Définition d'une propriété de document
             
             :value: valeur : peut prendre différents types
                 bool
@@ -103,11 +103,11 @@ class PropGroupe(XMLelem):
 
 ###################################################################################
 class ProprietesDoc(XMLelem):
-    def __init__(self, lstcat = []):
+    def __init__(self, doc, lstcat = []):
         self._codeXML = "ProprietesDoc"
         self.categories = [PropCategorie(n) for n in lstcat]    # Catégories de propriété
         self.proprietes = {}    # les Propriété
-    
+        self.doc = doc
     
     def get(self, code):
         return self.proprietes[code].value
@@ -120,7 +120,18 @@ class ProprietesDoc(XMLelem):
             return
         self.proprietes[code] = PropPropriete(nom, val, ptype, cat, grp)
         
+    def chargerParametresDraw(self):
+        self.proprietes["ApparenceFiche"] = self.doc.draw.getParametres()
     
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML pour enregistrement
+        """
+        self.chargerParametresDraw()
+        
+        return XMLelem.getBranche(self)
+
+
     
 ####################################################################################################
 #
