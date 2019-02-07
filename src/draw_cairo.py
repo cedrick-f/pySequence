@@ -212,8 +212,10 @@ def calcul_largeur(ctx, lt):
 def show_text_rect(ctx, texte, rect, \
                    va = 'c', ha = 'c', le = 0.8, pe = 1.0, \
                    b = 0.4, orient = 'h', \
-                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = True, 
-                   coulBord = None, tracer = True, ext = "...", debug = False):
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, 
+                   coulBord = None, ext = "...",
+                   tracer = True, forcer = True, wrap = True, couper = True, 
+                   debug = False):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -222,6 +224,10 @@ def show_text_rect(ctx, texte, rect, \
         orient : orientation du texte ('h', 'v')
         max_font : taille maxi de la font
         min_font : le texte peut être tronqué (1 ligne)
+        
+        :tracer: pour trracé en différé (quand taille fixe par exemple)
+        :forcer: mettre à False pour éviter les débordements quand pas la place --> pas d'affichage
+        
         
         le, pe : coefficient d'inter-ligne et inter-paragraphe
         
@@ -314,7 +320,7 @@ def show_text_rect(ctx, texte, rect, \
     
     if fontSize < fontsizeMin:
         if debug: print("   fontSize mini !", fontSize, fontsizeMin, texte)
-        if True:#not tracer:
+        if not tracer or not forcer:
             return fontsizeMin, (x, y, 0, 0)
         
         ctx.set_font_size(fontsizeMin)

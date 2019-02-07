@@ -7421,9 +7421,13 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     def SetTip(self):
         # Tip
         seq = self.sequence
+        
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
+        if seq is None:
+            self.tip.SetWholeText("nom", "Séquence non trouvée")
+        else:
+            self.tip.SetWholeText("nom", seq.intitule)
+            self.tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
         
         self.tip.SetPage()
 
@@ -9239,7 +9243,7 @@ class Seance(ElementAvecLien, ElementBase):
             (pour R et S : estimation à partie de la 1ère sous séance)
             (TODO : rajouter sélection effectif pour R et S)
         """
-        print("GetCodeEffectif", self, self.typeSeance)
+#         print("GetCodeEffectif", self, self.typeSeance)
         ref = self.GetReferentiel()
         if self.typeSeance in "RS" and len(self.seances) > 0:
             e = ref.effectifs[self.seances[0].effectif][4]
