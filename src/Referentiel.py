@@ -1928,10 +1928,14 @@ class Referentiel(XMLelem):
     def getPeriodeSpe(self, spe = None):
         """ Renvoie la liste des périodes attribuées à la spécialité
               format : [début, fin], à partir de 0
+              :spe: liste de code de spécialités
         """
         
         if spe is not None and len(self.listeSpecialites) > 0:
-            return [self.specialite[spe][4][0]-1, self.specialite[spe][4][-1]-1]
+            lp = []
+            for s in spe:
+                lp.extend([self.specialite[s][4][0]-1, self.specialite[s][4][-1]-1])
+            return sorted(list(set(lp)))
         return [0, self.getNbrPeriodes()-1]
 
     #############################################################################

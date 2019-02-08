@@ -1858,9 +1858,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        print ">>", toutferme
         if toutferme:
             evt.Skip()
-            wx.GetApp()._ipc.Exit()
+#             wx.GetApp()._ipc.Exit()
 #             wx.CallAfter(sys.exit)
-            wx.CallAfter(self.Destroy)
+#             wx.CallAfter(self.Destroy)
+            self.Destroy()
 
 
 
@@ -4457,7 +4458,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4714,7 +4715,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -10432,23 +10433,22 @@ class PanelPropriete_Seance(PanelPropriete):
                 del cb
 
         self.cbSpe = []
-        if self.seance.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
-            if self.seance.GetDocument().classe.specialite in ref.ensSpecifSeance[self.seance.typeSeance]:
-                if len(ref.listeEnsSpecif) > 0:
-                    
-                    self.titreSpe = wx.StaticText(self.pageGen, -1, "Enseignements Spécifiques :")
-                    self.speSizer.Add(self.titreSpe, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
-                    
-                    for s in ref.listeEnsSpecif:
-                        cb = wx.CheckBox(self.pageGen, -1, ref.ensSpecif[s][1],
-                                         name = s)
-                        cb.SetValue(True)
-                        cb.SetToolTip(ref.ensSpecif[s][2])
-                        cb.SetForegroundColour(ref.ensSpecif[s][3])
-                        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxSpe, cb)
-                        self.speSizer.Add(cb, flag = wx.EXPAND|wx.LEFT, border = 8)
-                        self.cbSpe.append(cb)
-                    self.speSizer.Layout()
+        if self.seance.aEnsSpe():
+            if len(ref.listeEnsSpecif) > 0:
+                
+                self.titreSpe = wx.StaticText(self.pageGen, -1, "Enseignements Spécifiques :")
+                self.speSizer.Add(self.titreSpe, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
+                
+                for s in ref.listeEnsSpecif:
+                    cb = wx.CheckBox(self.pageGen, -1, ref.ensSpecif[s][1],
+                                     name = s)
+                    cb.SetValue(True)
+                    cb.SetToolTip(ref.ensSpecif[s][2])
+                    cb.SetForegroundColour(ref.ensSpecif[s][3])
+                    self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxSpe, cb)
+                    self.speSizer.Add(cb, flag = wx.EXPAND|wx.LEFT, border = 8)
+                    self.cbSpe.append(cb)
+                self.speSizer.Layout()
 #                 
 #                 
 #         self.bsizer2.Layout()
@@ -14488,7 +14488,8 @@ class ArbreSavoirs(HTL.HyperTreeList):
         doc = self.pp.GetDocument()
         for f in self.savoirsRef.nivTaxo:
             if f == "Spe":
-                self.AddColumn(doc.classe.specialite, flag = wx.ALIGN_CENTER)
+                for s in doc.classe.specialite:
+                    self.AddColumn(s, flag = wx.ALIGN_CENTER)
             elif f == "EnsSpe":
                 
                 for es in ref.listeEnsSpecif:
@@ -14669,7 +14670,7 @@ class ArbreSavoirs(HTL.HyperTreeList):
                 if f == "Spe":
                     for sn in dic[k][0].nivTaxo[i]:
                         s, n = sn.split("-")
-                        if s == doc.classe.specialite:
+                        if s in doc.classe.specialite:
                             self.SetItemText(b, n, col)
                     col += 1
                 elif f == "EnsSpe":
@@ -16094,8 +16095,8 @@ class Panel_SelectEnseignement(wx.Panel):
         #
         # Spécialité
         # 
-        self.rb_spe = wx.Choice(self, -1, choices = [])
-        self.rb_spe.SetLabel("Choisir une spécialité")
+        self.rb_spe = wx.CheckListBox(self, -1, choices = [])
+        self.rb_spe.SetLabel("Choisir une ou plusieurs spécialité(s)")
         self.sizer.Add(self.rb_spe, 0, wx.GROW | wx.EXPAND| wx.ALL, 1)
         self.rb_spe.Show(False)
         
@@ -16108,7 +16109,8 @@ class Panel_SelectEnseignement(wx.Panel):
         
         self.Bind(wx.EVT_COMBOBOX, self.EvtRadioBox)
 #         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, self.cb_type)
-        self.Bind(wx.EVT_CHOICE, self.EvtRadioBoxSpe, self.rb_spe)
+        self.Bind(wx.EVT_CHECKLISTBOX, self.EvtRadioBoxSpe, self.rb_spe)
+        
         self.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.layout)
 #         def_ref = REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT]
         self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnTreeTooltip)
@@ -16130,7 +16132,7 @@ class Panel_SelectEnseignement(wx.Panel):
     ######################################################################################  
     def EvtRadioBoxSpe(self, event):
 #         print('EvtRadioBoxSpe')
-        self.classe.specialite = event.GetString()
+        self.classe.specialite = list(self.rb_spe.GetCheckedStrings())
         self.classe.doc.MiseAJourTypeEnseignement()
         self.classe.doc.SetPosition(self.classe.doc.position)
         self.MiseAJour()
@@ -16156,9 +16158,9 @@ class Panel_SelectEnseignement(wx.Panel):
         self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
         self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
         if len(self.classe.referentiel.listeSpecialites) > 0:
-            self.classe.specialite = self.classe.referentiel.listeSpecialites[0]
+            self.classe.specialite = [self.classe.referentiel.listeSpecialites[0]]
         else:
-            self.classe.specialite = ""
+            self.classe.specialite = []
             
             
 #         self.classe.MiseAJourTypeEnseignement()
@@ -16240,22 +16242,24 @@ class Panel_SelectEnseignement(wx.Panel):
     ######################################################################################  
     def MiseAJour(self):
 #         print("MiseAJour ens", self.classe.referentiel.Enseignement[0])
-        self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
+        ref = self.classe.referentiel
+        self.ctb_type.SetStringSelection(ref.Enseignement[0])
 #         self.st_type.SetLabel(self.classe.GetLabel())
         self.rb_spe.Clear()
-        for s in self.classe.referentiel.listeSpecialites:
+        for s in ref.listeSpecialites:
             doc = self.classe.GetDocument()
             if (isinstance(doc, pysequence.Sequence) \
-                and "S" in self.classe.referentiel.specialite[s][5]) \
+                and "S" in ref.specialite[s][5]) \
                or \
                (isinstance(doc, pysequence.Projet) \
-                and "P" in self.classe.referentiel.specialite[s][5]) \
+                and "P" in ref.specialite[s][5]) \
                or \
                isinstance(doc, pysequence.Progression):
                 self.rb_spe.Append(s)
-                
-        self.rb_spe.SetStringSelection(self.classe.specialite)
-        self.rb_spe.Show(len(self.classe.referentiel.listeSpecialites) > 0)
+#         print(self.classe.specialite)
+#         for s in self.classe.specialite:
+        self.rb_spe.SetCheckedStrings(self.classe.specialite)
+        self.rb_spe.Show(len(ref.listeSpecialites) > 0)
         
         self.bmp.SetBitmap(self.classe.getBitmapPeriode(200*SSCALE))
 

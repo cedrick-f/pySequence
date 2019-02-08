@@ -1017,7 +1017,7 @@ class Classe(ElementBase):
         self.undoStack = UndoStack(self)
         
         self.verrouillee = False
-        self.specialite = ""
+        self.specialite = []
         
         self.academie = ""
         self.ville = ""
@@ -1076,7 +1076,7 @@ class Classe(ElementBase):
     def setDefaut(self):
 #        print "setDefaut Classe"
         self.typeEnseignement = 'SSI'
-        self.specialite = ""
+        self.specialite = []
         
         self.effectifs['C'] = constantes.Effectifs["C"]
         self.nbrGroupes = { "C" : 1,
@@ -1163,7 +1163,7 @@ class Classe(ElementBase):
         # La classe
         classe = ET.Element("Classe")
         classe.set("Type", self.typeEnseignement)
-        classe.set("Spe", self.specialite)
+        classe.set("Spe", " ".join(self.specialite))
         
         classe.set("Version", version.__version__) # à partir de la version 6
         
@@ -1324,7 +1324,7 @@ class Classe(ElementBase):
         #
         # Spécialité
         #
-        self.specialite = branche.get("Spe", "")
+        self.specialite = branche.get("Spe", "").split(" ")
 
         #
         # Etablissement
@@ -1390,7 +1390,7 @@ class Classe(ElementBase):
     ######################################################################################  
     def GetLabel(self):
         if len(self.specialite) > 0:
-            return self.GetReferentiel().Enseignement[0]+" - "+self.specialite
+            return self.GetReferentiel().Enseignement[0]+" - "+"+".join(self.specialite)
         else:
             return self.GetReferentiel().Enseignement[0]
     
@@ -1399,7 +1399,7 @@ class Classe(ElementBase):
         if len(self.specialite) > 0:
             return self.GetReferentiel().Enseignement[1] \
                 +" - " \
-                +self.GetReferentiel().specialite[self.specialite][1]
+                +"+".join([self.GetReferentiel().specialite[s][1] for s in self.specialite])
         else:
             return self.GetReferentiel().Enseignement[1]
         
@@ -1542,9 +1542,10 @@ class Classe(ElementBase):
         """ Liste des périodes "libres" 
             parmi les périodes du Référentiel
         """
-#         print("GetPeriodes")
+#         print("GetPeriodes", self.specialite)
         if len(self.specialite) > 0:
             ep = self.GetReferentiel().getPeriodeSpe(self.specialite)
+#             print("   ", ep)
             return list(range(ep[0], ep[1]+1))
         else:
             return list(range(sum([p for a, p in self.GetReferentiel().periodes])))
@@ -3132,7 +3133,7 @@ class Sequence(BaseDoc):
             
             # Détermination de la liste de codes constituant le masque du filtre
             if code == "Spe":
-                ce = [self.classe.specialite]
+                ce = self.classe.specialite
                 ef = None
             elif code == "EnsSpe":
                 if seance is not None:
@@ -3502,8 +3503,9 @@ class Sequence(BaseDoc):
         self.classe.MiseAJourTypeEnseignement()
         
 #         print(self.position) 
-        if not sublist(self.GetPositions(), self.classe.GetPeriodes()):
-            self.position = [self.classe.GetPeriodes()[0], self.classe.GetPeriodes()[0]]
+        p = self.classe.GetPeriodes()
+        if not sublist(self.GetPositions(), p):
+            self.position = [p[0], p[0]]
 #         print(">>>", self.position) 
         
         self.CI.MiseAJourTypeEnseignement()
@@ -9889,11 +9891,22 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def SetCodeBranche(self):
+        
         if hasattr(self, 'codeBranche') and self.typeSeance != "":
             self.codeBranche.SetLabel(self.code)
             self.arbre.SetItemText(self.branche, self.GetReferentiel().seances[self.typeSeance][0])
             self.codeBranche.SetToolTip(self.intitule)
             
+            
+    ######################################################################################  
+    def aEnsSpe(self):
+        ref = self.GetReferentiel()
+        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
+            for s in self.GetDocument().classe.specialite:
+                if s in ref.ensSpecifSeance[self.typeSeance]:
+                    return True
+        return  False
+                 
                   
     ######################################################################################  
     def SetCode(self):
@@ -9908,10 +9921,9 @@ class Seance(ElementAvecLien, ElementBase):
         self.code += num
         
         ref = self.GetReferentiel()
-        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
-            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
-                if len(self.ensSpecif) > 0:
-                    self.code += " - " + " ".join(self.ensSpecif)
+        if self.aEnsSpe(): # La Seance est concernée par les Enseignements Spécifiques
+            if len(self.ensSpecif) > 0:
+                self.code += " - " + " ".join(self.ensSpecif)
 
         self.SetCodeBranche()
         
@@ -10304,12 +10316,11 @@ class Seance(ElementAvecLien, ElementBase):
         
         lst_ensSpe = []
         
-        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
-            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
-                for d in self.ensSpecif:
+        if self.aEnsSpe(): # La Seance est concernée par les Enseignements Spécifiques
+            for d in self.ensSpecif:
 #                     print(ref.ensSpecif[d][3], couleur.GetCouleurHTML(ref.ensSpecif[d][3]))
-                    lst_ensSpe.append((d, wx.Colour(*ref.ensSpecif[d][3]).GetAsString(wx.C2S_CSS_SYNTAX)))
-        
+                lst_ensSpe.append((d, wx.Colour(*ref.ensSpecif[d][3]).GetAsString(wx.C2S_CSS_SYNTAX)))
+    
         
         
         
@@ -10402,11 +10413,10 @@ class Seance(ElementAvecLien, ElementBase):
                 for d in self.demarche.split():
                     t += "\n  " + ref.demarches[d][1]
                 
-        if self.typeSeance in ref.ensSpecifSeance.keys(): # La Seance est concernée par les Enseignements Spécifiques
-            if self.GetDocument().classe.specialite in ref.ensSpecifSeance[self.typeSeance]:
-                t += "\n\n" + ref._nomEnsSpecif.Plur_()
-                for d in self.ensSpecif:
-                    t += "  " + d
+        if self.aEnsSpe(): # La Seance est concernée par les Enseignements Spécifiques
+            t += "\n\n" + ref._nomEnsSpecif.Plur_()
+            for d in self.ensSpecif:
+                t += "  " + d
                     
         t += "\n\n" + "Durée : " + getHoraireTxt(self.GetDuree())
         
