@@ -4458,7 +4458,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4715,7 +4715,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5269,7 +5269,10 @@ class PanelConteneur(wx.Panel):
 #            print "Destroy", self.panel
 #            try:
 #            self.bsizer.Remove(self.panel)
-            self.panel.Destroy()
+            try:
+                self.panel.Destroy()
+            except:
+                pass
 #            except:
 #                print "erreur AfficherPanel"
         
@@ -10271,7 +10274,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 for dic in lst:
                     k, g = list(dic.items())[0]
 #                     print("N=",classe.nbrGroupes[k])
-                    if classe.nbrGroupes[k] > 0:
+                    if k == 'I' or classe.nbrGroupes[k] > 0:
                         child = cbEff.Append(classe.GetStrEffectifComplet(k, -1), 
                                              parent, clientData = k)
                         r = self.cbEff.GetTree().GetBoundingRect(child)
@@ -10281,20 +10284,22 @@ class PanelPropriete_Seance(PanelPropriete):
             
 #             print("_effectifs", ref._effectifs)
             m = [0]
-            construire(ref.getTreeEffectifs(), m = m)
-#             print("m=", m[0])
-#             self.cbEff.SetMinSize((m[0]+10, -1))
+            treeEffectifs = ref.getTreeEffectifs(self.seance.typeSeance)
+            if len(treeEffectifs) > 0:
+                construire(treeEffectifs, m = m)
+    #             print("m=", m[0])
+    #             self.cbEff.SetMinSize((m[0]+10, -1))
+                
+    #             listEff = ref.effectifsSeance[self.seance.typeSeance]
+    #             for s in listEff:
+    #                 self.cbEff.Append(self.seance.GetDocument().classe.GetStrEffectifComplet(s, -1))
+    #             self.cbEff.SetSelection(0)
+                self.cbEff.GetTree().SetWindowStyle(wx.TR_NO_BUTTONS)
+                self.cbEff.ExpandAll()
+    #             print("sel", list(ref.getTreeEffectifs()[0].keys())[0])
+                self.cbEff.SetClientDataSelection(list(treeEffectifs[0].keys())[0])
             
-            self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff)
-            
-#             listEff = ref.effectifsSeance[self.seance.typeSeance]
-#             for s in listEff:
-#                 self.cbEff.Append(self.seance.GetDocument().classe.GetStrEffectifComplet(s, -1))
-#             self.cbEff.SetSelection(0)
-            self.cbEff.GetTree().SetWindowStyle(wx.TR_NO_BUTTONS)
-            self.cbEff.GetTree().ExpandAll()
-#             print("sel", list(ref.getTreeEffectifs()[0].keys())[0])
-            self.cbEff.SetClientDataSelection(list(ref.getTreeEffectifs()[0].keys())[0])
+            self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox)#, self.cbEff)
             
             self.titreEff = titre
             
@@ -10719,77 +10724,78 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtComboBox(self, event):
-#         print("EvtComboBox type")
-        ref = self.GetReferentiel()
-        event.Skip()
-        # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
-        if self.seance.typeSeance in ["R", "S"] \
-          and ref.listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
-            dlg = wx.MessageDialog(self, "Cette %s contient des sous-%s !\n\n" \
-                                         "Modifier le type de cette %s entrainera la suppression de toutes les sous %s !\n" \
-                                         "Voulez-vous continuer ?" %(ref._nomActivites.sing_(), 
-                                                                     ref._nomActivites.plur_(), 
-                                                                     ref._nomActivites.sing_(),
-                                                                     ref._nomActivites.plur_()),
-                                    "Modification du type de %s" %ref._nomActivites.de_(),
-                                    wx.YES_NO | wx.ICON_EXCLAMATION
-                                    #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                                    )
-            res = dlg.ShowModal()
-            dlg.Destroy() 
-            if res == wx.ID_NO:
-                return
-            else:
-                self.seance.SupprimerSousSeances()
-        
-        deja = self.seance.typeSeance in ACTIVITES
-#        print self.GetReferentiel().seances
-#         print(self.cbType.GetStringSelection())
-
-
-        self.seance.SetType(get_key(ref.seances, 
-                                    self.cbType.GetStringSelection(), 1))
-        self.seance.GetDocument().OrdonnerSeances()
-        if not self.seance.typeSeance in ["R","S"]:
-            self.AdapterAuType()
-        
-        if self.seance.typeSeance in ACTIVITES:
-            if not deja:
-                for sy in self.seance.GetDocument().systemes:
-                    self.seance.AjouterSysteme(sy, construire = False)
-        else:
-            self.seance.systemes = []
-        
-        if not self.seance.typeSeance in ["R","S"]:   
-            if self.cbEff.IsEnabled() and self.cbEff.IsShown() and self.cbEff.GetStringSelection() != "":
-                self.seance.SetEffectif(self.cbEff.GetStringSelection())
-            else:
-                self.seance.SetEffectif("C")
-#         print(self.seance.typeSeance, ref.effectifsSeance)
-#         if self.seance.typeSeance in list(ref.effectifsSeance.keys())\
-#             and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
-#             print(">>>", ref.effectifsSeance[self.seance.typeSeance][0])
-#             self.seance.SetEffectif(ref.effectifsSeance[self.seance.typeSeance][0])
-
+        if event.GetEventObject() == self.cbType:
+#             print("EvtComboBox type")
+            ref = self.GetReferentiel()
+            event.Skip()
+            # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
+            if self.seance.typeSeance in ["R", "S"] \
+              and ref.listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
+                dlg = wx.MessageDialog(self, "Cette %s contient des sous-%s !\n\n" \
+                                             "Modifier le type de cette %s entrainera la suppression de toutes les sous %s !\n" \
+                                             "Voulez-vous continuer ?" %(ref._nomActivites.sing_(), 
+                                                                         ref._nomActivites.plur_(), 
+                                                                         ref._nomActivites.sing_(),
+                                                                         ref._nomActivites.plur_()),
+                                        "Modification du type de %s" %ref._nomActivites.de_(),
+                                        wx.YES_NO | wx.ICON_EXCLAMATION
+                                        #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                                        )
+                res = dlg.ShowModal()
+                dlg.Destroy() 
+                if res == wx.ID_NO:
+                    return
+                else:
+                    self.seance.SupprimerSousSeances()
             
-        
-        self.ConstruireListeSystemes()
-        self.Layout()
-#        print "ok"
-        self.sendEvent(modif = "Modification du type %s" %ref._nomActivites.de_(), 
-                       draw = True, verif = True)
+            deja = self.seance.typeSeance in ACTIVITES
+    #        print self.GetReferentiel().seances
+    #         print(self.cbType.GetStringSelection())
+    
+    
+            self.seance.SetType(get_key(ref.seances, 
+                                        self.cbType.GetStringSelection(), 1))
+            self.seance.GetDocument().OrdonnerSeances()
+            if not self.seance.typeSeance in ["R","S"]:
+                self.AdapterAuType()
+            
+            if self.seance.typeSeance in ACTIVITES:
+                if not deja:
+                    for sy in self.seance.GetDocument().systemes:
+                        self.seance.AjouterSysteme(sy, construire = False)
+            else:
+                self.seance.systemes = []
+            
+            if not self.seance.typeSeance in ["R","S"]:   
+                if self.cbEff.IsEnabled() and self.cbEff.IsShown() and self.cbEff.GetClientData() != "":
+                    self.seance.SetEffectif(self.cbEff.GetClientData())
+                else:
+                    self.seance.SetEffectif("C")
+    #         print(self.seance.typeSeance, ref.effectifsSeance)
+    #         if self.seance.typeSeance in list(ref.effectifsSeance.keys())\
+    #             and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
+    #             print(">>>", ref.effectifsSeance[self.seance.typeSeance][0])
+    #             self.seance.SetEffectif(ref.effectifsSeance[self.seance.typeSeance][0])
+    
+                
+            
+            self.ConstruireListeSystemes()
+            self.Layout()
+    #        print "ok"
+            self.sendEvent(modif = "Modification du type %s" %ref._nomActivites.de_(), 
+                           draw = True, verif = True)
        
+        else:
         
-        
-    #############################################################################            
-    def EvtComboBoxEff(self, event):
-#         print("EvtComboBoxEff")
-        self.cbEff.SetClientDataSelection(self.cbEff.GetClientData())
-        self.seance.SetEffectif(self.cbEff.GetClientData())
-       
-#         self.seance.SetEffectif(event.GetString())  
-        self.sendEvent(modif = "Modification de l'effectif %s" %self.GetReferentiel()._nomActivites.du_(), 
-                       draw = True, verif = True)
+#     #############################################################################            
+#     def EvtComboBoxEff(self, event):
+#             print("EvtComboBoxEff")
+            self.cbEff.SetClientDataSelection(self.cbEff.GetClientData())
+            self.seance.SetEffectif(self.cbEff.GetClientData())
+           
+    #         self.seance.SetEffectif(event.GetString())  
+            self.sendEvent(modif = "Modification de l'effectif %s" %self.GetReferentiel()._nomActivites.du_(), 
+                           draw = True, verif = True)
 
 
     #############################################################################            
@@ -16258,8 +16264,9 @@ class Panel_SelectEnseignement(wx.Panel):
                 self.rb_spe.Append(s)
 #         print(self.classe.specialite)
 #         for s in self.classe.specialite:
-        self.rb_spe.SetCheckedStrings(self.classe.specialite)
-        self.rb_spe.Show(len(ref.listeSpecialites) > 0)
+        if len(ref.listeSpecialites) > 0:
+            self.rb_spe.SetCheckedStrings(self.classe.specialite)
+            self.rb_spe.Show()
         
         self.bmp.SetBitmap(self.classe.getBitmapPeriode(200*SSCALE))
 
@@ -17243,8 +17250,11 @@ class myComboTreeBox(wx.ComboCtrl):
     def Append(self, value, parent = None, clientData = None):
         return self.tcp.AddItem(value, parent, clientData)
 #         
-
+    def ExpandAll(self):
+        self.tcp.ExpandAll()
+    
     def SetClientDataSelection(self, data):
+#         print("SetClientDataSelection", data)
         self.tcp.SetClientDataSelection(data)
 #         print("value", self.GetStringSelection())
         self.SetText(self.GetStringSelection())
@@ -17317,6 +17327,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
     def SetClientDataSelection(self, data):
 #         print("SetClientDataSelection", data)
         root = self.tree.GetRootItem()
+
         if not root:
             return
         found = self.FindClientData(data, root)
@@ -17329,8 +17340,8 @@ class TreeCtrlComboPopup(wx.ComboPopup):
     def AddItem(self, value, parent = None, clientData = None):
         if not parent:
             root = self.tree.GetRootItem()
-#             if not root:
-#                 root = self.tree.AddRoot("<hidden root>")
+            if not root:
+                root = self.tree.AddRoot("<hidden root>")
             parent = root
 
         item = self.tree.AppendItem(parent, value, data = clientData)
@@ -17382,13 +17393,29 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         self.value = None
         self.curitem = None
 
+
+    def ExpandAll(self):
+        root = self.tree.GetRootItem()
+        if root:
+            item, cookie = self.tree.GetFirstChild(root)
+            while item:
+                self.tree.ExpandAllChildren(item)
+                item, cookie = self.tree.GetNextChild(root, cookie)
+        
+        
+        
+#         root = self.tree.GetRootItem()
+#         if root:
+#             self.tree.ExpandAllChildren(root)
+    
     # Create the popup child control.  Return true for success.
     def Create(self, parent):
         self.tree = wx.TreeCtrl(parent, style=wx.TR_HIDE_ROOT
-                                |wx.TR_HAS_BUTTONS#wx.TR_NO_BUTTONS
+                                |wx.TR_HAS_BUTTONS#wx.TR_NO_BUTTONS#
                                 |wx.TR_SINGLE
                                 |wx.TR_LINES_AT_ROOT
                                 |wx.SIMPLE_BORDER)
+
         self.tree.Bind(wx.EVT_MOTION, self.OnMotion)
         self.tree.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
 #         self.tree.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
@@ -17426,7 +17453,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         return ""
 
     def GetClientData(self, item = None):
-        if item is not None:
+        if item is not None and item.IsOk():
             return self.tree.GetItemData(item)
         elif self.value is not None:
             return self.tree.GetItemData(self.value)

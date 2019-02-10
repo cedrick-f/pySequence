@@ -1332,6 +1332,7 @@ def CloseFenHelp():
     if FenHelp is not None:
         try:
             FenHelp.Close()
+            FenHelp.Destroy()
         except:
             print("Erreur Fermeture FenHelp")
     FenHelp = None

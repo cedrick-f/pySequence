@@ -2475,11 +2475,30 @@ class Referentiel(XMLelem):
 #            return
                     
     #########################################################################    
-    def getTreeEffectifs(self):
+    def getTreeEffectifs(self, typeSeance):
         """ Renvoie les code d'effectifs
             sous forme arborescente
         """
-        return self._effectifs
+#         print("getTreeEffectifs")
+        if not typeSeance in self.listeTypeActivite:
+            return self._effectifs
+        
+#         seance = self.seances[typeSeance]
+
+        treeEffectifs = [{'C' : []}]
+        if 'I' in self.effectifsSeance[typeSeance]:
+            treeEffectifs.append({'I' : []})
+            
+        def eff(l, k0):
+            for k, e in self.effectifs.items():
+                if e is not None and k != "I" and len(e) > 4 and e[4] == k0 and k in self.effectifsSeance[typeSeance]:
+                    ll = []
+                    eff(ll, k)
+                    l.append({k: ll})
+        eff(treeEffectifs[0]['C'], 'C')
+        
+#         print("   ", treeEffectifs)
+        return treeEffectifs
     
         
     #########################################################################    

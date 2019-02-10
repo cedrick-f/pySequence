@@ -6625,6 +6625,7 @@
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_AP S_00="E" S_01="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_HC S_00="I" />
     <l_C S_00="C" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_SA S_00="C" S_01="G" />
@@ -6638,6 +6639,7 @@
     <l_ED />
     <l_AP />
     <l_P />
+    <l_HC />
     <l_C />
     <l_TD />
     <l_SA />
@@ -6646,7 +6648,11 @@
     <l_R />
     <l_S />
   </d_ensSpecifSeance>
-  <d_horsClasse />
+  <d_horsClasse>
+    <l_HC S_00="Activité en autonomie" S_01="Activité en autonomie" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
+  </d_horsClasse>
   <d_labels>
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
@@ -6663,9 +6669,9 @@
   <l_listeSpecialites />
   <l_listeSystemes S_00="PE" S_01="SE" S_02="SC" />
   <l_listeThematiques S_00="A1" S_01="A2" S_02="A3" S_03="A4" S_04="B1" S_05="B2" S_06="B3" S_07="C1" S_08="C2" S_09="C3" />
-  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
-  <l_listeTypeHorsClasse />
-  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" />
+  <l_listeTypeHorsClasse S_00="HC" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" S_09="R" S_10="S" />
   <d_nivTaxo />
   <d_options />
   <d_parties S_C="Conduite" S_S="Soutenance" />
@@ -6726,6 +6732,9 @@
     <l_P S_00="Projet" S_01="Activité de projet" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
+    <l_HC S_00="Activité en autonomie" S_01="Activité en autonomie" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
     <l_C S_00="Cours" S_01="Cours" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_C>

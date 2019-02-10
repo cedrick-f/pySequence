@@ -1324,8 +1324,8 @@ class Classe(ElementBase):
         #
         # Spécialité
         #
-        self.specialite = branche.get("Spe", "").split(" ")
-
+        self.specialite = branche.get("Spe", "").split()
+#         print("self.specialite", self.specialite)
         #
         # Etablissement
         #
@@ -1396,6 +1396,7 @@ class Classe(ElementBase):
     
     ######################################################################################  
     def GetLabelComplet(self):
+#         print("GetLabelComplet", self.specialite)
         if len(self.specialite) > 0:
             return self.GetReferentiel().Enseignement[1] \
                 +" - " \
@@ -1507,7 +1508,7 @@ class Classe(ElementBase):
             return 1.0 / self.effectifs['C']
         
         else:
-            if self.nbrGroupes[eff] > 0:
+            if eff in self.nbrGroupes and self.nbrGroupes[eff] > 0:
                 if ref.effectifs[eff][5] == "N":
                     return self.GetEffectifNorm(ref.effectifs[eff][4]) / self.nbrGroupes[eff]
                 else:
@@ -9131,12 +9132,12 @@ class Seance(ElementAvecLien, ElementBase):
                               expression = None, multiple = False)
         self.intitule  = ""
         self.intituleDansDeroul = True
-        self.effectif = "C"
+        self.effectif = 'C'
   
         if self.GetReferentiel().multiDemarches:
             self.demarche = ""
         else:
-            self.demarche = "I"  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
+            self.demarche = 'I'  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
         
         self.systemes = []  # liste d'objets Variable() dont l'attribut data est un Systeme
         self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
@@ -9246,15 +9247,18 @@ class Seance(ElementAvecLien, ElementBase):
             (TODO : rajouter sélection effectif pour R et S)
         """
 #         print("GetCodeEffectif", self, self.typeSeance)
-        ref = self.GetReferentiel()
+        
         if self.typeSeance in "RS" and len(self.seances) > 0:
+            ref = self.GetReferentiel()
             e = ref.effectifs[self.seances[0].effectif][4]
-            if e == "":
+            if e == '':
                 return 'C'
             return e
 #             return self.seances[0].GetCodeEffectif()
 #             return ref.effectifs[self.seances[0].GetCodeEffectif()][4]
         else:
+            if self.effectif == '':
+                return 'C'
             return self.effectif
     
     
@@ -9401,6 +9405,9 @@ class Seance(ElementAvecLien, ElementBase):
             self.effectif = branche.get("Effectif", "C")
             self.duree.v[0] = float(branche.get("Duree", "1"))
         
+        if self.effectif == '':
+            self.effectif = 'C'
+            
         # Enseignements Spécifiques
         self.ensSpecif = branche.get("EnsSpecif", "").split()
 #         print("   ensSpecif:", self.ensSpecif)
@@ -9536,13 +9543,14 @@ class Seance(ElementAvecLien, ElementBase):
                 elif val == 1:
                     codeEff = "P"
                 else:
-                    codeEff = ""
+                    codeEff = "C"
         else:
             codeEff = val
 #             for k, v in self.GetReferentiel().effectifs.items():
 #                 if v is not None and v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
 #                     codeEff = k
-        
+        if codeEff == "":
+            codeEff = 'C'
         self.effectif = codeEff
         
 
