@@ -516,11 +516,11 @@ Titres = ["Séquence pédagogique",
           "Séances",
           "Systèmes et matériels",
           "Classe",
-          "Elèves",
+          "Élèves",
           "Support",
           "Tâches",
           "Projet", 
-          "Equipe pédagogique",
+          "Équipe pédagogique",
           "Séquences et Projets", 
           "Progression"]
 
@@ -1139,20 +1139,28 @@ class Classe(ElementBase):
     def ouvrir(self, nomFichier):
         print("Ouverture classe", nomFichier)
         
-        try:
-            fichier = open(nomFichier,'r')
-    
-            root = ET.parse(fichier).getroot()
-            self.setBranche(root)
-            
-            fichier.close()
-            self.app.fichierClasse = nomFichier
-            
-            return True
-
-        except:
-            print("Erreur Ouverture classe", nomFichier)
+        root = safeParse(nomFichier, None)
+        if root is None:
             return False
+        
+        self.setBranche(root)
+        self.app.fichierClasse = nomFichier
+        
+        return True
+#         try:
+#             fichier = open(nomFichier,'r')
+#     
+#             root = ET.parse(fichier).getroot()
+#             self.setBranche(root)
+#             
+#             fichier.close()
+#             self.app.fichierClasse = nomFichier
+#             
+#             return True
+# 
+#         except:
+#             print("Erreur Ouverture classe", nomFichier)
+#             return False
         
 #        self.MiseAJour()
 
@@ -1749,7 +1757,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ######################################################################################  
     def GetApercu(self, w = 210, h = -1, entete = False):
-        imagesurface = self.draw.get_apercu(self, w, entete = entete)
+        imagesurface = draw_cairo.get_apercu(self, w, entete = entete)
         img = getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414)
         if h == -1:
             return img.ConvertToBitmap()
@@ -3583,7 +3591,7 @@ class Sequence(BaseDoc):
                 t = Template(constantes.TEMPLATE_EFF)
             
             
-            image = draw_cairo.getBase64PNG(draw_cairo_seq.getBitmapClasse(400, 200, self.GetClasse()))
+            image = draw_cairo.getBase64PNG(draw_cairo.getBitmapClasse(400, 200, self.GetClasse()))
 #             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
             if css:
                 if image is not None:
@@ -4868,7 +4876,7 @@ class Projet(BaseDoc, Grammaire):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, self.sing_(), #Titres[9], 
+        self.branche = arbre.AppendItem(branche, self.Sing_(), #Titres[9], 
                                         data = self,
                                         image = self.arbre.images["Prj"])
 #        if hasattr(self, 'tip'):
@@ -4890,7 +4898,7 @@ class Projet(BaseDoc, Grammaire):
         # Les élèves
         #
         print(self.GetReferentiel().labels["ELEVES"][2])
-        self.brancheElv = arbre.AppendItem(self.branche, self.GetReferentiel().labels["ELEVES"][2].plur_(), 
+        self.brancheElv = arbre.AppendItem(self.branche, self.GetReferentiel().labels["ELEVES"][2].Plur_(), 
                                            data = "Ele",
                                            image = self.arbre.images["Grp"])
         for e in self.eleves:
@@ -4905,7 +4913,7 @@ class Projet(BaseDoc, Grammaire):
         #
         # Les tâches
         #
-        self.brancheTac = arbre.AppendItem(self.branche, self.GetReferentiel()._nomTaches.plur_(), #Titres[8], 
+        self.brancheTac = arbre.AppendItem(self.branche, self.GetReferentiel()._nomTaches.Plur_(), #Titres[8], 
                                            data = "Tac",
                                            image = self.arbre.images["Tac"])
         for t in self.taches:
@@ -5156,18 +5164,18 @@ class Projet(BaseDoc, Grammaire):
     #############################################################################            
     def drawPeriode(self, ctx, larg):
         prop = 7
-        w, h = 0.04*prop * draw_cairo_prj.COEF, 0.04 * draw_cairo_prj.COEF
+        w, h = 0.04*prop * draw_cairo.COEF, 0.04 * draw_cairo.COEF
         ctx.scale(larg/w, larg/w) 
     #     ctx.set_source_rgba(1,1,1,1)
     #     ctx.paint()
-        draw_cairo_prj.DrawPeriodes(ctx, (0,0,w,h), 
+        draw_cairo.DrawPeriodes(ctx, (0,0,w,h), 
                                     self.getRangePeriode(), 
                                     self.GetReferentiel().periodes,
                                     self.GetReferentiel().projets)
         
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo_prj.getBitmapPeriode(larg, self.getRangePeriode(), 
+        imagesurface = draw_cairo.getBitmapPeriode(larg, self.getRangePeriode(), 
                                                        self.GetReferentiel().periodes ,
                                                        self.GetReferentiel().projets, 
                                                        prop = 7)
@@ -12038,6 +12046,7 @@ class Support(ElementAvecLien, ElementBase):
         self.parent = parent
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self)
+        Grammaire.__init__(self, "Support(s)$m")
         
         self.modeles = []
         

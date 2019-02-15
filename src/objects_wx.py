@@ -4458,7 +4458,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4715,7 +4715,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -6844,7 +6844,7 @@ class PanelPropriete_Classe(PanelPropriete):
         pageSys = PanelPropriete(nb, objet = classe)
         pageSys.SetBackgroundColour(bg_color)
         self.pageSys = pageSys
-        nb.AddPage(pageSys, ref._nomSystemes.plur_())
+        nb.AddPage(pageSys, ref._nomSystemes.Plur_())
 
         
         self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
@@ -7077,6 +7077,11 @@ class PanelPropriete_Classe(PanelPropriete):
         if nomFichier != '':
             self.classe.ouvrir(nomFichier)
         
+        self.classe.doc.MiseAJourTypeEnseignement()
+        self.classe.doc.SetPosition(self.classe.doc.position)
+        
+        self.MiseAJour()
+        
         self.sendEvent(modif = "Ouverture d'une Classe",
                        obj = self.classe, draw = True, verif = True)
     
@@ -7084,7 +7089,7 @@ class PanelPropriete_Classe(PanelPropriete):
     def enregistrer(self, nomFichier):
 
         wx.BeginBusyCursor()
-        fichier = open(nomFichier, 'w')
+#         fichier = open(nomFichier, 'w')
         
         # La classe
         classe = self.classe.getBranche()
@@ -7092,20 +7097,23 @@ class PanelPropriete_Classe(PanelPropriete):
         # La racine
         constantes.indent(classe)
         
-        try:
-#            ET.ElementTree(classe).write(fichier, encoding = SYSTEM_ENCODING)
-            ET.ElementTree(classe).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
-        except IOError:
-            messageErreur(None, "Accés refusé", 
-                                  "L'accés au fichier %s a été refusé !\n\n"\
-                                  "Essayer de faire \"Enregistrer sous...\"" %nomFichier)
-        except UnicodeDecodeError:
-            messageErreur(None, "Erreur d'encodage", 
-                                  "Un caractére spécial empéche l'enregistrement du fichier !\n\n"\
-                                  "Essayer de le localiser et de le supprimer.\n"\
-                                  "Merci de reporter cette erreur au développeur.")
+        enregistrer_root(classe, nomFichier)
+        
+        
+#         try:
+# #            ET.ElementTree(classe).write(fichier, encoding = SYSTEM_ENCODING)
+#             ET.ElementTree(classe).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
+#         except IOError:
+#             messageErreur(None, "Accés refusé", 
+#                                   "L'accés au fichier %s a été refusé !\n\n"\
+#                                   "Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+#         except UnicodeDecodeError:
+#             messageErreur(None, "Erreur d'encodage", 
+#                                   "Un caractére spécial empéche l'enregistrement du fichier !\n\n"\
+#                                   "Essayer de le localiser et de le supprimer.\n"\
+#                                   "Merci de reporter cette erreur au développeur.")
             
-        fichier.close()
+#         fichier.close()
 
         wx.EndBusyCursor()
         
@@ -12683,7 +12691,7 @@ class PanelPropriete_Personne(PanelPropriete):
 #         label = self.lb.GetString(index)
         self.personne.AjouterEnleverModele(index)
         
-        self.sendEvent(modif = "Modification des modèles associés à %s" %self.GetReferentiel().labels["ELEVES"][2].le_(), 
+        self.sendEvent(modif = "Modification des modèles associés à %s" %self.personne.GetReferentiel().labels["ELEVES"][2].le_(), 
                        draw = False, verif = False)
         
     #############################################################################            
