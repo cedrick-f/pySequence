@@ -449,15 +449,19 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
                                        cairo.FONT_WEIGHT_BOLD)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
     
-    h = taillePos[1] * 0.8
+    
+    t2 = seq.classe.GetLabelComplet()
+    coef = max(min(-0.003*len(t2)+0.9, 0.8), 0.45)
+    h = taillePos[1] * coef #0.8
     show_text_rect(ctx, t, (posObj[0] , posPos[1], tailleTypeEns, h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                    coulBord = (0, 0, 0))
 
-    t = seq.classe.GetLabelComplet()
+    
+#     print("len=", len(t2))
     ctx.set_source_rgb (0.3, 0.3, 0.8)
-    show_text_rect(ctx, t, (posObj[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
+    show_text_rect(ctx, t2, (posObj[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False)
     

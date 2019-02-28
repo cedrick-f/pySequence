@@ -5935,7 +5935,7 @@
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
   <l_listeEnsSpecif S_00="AC" S_01="EE" S_02="ITEC" S_03="SIN" />
   <l_listeNivTaxo S_00="1.0" S_01="2.0" S_02="3.0" S_03="4.0" />
-  <l_listeSpecialites S_00="I2D" S_01="IT" S_02="2I2D" S_03="PCM" />
+  <l_listeSpecialites S_00="IT" S_01="I2D" S_02="2I2D" S_03="PCM" />
   <l_listeSystemes S_00="PE" S_01="SE" S_02="SC" />
   <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="DM" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" />
@@ -6163,16 +6163,16 @@
     </l_S>
   </d_seances>
   <d_specialite>
-    <l_I2D S_00="I2D" S_01="Ingénierie et Développement Durable" S_02="">
-      <l_03 I_00="0" I_01="0" I_02="0" />
-      <l_04 I_00="1" I_01="5" />
-      <l_05 S_00="S" S_01="P" />
-    </l_I2D>
     <l_IT S_00="IT" S_01="Innovation Technologique" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
       <l_04 I_00="1" I_01="5" />
       <l_05 S_00="S" S_01="P" />
     </l_IT>
+    <l_I2D S_00="I2D" S_01="Ingénierie et Développement Durable" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+      <l_04 I_00="1" I_01="5" />
+      <l_05 S_00="S" S_01="P" />
+    </l_I2D>
     <l_2I2D S_00="2I2D" S_01="Ingénierie, Innovation et Développement Durable" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
       <l_04 I_00="6" I_01="10" />

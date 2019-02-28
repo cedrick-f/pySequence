@@ -1407,8 +1407,8 @@ class Classe(ElementBase):
 #         print("GetLabelComplet", self.specialite)
         if len(self.specialite) > 0:
             return self.GetReferentiel().Enseignement[1] \
-                +" - " \
-                +"+".join([self.GetReferentiel().specialite[s][1] for s in self.specialite])
+                +"\n" \
+                +" + ".join([self.GetReferentiel().specialite[s][1] for s in self.specialite])
         else:
             return self.GetReferentiel().Enseignement[1]
         

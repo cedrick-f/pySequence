@@ -159,6 +159,7 @@ class SingleInstApp(wx.App):
         self.locale = wx.Locale(wx.LANGUAGE_ENGLISH) # !!! obligé pour certains PC ???
 #         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
         # Problème avec les PNG ??? Suppression des warning
+        #  --> bug dans la version wx4 : les warnings plantent : il faut changer self.locale
         # https://github.com/wxWidgets/Phoenix/issues/769
         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
         

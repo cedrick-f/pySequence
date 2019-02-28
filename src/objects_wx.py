@@ -123,6 +123,9 @@ import wx.lib.colourdb
 import wx.lib.colourselect as  csel
 import wx.lib.agw.foldpanelbar as fpb
 
+# import wx.lib.mixins.listctrl as listmix
+
+
 # Pour les descriptions
 
 import orthographe
@@ -167,7 +170,7 @@ import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 # import widgets
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
-                    isstring, EditableListCtrl, \
+                    isstring, EditableListCtrl, Grammaire, \
                     getSingulier, getPluriel, getSingulierPluriel, et2ou, \
                     TextCtrl_Help, CloseFenHelp, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
@@ -8446,17 +8449,24 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Cas des CI personnalisés
         #
+        
         tit = ref.nomCI
         if len(ref.CentresInterets) > 0:
             tit += " personnalisé(s)"
+            
+        tit = Grammaire(tit)    
+        if self.CI.maxCI != 1:
+            tit = tit.Plur_()
+        else:
+            tit = tit.Sing_()
+            
         if ref.CI_cible:
             self.elb = ListeCI(panelCI, prems = len(ref.CentresInterets), pref = abrevCI)
             self.elb.SetMinSize((-1, 60*SSCALE))
         else:
-            self.elb = MyEditableListBox(panelCI, -1, 
-                                         getSingulierPluriel(tit, self.CI.maxCI != 1),
-                                              size = wx.DefaultSize,
-                                              style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
+            self.elb = MyEditableListBox(panelCI, -1, tit,
+                                         size = wx.DefaultSize,
+                                         style = adv.EL_ALLOW_NEW | adv.EL_ALLOW_EDIT | adv.EL_ALLOW_DELETE)
             self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
             self.elb.SetMinSize((-1, 60*SSCALE))
             self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
@@ -8470,7 +8480,7 @@ class PanelPropriete_CI(PanelPropriete):
         #
 #         print("maxCI", ref.maxCI)
         hs = wx.BoxSizer(wx.HORIZONTAL)
-        hs.Add(wx.StaticText(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.plur_()), 
+        hs.Add(wx.StaticText(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.Plur_()), 
                flag = wx.EXPAND|wx.TOP|wx.RIGHT, border = 4)
         
         self.nCI = wx.SpinCtrl(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.plur_(), size = (35*SSCALE, -1))
@@ -14458,7 +14468,7 @@ class ArbreCompSav(HTL.HyperTreeList):
 
 
 
-class ArbreSavoirs(HTL.HyperTreeList):
+class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
     def __init__(self, parent, typ, savFiltre, savoirsRef, filtre = None,
                  pp = None, et = False, agwStyle = 0):
         """    
@@ -14470,7 +14480,11 @@ class ArbreSavoirs(HTL.HyperTreeList):
         """
         HTL.HyperTreeList.__init__(self, parent, -1, 
                                    agwStyle = wx.TR_MULTIPLE|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|\
-                                   CT.TR_AUTO_CHECK_PARENT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|HTL.TR_NO_HEADER|agwStyle) # wx.TR_DEFAULT_STYLE|<< le dernier pour accepter les texte multiligne (ça marche mais pas débuggé)
+                                   CT.TR_AUTO_CHECK_PARENT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|HTL.TR_NO_HEADER|CT.TR_FULL_ROW_HIGHLIGHT| \
+                                   agwStyle) # wx.TR_DEFAULT_STYLE|<< le dernier pour accepter les texte multiligne (ça marche mais pas débuggé)
+        
+#         listmix.ListRowHighlighter.__init__(self, (206, 218, 255))
+        
 #         print("ArbreSavoirs")
         self.parent = parent
         
@@ -14547,6 +14561,10 @@ class ArbreSavoirs(HTL.HyperTreeList):
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        
+        self.Bind(CT.EVT_TREE_ITEM_EXPANDED, self.OnCollOrExp)
+        self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnCollOrExp)
+        
         self.GetMainWindow().Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnGetToolTip)
         
         
@@ -14633,9 +14651,34 @@ class ArbreSavoirs(HTL.HyperTreeList):
 #         wx.ClientDC(self).SetFont(font)
 
 
-
     ####################################################################################
-    def Construire(self, branche, dic, et = False, niveau = 0):
+    def OnCollOrExp(self, event):
+        self.AlternColour()
+        
+    ####################################################################################
+    def AlternColour(self, parent = None, pair = False):
+#         print("AlternColour")
+        if parent is None:
+            parent = self.GetRootItem()
+        item, cookie = self.GetFirstChild(parent)
+    
+        while item != None and item.IsOk():
+            if not item.IsHidden():#self.IsVisible(item):
+                if pair:
+                    self.SetItemBackgroundColour(item, wx.Colour(0xDFDFDF))
+                else:
+                    self.SetItemBackgroundColour(item, self.GetBackgroundColour())
+                pair = not pair
+                
+            if self.ItemHasChildren(item):
+                self.AlternColour(item, pair)
+            item, cookie = self.GetNextChild(parent, cookie)
+    
+        return
+            
+            
+    ####################################################################################
+    def Construire(self, branche, dic, et = False, niveau = 0):#, pair = None):
         """ Construction d'une branche de "savoirs"
             <et> = prérequis ETT pour spécialité STI2D ?? plus utilisé ??
             
@@ -14643,6 +14686,8 @@ class ArbreSavoirs(HTL.HyperTreeList):
         """
         if dic == None:
             return
+#         if pair is None:
+#             pair = [False]
 #         print(" "*niveau, "Construire", dic)
 
         clefs = constantes.trier(list(dic.keys()))
@@ -14669,10 +14714,13 @@ class ArbreSavoirs(HTL.HyperTreeList):
                 ct_type = 1
             else:
                 ct_type = 0
+            
+            
                 
             b = self.AppendItem(branche, k+" "+dic[k][0].intitule, 
                                 ct_type = ct_type, 
                                 data = toolTip)
+            
             
             #
             # Taxonomie
@@ -14680,13 +14728,28 @@ class ArbreSavoirs(HTL.HyperTreeList):
             ref = self.pp.GetReferentiel()
             doc = self.pp.GetDocument()
             col = 1
+#             print("nivTaxo", k, " : ", self.savoirsRef.nivTaxo)
+            
+            # format dans __init__() :
+#             for f in self.savoirsRef.nivTaxo:
+#                 if f == "Spe":
+#                     for s in doc.classe.specialite:
+#                         self.AddColumn(s, flag = wx.ALIGN_CENTER)
+#                 elif f == "EnsSpe":
+#                     
+#                     for es in ref.listeEnsSpecif:
+#                         self.AddColumn(es, flag = wx.ALIGN_CENTER)
+                    
+            
+            
             for i, f in enumerate(self.savoirsRef.nivTaxo):  # Même structure que dans _init_
                 if f == "Spe":
-                    for sn in dic[k][0].nivTaxo[i]:
-                        s, n = sn.split("-")
-                        if s in doc.classe.specialite:
-                            self.SetItemText(b, n, col)
-                    col += 1
+                    for sp in doc.classe.specialite:
+                        for sn in dic[k][0].nivTaxo[i]:
+                            s, n = sn.split("-")
+                            if s == sp:
+                                self.SetItemText(b, n, col)
+                        col += 1
                 elif f == "EnsSpe":
                     d = dict([l.split("-") for l in dic[k][0].nivTaxo[i]])
                     for es in ref.listeEnsSpecif:
@@ -14695,8 +14758,23 @@ class ArbreSavoirs(HTL.HyperTreeList):
                         col += 1
             
             
+#             for i, f in enumerate(self.savoirsRef.nivTaxo):  # Même structure que dans _init_
+#                 if f == "Spe":
+#                     for sn in dic[k][0].nivTaxo[i]:
+#                         s, n = sn.split("-")
+#                         if s in doc.classe.specialite:
+#                             self.SetItemText(b, n, col)
+#                         col += 1
+#                 elif f == "EnsSpe":
+#                     d = dict([l.split("-") for l in dic[k][0].nivTaxo[i]])
+#                     for es in ref.listeEnsSpecif:
+#                         if es in d.keys():
+#                             self.SetItemText(b, d[es], col)
+#                         col += 1
+                        
+                        
             if type(dic[k][0].sousSav) == dict:
-                self.Construire(b, dic[k][1], et, niveau = niveau+1)       
+                self.Construire(b, dic[k][1], et, niveau = niveau+1)#, pair = pair)       
             self.items[k] = b
             
             if et or niveau == 4:
@@ -14705,6 +14783,9 @@ class ArbreSavoirs(HTL.HyperTreeList):
             if niveau == 0:
                 self.SetItemBold(b, True)
     
+#             if pair[0]:
+#                 self.SetItemBackgroundColour(b, wx.Colour(0xDDDDDD))#wx.LIGHT_GREY))
+#             pair[0] = not pair[0]
     
     
 #     ####################################################################################
