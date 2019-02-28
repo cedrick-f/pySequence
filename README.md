@@ -59,7 +59,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 |Lien |Remarque|
 |---|---|
 |[pySequence_7.1.17.zip](https://github.com/cedrick-f/pySequence/releases/download/v7.1.17/pySequence_7.1.17.zip)   |Dernière version "stable"|
-|[pySequence_8.0-beta.32.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.0-beta.32)|Dernière (ultime ?) version beta|
+|[pySequence_8.0-beta.33.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.0-beta.33)|Dernière (ultime ?) version beta|
 
 
 
