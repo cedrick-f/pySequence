@@ -4461,7 +4461,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4718,7 +4718,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -8480,7 +8480,7 @@ class PanelPropriete_CI(PanelPropriete):
         #
 #         print("maxCI", ref.maxCI)
         hs = wx.BoxSizer(wx.HORIZONTAL)
-        hs.Add(wx.StaticText(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.Plur_()), 
+        hs.Add(wx.StaticText(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.plur_()), 
                flag = wx.EXPAND|wx.TOP|wx.RIGHT, border = 4)
         
         self.nCI = wx.SpinCtrl(panelCI, -1, "Nombre maximum de %s" %ref._nomCI.plur_(), size = (35*SSCALE, -1))
@@ -16955,7 +16955,7 @@ class PanelProblematiques(wx.Panel):
         #
         # Cas des Problématiques personalisées
         #
-        t = ref._nomPb.plur_()
+        t = ref._nomPb.Plur_()
         if hasPb:
             t += " personnalisées"
         

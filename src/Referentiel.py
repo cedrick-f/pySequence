@@ -2427,7 +2427,7 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getTypeEtab(self):
-        if self.Famille in ["STI", "SSI", "STS", "2nde", "ISN"]:
+        if self.Famille in ["STI", "SSI", "SI", "STS", "2nde", "ISN", "MPSI"]:
             return 'L'  # Lycée
         else:
             return 'C'  # Collège
@@ -3483,7 +3483,7 @@ class Competences(XMLelem):
 #         print "getCompetence", comp
         def getComp(dic):
 #             print "   ", dic
-            if comp in list(dic.keys()):
+            if comp in dic.keys():
                 return dic[comp]
             else:
                 for competence in dic.values():
@@ -3801,12 +3801,20 @@ class Savoirs(XMLelem):
         if dic is None:
             dic = self.dicSavoirs
 #         print(" "*c, dic)
+        
         if code in dic:
             return dic[code]#[0]
         else:
-            cd = ".".join(code.split(".")[:c])
-#             print(" "*c, ">>", cd)
-            return self.getSavoir(code, dic[cd].sousSav, c+1)#dic[cd][1]
+            for sav in dic.values():
+                cod = self.getSavoir(code, sav.sousSav, c+1)
+                if cod is not None: 
+                    return cod
+            
+            
+            
+#             cd = ".".join(code.split(".")[:c])
+# #             print(" "*c, ">>", cd)
+#             return self.getSavoir(code, dic[cd].sousSav, c+1)#dic[cd][1]
 
 
     ###########################################################
