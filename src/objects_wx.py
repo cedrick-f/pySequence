@@ -4461,7 +4461,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4718,7 +4718,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -10059,7 +10059,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Systèmes
         #
-        self.box = myStaticBox(pageGen, -1, ref._nomSystemes.plur_()+" nécessaires", size = (200*SSCALE,200*SSCALE))
+        self.box = myStaticBox(pageGen, -1, ref._nomSystemes.Plur_()+" nécessaires", size = (200*SSCALE,200*SSCALE))
         self.box.SetMinSize((200*SSCALE,200*SSCALE))
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
@@ -10300,9 +10300,10 @@ class PanelPropriete_Seance(PanelPropriete):
                             m[0] = max(m[0], r.GetRight())# + r.GetWidth())
                         construire(g, child, m)
             
-#             print("_effectifs", ref._effectifs)
+            print("_effectifs", ref._effectifs)
             m = [0]
             treeEffectifs = ref.getTreeEffectifs(self.seance.typeSeance)
+#             print("treeEffectifs", treeEffectifs)
             if len(treeEffectifs) > 0:
                 construire(treeEffectifs, m = m)
     #             print("m=", m[0])
@@ -10406,9 +10407,9 @@ class PanelPropriete_Seance(PanelPropriete):
                 
                 listDem = ref.demarcheSeance[self.seance.typeSeance]
                 if ref.multiDemarches and len(listDem) > 1:
-                    tit = ref._nomDemarches.plur_()
+                    tit = ref._nomDemarches.Plur_()
                 else:
-                    tit = ref._nomDemarches.sing_()
+                    tit = ref._nomDemarches.Sing_()
                 tit += " " + ref._nomActivites.du_()
                 titre = wx.StaticText(self.pageGen, -1, tit + " :")
                 self.titreDem = titre
@@ -14518,11 +14519,14 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
             if f == "Spe":
                 for s in doc.classe.specialite:
                     self.AddColumn(s, flag = wx.ALIGN_CENTER)
+                    
             elif f == "EnsSpe":
-                
                 for es in ref.listeEnsSpecif:
                     self.AddColumn(es, flag = wx.ALIGN_CENTER)
-        
+            
+            else:
+                self.AddColumn(f, flag = wx.ALIGN_CENTER)
+                
         if self.GetColumnCount() > 1:
             self.SetAGWWindowStyleFlag(self.GetAGWWindowStyleFlag()^HTL.TR_NO_HEADER)           
 
@@ -14757,7 +14761,12 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
                             self.SetItemText(b, d[es], col)
                         col += 1
             
-            
+                else:
+                    if len(dic[k][0].nivTaxo[i]) > 0:
+                        self.SetItemText(b, " ".join(dic[k][0].nivTaxo[i]), col)
+                    
+                    
+                    
 #             for i, f in enumerate(self.savoirsRef.nivTaxo):  # Même structure que dans _init_
 #                 if f == "Spe":
 #                     for sn in dic[k][0].nivTaxo[i]:

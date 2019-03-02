@@ -2479,7 +2479,7 @@ class Referentiel(XMLelem):
         """ Renvoie les code d'effectifs
             sous forme arborescente
         """
-#         print("getTreeEffectifs")
+        print("getTreeEffectifs", self.effectifsSeance[typeSeance])
         if not typeSeance in self.listeTypeActivite:
             return self._effectifs
         
@@ -2487,7 +2487,10 @@ class Referentiel(XMLelem):
 
         treeEffectifs = [{'C' : []}]
         if 'I' in self.effectifsSeance[typeSeance]:
-            treeEffectifs.append({'I' : []})
+            if not 'C' in self.effectifsSeance[typeSeance]:
+                treeEffectifs = [{'I' : []}]
+            else:
+                treeEffectifs.append({'I' : []})
             
         def eff(l, k0):
             for k, e in self.effectifs.items():
@@ -2495,7 +2498,8 @@ class Referentiel(XMLelem):
                     ll = []
                     eff(ll, k)
                     l.append({k: ll})
-        eff(treeEffectifs[0]['C'], 'C')
+        if 'C' in treeEffectifs[0]:
+            eff(treeEffectifs[0]['C'], 'C')
         
 #         print("   ", treeEffectifs)
         return treeEffectifs

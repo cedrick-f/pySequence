@@ -2977,7 +2977,7 @@ class Sequence(BaseDoc):
 #         print("ConstruireArbre Seq")
 #         print err
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, self.sing_(),#Titres[0] 
+        self.branche = arbre.AppendItem(branche, self.Sing_(),#Titres[0] 
                                         image = self.arbre.images["Seq"],
                                         data = self,)
         self.arbre.SetItemBold(self.branche)
@@ -3035,7 +3035,7 @@ class Sequence(BaseDoc):
             #
             # Les Séances
             #
-            self.brancheSce = arbre.AppendItem(self.branche, ref._nomSeances.plur_(), 
+            self.brancheSce = arbre.AppendItem(self.branche, ref._nomSeances.Plur_(), 
                                                image = self.arbre.images["Sea"], 
                                                data = "Sea")
             self.arbre.SetItemBold(self.brancheSce)
@@ -3045,7 +3045,7 @@ class Sequence(BaseDoc):
             #
             # Les systèmes
             #
-            self.brancheSys = arbre.AppendItem(self.branche, ref._nomSystemes.plur_(), 
+            self.brancheSys = arbre.AppendItem(self.branche, ref._nomSystemes.Plur_(), 
                                                image = self.arbre.images["Sys"], 
                                                data = "Sys")
             
@@ -3162,7 +3162,7 @@ class Sequence(BaseDoc):
 
             
             ce2 = ce[:]
-            if ef is not None and hasattr(ef, 'filtre'):
+            if ef is not None and hasattr(ef, 'filtre') and ef.filtre is not None:
                 for e in ce:
                     ce2.extend([c for c in ref.getSousElem(e, code) if c in ef.filtre])
 #             print("   ce =", ce, "-->", ce2)

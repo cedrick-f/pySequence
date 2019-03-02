@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SI" S_Famille="SI" S_FichierLogo="logo-si-2019.png" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thématique(s)$f" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)$f">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SI" S_Famille="SI" S_FichierLogo="logo-si-2019.png" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thématique(s)$f" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)$f">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/43/6/spe640_annexe_1063436.pdf" />
   </l_BO_URL>
@@ -864,7 +864,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -876,7 +876,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -925,7 +925,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -998,7 +998,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1035,7 +1035,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1072,7 +1072,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1122,7 +1122,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -1134,7 +1134,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1183,7 +1183,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1232,7 +1232,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1281,7 +1281,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1318,7 +1318,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1367,7 +1367,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1404,7 +1404,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1441,7 +1441,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -1453,7 +1453,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -1465,7 +1465,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1514,7 +1514,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1575,7 +1575,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -1600,7 +1600,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1637,7 +1637,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1698,7 +1698,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1747,7 +1747,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1796,7 +1796,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -1808,7 +1808,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1857,7 +1857,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1918,7 +1918,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -1978,7 +1978,7 @@
                   </l_elemAssocies>
                   <l_infos />
                   <l_nivTaxo>
-                    <l_00 />
+                    <l_00 S_00="1ère" />
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
@@ -1990,7 +1990,7 @@
                   </l_elemAssocies>
                   <l_infos />
                   <l_nivTaxo>
-                    <l_00 />
+                    <l_00 S_00="Tale" />
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
@@ -2004,7 +2004,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2016,7 +2016,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2053,7 +2053,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2090,7 +2090,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2106,7 +2106,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_C13.1>
-                <Savoir_C13.2 S_intitule="Champ des viresses">
+                <Savoir_C13.2 S_intitule="Champ des vitesses">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2151,7 +2151,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2212,7 +2212,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2237,7 +2237,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2249,7 +2249,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" S_01="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2261,7 +2261,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2310,7 +2310,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2322,7 +2322,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2371,7 +2371,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2383,7 +2383,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2395,7 +2395,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
@@ -2445,7 +2445,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2457,7 +2457,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2469,7 +2469,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2481,7 +2481,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2493,7 +2493,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2505,7 +2505,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2517,7 +2517,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="1ère" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2529,7 +2529,7 @@
               </l_elemAssocies>
               <l_infos />
               <l_nivTaxo>
-                <l_00 />
+                <l_00 S_00="Tale" />
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav />
@@ -2537,7 +2537,7 @@
           </d_sousSav>
         </Savoir_E>
       </d_dicSavoirs>
-      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
+      <l_nivTaxo S_00="Année" S_01="EnsSpe" />
     </Savoirs_S>
     <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="Math" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Capacités Math">
       <l_asso_contexte />
@@ -6623,7 +6623,7 @@
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_AP S_00="E" S_01="P" />
+    <l_AP S_00="C" S_01="D" S_02="E" S_03="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_HC S_00="I" />
     <l_C S_00="C" />
