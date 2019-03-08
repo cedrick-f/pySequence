@@ -762,7 +762,7 @@ class ElementBase(Grammaire):
              - liens 
              - ...
         """
-        print("EnrichiHTML", self, seance, self.cadre)
+#         print("EnrichiHTML", self, seance, self.cadre)
         
         for i, (p, f, c) in enumerate(self.cadre):
             div = doc.new_tag('div')
@@ -786,7 +786,35 @@ class ElementBase(Grammaire):
             p['x'] = c[0]
             p['y'] = c[1]
         
-    
+#             if hasattr(self, 'GetLien'):
+#                 lien = self.GetLienHTML()
+# #                lien = lien.decode(FILE_ENCODING)
+# #                 lien = lien.encode('utf-8')
+#                 t = doc.createElement("a")
+#                 txt = doc.createTextNode(lien)
+#                 t.appendChild(txt)
+#                 np = p.cloneNode(True)
+#                 t.appendChild(np)
+#                 if p.parentNode is not None:
+#                     p.parentNode.insertBefore(t, p)
+#                     p.parentNode.removeChild(p)
+# #                p.appendChild(t)
+#                 
+#                 if lien != '':
+#                     self.SetSVGLien(t, lien)
+                    
+                    
+                    
+        if hasattr(self, 'GetLien'):
+            lien = self.GetLienHTML()
+            if len(lien) > 0:
+#                 print(self, ">>> lien:", lien)
+                for i, (p, f, c) in enumerate(self.cadre):
+                    tag_a = doc.new_tag('a')
+                    tag_a['href'] = lien
+                    tag_a['target'] = "_blank"
+                    p.wrap(tag_a)
+                
     
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
@@ -2652,12 +2680,18 @@ class Sequence(BaseDoc):
             s.SupprimerSysteme(i) 
             
     ######################################################################################  
-    def CollerElem(self, event = None, bseance = None):
+    def CollerElem(self, event = None, item = None, bseance = None):
         """ Colle la séance présente dans le presse-papier (branche <bseance>)
             en première position
         """
 #        print "CollerElem 1ere pos"
-        
+        if hasattr(self, "brancheSce") and item == self.brancheSce:
+            sea_avant = 0
+        else:
+            sea_avant = self.arbre.GetItemPyData(item)
+            if not isinstance(sea_avant, Seance):
+                return
+                
         if bseance == None:
             bseance = GetObjectFromClipBoard('Seance')
             if bseance == None:
@@ -3578,8 +3612,8 @@ class Sequence(BaseDoc):
             
             :i:  code pour différentier ...
         """
-        print("GetBulleHTML Seq", self, i)
-        ref = self.GetReferentiel()
+#         print("GetBulleHTML Seq", self, i)
+#         ref = self.GetReferentiel()
         
         def b64(img):
             return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
@@ -3602,9 +3636,7 @@ class Sequence(BaseDoc):
             else:
                 image = self.tip.GetImgURL(image, width = 200)
             
-            
-            
-            
+
             html = t.render(titre = "Découpage de la classe",
                             image = image,
                             )
@@ -7922,7 +7954,7 @@ class CentreInteret(ElementBase):
     
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False):
-        print("GetBulleHTML", self, i)
+#         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         
         if len(self.numCI)+len(self.CI_perso) > 1:
@@ -9428,7 +9460,7 @@ class Seance(ElementAvecLien, ElementBase):
             l = self.GetCompetencesVisables(typ)
 #             print("  ", typ, l)
             for c in self.compVisees:
-                if c[0] == typ and not c[1:] in l:
+                if c[0] == typ and (l is not None and not c[1:] in l):
                     self.compVisees.remove(c)
         
         # Indicateurs de performance

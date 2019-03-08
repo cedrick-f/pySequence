@@ -10300,7 +10300,7 @@ class PanelPropriete_Seance(PanelPropriete):
                             m[0] = max(m[0], r.GetRight())# + r.GetWidth())
                         construire(g, child, m)
             
-            print("_effectifs", ref._effectifs)
+#             print("_effectifs", ref._effectifs)
             m = [0]
             treeEffectifs = ref.getTreeEffectifs(self.seance.typeSeance)
 #             print("treeEffectifs", treeEffectifs)

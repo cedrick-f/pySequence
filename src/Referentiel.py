@@ -2479,7 +2479,7 @@ class Referentiel(XMLelem):
         """ Renvoie les code d'effectifs
             sous forme arborescente
         """
-        print("getTreeEffectifs", self.effectifsSeance[typeSeance])
+#         print("getTreeEffectifs", self.effectifsSeance[typeSeance])
         if not typeSeance in self.listeTypeActivite:
             return self._effectifs
         

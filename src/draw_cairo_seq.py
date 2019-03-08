@@ -1321,7 +1321,7 @@ class Cadre():
     #            print (wc, y, self.w - (wc-x), self.h)
     #            print 
                 if self.h < 0.02 * COEF: # h petit -> on écrit à coté du code !
-                    rct = (wc, y, self.w - (wc-x), self.h)
+                    rct = (x+wc, y, self.w - (wc-x), self.h)
                 else:
                     rct = (x, y + hc, self.w, self.h-hc)
     
