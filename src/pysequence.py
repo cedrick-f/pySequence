@@ -2284,6 +2284,9 @@ class Sequence(BaseDoc):
     def getBranche(self):
         """ Renvoie la branche XML de la séquence pour enregistrement
         """
+        tps = time.clock()
+        
+        
         # Création de la racine
         sequence = ET.Element("Sequence")
         
@@ -2293,6 +2296,7 @@ class Sequence(BaseDoc):
 
         if self.commentaires != "":
             sequence.set("Commentaires", self.commentaires)
+        
         
         sequence.set("Domaine", self.domaine)
 
@@ -2304,6 +2308,7 @@ class Sequence(BaseDoc):
             
         sequence.append(self.CI.getBranche())
         
+        
         prerequis = ET.SubElement(sequence, "Prerequis")
         prerequis.append(self.prerequis["S"].getBranche())
         prerequis.append(self.prerequis["C"].getBranche())
@@ -2312,6 +2317,7 @@ class Sequence(BaseDoc):
         
 #        self.getBrancheList(sequence,  "Objectifs", self.obj)
         
+        
         objectifs = ET.SubElement(sequence, "Objectifs")
         for obj in list(self.obj.values()):
             objectifs.append(obj.getBranche())
@@ -2319,7 +2325,9 @@ class Sequence(BaseDoc):
         seances = ET.SubElement(sequence, "Seances")
         for sce in self.seances:
             seances.append(sce.getBranche())
-            
+        
+        
+        
         systeme = ET.SubElement(sequence, "Systemes")
         for sy in self.systemes:
 #            c = hasattr(sy, 'panelPropriete') and sy.panelPropriete.cbListSys.GetStringSelection() != u""
@@ -2327,6 +2335,8 @@ class Sequence(BaseDoc):
                 systeme.append(sy.getBrancheClasse())
             else:
                 systeme.append(sy.getBranche())
+        
+        print("1 :", time.clock() - tps)
         
         return sequence
 
@@ -10412,7 +10422,7 @@ class Seance(ElementAvecLien, ElementBase):
                 lstSavVises.append((c[1:], ref.getSavoir(c).intitule))
         
         
-        html = t.render(titre = ref._nomActivites.sing_()+" "+ self.code,
+        html = t.render(titre = ref._nomActivites.Sing_()+" "+ self.code,
                         nom_type = ref.seances[self.typeSeance][1],
                         coul_type = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]),
                         icon_type = icon_type,

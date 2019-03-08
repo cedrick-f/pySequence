@@ -2837,18 +2837,26 @@ class FenetreSequence(FenetreDocument):
     def OnDocModified(self, event):
 #         print("OnDocModified", event.GetModif())
         
-        if event.GetModif() != "":
-            self.classe.undoStack.do(event.GetModif())
-            self.sequence.undoStack.do(event.GetModif())
+        # coupé pour accélération :
+#         if event.GetModif() != "":
+#             self.classe.undoStack.do(event.GetModif())
+#             self.sequence.undoStack.do(event.GetModif())
         
         if event.GetDocument() == self.sequence:
+            if event.GetModif() != "":
+                self.sequence.undoStack.do(event.GetModif())
+                
             if event.GetVerif():
                 self.sequence.VerifPb()
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
             
+            
         elif event.GetDocument() == self.classe:
+            if event.GetModif() != "":
+                self.classe.undoStack.do(event.GetModif())
+            
             if event.GetVerif():
                 self.sequence.VerifPb()
             if event.GetDraw():
@@ -19421,22 +19429,30 @@ import tempfile
 def img2str(img):
     """
     """
-#     global app
-#     if not wx.GetApp():
-#         app = wx.PySimpleApp()
-        
-    # convert the image file to a temporary file
-    tfname = tempfile.mktemp()
-    try:
-        img.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-        data = b64encode(open(tfname, "rb").read())
-    finally:
-        if os.path.exists(tfname):
-            try:
-                os.remove(tfname)
-            except:
-                pass
-    return data
+    # Ca ne marche pas : pas en PNG, str trop longue !
+    #return b64encode(img.GetData())
+    
+    # Version BytesIO : plus rapide que la version fichier (-20%)
+    s = io.BytesIO()
+    img.SaveFile(s, wx.BITMAP_TYPE_PNG)
+    s.seek(0)
+    return b64encode(s.read())
+    
+    
+#     # Version fichier sur le disque : long !! (mais ça marche
+#     data = ""
+#     # convert the image file to a temporary file
+#     tfname = tempfile.mktemp()
+#     try:
+#         img.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+#         data = b64encode(open(tfname, "rb").read())
+#     finally:
+#         if os.path.exists(tfname):
+#             try:
+#                 os.remove(tfname)
+#             except:
+#                 pass
+#     return data
 
 
 
