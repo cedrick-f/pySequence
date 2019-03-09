@@ -3772,6 +3772,10 @@ class Projet(BaseDoc, Grammaire):
         
     ######################################################################################  
     def GetDuree(self):
+        ld = [e.GetDuree() for e in self.eleves + self.groupes]
+        if len(ld) > 0:
+            duree = max(ld)
+            return duree   
         duree = 0
         for t in self.taches:
             duree += t.GetDuree()
