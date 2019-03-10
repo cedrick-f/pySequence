@@ -10875,13 +10875,17 @@ class Tache(ElementAvecLien, ElementBase):
     def GetCompetencesUtil(self):
 #        print "GetCompetencesUtil", self.indicateursEleve
         lst = []
-        for e in list(self.indicateursEleve.values()):
+        for e in self.indicateursEleve.values():
             for i in e:
                 ci = i.split('_')[0]
                 if not ci in lst:
                     lst.append(ci)
         
-        
+        for e in self.compVisees:
+            if not e in lst:
+                lst.append(e)
+                    
+                    
 #        for i in self.indicateursEleve[0]:
 #            lst.append(i.split('_')[0])
         return lst
