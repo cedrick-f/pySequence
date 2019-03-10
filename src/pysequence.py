@@ -928,7 +928,7 @@ class ElementBase(Grammaire):
             
     ######################################################################################  
     def GetBulleSVG(self, i):
-        print("GetBulleSVG", self, i)
+#         print("GetBulleSVG", self, i)
 #        if hasattr(self, 'description'):
 #            des = "\n\n" + self.GetDescription()
 
@@ -2188,7 +2188,7 @@ class Sequence(BaseDoc):
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
         """
-        print("GetPtCaract Seq")
+#         print("GetPtCaract Seq")
         lst = BaseDoc.GetPtCaract(self)
         
         lst.extend(self.obj["C"].GetPtCaract())
@@ -2284,7 +2284,7 @@ class Sequence(BaseDoc):
     def getBranche(self):
         """ Renvoie la branche XML de la séquence pour enregistrement
         """
-        tps = time.clock()
+#         tps = time.clock()
         
         
         # Création de la racine
@@ -2336,7 +2336,7 @@ class Sequence(BaseDoc):
             else:
                 systeme.append(sy.getBranche())
         
-        print("1 :", time.clock() - tps)
+#         print("1 :", time.clock() - tps)
         
         return sequence
 
@@ -2630,7 +2630,7 @@ class Sequence(BaseDoc):
         
 #         print("  ", setc, sets)
 #         print("3 :", time.clock() - tps)
-        tps = time.clock()
+#         tps = time.clock()
         
         #
         # Objectifs de la séquence
@@ -2750,7 +2750,7 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
-        print("SupprimerSeance depuis :", self)
+#         print("SupprimerSeance depuis :", self)
 #        print "   ", self.seances
         if len(self.seances) > 1: # On en laisse toujours une !!
             ref = self.GetReferentiel()
@@ -2897,12 +2897,13 @@ class Sequence(BaseDoc):
         
     ######################################################################################  
     def AjouterSysteme(self, event = None):
+        ref = self.GetReferentiel()
         sy = Systeme(self)
-        print("AjouterSysteme", sy)
+#         print("AjouterSysteme", sy)
         self.systemes.append(sy)
         sy.ConstruireArbre(self.arbre, self.brancheSys)
         self.arbre.Expand(self.brancheSys)
-        self.GetApp().sendEvent(modif = "Ajout d'un Système")
+        self.GetApp().sendEvent(modif = "Ajout d'%s" %ref._nomSysteme.un_())
         self.arbre.SelectItem(sy.branche)
         self.AjouterSystemeSeance(sy)
         return
@@ -2912,7 +2913,7 @@ class Sequence(BaseDoc):
 #         print("AjouterListeSystemes séquence", syst)
         nouvListe = []
         for s in syst:
-            print("   ",s)
+#             print("   ",s)
             
             if isinstance(s, Systeme):
                 sy = s.Copie(self)
@@ -3268,7 +3269,7 @@ class Sequence(BaseDoc):
         """ Gestion (filtrage) des items des Competences et des Savoirs de la séquence
             en fonction des items "cochés" de <elem> (type pysequence.Competence ou Savoir)
         """
-#         print("SEQ: GererElementsDependants de contexte", contexte)
+        print("SEQ: GererElementsDependants de contexte :", contexte)
         
         ref = self.GetReferentiel()
         
@@ -3820,7 +3821,7 @@ class Projet(BaseDoc, Grammaire):
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG et HTML)
         """
-        print("GetPtCaract prj")
+#         print("GetPtCaract prj")
         lst = BaseDoc.GetPtCaract(self)  
             
         lst.extend(self.support.GetPtCaract())
@@ -4660,6 +4661,9 @@ class Projet(BaseDoc, Grammaire):
         # On enregistre les positions des revues intermédiaires (après qui ?)
         #
         prj = self.GetProjetRef()
+        if prj is None:
+            return lstTaches
+        
         Rev = []
         for i, t in enumerate(lstTaches):
             if t.phase == _Rev:
@@ -4946,7 +4950,7 @@ class Projet(BaseDoc, Grammaire):
         #
         # Les élèves
         #
-        print(self.GetReferentiel().labels["ELEVES"][2])
+#         print(self.GetReferentiel().labels["ELEVES"][2])
         self.brancheElv = arbre.AppendItem(self.branche, self.GetReferentiel().labels["ELEVES"][2].Plur_(), 
                                            data = "Ele",
                                            image = self.arbre.images["Grp"])
@@ -5111,8 +5115,11 @@ class Projet(BaseDoc, Grammaire):
         """ Renvoie la liste ordonnée des phases dans le projet
         """
 #        print "GetListePhases",
+        prj = self.GetProjetRef()
+        if prj is None:
+            return []
 #        lst = list(constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1])
-        lst = [k for k in self.GetProjetRef().listPhases if not k in self.GetProjetRef().listPhasesEval]
+        lst = [k for k in prj.listPhases if not k in prj.listPhasesEval]
 #        lst = list(self.GetReferentiel().listPhases_prj)
 #        print "  ", self.classe.GetReferentiel()
 #        print "  ", lst
@@ -5359,7 +5366,7 @@ class Projet(BaseDoc, Grammaire):
 #        print r.GetDicIndicateursEleve(self.eleves[1])
 #        print r.indicateursEleve
         
-        for codes in list(r.indicateursEleve.values()):
+        for codes in r.indicateursEleve.values():
             for code in codes:
                 if not code in r.indicateursMaxiEleve[0]:
                     codes.remove(code)
@@ -5376,6 +5383,9 @@ class Projet(BaseDoc, Grammaire):
         """
         pb = []
         prj = self.GetProjetRef()
+        if prj is None:
+            return
+        
         for k in list(prj.parties.keys()):
             if not os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
                 prjdef = REFERENTIELS[self.GetTypeEnseignement()].getProjetDefaut()
@@ -5383,7 +5393,7 @@ class Projet(BaseDoc, Grammaire):
                     prj.grilles[k] = prjdef.grilles[k]
                     prj.cellulesInfo[k] = prjdef.cellulesInfo[k]
                 else:
-                    print(k, grilles.getFullNameGrille(prjdef.grilles[k][0]))
+#                     print(k, grilles.getFullNameGrille(prjdef.grilles[k][0]))
                     pb.append(k)
         
         if len(pb) > 0:
@@ -5421,8 +5431,12 @@ class Projet(BaseDoc, Grammaire):
 #        tousIndicateurs = self.GetReferentiel()._dicIndicateurs_prj
 #        print tousIndicateurs
 #        REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
+        if self.GetProjetRef()._pasdIndic:
+            return
+        
         tR1 = None
         tR2 = None
+        
         indicateurs = [{} for e in range(len(self.eleves)+1)]   # 0 : tous les élèves
 
         for t in self.taches:   # toutes les tâches, dans l'ordre
@@ -5436,7 +5450,7 @@ class Projet(BaseDoc, Grammaire):
                     else:
                         t.indicateursEleve[neleve] = []
 
-                    for c, l in list(indicateurs[neleve].items()):
+                    for c, l in indicateurs[neleve].items():
                         for i, ok in enumerate(l):
                             if ok:
                                 codeIndic = c+"_"+str(i+1)
@@ -5445,7 +5459,7 @@ class Projet(BaseDoc, Grammaire):
                                 if self.GetProjetRef().getTypeIndicateur(codeIndic) == 'C': # tousIndicateurs[c][i][1]: # Indicateur "revue"
                                     if t.phase in TOUTES_REVUES:
                                         
-                                        if (True in list(self.GetReferentiel().compImposees.values())): #self.GetReferentiel().compImposees['C']:
+                                        if (True in self.GetReferentiel().compImposees.values()): #self.GetReferentiel().compImposees['C']:
                                             if self.GetProjetRef().getIndicateur(codeIndic).getRevue() == t.phase:
 #                                                print "  compImposees", t.phase, ":", codeIndic
                                                 t.indicateursEleve[neleve].append(codeIndic)
@@ -5592,7 +5606,7 @@ class Progression(BaseDoc, Grammaire):
         if self.code == None:
             return self.GetReferentiel().getProjetDefaut()
         else:
-            if self.code in list(self.GetReferentiel().projets.keys()):
+            if self.code in self.GetReferentiel().projets.keys():
                 return self.GetReferentiel().projets[self.code]
             else:
                 return None
@@ -5635,7 +5649,7 @@ class Progression(BaseDoc, Grammaire):
              - ...
              :doc: beautifulsoup
         """
-        print("EnrichiHTML Progression")
+#         print("EnrichiHTML Progression")
         ElementBase.EnrichiHTML(self, doc)
         
         for s in self.sequences_projets:# + self.eleves:
@@ -6221,7 +6235,7 @@ class Progression(BaseDoc, Grammaire):
     
     ######################################################################################  
     def OuvrirProjet(self, event = None, item = None):
-        l = self.arbre.GetItemPyData(item)
+        l = self.arbre.GetItemPyData(item) # lienProjet de la Progression
         nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
         app = self.GetApp().parent.ouvrirDoc(l.projet, nomFichier)
@@ -7016,8 +7030,8 @@ class Progression(BaseDoc, Grammaire):
     ##################################################################################################    
     def enregistrer(self, nomFichier, dialog = True):
         
-        print("enregistrer", nomFichier, end=' ') 
-        print("   ", self.dependants)
+#         print("enregistrer", nomFichier, end=' ') 
+#         print("   ", self.dependants)
         # La progression
         progression = self.getBranche()
         classe = self.classe.getBranche()
@@ -7033,7 +7047,7 @@ class Progression(BaseDoc, Grammaire):
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence in self.dependants:
                 nomFichier = os.path.join(self.GetPath(), lienSeq.path)
-                print("++", self.GetPath(), lienSeq.path)
+#                 print("++", self.GetPath(), lienSeq.path)
                 ok = ok and lienSeq.sequence.enregistrer(nomFichier, dialog = dialog)
         
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
@@ -7054,7 +7068,7 @@ class Progression(BaseDoc, Grammaire):
             
             :i:  code pour différentier ...
         """
-        print("GetBulleHTML Prg", self, i)
+#         print("GetBulleHTML Prg", self, i)
         ref = self.GetReferentiel()
         
         def b64(img):
@@ -7307,7 +7321,7 @@ class ElementProgression():
             
             :i:  code pour différentier ...
         """
-        print("GetBulleHTML liendoc", self, i)
+#         print("GetBulleHTML liendoc", self, i)
         ref = self.GetReferentiel()
         
         def b64(img):
@@ -7418,7 +7432,7 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     
     ######################################################################################  
     def ChargerSequence(self, reparer = False):
-        print("ChargerSequence", self.path)
+#         print("ChargerSequence", self.path)
         classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path, reparer = reparer)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.sequence = sequence
@@ -7573,9 +7587,9 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
     
     ######################################################################################  
     def ChargerProjet(self, reparer = False):
-        print("ChargerProjet", self.path)
+#         print("ChargerProjet", self.path)
         classe, projet = self.GetDocument().OuvrirFichierPrj(self.path, reparer = reparer)
-        print("   ", classe.typeEnseignement , self.GetReferentiel().Code)
+#         print("   ", classe.typeEnseignement , self.GetReferentiel().Code)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.projet = projet
 
@@ -8752,7 +8766,7 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def GetBulleSVG(self, i):
-        print("GetBulleSVG", self, i)
+#         print("GetBulleSVG", self, i)
 
         c = sorted(self.competences)[i]
         t = self.GetDiscipline(c[0]) +" " + c[1:] + " :\n" + self.GetReferentiel().getCompetence(c).intitule  
@@ -10760,10 +10774,13 @@ class Tache(ElementAvecLien, ElementBase):
         """ Complète le dict des compétences/indicateurs globaux (tous les élèves confondus)
         """
 #        print "ActualiserDicIndicateurs", self
-        for i in range(len(self.projet.eleves)):
-            for c in self.indicateursEleve[i+1]:
-                if not c in self.indicateursEleve[0]:
-                    self.indicateursEleve[0].append(c)
+        prj = self.GetProjetRef()
+        if not prj._pasdIndic:
+            for i in range(len(self.projet.eleves)):
+                for c in self.indicateursEleve[i+1]:
+                    if not c in self.indicateursEleve[0]:
+                        print("!!!!!!!!!!!!!!!!!!!!!")
+                        self.indicateursEleve[0].append(c)
 
 
     ######################################################################################  
@@ -10790,14 +10807,14 @@ class Tache(ElementAvecLien, ElementBase):
             Dict :  clef = code compétence
             valeur = liste [True False ...] des indicateurs à mobiliser
         """
-#        print "GetDicIndicateurs", self, ":", self.indicateursEleve
+        print("GetDicIndicateurs", self, ":", self.indicateursEleve)
 #        print self.GetProjetRef()._dicoIndicateurs_simple
         if self.GetProjetRef() is None:
             return {}
         
         tousIndicateurs = {}
         for disc, dic in self.GetProjetRef()._dicoIndicateurs_simple.items():
-            for k, i in list(dic.items()):
+            for k, i in dic.items():
                 tousIndicateurs[disc+k] = i
 #        print "  >", tousIndicateurs
         
@@ -10809,10 +10826,16 @@ class Tache(ElementAvecLien, ElementBase):
                 competence, indicateur = cci
                 indicateur = int(eval(indicateur)-1)
                 nbrIndic = len(tousIndicateurs[competence])
-                if not competence in list(indicateurs.keys()):
+                if not competence in indicateurs.keys():
                     indicateurs[competence] = [False]*nbrIndic
                 indicateurs[competence][indicateur] = True
                     
+        if self.GetProjetRef()._pasdIndic:            
+            for e in self.compVisees:
+                competence = e
+                if not competence in indicateurs.keys():
+                    indicateurs[competence] = [True]
+                
         return indicateurs
     
     
@@ -11186,11 +11209,12 @@ class Tache(ElementAvecLien, ElementBase):
                                             self.indicateursEleve[0].append(codeindic)
         
         
-        if debug: print("   indicateursEleve", self.indicateursEleve)
+#         if debug: 
+#         
         
         if not self.estPredeterminee():
             self.ActualiserDicIndicateurs()
-            
+        print("   indicateursEleve", self.indicateursEleve)
         # Compétences visées
         self.compVisees = branche.get("CompVisees", "").split()
 #         print("compVisees", self.phase, ":", self.compVisees)
@@ -11345,11 +11369,15 @@ class Tache(ElementAvecLien, ElementBase):
                 i += 1
         num = str(i+1)
         
+        prj = self.GetProjetRef()
+        
         if self.phase != "":
             if self.phase in TOUTES_REVUES_EVAL_SOUT:
                 self.code = self.phase
+            elif prj is not None:
+                self.code = prj.phases[self.phase][2]+num     #constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
             else:
-                self.code = self.GetProjetRef().phases[self.phase][2]+num     #constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
+                self.code = num # à vérifier ...
         else:
             self.code = num
 
@@ -11358,13 +11386,13 @@ class Tache(ElementAvecLien, ElementBase):
         # Branche de l'arbre
         #
         if hasattr(self, 'codeBranche') and self.phase != "":
-            if self.phase in TOUTES_REVUES_EVAL_SOUT:
+            if self.phase in TOUTES_REVUES_EVAL_SOUT and prj is not None:
                 self.codeBranche.SetLabel("")
-                code = self.GetProjetRef().phases[self.phase][1]
+                code = prj.phases[self.phase][1]
             else:
                 if self.estPredeterminee():
                     code = self.intitule
-                    intitule = self.GetProjetRef().taches[self.intitule][1]
+                    intitule = prj.taches[self.intitule][1]
                     
                 else:
                     code = self.code
@@ -11607,8 +11635,10 @@ class Tache(ElementAvecLien, ElementBase):
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
         
-        if self.phase in TOUTES_REVUES_SOUT:
-            titre = self.GetProjetRef().phases[self.phase][1]
+        prj = self.GetProjetRef()
+        
+        if self.phase in TOUTES_REVUES_SOUT and prj is not None:
+            titre = prj.phases[self.phase][1]
             texte = draw_cairo.getHoraireTxt(self.GetDelai())
 
         else:
@@ -11618,8 +11648,8 @@ class Tache(ElementAvecLien, ElementBase):
                 p = self.code
                     
             titre = "Tâche "+ p
-            if self.phase != "":
-                    t = self.GetProjetRef().phases[self.phase][1]
+            if self.phase != "" and prj is not None:
+                t = prj.phases[self.phase][1]
             else:
                 t = ""
             texte = t
@@ -12844,7 +12874,7 @@ class Eleve(Personne, ElementBase):
     
     ######################################################################################  
     def OuvrirGrille(self, k):
-        print("OuvrirGrille", k)
+#         print("OuvrirGrille", k)
         self.grille[k].Afficher(self.GetDocument().GetPath())
 #         try:
 #             self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])

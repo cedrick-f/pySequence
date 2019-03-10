@@ -1045,19 +1045,19 @@ def DrawLigne(ctx, x, y, gras = False):
     
 ######################################################################################  
 def regrouperDic(obj, dicIndicateurs):
-#     print "regrouperDic", dicIndicateurs
+    print("regrouperDic", dicIndicateurs)
 #     print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences
-    if obj.GetProjetRef() is None:
-        return dicIndicateurs, {}
+    if obj.GetProjetRef() is None or obj.GetProjetRef()._pasdIndic:
+        return dicIndicateurs, {k:[{'C':0}] for k in dicIndicateurs}
     
     if obj.GetProjetRef()._niveau == 3:
         dic = {}
         typ = {}
-        for disc, tousIndicateurs in list(obj.GetProjetRef()._dicoCompetences.items()):
+        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
 #             print "   ", disc, tousIndicateurs
-            for k0, competence in list(tousIndicateurs.items()):
+            for k0, competence in tousIndicateurs.items():
 #                 print "      ",k0,  competence
-                for k1, sousComp in list(competence.sousComp.items()):
+                for k1, sousComp in competence.sousComp.items():
 #                     print "         ", k1, sousComp
                     dic[disc+k1] = []
                     typ[disc+k1] = []
@@ -1065,7 +1065,7 @@ def regrouperDic(obj, dicIndicateurs):
                     lk2.sort()
     #                print "  ", lk2
                     for k2 in lk2:
-                        if disc+k2 in list(dicIndicateurs.keys()):
+                        if disc+k2 in dicIndicateurs.keys():
                             dic[disc+k1].extend(dicIndicateurs[disc+k2])
     #                        print "   **", v1[1][k2]
                             typ[disc+k1].extend([p.poids for p in sousComp.sousComp[k2].indicateurs])
@@ -1074,7 +1074,7 @@ def regrouperDic(obj, dicIndicateurs):
                             dic[disc+k1].extend([False]*l)
                             typ[disc+k1].extend(['']*l)
                     
-                    if not disc+k1 in list(xComp.keys()):
+                    if not disc+k1 in xComp.keys():
 #                     if dic[disc+k1] == [] or not (True in dic[disc+k1]):
                         del dic[disc+k1]
                         del typ[disc+k1]
@@ -1087,15 +1087,15 @@ def regrouperDic(obj, dicIndicateurs):
         typ = {}
         for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
 #             print "-----", disc
-            for k0, competence in list(tousIndicateurs.items()):
+            for k0, competence in tousIndicateurs.items():
 #                 print "     ", k0, competence
-                for k1, sousComp in list(competence.sousComp.items()):
+                for k1, sousComp in competence.sousComp.items():
 #                     print "        ", k1, sousComp
                     dic[disc+k1] = []
                     typ[disc+k1] = []
                     
                     
-                    if disc+k1 in list(dicIndicateurs.keys()):
+                    if disc+k1 in dicIndicateurs.keys():
                         dic[disc+k1].extend(dicIndicateurs[disc+k1])
 #                        print "   **", v1[1][k2]
                         typ[disc+k1].extend([p.poids for p in sousComp.indicateurs])
@@ -1105,7 +1105,7 @@ def regrouperDic(obj, dicIndicateurs):
                         typ[disc+k1].extend(['']*l)
                     
                     
-                    if not disc+k1 in list(xComp.keys()):
+                    if not disc+k1 in xComp.keys():
 #                     if dic[disc+k1] == [] or not (True in dic[disc+k1]):
                         del dic[disc+k1]
                         del typ[disc+k1]
@@ -1141,10 +1141,10 @@ def regrouperLst(prjRef, lstCompetences):
     lstCompetences.sort()
     if prjRef is not None and prjRef._niveau == 3:
         lstGrpCompetences = []
-        for disc, tousIndicateurs in list(prjRef._dicoCompetences.items()):
+        for disc, tousIndicateurs in prjRef._dicoCompetences.items():
             dic = []
-            for k0, competence in list(tousIndicateurs.items()):
-                for k1, sousComp in list(competence.sousComp.items()):
+            for k0, competence in tousIndicateurs.items():
+                for k1, sousComp in competence.sousComp.items():
                     for k2 in sorted(sousComp.sousComp.keys()):
                         if disc+k2 in lstCompetences:
                             dic.append(disc+k1)
@@ -1155,7 +1155,8 @@ def regrouperLst(prjRef, lstCompetences):
         return lstGrpCompetences
     else:
         return lstCompetences
-    
+
+
 ######################################################################################  
 def DrawCroisementsCompetencesTaches(ctx, tache, y):
     DrawBoutonCompetence(ctx, tache, regrouperDic(tache, tache.GetDicIndicateurs()), y)
@@ -1244,7 +1245,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
          ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
-#     print "DrawBoutonCompetence", objet, dicIndic
+    print("DrawBoutonCompetence", objet, dicIndic)
     if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r
@@ -1254,53 +1255,53 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     ctx.set_line_width (0.0004 * COEF)
     dicIndic, dictype = dicIndic
  
-    for s in list(dicIndic.keys()):
+    for s in dicIndic.keys():
         
-        if s in list(dicIndic.keys()):
-            x = xComp[s]-wColComp/2
-            
-            rect = (x, y-h/2, wColComp, h)
-            
-            objet.GetDocument().zones_sens.append(Zone([rect], obj = objet, param = s))
-            
-    #        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
-    #            objet.GetDocument().rectComp[s].append(rect)
-    #        else:
-    #            objet.GetDocument().rectComp[s] = [rect]
-            
-            objet.pts_caract.append((x,y))
-            
-            indic = dicIndic[s]
-    #            dangle = 2*pi/len(indic)
-            dx = wColComp/len(indic)
-            for a, i in enumerate(indic):
-                if i: # Rose ou bleu
-    #                 print "   ", s, a
-                    part = list(dictype[s][a].keys())[0]
-                    if part == 'S':
-    #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
-                        d = -1
-                    else:
-                        d = 1
-                    ctx.set_source_rgba (*getCoulComp(part))
-                else: # Rien => Transparent
-                    d = 0
-                    ctx.set_source_rgba (1, 1, 1, 0)
-                
-#                 print "d", d, (x+a*dx, y-h/2+d*dh, dx, h-dh)
-                
-                if d != 0:
-                    ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-                    ctx.fill_preserve ()
+#         if s in dicIndic.keys():
+        x = xComp[s]-wColComp/2
+        
+        rect = (x, y-h/2, wColComp, h)
+        
+        objet.GetDocument().zones_sens.append(Zone([rect], obj = objet, param = s))
+        
+#        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
+#            objet.GetDocument().rectComp[s].append(rect)
+#        else:
+#            objet.GetDocument().rectComp[s] = [rect]
+        
+        objet.pts_caract.append((x,y))
+        
+        indic = dicIndic[s]
+#            dangle = 2*pi/len(indic)
+        dx = wColComp/len(indic)
+        for a, i in enumerate(indic):
+            if i: # Rose ou bleu
+#                 print "   ", s, a
+                part = list(dictype[s][a].keys())[0]
+                if part == 'S':
+#                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
+                    d = -1
                 else:
-                    ctx.move_to(x+a*dx, y-h/2+dh)
-                    ctx.rel_line_to(0, h-4*dh)
-                    ctx.move_to(x+a*dx+dx, y-h/2+dh)
-                    ctx.rel_line_to(0, h-4*dh)
-    
-                
-                ctx.set_source_rgba (0, 0 , 0, 1)
-                ctx.stroke()
+                    d = 1
+                ctx.set_source_rgba (*getCoulComp(part))
+            else: # Rien => Transparent
+                d = 0
+                ctx.set_source_rgba (1, 1, 1, 0)
+            
+#                 print "d", d, (x+a*dx, y-h/2+d*dh, dx, h-dh)
+            
+            if d != 0:
+                ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
+                ctx.fill_preserve ()
+            else:
+                ctx.move_to(x+a*dx, y-h/2+dh)
+                ctx.rel_line_to(0, h-4*dh)
+                ctx.move_to(x+a*dx+dx, y-h/2+dh)
+                ctx.rel_line_to(0, h-4*dh)
+
+            
+            ctx.set_source_rgba (0, 0 , 0, 1)
+            ctx.stroke()
 
 
 

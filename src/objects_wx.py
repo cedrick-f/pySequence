@@ -1367,20 +1367,25 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             note : pour l'instant, que pour des Séquences
         """
-#         print "ouvrirDoc", nomFichier
-        if doc.GetType() == 'seq':
-            child = FenetreSequence(self, sequence = doc)
-            child.SetIcon(scaleIcone(constantes.dicimages["Seq"].GetBitmap()))
-            doc
-        elif doc.GetType() == 'prj':
-            child = FenetreProjet(self, projet = doc)
-            child.SetIcon(scaleIcone(constantes.dicimages["Prj"].GetBitmap()))
-        child.finaliserOuverture()
+        print("ouvrirDoc", doc)
+        self.ouvrir(nomFichier)
+        return
         
-        child.definirNomFichierCourant(nomFichier)
-        wx.CallAfter(child.Activate)
-        self.OnDocChanged()
-        return child
+        # Ancienne version : Pourquoi ?
+#         if doc.GetType() == 'seq':
+#             child = FenetreSequence(self, sequence = doc)
+#             child.SetIcon(scaleIcone(constantes.dicimages["Seq"].GetBitmap()))
+#              
+#         elif doc.GetType() == 'prj':
+#              
+#             child = FenetreProjet(self, projet = doc)
+#             child.SetIcon(scaleIcone(constantes.dicimages["Prj"].GetBitmap()))
+#         child.finaliserOuverture()
+#          
+#         child.definirNomFichierCourant(nomFichier)
+#         wx.CallAfter(child.Activate)
+#         self.OnDocChanged()
+#         return child
     
 #     root = ET.parse(fichier).getroot()
 #             
@@ -1429,20 +1434,20 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             # Le Fichier n'est pas déja ouvert
             #
             if not nomFichier in self.GetNomsFichiers():
-                if ext == "seq":
-                    #
-                    # On vérifie si la Séquence fait partie d'une Progression ouverte
-                    #
-                    path2 = os.path.normpath(os.path.abspath(nomFichier))
-                    for prog in self.GetDocumentsOuverts('prg'):
-                        for lienSeq in prog[0].sequences_projets:
-                            path1 = os.path.normpath(os.path.abspath(lienSeq.path))
-                            if path1 == path2:  # La séquence fait partie d'une progression ouverte
-#                                 print "Dans prog :", path2
-                                self.ouvrirDoc(lienSeq.sequence, nomFichier)
-                                wx.EndBusyCursor()
-                                self.Thaw()
-                                return lienSeq.sequence
+#                 if ext == "seq":
+#                     #
+#                     # On vérifie si la Séquence fait partie d'une Progression ouverte
+#                     #
+#                     path2 = os.path.normpath(os.path.abspath(nomFichier))
+#                     for prog in self.GetDocumentsOuverts('prg'):
+#                         for lienSeq in prog[0].sequences_projets:
+#                             path1 = os.path.normpath(os.path.abspath(lienSeq.path))
+#                             if path1 == path2:  # La séquence fait partie d'une progression ouverte
+# #                                 print "Dans prog :", path2
+#                                 self.ouvrirDoc(lienSeq.sequence, nomFichier)
+#                                 wx.EndBusyCursor()
+#                                 self.Thaw()
+#                                 return lienSeq.sequence
                 
                 child = self.commandeNouveau(ext = ext, ouverture = True)
 #                 print("doc=",child)
@@ -1946,7 +1951,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #########################################################################################################
     def HideTip(self, event = None):
-        print("HideTip document")
+#         print("HideTip document")
         self.GetDocument().HideTip()
     
     
@@ -2221,7 +2226,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def autoSave(self, event):
-        print("autoSave")
+#         print("autoSave")
         if self.fichierCourantModifie:
             wx.BeginBusyCursor()
             
@@ -2234,7 +2239,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             
             if self.GetDocument().enregistrer(nf, dialog = False):
                 self.fichierSauvegarde = nf
-                print("   ", nf)
+#                 print("   ", nf)
                 
             wx.EndBusyCursor()
             
@@ -2639,7 +2644,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         - liens 
         - ...
         """
-        print("enrichirHTML")
+#         print("enrichirHTML")
         epsilon = 1.5
         def match(p0, p1):
             return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
@@ -3005,7 +3010,7 @@ class FenetreSequence(FenetreDocument):
             :param nomFichier: encodé en FileEncoding
         """
         print("ouvrir sequence", nomFichier)
-        tps1 = time.clock()
+#         tps1 = time.clock()
         Ok = True
         Annuler = False
         nbr_etapes = 10
@@ -3144,8 +3149,8 @@ class FenetreSequence(FenetreDocument):
 #        dlg.top()
         count += 1
 
-        tps2 = time.clock() 
-        print("Ouverture :", tps2 - tps1)
+#         tps2 = time.clock() 
+#         print("Ouverture :", tps2 - tps1)
 
         if Ok:
             dlg.Destroy()
@@ -3466,7 +3471,7 @@ class FenetreProjet(FenetreDocument):
             :param nomFichier: encodé en FileEncoding
         """
         print("Ouverture projet", nomFichier)
-        tps1 = time.clock()
+#         tps1 = time.clock()
         Ok = True
         Annuler = False
         nbr_etapes = 10
@@ -3638,8 +3643,8 @@ class FenetreProjet(FenetreDocument):
         #
 #        self.projet.VerifierVersionGrilles()
         
-        tps2 = time.clock() 
-        print("Ouverture :", tps2 - tps1)
+#         tps2 = time.clock() 
+#         print("Ouverture :", tps2 - tps1)
 
 #         self.fiche.Redessiner() #!!!
 
@@ -4469,7 +4474,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4726,7 +4731,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -6229,7 +6234,7 @@ class PanelPropriete_Projet(PanelPropriete):
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-        print("MiseAJour Projet", sendEvt)
+#         print("MiseAJour Projet", sendEvt)
 
         ref = self.projet.GetProjetRef()
         
@@ -6573,7 +6578,7 @@ class PanelPropriete_Progression(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print("MiseAJour Progression", sendEvt)
+#         print("MiseAJour Progression", sendEvt)
 
         
         # La page "Généralités"
@@ -7770,7 +7775,8 @@ class ListeCI(wx.Panel):
         
 
     def OnGetItemToolTip(self, item, col):
-        print(item, col)
+        pass
+#         print(item, col)
         
         
 #class ListeCI(ULC.UltimateListCtrl):
@@ -8574,11 +8580,11 @@ class PanelPropriete_CI(PanelPropriete):
      
     #############################################################################            
     def OnText(self, event):
-        print(event.GetString(), self.nCI.GetValue())
+#         print(event.GetString(), self.nCI.GetValue())
         if int(event.GetString()) == 0:
             self.Unbind(wx.EVT_SPINCTRL)
             self.nCI.SetRange(0,9)
-            print(" ", event.GetString(), self.nCI.GetValue())
+#             print(" ", event.GetString(), self.nCI.GetValue())
             self.nCI.SetValue(0)
             self.Bind(wx.EVT_SPINCTRL, self.OnOption, self.nCI)
         event.Skip()
@@ -8590,7 +8596,7 @@ class PanelPropriete_CI(PanelPropriete):
             (ne peut se produire que si ce nombre n'est pas fixé par le référentiel)
         """
         m = len(self.CI.numCI)+len(self.CI.CI_perso)
-        print("OnOption", m, self.CI.maxCI, self.nCI.GetValue())
+#         print("OnOption", m, self.CI.maxCI, self.nCI.GetValue())
         if self.CI.maxCI == 0: # pas de limite
             self.nCI.SetValue(m)
             self.CI.maxCI = m
@@ -9267,7 +9273,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print("MiseAJour PanelPropriete_LienSequence", self.lien, sendEvt)
+#         print("MiseAJour PanelPropriete_LienSequence", self.lien, sendEvt)
 
 #        self.intit.SetLabel(self.sequence.intitule)
         
@@ -9671,12 +9677,10 @@ class PanelPropriete_Competences(PanelPropriete):
     ######################################################################################  
     def AjouterCompetence(self, code, propag = None):
 #         print "AjouterCompetence", code
-        
-        self.competences.competences.append(code)
-        
-        
-        self.competences.GererElementsDependants(code)
-        self.competences.SetCodeBranche()
+        if not code in self.competences.competences:
+            self.competences.competences.append(code)
+            self.competences.GererElementsDependants(code)
+            self.competences.SetCodeBranche()
         
         
     ######################################################################################  
@@ -12638,7 +12642,7 @@ class PanelPropriete_Personne(PanelPropriete):
     def OnSauv(self, event):
         """ 
         """
-        print("OnSauv", self.GetListProfs())
+#         print("OnSauv", self.GetListProfs())
         
         # Construction de la structure XML
         root = ET.Element("Professeurs")
@@ -13094,7 +13098,7 @@ class PanelPropriete_Groupe(PanelPropriete):
     
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-        print("MiseAJour panelPropriete Groupe", self.groupe.typeEnseignement)
+#         print("MiseAJour panelPropriete Groupe", self.groupe.typeEnseignement)
 #         print "  ", REFERENTIELS.keys()
 #         self.cb_type.SetStringSelection(self.groupe.typeEnseignement)
 #         self.cb_type.SetStringSelection(REFERENTIELS[self.groupe.typeEnseignement].Enseignement[0])
@@ -13806,8 +13810,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
 #             print "> panelPropriete", panelPropriete
             self.panelProp.AfficherPanel(panelPropriete)
             self.parent.Refresh()
-        else:
-            print("rien", panelPropriete)
+#         else:
+#             print("rien", panelPropriete)
 #         tps3 = time.clock() 
         
         
@@ -15022,12 +15026,12 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
         """
                 source : https://stackoverflow.com/questions/6954242/wxpython-treectrl-how-can-i-get-a-tree-item-by-name
         """
-        print("get_item_by_label", search_text)
+#         print("get_item_by_label", search_text)
         item, cookie = self.GetFirstChild(root_item)
     
         while item != None and item.IsOk():
             text = self.GetItemText(item).replace("\n", "")
-            print("   ", text)
+#             print("   ", text)
             if text.split(" ")[0] == search_text:
                 return item
             if self.ItemHasChildren(item):
@@ -15385,7 +15389,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     ###################################################################################
     def setIndicateur(self, item, indic):
-        print("setIndicateur", indic)
+#         print("setIndicateur", indic)
         wnd = self.GetItemWindow(item, 1)
         if wnd is not None:
             wnd.SetValue(indic)
@@ -16370,7 +16374,7 @@ class Panel_SelectEnseignement(wx.Panel):
         if event != None:
 #             radio_selected = event.GetEventObject()
             CodeFam = Referentiel.getEnseignementLabel(event.GetString())
-        print("EvtRadioBox", CodeFam)
+#         print("EvtRadioBox", CodeFam)
         if CodeFam is None:
             self.ctb_type.SetStringSelection(self.GetReferentiel().Enseignement[0])
             return
@@ -17208,7 +17212,7 @@ class PanelProblematiques(wx.Panel):
 
     ######################################################################################              
     def OnClick(self, event = None, item = None):
-        print("OnClick")
+        print("Fonction inutile : OnClick")
 
 
     ######################################################################################              
@@ -19181,7 +19185,7 @@ class Panel_BO(wx.Panel):
     
     ######################################################################################################
     def Construire(self, ref):
-        print("Construire Panel_BO")
+#         print("Construire Panel_BO")
         if ref.BO_dossier == "":
             return
         
