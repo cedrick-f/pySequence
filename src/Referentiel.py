@@ -455,7 +455,7 @@ class XMLelem():
     ###########################################################
     def getPremierEtDernierNiveauArbre(self, dic):
         sdic = {}
-        for k0, competence in list(dic.items()):
+        for k0, competence in dic.items():
             if competence.sousComp != {}:
                 if competence.poids != {}: # premier niveau = [intitule, dict ou liste, poids]
                     sdic[k0] = competence.copie()
@@ -600,7 +600,7 @@ class XMLelem():
     ###########################################################
     def getDernierNiveauArbre(self, dic):
         dicIndic = {}
-        for k0, competence in list(dic.items()):
+        for k0, competence in dic.items():
             if competence.sousComp != {}:
                 dicIndic.update(self.getDernierNiveauArbre(competence.sousComp))
             else:
@@ -1059,7 +1059,7 @@ class Referentiel(XMLelem):
         # à partir de 7.1
 #         print self.nomDom
         if self.nomDom == "None":
-            self.nomDom = "Domaine(s)"
+            self.nomDom = "Domaine(s)$m"
             
             
         
@@ -1966,7 +1966,7 @@ class Referentiel(XMLelem):
             situé à la position <position>
         """
 #        print "getProjetEval", position
-        for k, p in list(self.projets.items()):
+        for k, p in self.projets.items():
 #            print "   ", p.periode
             if position in p.periode:
                 return k
@@ -1979,7 +1979,7 @@ class Referentiel(XMLelem):
         """
         pos = []
         prj = []
-        for k, p in list(self.projets.items()):
+        for k, p in self.projets.items():
             prj.append(k)
             pos.append(max(*p.periode, 0))
         
@@ -2675,7 +2675,7 @@ class Projet(XMLelem):
         if '_' in cod:
             code, i = cod.split('_')
             i = int(i)
-            if code in list(self._dicoIndicateurs_simple[disc].keys()):
+            if code in self._dicoIndicateurs_simple[disc].keys():
                 indics = self._dicoIndicateurs_simple[disc][code]
                 if len(indics) >= i:
                     indic = indics[i-1]
@@ -2885,15 +2885,16 @@ class Projet(XMLelem):
         ###########################################################
         def chercherIndicIdem(dic, debug = False):
             ii = None
-            for k0, competence in list(dic.items()):
+            for k0, competence in dic.items():
                 if debug: print(k0)
+                
                 if competence.sousComp != {}:
                     if debug: print("   ", competence)
                     ii = chercherIndicIdem(competence.sousComp, debug = debug)
                     if debug: print("   ii", ii)
                     if ii != None : return ii
+                
                 else:
-                    lst = []
                     for l in competence.indicateurs:
                         if isinstance(l, Indicateur) and "idem" in l.intitule:
                             if debug: print(l.intitule)
@@ -2904,14 +2905,17 @@ class Projet(XMLelem):
             if ii != None:
                 return ii
         
+        
         ###########################################################
         def chercherDicIndic(dic, code, debug = False):
             """ Renvoie le dictionnaire de compétences qui contient le <code>
+                
+                Fonction récursive
             """
-            if code in list(dic.keys()):
+            if code in dic.keys():
                 return dic
             else:
-                for k0, competence in list(dic.items()):
+                for k0, competence in dic.items():
                     if debug: print(k0)
                     if competence.sousComp != {}:
                         if debug: print("   ", competence)
@@ -2919,8 +2923,18 @@ class Projet(XMLelem):
                         if sdic != None : return sdic
             return
             
-        
-                                
+        ###########################################################
+        def pasIndic(dic):
+            """ Renvoie True s'il n'y a pas d'indicateurs pour ce projet
+                
+                Fonction récursive
+            """
+            for k0, d in dic.items():
+                for k, l in d.items():
+                    if len(l) != 0:
+                        return False
+            return True
+                       
                                 
        
                         
@@ -2929,6 +2943,7 @@ class Projet(XMLelem):
         self._dicoIndicateurs = {}
         self._dicoIndicateurs_famille = {}
         self._dicoIndicateurs_simple = {}
+        
 #        self._dicoCompetences_simple = {}
 
         
@@ -2982,8 +2997,8 @@ class Projet(XMLelem):
             
             if debug:
                 print(self._dicoIndicateurs[code])
-                for typi, dico in list(self._dicoIndicateurs.items()):
-                    for grp, grpComp in list(dico.items()):
+                for typi, dico in self._dicoIndicateurs.items():
+                    for grp, grpComp in dico.items():
                         print("  poids :", grpComp.poids)
                         
             self.normaliserPoids(self._dicoIndicateurs[code], debug = False)
@@ -3003,16 +3018,18 @@ class Projet(XMLelem):
                 print(self._dicoIndicateurs_simple[code])
     #        print "_dicIndicateurs_prj_simple", self._dicIndicateurs_prj_simple
         
-        
+#         print(self._parent.Code, self.code, "_dicoIndicateurs_simple", self._dicoIndicateurs_simple)
+        self._pasdIndic = pasIndic(self._dicoIndicateurs_simple)  # Pour savoir s'il y a des indicateurs de performance associés aux compétences
+#         print("   >>>>", self._pasdIndic)
         #
         # Post-traitement des tâches (si prédéterminées)
         #
         
         # On ne prend que les tâches concernées par le projet
-        for t in list(self.taches.values()):
+        for t in self.taches.values():
             l = []
-            for code in list(ref.dicoCompetences.keys()):
-                l.extend(list(self._dicoCompetences[code].keys()))
+            for code in ref.dicoCompetences.keys():
+                l.extend(self._dicoCompetences[code].keys())
             t[2] = [cc for cc in t[2] if cc in l]
             
         # On trie par phase
@@ -3039,7 +3056,7 @@ class Projet(XMLelem):
             num est utilisé pour rechercher avec le numiemme élément d'une valeur de type liste
         """
         dic = getattr(self, dicattr)
-        for k,v in list(dic.items()):
+        for k,v in dic.items():
             if num != None:
                 v = v[num]
             if v == nom:
@@ -3058,8 +3075,8 @@ class Projet(XMLelem):
         ###########################################################
         def aplatir(dic, niv=1):
             ddic = {}
-            for k0, v0 in list(dic.items()):
-                for k1, v1 in list(v0[1].items()):
+            for k0, v0 in dic.items():
+                for k1, v1 in v0[1].items():
                     if type(v1) == list:
                         ddic[k1] = [v1[0]]
                         if type(v1[1]) == dict:
@@ -3077,7 +3094,7 @@ class Projet(XMLelem):
 #            print dic
             l = competence.indicateurs
             if competence.sousComp != {}:
-                for sousComp in list(competence.sousComp.values()):
+                for sousComp in competence.sousComp.values():
                     l.extend(getListeIndic(sousComp))
             return l
             

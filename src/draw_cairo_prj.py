@@ -587,17 +587,21 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
             #
             # Barres d'évaluabilité
             #
+            if prj.GetProjetRef() is None:
+                parties = {}
+            else:
+                parties = prj.GetProjetRef().parties
             for i, e in enumerate(prj.eleves + prj.groupes):
                 ev = e.GetEvaluabilite(compil = True)[1]
                 y = posZElevesH[1] + i*hEleves
     #            wr = tailleZElevesH[0]*r
     #            ws = tailleZElevesH[0]*s
-                hb = hEleves/(len(prj.GetProjetRef().parties)+1)
+                hb = hEleves/(len(parties)+1)
     #            y = posZElevesH[1] + (2*i*hb)+hb/2
                 
     
                 
-                for j, part in enumerate(prj.GetProjetRef().parties.keys()):
+                for j, part in enumerate(parties.keys()):
                     
                     barreH(ctx, posZElevesH[0], y+(j+1)*hb, tailleZElevesH[0], ev[part][0], ev[part][1], hb, 
                            (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
@@ -727,10 +731,14 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
                     orient = "h"
                 else:
                     orient = "v"
-                try:
-                    n = prj.GetProjetRef().phases[phase][1]
-                except KeyError:
+                
+                if prj.GetProjetRef() is None:
                     n = ""
+                else:
+                    try:
+                        n = prj.GetProjetRef().phases[phase][1]
+                    except KeyError:
+                        n = ""
                 show_text_rect(ctx, n, 
                                (posZDeroul[0] + ecartX/6, yh[0], 
                                 wPhases, yh[1]-yh[0]), 
@@ -748,7 +756,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     # Durées élève entre revues (uniquement en période "terminale")
     #
-    if not entete:
+    if not entete and prj.GetProjetRef() is not None:
     #    tps = time.time()
         posEpreuve = prj.GetProjetRef().getPeriodeEval()
         if posEpreuve is not None and prj.position == posEpreuve:
@@ -790,7 +798,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
     #
     # Croisements élèves/tâches
     #
-    if not entete:
+    if not entete :
 #    tps = time.time()
         for t, y in yTaches: 
             DrawCroisementsElevesTaches(ctx, t, y)
@@ -806,8 +814,11 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
             x = xEleves[i]-wEleves*3/4
             y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
             d = e.GetDuree()
-            dureeRef = prj.GetProjetRef().duree
-            taux = abs((d-dureeRef)/dureeRef)*100
+            if prj.GetProjetRef() is None:
+                taux = 100
+            else:
+                dureeRef = prj.GetProjetRef().duree
+                taux = abs((d-dureeRef)/dureeRef)*100
     #        print "   duree", d, "/", dureeRef
     #        print "   taux", taux
             if taux < constantes.DELTA_DUREE:
@@ -1036,6 +1047,9 @@ def DrawLigne(ctx, x, y, gras = False):
 def regrouperDic(obj, dicIndicateurs):
 #     print "regrouperDic", dicIndicateurs
 #     print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences
+    if obj.GetProjetRef() is None:
+        return dicIndicateurs, {}
+    
     if obj.GetProjetRef()._niveau == 3:
         dic = {}
         typ = {}
@@ -1071,7 +1085,7 @@ def regrouperDic(obj, dicIndicateurs):
     else:
         dic = {}
         typ = {}
-        for disc, tousIndicateurs in list(obj.GetProjetRef()._dicoCompetences.items()):
+        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
 #             print "-----", disc
             for k0, competence in list(tousIndicateurs.items()):
 #                 print "     ", k0, competence

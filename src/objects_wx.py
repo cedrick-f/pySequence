@@ -171,7 +171,7 @@ import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, Grammaire, \
-                    getSingulier, getPluriel, getSingulierPluriel, et2ou, \
+                    getPluriel, getSingulierPluriel, et2ou, \
                     TextCtrl_Help, CloseFenHelp, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
@@ -9433,7 +9433,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200*SSCALE,-1))
+        sbp = myStaticBox(self, -1, ref._nomPb.Sing_(), size = (200*SSCALE,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         self.panelPb = TextCtrl_Help(self, "")
         self.panelPb.SetTitre(ref.nomPb)
@@ -11070,42 +11070,43 @@ class PanelPropriete_Tache(PanelPropriete):
         c00 = wx.BoxSizer(wx.HORIZONTAL)
         
         prj = self.tache.GetProjetRef()
+        if prj is not None:
 #        lstPhases = [p[1] for k, p in ref.phases_prj.items() if not k in ref.listPhasesEval_prj]
-        lstPhases = [prj.phases[k][1] for k in prj.listPhases if not k in prj.listPhasesEval]
-        
-        titre = wx.StaticText(pageGen, -1, "Phase :")
-        c00.Add(titre, flag = wx.EXPAND)
-#         pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
-        
-        if tache.phase in TOUTES_REVUES_SOUT:
-            txtPhas = wx.StaticText(pageGen, -1, prj.phases[tache.phase][1])
-            c00.Add(txtPhas, flag = wx.EXPAND)
-#             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            lstPhases = [prj.phases[k][1] for k in prj.listPhases if not k in prj.listPhasesEval]
             
-        elif tache.estPredeterminee():
-            txtPhas = wx.StaticText(pageGen, -1, "")
-#             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
-            self.txtPhas = txtPhas
-            c00.Add(txtPhas, flag = wx.EXPAND)
+            titre = wx.StaticText(pageGen, -1, "Phase : ")
+            c00.Add(titre, flag = wx.EXPAND)
+    #         pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
             
-        else:
-            cbPhas = combo_adv.BitmapComboBox(pageGen, -1, "Sélectionner la phase",
-                                 choices = lstPhases, #size = (-1, 24*SSCALE),
-                                 style = wx.CB_READONLY
-                                        |wx.CB_DROPDOWN
-#                                  | wx.TE_PROCESS_ENTER
-#                                 | 
-                                 #| wx.CB_SORT
-                                 )
-            
-            for i, k in enumerate(sorted([k for k in list(prj.phases.keys()) if not k in prj.listPhasesEval])):#ref.listPhases_prj):
-                cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap(), 24*SSCALE, 24*SSCALE))
-            pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
-            self.cbPhas = cbPhas
-            c00.Add(cbPhas, flag = wx.EXPAND)
-            
-#             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
-        c0.Add(c00, flag = wx.EXPAND)    
+            if tache.phase in TOUTES_REVUES_SOUT:
+                txtPhas = wx.StaticText(pageGen, -1, prj.phases[tache.phase][1])
+                c00.Add(txtPhas, flag = wx.EXPAND)
+    #             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+                
+            elif tache.estPredeterminee():
+                txtPhas = wx.StaticText(pageGen, -1, "")
+    #             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+                self.txtPhas = txtPhas
+                c00.Add(txtPhas, flag = wx.EXPAND)
+                
+            else:
+                cbPhas = combo_adv.BitmapComboBox(pageGen, -1, "Sélectionner la phase",
+                                     choices = lstPhases, #size = (-1, 24*SSCALE),
+                                     style = wx.CB_READONLY
+                                            |wx.CB_DROPDOWN
+    #                                  | wx.TE_PROCESS_ENTER
+    #                                 | 
+                                     #| wx.CB_SORT
+                                     )
+                
+                for i, k in enumerate(sorted([k for k in list(prj.phases.keys()) if not k in prj.listPhasesEval])):#ref.listPhases_prj):
+                    cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap(), 24*SSCALE, 24*SSCALE))
+                pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
+                self.cbPhas = cbPhas
+                c00.Add(cbPhas, flag = wx.EXPAND)
+                
+    #             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
+            c0.Add(c00, flag = wx.EXPAND)    
 
         
         #
@@ -11228,7 +11229,8 @@ class PanelPropriete_Tache(PanelPropriete):
         pageGen.sizer.AddGrowableCol(3)
         
         self.ConstruireCompetences()
-        self.ConstruireCasesEleve()
+        if prj is not None and not prj._pasdIndic:
+            self.ConstruireCasesEleve()
         self.MiseAJour()
 
         
@@ -11307,8 +11309,9 @@ class PanelPropriete_Tache(PanelPropriete):
                     arbre.MiseAJour(competence, self.tache.indicateursEleve[0][competence])
             else:
                 prj = self.tache.GetProjetRef()
-                for arbre in list(self.arbres.values()):
-                    arbre.MiseAJour(competence, prj._dicCompetences_simple[competence][1])
+                if prj is not None:
+                    for arbre in list(self.arbres.values()):
+                        arbre.MiseAJour(competence, prj._dicCompetences_simple[competence][1])
 #                self.arbre.MiseAJour(competence, REFERENTIELS[self.tache.GetTypeEnseignement()]._dicCompetences_prj_simple[competence][1])
             
             
@@ -11351,7 +11354,18 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.lb.SetSelection(index)    # so that (un)checking also selects (moves the highlight)
         
 
-    
+    ######################################################################################  
+    def AjouterEnleverCompetences(self, app, rem, compRef):
+        for s in app:
+            if not s in self.tache.compVisees:
+                self.tache.compVisees.append(s)
+        for s in rem:
+            if s in self.tache.compVisees:
+                self.tache.compVisees.remove(s)
+        
+        self.sendEvent(modif = "Ajout/Suppression d'%s visée par à la Tâche" %compRef._nom.un_(), 
+                       draw = True, verif = True) 
+        
    
     ######################################################################################  
     def AjouterCompetence(self, code, propag = True):
@@ -11458,7 +11472,8 @@ class PanelPropriete_Tache(PanelPropriete):
                     break
             
         if not self.tache.phase in [self.tache.projet.getCodeLastRevue(), _S] \
-           and not (self.tache.phase in TOUTES_REVUES_EVAL and (True in list(ref.compImposees.values()))): #tache.GetReferentiel().compImposees['C']):
+           and not (self.tache.phase in TOUTES_REVUES_EVAL and (True in list(ref.compImposees.values()))) \
+           and prj is not None: #tache.GetReferentiel().compImposees['C']):
             
 #            print "ConstruireCompetences", self.tache, ref, prj
 
@@ -11473,15 +11488,21 @@ class PanelPropriete_Tache(PanelPropriete):
                 compRef = ref.getToutesCompetencesDict()[code]
                 pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
                 
-                self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, 
-                                                        dicComp, compRef, self,
-                                                 revue = self.tache.phase in TOUTES_REVUES_SOUT, 
-                                                 eleves = (self.tache.phase in TOUTES_REVUES_EVAL_SOUT \
-                                                           or self.tache.estPredeterminee()))
+#                 print("dicComp", dicComp)
+                if prj._pasdIndic:
+                    dic_f = ref.getToutesCompetencesDict()[code].GetDicFiltre()
+                    self.arbres[code] = ArbreCompetences(self.pagesComp[-1], code, dic_f, ref.getToutesCompetencesDict()[code], 
+                                                         pp = self, agwStyle = HTL.TR_NO_HEADER)
+                else:
+                    self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, 
+                                                            dicComp, compRef, self,
+                                                            revue = self.tache.phase in TOUTES_REVUES_SOUT, 
+                                                            eleves = (self.tache.phase in TOUTES_REVUES_EVAL_SOUT \
+                                                               or self.tache.estPredeterminee()))
                 
                 pageComsizer.Add(self.arbres[code], 1, flag = wx.EXPAND)
                 self.pagesComp[-1].SetSizer(pageComsizer)
-                self.nb.AddPage(self.pagesComp[-1], getPluriel(compRef.nomGenerique) + " à mobiliser : " + compRef.abrDiscipline) 
+                self.nb.AddPage(self.pagesComp[-1], "%s à mobiliser : %s" %(compRef._nom.Plur_(),compRef.abrDiscipline))
                 
                 self.pageComsizer = pageComsizer
             
@@ -11587,7 +11608,7 @@ class PanelPropriete_Tache(PanelPropriete):
     def ConstruireCasesEleve(self):
         # On reconstruit l'arbre pour ajouter/enlever des cases "élève"
         if hasattr(self, 'arbres'):
-            for arbre in list(self.arbres.values()):
+            for arbre in self.arbres.values():
                 if arbre.eleves:
                     arbre.ConstruireCasesEleve()
         
@@ -11698,6 +11719,9 @@ class PanelPropriete_Tache(PanelPropriete):
         """ Modification de l'intitulé de la tâche
         """
         prj = self.tache.GetProjetRef()
+        if prj is None:
+            return
+        
 #        ct = event.GetString().split()[0]
         ct = texte
         if len(ct) == 0 or ct.split()[0] not in prj.listTaches:
@@ -11757,8 +11781,11 @@ class PanelPropriete_Tache(PanelPropriete):
         """ Changement de phase
         """
 #        print "EvtComboBox phase", self.tache, self.tache.phase
-        ref = self.tache.GetProjetRef()
-        newPhase = ref.getClefDic('phases', self.cbPhas.GetStringSelection(), 1)
+        prj = self.tache.GetProjetRef()
+        if prj is None:
+            return
+        
+        newPhase = prj.getClefDic('phases', self.cbPhas.GetStringSelection(), 1)
 #        print "   ", newPhase
 #        newPhase = get_key(self.GetReferentiel().NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
 #                                        self.cbPhas.GetStringSelection())
@@ -11800,7 +11827,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-#        print "MiseAJour panelPropriete Tache"
+#         print("MiseAJour panelPropriete Tache", self.tache.compVisees)
 #        print "MiseAJour", self.tache.phase, self.tache.intitule
         
         #
@@ -11809,7 +11836,7 @@ class PanelPropriete_Tache(PanelPropriete):
         if hasattr(self, 'arbres'):
             for codeIndic in self.tache.indicateursEleve[0]:
                 disc, code = codeIndic[0], codeIndic[1:]
-                if code in list(self.arbres[disc].items.keys()):
+                if code in self.arbres[disc].items.keys():
                     item = self.arbres[disc].items[code]
                     cases = self.arbres[disc].GetItemWindow(item, self.arbres[disc].colEleves)
                     if isinstance(cases, ChoixCompetenceEleve):     # Cas des revues à évaluation
@@ -11817,7 +11844,21 @@ class PanelPropriete_Tache(PanelPropriete):
                     else:
                         self.arbres[disc].CheckItem2(item)
                         self.arbres[disc].AutoCheckChild(item, True)
+            
+            for codeComp in self.tache.compVisees:
+                disc, code = codeComp[0], codeComp[1:]
+#                 print("  ", self.arbres[disc].items.keys())
+                if code in self.arbres[disc].items.keys():
+                    self.arbres[disc].UnselectAll()
+                    for cmp in self.tache.compVisees:
+                        if disc == cmp[0]:
+                            if cmp[1:] in self.arbres[disc].items.keys():
+                                i = self.arbres[disc].items[cmp[1:]]
+                                self.arbres[disc].CheckItem2(i)
+                                self.arbres[disc].AutoCheckChild(i, True)
                     
+
+                
                         
 #        if hasattr(self, 'arbres'):
 #            for arbre in self.arbres.values():
@@ -11835,24 +11876,24 @@ class PanelPropriete_Tache(PanelPropriete):
         
         prj = self.tache.GetProjetRef()
 #        if not tache.estPredeterminee():
-        if hasattr(self, 'cbTache'):
-            if self.tache.intitule in list(prj.taches.keys()):
+        if hasattr(self, 'cbTache') and prj is not None:
+            if self.tache.intitule in prj.taches.keys():
                 self.cbTache.SetLabel(self.tache.intitule+"\n"+prj.taches[self.tache.intitule][1])
         
         #
         # Phase de la tâche
         #
         if hasattr(self, 'txtPhas'):
-            if self.tache.intitule in list(prj.taches.keys()):
+            if self.tache.intitule in prj.taches.keys() and prj is not None:
                 self.txtPhas.SetLabel(prj.phases[prj.taches[self.tache.intitule][0]][1])
             else:
                 self.txtPhas.SetLabel("")
         
-        if hasattr(self, 'cbPhas') and self.tache.phase != '':
+        if hasattr(self, 'cbPhas') and self.tache.phase != '' and prj is not None:
 #            print self.tache.phase
 #            print self.tache.GetProjetRef().phases[self.tache.phase][1]
             try:
-                self.cbPhas.SetStringSelection(self.tache.GetProjetRef().phases[self.tache.phase][1])
+                self.cbPhas.SetStringSelection(prj.phases[self.tache.phase][1])
             except:
                 print("Erreur : conflit de type d'enseignement !")
                 pass
@@ -15091,6 +15132,11 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.ExpandAll()
     
         
+    #############################################################################
+    def MiseAJourPhase(self, phase):
+        self.DeleteChildren(self.root)
+        self.Construire(self.root, self.compFiltre)
+        self.ExpandAll()
     
     
     
@@ -15316,16 +15362,22 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ###################################################################################
     def MiseAJour(self, typ, seance):
+#         if isinstance(seance, pysequence.Seance):
         for cmp, item in self.items.items():
             wnd = self.GetItemWindow(item, 1)
             if wnd is not None and typ+cmp in seance.indicateurs:
                 self.setIndicateur(item, seance.indicateurs[typ+cmp])
-                            
-                            
-                            
+        
+#         else:
+#             for cmp, item in self.items.items():
+#                 wnd = self.GetItemWindow(item, 1)
+#                 if wnd is not None and typ+cmp in seance.compVisees:
+#                     self.setIndicateur(item, True)            
+#     
+    
     ###################################################################################
     def setIndicateur(self, item, indic):
-#         print("setIndicateur", indic)
+        print("setIndicateur", indic)
         wnd = self.GetItemWindow(item, 1)
         if wnd is not None:
             wnd.SetValue(indic)
@@ -15483,17 +15535,20 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-        self.SetColumnText(0, getPluriel(compRef.nomGenerique) + " et " + compRef.nomGeneriqueIndic)
+#         self.SetColumnText(0, getPluriel(compRef.nomGenerique) + " et " + compRef.nomGeneriqueIndic)
+        self.SetColumnText(0, "%s et %s" %(compRef._nom.Plur_(),compRef._nomIndic.Plur_()))
+        
         
         tache = self.GetTache()
         prj = tache.GetProjetRef()
-        
-        for i, part in enumerate(prj.parties.keys()):
-            self.SetColumnText(i+1, "Poids "+part)
-            self.SetColumnWidth(i+1, 60*SSCALE)
-        
-        if eleves:
-            self.SetColumnWidth(i+2, 0)
+        if prj is not None:
+            i=0
+            for i, part in enumerate(prj.parties.keys()):
+                self.SetColumnText(i+1, "Poids "+part)
+                self.SetColumnWidth(i+1, 60*SSCALE)
+            
+            if eleves and i>0:
+                self.SetColumnWidth(i+2, 0)
         
         
     ####################################################################################
@@ -15508,14 +15563,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def CreerColonnes(self):
         tache = self.GetTache()
         prj = tache.GetProjetRef()
-        
-        for i in range(len(list(prj.parties.keys()))):
-            self.AddColumn("")
-            self.SetColumnWidth(i+1, 0)
-        
-        self.colEleves = len(list(prj.parties.keys()))+1
-        self.AddColumn(tache.GetReferentiel().labels["ELEVES"][2].plur_())#(u"Eleves")
-        self.SetColumnWidth(self.colEleves, 0)
+        if prj is not None:
+            for i in range(len(prj.parties.keys())):
+                self.AddColumn("")
+                self.SetColumnWidth(i+1, 0)
+            
+            self.colEleves = len(prj.parties.keys())+1
+            self.AddColumn(tache.GetReferentiel().labels["ELEVES"][2].plur_())#(u"Eleves")
+            self.SetColumnWidth(self.colEleves, 0)
         
         
     ####################################################################################
@@ -15563,12 +15618,15 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         tache = self.GetTache()
         prj = tache.GetProjetRef()
+        if prj is None:
+            return 
+        
 #        print " prj", prj, self.typ
-        if dic == None: # Construction de la racine
+        if dic is None: # Construction de la racine
 #            dic = self.competences.dicCompetences
 #             dic = tache.GetReferentiel().dicCompetences
-            self.compFiltre
-            
+            dic = self.compFiltre
+#         print("dic", dic, self.compFiltre)
         
 #        print "   ProjetRef", prj
 #         print("  dicCompetences", dic)
@@ -15581,12 +15639,15 @@ class ArbreCompetencesPrj(ArbreCompetences):
             tousEleve = [True]*len(tache.projet.eleves)
         
         def const(d, br, debug = False, niveau = 0):
+#             print(" "*niveau, d)
             ks = list(d.keys())
             ks.sort()
             for k in ks:
-                if debug: print("*"*niveau, k)
+                
 #                 v = d[k]
-                competence = d[k]
+                competence = d[k] # type Referentiel.Competence
+                if debug: print("*"*niveau, k, competence.sousComp)
+                
 #                print "****", k#, prj.taches[tache.intitule][2]
 
                 #
@@ -15612,7 +15673,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                        print " * ",v[2]
                         
                         for i, part in enumerate(prj.parties.keys()):
-                            if part in list(competence.poids.keys()):
+                            if part in competence.poids.keys():
                                 self.SetItemText(b, pourCent2(0.01*competence.poids[part]), i+1)
                         
 #                        for i, p in enumerate(v[2][1:]):
@@ -15631,7 +15692,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     b = None #
                     tous = True
                     
-                    if not tache.estPredeterminee() or (tache.intitule in list(prj.taches.keys()) and k in prj.taches[tache.intitule][2]):
+                    if not tache.estPredeterminee() \
+                       or (tache.intitule in prj.taches.keys() and k in prj.taches[tache.intitule][2]):
+                        
                         cc = [cd+ " " + it for cd, it in zip(k.split("\n"), competence.intitule.split("\n"))]
                         comp = self.AppendItem(br, "\n ".join(cc),
                                                 data = k)
@@ -15641,9 +15704,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
                         #
                         if competence.poids != {}: # 
 #                         if len(v) == 3: # 
-                            if debug: print("   prem's", competence.poids)
+                            if debug: print("   prem'S", competence.poids)
                             for j, part in enumerate(prj.parties.keys()):
-                                if part in list(competence.poids.keys()):
+                                if part in competence.poids.keys():
     #                        for i, p in enumerate(v[2][1:]):
     #                            if p != 0:
                                     self.SetItemText(comp, pourCent2(0.01*competence.poids[part]), j+1)
@@ -15669,7 +15732,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 b = self.AppendItem(comp, indic.intitule, 
                                                     data = codeIndic)
                                 for j, part in enumerate(prj.parties.keys()):
-                                    if part in list(competence.poids.keys()):
+                                    if part in competence.poids.keys():
     #                            for j, p in enumerate(indic.poids[1:]):
     #                                if p != 0:
                                         if j == 0:  coul = 'C'
@@ -15696,7 +15759,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 if debug: print("   indic", indic)
                                 
                                 for j, part in enumerate(prj.parties.keys()):
-                                    if part in list(indic.poids.keys()):
+                                    if part in indic.poids.keys():
     #                            for j, p in enumerate(indic.poids[1:]):
     #                                if p != 0:
                                         self.SetItemText(b, pourCent2(0.01*indic.poids[part]), j+1)
@@ -15728,6 +15791,16 @@ class ArbreCompetencesPrj(ArbreCompetences):
     #                                self.Collapse(comp)
     #                                self.Refresh()
                                     self.Layout()
+                                    
+                        #
+                        # Cas où il n'y a pas d'indicateurs dans ce type de projet
+                        #
+                        if prj._pasdIndic:
+                            if debug: print("   pas d'indic !!")
+                            for k, d in competence.sousComp.items():
+                                b = self.AppendItem(comp, k+" "+competence.intitule, 
+                                                    ct_type = 1,
+                                                    data = k)
                     
                     if b == None: # Désactivation si branche vide d'indicateurs
                         pass#self.SetItemType(br,0)
@@ -15767,11 +15840,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         wx.CallAfter(self.pp.SetCompetences)
 
 
-    #############################################################################
-    def MiseAJourPhase(self, phase):
-        self.DeleteChildren(self.root)
-        self.Construire(self.root)
-        self.ExpandAll()
+    
         
     
     #############################################################################
@@ -17070,7 +17139,7 @@ class PanelProblematiques(wx.Panel):
         self.CI.Pb_perso = self.PbPerso.GetStrings()
 #         print  "  ", self.CI.Pb_perso
         
-        t = "Modification de la %s" %getSingulier(ref.nomPb)
+        t = "Modification %s" %ref._nomPb.du_()
         self.Parent.GetDocument().GererDependants(self.CI.parent, t)
             
         if self.Parent.onUndoRedo():
@@ -17325,7 +17394,9 @@ class TreeCtrlComboPopupTaches(TreeCtrlComboPopup2):
         TreeCtrlComboPopup2.__init__(self, parent, style)
         
         prj = tache.GetProjetRef()
-
+        if prj is None:
+            return 
+        
         ph = None
         for ct in prj.listTaches:
             if ph != prj.taches[ct][0]:

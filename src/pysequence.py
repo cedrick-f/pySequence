@@ -3753,22 +3753,25 @@ class Projet(BaseDoc, Grammaire):
     def GetProjetRef(self):
         """ Renvoie le projet (Referentiel.Projet) de référence
         """
-#        print "GetProjetRef", self.code
+#         print("GetProjetRef", self.code, list(self.GetReferentiel().projets.keys()))
         if self.code == None:
             return self.GetReferentiel().getProjetDefaut()
         else:
-            if self.code in list(self.GetReferentiel().projets.keys()):
+            if self.code in self.GetReferentiel().projets.keys():
                 return self.GetReferentiel().projets[self.code]
             else:
-                return None
+                return None #Referentiel.Projet(self.GetReferentiel()) # None : pose des pb
 
     ######################################################################################  
     def GetPeriodeDefaut(self):
         projet = self.GetProjetRef()
-        if projet is not None:
-            return projet.getPeriodeDefaut()
-        else:
-            return [0,0]
+        return projet.getPeriodeDefaut()
+    
+    
+#         if projet is not None:
+#             return projet.getPeriodeDefaut()
+#         else:
+#             return [0,0]
         
     ######################################################################################  
     def GetDuree(self):
@@ -10713,8 +10716,8 @@ class Tache(ElementAvecLien, ElementBase):
         
         self.phase = phaseTache
         
+        self.compVisees = [] # codes des compétences visées (uniquement pour projest non évalués)
         
-#        
         if branche != None:
             self.setBranche(branche)
 ##            if not Ok:
@@ -10725,7 +10728,8 @@ class Tache(ElementAvecLien, ElementBase):
             if phaseTache in TOUTES_REVUES_SOUT:
                 self.indicateursMaxiEleve = self.IndicateursEleveDefaut()
                 
-                
+        
+        
         
     def __eq__(self, tache):
         if tache == None:
@@ -10788,8 +10792,11 @@ class Tache(ElementAvecLien, ElementBase):
         """
 #        print "GetDicIndicateurs", self, ":", self.indicateursEleve
 #        print self.GetProjetRef()._dicoIndicateurs_simple
+        if self.GetProjetRef() is None:
+            return {}
+        
         tousIndicateurs = {}
-        for disc, dic in list(self.GetProjetRef()._dicoIndicateurs_simple.items()):
+        for disc, dic in self.GetProjetRef()._dicoIndicateurs_simple.items():
             for k, i in list(dic.items()):
                 tousIndicateurs[disc+k] = i
 #        print "  >", tousIndicateurs
@@ -10817,8 +10824,11 @@ class Tache(ElementAvecLien, ElementBase):
         """
 #        print "GetDicIndicateursEleve", self, eleve.id+1
         indicateurs = {}
+        if self.GetProjetRef() is None:
+            return {}
+        
         numEleve = eleve.id
-        for dic in list(self.GetProjetRef()._dicoIndicateurs_simple.values()):
+        for dic in self.GetProjetRef()._dicoIndicateurs_simple.values():
             for i in self.indicateursEleve[numEleve+1]:
                 competence, indicateur = i.split('_')
                 indicateur = eval(indicateur)-1
@@ -10941,6 +10951,11 @@ class Tache(ElementAvecLien, ElementBase):
                 for i, c in enumerate(self.indicateursEleve[0]):
                     brancheCmp.set("Indic"+str(i), c)
             
+        # Compétences visées
+        if len(self.compVisees) > 0:
+            root.set("CompVisees", " ".join(self.compVisees))    
+            
+            
         root.set("IntituleDansDeroul", str(self.intituleDansDeroul))
         return root    
         
@@ -11032,8 +11047,10 @@ class Tache(ElementAvecLien, ElementBase):
                         indic = brancheInd.get("Indic"+str(i))
                         if indic != None:
                             lst = toList(indic)
-                        else:
+                        elif ref is not None:
                             lst = [True]*len(ref._dicIndicateurs[e])
+                        else:
+                            lst = []
                         for n,j in enumerate(lst):
                             if j:
                                 self.indicateursEleve[0].append(brancheCmp.get(e)+"_"+str(n+1))
@@ -11085,7 +11102,7 @@ class Tache(ElementAvecLien, ElementBase):
 #                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                         
-                                    if not code in ref._dicoIndicateurs_simple[disc]:
+                                    if ref is not None and not code in ref._dicoIndicateurs_simple[disc]:
                                         print("Erreur 1", code, "<>", ref._dicoIndicateurs_simple[disc])
                                         err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                         return err
@@ -11118,7 +11135,7 @@ class Tache(ElementAvecLien, ElementBase):
 #                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                         
                                     # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                    if not code in ref._dicIndicateurs:
+                                    if ref is not None and not code in ref._dicIndicateurs:
                                         print("Erreur 2")
                                         err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                         return err
@@ -11147,21 +11164,22 @@ class Tache(ElementAvecLien, ElementBase):
                                 
                             # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                             indic = eval(indic)-1
-                            if self.phase == 'XXX' and ref.getTypeIndicateur(codeindic) == 'C':
+                            if ref is not None and self.phase == 'XXX' and ref.getTypeIndicateur(codeindic) == 'C':
                                 continue
                             
                                 
 #                                try:
 #                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                            for disc, dic in list(ref._dicoIndicateurs_simple.items()):
-                                if code[0] == disc:
-                                    if not code[1:] in list(dic.keys()):
-                                        print("Erreur 3", code, "<>", ref._dicoIndicateurs_simple[disc])
-                                        if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
-                                            err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
-                                    else:
-                                        self.indicateursEleve[0].append(codeindic)
+                            if ref is not None: 
+                                for disc, dic in ref._dicoIndicateurs_simple.items():
+                                    if code[0] == disc:
+                                        if not code[1:] in list(dic.keys()):
+                                            print("Erreur 3", code, "<>", ref._dicoIndicateurs_simple[disc])
+                                            if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
+                                                err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                                        else:
+                                            self.indicateursEleve[0].append(codeindic)
         
         
         if debug: print("   indicateursEleve", self.indicateursEleve)
@@ -11169,6 +11187,10 @@ class Tache(ElementAvecLien, ElementBase):
         if not self.estPredeterminee():
             self.ActualiserDicIndicateurs()
             
+        # Compétences visées
+        self.compVisees = branche.get("CompVisees", "").split()
+#         print("compVisees", self.phase, ":", self.compVisees)
+        
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
     
 
@@ -11202,7 +11224,7 @@ class Tache(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def GetIntit(self, num = None):
-        if self.estPredeterminee() > 0:
+        if self.GetProjetRef() is not None and self.estPredeterminee() > 0:
             return self.intitule+"\n"+self.GetProjetRef().taches[self.intitule][1]
         else:
             return self.intitule
@@ -11271,6 +11293,9 @@ class Tache(ElementAvecLien, ElementBase):
     ######################################################################################  
     def GetProchaineRevue(self):
 #        print "GetProchaineRevue"
+        if self.GetProjetRef() is None:
+            return 0
+        
         posRevues = self.GetProjetRef().posRevues[self.projet.nbrRevues]
 #        print "   posRevues:", posRevues
         for i, pr in enumerate(posRevues):#.reverse():
@@ -13311,18 +13336,18 @@ class Eleve(Personne, ElementBase):
                                             p = 1.0*poids[ph]/100
                                         
                                             rs[disc][ph] += p * poidsGrp[ph]/100
-                                            if grp in list(lers[disc][ph].keys()):
+                                            if grp in lers[disc][ph].keys():
                                                 lers[disc][ph][grp] += p
                                             else:
                                                 lers[disc][ph][grp] = p
                             else:
-                                if not grp in list(lers[disc][ph].keys()):
+                                if not grp in lers[disc][ph].keys():
                                     lers[disc][ph][grp] = 0
                             
             return
         
-        for typi, dico in list(prj._dicoIndicateurs.items()):
-            for grp, grpComp in list(dico.items()):
+        for typi, dico in prj._dicoIndicateurs.items():
+            for grp, grpComp in dico.items():
 #                 print "  >>> poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)
                 
@@ -13333,12 +13358,12 @@ class Eleve(Personne, ElementBase):
         # liste des classeurs avec des grilles comprenant des colonne "non"
 #        classeurs = [i[0] for i in self.GetReferentiel().cellulesInfo_prj["NON"] if i[0] != '']
         seuil = {}
-        for disc, dic in list(prj._dicoGrpIndicateur.items()):
+        for disc, dic in prj._dicoGrpIndicateur.items():
             seuil[disc] = {}
-            for t in list(dic.keys()):
+            for t in dic.keys():
     #            if t in classeurs:
     #            print "aColNon", self.GetReferentiel().aColNon
-                if t in list(self.GetReferentiel().aColNon.keys()) and self.GetReferentiel().aColNon[t]:
+                if t in self.GetReferentiel().aColNon.keys() and self.GetReferentiel().aColNon[t]:
                     seuil[disc][t] = 0.5  # s'il y a une colonne "non", le seuil d'évaluabilité est de 50% par groupe de compétence
                 else:
                     seuil[disc][t] = 1.0     # s'il n'y a pas de colonne "non", le seuil d'évaluabilité est de 100% par groupe de compétence
@@ -13347,15 +13372,15 @@ class Eleve(Personne, ElementBase):
         ev_tot = {}
 #        for txt, le, ph in zip([r, s], [ler, les], prj._dicGrpIndicateur.keys()):
 
-        for disc, dic in list(prj._dicoGrpIndicateur.items()):
+        for disc, dic in prj._dicoGrpIndicateur.items():
             ev[disc] = {}
             ev_tot[disc] = {}
-            for part in list(dic.keys()):
+            for part in dic.keys():
                 txt = rs[disc][part]
                 txt = round(txt, 6)
                 ev[disc][part] = {}
                 ev_tot[disc][part] = [txt, True]
-                for grp, tx in list(lers[disc][part].items()):
+                for grp, tx in lers[disc][part].items():
                     tx = round(tx, 6)
                     ev[disc][part][grp] = [tx, tx >= seuil[disc][part]]
                     ev_tot[disc][part][1] = ev_tot[disc][part][1] and ev[disc][part][grp][1]
@@ -13548,7 +13573,7 @@ class Eleve(Personne, ElementBase):
                 self.codeBranche.comp[disc+part].SetLabel(rallonge(pourCent2(ev_tot[disc][part][0])))
         
         keys = {}
-        for disc, dic in list(self.GetProjetRef()._dicoIndicateurs_simple.items()):
+        for disc, dic in self.GetProjetRef()._dicoIndicateurs_simple.items():
             keys[disc] = sorted(dic.keys())
             if "O8s" in keys[disc]:
                 keys[disc].remove("O8s")
@@ -13668,7 +13693,7 @@ class Eleve(Personne, ElementBase):
             ev, ev_tot, seuil = self.GetEvaluabilite()
             prj = self.GetProjetRef()
             keys = {}
-            for disc, dic in list(prj._dicoIndicateurs.items()):
+            for disc, dic in prj._dicoIndicateurs.items():
                 keys[disc] = sorted(dic.keys())
 #            if "O8s" in keys:
 #                keys.remove("O8s")
@@ -13714,7 +13739,7 @@ class Eleve(Personne, ElementBase):
                         self.tip.AjouterCol("le"+part, l, coul,
                                        couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
-            for disc in list(prj._dicoIndicateurs.keys()):
+            for disc in prj._dicoIndicateurs.keys():
                 for t in keys[disc]:
                     self.tip.AjouterCol("le", t, size = 2) 
             
