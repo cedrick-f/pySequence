@@ -11579,7 +11579,9 @@ class PanelPropriete_Tache(PanelPropriete):
         
         
         # sur les pages "Compétences"
-        self.ConstruireCasesEleve()
+        prj = self.tache.GetProjetRef()
+        if prj is not None and not prj._pasdIndic:
+            self.ConstruireCasesEleve()
         
         
     #############################################################################            
@@ -11684,9 +11686,11 @@ class PanelPropriete_Tache(PanelPropriete):
         
         self.GetDocument().MiseAJourDureeEleves()
 #        self.GetDocument().MiseAJourTachesEleves()
+        prj = self.tache.GetProjetRef()
+        if prj is not None and not prj._pasdIndic:
+            self.ConstruireCasesEleve()
         
-        self.ConstruireCasesEleve()
-        self.sendEvent(modif = "Changement d'%s concerné par la tâche" %self.GetReferentiel().labels["ELEVES"][2].le_(), 
+        self.sendEvent(modif = "Changement d'%s concerné par la tâche" %self.GetDocument().GetReferentiel().labels["ELEVES"][2].le_(), 
                        draw = True, verif = True)    
 
 
@@ -12822,7 +12826,9 @@ class PanelPropriete_Groupe(PanelPropriete):
         titre = myStaticBox(self, -1, "Type d'enseignement")
         titre.SetMinSize((180*SSCALE, 100*SSCALE))
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        te = ArbreTypeEnseignement(self, self)
+#         te = ArbreTypeEnseignement(self, self)
+        te = Panel_SelectEnseignement(self, self, self.pourProjet, self.groupe)
+        
         self.st_type = wx.StaticText(self, -1, "")
         self.st_type.Show(False)
         sb.Add(te, 1, flag = wx.EXPAND)
@@ -12830,7 +12836,8 @@ class PanelPropriete_Groupe(PanelPropriete):
 
         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
  
-        te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
+        te.MiseAJour()
+#         te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
 
         self.sizer.Add(sb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = te
@@ -12856,7 +12863,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         #
         # Etablissement
         #
-        titre = myStaticBox(self, -1, "Etablissement")
+        titre = myStaticBox(self, -1, "Établissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(self, -1, "Académie :")
@@ -12893,7 +12900,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         sh.Add(self.cbv, 1,flag = wx.ALIGN_CENTER_VERTICAL|wx.LEFT, border = 5)
         sb.Add(sh, flag = wx.EXPAND)
         
-        t = wx.StaticText(self, -1, "Etablissement :")
+        t = wx.StaticText(self, -1, "Établissement :")
         sb.Add(t, flag = wx.EXPAND)
         
         self.cbe = wx.ComboBox(self, -1, "sélectionner un établissement ...", (-1,-1), 
@@ -12923,7 +12930,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         # Elèves
         #
         ref = groupe.GetReferentiel()
-        n = ref.labels["ELEVES"][2].plur_()
+        n = ref.labels["ELEVES"][2].Plur_()
         titre = myStaticBox(self, -1, "%s du groupe" %n)
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
@@ -13043,7 +13050,7 @@ class PanelPropriete_Groupe(PanelPropriete):
 #            self.classe.etablissement = self.textctrl.GetStringSelection()
 #            self.AfficherAutre(True)
 #        else:
-        self.classe.etablissement = evt.GetString()
+        self.groupe.etablissement = evt.GetString()
 #        self.AfficherAutre(False)
 
         self.sendEvent(modif = "Modification de l'établissement",
@@ -13087,10 +13094,11 @@ class PanelPropriete_Groupe(PanelPropriete):
     
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
-#         print "MiseAJour panelPropriete Groupe", self.groupe.typeEnseignement
+        print("MiseAJour panelPropriete Groupe", self.groupe.typeEnseignement)
 #         print "  ", REFERENTIELS.keys()
 #         self.cb_type.SetStringSelection(self.groupe.typeEnseignement)
-        self.cb_type.SetStringSelection(REFERENTIELS[self.groupe.typeEnseignement].Enseignement[0])
+#         self.cb_type.SetStringSelection(REFERENTIELS[self.groupe.typeEnseignement].Enseignement[0])
+        self.cb_type.MiseAJour()
         
         self.textctrln.ChangeValue(self.groupe.nom)
 
@@ -16251,12 +16259,18 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
 #   Classes définissant le panel de sélection du type d'enseignement
 #
 ####################################################################################*
-from wx.lib.combotreebox import ComboTreeBox
+# from wx.lib.combotreebox import ComboTreeBox
 class Panel_SelectEnseignement(wx.Panel):
-    def __init__(self, parent, panelClasse, pourProjet, classe):
+    def __init__(self, parent, panelClasse, pourProjet, objet):
         wx.Panel.__init__(self, parent, -1)
         
-        self.classe = classe
+        if isinstance(objet, pysequence.Classe):
+            self.classe = objet
+            self.groupe = None
+        elif isinstance(objet, pysequence.Groupe):
+            self.groupe = objet
+            self.classe = None
+            
         self.pourProjet = pourProjet
         
         self.panelClasse = panelClasse
@@ -16284,9 +16298,13 @@ class Panel_SelectEnseignement(wx.Panel):
         #
         # Périodes possibles
         #
-        self.bmp = wx.StaticBitmap(self, -1, wx.Bitmap())
-        self.bmp.SetToolTip("Périodes attribuées à la spécialité")
-        self.sizer.Add(self.bmp, wx.EXPAND| wx.ALL, 1)
+        if self.classe is not None:
+            self.bmp = wx.StaticBitmap(self, -1, wx.Bitmap())
+            self.bmp.SetToolTip("Périodes attribuées à la spécialité")
+            self.sizer.Add(self.bmp, wx.EXPAND| wx.ALL, 1)
+        
+        
+        
         
         self.Bind(wx.EVT_COMBOBOX, self.EvtRadioBox)
 #         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, self.cb_type)
@@ -16303,6 +16321,22 @@ class Panel_SelectEnseignement(wx.Panel):
 #         self.cb_type.SetStringSelection(def_ref.Enseignement[0])
 #         self.sp_type.Show(len(def_ref.listeSpecialites) > 0)
 
+
+    ######################################################################################  
+    def GetReferentiel(self):
+        if self.classe is not None:
+            return self.classe.referentiel
+        if self.groupe is not None:
+            return REFERENTIELS[self.groupe.typeEnseignement]
+    
+    
+    ######################################################################################  
+    def GetDocument(self):
+        if self.classe is not None:
+            return self.classe.GetDocument()
+        if self.groupe is not None:
+            return self.groupe.GetDocument()
+        
     
     ######################################################################################  
     def layout(self, event):
@@ -16313,16 +16347,21 @@ class Panel_SelectEnseignement(wx.Panel):
     ######################################################################################  
     def EvtRadioBoxSpe(self, event):
 #         print('EvtRadioBoxSpe')
-        self.classe.specialite = list(self.rb_spe.GetCheckedStrings())
-        self.classe.doc.MiseAJourTypeEnseignement()
-        self.classe.doc.SetPosition(self.classe.doc.position)
-        self.MiseAJour()
-        self.sizer.Layout()
+        if self.classe is not None:
+            self.classe.specialite = list(self.rb_spe.GetCheckedStrings())
+            self.classe.doc.MiseAJourTypeEnseignement()
+            self.classe.doc.SetPosition(self.classe.doc.position)
+            self.MiseAJour()
+            self.sizer.Layout()
+            
+            self.panelClasse.sendEvent(modif = "Modification de la spécialité",
+                                       obj = self.classe, draw = True, verif = True)
         
-        self.panelClasse.sendEvent(modif = "Modification de la spécialité",
-                                   obj = self.classe, draw = True, verif = True)
-        
-        
+        if self.groupe is not None:
+            self.groupe.specialite = list(self.rb_spe.GetCheckedStrings())
+            
+            
+            
     ######################################################################################  
     def EvtRadioBox(self, event = None, CodeFam = None):
         """ Sélection d'un type d'enseignement
@@ -16331,33 +16370,37 @@ class Panel_SelectEnseignement(wx.Panel):
         if event != None:
 #             radio_selected = event.GetEventObject()
             CodeFam = Referentiel.getEnseignementLabel(event.GetString())
-#         print("EvtRadioBox", CodeFam)
+        print("EvtRadioBox", CodeFam)
         if CodeFam is None:
-            self.ctb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
+            self.ctb_type.SetStringSelection(self.GetReferentiel().Enseignement[0])
             return
         
-        self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
-        self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
-        if len(self.classe.referentiel.listeSpecialites) > 0:
-            self.classe.specialite = [self.classe.referentiel.listeSpecialites[0]]
-        else:
-            self.classe.specialite = []
+        if self.classe is not None:
+            self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
+            self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
+            if len(self.classe.referentiel.listeSpecialites) > 0:
+                self.classe.specialite = [self.classe.referentiel.listeSpecialites[0]]
+            else:
+                self.classe.specialite = []
             
-            
-#         self.classe.MiseAJourTypeEnseignement()
-        self.classe.doc.MiseAJourTypeEnseignement()
-        self.classe.doc.SetPosition(self.classe.doc.position)
+    #         self.classe.MiseAJourTypeEnseignement()
+            self.classe.doc.MiseAJourTypeEnseignement()
+            self.classe.doc.SetPosition(self.classe.doc.position)
+
+            # Mise à jour du panel Classe
+            self.panelClasse.MiseAJourTypeEnseignement()
         
+        if self.groupe is not None:
+            self.groupe.typeEnseignement = CodeFam[0]
+            # Mise à jour du panel Groupe
+            self.panelClasse.MiseAJour()
+    
         # Gestion des affichages ...
-        self.rb_spe.Show(len(self.classe.referentiel.listeSpecialites) > 0)
+        self.rb_spe.Show(len(self.GetReferentiel().listeSpecialites) > 0)
         self.MiseAJour()
         self.sizer.Layout()
-            
-        # Mise à jour du panel Classe
-        self.panelClasse.MiseAJourTypeEnseignement()
         
-    
-    
+        
     ######################################################################################  
     def Verrouiller(self):
         etat = not self.classe.verrouillee
@@ -16423,12 +16466,12 @@ class Panel_SelectEnseignement(wx.Panel):
     ######################################################################################  
     def MiseAJour(self):
 #         print("MiseAJour ens", self.classe.referentiel.Enseignement[0])
-        ref = self.classe.referentiel
+        ref = self.GetReferentiel()
         self.ctb_type.SetStringSelection(ref.Enseignement[0])
 #         self.st_type.SetLabel(self.classe.GetLabel())
         self.rb_spe.Clear()
         for s in ref.listeSpecialites:
-            doc = self.classe.GetDocument()
+            doc = self.GetDocument()
             if (isinstance(doc, pysequence.Sequence) \
                 and "S" in ref.specialite[s][5]) \
                or \
@@ -16440,10 +16483,15 @@ class Panel_SelectEnseignement(wx.Panel):
 #         print(self.classe.specialite)
 #         for s in self.classe.specialite:
         if len(ref.listeSpecialites) > 0:
-            self.rb_spe.SetCheckedStrings(self.classe.specialite)
+            if self.classe is not None:
+                sp = self.classe.specialite
+            if self.groupe is not None:
+                sp = self.groupe.specialite
+            self.rb_spe.SetCheckedStrings(sp)
             self.rb_spe.Show()
         
-        self.bmp.SetBitmap(self.classe.getBitmapPeriode(200*SSCALE))
+        if hasattr(self, 'bmp'):
+            self.bmp.SetBitmap(self.classe.getBitmapPeriode(200*SSCALE))
 
 
 

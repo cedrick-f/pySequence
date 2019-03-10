@@ -13815,6 +13815,7 @@ class Groupe(Eleve):
         self.image = None
         
         self.typeEnseignement = self.GetReferentiel().Code
+        self.specialite = []
 
         self.academie = self.GetDocument().classe.academie
         self.ville = self.GetDocument().classe.ville
@@ -14352,6 +14353,7 @@ class Groupe(Eleve):
         # La classe
         groupe = ET.Element("Groupe")
         groupe.set("Type", self.typeEnseignement)
+        groupe.set("Spe", " ".join(self.specialite))
         
         groupe.set("Id", str(self.id))
         groupe.set("Nom", self.nom)
@@ -14386,7 +14388,9 @@ class Groupe(Eleve):
             eleve.setBranche(e)
             self.eleves.append(eleve)
             
-            
+        self.specialite = branche.get("Spe", "").split()
+        
+        
         #
         # Etablissement
         #

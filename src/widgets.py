@@ -1930,7 +1930,7 @@ class ListCtrlMixed(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.TextEdi
 
 class EditableListCtrl(wx.Panel):
     def __init__(self, parent, ID, pos=wx.DefaultPosition,
-                 size=wx.DefaultSize,
+                 size = wx.DefaultSize,
                  img = (wx.NullBitmap, wx.NullBitmap), 
                  hlp = ("Ajouter", "Supprimer la selection")):
         
@@ -1977,10 +1977,10 @@ class EditableListCtrl(wx.Panel):
 #         print "OnToolClick", self.listCtrl.GetItemCount()
         if event.GetId() == self.IDajout:
             n = self.listCtrl.GetItemCount()
-            newindex = self.listCtrl.InsertStringItem(n, self.listCtrl.GetColumn(0).GetText() + str(n))
+            newindex = self.listCtrl.InsertItem(n, self.listCtrl.GetColumn(0).GetText() + str(n))
             
             for col in range(self.listCtrl.GetColumnCount()-1):
-                self.listCtrl.SetStringItem(newindex, col + 1, self.listCtrl.GetColumn(col+1).GetText() + str(n))
+                self.listCtrl.SetItem(newindex, col + 1, self.listCtrl.GetColumn(col+1).GetText() + str(n))
     
             self.listCtrl.SetItemData(newindex, wx.NewId())
             
@@ -1993,9 +1993,9 @@ class EditableListCtrl(wx.Panel):
     def SetListItem(self, items):
         for data in items:
             n = self.listCtrl.GetItemCount()
-            newindex = self.listCtrl.InsertStringItem(n, data[0])
+            newindex = self.listCtrl.InsertItem(n, data[0])
             for col in range(self.listCtrl.GetColumnCount()-1):
-                self.listCtrl.SetStringItem(newindex, col + 1, data[col+1])
+                self.listCtrl.SetItem(newindex, col + 1, data[col+1])
     
             self.listCtrl.SetItemData(newindex, wx.NewId())
     
@@ -2007,7 +2007,7 @@ class EditableListCtrl(wx.Panel):
         for row in range(count):
             l.append([])
             for col in range(cols):
-                item = self.listCtrl.GetItem(itemId=row, col=col)
+                item = self.listCtrl.GetItem(itemIdx=row, col=col)
                 l[-1].append(item.GetText())
         return l
     
