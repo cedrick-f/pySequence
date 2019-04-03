@@ -2375,8 +2375,10 @@ class Referentiel(XMLelem):
         
         elif feuille[:4] == "Comp":
             comp = self.getCompetence(feuille[-1]+code)
-#             print(feuille[-1]+code)
+#             print("  ", feuille[-1]+code)
+            
             if comp is not None:
+#                 print("   ", comp.sousComp.keys())
                 for sc in comp.sousComp.keys():
                     lst.extend(self.getSousElem(sc, feuille))
                 

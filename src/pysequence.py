@@ -3203,16 +3203,24 @@ class Sequence(BaseDoc):
             elif code[:3] == "Sav":
                 ce = d["S"].savoirs
                 ef = d["S"]
-
+#             print("   :", code, ef.filtre)
             
             filtres.append(filtre)
 
-            
+            # On ajoute les sous éléments ...
             ce2 = ce[:]
-            if ef is not None and hasattr(ef, 'filtre') and ef.filtre is not None:
+#             if ef is not None and hasattr(ef, 'filtre') and ef.filtre is not None:
+#                 for e in ce:
+# #                     print("   ..", e)
+#                     ce2.extend([c for c in ref.getSousElem(e, code) if c in ef.filtre])
+                    
+            if ef is not None and hasattr(ef, 'filtre'):
                 for e in ce:
-                    ce2.extend([c for c in ref.getSousElem(e, code) if c in ef.filtre])
-#             print("   ce =", ce, "-->", ce2)
+#                     print("   ..", e)
+                    ce2.extend([c for c in ref.getSousElem(e, code) if (ef.filtre is None or c in ef.filtre)])
+                    
+                    
+            print("   ce =", ce, "-->", ce2)
             
 #             if isinstance(elem, Referentiel.Competences):
 #                 dic = ref.getDicToutesCompetences()
@@ -3237,7 +3245,7 @@ class Sequence(BaseDoc):
 #                     else:
 #                         ssval = 
         
-#         print("filtres :", filtres)
+        print("   filtres :", filtres)
         
         #
         # Intersection des différens filtres
