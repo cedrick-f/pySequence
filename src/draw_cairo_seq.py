@@ -674,10 +674,11 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         
     lstComp = []
     lstTyp = []
+    ttcomp = ref.getToutesCompetencesDict()
     for c in sorted(seq.prerequis["C"].competences):
         typ, cod = c[0], c[1:]
         
-        comp = ref.getToutesCompetencesDict()[typ]
+        comp = ttcomp[typ]
         
 #         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
 #             comp = ref_tc.dicoCompetences["S"]
@@ -694,7 +695,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     for cod, comp in lstComp:   
         disc = comp.codeDiscipline
-        lstTexteC.append(comp.getCompetence(cod).intitule)
+        intit = comp.getCompetence(cod).intitule
+        if len(intit) == 0:
+            intit = " "
+        lstTexteC.append(intit)
         if multi:
             lstCodesC.append(comp.abrDiscipline + " " + cod)
         else:
@@ -715,9 +719,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         
     lstSav = []
     lstTyp = []
+    ttsav = ref.getTousSavoirsDict()
     for c in sorted(seq.prerequis["S"].savoirs):
         typ, cod = c[0], c[1:]
-        savoir = ref.getTousSavoirsDict()[typ]
+        savoir = ttsav[typ]
 #         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
 #             savoir = ref_tc.dicoSavoirs["S"]
 #         else:
@@ -725,7 +730,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
 #                 savoir = ref.dicoSavoirs[typ]
 #             elif ref_tc and typ in list(ref_tc.dicoSavoirs.keys()):
 #                 savoir = ref_tc.dicoSavoirs[typ]
-        lstSav.append([cod,savoir])
+        lstSav.append([cod, savoir])
         if not typ in lstTyp:
             lstTyp.append(typ)
     
@@ -735,7 +740,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     for cod, savoir in lstSav:
         disc = savoir.codeDiscipline
-        lstTexteS.append(savoir.getSavoir(cod).intitule)
+        intit = savoir.getSavoir(cod).intitule
+        if len(intit) == 0:
+            intit = " "
+        lstTexteS.append(intit)
         if multi:
             lstCodesS.append(savoir.abrDiscipline+" "+cod)
         else:
@@ -852,7 +860,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstTyp = []
     for c in seq.GetObjAffiches():#obj["C"].competences:
         typ, cod = c[0], c[1:]
-        comp = ref.getToutesCompetencesDict()[typ]
+        comp = ttcomp[typ]
         
 #         comp = None
 # #         print "typ, cod =", typ, cod
@@ -873,8 +881,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     for cod, comp in lstComp:    
         disc = comp.codeDiscipline
-        
-        lstTexteC.append(comp.getCompetence(cod).intitule)
+        intit = comp.getCompetence(cod).intitule
+        if len(intit) == 0: # Précaution nécessaire car bug : parfois == ""
+            intit = " "
+        lstTexteC.append(intit)
         if multi:
             lstCodesC.append(comp.abrDiscipline + " " + cod)
         else:
@@ -888,9 +898,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     lstSav = []
     lstTyp = []
+    
     for c in sorted(seq.obj["S"].savoirs):
         typ, cod = c[0], c[1:]
-        savoir = ref.getTousSavoirsDict()[typ]
+        savoir = ttsav[typ]
         
 #         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
 #             savoir = ref_tc.dicoSavoirs["S"]
@@ -907,8 +918,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     for cod, savoir in lstSav:
         disc = savoir.codeDiscipline
-        
-        lstTexteS.append(savoir.getSavoir(cod).intitule)
+        intit = savoir.getSavoir(cod).intitule
+        if len(intit) == 0: # Précaution nécessaire car bug : parfois == ""
+            intit = " "
+        lstTexteS.append(intit)
         if multi:
             lstCodesS.append(savoir.abrDiscipline + " " + cod)
         else:
@@ -959,6 +972,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
         ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
 #        r = liste_code_texte(ctx, [s[1:] for s in seq.obj["S"].savoirs], 
 #                             lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
+        
         r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
                              rectS, 
                              0.03*rect_width, 0.1, 

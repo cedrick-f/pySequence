@@ -1045,7 +1045,7 @@ def DrawLigne(ctx, x, y, gras = False):
     
 ######################################################################################  
 def regrouperDic(obj, dicIndicateurs):
-    print("regrouperDic", dicIndicateurs)
+#     print("regrouperDic", dicIndicateurs)
 #     print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences
     if obj.GetProjetRef() is None or obj.GetProjetRef()._pasdIndic:
         return dicIndicateurs, {k:[{'C':0}] for k in dicIndicateurs}
@@ -1245,7 +1245,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
          ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
-    print("DrawBoutonCompetence", objet, dicIndic)
+#     print("DrawBoutonCompetence", objet, dicIndic)
     if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r

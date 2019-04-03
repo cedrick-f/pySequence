@@ -1367,9 +1367,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             note : pour l'instant, que pour des Séquences
         """
-        print("ouvrirDoc", doc)
-        self.ouvrir(nomFichier)
-        return
+#         print("ouvrirDoc", doc)
+        return self.ouvrir(nomFichier)
+        
         
         # Ancienne version : Pourquoi ?
 #         if doc.GetType() == 'seq':
@@ -6136,11 +6136,11 @@ class PanelPropriete_Projet(PanelPropriete):
                 sb.Add(self.intctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
                 
-                titreInt = myStaticBox(self.pages['DEC'], -1, "Enoncés du besoin des différentes parties du projet")
+                titreInt = myStaticBox(self.pages['DEC'], -1, "Énoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
                 self.enonctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)       
-                self.enonctrl.SetToolTip("Enoncés du besoin des parties du projet confiées à chaque groupe")
-                self.enonctrl.SetTitre("Enoncés du besoin des différentes parties du projet")
+                self.enonctrl.SetToolTip("Énoncés du besoin des parties du projet confiées à chaque groupe")
+                self.enonctrl.SetTitre("Énoncés du besoin des différentes parties du projet")
         
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
 #                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.enonctrl)
@@ -12947,9 +12947,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.list_ctrl.InsertColumn(0, 'Nom')
         self.list_ctrl.InsertColumn(1, 'Prénom')
 #         self.list_ctrl.Bind(wx.EVT_TOOL, self.OnClick)
-        self.list_ctrl.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnClick)
-        self.list_ctrl.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnClick)
-        self.list_ctrl.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnClick)
+        
         
         sb.Add(self.list_ctrl, flag = wx.EXPAND)
         
@@ -12965,7 +12963,9 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         self.Layout()
         
-    
+        self.list_ctrl.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnClick)
+        self.list_ctrl.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnClick)
+        self.list_ctrl.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnClick)
     
     #############################################################################            
     def OnClick(self, event):

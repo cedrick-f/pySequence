@@ -1860,12 +1860,13 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def GererDependants(self, obj, t):
         """ Gestion des documents qui dépendent du présent document
         """
-#         print "GererDependants", t
-        obj.GetApp().sendEvent(modif = t, obj = self)
-        if self.GetApp() == obj.GetApp(): # la séquence n'est pas ouverte dans une autre fenêtre
+#         print("GererDependants", obj, t)
+#         print(self.GetApp(), obj.GetApp())
+        self.GetApp().sendEvent(modif = t, obj = self)
+        if self.GetApp() == obj.GetApp(): # le document n'est pas ouvert dans une autre fenêtre
             self.dependants.append(obj)
         else:
-            self.GetApp().sendEvent(modif = t, obj = self)
+            obj.GetApp().sendEvent(modif = t, obj = self)
         
         
     ######################################################################################  
@@ -1885,8 +1886,8 @@ class BaseDoc(ElementBase, ElementAvecLien):
                     self.SelectItem(zone.obj.branchePre, depuisFiche = True)
             
             else:
+                ref = self.GetReferentiel()
                 if isinstance(zone.obj, Sequence) and len(zone.param) > 2 and zone.param[:2] == "CI":
-                    ref = self.GetReferentiel()
                     zone.obj.CI.ToogleNum(int(zone.param[2:]))
                     t = "Modification "+ ref._nomCI.des_() + " de la Séquence"
                     pp = self.GetApp().GetPanelProp()
@@ -1895,11 +1896,10 @@ class BaseDoc(ElementBase, ElementAvecLien):
                     self.GererDependants(zone.obj, t)
                 
                 elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
-                    ref = self.GetReferentiel()
 #                     print("Click : S"+zone.param[3:])
 #                     print(zone.obj.obj['C'])
                     zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
-                    t = "Modification des "+ getPluriel(ref.dicoCompetences["S"].nomGenerique) + " visées par la Séquence"
+                    t = "Modification "+ ref.dicoCompetences["S"]._nom.des_() + " visées par la Séquence"
                     pp = self.GetApp().GetPanelProp()
                     if hasattr(pp, "MiseAJourApercu"):
                         pp.MiseAJourApercu()
@@ -2081,7 +2081,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ##################################################################################################    
     def Tip_EQU(self, typeDoc):
-        self.tip.SetWholeText("titre", "Equipe pédagogique impliquée dans " + typeDoc)
+        self.tip.SetWholeText("titre", "Équipe pédagogique impliquée dans " + typeDoc)
         self.tip.Supprime('img')
     
     
@@ -2417,6 +2417,8 @@ class Sequence(BaseDoc):
         self.obj["C"].setBranche(list(brancheObj)[0])
         self.obj["S"].setBranche(list(brancheObj)[1])
         
+        
+        
         brancheSys = branche.find("Systemes")
         self.systemes = []
         for sy in list(brancheSys):
@@ -2620,7 +2622,7 @@ class Sequence(BaseDoc):
         dic_f_s = {}
         sets = set()
         for k, l in dsv.items():
-            # Compétences possibles comme objectif (à l'image de l'arbre)
+            # Savoirs possibles comme objectif (à l'image de l'arbre)
             filtre = self.GetFiltre(ttsav[k], "O")
             dic_f_s[k] = ttsav[k].GetDicFiltre(filtre)
 #             print("  c", dic_f)
@@ -3269,7 +3271,7 @@ class Sequence(BaseDoc):
         """ Gestion (filtrage) des items des Competences et des Savoirs de la séquence
             en fonction des items "cochés" de <elem> (type pysequence.Competence ou Savoir)
         """
-        print("SEQ: GererElementsDependants de contexte :", contexte)
+#         print("SEQ: GererElementsDependants de contexte :", contexte)
         
         ref = self.GetReferentiel()
         
@@ -3926,7 +3928,7 @@ class Projet(BaseDoc, Grammaire):
             e = self.eleves[-1-i]
             t = e.GetNomPrenom()+"\n"
             t += "Durée d'activité : "+draw_cairo.getHoraireTxt(e.GetDuree())+"\n"
-            t += "Evaluabilité :\n"
+            t += "Évaluabilité :\n"
             ev_tot = e.GetEvaluabilite()[1]
 #             print ev_tot
             for disc, dic in list(self.GetProjetRef()._dicoGrpIndicateur.items()):
@@ -6230,16 +6232,16 @@ class Progression(BaseDoc, Grammaire):
         l = self.arbre.GetItemPyData(item)
         nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        app = self.GetApp().parent.ouvrirDoc(l.sequence, nomFichier)
-#        l.sequence.app = app
+        l.sequence = self.GetApp().parent.ouvrirDoc(l.sequence, nomFichier)
+        
     
     ######################################################################################  
     def OuvrirProjet(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item) # lienProjet de la Progression
         nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        app = self.GetApp().parent.ouvrirDoc(l.projet, nomFichier)
-#        l.sequence.app = app
+        l.projet = self.GetApp().parent.ouvrirDoc(l.projet, nomFichier)
+#         l.projet.app = app.GetApp()
 
     ######################################################################################  
     def ChargerSequences(self, parent, reparer = False):
@@ -8878,7 +8880,7 @@ class Savoirs(ElementBase):
             - M = math
             - P = physique
         """
-#        print "setBranche Savoirs"
+        print("setBranche Savoirs")
         
         # Détection d'un ancienne version (pas infaillible !)
         ancien = False
@@ -10775,11 +10777,10 @@ class Tache(ElementAvecLien, ElementBase):
         """
 #        print "ActualiserDicIndicateurs", self
         prj = self.GetProjetRef()
-        if not prj._pasdIndic:
+        if prj is not None and not prj._pasdIndic:
             for i in range(len(self.projet.eleves)):
                 for c in self.indicateursEleve[i+1]:
                     if not c in self.indicateursEleve[0]:
-                        print("!!!!!!!!!!!!!!!!!!!!!")
                         self.indicateursEleve[0].append(c)
 
 
@@ -10807,7 +10808,7 @@ class Tache(ElementAvecLien, ElementBase):
             Dict :  clef = code compétence
             valeur = liste [True False ...] des indicateurs à mobiliser
         """
-        print("GetDicIndicateurs", self, ":", self.indicateursEleve)
+#         print("GetDicIndicateurs", self, ":", self.indicateursEleve)
 #        print self.GetProjetRef()._dicoIndicateurs_simple
         if self.GetProjetRef() is None:
             return {}
@@ -11214,7 +11215,7 @@ class Tache(ElementAvecLien, ElementBase):
         
         if not self.estPredeterminee():
             self.ActualiserDicIndicateurs()
-        print("   indicateursEleve", self.indicateursEleve)
+#         print("   indicateursEleve", self.indicateursEleve)
         # Compétences visées
         self.compVisees = branche.get("CompVisees", "").split()
 #         print("compVisees", self.phase, ":", self.compVisees)
@@ -13624,7 +13625,7 @@ class Eleve(Personne, ElementBase):
         for disc in list(self.GetProjetRef()._dicoGrpIndicateur.keys()):
             for ph, nomph in list(self.GetProjetRef().parties.items()):
                 st = self.codeBranche.comp[disc+ph]
-                t = "Evaluabilité de la "+nomph+" du projet "
+                t = "Évaluabilité de la "+nomph+" du projet "
                 tt = ""
                 if ev_tot[disc][ph][1]:
                     tt += "\n" + t1

@@ -67,7 +67,8 @@ print(sys.version_info)
 
 import wx
 locale = wx.Locale.GetSystemLanguage()
-print("Locale :", locale)
+print("Locale :", locale, '(FR:',wx.LANGUAGE_FRENCH, ';EN:' , wx.LANGUAGE_ENGLISH, ')')
+
 
 
 import version
@@ -155,12 +156,12 @@ class SingleInstApp(wx.App):
     PORT = 27115
 
     def OnInit(self):
-        self.locale = wx.Locale(locale)
-        print("LOCALE_DECIMAL_POINT", self.locale.GetInfo(wx.LOCALE_DECIMAL_POINT, wx.LOCALE_CAT_NUMBER))
-#         self.locale = wx.Locale(wx.LANGUAGE_ENGLISH) # !!! obligé pour certains PC ???
+#         self.locale = wx.Locale(locale)
 #         print("LOCALE_DECIMAL_POINT", self.locale.GetInfo(wx.LOCALE_DECIMAL_POINT, wx.LOCALE_CAT_NUMBER))
-        self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
-        print("LOCALE_DECIMAL_POINT", self.locale.GetInfo(wx.LOCALE_DECIMAL_POINT, wx.LOCALE_CAT_NUMBER))
+        self.locale = wx.Locale(wx.LANGUAGE_ENGLISH) # !!! obligé pour certains PC ???
+#         print("LOCALE_DECIMAL_POINT", self.locale.GetInfo(wx.LOCALE_DECIMAL_POINT, wx.LOCALE_CAT_NUMBER))
+#         self.locale = wx.Locale(wx.LANGUAGE_FRENCH) # Sans ça, il y a des erreurs sur certains PC ...
+#         print("LOCALE_DECIMAL_POINT", self.locale.GetInfo(wx.LOCALE_DECIMAL_POINT, wx.LOCALE_CAT_NUMBER))
 
 
         # Problème avec les PNG ??? Suppression des warning
@@ -394,6 +395,7 @@ class MySplashScreen(adv.SplashScreen):
 
 #        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
 #         self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
+        self.locale = wx.Locale(locale)
 
         options, fichier = GetArgs()
 
