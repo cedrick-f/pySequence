@@ -748,7 +748,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="20" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO1.1 S_intitule="Énoncer une problématique">
               <l_domaines />
@@ -756,13 +756,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 1">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -774,13 +768,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 3">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -792,13 +780,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 5">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -815,7 +797,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="20" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO2.1 S_intitule="Formuler des hypothèses">
               <l_domaines />
@@ -823,13 +805,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 7">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -841,13 +817,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 9">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -859,13 +829,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 10">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -942,7 +906,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="30" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO3.1 S_intitule="Mettre en œuvre les étapes d'une démarche">
               <l_domaines />
@@ -1076,7 +1040,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="45" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO5.1 S_intitule="Présenter une démarche de manière argumentée, synthétique et cohérente">
               <l_domaines />
@@ -1084,13 +1048,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 11">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -1102,13 +1060,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 12">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -1120,13 +1072,7 @@
                 <l_00 S_00="PCM" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs>
-                <Indicateur_00 S_intitule="Indic 13">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-              </l_indicateurs>
+              <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -5878,7 +5824,7 @@
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
-    <l_AP S_00="S" S_01="T" S_02="U" S_03="E" S_04="P" />
+    <l_AP S_00="D" S_01="S" S_02="T" S_03="U" S_04="E" S_05="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" S_08="I" />
     <l_DM S_00="I" />
     <l_C S_00="C" S_01="G" S_02="D" S_03="S" S_04="T" S_05="U" S_06="E" S_07="P" />

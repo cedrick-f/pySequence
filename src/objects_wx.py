@@ -1489,7 +1489,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
   
         if nomFichier == None:
             dlg = wx.FileDialog(
-                                self, message="Ouvrir un fichier pySéquence",
+                                self, message=f"Ouvrir un fichier {version.__appname__}",
 #                                defaultDir = self.DossierSauvegarde, 
                                 defaultFile = "",
                                 wildcard = mesFormats,
@@ -1505,8 +1505,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 nomFichier = r''
             
             dlg.Destroy()
-        
-        self.ouvrir(nomFichier, reparer = reparer)
+        if nomFichier != r'':
+            self.ouvrir(nomFichier, reparer = reparer)
 #         print("fin")
         
         
@@ -4474,7 +4474,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4731,7 +4731,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)

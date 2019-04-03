@@ -3220,7 +3220,7 @@ class Sequence(BaseDoc):
                     ce2.extend([c for c in ref.getSousElem(e, code) if (ef.filtre is None or c in ef.filtre)])
                     
                     
-            print("   ce =", ce, "-->", ce2)
+#             print("   ce =", ce, "-->", ce2)
             
 #             if isinstance(elem, Referentiel.Competences):
 #                 dic = ref.getDicToutesCompetences()
@@ -3245,7 +3245,7 @@ class Sequence(BaseDoc):
 #                     else:
 #                         ssval = 
         
-        print("   filtres :", filtres)
+#         print("   filtres :", filtres)
         
         #
         # Intersection des différens filtres
