@@ -1869,7 +1869,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #             wx.GetApp()._ipc.Exit()
 #             wx.CallAfter(sys.exit)
 #             wx.CallAfter(self.Destroy)
-            self.Destroy()
+#             self.Destroy()
 
 
 

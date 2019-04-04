@@ -3166,7 +3166,7 @@ class Sequence(BaseDoc):
             :elem: Referentiel.Competences ou Referentiel.Savoirs
             :preresuis: contexte
         """
-#         print("GetFiltre", elem, contexte)
+        print("GetFiltre", elem, contexte)
         ref = self.GetReferentiel()
         
         if contexte == "P":
@@ -8888,7 +8888,7 @@ class Savoirs(ElementBase):
             - M = math
             - P = physique
         """
-        print("setBranche Savoirs")
+#         print("setBranche Savoirs")
         
         # Détection d'un ancienne version (pas infaillible !)
         ancien = False

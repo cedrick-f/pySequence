@@ -67,8 +67,8 @@ def MyExceptionHook(typ, value, traceb):
     print("\nType : ",typ,"\n", file=sys.stderr)
     print("ValueError : ",value, file=sys.stderr)
 #     print "".join(traceback.format_exception(typ, value, traceb))
-    SendBugReport(traceb)
-#     sys.exit()
+    SendBugReport("%0A".join(traceback.format_exception(typ, value, traceb)))
+    sys.exit()
     
 
 
@@ -149,14 +149,15 @@ def SendBugReport(traceb = ""):
         import util_path
         e_mail="cedrick.faury@ac-clermont.fr"
         now = str(datetime.datetime.now())
-        subject = version.__appname__ + version.__version__
-        subject += " : rapport d'erreur" + now
+        subject = version.__appname__
+        subject += " : rapport d'erreur du " + now
 #        body="<HTML><BODY><P>"
         
-        body = "%s a rencontré une erreur le " %version.__appname__ + now
-        body += "%0ADescription d'une méthode pour reproduire l'erreur :"
+        body = f"{version.__appname__} a rencontré une erreur le {now}"
+        body += f"%0AVersion : {version.__version__}"
+        body += "%0A%0ADescription d'une méthode pour reproduire l'erreur :"
         body += "%0A%0A%0A%0A%0A"
-        body += "=================TraceBack===================="
+        body += "=================TraceBack====================%0A"
         #
         # Parcours du fichier
         #
@@ -168,19 +169,22 @@ def SendBugReport(traceb = ""):
             body+=traceb
         body += "==============================================%0A%0A"
         
-        sys.stdout.close()
-        file_log = open(util_path.LOG_FILE,'r')
-#         sys.stdout.seek(0, 0)
-        body += "%0A".join(file_log.readlines())
-        file_log.close()
-        sys.stdout = open(util_path.LOG_FILE, "w")
+#         sys.stdout.close()
+#         file_log = open(util_path.LOG_FILE,'r')
+# #         sys.stdout.seek(0, 0)
+#         body += "%0A".join(file_log.readlines())
+#         file_log.close()
+#         sys.stdout = open(util_path.LOG_FILE, "w")
 
 #         body += u"L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__
 #        body+="</P></BODY></HTML>"
-        file_error.close()
-        to_send="""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body)
+#         file_error.close()
+        print(body)
+        body = body.replace('\n', '%0A')
+        body = body.replace(' ', '%20')
+        to_send="""mailto:%s?subject=%s&body=%s"""%(e_mail, subject, body)
 
         print("Envoi ...",to_send)
-        print(webbrowser.open("""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body)))
+        print(webbrowser.open(to_send))
 
     
