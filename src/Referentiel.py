@@ -3053,6 +3053,17 @@ class Projet(XMLelem):
 #        lst.extend()
 
 
+#     ###########################################################
+#     def getListeIndic(self, competence):
+# #            print "getListeIndic"
+# #            print dic
+#         l = competence.indicateurs
+#         if competence.sousComp != {}:
+#             for sousComp in competence.sousComp.values():
+#                 l.extend(self.getListeIndic(sousComp))
+#         return l
+        
+        
     #########################################################################    
     def getClefDic(self, dicattr, nom, num = None):
         """ Renvoie la clef associée à une valeur dans un dictionnaire
@@ -3132,7 +3143,7 @@ class Projet(XMLelem):
         ###########################################################
         def getDernierNiveauArbre(dic):
             sdic = {}
-            for k0, v0 in list(dic.items()):
+            for k0, v0 in dic.items():
                 if len(v0) > 1 and  type(v0[1]) == dict:
                     sdic.update(getDernierNiveauArbre(v0[1]))
                 else:
@@ -3144,7 +3155,7 @@ class Projet(XMLelem):
         # Ajout des compétences du tronc commun
         #
         self._dicoGrpIndicateur = {}
-        for code, comp in list(self._dicoCompetences.items()):
+        for code, comp in self._dicoCompetences.items():
             if ref.tr_com != []:
                 t = ref.tr_com[0]
     #            print "   ++", t, REFERENTIELS.keys()
@@ -3157,16 +3168,16 @@ class Projet(XMLelem):
             
     
             self._dicoGrpIndicateur[code] = {}
-            for p in list(self.parties.keys()):
+            for p in self.parties.keys():
                 self._dicoGrpIndicateur[code][p] = []
     
-            for comp, competence in list(self._dicoIndicateurs[code].items()):
+            for comp, competence in self._dicoIndicateurs[code].items():
                 for indic in getListeIndic(competence):
-                    for part in list(indic.poids.keys()):
-                        if part in list(self._dicoGrpIndicateur[code].keys()):
+                    for part in indic.poids.keys():
+                        if part in self._dicoGrpIndicateur[code].keys():
                             self._dicoGrpIndicateur[code][part].append(comp)
     
-            for p in list(self.parties.keys()):
+            for p in self.parties.keys():
                 self._dicoGrpIndicateur[code][p] = list(set(self._dicoGrpIndicateur[code][p]))
 
 #        if self._parent.Code == "EE-SI":

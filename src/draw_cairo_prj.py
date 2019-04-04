@@ -542,8 +542,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
             p = tableauV(ctx, [c[1:] for c in competences], posZComp[0], posZComp[1], 
                     tailleZComp[0], tailleZComp[1], 
                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = BCoulCompS)
-
-            prj.pt_caract.append((getPts(p), "Cmp"))
+            for pt in getPts(p):
+                prj.pt_caract.append((pt, "Cmp"))
 
 #    print "compétences", time.time() - tps
 
@@ -613,7 +613,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
                          tailleZElevesH[0], 0, tailleZElevesH[1], 
                          va = 'c', ha = 'd', orient = 'h', coul = CoulAltern)
             
-            prj.pt_caract.append((getPts(rec), "Elv"))
+            for pt in getPts(rec):
+                prj.pt_caract.append((pt, "Elv"))
             
             #
             # Lignes horizontales

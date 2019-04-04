@@ -137,6 +137,11 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
 DEBUG = "beta" in version.__version__
 
 
+def b64(img):
+    return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+        
+        
+
 def safeParse(nomFichier, toplevelwnd):
     if not os.path.isfile(nomFichier):
         return
@@ -939,8 +944,15 @@ class ElementBase(Grammaire):
 #         print("ttt", type(t))
         return t#.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
-           
-           
+    
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False):
+#         print("GetBulleHTML", self, i)
+        return  ""
+    
+    
+    
+    
     ######################################################################################     
     def GetClasse(self):
         if hasattr(self, 'projet') and self.projet is not None:
@@ -959,7 +971,8 @@ class ElementBase(Grammaire):
         else:
             cl = self.classe
         return cl
-            
+    
+    
     ######################################################################################  
     def GetTypeEnseignement(self, simple = False):
         cl = self.GetClasse()
@@ -3166,7 +3179,7 @@ class Sequence(BaseDoc):
             :elem: Referentiel.Competences ou Referentiel.Savoirs
             :preresuis: contexte
         """
-        print("GetFiltre", elem, contexte)
+#         print("GetFiltre", elem, contexte)
         ref = self.GetReferentiel()
         
         if contexte == "P":
@@ -3636,8 +3649,6 @@ class Sequence(BaseDoc):
 #         print("GetBulleHTML Seq", self, i)
 #         ref = self.GetReferentiel()
         
-        def b64(img):
-            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
         
         if i == "Eff":
             if css:
@@ -3925,13 +3936,17 @@ class Projet(BaseDoc, Grammaire):
     
     ######################################################################################  
     def GetBulleSVG(self, i):
+        prj = self.GetProjetRef()
         if i >= 0:
             c = self.GetCompetencesUtil()
-            prj = self.GetProjetRef()
-            lstIndic = prj._dicIndicateurs_simple[c[i]]
+#             print(c)
+#             print(prj._dicoIndicateurs_simple)
+            lstIndic = prj._dicoIndicateurs_simple[c[i][0]][c[i][1:]]
+#             lstIndic = prj.getListeIndic(c[i])
 #            lstIndic = REFERENTIELS[self.classe.typeEnseignement]._dicIndicateurs_prj_simple[c[i]]
-            t = c[i] + " :\n" + "\n".join([indic.intitule for indic in lstIndic])
-            return t.encode(SYSTEM_ENCODING)
+            t = c[i][1:] + " :\n" + "\n".join([indic.intitule for indic in lstIndic])
+            return t#.encode(SYSTEM_ENCODING)
+        
         else:
             e = self.eleves[-1-i]
             t = e.GetNomPrenom()+"\n"
@@ -3939,17 +3954,17 @@ class Projet(BaseDoc, Grammaire):
             t += "Évaluabilité :\n"
             ev_tot = e.GetEvaluabilite()[1]
 #             print ev_tot
-            for disc, dic in list(self.GetProjetRef()._dicoGrpIndicateur.items()):
-                for ph, nomph in list(self.GetProjetRef().parties.items()):
+            for disc, dic in prj._dicoGrpIndicateur.items():
+                for ph, nomph in prj.parties.items():
 #                     print "  ", ph
                     t += nomph + pourCent2(ev_tot[disc][ph][0], True)+"\n"
             
 #            t += u"\tconduite : "+pourCent2(ev_tot['R'][0], True)+"\n"
 #            t += u"\tsoutenance : "+pourCent2(ev_tot['S'][0], True)+"\n"
-            return t.encode(SYSTEM_ENCODING)
+            return t#.encode(SYSTEM_ENCODING)
             
             
-            
+    
     ######################################################################################  
     def GetCode(self, i = None):
         return "Projet"
@@ -7081,9 +7096,6 @@ class Progression(BaseDoc, Grammaire):
 #         print("GetBulleHTML Prg", self, i)
         ref = self.GetReferentiel()
         
-        def b64(img):
-            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
-        
         if i == "Equ":
             if css:
                 t = Template(constantes.TEMPLATE_PROF_CSS)
@@ -7334,8 +7346,6 @@ class ElementProgression():
 #         print("GetBulleHTML liendoc", self, i)
         ref = self.GetReferentiel()
         
-        def b64(img):
-            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
         
 
         doc = self.GetDoc()
@@ -10383,9 +10393,7 @@ class Seance(ElementAvecLien, ElementBase):
         """
 #         print("GetBulleHTML séance", self, i)
         ref = self.GetReferentiel()
-        
-        def b64(img):
-            return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+
         
         if css:
             t = Template(constantes.TEMPLATE_SEANCE_CSS)
@@ -11639,7 +11647,26 @@ class Tache(ElementAvecLien, ElementBase):
     def GetFicheHTML(self, param = None):
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_TACHE)
     
-
+    
+    ######################################################################################  
+    def GetBulleSVG(self, i):
+        """ Renvoie le tootTip sous la forme d'un texte brut
+            pour affichage sur la fiche SVG
+        """
+        # A FAIRE !!
+        return ""
+    
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        # A FAIRE !!
+        return ""
+    
+    
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())

@@ -2462,6 +2462,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 
             except:
                 message += "  ... ERREUR\n"
+                if DEBUG:
+                    raise
+                
             dlg.update(dlg.count+1, message)
             
         
@@ -2469,7 +2472,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         mesFormats = "zip (.zip)|*.zip"
 
         dlg = wx.FileDialog(
-            self, message="Enregistrer l'archive sous ...", 
+            self, message = "Enregistrer l'archive sous ...", 
             defaultDir=toSystemEncoding(self.DossierSauvegarde) , 
             defaultFile = os.path.splitext(self.fichierCourant)[0]+".zip", 
             wildcard=mesFormats, style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT|wx.FD_CHANGE_DIR
@@ -2489,13 +2492,23 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                                              )
                 retCode = dlg.ShowModal()
                 if retCode == wx.ID_NO:
-                    return 
+                    return
+            else:
+                try:
+                    os.mkdir(dir)
+                except:
+                    Dialog_ErreurAccesDossier(dir, dlg)
+                    wx.EndBusyCursor()
+                    if DEBUG:
+                        raise
+                    dlg.Destroy()
+                    return
                      
             
             nomGen = os.path.join(dir, os.path.splitext(os.path.split(path)[1])[0])
-#             print "  path :", path
-#             print "  dir :", dir
-#             print "  nomGen :", nomGen
+#             print("  path :", path)
+#             print("  dir :", dir)
+#             print("  nomGen :", nomGen)
             
             wx.BeginBusyCursor()
             
@@ -2510,14 +2523,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                                    wx.GetTopLevelParent(self))
             dlg.Show()
             
-            try:
-                os.mkdir(dir)
-            except:
-                pass
-            
-            
             ecrire(self.exporterFichePDF, nomGen+".pdf")
             ecrire(self.exporterFicheSVG, nomGen+".svg")
+            ecrire(self.exporterFicheHTML, nomGen+".html")
             
 #             self.exporterFicheSVG(nomGen+".svg")
             
@@ -2535,8 +2543,19 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 
                 ecrire(genpdf.genererDossierValidation,nomGen+"_Dossier_Validation.pdf", self.projet, self)
                 
+            try:
+                shutil.make_archive(dir, 'zip', dir)
+            except IOError:
+                Dialog_ErreurAccesFichier(dir+'.zip', dlg)
+                wx.EndBusyCursor()
+                if DEBUG:
+                    raise
+                dlg.Destroy()
+                return
             
-            shutil.make_archive(dir, 'zip', dir)
+            
+            
+            
             
             dlg.update(maxCount, dlg.GetMessage()+"Terminé !")
 #             shutil.rmtree(dir)
@@ -2722,11 +2741,15 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
 
  
-def Dialog_ErreurAccesFichier(nomFichier):
-    messageErreur(None, 'Erreur !',
+def Dialog_ErreurAccesFichier(nomFichier, win = None):
+    messageErreur(win, 'Erreur !',
                   "Impossible d'accéder en écriture au fichier\n\n%s" %toSystemEncoding(nomFichier))
 
-
+def Dialog_ErreurAccesDossier(nomFichier, win = None):
+    messageErreur(win, 'Erreur !',
+                  "Impossible d'accéder en écriture au dossier\n\n%s" %toSystemEncoding(nomFichier))
+    
+    
 ########################################################################################
 #
 #
