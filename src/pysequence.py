@@ -3057,7 +3057,7 @@ class Sequence(BaseDoc):
         self.brancheObj = arbre.AppendItem(self.branche, Titres[2], 
                                            image = self.arbre.images["Obj"], 
                                            data = "Obj")
-        for obj in list(self.obj.values()):
+        for obj in self.obj.values():
             obj.ConstruireArbre(arbre, self.brancheObj)
             
         
@@ -3067,7 +3067,7 @@ class Sequence(BaseDoc):
         self.branchePre = arbre.AppendItem(self.branche, Titres[1], 
                                            image = self.arbre.images["Sav"], 
                                            data = "Pre")
-        for pre in list(self.prerequis.values()):
+        for pre in self.prerequis.values():
             pre.ConstruireArbre(arbre, self.branchePre, prerequis = True)
 
 
@@ -3213,10 +3213,13 @@ class Sequence(BaseDoc):
             elif code[:4] == "Comp":
                 ce = [e[1:] for e in d["C"].competences]
                 ef = d["C"]
+                ef.filtre = self.GetFiltre(ref.getToutesCompetencesDict()[code[-1]], contexte)
             elif code[:3] == "Sav":
                 ce = d["S"].savoirs
                 ef = d["S"]
-#             print("   :", code, ef.filtre)
+                ef.filtre = self.GetFiltre(ref.getTousSavoirsDict()[code[-1]], contexte)
+                
+            print("   :", code, ef.filtre)
             
             filtres.append(filtre)
 
@@ -8371,7 +8374,7 @@ class Competences(ElementBase):
         
         self.num = numComp
         self.competences = []       # Liste des compétences (prérequis ou objectif) de la Séquence
-        self.filtre = []
+        self.filtre = None #[]
         
         self.prerequis = prerequis  # True si ce sont des competences prérequises
         
@@ -8468,6 +8471,24 @@ class Competences(ElementBase):
         
 #        self.GetPanelPropriete().MiseAJour()
     
+    
+    ######################################################################################  
+    def getCompetencesEtendues(self):
+        """ Renvoie la liste des compétences étendues :
+            A1
+            >>>
+            A1
+            A1.1
+            A1.2
+            A1.3
+        """
+        print("getCompetencesEtendues", self.competences)
+        ref = self.GetReferentiel()
+        lr = set(self.competences)
+        for code in self.competences:
+            lr = lr | set([code[0]+c for c in ref.getSousElem(code[1:], "Comp_"+code[0])])
+        print("  >>>", list(lr))
+        return list(lr)
     
     
     ######################################################################################  
@@ -8874,7 +8895,7 @@ class Savoirs(ElementBase):
             contexte = "O"
 #         print("savRef", savRef)
         self.filtre = self.parent.GetFiltre(savRef, contexte)#, self.filtre)
-#         print("filtre", self.filtre)
+        print("filtre", self.filtre)
         dic_f = savRef.GetDicFiltre(self.filtre)
 #         print("dic_f_sav", dic_f)
         return PanelPropriete_Savoirs(parent, self, code, dic_f, savRef, filtre = self.filtre)

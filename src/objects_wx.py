@@ -9918,7 +9918,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-#         print("MiseAJour Savoirs", self.code, self.arbre)
+#         print("MiseAJour Savoirs", self.code, self.arbre.items)
 #         print self.code
 
         if hasattr(self, 'arbre'):
@@ -10560,7 +10560,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 dic_f = ref.getToutesCompetencesDict()[cod].GetDicFiltre(filtre)
 #                 print("ArbreCompetences", cod, dic_f, ref.dicoCompetences[cod])
                 self.arbreCmp[cod] = ArbreCompetences(self.pageCmp, cod, dic_f, ref.getToutesCompetencesDict()[cod],
-                                                      lstCases = self.seance.GetDocument().obj["C"].competences, 
+                                                      lstCases = doc.obj["C"].getCompetencesEtendues(), 
                                                       pp = self, agwStyle = HTL.TR_NO_HEADER)
                 # parent, typ, dicCompetences, competences, pptache = None, filtre = None, agwStyle = 0
                 self.cmpSizer.Add(self.arbreCmp[cod], 1, flag = wx.EXPAND)
@@ -14868,6 +14868,7 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
                         
             if type(dic[k][0].sousSav) == dict:
                 self.Construire(b, dic[k][1], et, niveau = niveau+1)#, pair = pair)       
+            
             self.items[k] = b
             
             if et or niveau == 4:
@@ -15185,13 +15186,20 @@ class ArbreCompetences(HTL.HyperTreeList):
             :dic: 
             :ct_type: 0 = normal, 1 = check, 2 = radio
         """
-#         print(" "*niveau,"Construire", dic)
+#         print(" "*niveau,"Construire", self.lstCases)
 #         if dic == None:
 #             dic = self.competences.dicCompetences
 
+#         # On ajoute les sous éléments des compétences "cochables"
+#         lstCases_ss = []
+#         for code in self.lstCases:
+#             lstCases_ss.extend(ref.getSousElem(code[1:], "Comp_"+code[0]))
+        
+        
         clefs = constantes.trier(list(dic.keys()))
         for k in clefs:
-            if dic[k][1] is None or len(dic[k][1]) > 1:
+#             print("  "+" "*niveau, dic[k])
+            if dic[k][1] is None or len(dic[k][1]) > 1: # Feuille ou noeud avec plusieurs fils
                 if self.lstCases is None or self.typ+k in self.lstCases:
                     ct_type = 1
                 else:
@@ -15269,7 +15277,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ####################################################################################
     def OnItemCheck(self, event):
-#         print("OnItemCheck")
+        print("OnItemCheck")
         event.Skip()
         
         self.uncheckParentsPasPleins(self.root)

@@ -2283,13 +2283,7 @@ class Referentiel(XMLelem):
         
         
         
-    #########################################################################
-    def getSousSavoirs(self, code):
-#         print "getSousSavoirs", code
-        for codeDiscipline, savoirs in self.getTousSavoirs():
-#             print "   ", codeDiscipline, savoirs
-            if codeDiscipline == code[0]:
-                return savoirs.getSousSavoirs(code[1:]) 
+    
     
     
     #########################################################################
@@ -2358,12 +2352,22 @@ class Referentiel(XMLelem):
 #         return lst
     
 
-        
+    #########################################################################
+    def getSousSavoirs(self, code):
+#         print "getSousSavoirs", code
+        for codeDiscipline, savoirs in self.getTousSavoirs():
+#             print "   ", codeDiscipline, savoirs
+            if codeDiscipline == code[0]:
+                return savoirs.getSousSavoirs(code[1:]) 
+            
         
     #########################################################################
     def getSousElem(self, code, feuille):
         """ Renvoie tous les sous-éléments d'un élément de code <code>
             de la feuille <feuille>
+            sous forme de liste
+            
+            :code: code de l'élément, sans préfixe de type (il est dans feuille)
             
             fonction récursive
         """
@@ -3856,9 +3860,11 @@ class Savoirs(XMLelem):
     def getSousSavoirs(self, code):
         """ Renvoie la liste des codes des sous-savoirs
             [] si on est au bout de la branche
+            
+            NON récursif
         """
         
-        if code in list(self.dicSavoirs.keys()):# and len(self.dicSavoirs[code]) > 1:
+        if code in self.dicSavoirs.keys():# and len(self.dicSavoirs[code]) > 1:
             return list(self.dicSavoirs[code].sousSav.keys())#[1]
         return []
     
