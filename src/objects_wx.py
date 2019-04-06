@@ -7562,6 +7562,11 @@ class ListeCI(wx.Panel):
         #
         # Liste
         #
+        # Passage momentané en Anglais (bug de wxpython)
+        loc = wx.GetApp().locale.GetSystemLanguage()
+        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        
+        
         self.list = ULC.UltimateListCtrl(self, wx.ID_ANY, 
                                          agwStyle = ULC.ULC_REPORT|ULC.ULC_EDIT_LABELS|ULC.ULC_SHOW_TOOLTIPS|
                                                     ULC.ULC_SINGLE_SEL|ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
@@ -7616,6 +7621,10 @@ class ListeCI(wx.Panel):
         self.sizer.Add(self.list,1, flag = wx.EXPAND)
         self.SetSizer(self.sizer)
         self.sizer.Layout()
+        
+        
+        wx.GetApp().locale = wx.Locale(loc)
+        
         
         self.OnChangeSelection()
 
@@ -9074,6 +9083,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         ref = self.sequence.GetReferentiel()
         
+        # Passage momentané en Anglais (bug de wxpython)
+        loc = wx.GetApp().locale.GetSystemLanguage()
+        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        
         
         #
         # Intitulé de la séquence
@@ -9179,6 +9192,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.sizer.AddGrowableCol(2)
         self.sizer.Layout()
     
+        wx.GetApp().locale = wx.Locale(loc)
     
 
     #############################################################################            
@@ -15277,7 +15291,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ####################################################################################
     def OnItemCheck(self, event):
-        print("OnItemCheck")
+#         print("OnItemCheck")
         event.Skip()
         
         self.uncheckParentsPasPleins(self.root)
@@ -18001,7 +18015,12 @@ class URLSelectorCombo(wx.Panel):
         self.lien = lien
         
         sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        
         lsizer = self.CreateSelector()
+        
+        
+        
         sizer.Add(lsizer, 1, flag = wx.EXPAND)
         self.SetSizerAndFit(sizer)
         
@@ -18011,7 +18030,9 @@ class URLSelectorCombo(wx.Panel):
     
     ###############################################################################################
     def CreateSelector(self):
-        
+        # Passage momentané en Anglais (bug de wxpython)
+        loc = wx.GetApp().locale.GetSystemLanguage()
+        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         bsize = (16*SSCALE, 16*SSCALE)
         
@@ -18042,6 +18063,8 @@ class URLSelectorCombo(wx.Panel):
         # Pour drag&drop direct de fichiers !! (expérimental)
         file_drop_target = MyFileDropTarget(self)
         self.SetDropTarget(file_drop_target)
+        
+        wx.GetApp().locale = wx.Locale(loc)
         
         return sizer
     

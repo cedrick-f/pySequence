@@ -3219,7 +3219,7 @@ class Sequence(BaseDoc):
                 ef = d["S"]
                 ef.filtre = self.GetFiltre(ref.getTousSavoirsDict()[code[-1]], contexte)
                 
-            print("   :", code, ef.filtre)
+#             print("   :", code, ef.filtre)
             
             filtres.append(filtre)
 
@@ -8482,12 +8482,12 @@ class Competences(ElementBase):
             A1.2
             A1.3
         """
-        print("getCompetencesEtendues", self.competences)
+#         print("getCompetencesEtendues", self.competences)
         ref = self.GetReferentiel()
         lr = set(self.competences)
         for code in self.competences:
             lr = lr | set([code[0]+c for c in ref.getSousElem(code[1:], "Comp_"+code[0])])
-        print("  >>>", list(lr))
+#         print("  >>>", list(lr))
         return list(lr)
     
     
