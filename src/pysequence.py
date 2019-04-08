@@ -3790,13 +3790,13 @@ class Projet(BaseDoc, Grammaire):
     ######################################################################################  
     def GetPeriodeDefaut(self):
         projet = self.GetProjetRef()
-        return projet.getPeriodeDefaut()
+#         return projet.getPeriodeDefaut()
     
     
-#         if projet is not None:
-#             return projet.getPeriodeDefaut()
-#         else:
-#             return [0,0]
+        if projet is not None:
+            return projet.getPeriodeDefaut()
+        else:
+            return [0,0]
         
     ######################################################################################  
     def GetDuree(self):
@@ -5459,7 +5459,7 @@ class Projet(BaseDoc, Grammaire):
 #        tousIndicateurs = self.GetReferentiel()._dicIndicateurs_prj
 #        print tousIndicateurs
 #        REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
-        if self.GetProjetRef()._pasdIndic:
+        if self.GetProjetRef() is None or self.GetProjetRef()._pasdIndic:
             return
         
         tR1 = None

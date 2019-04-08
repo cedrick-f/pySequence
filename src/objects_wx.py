@@ -6087,6 +6087,9 @@ class PanelPropriete_Projet(PanelPropriete):
         
         CloseFenHelp()
         
+        if ref is None:
+            return
+        
         #
         # Page "Généralités"
         #
@@ -6276,19 +6279,19 @@ class PanelPropriete_Projet(PanelPropriete):
             self.pages['SYN'][1].SetValue(self.projet.synoptique, False)
         
         # La page "typologie" ('TYP')
-        if ref.attributs['TYP'][0] != "":
+        if ref is not None and ref.attributs['TYP'][0] != "":
             for t in self.projet.typologie:
                 self.lb.Check(t)
                 
         # La page "sous parties" ('DEC')
-        if ref.attributs['DEC'][0] != "":
+        if ref is not None and ref.attributs['DEC'][0] != "":
             self.intctrl.SetValue(self.projet.intituleParties, False)
             self.enonctrl.SetValue(self.projet.besoinParties, False)
             self.nbrParties.v[0] = self.projet.nbrParties
             self.ctrlNbrParties.mofifierValeursSsEvt()
         
         # La page "Partenariat" ('PAR')
-        if ref.attributs['PAR'][0] != "":
+        if ref is not None and ref.attributs['PAR'][0] != "":
             self.parctrl['PAR'].SetValue(self.projet.partenariat, False)
             self.parctrl['PRX'].SetValue(self.projet.montant, False)
             self.parctrl['SRC'].SetValue(self.projet.src_finance, False)
@@ -6762,6 +6765,8 @@ class PanelOrganisation(wx.Panel):
     #############################################################################            
     def EvtListBox(self, event):
         ref = self.objet.GetProjetRef()
+        if ref is None:
+            return
         if ref.getClefDic('phases', self.liste.GetString(event.GetSelection()), 0) in TOUTES_REVUES_EVAL:
             self.buttonUp.Enable(True)
             self.buttonDown.Enable(True)
@@ -6778,10 +6783,11 @@ class PanelOrganisation(wx.Panel):
         """
      
         revue = self.liste.GetStringSelection()
+        ref = self.objet.GetProjetRef()
         
-        if revue[:5] == "Revue":
+        if ref is not None and revue[:5] == "Revue":
             i = event.GetId()
-            ref = self.objet.GetProjetRef()
+            
             posRevue = self.liste.GetSelection()
             numRevue = eval(revue[-1])
     
@@ -6822,6 +6828,8 @@ class PanelOrganisation(wx.Panel):
 #        print "MiseAJourListe"
 #        print self.objet.GetListeNomsPhases()
         prj = self.objet.GetProjetRef()
+        if prj is None:
+            return
         self.ctrlNbrRevues.redefBornes([min(prj.posRevues.keys()), max(prj.posRevues.keys())])
         self.ctrlNbrRevues.setValeur(prj.getNbrRevuesDefaut())
         self.liste.Set(self.objet.GetListeNomsPhases())

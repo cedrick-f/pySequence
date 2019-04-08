@@ -1980,8 +1980,9 @@ class Referentiel(XMLelem):
         pos = []
         prj = []
         for k, p in self.projets.items():
-            prj.append(k)
-            pos.append(max(*p.periode, 0))
+            if len(p.periode) > 0:
+                prj.append(k)
+                pos.append(max(*p.periode, 0))
         
         if len(prj) > 0:
             return prj[pos.index(max(pos))]
