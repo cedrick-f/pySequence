@@ -17949,9 +17949,9 @@ def get_key(dic, value, pos = None):
 ##########################################################################################################
 class URLDialog(wx.Dialog):
     def __init__(self, parent, lien, pathseq):
-        wx.Dialog.__init__(self, parent, -1)
+        wx.Dialog.__init__(self, parent, -1, "Sélection de lien")
         self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
-        self.Create(parent, -1, "Sélection de lien")
+#         self.Create(parent, -1,  "Sélection de lien")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
