@@ -1683,6 +1683,8 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.intitule = intitule
         self.classe = classe
         
+        self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
+        
         self.centrer = True
         self.surbrillance = None # Objet à afficher en surbrillance
         
@@ -3703,7 +3705,6 @@ class Projet(BaseDoc, Grammaire):
 #         
         BaseDoc.__init__(self, app, classe, intitule)
         
-        self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
         # code désignant le type de projet
 #        print "init Projet"
