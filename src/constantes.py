@@ -761,13 +761,14 @@ class Discipline():
 
 
 # Disciplines "Prof"
-DISCIPLINES = ['SII', 'Tch', 'ISN', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Eco', 'Aut']#, 'GE', 'CM', 'SA']
+DISCIPLINES = ['SII', 'Tch', 'ISN', 'Phy', 'Mat', 'Inf', 'Svt', 'LV1', 'Phi', 'Spo', 'Eco', 'Aut']#, 'GE', 'CM', 'SA']
 NOM_DISCIPLINES = {'Tec' : "Sciences Industrielles de l'Ingénieur", 
                    'SII' : "Sciences Industrielles de l'Ingénieur",
                    'ISN' : "Informatique et Sciences du Numérique ",
                    'Tch' : "Technologie", 
                    'Phy' : "Physique/Chimie", 
                    'Mat' : "Mathématiques", 
+                   'Inf' : "Informatique", 
                    'Svt' : "Sciences de la Vie et de la Terre",
                    'Phi' : "Philosophie", 
                    'LV1' : "Langue vivante",
@@ -785,6 +786,7 @@ CODE_DISCIPLINES = {'Tec' : "SII",
                     'Tch' : "Techno", 
                    'Phy' : "PC", 
                    'Mat' : "M", 
+                   'Inf' : "Info",
                    'Svt' : "SVT",
                    'Phi' : "Phi", 
                    'LV1' : "LV",
@@ -802,6 +804,7 @@ COUL_DISCIPLINES = {'Tec' : (.1, .1, .1),
                     'Tch' : (.1, .1, .1), 
                     'Phy' : (0.7, 0.2, 0), 
                     'Mat' : (0, 0.7, 0.2), 
+                    'Inf' : (0, 0.7, 0.2), 
                     'Svt' : (0.1, 0.7, 0.1),
                     'Phi' : (0.3, 0, 0.9), 
                     'LV1' : (0.45, 0.45, 0),

@@ -1153,7 +1153,7 @@ class Classe(ElementBase):
         
         # On vérifie que c'est bien un type d'enseignement avec projet
         if pourProjet:
-            if not self.typeEnseignement in [ref.Code for ref in list(REFERENTIELS.values()) if len(ref.projets) > 0]:
+            if not self.typeEnseignement in [ref.Code for ref in REFERENTIELS.values() if len(ref.projets) > 0]:
                 self.typeEnseignement = constantes.TYPE_ENSEIGNEMENT_DEFAUT
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
         else:    
@@ -2334,7 +2334,7 @@ class Sequence(BaseDoc):
         
         
         objectifs = ET.SubElement(sequence, "Objectifs")
-        for obj in list(self.obj.values()):
+        for obj in self.obj.values():
             objectifs.append(obj.getBranche())
             
         seances = ET.SubElement(sequence, "Seances")
@@ -3430,7 +3430,7 @@ class Sequence(BaseDoc):
         
         def ajouter(k, l, comp):
             if len(comp.sousComp) > 0:
-                for k2, c2 in list(comp.sousComp.items()):
+                for k2, c2 in comp.sousComp.items():
                     ajouter("S"+k2, l, c2)
             else:
                 l.append(k)
@@ -3529,8 +3529,8 @@ class Sequence(BaseDoc):
         dic = {}
         for s in self.GetToutesSeances():
             d = s.GetNbrSystemes(niveau = niveau)
-            for k, v in list(d.items()):
-                if k in list(dic.keys()):
+            for k, v in d.items():
+                if k in dic.keys():
                     dic[k] += v
                 else:
                     dic[k] = v
@@ -3592,10 +3592,10 @@ class Sequence(BaseDoc):
         
         self.CI.MiseAJourTypeEnseignement()
 #         self.obj['C'].MiseAJourTypeEnseignement()
-        for o in list(self.obj.values()):
+        for o in self.obj.values():
             o.MiseAJourTypeEnseignement()
             
-        for p in list(self.prerequis.values()):
+        for p in self.prerequis.values():
             p.MiseAJourTypeEnseignement()
             
         for s in self.seances:
@@ -4095,7 +4095,7 @@ class Projet(BaseDoc, Grammaire):
             self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
             
             self.nbrRevues = eval(branche.get("NbrRevues", str(ref.getNbrRevuesDefaut())))
-            if not self.nbrRevues in list(ref.posRevues.keys()):
+            if not self.nbrRevues in ref.posRevues.keys():
                 self.nbrRevues = ref.getNbrRevuesDefaut()
             self.positionRevues = branche.get("PosRevues", 
                                               '-'.join(list(ref.posRevues[self.nbrRevues]))).split('-')
@@ -4745,7 +4745,7 @@ class Projet(BaseDoc, Grammaire):
         #
         # On ajoute les tâches sans phase
         #
-        if '' in list(paquet.keys()):
+        if '' in paquet.keys():
             lst.extend(paquet[''])
             
 #        print lst
@@ -5316,7 +5316,7 @@ class Projet(BaseDoc, Grammaire):
             win = self.GetApp()
         existe = []
         for fe in nomFichiers.values():
-            for f in list(fe.values()):
+            for f in fe.values():
                 if os.path.isfile(f[1]):
                     existe.append(f[1])
         
@@ -5415,7 +5415,7 @@ class Projet(BaseDoc, Grammaire):
         if prj is None:
             return
         
-        for k in list(prj.parties.keys()):
+        for k in prj.parties.keys():
             if not os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
                 prjdef = REFERENTIELS[self.GetTypeEnseignement()].getProjetDefaut()
                 if os.path.isfile(grilles.getFullNameGrille(prjdef.grilles[k][0])):
@@ -5534,10 +5534,10 @@ class Projet(BaseDoc, Grammaire):
                 
             else:   # On stock les indicateurs dans un dictionnaire CodeCompétence : ListeTrueFalse
                 indicTache = t.GetDicIndicateurs()
-                for c, i in list(indicTache.items()):
+                for c, i in indicTache.items():
                     for neleve in range(len(self.eleves)+1):
                         if (neleve == 0) or ((neleve-1) in t.eleves):
-                            if c in list(indicateurs[neleve].keys()):
+                            if c in indicateurs[neleve].keys():
                                 indicateurs[neleve][c] = [x or y for x,y in zip(i, indicateurs[neleve][c])]
                             else:
                                 indicateurs[neleve][c] = i 
@@ -5917,7 +5917,7 @@ class Progression(BaseDoc, Grammaire):
         
         err = self.GetRectangles()[-1]
         
-        return [m for e, m in list(messages.items()) if e & err]
+        return [m for e, m in messages.items() if e & err]
     
     
     
@@ -7011,7 +7011,7 @@ class Progression(BaseDoc, Grammaire):
                         self.tip.SetWholeText("int", codec + " " + competence.intitule)
                         if len(competence.sousComp) > 0:
 #                             print competence.sousComp.items()
-                            lc = sorted(list(competence.sousComp.items()), key = lambda c:c[0])
+                            lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
                             for k, v in lc:
                                 self.tip.AjouterElemListeDL('list', k, v.intitule)
 #                     elif len(competences) == 3:
@@ -7762,7 +7762,7 @@ class CentreInteret(ElementBase):
 #        print "setBranche CI"
         self.numCI = []
         self.poids = []
-        for i in range(len(list(branche.keys()))):
+        for i in range(len(branche.keys())):
             n = branche.get("C"+str(i), "")
             if n != "":
                 self.numCI.append(eval(n))
@@ -8431,7 +8431,7 @@ class Competences(ElementBase):
     ######################################################################################  
     def setBranche(self, branche):
         self.competences = []
-        for i in range(len(list(branche.keys()))):
+        for i in range(len(branche.keys())):
             
             codeindic = branche.get("C"+str(i), "")
             
@@ -8517,7 +8517,7 @@ class Competences(ElementBase):
         
         def ajouter(k, l, comp):
             if len(comp.sousComp) > 0:
-                for k2, c2 in list(comp.sousComp.items()):
+                for k2, c2 in comp.sousComp.items():
                     ajouter("S"+k2, l, c2)
             else:
                 l.append(k)
@@ -8924,7 +8924,7 @@ class Savoirs(ElementBase):
         
         # Détection d'un ancienne version (pas infaillible !)
         ancien = False
-        for i in range(len(list(branche.keys()))):
+        for i in range(len(branche.keys())):
             code = branche.get("S"+str(i), "")
             if code != "":
                 if not code[0] in ["B", "S", "M", "P"]: # version < 4.6
@@ -8932,7 +8932,7 @@ class Savoirs(ElementBase):
                     break
         
         self.savoirs = []
-        for i in range(len(list(branche.keys()))):
+        for i in range(len(branche.keys())):
             code = branche.get("S"+str(i), "")
             if code != "":
                 if ancien: # version < 4.6
@@ -10894,7 +10894,7 @@ class Tache(ElementAvecLien, ElementBase):
             for i in self.indicateursEleve[numEleve+1]:
                 competence, indicateur = i.split('_')
                 indicateur = eval(indicateur)-1
-                if not competence in list(indicateurs.keys()):
+                if not competence in indicateurs.keys():
                     indicateurs[competence] = [False]*len(dic[competence[1:]])
                 
                 indicateurs[competence][indicateur] = True
@@ -10921,7 +10921,7 @@ class Tache(ElementAvecLien, ElementBase):
             if set(indicateurs.keys()) != set(ie.keys()):
 #                print "       >1"
                 return True
-            for k, v in list(ie.items()):
+            for k, v in ie.items():
                 for a, b in zip(v, indicateurs[k]):
                     if a != b:
 #                        print "       >2"
@@ -11005,7 +11005,7 @@ class Tache(ElementAvecLien, ElementBase):
                 lstR = [_R1, _R2]
                     
             if self.phase in lstR or self.estPredeterminee():
-                for e, indicateurs in list(self.indicateursEleve.items())[1:]:
+                for e, indicateurs in self.indicateursEleve.items()[1:]:
                     if e > len(self.projet.eleves):
                         break
                     brancheE = ET.Element("Eleve"+str(e))
@@ -11146,7 +11146,7 @@ class Tache(ElementAvecLien, ElementBase):
                             
                             brancheE = brancheInd.find("Eleve"+str(i+1))
                             if brancheE != None:
-                                for c in list(brancheE.keys()):
+                                for c in brancheE.keys():
                                     codeindic = brancheE.get(c)
                                     if self.GetClasse().GetVersionNum() < 7:
                                         codeindic = "S"+codeindic
@@ -11182,7 +11182,7 @@ class Tache(ElementAvecLien, ElementBase):
                             
                             else: # Pour ouverture version <4.8beta1
                                 indicprov = []
-                                for c in list(brancheInd.keys()):
+                                for c in brancheInd.keys():
                                     codeindic = brancheInd.get(c)
                                     if self.GetClasse().GetVersionNum() < 7:
                                         codeindic = "S"+codeindic
@@ -11209,7 +11209,7 @@ class Tache(ElementAvecLien, ElementBase):
                                     indicprov.append(codeindic)
                                     dic = e.GetDicIndicateursRevue(self.phase)
                                     
-                                    if code in list(dic.keys()):
+                                    if code in dic.keys():
                                         if dic[code][indic]:
                                             self.indicateursEleve[i+1].append(codeindic)
                                 
@@ -11240,7 +11240,7 @@ class Tache(ElementAvecLien, ElementBase):
                             if ref is not None: 
                                 for disc, dic in ref._dicoIndicateurs_simple.items():
                                     if code[0] == disc:
-                                        if not code[1:] in list(dic.keys()):
+                                        if not code[1:] in dic.keys():
                                             print("Erreur 3", code, "<>", ref._dicoIndicateurs_simple[disc])
                                             if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
                                                 err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
@@ -11559,7 +11559,7 @@ class Tache(ElementAvecLien, ElementBase):
             else:
                 dicIndic = self.projet.eleves[eleve-1].GetDicIndicateursRevue(self.phase)
                 comp = code.split("_")[0]
-                if comp in list(dicIndic.keys()):
+                if comp in dicIndic.keys():
                     if comp != code: # Indicateur seul
                         indic = eval(code.split("_")[1])
                         ok = dicIndic[comp][indic-1]
@@ -12159,7 +12159,7 @@ class Calendrier(ElementAvecLien, ElementBase):
     def GetCreneauxFeries(self):
         creneaux = []
         jours_feries = constantes.JOURS_FERIES
-        lstAcad = sorted([a[0] for a in list(constantes.ETABLISSEMENTS.values())])
+        lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
         acad = self.GetClasse().academie
         
         try:
@@ -12168,17 +12168,17 @@ class Calendrier(ElementAvecLien, ElementBase):
             num_acad = None      
                         
         for annee in self.GetListeAnnees():
-            if annee in list(jours_feries.keys()):
+            if annee in jours_feries.keys():
                 list_zones, list_crenaux = jours_feries[annee]
                 
                 zone = None
                 if num_acad is not None:
-                    for z, l in list(list_zones.items()):
+                    for z, l in list_zones.items():
                         if num_acad in l:
                             zone = z
                             break
                 
-                if zone in list(list_crenaux.keys()):
+                if zone in list_crenaux.keys():
                     creneaux.extend(list_crenaux[zone])
             
         return creneaux
@@ -12512,7 +12512,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
     
     ######################################################################################  
     def GetLogosLogiciels(self):
-        return {l : constantes.IMG_LOGICIELS[l].GetBitmap() for l in self.logiciels if l in list(constantes.IMG_LOGICIELS.keys())}
+        return {l : constantes.IMG_LOGICIELS[l].GetBitmap() for l in self.logiciels if l in constantes.IMG_LOGICIELS.keys()}
     
     
     ######################################################################################  
@@ -12602,7 +12602,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
 #         print self.logiciels
 #         image = scaleImage(constantes.IMG_LOGICIELS[self.logiciels[0]].GetBitmap())
 #         print image
-        if len(self.logiciels) > 0 and self.logiciels[0] in list(self.arbre.images.keys()):
+        if len(self.logiciels) > 0 and self.logiciels[0] in self.arbre.images.keys():
             image = self.arbre.images[self.logiciels[0]]
         else:
             image = self.arbre.images[self.code]
@@ -12706,7 +12706,7 @@ class Personne(ElementBase):
             root.set("Discipline", str(self.discipline))
             
         if hasattr(self, 'grille'): # Cas des élèves (et pas des profs)
-            for k, g in list(self.grille.items()):
+            for k, g in self.grille.items():
                 root.set("Grille"+k, toSystemEncoding(g.path))       
 #                 brancheGri = ET.Element("Grille"+k)
 #                 root.append(brancheGri)
@@ -12739,7 +12739,7 @@ class Personne(ElementBase):
             
         if hasattr(self, 'grille'):     # élève
 #            print self.grille
-            for k in list(self.GetProjetRef().parties.keys()):
+            for k in self.GetProjetRef().parties.keys():
                 self.grille[k] = Lien(typ = "f")
                 self.grille[k].path = toFileEncoding(branche.get("Grille"+k, r""))
 #             print "grilles", self.grille
@@ -12872,7 +12872,7 @@ class Eleve(Personne, ElementBase):
         self.code = "Elv"
         
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
-        for k in list(doc.GetProjetRef().parties.keys()):
+        for k in doc.GetProjetRef().parties.keys():
             self.grille[k] = Lien(typ = 'f')
         
         Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 550*SSCALE)
@@ -12944,7 +12944,7 @@ class Eleve(Personne, ElementBase):
              
     ######################################################################################  
     def OuvrirGrilles(self, event):
-        for k in list(self.grille.keys()):
+        for k in self.grille.keys():
             self.OuvrirGrille(k)
 #        if self.GetTypeEnseignement(simple = True) == "STI2D":
 #            self.OuvrirGrille(1)
@@ -13018,15 +13018,15 @@ class Eleve(Personne, ElementBase):
             dirpath = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
         
         prefixes = {}
-        for part, g in list(prj.parties.items()):
+        for part, g in prj.parties.items():
             fo = prj.grilles[part][0]
-            if not fo in list(prefixes.keys()):
+            if not fo in prefixes.keys():
                 prefixes[fo] = [part]
             else:
                 prefixes[fo].append(part)
             
         nomFichiers = {} 
-        for fo, parts in list(prefixes.items()):
+        for fo, parts in prefixes.items():
             prefixe = "_".join(["Grille"]+[prj.parties[part] for part in parts])
             gr = prj.grilles[parts[0]]
             if grilles.EXT_EXCEL != None: 
@@ -13107,7 +13107,7 @@ class Eleve(Personne, ElementBase):
         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
         #
         tableaux = {}
-        for fo, v in list(nomFichiers.items()):
+        for fo, v in nomFichiers.items():
             parts, f = v
             if os.path.isfile(f):  # Fichier grille élève déja existant
 #                 print "   exist :", f
@@ -13160,7 +13160,7 @@ class Eleve(Personne, ElementBase):
         #
         # Enregistrement final des grilles
         #
-        for f, v in list(tableaux.items()):
+        for f, v in tableaux.items():
             parts, t = v
             try:
                 t.save()
@@ -13348,7 +13348,7 @@ class Eleve(Personne, ElementBase):
     ######################################################################################  
     def GrillesGenerees(self):
         b = True
-        for g in list(self.grille.values()):
+        for g in self.grille.values():
             b = b and len(g.path) > 0
         return b
     
@@ -13395,10 +13395,10 @@ class Eleve(Personne, ElementBase):
 
         rs = {}
         lers = {}
-        for disc, dic in list(prj._dicoGrpIndicateur.items()):
+        for disc, dic in prj._dicoGrpIndicateur.items():
             rs[disc] = {}
             lers[disc] = {}
-            for ph in list(dic.keys()):
+            for ph in dic.keys():
                 lers[disc][ph] = {}
                 rs[disc][ph] = 0
 #         print "   xx init :", rs, lers
@@ -13407,23 +13407,23 @@ class Eleve(Personne, ElementBase):
         def getPoids(competence, code, poidsGrp):
 #             print "  getPoids", code
             if competence.sousComp != {}:
-                for k, c in list(competence.sousComp.items()):
+                for k, c in competence.sousComp.items():
                     getPoids(c, k, poidsGrp)
             
 #             if competence.poids != {}:
-            for disc, dic in list(prj._dicoGrpIndicateur.items()):
-                for ph in list(dic.keys()):
+            for disc, dic in prj._dicoGrpIndicateur.items():
+                for ph in dic.keys():
 #                     print "      ", ph
                     if grp in dic[ph]:
 #                         print "_", dic[ph]
                         for i, indic in enumerate(competence.indicateurs):
                             
-                            if disc+code in list(dicIndicateurs.keys()):
+                            if disc+code in dicIndicateurs.keys():
                                 if dicIndicateurs[disc+code][i]:
 #                                     print "  comp", code, i, indic.poids, ph
                                     poids = indic.poids
-                                    if ph in list(poids.keys()):
-                                        if not ph in list(poidsGrp.keys()):
+                                    if ph in poids.keys():
+                                        if not ph in poidsGrp.keys():
                                             print("ERREUR poids", code, "Faire \"Ouvrir et réparer\"")
                                         else:
                                             p = 1.0*poids[ph]/100
@@ -13525,8 +13525,8 @@ class Eleve(Personne, ElementBase):
                         indicTache = t.GetDicIndicateursEleve(self) # Les indicateurs des compétences à mobiliser pour cette tâche
                     else:
                         indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
-                    for c, i in list(indicTache.items()):
-                        if c in list(indicateurs.keys()):
+                    for c, i in indicTache.items():
+                        if c in indicateurs.keys():
                             indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
                         else:
                             indicateurs[c] = i
@@ -13550,8 +13550,8 @@ class Eleve(Personne, ElementBase):
                 break
             if self.id in t.eleves:     # L'élève est concerné par cette tâche
                 indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
-                for c, i in list(indicTache.items()):
-                    if c in list(indicateurs.keys()):
+                for c, i in indicTache.items():
+                    if c in indicateurs.keys():
                         indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
                     else:
                         indicateurs[c] = i
@@ -13616,7 +13616,7 @@ class Eleve(Personne, ElementBase):
 #        print "MiseAJourTypeEnseignement", self
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
 #        print self.GetReferentiel().nomParties_prj
-        for k in list(self.GetProjetRef().parties.keys()):
+        for k in self.GetProjetRef().parties.keys():
             self.grille[k] = Lien(typ = 'f')
 #        self.GetPanelPropriete().MiseAJourTypeEnseignement()
     
@@ -13661,8 +13661,8 @@ class Eleve(Personne, ElementBase):
 #        er, es , ler, les = self.GetEvaluabilite(complet = True)
         ev, ev_tot, seuil = self.GetEvaluabilite()
         
-        for disc, dic in list(self.GetProjetRef()._dicoGrpIndicateur.items()):
-            for part in list(dic.keys()):
+        for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
+            for part in dic.keys():
                 self.codeBranche.comp[disc+part].SetLabel(rallonge(pourCent2(ev_tot[disc][part][0])))
         
         keys = {}
@@ -13680,15 +13680,15 @@ class Eleve(Personne, ElementBase):
         t52 = "les compétences "
         
 #        for ph, nomph, st in zip(['R', 'S'], [u"conduite", u"soutenance"], [self.evaluR, self.evaluS]):
-        for disc in list(self.GetProjetRef()._dicoGrpIndicateur.keys()):
-            for ph, nomph in list(self.GetProjetRef().parties.items()):
+        for disc in self.GetProjetRef()._dicoGrpIndicateur.keys():
+            for ph, nomph in self.GetProjetRef().parties.items():
                 st = self.codeBranche.comp[disc+ph]
                 t = "Évaluabilité de la "+nomph+" du projet "
                 tt = ""
                 if ev_tot[disc][ph][1]:
                     tt += "\n" + t1
             
-                le = [k for k in list(ev[disc][ph].keys()) if ev[disc][ph][k] == False] # liste des groupes de compétences pas évaluable
+                le = [k for k in ev[disc][ph].keys() if ev[disc][ph][k] == False] # liste des groupes de compétences pas évaluable
                 if len(le) == 1:
                     tt += "\n" + t21 + t3 + t51 + le[0] + t4 + pourCent2(seuil[disc][ph])
                 else:
@@ -13791,14 +13791,14 @@ class Eleve(Personne, ElementBase):
 #            if "O8s" in keys:
 #                keys.remove("O8s")
             lab = {}
-            for disc, dic in list(prj._dicoGrpIndicateur.items()):
+            for disc, dic in prj._dicoGrpIndicateur.items():
                 lab[disc] = {}
-                for part in list(dic.keys()):
+                for part in dic.keys():
                     lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
         #            totalOk = True
                     for k in keys[disc]:
                         if k in prj._dicoGrpIndicateur[disc][part]:
-                            if k in list(ev[disc][part].keys()):
+                            if k in ev[disc][part].keys():
                                 
         #                        totalOk = totalOk and (ler[k] >= 0.5)
                                 lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
@@ -13809,8 +13809,8 @@ class Eleve(Personne, ElementBase):
                             lab[disc][part].append(["", True])
                     lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
  
-            for disc, dic in list(prj._dicoGrpIndicateur.items()):
-                for part in list(dic.keys()):
+            for disc, dic in prj._dicoGrpIndicateur.items():
+                for part in dic.keys():
     #                print "   ", part
                     for i, lo in enumerate(lab[disc][part]):
     #                    print "      ", i, lo
@@ -13858,8 +13858,8 @@ class Eleve(Personne, ElementBase):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
-        for disc, dic in list(self.GetProjetRef()._dicoGrpIndicateur.items()):
-            for part in list(dic.keys()):
+        for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
+            for part in dic.keys():
                 self.codeBranche.Add(disc+part)
         
         self.codeBranche.AddImg()
@@ -14625,8 +14625,8 @@ class Groupe(Eleve):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
-        for disc, dic in list(self.GetProjetRef()._dicoGrpIndicateur.items()):
-            for part in list(dic.keys()):
+        for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
+            for part in dic.keys():
                 self.codeBranche.Add(disc+part)
         
 #        if self.image == None or self.image == wx.NullBitmap:

@@ -18251,7 +18251,8 @@ class A_propos(wx.Dialog):
                                              "Jean-Claude FRICOU (STS SN)", \
                                              "Emmanuel VIGNAUD (Ede SI-CIT-DIT 2nde)", \
                                              "Arnaud BULCKE (Techno Collège)", \
-                                             "Laurent Moutoussamy (MPSI)")), \
+                                             "Laurent Moutoussamy (MPSI)", \
+                                             "André Forys (NSI)")), \
                       
                       ("Remerciements : ", ("un grand merci aux très nombreux", \
                                              "utilisateurs qui ont pris le temps", \
