@@ -2920,7 +2920,7 @@ class Sequence(BaseDoc):
         self.systemes.append(sy)
         sy.ConstruireArbre(self.arbre, self.brancheSys)
         self.arbre.Expand(self.brancheSys)
-        self.GetApp().sendEvent(modif = "Ajout d'%s" %ref._nomSysteme.un_())
+        self.GetApp().sendEvent(modif = "Ajout d'%s" %ref._nomSystemes.un_())
         self.arbre.SelectItem(sy.branche)
         self.AjouterSystemeSeance(sy)
         return
@@ -11807,7 +11807,8 @@ class Systeme(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def getBrancheClasse(self):
-        """ Renvoie la branche XML de la compétence pour enregistrement
+        """ Renvoie la branche XML du Système pour enregistrement
+            cas d'un système associé à une Classe
         """
         root = ET.Element("Systeme")
         root.set("NomClasse", self.nom)
@@ -11816,7 +11817,7 @@ class Systeme(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def getBranche(self):
-        """ Renvoie la branche XML de la compétence pour enregistrement
+        """ Renvoie la branche XML du Système pour enregistrement
         """
 #         print("getBranche", self, self.GetDocument())
         
@@ -11971,7 +11972,7 @@ class Systeme(ElementAvecLien, ElementBase):
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([["Supprimer", 
-                                                     functools.partial(self.parent.SupprimerSysteme, item = itemArbre),
+                                                     functools.partial(self.GetDocument().SupprimerSysteme, item = itemArbre),
                                                      scaleImage(images.Icone_suppr_systeme.GetBitmap())],
                                                     ["Créer un lien", self.CreerLien, 
                                                      scaleImage(images.Icone_lien.GetBitmap())]])

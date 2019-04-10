@@ -68,7 +68,7 @@ def ouvrirFichierExcel(nomFichier = None):
     #                                defaultDir = self.DossierSauvegarde, 
                                 defaultFile = "",
                                 wildcard = mesFormats,
-                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                                style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
                                 )
             
             if dlg.ShowModal() == wx.ID_OK:
@@ -388,7 +388,7 @@ class RichTextFrame(wx.Frame):
         wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=False)
         dlg = wx.FileDialog(self, "Choose a filename",
                             wildcard=wildcard,
-                            style=wx.OPEN)
+                            style=wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             if path:
@@ -409,7 +409,7 @@ class RichTextFrame(wx.Frame):
 
         dlg = wx.FileDialog(self, "Choose a filename",
                             wildcard=wildcard,
-                            style=wx.SAVE)
+                            style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             if path:
@@ -721,55 +721,55 @@ class RichTextFrame(wx.Frame):
         self.SetMenuBar(mb)
 
 
-    def MakeToolBar(self):
-        def doBind(item, handler, updateUI=None):
-            self.Bind(wx.EVT_TOOL, handler, item)
-            if updateUI is not None:
-                self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
-        
-        tbar = self.CreateToolBar()
-        doBind( tbar.AddTool(-1, images._rt_open.GetBitmap(),
-                            shortHelpString="Open"), self.OnFileOpen)
-        doBind( tbar.AddTool(-1, images._rt_save.GetBitmap(),
-                            shortHelpString="Save"), self.OnFileSave)
-        tbar.AddSeparator()
-        doBind( tbar.AddTool(wx.ID_CUT, images._rt_cut.GetBitmap(),
-                            shortHelpString="Cut"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_COPY, images._rt_copy.GetBitmap(),
-                            shortHelpString="Copy"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_PASTE, images._rt_paste.GetBitmap(),
-                            shortHelpString="Paste"), self.ForwardEvent, self.ForwardEvent)
-        tbar.AddSeparator()
-        doBind( tbar.AddTool(wx.ID_UNDO, images._rt_undo.GetBitmap(),
-                            shortHelpString="Undo"), self.ForwardEvent, self.ForwardEvent)
-        doBind( tbar.AddTool(wx.ID_REDO, images._rt_redo.GetBitmap(),
-                            shortHelpString="Redo"), self.ForwardEvent, self.ForwardEvent)
-        tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, images._rt_bold.GetBitmap(), isToggle=True,
-                            shortHelpString="Bold"), self.OnBold, self.OnUpdateBold)
-        doBind( tbar.AddTool(-1, images._rt_italic.GetBitmap(), isToggle=True,
-                            shortHelpString="Italic"), self.OnItalic, self.OnUpdateItalic)
-        doBind( tbar.AddTool(-1, images._rt_underline.GetBitmap(), isToggle=True,
-                            shortHelpString="Underline"), self.OnUnderline, self.OnUpdateUnderline)
-        tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, images._rt_alignleft.GetBitmap(), isToggle=True,
-                            shortHelpString="Align Left"), self.OnAlignLeft, self.OnUpdateAlignLeft)
-        doBind( tbar.AddTool(-1, images._rt_centre.GetBitmap(), isToggle=True,
-                            shortHelpString="Center"), self.OnAlignCenter, self.OnUpdateAlignCenter)
-        doBind( tbar.AddTool(-1, images._rt_alignright.GetBitmap(), isToggle=True,
-                            shortHelpString="Align Right"), self.OnAlignRight, self.OnUpdateAlignRight)
-        tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, images._rt_indentless.GetBitmap(),
-                            shortHelpString="Indent Less"), self.OnIndentLess)
-        doBind( tbar.AddTool(-1, images._rt_indentmore.GetBitmap(),
-                            shortHelpString="Indent More"), self.OnIndentMore)
-        tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, images._rt_font.GetBitmap(),
-                            shortHelpString="Font"), self.OnFont)
-        doBind( tbar.AddTool(-1, images._rt_colour.GetBitmap(),
-                            shortHelpString="Font Colour"), self.OnColour)
-
-        tbar.Realize()
+#     def MakeToolBar(self):
+#         def doBind(item, handler, updateUI=None):
+#             self.Bind(wx.EVT_TOOL, handler, item)
+#             if updateUI is not None:
+#                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
+#         
+#         tbar = self.CreateToolBar()
+#         doBind( tbar.AddTool(-1, images._rt_open.GetBitmap(),
+#                             shortHelpString="Open"), self.OnFileOpen)
+#         doBind( tbar.AddTool(-1, images._rt_save.GetBitmap(),
+#                             shortHelpString="Save"), self.OnFileSave)
+#         tbar.AddSeparator()
+#         doBind( tbar.AddTool(wx.ID_CUT, images._rt_cut.GetBitmap(),
+#                             shortHelpString="Cut"), self.ForwardEvent, self.ForwardEvent)
+#         doBind( tbar.AddTool(wx.ID_COPY, images._rt_copy.GetBitmap(),
+#                             shortHelpString="Copy"), self.ForwardEvent, self.ForwardEvent)
+#         doBind( tbar.AddTool(wx.ID_PASTE, images._rt_paste.GetBitmap(),
+#                             shortHelpString="Paste"), self.ForwardEvent, self.ForwardEvent)
+#         tbar.AddSeparator()
+#         doBind( tbar.AddTool(wx.ID_UNDO, images._rt_undo.GetBitmap(),
+#                             shortHelpString="Undo"), self.ForwardEvent, self.ForwardEvent)
+#         doBind( tbar.AddTool(wx.ID_REDO, images._rt_redo.GetBitmap(),
+#                             shortHelpString="Redo"), self.ForwardEvent, self.ForwardEvent)
+#         tbar.AddSeparator()
+#         doBind( tbar.AddTool(-1, images._rt_bold.GetBitmap(), isToggle=True,
+#                             shortHelpString="Bold"), self.OnBold, self.OnUpdateBold)
+#         doBind( tbar.AddTool(-1, images._rt_italic.GetBitmap(), isToggle=True,
+#                             shortHelpString="Italic"), self.OnItalic, self.OnUpdateItalic)
+#         doBind( tbar.AddTool(-1, images._rt_underline.GetBitmap(), isToggle=True,
+#                             shortHelpString="Underline"), self.OnUnderline, self.OnUpdateUnderline)
+#         tbar.AddSeparator()
+#         doBind( tbar.AddTool(-1, images._rt_alignleft.GetBitmap(), isToggle=True,
+#                             shortHelpString="Align Left"), self.OnAlignLeft, self.OnUpdateAlignLeft)
+#         doBind( tbar.AddTool(-1, images._rt_centre.GetBitmap(), isToggle=True,
+#                             shortHelpString="Center"), self.OnAlignCenter, self.OnUpdateAlignCenter)
+#         doBind( tbar.AddTool(-1, images._rt_alignright.GetBitmap(), isToggle=True,
+#                             shortHelpString="Align Right"), self.OnAlignRight, self.OnUpdateAlignRight)
+#         tbar.AddSeparator()
+#         doBind( tbar.AddTool(-1, images._rt_indentless.GetBitmap(),
+#                             shortHelpString="Indent Less"), self.OnIndentLess)
+#         doBind( tbar.AddTool(-1, images._rt_indentmore.GetBitmap(),
+#                             shortHelpString="Indent More"), self.OnIndentMore)
+#         tbar.AddSeparator()
+#         doBind( tbar.AddTool(-1, images._rt_font.GetBitmap(),
+#                             shortHelpString="Font"), self.OnFont)
+#         doBind( tbar.AddTool(-1, images._rt_colour.GetBitmap(),
+#                             shortHelpString="Font Colour"), self.OnColour)
+# 
+#         tbar.Realize()
 
        
 

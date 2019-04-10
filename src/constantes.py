@@ -1369,23 +1369,23 @@ BASE_FICHE_HTML_PRJ = """
     <img id="ap" src=" " alt=" "> 
 """
 
-BASE_FICHE_HTML_PROF = ""
-# "
-#     <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
-# 
-# 
-#     <table border="0" width="100%">
-#         <tbody>
-#         <tr align="right" valign="top">
-#             <td width="200"><p id="nom"></p></td>
-#             <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
-#         </tr>
-#         <tr align="right" valign="top">
-#             <td><p id="spe"> </p></td>
-#         </tr>
-#         </tbody>
-#     </table>
-# """
+BASE_FICHE_HTML_PROF = """
+    <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
+ 
+ 
+    <table border="0" width="100%">
+        <tbody>
+        <tr align="right" valign="top">
+            <td width="200"><p id="nom"></p></td>
+            <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
+        </tr>
+        <tr align="right" valign="top">
+            <td><p id="spe"> </p></td>
+        </tr>
+        </tbody>
+    </table>
+"""
+
 TEMPLATE_PROF_CSS = ""
 TEMPLATE_PROF = ""
 
