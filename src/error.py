@@ -129,7 +129,8 @@ def SendBugReport(traceb = ""):
 
     message= "%s a rencontré une erreur et doit être fermé.\n\n" \
              "Voulez-vous envoyer un rapport d'erreur ?" %version.__appname__
-    dlg=wx.MessageDialog(None,message,"Erreur", wx.YES_NO| wx.ICON_ERROR).ShowModal()
+    dlg = wx.MessageDialog(None,message,"Erreur", wx.YES_NO| wx.ICON_ERROR).ShowModal()
+    
     if dlg==5103:#YES, on envoie le mail
         #
         # Définition du mail
@@ -147,7 +148,7 @@ def SendBugReport(traceb = ""):
         
         
         import util_path
-        e_mail="cedrick.faury@ac-clermont.fr"
+        e_mail = f"{version.__mail__}".replace('#', '@')
         now = str(datetime.datetime.now())
         subject = version.__appname__
         subject += " : rapport d'erreur du " + now
@@ -187,4 +188,12 @@ def SendBugReport(traceb = ""):
         print("Envoi ...",to_send)
         print(webbrowser.open(to_send))
 
+    else:
+        message = "Merci d'envoyer le rapport suivant à l'équipe de développement, \n" \
+                  "accompagné d'une description d'une méthode pour reproduire l'erreur\n" \
+                  "à l'adresse suivante :\n\n"
+        message += f"   {version.__mail__}\n\n".replace('#', '@')
+        message += "%s a rencontré une erreur :\n" %version.__appname__
+        message += traceb
+        dlg = wx.MessageDialog(None,message,"Rapport d'erreur", wx.OK| wx.ICON_ERROR).ShowModal()
     

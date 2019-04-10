@@ -2360,6 +2360,7 @@ class Sequence(BaseDoc):
     def setBranche(self, branche, reparer = False):
         """ Lecture d'une branche XML de séquence
         """
+        
 #         print "setBranche séquence"
 #        t0 = time.time()
         err = []

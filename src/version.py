@@ -39,7 +39,7 @@ Gestion des numéros de version
 
 """
 
-import urllib.request, urllib.error, urllib.parse
+import urllib.request#, urllib.error, urllib.parse
 import json
 import webbrowser
 import wx
@@ -48,7 +48,7 @@ import wx
 
 __appname__= "pySéquence 8"
 __author__ = "Cédrick FAURY"
-__version__ = "8.1.4"
+__version__ = "8.1.5"
 __urlapi__ = "https://api.github.com/repos/cedrick-f/pySequence"
 __url__ = "https://github.com/cedrick-f/pySequence"
 __mail__ = "cedrick.faury#ac-clermont.fr"
