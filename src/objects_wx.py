@@ -5979,7 +5979,7 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def EvtVariable(self, event):
         var = event.GetVar()
-        if var == self.nbrParties:
+        if hasattr(self, 'nbrParties') and var == self.nbrParties:
             self.projet.nbrParties = var.v[0]
         elif var == self.annee:
             self.projet.annee = var.v[0]

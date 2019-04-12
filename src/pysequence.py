@@ -11006,7 +11006,7 @@ class Tache(ElementAvecLien, ElementBase):
                 lstR = [_R1, _R2]
                     
             if self.phase in lstR or self.estPredeterminee():
-                for e, indicateurs in self.indicateursEleve.items()[1:]:
+                for e, indicateurs in list(self.indicateursEleve.items())[1:]:
                     if e > len(self.projet.eleves):
                         break
                     brancheE = ET.Element("Eleve"+str(e))
