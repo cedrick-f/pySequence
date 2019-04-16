@@ -2101,12 +2101,13 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.mgr.UnInit()
 # #         del self.mgr
 #         self.mgr.Destroy()
-           
-        try:
-            wx.CallAfter(self.Destroy)
-            print("   ***")
-        except:
-            pass
+        
+        self.Close()
+#         try:
+#             wx.CallAfter(self.Destroy)
+#             print("   ***")
+#         except:
+#             pass
         
         return True
         
@@ -2577,7 +2578,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def quitter(self, event = None):
-#         print("quitter")
+# #         print("quitter")
 #         if event is not None:
 #             event.Skip()
         if self.fichierCourantModifie:

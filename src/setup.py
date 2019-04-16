@@ -14,7 +14,7 @@
 ##
 ## pySéquence : aide à la construction
 ## de Séquences et Progressions pédagogiques
-## et à la validation de Projets
+# et à la validation de Projets
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

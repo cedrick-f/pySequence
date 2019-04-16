@@ -1883,7 +1883,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
 #            h = (fascent+fdescent)*len(ll)
             for i, t in enumerate(l):
         #        print "  ",t
-                xbearing, ybearing, width, height, xadvance, yadvance = ctx, text_extents(t)
+                xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
                 xt, yt = _x+xbearing+(wc-width)/2, _y + (fascent+fdescent)*i - fdescent + fheight
         #        print "  ",xt, yt
                 if ha == 'c':

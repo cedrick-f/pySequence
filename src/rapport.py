@@ -577,6 +577,11 @@ class FrameRapport(wx.Frame):
             if updateUI is not None:
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
         
+        # Passage momentané en Anglais (bug de wxpython)
+        loc = wx.GetApp().locale.GetSystemLanguage()
+        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        
+        
         tbar = self.CreateToolBar()
         doBind( tbar.AddTool(-1, "", _rt_save.GetBitmap(),
                             shortHelp="Enregistrer"), self.OnFileSave)
@@ -632,6 +637,7 @@ class FrameRapport(wx.Frame):
                 ))
         self.Bind(wx.EVT_COMBOBOX, self.OnApplyStyle)
         
+        wx.GetApp().locale = wx.Locale(loc)
         
         tbar.Realize()
 

@@ -2038,6 +2038,10 @@ class BaseDoc(ElementBase, ElementAvecLien):
         if len(self.equipe) < 5:
             e = Prof(self, len(self.equipe))
             self.equipe.append(e)
+            if not hasattr(self, 'branchePrf'):
+                self.branchePrf = self.arbre.InsertItem(self.branche, 4, Titres[10], 
+                                                   data = "Equ")
+            
             e.ConstruireArbre(self.arbre, self.branchePrf)
             self.arbre.Expand(self.branchePrf)
             self.GetApp().sendEvent(modif = "Ajout d'un professeur")
@@ -2050,6 +2054,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
 #        i = self.equipe.index(e)
         self.equipe.remove(e)
         self.arbre.Delete(item)
+        if len(self.equipe) == 0:
+            self.arbre.Delete(self.branchePrf)
+            del self.branchePrf
         self.GetApp().sendEvent(modif = "Suppression d'un professeur")
 
 
