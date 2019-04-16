@@ -4418,6 +4418,7 @@ class FenetreProgression(FenetreDocument):
             wx.CallAfter(dlg.Destroy)
             return
         
+        self.definirNomFichierCourant(nomFichier)
         
         #
         # Finalisation de l'ouverture
@@ -4452,6 +4453,8 @@ class FenetreProgression(FenetreDocument):
                 except:
                     Ok = False
                     message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + "\n"
+                    if DEBUG:
+                        raise
             
 
         self.progression.Verrouiller()
@@ -4488,7 +4491,7 @@ class FenetreProgression(FenetreDocument):
         self.progression.undoStack.do("Ouverture de la Progression")
         self.parent.miseAJourUndo()
         
-        self.definirNomFichierCourant(nomFichier)
+        
         
         return self.progression
     
@@ -4498,7 +4501,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4755,7 +4758,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+class BaseFiche2(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)

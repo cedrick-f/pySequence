@@ -2039,7 +2039,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
             e = Prof(self, len(self.equipe))
             self.equipe.append(e)
             if not hasattr(self, 'branchePrf'):
-                self.branchePrf = self.arbre.InsertItem(self.branche, 4, Titres[10], 
+                self.branchePrf = self.arbre.InsertItem(self.branche, 3, Titres[10], 
                                                    data = "Equ")
             
             e.ConstruireArbre(self.arbre, self.branchePrf)
@@ -5651,14 +5651,15 @@ class Progression(BaseDoc, Grammaire):
 
     ######################################################################################  
     def GetPositions(self):
-        """ Renvoie la liste de toutes les positions occupées par les Séquences et le Projets
+        """ Renvoie la liste de toutes les positions occupées par les Séquences et les Projets
         """
         l = []
 #         for doc in [s.GetDoc() for s in self.sequences_projets]:
         for s in self.sequences_projets:
             doc = s.GetDoc()
 #             print "  ", s.path
-            l.extend(doc.GetPositions())
+            if doc is not None:
+                l.extend(doc.GetPositions())
         return list(set(l))
 
 
@@ -5933,7 +5934,7 @@ class Progression(BaseDoc, Grammaire):
     def GetDuree(self):
         """ Renvoie la durée totale des Séquence et des Projets de la Progression
         """
-        return sum([sp.GetDoc().GetDuree() for sp in self.sequences_projets])
+        return sum([sp.GetDoc().GetDuree() for sp in self.sequences_projets if sp.GetDoc() is not None])
 
 #     ######################################################################################  
 #     def GetCompetencesAbordees(self):
@@ -5968,7 +5969,9 @@ class Progression(BaseDoc, Grammaire):
 #         print "GetCompetencesAbordees"
         lstComp = []
         for sp in self.sequences_projets:
-            lstComp.extend(sp.GetDoc().GetCompetencesVisees())
+            doc = sp.GetDoc()
+            if doc is not None:
+                lstComp.extend(doc.GetCompetencesVisees())
  
         l = [(k, lstComp.count(k)) for k in lstComp]
         if l != []:
@@ -6297,28 +6300,32 @@ class Progression(BaseDoc, Grammaire):
                     res = dlg.ShowModal()
                     dlg.Destroy()
                     if res == wx.ID_YES:
+                        
                         fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
-                        fichiers, sequences = list(zip(*fichiers_sequences))
-                        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+                        if len(fichiers_sequences) > 0:
+                            fichiers, sequences = list(zip(*fichiers_sequences))
+                            fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+                            dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
+                                                                       "celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
+                                                        "Fichiers Séquences disponibles",
+                                                        [toSystemEncoding(f) for f in fichiers], 
+                                                        wx.CHOICEDLG_STYLE
+                                                        )
+                            
+                            if dlg.ShowModal() == wx.ID_OK:
+                                i = dlg.GetSelection() 
+                                lienSeq.path = fichiers[i]
+                                lienSeq.sequence = sequences[i]
+                                self.GetApp().MarquerFichierCourantModifie()
+    
+                            else:
+                                aSupprimer.append(lienSeq)
+                                
+                            dlg.Destroy()
                         
-                        dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
-                                                                   "celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
-                                                    "Fichiers Séquences disponibles",
-                                                    [toSystemEncoding(f) for f in fichiers], 
-                                                    wx.CHOICEDLG_STYLE
-                                                    )
-                        
-                        if dlg.ShowModal() == wx.ID_OK:
-                            i = dlg.GetSelection() 
-                            lienSeq.path = fichiers[i]
-                            lienSeq.sequence = sequences[i]
-                            self.GetApp().MarquerFichierCourantModifie()
-
                         else:
                             aSupprimer.append(lienSeq)
-                            
-                        dlg.Destroy()
-                    
+                        
                     elif res == wx.ID_NO:
                         aSupprimer.append(lienSeq)
                         continue
@@ -6810,7 +6817,7 @@ class Progression(BaseDoc, Grammaire):
         
         >> Renvoie une liste [(nomFichier, Sequence)]
         """   
-#        print "GetSequencesDossier"
+#         print("GetSequencesDossier", self.GetPath())
         wx.BeginBusyCursor()
         
         #
@@ -6822,7 +6829,7 @@ class Progression(BaseDoc, Grammaire):
                 l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.seq'])
         else:
             l.extend(glob.glob(os.path.join(self.GetPath(), "*.seq")))
-            
+#         print("   ", l)
         #
         # Un ProgressDialog pour patienter ...
         #
@@ -6842,7 +6849,8 @@ class Progression(BaseDoc, Grammaire):
         if exclureExistant:
             lf = [os.path.abspath(ls.path) for ls in self.sequences_projets] # Existant
             l = [ls for ls in l if not ls in lf]
-            
+        
+#         print("   ", l)
         #
         # On ouvre tous les fichiers .seq pour vérifier leur compatibilité
         #
@@ -7304,20 +7312,32 @@ class ElementProgression():
     
     ######################################################################################  
     def GetNbrPeriodes(self):
-        return self.GetDoc().GetNbrPeriodes()
+        doc = self.GetDoc()
+        if doc is not None:
+            return doc.GetNbrPeriodes()
+        return 0
         
     ######################################################################################  
     def GetDuree(self):
-        return self.GetDoc().GetDuree()
+        doc = self.GetDoc()
+        if doc is not None:
+            return doc.GetDuree()
+        return 0
     
     
     ######################################################################################  
     def GetPeriodes(self):
-        return self.GetDoc().GetPositions()
+        doc = self.GetDoc()
+        if doc is not None:
+            return doc.GetPositions()
+        return [0]
     
     ######################################################################################  
     def GetPosition(self):
-        return self.GetDoc().position
+        doc = self.GetDoc()
+        if doc is not None:
+            return doc.position
+        return [0, 0]
     
     ######################################################################################  
     def getBranche(self):
@@ -7429,7 +7449,9 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     
     ######################################################################################  
     def GetPosition(self):
-        return self.sequence.position
+        if self.sequence is not None:
+            return self.sequence.position
+        return [0,0]
     
     
     ######################################################################################  

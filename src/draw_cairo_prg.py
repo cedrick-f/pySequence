@@ -1383,6 +1383,8 @@ def DrawSequencesEtProjets(ctx, prg):
     for i, y in enumerate(yTaches): 
         x = rects[i][0] + rects[i][2]
         doc = prg.sequences_projets[i].GetDoc()
+        if doc is None:
+            continue
         DrawLigne(ctx, x, y)
         DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
         if hasattr(doc, 'CI'):
@@ -1515,6 +1517,8 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     """
     global yTaches
     doc = lienDoc.GetDoc()
+    if doc is None:
+        return
     
     e = 0.0015 * COEF   # épaisseur du cadre
     x, y, w, h = rect
