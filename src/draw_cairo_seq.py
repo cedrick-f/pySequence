@@ -837,7 +837,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     x0, y0 = posObj
 #    tailleObj[0] =  taillePos[0]
     rect_width, rect_height  = tailleObj
-    curve_rect_titre(ctx, ref.labels["OBJEC"][2].plur_(),#"Objectifs", 
+    curve_rect_titre(ctx, ref.labels["OBJEC"][2].Plur_(),#"Objectifs", 
                      (x0, y0, rect_width, rect_height), 
                      BcoulObj, IcoulObj, fontObj)
                           

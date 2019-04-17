@@ -3064,7 +3064,7 @@ class Sequence(BaseDoc):
         #
         # Les objectifs
         #
-        self.brancheObj = arbre.AppendItem(self.branche, Titres[2], 
+        self.brancheObj = arbre.AppendItem(self.branche, ref.labels["OBJEC"][2].Plur_(), #Titres[2], 
                                            image = self.arbre.images["Obj"], 
                                            data = "Obj")
         for obj in self.obj.values():
