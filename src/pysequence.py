@@ -3305,7 +3305,7 @@ class Sequence(BaseDoc):
         """ Gestion (filtrage) des items des Competences et des Savoirs de la séquence
             en fonction des items "cochés" de <elem> (type pysequence.Competence ou Savoir)
         """
-#         print("SEQ: GererElementsDependants de contexte :", contexte)
+        print("SEQ: GererElementsDependants de contexte :", contexte)
         
         ref = self.GetReferentiel()
         
@@ -8426,7 +8426,15 @@ class Competences(ElementBase):
         return self.parent
 
     
-    
+    ######################################################################################  
+    def GetContext(self):
+        """ Renvoie le contexte (Objectif ou Prérequis) des compétences
+            sous forme d'un code : 'P' ou 'O'
+        """
+        if self.prerequis:
+            return "P"
+        else:
+            return "O"
     
     
                 
@@ -8436,14 +8444,10 @@ class Competences(ElementBase):
             <compRef> est du type Referentiel.Competences
         """
 #         ref = self.GetReferentiel()
-        if self.prerequis:
-            contexte = "P"
-        else:
-            contexte = "O"
 # #         dep = ref.getDependant(comp, contexte)
 # #         if dep is not None:
 #         seq = self.parent
-        self.filtre = self.parent.GetFiltre(compRef, contexte)#, self.filtre)
+        self.filtre = self.parent.GetFiltre(compRef, self.GetContext())#, self.filtre)
         dic_f = compRef.GetDicFiltre(self.filtre)
 #         print("GetPanelPropriete", self.filtre)
         return PanelPropriete_Competences(parent, self, code, dic_f, compRef)
@@ -8727,10 +8731,10 @@ class Competences(ElementBase):
         lst = ref.getToutesCompetences()
         if prerequis:
             aff = any([d.pre for k, d in lst])
-            ctx = "P"
         else:
             aff = any([d.obj for k, d in lst])
-            ctx = "O"
+        
+        ctx = self.GetContext()
         self.codeBranche = {}
         if aff:
             self.arbre = arbre
@@ -8780,12 +8784,8 @@ class Competences(ElementBase):
             qui dépendent de la compétence <codeComp>
         """
 #         print("GererElementsDependants de", codeComp)
-        seq = self.parent
-        if self.prerequis:
-            contexte = "P"
-        else:
-            contexte = "O"
-        seq.GererElementsDependants(contexte)
+        seq = self.GetDocument()
+        seq.GererElementsDependants(self.GetContext())
         
         
 #         ref = seq.GetReferentiel()
@@ -9150,7 +9150,18 @@ class Savoirs(ElementBase):
             
             self.SetCodeBranche()
         
-        
+    
+    #########################################################################
+    def GererElementsDependants(self):
+        """ Gestion des éléments (Competences, Savoirs, Th, Dom, Spe)
+            qui dépendent des savoirs
+        """
+#         print("GererElementsDependants de", codeComp)
+        seq = self.GetDocument()
+        seq.GererElementsDependants(self.GetContext())
+   
+   
+   
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'arbre'):

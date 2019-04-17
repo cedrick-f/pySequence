@@ -4501,7 +4501,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4758,7 +4758,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow):
+class BaseFiche(wx.ScrolledWindow):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -9923,6 +9923,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
     def AjouterSavoir(self, code, propag = None):
 #         print "AjouterCompetence", code
         self.savoirs.savoirs.append(code)
+        self.savoirs.GererElementsDependants()
         self.savoirs.SetCodeBranche()
 
         
@@ -9930,6 +9931,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
     def EnleverSavoir(self, code, propag = None):
         if code in self.savoirs.savoirs:
             self.savoirs.savoirs.remove(code)
+            self.savoirs.GererElementsDependants()
             self.savoirs.SetCodeBranche()
 
 
@@ -9951,6 +9953,9 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #             self.arbre.ExpandAll()
             for s in self.savoirs.savoirs:
                 if self.code == s[0]:
+                    if not s[1:] in self.arbre.items:
+                        print("ERREUR : ")
+                        continue
 #                     print("   ", s[1:])
                     i = self.arbre.items[s[1:]]
 #                     i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
@@ -10379,7 +10384,7 @@ class PanelPropriete_Seance(PanelPropriete):
     #             print("sel", list(ref.getTreeEffectifs()[0].keys())[0])
                 self.cbEff.SetClientDataSelection(list(treeEffectifs[0].keys())[0])
             
-            self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox)#, self.cbEff)
+            #, self.cbEff)
             
             self.titreEff = titre
             
@@ -10494,7 +10499,7 @@ class PanelPropriete_Seance(PanelPropriete):
                                      | wx.CB_READONLY
                                      #| wx.CB_SORT
                                      )
-                    self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
+#                     self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
                     self.demSizer.Add(cbDem, flag = wx.EXPAND|wx.LEFT, border = 8)
                     for s in listDem:
                         cbDem.Append(ref.demarches[s][1])
@@ -10647,6 +10652,8 @@ class PanelPropriete_Seance(PanelPropriete):
             self.pageSav.sizer.Layout()
         
         
+        
+        self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox)
         
         
         
@@ -10804,6 +10811,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtComboBox(self, event):
+#         print("EvtComboBox")
         if event.GetEventObject() == self.cbType:
 #             print("EvtComboBox type")
             ref = self.GetReferentiel()
@@ -10864,18 +10872,27 @@ class PanelPropriete_Seance(PanelPropriete):
     #        print "ok"
             self.sendEvent(modif = "Modification du type %s" %ref._nomActivites.de_(), 
                            draw = True, verif = True)
-       
-        else:
-        
-#     #############################################################################            
-#     def EvtComboBoxEff(self, event):
-#             print("EvtComboBoxEff")
+
+
+
+        elif event.GetEventObject() == self.cbEff:
             self.cbEff.SetClientDataSelection(self.cbEff.GetClientData())
             self.seance.SetEffectif(self.cbEff.GetClientData())
            
     #         self.seance.SetEffectif(event.GetString())  
             self.sendEvent(modif = "Modification de l'effectif %s" %self.GetReferentiel()._nomActivites.du_(), 
                            draw = True, verif = True)
+
+
+        elif event.GetEventObject() == self.cbDem:
+            print("EvtComboBoxDem")
+            ref = self.seance.GetReferentiel()
+            listDem = ref.demarcheSeance[self.seance.typeSeance]
+            sel = self.cbDem.GetSelection()
+            if sel != wx.NOT_FOUND and sel < len(listDem):
+                self.seance.SetDemarche(listDem[sel])
+                self.sendEvent(modif = "Modification de %s %s" %(ref._nomDemarches.le_(), ref._nomActivites.du_()), 
+                               draw = True, verif = True) 
 
 
     #############################################################################            
@@ -10890,13 +10907,14 @@ class PanelPropriete_Seance(PanelPropriete):
                        draw = True, verif = True)
 
 
-    #############################################################################            
-    def EvtComboBoxDem(self, event):
-        ref = self.seance.GetReferentiel()
-        cb = event.GetEventObject()
-        self.seance.SetDemarche(cb.GetName())  
-        self.sendEvent(modif = "Modification de %s %s" %(ref._nomDemarches.le_(), ref._nomActivites.du_()), 
-                       draw = True, verif = True) 
+#     #############################################################################            
+#     def EvtComboBoxDem(self, event):
+#         print("EvtComboBoxDem")
+#         ref = self.seance.GetReferentiel()
+#         cb = event.GetEventObject()
+#         self.seance.SetDemarche(cb.GetName())  
+#         self.sendEvent(modif = "Modification de %s %s" %(ref._nomDemarches.le_(), ref._nomActivites.du_()), 
+#                        draw = True, verif = True) 
         
     
     #############################################################################            

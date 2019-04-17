@@ -1481,7 +1481,7 @@ class RapportRTF2(richtext.RichTextPanel):
         dlg = wx.FileDialog(self, titre,
                             wildcard=wildcard,
                             defaultFile = nomFichierDefaut,
-                            style=wx.SAVE)
+                            style=wx.FD_SAVE)
         
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -2270,7 +2270,7 @@ class RapportRTF(rt.RichTextCtrl):
         dlg = wx.FileDialog(self, titre,
                             wildcard=wildcard,
                             defaultFile = nomFichierDefaut,
-                            style=wx.SAVE)
+                            style=wx.FD_SAVE)
         
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
