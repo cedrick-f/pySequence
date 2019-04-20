@@ -578,7 +578,7 @@ def trier(l):
             
     regex = r"(?<=[a-zA-Z.?])(\d)(?!\d)"
     subst = "0\\1"
-    print("Trier", l, "-->", sorted(l, key=lambda s:re.sub(regex, subst, s, 0)))
+#     print("Trier", l, "-->", sorted(l, key=lambda s:re.sub(regex, subst, s, 0)))
     return sorted(l, key=lambda s:re.sub(regex, subst, s, 0))
     
 #     if len(l) > 0:
