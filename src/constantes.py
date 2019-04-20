@@ -559,7 +559,7 @@ def evaluer(s):
         return l+i
         
         
-        
+import re
 #############################################################################################################
 def trier(l):
     """ Tri de codes
@@ -576,17 +576,21 @@ def trier(l):
 #             v = s
 #         return v
             
-#     print("trier", l)
-    if len(l) > 0:
-        if '.' in l[0]:
-            return sorted(l, key=lambda c: evaluer(c.split('.')[-1]))
-        else:
-            try:
-                return sorted(l, key=lambda c: evaluer(c))
-            except:
-                return sorted(l)
-    else:
-        return l
+    regex = r"(?<=[a-zA-Z.?])(\d)(?!\d)"
+    subst = "0\\1"
+    print("Trier", l, "-->", sorted(l, key=lambda s:re.sub(regex, subst, s, 0)))
+    return sorted(l, key=lambda s:re.sub(regex, subst, s, 0))
+    
+#     if len(l) > 0:
+#         if '.' in l[0]:
+#             return sorted(l, key=lambda c: evaluer(c.split('.')[-1]))
+#         else:
+#             try:
+#                 return sorted(l, key=lambda c: evaluer(c))
+#             except:
+#                 return sorted(l)
+#     else:
+#         return l
 
 #ouvrirConfig()
 #filterUnits="userSpaceOnUse"

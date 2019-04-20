@@ -675,7 +675,8 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstComp = []
     lstTyp = []
     ttcomp = ref.getToutesCompetencesDict()
-    for c in sorted(seq.prerequis["C"].competences):
+#     for c in sorted(seq.prerequis["C"].competences):
+    for c in constantes.trier(seq.prerequis["C"].competences):
         typ, cod = c[0], c[1:]
         
         comp = ttcomp[typ]
@@ -720,7 +721,8 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstSav = []
     lstTyp = []
     ttsav = ref.getTousSavoirsDict()
-    for c in sorted(seq.prerequis["S"].savoirs):
+#     for c in sorted(seq.prerequis["S"].savoirs):
+    for c in constantes.trier(seq.prerequis["S"].savoirs):
         typ, cod = c[0], c[1:]
         savoir = ttsav[typ]
 #         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
@@ -877,7 +879,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     multi = len(lstTyp) > 1
     
-    lstComp.sort(key = lambda x:x[0])
+#     lstComp.sort(key = lambda x:x[0])
     
     for cod, comp in lstComp:    
         disc = comp.codeDiscipline
@@ -899,7 +901,8 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstSav = []
     lstTyp = []
     
-    for c in sorted(seq.obj["S"].savoirs):
+#     for c in sorted(seq.obj["S"].savoirs):
+    for c in constantes.trier(seq.obj["S"].savoirs):
         typ, cod = c[0], c[1:]
         savoir = ttsav[typ]
         

@@ -3177,7 +3177,7 @@ class Sequence(BaseDoc):
 #             print(cmp, i, path)
             lst.append(cmp[0]+path[i])
 #         print("GetObjAffiches", list(set(lst)))
-        return sorted(list(set(lst)))
+        return constantes.trier(list(set(lst)))
     
     
     #########################################################################
@@ -8628,11 +8628,11 @@ class Competences(ElementBase):
         """
         if num is None:
             if cod is None:
-                return sep.join(self.competences)
+                return sep.join(constantes.trier(self.competences))
             else:
                 c = self.TrierCodes()
                 if cod in c.keys():
-                    return sep.join(c[cod])
+                    return sep.join(constantes.trier(c[cod]))
                 else:
                     return ""
         
@@ -9013,11 +9013,11 @@ class Savoirs(ElementBase):
         """
         if num is None:
             if cod is None:
-                return sep.join(self.savoirs)
+                return sep.join(constantes.trier(self.savoirs))
             else:
                 c = self.TrierCodes()
                 if cod in c.keys():
-                    return sep.join(c[cod])
+                    return sep.join(constantes.trier(c[cod]))
                 else:
                     return ""
         
