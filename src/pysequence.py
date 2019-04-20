@@ -3305,7 +3305,7 @@ class Sequence(BaseDoc):
         """ Gestion (filtrage) des items des Competences et des Savoirs de la séquence
             en fonction des items "cochés" de <elem> (type pysequence.Competence ou Savoir)
         """
-        print("SEQ: GererElementsDependants de contexte :", contexte)
+#         print("SEQ: GererElementsDependants de contexte :", contexte)
         
         ref = self.GetReferentiel()
         
@@ -3315,22 +3315,33 @@ class Sequence(BaseDoc):
             d = self.obj
         
         maj = False
+        toremove=[]
         for cc in d["C"].competences:
             filtre = self.GetFiltre(ref.getToutesCompetencesDict()[cc[0]], contexte)
             if filtre is not None and not (cc[1:] in filtre):
-                d["C"].competences.remove(cc)
+                toremove.append(cc)
                 maj = True
+        for s in toremove:
+            d["C"].competences.remove(s)
         if maj:
             d["C"].SetCodeBranche()
-            
+        
+        
+#         print("  sav : ", d["S"].savoirs)
         maj = False
+        toremove=[]
         for cs in d["S"].savoirs:
+#             print("   ", cs)
             filtre = self.GetFiltre(ref.getTousSavoirsDict()[cs[0]], contexte)
             if filtre is not None and not (cs[1:] in filtre):
-                d["S"].savoirs.remove(cs)
+                toremove.append(cs)
                 maj = True
+        
+        for s in toremove:
+            d["S"].savoirs.remove(s)
         if maj:
             d["S"].SetCodeBranche()
+    
     
     ######################################################################################  
     def Rafraichir(self):
@@ -8926,7 +8937,7 @@ class Savoirs(ElementBase):
             contexte = "O"
 #         print("savRef", savRef)
         self.filtre = self.parent.GetFiltre(savRef, contexte)#, self.filtre)
-        print("filtre", self.filtre)
+#         print("filtre", self.filtre)
         dic_f = savRef.GetDicFiltre(self.filtre)
 #         print("dic_f_sav", dic_f)
         return PanelPropriete_Savoirs(parent, self, code, dic_f, savRef, filtre = self.filtre)

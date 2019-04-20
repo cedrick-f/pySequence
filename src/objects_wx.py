@@ -10885,7 +10885,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
 
         elif event.GetEventObject() == self.cbDem:
-            print("EvtComboBoxDem")
+#             print("EvtComboBoxDem")
             ref = self.seance.GetReferentiel()
             listDem = ref.demarcheSeance[self.seance.typeSeance]
             sel = self.cbDem.GetSelection()
