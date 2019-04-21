@@ -10114,7 +10114,7 @@ class Seance(ElementAvecLien, ElementBase):
         else:
             image = -1
         
-        self.branche = arbre.AppendItem(branche, self.GetReferentiel()._nomActivites.sing_()+" :", 
+        self.branche = arbre.AppendItem(branche, self.GetReferentiel()._nomActivites.Sing_()+" :", 
                                         wnd = self.codeBranche, 
                                         data = self, image = image)
         self.codeBranche.SetBranche(self.branche)

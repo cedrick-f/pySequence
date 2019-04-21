@@ -7458,8 +7458,8 @@ class PanelPropriete_Classe(PanelPropriete):
         ref = self.classe.GetReferentiel()
         
         # Mise à jour l'onglet Systèmes
-        self.nb.SetPageText(2, ref._nomSystemes.plur_())
-        self.btnAjouterSys.SetLabel("Ajouter %s" %et2ou(ref._nomSystemes.un_()))
+        self.nb.SetPageText(2, ref._nomSystemes.Plur_())
+        self.btnAjouterSys.SetLabel("Ajouter")# %s" %et2ou(ref._nomSystemes.un_()))
         self.btnAjouterSys.SetToolTip("Ajouter %s à la liste" %et2ou(ref._nomSystemes.un_("nouveau")))
         
         self.btnSupprimerSys.SetLabel("Supprimer")
@@ -10385,7 +10385,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 self.cbEff.SetClientDataSelection(list(treeEffectifs[0].keys())[0])
             
             #, self.cbEff)
-            
+#             self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.cbEff)
             self.titreEff = titre
             
             self.bsizer2.Add(self.titreEff, flag = wx.ALIGN_BOTTOM|wx.LEFT|wx.BOTTOM, border = 2)
@@ -10499,7 +10499,7 @@ class PanelPropriete_Seance(PanelPropriete):
                                      | wx.CB_READONLY
                                      #| wx.CB_SORT
                                      )
-#                     self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
+#                     self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbDem)
                     self.demSizer.Add(cbDem, flag = wx.EXPAND|wx.LEFT, border = 8)
                     for s in listDem:
                         cbDem.Append(ref.demarches[s][1])
@@ -10811,7 +10811,8 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtComboBox(self, event):
-#         print("EvtComboBox")
+        if hasattr(self, 'cbEff'):
+            print("EvtComboBox", event.GetEventObject(), self.cbEff)
         if event.GetEventObject() == self.cbType:
 #             print("EvtComboBox type")
             ref = self.GetReferentiel()
@@ -10876,6 +10877,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
 
         elif event.GetEventObject() == self.cbEff:
+            print("   effectif")
             self.cbEff.SetClientDataSelection(self.cbEff.GetClientData())
             self.seance.SetEffectif(self.cbEff.GetClientData())
            
@@ -17668,7 +17670,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         
         
     def OnLeftDown(self, evt):
-        
+#         print("OnLeftDown", self.GetComboCtrl())
         # do the combobox selection
         item, flags = self.tree.HitTest(evt.GetPosition())
         if item and flags & wx.TREE_HITTEST_ONITEMLABEL:
@@ -17679,7 +17681,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
         ev = wx.CommandEvent(wx.EVT_COMBOBOX.typeId)
         ev.SetString(self.GetStringValue())
         ev.SetClientData(self.GetClientData(item))
-        
+        ev.SetEventObject(self.GetComboCtrl())
 #         print("   ", self.GetClientData(item))
 #         self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
 #         print("OnLeftDown", item)
