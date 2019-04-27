@@ -1338,13 +1338,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             child = FenetreSequence(self, ouverture)
             child.SetIcon(scaleIcone(constantes.dicimages["Seq"].GetBitmap()))
         elif ext == 'prj':
-            child = FenetreProjet(self)
+            child = FenetreProjet(self, ouverture)
             child.SetIcon(scaleIcone(constantes.imagesProjet["Prj"].GetBitmap()))
         elif ext == 'prg':
             child = FenetreProgression(self, ouverture)
             child.SetIcon(scaleIcone(constantes.imagesProgression["Prg"].GetBitmap()))
         else:
             child = None
+
         
 #         if not ouverture: # Si c'est vraiment pour un document vide
         self.OnDocChanged(None)
@@ -2831,7 +2832,15 @@ class FenetreSequence(FenetreDocument):
         self.miseEnPlace()
         self.fiche.Redessiner()
 
-
+        if not ouverture:
+            #
+            # Mise en liste undo/redo
+            #    
+            self.classe.undoStack.do("Nouvelle Classe")
+            self.sequence.undoStack.do("Nouvelle Séquence")
+            self.parent.miseAJourUndo()
+            
+            
 #     ###############################################################################################
 #     def ajouterOutils(self):
 #         self.parent.supprimerOutils()
@@ -3303,7 +3312,14 @@ class FenetreProjet(FenetreDocument):
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
         
-    
+        if not ouverture:
+            #
+            # Mise en liste undo/redo
+            #    
+            self.classe.undoStack.do("Nouvelle Classe")
+            self.sequence.undoStack.do("Nouveau Projet")
+            self.parent.miseAJourUndo()
+            
     #############################################################################
     def CleanClose(self):
         """ Tout ce qu'il faut faire pour que le document se ferme proprement ...
@@ -4161,6 +4177,13 @@ class FenetreProgression(FenetreDocument):
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
 
+        if not ouverture:
+            #
+            # Mise en liste undo/redo
+            #    
+            self.classe.undoStack.do("Nouvelle Classe")
+            self.sequence.undoStack.do("Nouvelle Progression")
+            self.parent.miseAJourUndo()
 
     ###############################################################################################
     def GetDocument(self):
