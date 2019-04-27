@@ -503,6 +503,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     #
     
     # Affichage du Logo
+#     print(seq.classe.referentiel.getLogo())
     image(ctx, 
           posCib[0], posCib[1], tailleCib[0], tailleCib[1],
           seq.classe.referentiel.getLogo())

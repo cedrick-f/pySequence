@@ -1700,6 +1700,8 @@ def image(ctx, x, y, w, h, bmp, marge = 0):
     try:
         bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
         image = cairo.ImageSurface.create_from_png(tfname)
+    except:
+        return
     finally:
         if os.path.exists(tfname):
             os.remove(tfname)  

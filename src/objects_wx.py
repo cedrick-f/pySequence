@@ -10811,8 +10811,8 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtComboBox(self, event):
-        if hasattr(self, 'cbEff'):
-            print("EvtComboBox", event.GetEventObject(), self.cbEff)
+#         if hasattr(self, 'cbEff'):
+#             print("EvtComboBox", event.GetEventObject(), self.cbEff)
         if event.GetEventObject() == self.cbType:
 #             print("EvtComboBox type")
             ref = self.GetReferentiel()
@@ -10877,7 +10877,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
 
         elif event.GetEventObject() == self.cbEff:
-            print("   effectif")
+#             print("   effectif")
             self.cbEff.SetClientDataSelection(self.cbEff.GetClientData())
             self.seance.SetEffectif(self.cbEff.GetClientData())
            
