@@ -161,7 +161,7 @@ from xml.dom.minidom import parse, parseString
 # Graphiques vectoriels
 
 import wx.lib.wxcairo
-import cairo
+import cairocffi as cairo
 
 import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 
