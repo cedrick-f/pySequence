@@ -37,7 +37,7 @@ AppCopyright=Copyright © 2011-2019 Cédrick Faury
 VersionInfoVersion = {#AppVersionInfo}
 
 ;Répertoire de base contenant les fichiers
-SourceDir=C:\Users\Cedrick\Documents\Developp\pySequence
+SourceDir=C:\Users\Cedrick\Documents\Developp\pysequence
 
 ;Repertoire d'installation
 DefaultDirName={pf}\{#AppName}

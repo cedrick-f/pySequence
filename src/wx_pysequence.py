@@ -541,8 +541,8 @@ def GetArgs():
             
             # on verifie que le fichier passé en paramètre existe
             if os.path.isfile(parametre):
-                fichier = parametre.decode(FILE_ENCODING)
-                fichier = fichier.encode('utf-8')
+                fichier = parametre#.decode(FILE_ENCODING)
+                #fichier = fichier.encode('utf-8')
                 fichier = util_path.verifierPath(fichier)
     return options, fichier
 

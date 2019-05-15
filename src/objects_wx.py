@@ -1850,7 +1850,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.options.definir()
         self.options.valider(self)
         self.options.enregistrer()
-#         except IOError:
+#         except PermissionError:
 #             print("   Permission d'enregistrer les options refusée...", end=' ')
 #         except:
 #             print("   Erreur enregistrement options...", end=' ')
@@ -3317,7 +3317,7 @@ class FenetreProjet(FenetreDocument):
             # Mise en liste undo/redo
             #    
             self.classe.undoStack.do("Nouvelle Classe")
-            self.sequence.undoStack.do("Nouveau Projet")
+            self.projet.undoStack.do("Nouveau Projet")
             self.parent.miseAJourUndo()
             
     #############################################################################
@@ -4182,7 +4182,7 @@ class FenetreProgression(FenetreDocument):
             # Mise en liste undo/redo
             #    
             self.classe.undoStack.do("Nouvelle Classe")
-            self.sequence.undoStack.do("Nouvelle Progression")
+            self.progression.undoStack.do("Nouvelle Progression")
             self.parent.miseAJourUndo()
 
     ###############################################################################################
@@ -5488,7 +5488,15 @@ class PanelPropriete(scrolled.ScrolledPanel):
             # This returns a Python list of files that were selected.
             paths = dlg.GetPaths()#.decode(FILE_ENCODING)
             nomFichier = paths[0]
-            self.objet.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
+            try:
+                bmp = wx.Image(nomFichier).ConvertToBitmap()
+            except:
+                messageErreur(self, "Erreur !",
+                                    "Fichier image invalide !\n" \
+                                 )
+                dlg.Destroy()
+                return
+            self.objet.image = rognerImage(bmp)
             self.SetImage(True)
         
         dlg.Destroy()

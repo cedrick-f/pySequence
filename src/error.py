@@ -48,7 +48,7 @@ from widgets import messageInfo
 import wx
 
 import version
-
+import re
 
 
 def MyExceptionHook(typ, value, traceb):
@@ -67,7 +67,16 @@ def MyExceptionHook(typ, value, traceb):
     print("\nType : ",typ,"\n", file=sys.stderr)
     print("ValueError : ",value, file=sys.stderr)
 #     print "".join(traceback.format_exception(typ, value, traceb))
-    SendBugReport("%0A".join(traceback.format_exception(typ, value, traceb)))
+    
+    # source : https://stackoverflow.com/questions/37056981/python3-dont-show-full-directory-path-on-error-message
+    lines = traceback.format_list(traceback.extract_tb(traceb))
+    def shorten(match):
+        return 'File "{}"'.format(os.path.basename(match.group(1)))
+    lines = [re.sub(r'File "([^"]+)"', shorten, line) for line in lines]
+    
+    
+#     SendBugReport("%0A".join(traceback.format_exception(typ, value, traceb)))
+    SendBugReport(lines)
     sys.exit()
     
 
@@ -118,7 +127,7 @@ if True:#not "beta" in version.__version__:
 
 
 
-def SendBugReport(traceb = ""):
+def SendBugReport(lines_tb):
     """
     Fonction qui envoie le rapport de bug par mail.
     """
@@ -167,7 +176,7 @@ def SendBugReport(traceb = ""):
                 for line in file_error.readlines():
                     body+=line+"%0A"
         else:
-            body+=traceb
+            body+="%0A".join(lines_tb)
         body += "==============================================%0A%0A"
         
 #         sys.stdout.close()
@@ -194,6 +203,10 @@ def SendBugReport(traceb = ""):
                   "à l'adresse suivante :\n\n"
         message += f"   {version.__mail__}\n\n".replace('#', '@')
         message += "%s a rencontré une erreur :\n" %version.__appname__
-        message += traceb
+        message += "\n".join(lines_tb)
         dlg = wx.MessageDialog(None,message,"Rapport d'erreur", wx.OK| wx.ICON_ERROR).ShowModal()
+    
+    
+    
+    
     

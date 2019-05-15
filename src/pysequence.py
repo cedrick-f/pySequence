@@ -1935,7 +1935,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
                     if hasattr(pp, "SetBitmapPosition"):
                         pp.SetBitmapPosition()
 #                    self.GetApp().arbre.OnSelChanged()
-                    self.GetApp().sendEvent(modif = "Changement de position "+ self.article_c_obj + " " + self.nom_obj,
+                    self.GetApp().sendEvent(modif = "Changement de position "+ self.du_(),
                                             obj = self)
             
             elif zone.param == "PB":
@@ -2890,19 +2890,23 @@ class Sequence(BaseDoc):
 
             dlg.Destroy()
             classe, sequence = self.OuvrirFichierSeq(nomFichier)
-            if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
-                ps = LienSequence(self)
-                self.prerequisSeance.append(ps)
-                ps.path = nomFichier    
-                ps.sequence = sequence
-                ps.ConstruireArbre(self.arbre, self.brancheSeq)
-                self.GetApp().sendEvent(modif = "Ajout d'une Séquence prérequise")
-                self.arbre.SelectItem(ps.branche)
+            if classe is None:
+                messageErreur(self.GetApp(), "Erreur d'ouverture de Séquence", 
+                              "La séquence \n\n   %s\n\nn'a pas pu être ouverte !\n" %nomFichier)
             else:
-                messageErreur(self.GetApp(), "Séquence incompatible", 
-                              "La séquence choisie n'est pas compatible\n" \
-                              "avec la séquence en cours d'édition.\n" \
-                              " - Classe différente : %s ≠ %s" %(classe.typeEnseignement,self.GetReferentiel().Code))
+                if classe.typeEnseignement == self.GetReferentiel().Code:
+                    ps = LienSequence(self)
+                    self.prerequisSeance.append(ps)
+                    ps.path = nomFichier    
+                    ps.sequence = sequence
+                    ps.ConstruireArbre(self.arbre, self.brancheSeq)
+                    self.GetApp().sendEvent(modif = "Ajout d'une Séquence prérequise")
+                    self.arbre.SelectItem(ps.branche)
+                else:
+                    messageErreur(self.GetApp(), "Séquence incompatible", 
+                                  "La séquence choisie n'est pas compatible\n" \
+                                  "avec la séquence en cours d'édition.\n" \
+                                  " - Classe différente : %s ≠ %s" %(classe.typeEnseignement,self.GetReferentiel().Code))
 
         
         
@@ -4293,7 +4297,7 @@ class Projet(BaseDoc, Grammaire):
             effacerRevues()
             
             # On passe à une position "épreuve"
-            if self.code != None:
+            if hasattr(self, 'arbre') and self.code is not None:
                 for tr in self.creerTachesRevue():
                     self.taches.append(tr)
                     tr.ConstruireArbre(self.arbre, self.brancheTac)
@@ -4302,7 +4306,7 @@ class Projet(BaseDoc, Grammaire):
 #                        tr.panelPropriete.MiseAJour()
                 self.OrdonnerTaches()
                 self.arbre.Ordonner(self.brancheTac)
-                self.GetApp().sendEvent(modif = "Changement de projet")
+                self.GetApp().sendEvent(modif = "Changement de Projet")
     
 
                 
@@ -8065,6 +8069,7 @@ class CentreInteret(ElementBase):
             lst_CI.append((ref.abrevCI+str(len(ref.CentresInterets)+i+1), c))
         
         lst_pb = []
+        nomPb = ""
         if len(self.Pb + self.Pb_perso) > 0:
             if len(self.Pb + self.Pb_perso) > 1:
                 nomPb = ref._nomPb.Plur_()
@@ -12601,7 +12606,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
         if self.intitule != "":
             t = self.intitule
         else:
-            t = self.nom_obj + " " + str(self.id)
+            t = self.Sing_() + " " + str(self.id)
         return t
     
     ######################################################################################  

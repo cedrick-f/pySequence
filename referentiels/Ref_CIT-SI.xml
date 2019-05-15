@@ -1,0 +1,525 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="1" S_AnneeDebut="Sec5" S_Code="Option CIT-SI" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th" S_abrevPb="Non" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s) proposée(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+  <l_BO_URL>
+    <l_00 S_00="Programme CIT-SI" S_01="https://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/53/1/spe570_annexe_1062531.pdf" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="2nde" />
+  <l_CentresInterets S_00="la mobilité des personnes et des biens" S_01="les structures et les constructions" S_02="les objets connectés" S_03="les produits d’assistance pour la santé et la sécurité" S_04="la compensation du handicap" S_05="l’augmentation ou le suivi des performances du corps humain" />
+  <l_Enseignement S_00="CIT-SI" S_01="Enseignement optionnel 2nde - CIT-SI--Conception et Innovation Technologique--Sciences de l'ingénieur" S_02="Option - 2nde" S_03="Enseignement optionnel Seconde" />
+  <d_aColNon />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" S_02="EF" S_03="ES" S_04="AE" S_05="EC" />
+    <l_AP S_00="I" S_01="R" S_02="EF" S_03="ES" S_04="AE" S_05="EC" />
+    <l_P S_00="I" S_01="R" S_02="P" S_03="EF" S_04="ES" S_05="AE" S_06="EC" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_EF S_00="Eval. Form." S_01="Evaluation formative" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_EF>
+    <l_ES S_00="Eval. Som." S_01="Evaluation sommative" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ES>
+    <l_AE S_00="Auto-éval." S_01="Auto-évaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AE>
+    <l_EC S_00="Eval. Conf." S_01="Evaluation par contrat de confiance" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_EC>
+  </d_demarches>
+  <d_dicFonctions />
+  <d_dicoCompetences>
+    <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)$f" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicCompetences>
+        <Competence_CT-CIT S_intitule="CIT : Mettre en œuvre une démarche de projet et de créativité">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT-CIT.1 S_intitule="Travailler en équipe. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.1>
+            <Competence_CT-CIT.2 S_intitule="Sélectionner des références et des ressources documentaires spécifiques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.2>
+            <Competence_CT-CIT.3 S_intitule="S’initier au vocabulaire de l’innovation et de la créativité.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.3>
+            <Competence_CT-CIT.4 S_intitule="Utiliser des méthodes de créativité.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.4>
+            <Competence_CT-CIT.5 S_intitule="Appréhender les méthodologies en design de produit.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.5>
+            <Competence_CT-CIT.6 S_intitule="Formuler des propositions et retenir les solutions les plus pertinentes.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.6>
+            <Competence_CT-CIT.7 S_intitule="Identifier les contraintes réglementaires, environnementales et économiques liées à un contexte donné.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.7>
+            <Competence_CT-CIT.8 S_intitule="Élaborer une solution innovante.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-CIT.8>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT-CIT>
+        <Competence_CT-SI S_intitule="SI : Raisonner, pratiquer une démarche scientifique, expérimenter">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT-SI.1 S_intitule="Travailler en équipe. ">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.1>
+            <Competence_CT-SI.2 S_intitule="Sélectionner des références et des ressources documentaires spécifiques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.2>
+            <Competence_CT-SI.3 S_intitule="Mettre au point un protocole expérimental (formuler des hypothèses, hiérarchiser, sélectionner, expliciter, contextualiser).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.3>
+            <Competence_CT-SI.4 S_intitule="Manipuler et expérimenter.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.4>
+            <Competence_CT-SI.5 S_intitule="Simuler à partir d’un modèle donné.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.5>
+            <Competence_CT-SI.6 S_intitule="Analyser les résultats obtenus.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.6>
+            <Competence_CT-SI.7 S_intitule="Identifier un principe scientifique en rapport avec le fonctionnement d’un système.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.7>
+            <Competence_CT-SI.8 S_intitule="Matérialiser un support d’expérimentation.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT-SI.8>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT-SI>
+        <Competence_CT S_intitule="S'approprier des outils et des méthodes">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_CT.1 S_intitule="Exprimer une réflexion, un principe, une idée, une solution technique.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT.1>
+            <Competence_CT.2 S_intitule="Utiliser des outils de communication.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT.2>
+            <Competence_CT.3 S_intitule="Rendre compte, sous forme écrite ou orale, des résultats d’une analyse, d’une expérience, d’une recherche et d’une réflexion.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_CT>
+      </d_dicCompetences>
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Savoir(s)$m">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicSElemAssocies />
+      <d_dicSavoirs />
+      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
+    </Savoirs_S>
+  </d_dicoSavoirs>
+  <d_domaines>
+    <l_M S_00="Champ des matériaux et des structures" S_01="innovations associées aux nouveaux matériaux et aux systèmes techniques, structures et constructions associées, aux impacts environnementaux dus aux matériaux et aux principes de transformation et de mise en forme retenus" S_02="">
+      <l_03 I_00="0" I_01="128" I_02="0" />
+    </l_M>
+    <l_E S_00="Champ de l'énergie" S_01="innovations associées aux systèmes de transformation, de stockage et de régulation de l’énergie, à l’efficacité énergétique, aux économies d’énergie, aux impacts environnementaux associés, etc." S_02="">
+      <l_03 I_00="255" I_01="0" I_02="0" />
+    </l_E>
+    <l_I S_00="Champ de l’information" S_01="innovations associées aux systèmes d’acquisition, de numérisation, de traitement, de communication, de stockage et de restitution de voix, images et informations, ou bien associées au virtuel, aux réseaux, etc." S_02="">
+      <l_03 I_00="0" I_01="102" I_02="204" />
+    </l_I>
+  </d_domaines>
+  <d_effectifs>
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 I_00="77" I_01="77" I_02="179" />
+    </l_C>
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="C" S_05="O">
+      <l_03 I_00="102" I_01="127" I_02="102" />
+    </l_G>
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="G" S_05="N">
+      <l_03 I_00="179" I_01="77" I_02="77" />
+    </l_D>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="G" S_05="N">
+      <l_03 I_00="77" I_01="127" I_02="127" />
+    </l_E>
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
+      <l_03 I_00="127" I_01="77" I_02="127" />
+    </l_P>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="" S_05="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_AP S_00="E" S_01="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_C S_00="C" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_SA S_00="C" S_01="G" />
+    <l_SS S_00="C" />
+    <l_E S_00="C" />
+    <l_R />
+    <l_S />
+  </d_effectifsSeance>
+  <d_ensSpecif />
+  <d_ensSpecifSeance>
+    <l_ED />
+    <l_AP />
+    <l_P />
+    <l_C />
+    <l_TD />
+    <l_SA />
+    <l_SS />
+    <l_E />
+    <l_R />
+    <l_S />
+  </d_ensSpecifSeance>
+  <d_horsClasse />
+  <d_labels>
+    <l_SEQINT S_00="Problématiques proposées" S_01="Problématiques proposées" />
+    <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
+    <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+  </d_labels>
+  <l_listCompetences S_00="S" />
+  <l_listProblematiques>
+    <l_00 />
+    <l_01 />
+    <l_02 />
+    <l_03 />
+    <l_04 S_00="Comment améliorer le quotidien d’une personne handicapée ?" />
+    <l_05 />
+  </l_listProblematiques>
+  <l_listSavoirs S_00="S" />
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" S_03="EF" S_04="ES" S_05="AE" S_06="EC" />
+  <l_listeDomaines S_00="M" S_01="E" S_02="I" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeEnsSpecif />
+  <l_listeNivTaxo />
+  <l_listeSpecialites />
+  <l_listeSystemes S_00="PE" />
+  <l_listeThematiques S_00="MPB" S_01="STCONS" S_02="OBC" S_03="PASS" S_04="COMPH" S_05="ASPERFH" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
+  <l_listeTypeHorsClasse />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_nivTaxo />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="3" S_00="2_nde" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Défi de fin d'année">
+      <d_attributs>
+        <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="" />
+        <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, thématique, concours…" S_02="" S_03="" />
+        <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="" />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
+        <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Découpage du projet" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_ S_00="" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo />
+      <d_grilles />
+      <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties />
+      <d_parties />
+      <l_periode I_00="3" />
+      <d_phases>
+        <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Ana" S_01="Rea" />
+        <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
+      </d_posRevues>
+      <d_taches />
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_C S_00="Cours" S_01="Cours" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_TD>
+    <l_SA S_00="Bilan" S_01="Bilan d'Activité ou de Séance" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SA>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+  </d_seances>
+  <d_specialite />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+  </d_systemes>
+  <d_thematiques>
+    <l_MPB S_00="Mobilité" S_01="la mobilité des personnes et des biens" S_02="">
+      <l_03 I_00="255" I_01="255" I_02="0" />
+    </l_MPB>
+    <l_STCONS S_00="Structures et constructions" S_01="les structures et les constructions" S_02="">
+      <l_03 I_00="153" I_01="204" I_02="255" />
+    </l_STCONS>
+    <l_OBC S_00="Objets connectés" S_01="les objets connectés" S_02="">
+      <l_03 I_00="255" I_01="128" I_02="128" />
+    </l_OBC>
+    <l_PASS S_00="Assistance santé sécurité" S_01="les produits d’assistance pour la santé et la sécurité" S_02="">
+      <l_03 I_00="0" I_01="255" I_02="0" />
+    </l_PASS>
+    <l_COMPH S_00="Compensation du handicap" S_01="la compensation du handicap" S_02="">
+      <l_03 I_00="255" I_01="153" I_02="0" />
+    </l_COMPH>
+    <l_ASPERFH S_00="Augmenation des performances" S_01="l’augmentation ou le suivi des performances du corps humain" S_02="">
+      <l_03 I_00="150" I_01="150" I_02="150" />
+    </l_ASPERFH>
+  </d_thematiques>
+  <l_tr_com />
+</Referentiel>

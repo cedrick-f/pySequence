@@ -164,8 +164,10 @@ class Options:
 #                    
 #                else:
 #                    config.set(titre, opt[0], opt[1])
-        
-        config.write(open(self.fichierOpt,'w', encoding="utf-8"))
+        try:
+            config.write(open(self.fichierOpt,'w', encoding="utf-8"))
+        except:
+            print("Erreur d'enregistrement des options")
 
 
 

@@ -249,7 +249,7 @@ from xhtml2pdf import pisa
 #from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 #    print "genererFicheValidationHTML"
-    with open(nomFichierHTML,'r') as f:
+    with open(nomFichierHTML,'r', encoding='utf-8') as f:
         sourceHtml = f.read()
 
 
@@ -298,7 +298,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     
 #    print champs['TCH']
     
-    for code, val in list(champs.items()):
+    for code, val in champs.items():
         sourceHtml = sourceHtml.replace("[["+code+"]]", val)
     
     sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(util_path.PATH, r"..", DOSSIER_REF))

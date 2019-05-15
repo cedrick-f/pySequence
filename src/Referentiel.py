@@ -1487,7 +1487,7 @@ class Referentiel(XMLelem):
         if "Fonctions" in wb.sheet_names():
             sh_va = wb.sheet_by_name("Fonctions")
             self.nomFonctions =   sh_va.cell(0,0).value
-            self.nomTaches = sh_va.cell(0,5).value
+#             self.nomTaches = sh_va.cell(0,5).value
             self.dicFonctions = getArbreFonc(sh_va, list(range(2, sh_va.nrows)), 0, prems = True, debug = False)
 #            print "dicFonctions", self.dicFonctions
 
