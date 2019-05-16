@@ -223,9 +223,7 @@ SSCALE = 1.0 # Facteur d'échelle à appliquer à toutes les dimensions des widg
 DEBUG = "beta" in version.__version__
 
 
-# Gestion des messages d'erreur
-if not DEBUG:
-    import error
+
 
 ####################################################################################
 #
@@ -311,8 +309,8 @@ class AppelEvent(wx.PyCommandEvent):
         return self.file
     
     
-def Get():
-    return
+# def Get():
+#     return
 ####################################################################################
 #
 #   Quelques flags
@@ -4087,29 +4085,29 @@ class FenetreProjet(FenetreDocument):
 #        self.fiche.enCours = False
 
 
-class ThreadDraw(threading.Thread):
-    def __init__(self):
-        super(ThreadDraw, self).__init__()
-        self._stop_event = threading.Event()
-        self.ctx = None
-        self.doc = None
-
-    def set_param(self,  ctx, doc):
-        self.ctx = ctx
-        self.doc = doc
+# class ThreadDraw(threading.Thread):
+#     def __init__(self):
+#         super(ThreadDraw, self).__init__()
+#         self._stop_event = threading.Event()
+#         self.ctx = None
+#         self.doc = None
+# 
+#     def set_param(self,  ctx, doc):
+#         self.ctx = ctx
+#         self.doc = doc
+#         
+#     def stop(self):
+#         self._stop_event.set()
+# 
+#     def stopped(self):
+#         return self._stop_event.is_set()
+#         
+#     def run(self):
+#         if self.doc is not None:
+#             self.doc.DefinirCouleurs()
+#             self.doc.draw.Draw(self.ctx, self.doc)
         
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-        
-    def run(self):
-        if self.doc is not None:
-            self.doc.DefinirCouleurs()
-            self.doc.draw.Draw(self.ctx, self.doc)
-        
-threadDraw = ThreadDraw()
+# threadDraw = ThreadDraw()
 
 ########################################################################################
 #
@@ -19763,5 +19761,7 @@ class CairoStaticBitmap(wx.Panel):
         
 import pysequence
 
-
+# Gestion des messages d'erreur
+if not DEBUG:
+    import error
 

@@ -50,8 +50,11 @@ print(sys.getdefaultencoding())
 
 
 from version import __version__, GetVersion_cxFreeze, __mail__, __appname__
+
+import cairocffi
+# import cairocffi.ffi_build
     
-    
+
 ## Remove the build folder, a bit slower but ensures that build contains the latest
 import shutil
 shutil.rmtree("build", ignore_errors=True)
@@ -122,8 +125,8 @@ if sys.platform == "linux2":
 build_exe_options = {'build_exe': 'build/bin',
                      'include_msvcr': True,
                      'add_to_path': True,
-                     "packages": ["reportlab",'encodings', 'asyncio'\
-                                  ],#"os", "xhtml2pdf","html5lib", "enchant", , "wx.lib.pdfwin", "PIL"], 
+                     "packages": ["reportlab",'encodings', 'asyncio', '_cffi_backend'\
+                                  ],#,'cairocffi._generated.ffi' \#"os", "xhtml2pdf","html5lib", "enchant", , "wx.lib.pdfwin", "PIL"], 
 #                      "zip_includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
                      "optimize" : 1,
