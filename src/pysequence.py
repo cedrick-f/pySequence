@@ -12720,7 +12720,9 @@ class Personne(ElementBase):
 
     ######################################################################################  
     def __eq__(self, personne):
-        return self.GetNom() == personne.GetNom() and self.GetPrenom() == personne.GetPrenom()
+        return isinstance(personne, Personne) \
+            and self.GetNom() == personne.GetNom() \
+            and self.GetPrenom() == personne.GetPrenom()
     
     
     ######################################################################################  

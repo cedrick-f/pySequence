@@ -73,7 +73,7 @@ def MyExceptionHook(typ, value, traceb):
     def shorten(match):
         return 'File "{}"'.format(os.path.basename(match.group(1)))
     lines = [re.sub(r'File "([^"]+)"', shorten, line) for line in lines]
-    
+    lines.append('{}: {}'.format(typ.__name__, value))
     
 #     SendBugReport("%0A".join(traceback.format_exception(typ, value, traceb)))
     SendBugReport(lines)
@@ -176,8 +176,9 @@ def SendBugReport(lines_tb):
                 for line in file_error.readlines():
                     body+=line+"%0A"
         else:
+            lines_tb = [line.replace("\n", "%0A") for line in lines_tb]
             body+="%0A".join(lines_tb)
-        body += "==============================================%0A%0A"
+        body += "%0A==============================================%0A%0A"
         
 #         sys.stdout.close()
 #         file_log = open(util_path.LOG_FILE,'r')
