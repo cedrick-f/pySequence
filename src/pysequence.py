@@ -7269,7 +7269,8 @@ class ElementProgression():
     
     ######################################################################################  
     def __eq__(self, lien):
-        return os.path.normpath(self.path) == os.path.normpath(lien.path)
+        return isinstance(lien, ElementProgression) \
+            and os.path.normpath(self.path) == os.path.normpath(lien.path)
     
     
     ######################################################################################  
@@ -10822,7 +10823,6 @@ class Tache(ElementAvecLien, ElementBase):
         self.image = None
         
         # Les autres données
-        
 #        self.panelParent = panelParent
         
         self.phase = phaseTache
@@ -10839,13 +10839,12 @@ class Tache(ElementAvecLien, ElementBase):
             if phaseTache in TOUTES_REVUES_SOUT:
                 self.indicateursMaxiEleve = self.IndicateursEleveDefaut()
                 
-        
-        
-        
+    
+    ######################################################################################  
     def __eq__(self, tache):
-        if tache == None:
-            return False
-        return self.code == tache.code and self.ordre == tache.ordre
+        return isinstance(tache, Tache) \
+            and tache is not None \
+            and self.code == tache.code and self.ordre == tache.ordre
   
     
     ######################################################################################  
@@ -12923,7 +12922,7 @@ class Personne(ElementBase):
 #   Classe définissant les propriétés d'un élève
 #
 ####################################################################################
-class Eleve(Personne, ElementBase):
+class Eleve(Personne):
     def __init__(self, doc, ident = 0, nom = "", prenom = ""):
         
 #         self.titre = u"élève"
@@ -12935,6 +12934,7 @@ class Eleve(Personne, ElementBase):
             self.grille[k] = Lien(typ = 'f')
         
         Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 550*SSCALE)
+        Grammaire.__init__(self, self.GetReferentiel().labels["ELEVES"][0])
         
         self.titre = self.GetReferentiel().labels["ELEVES"][2].sing_()
  
@@ -14717,6 +14717,7 @@ class Prof(Personne):
         self.referent = False
         
         Personne.__init__(self, doc, ident)
+        Grammaire.__init__(self, "Professeur(s)$m")
         
     ######################################################################################  
     def GetAvatar(self):
