@@ -732,24 +732,22 @@ class Referentiel(XMLelem):
         self.listSavoirs = []
         self.dicoSavoirs = {}
 
+
         #
         # Compétences
         #
         self.listCompetences = []
         self.dicoCompetences = {}
         
-        
-#        self.dicCompetences_prj = {}
-#        self.dicIndicateurs_prj = {}
-#        self.dicPoidsIndicateurs_prj = {}
-#        self.dicLignesIndicateurs_prj = {}
 
         #
         # Fonctions/Tâches
         #
-        self.nomFonctions = "Fonction(s)$f"    # nom donnés aux Fonctions : "Fonctions", ...
+        self.fonctions = None   # Type Fonctions
+#         self.nomFonctions = "Fonction(s)$f"    # nom donnés aux Fonctions : "Fonctions", ...
+#         self.dicFonctions = {}
         self.nomTaches = "Tâche(s)$f"          # nom donnés aux Tâches : "Tâches", ...
-        self.dicFonctions = {}
+
         
         
         #
@@ -1164,58 +1162,7 @@ class Referentiel(XMLelem):
 
 
         
-        ###########################################################
-        def getArbreFonc(sh, rng, col, prems = False, debug = False):
-            """ Construit la structure en arbre :
-                    utilisé pour les Fonctions
-                (fonction récursive)
-                
-                <rng> : liste des lignes
-                <col> : numéro de la colonne traitée (=0 au lancement)
-                <prems> : racine de l'arbre (=True au lancement)
-                <fonction> : cas spécifique du traitement des Fonctions
-            """
-            dic = {}
-            
-            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
-            
-            # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
-            lstLig = [l  for l in rng if sh.cell(l,col).value != ""]
-            if debug: print("  **",lstLig)
-            
-            for i, l in enumerate(lstLig):
-                code = str(sh.cell(l,col).value)
-                intitule = str(sh.cell(l,col+1).value)
-                
-                if debug: print("-> ",l, code, intitule)
-                
-                # Toutes les lignes entre chaque code
-                if i < len(lstLig)-1:
-                    ssRng = list(range(l+1, lstLig[i+1]))
-                else:
-                    ssRng = list(range(l+1, rng[-1]+1))
-                if debug: print("   ", ssRng)
-
-                # Il y a encore des items à droite ...
-                if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != ""] != []:
-
-                    dic[code] = [intitule, getArbreFonc(sh, ssRng, col+1, debug = debug)]
-                    lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(l,co).value != ""]
-#                        print "   lstComp1 =", lstComp
-                    dic[code].append(lstComp)
-                        
-
-                # Il n'y a plus d'item à droite => Indicateur()
-                else:
-                    dic[code] = [intitule, []]
-                    for ll in [l] + ssRng:
-                        lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(ll,co).value != ""]
-#                            print "   lstComp2 =", lstComp
-                        dic[code][1] = lstComp
-            
-            if debug: print() 
-            return dic
-
+        
         
         ###########################################################
         def listItemCol(sh, col, rng):
@@ -1486,9 +1433,15 @@ class Referentiel(XMLelem):
         #
         if "Fonctions" in wb.sheet_names():
             sh_va = wb.sheet_by_name("Fonctions")
-            self.nomFonctions =   sh_va.cell(0,0).value
-#             self.nomTaches = sh_va.cell(0,5).value
-            self.dicFonctions = getArbreFonc(sh_va, list(range(2, sh_va.nrows)), 0, prems = True, debug = False)
+            
+            
+            self.fonctions = Fonctions(sh_va.cell(0,0).value)
+            self.fonctions.importer(sh_va, self)
+            
+            # ancienne méthode
+#             self.nomFonctions =   sh_va.cell(0,0).value
+# #             self.nomTaches = sh_va.cell(0,5).value
+#             self.dicFonctions = getArbreFonc(sh_va, list(range(2, sh_va.nrows)), 0, prems = True, debug = False)
 #            print "dicFonctions", self.dicFonctions
 
 
@@ -1717,7 +1670,7 @@ class Referentiel(XMLelem):
                     "nomSpe",
                     "nomCI",
                     "nomPb",
-                    "nomFonctions",
+#                     "nomFonctions",
                     "nomTaches",
                     "nomDemarches",
                     "nomSeances",
@@ -2026,6 +1979,8 @@ class Referentiel(XMLelem):
         if code[0] == "B" and self.tr_com != []: # Compétence de tronc commun
             r = REFERENTIELS[self.tr_com[0]]
             r.dicoCompetences["S"].getPathCompetence(path, code[1:])
+        elif code[0] == "F" and self.fonctions is not None:
+            self.fonctions.getPathFonction(path, code[1:])
         else:
             self.dicoCompetences[code[0]].getPathCompetence(path, code[1:])
 #         print(path)
@@ -2038,6 +1993,8 @@ class Referentiel(XMLelem):
         if code[0] == "B" and self.tr_com != []: # Compétence de tronc commun
             r = REFERENTIELS[self.tr_com[0]]
             return r.dicoCompetences["S"].getCompetence(code[1:])
+        elif code[0] == "F" and self.fonctions is not None:
+            self.fonctions.getFonction(code[1:])
         else:
             return self.dicoCompetences[code[0]].getCompetence(code[1:])
 
@@ -2050,6 +2007,8 @@ class Referentiel(XMLelem):
         if code[0] == "B" and self.tr_com != []: # Compétence de tronc commun
             r = REFERENTIELS[self.tr_com[0]]
             return r.dicoCompetences["S"].getCompetenceParente(code[1:])
+        elif code[0] == "F" and self.fonctions is not None:
+            self.dicoCompetences[code[0]].getFonctionParente(code[1:])
         else:
             return self.dicoCompetences[code[0]].getCompetenceParente(code[1:])
 
@@ -2104,19 +2063,7 @@ class Referentiel(XMLelem):
         return lstComp
     
     
-    #########################################################################
-    def getToutesCompetencesDict(self):
-        """ Renvoie sous la forme {code : Referentiel.Competences, }
-            toutes les competences concernés par cet enseignement
-        """
-        dicComp = {c: self.dicoCompetences[c] for c in self.listCompetences}
-        if self.tr_com != []:
-            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
-            r = REFERENTIELS[self.tr_com[0]]
-            dicComp["B"] = r.dicoCompetences["S"]
-            dicComp.update({c: r.dicoCompetences[c] for c in r.dicoCompetences.keys() if c != "S"})
-            
-        return dicComp
+    
     
     
     #########################################################################
@@ -2139,6 +2086,22 @@ class Referentiel(XMLelem):
         dic = self.getDicTousSavoirs()
         return dic[code].nomGenerique
     
+    #########################################################################
+    def getToutesCompetencesDict(self):
+        """ Renvoie sous la forme {code : Referentiel.Competences, }
+            toutes les competences concernés par cet enseignement
+        """
+        dicComp = {c: self.dicoCompetences[c] for c in self.listCompetences}
+        if self.tr_com != []:
+            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+            r = REFERENTIELS[self.tr_com[0]]
+            dicComp["B"] = r.dicoCompetences["S"]
+            dicComp.update({c: r.dicoCompetences[c] for c in r.dicoCompetences.keys() if c != "S"})
+        
+        if self.fonctions is not None:
+            dicComp.update({"F" : self.fonctions})
+        return dicComp
+    
     
     #########################################################################
     def getDicToutesCompetences(self):
@@ -2151,7 +2114,10 @@ class Referentiel(XMLelem):
             r = REFERENTIELS[self.tr_com[0]]
             dicComp.update({"B": r.dicoCompetences["S"]})
             dicComp.update({c : r.dicoCompetences[c] for c in list(r.dicoCompetences.keys()) if c != "S"})
-             
+            
+        if self.fonctions is not None:
+            dicComp.update({"F" : self.fonctions})
+            
         return dicComp
     
     #########################################################################
@@ -3987,6 +3953,264 @@ class Savoirs(XMLelem):
 
 
 
+
+#################################################################################################################################
+#
+#        Ensemble de Compétences
+#
+#################################################################################################################################
+class Fonctions(XMLelem):
+    def __init__(self, nomGenerique = "Fonction(s)$f", codeDiscipline = "Tec", nomDiscipline = "", abrDiscipline = ""):
+        self._codeXML = "Fonctions"
+        self.nomGenerique = nomGenerique
+        self._nom = Grammaire(nomGenerique)
+        self.codeDiscipline = codeDiscipline
+        self.nomDiscipline = nomDiscipline          # Nom discipline
+        self.abrDiscipline = abrDiscipline          # Abréviation discipline
+        
+        self.dicFonctions = {}        # Dictionnaire de Compétences (arborescence)
+        self.obj = self.pre = True
+        self.nivObj = 0         # Niveau maximum d'apparition sur la fiche
+        
+        self.asso_type = []     # liste (2 maxi) de codes d'éléments associés aux compétences
+                                # peut être : Savoirs, Competence, liste de Th ou de Dom
+        self.asso_contexte = [] # O ou P
+        
+
+
+#     #########################################################################
+#     def __repr__(self):
+#         competences = u"\n".join([c.__repr__() for c in self.dicCompetences.values()])
+#         return "Referentiel.Competences"# + competences# str(self.obj)+str(self.pre)
+    
+    ###########################################################
+    def compacterListeCodes(self, lst):
+        for k, s in self.dicFonctions.items():
+            s.compacterListeCodes(lst)
+        
+            if set(self.dicFonctions.keys()).issubset(lst):
+                lst = set(lst).difference(self.dicFonctions.keys())
+                lst.add(k)
+    
+    #########################################################################
+    def importer(self, feuille, ref, debug = False):
+        
+        ###########################################################
+        def getArbreFonc(sh, rng, col, prems = False, debug = False):
+            """ Construit la structure en arbre :
+                    utilisé pour les Fonctions
+                (fonction récursive)
+                
+                <rng> : liste des lignes
+                <col> : numéro de la colonne traitée (=0 au lancement)
+                <prems> : racine de l'arbre (=True au lancement)
+                <fonction> : cas spécifique du traitement des Fonctions
+            """
+            dic = {}
+            
+            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
+            
+            # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
+            lstLig = [l  for l in rng if sh.cell(l,col).value != ""]
+            if debug: print("  **",lstLig)
+            
+            for i, l in enumerate(lstLig):
+                code = str(sh.cell(l,col).value)
+                intitule = str(sh.cell(l,col+1).value)
+                
+                if debug: print("-> ",l, code, intitule)
+                
+                # Toutes les lignes entre chaque code
+                if i < len(lstLig)-1:
+                    ssRng = list(range(l+1, lstLig[i+1]))
+                else:
+                    ssRng = list(range(l+1, rng[-1]+1))
+                if debug: print("   ", ssRng)
+
+                # Il y a encore des items à droite ...
+                if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != ""] != []:
+
+                    dic[code] = [intitule, getArbreFonc(sh, ssRng, col+1, debug = debug)]
+                    lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(l,co).value != ""]
+#                        print "   lstComp1 =", lstComp
+                    dic[code].append(lstComp)
+                        
+
+                # Il n'y a plus d'item à droite => Indicateur()
+                else:
+                    dic[code] = [intitule, []]
+                    for ll in [l] + ssRng:
+                        lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(ll,co).value != ""]
+#                            print "   lstComp2 =", lstComp
+                        dic[code][1] = lstComp
+            
+            if debug: print() 
+            return dic
+
+        self.dicFonctions = getArbreFonc(feuille, list(range(2, feuille.nrows)), 0, prems = True, debug = False)
+
+    
+    #########################################################################
+    def postTraiter(self):
+        """ 
+        """
+#         print("postTraiter")
+
+        self._nom = Grammaire(self.nomGenerique)
+        
+        
+    ####################################################################################
+    def GetDicFiltre(self, filtre = None, dic = None):
+        """ Renvoie le dictionnaire représentant l'arbre
+            après passage à travers le filtre
+            
+            Pas de filtre pour les fonctions
+        """
+        
+        return self.dicFonctions
+    
+    
+    #########################################################################
+    def getPathFonction(self, path, comp):
+#         print(self.dicFonctions)
+        if comp in self.dicFonctions.keys():
+            path.append(comp)
+            return
+        for cod, dic in self.dicFonctions.items():
+            if comp in dic[1].keys():
+                path.append(cod)
+                path.append(comp)
+                return
+            
+    
+    
+    #########################################################################
+    def getFonction(self, comp):
+#         print "getCompetence", comp
+        def getComp(dic):
+#             print "   ", dic
+            if comp in dic.keys():
+                return dic[comp]
+            else:
+                for competence in dic.values():
+                    if comp in competence[1].keys():
+                        return competence[1][comp]
+#                     c = getComp(competence.sousComp)
+#                     if c is not None: 
+#                         return c
+ 
+        return getComp(self.dicFonctions)
+        
+        
+    #########################################################################
+    def getCompetenceParente(self, comp):
+        """ Renvoie le CODE de la compétence "parente" de celle de code <comp>
+        """
+        def getComp(dic):
+            for par, competence in dic.items():
+                if comp in competence.sousComp.keys():
+                    return par
+                else:
+                    return getComp(competence.sousComp)
+ 
+        return getComp(self.dicFonctions)
+    
+    
+#     #########################################################################
+#     def getCompetenceEtGroupe(self, comp):
+# #         print "getCompetenceEtGroupe", comp
+#         grp = []
+#         def getComp(dic):
+# #             print "   ", dic
+#             if comp in list(dic.keys()):
+#                 return dic[comp]
+#             else:
+#                 for k, competence in list(dic.items()):
+#                     c = getComp(competence.sousComp)
+#                     if c is not None:
+#                         grp.insert(0, (k,competence))
+#                         return c
+#         grp.append((comp, getComp(self.dicCompetences)))
+# #         print ">>>", grp
+#         return grp
+
+#     #########################################################################
+#     def getCompetenceEtGroupe(self, comp):
+#         grp = [None]
+#         def getComp(dic, prem = False):
+# #             print "   ", dic
+#             if comp in dic.keys():
+#                 if prem:
+#                     grp[0] = dic[comp]
+#                 return dic[comp]
+#             else:
+#                 for k, competence in dic.items():
+#                     if prem:
+#                         grp[0] = dic[k]
+#                     c = getComp(competence.sousComp)
+#                     
+#                     if c is not None:
+#                         return c
+#         cmp = getComp(self.dicCompetences, prem = True)
+#         return grp[0], cmp
+#     
+    
+    #########################################################################
+    def get2Niveaux(self):
+        """
+        :return: une liste de listes (2 premiers niveaux)
+        
+        format :
+        [['A', ['A1', 'A2', 'A3']],
+        ['B', ['B1', 'B2']],
+        ...]
+        """
+        lst0 = []
+        for k0, v0 in list(self.dicFonctions.items()):
+            lst1 = []
+            for k1, v1 in list(v0.sousComp.items()):
+                lst1.append(k1)
+#             lst1.sort()
+            lst1 = constantes.trier(lst1)
+            lst0.append([k0, lst1])
+#         lst0 = constantes.trier(lst0)
+        lst0.sort(key = lambda c:c[0])
+#         lst0.sort(key = lambda c:c[0])
+        return lst0
+            
+    #########################################################################
+    def getProfondeur(self):
+        for k0, v0 in list(self.dicFonctions.items()):
+            for k1, v1 in list(v0.sousComp.items()):
+                if len(v1.sousComp) > 0:
+                    return 3
+                else:
+                    return 2
+            return 1
+
+#     #########################################################################
+#     def getElemAssocies(self, elem_filtre = None, contexte = None):
+#         """ Renvoie un dictionnaire :
+#             {code compétence : [codes d'éléments associés]}
+#             
+#             
+#             self.asso_type = []      # liste (2 maxi) de codes d'éléments associés aux compétences
+#                                      # peut être : Savoirs, Competence, liste de Th ou de Dom
+#             self.asso_contexte = []  # O ou P ou OP
+#         """
+#         
+#         if elem_filtre in self.asso_type:
+#             indice = self.asso_type.index(elem_filtre) # 0 ou 1 (2 colonnes)
+#         else:
+#             return {}
+#         if not contexte in self.asso_contexte[indice]:
+#             return {}
+#         dic = {}
+#         for code, sc in self.dicCompetences.items():
+#             lst = sc.elemAssocies[indice]
+#             dic[code] = lst
+#             sc.getElemAssocies(dic, indice)
+#         return dic
 
             
 objets = {"Indicateur" : Indicateur,

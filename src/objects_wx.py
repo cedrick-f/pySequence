@@ -9713,8 +9713,8 @@ class PanelPropriete_Competences(PanelPropriete):
     def construire(self, compRef):
         """ Création de l'arbre
         """
-        if self.code == "Fct":
-            self.arbre = ArbreFonctionsPrj(self, self.code, self.compFiltre,
+        if self.code == "F": # Cas particulier des Fonctions
+            self.arbre = ArbreFonctionsPrj(self, self.code, compRef,
                                            self, agwStyle = HTL.TR_NO_HEADER)
             
         else:
@@ -9782,7 +9782,7 @@ class PanelPropriete_Competences(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         """ On coche tout ce qui doit l'être dans les différents arbres
         """
-#         print u"MiseAJour compétences"
+#         print("MiseAJour compétences")
 #        print "  ", self.arbre.items.keys()
 #        print "   ", self.competence.competences
 
@@ -10208,10 +10208,11 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.dicComp = {}
         for c in doc.obj["C"].competences:
-            if c[0] in self.dicComp.keys():
-                self.dicComp[c[0]].append(c[1:])
-            else:
-                self.dicComp[c[0]] = [c[1:]]
+            if c[0] != 'F':
+                if c[0] in self.dicComp.keys():
+                    self.dicComp[c[0]].append(c[1:])
+                else:
+                    self.dicComp[c[0]] = [c[1:]]
         # reste déplacé dans AdapterAuType()
         
         
@@ -15159,7 +15160,7 @@ class ArbreCompetences(HTL.HyperTreeList):
             :parent: 
             :typ:
             :compFiltre: dictionnaire des compétences à afficher dans l'abre (sortie de GetDicFiltre())
-            :competencesRef: type referentiel.Competences
+            :competencesRef: type referentiel.Competences (ou referentiel.Fonctions)
             :pp: PanelPropriete contenant les méthodes AjouterEnlever...
         """
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS,
@@ -15188,7 +15189,8 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.CreerColonnes() # Pour projet uniquement
         
         # Séance ==> colonne pour Indicateurs
-        if isinstance(self.pp, PanelPropriete_Seance):
+        if isinstance(self.pp, PanelPropriete_Seance) \
+          and isinstance(competencesRef, Referentiel.Competences):
             self.AddColumn(competencesRef._nomIndic.Plur_())
             self.Bind(wx.EVT_TEXT, self.OnTextIndic)
         
@@ -16063,43 +16065,44 @@ class ArbreFonctionsPrj(ArbreCompetences):
                             CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
                             CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD):
 
-
-        ArbreCompetences.__init__(self, parent, typ, None, competences, pptache,
+        
+        ArbreCompetences.__init__(self, parent, typ, None, competences, pp = pptache,
                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         
-          
+        
 #         ArbreCompetences.__init__(self, parent, ref, pptache,
 #                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
-        ref = self.competence.GetReferentiel()
-        self.SetColumnText(0, ref.nomFonctions + " et " + ref.nomTaches)
+        ref = parent.GetDocument().GetReferentiel()
+        self.SetColumnText(0, competences._nom.Plur_() + " et " + ref._nomTaches.Plur_())
         
       
 
 
     ####################################################################################
-    def Construire(self, branche = None, dic = None, ref = None):
+    def Construire(self, branche = None, dic = None):
 #        print "Construire fonctions",
-        if ref == None:
-            ref = self.ref
+        
 #        prj = self.pptache.tache.GetProjetRef()
         
         if dic == None: # Construction de la racine
-            dic = ref.dicFonctions
+            dic = self.competencesRef.dicFonctions
         if branche == None:
             branche  = self.root
 #        print dic
 #        
 #        print "   ", self.GetColumnCount()
-        for c in range(1, self.GetColumnCount()):
-            self.RemoveColumn(1)
+#         for c in range(1, self.GetColumnCount()):
+#             self.RemoveColumn(1)
 #        print "  ", dic
-        for i, c in enumerate(sorted(ref.dicCompetences.keys())):
-            self.AddColumn("")
-            self.SetColumnText(i+1, c)
-            self.SetColumnAlignment(i+1, wx.ALIGN_CENTER)
-            self.SetColumnWidth(i+1, 30*SSCALE)
+#         for i, c in enumerate(sorted(ref.dicCompetences.keys())):
+#             self.AddColumn("")
+#             self.SetColumnText(i+1, c)
+#             self.SetColumnAlignment(i+1, wx.ALIGN_CENTER)
+#             self.SetColumnWidth(i+1, 30*SSCALE)
+            
+        
             
 #        tache = self.pptache.tache
             
@@ -16115,7 +16118,7 @@ class ArbreFonctionsPrj(ArbreCompetences):
                 v = d[k]
                 if len(v) > 1 and type(v[1]) == dict:
                     if debug: print("   ", v[0])
-                    b = self.AppendItem(br, k+" "+v[0])
+                    b = self.AppendItem(br, k+" "+v[0], data = k)
                     self.items[k] = b
                     const(v[1], b, debug = debug)
                         
@@ -16126,7 +16129,7 @@ class ArbreFonctionsPrj(ArbreCompetences):
                     if debug: print("   prem's 2", v[1])
                     
                     
-                    for c, p in enumerate(sorted(ref.dicCompetences.keys())):
+                    for c, p in enumerate(sorted(self.competencesRef.dicFonctions.keys())):
                         if p in v[1]:
 #                    for i, p in enumerate(v[1]):
 #                        if p == self.GetColumnText(i+1):
@@ -16159,7 +16162,22 @@ class ArbreFonctionsPrj(ArbreCompetences):
             
     ####################################################################################
     def OnItemCheck(self, event, item = None):
-        pass
+#         print("OnItemCheck Fct")
+        event.Skip()
+        
+        self.uncheckParentsPasPleins(self.root)
+
+        lstc, lstu = [], []
+        self.getListItemCheckedUnchecked(self.root, lstc, lstu)
+        self.pp.AjouterEnleverCompetences(lstc, lstu, self.competencesRef)
+        
+        self.Refresh()                
+        wx.CallAfter(self.pp.SetCompetences)
+
+
+
+
+
 
 
 

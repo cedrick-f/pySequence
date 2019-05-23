@@ -855,9 +855,9 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     lstCoulC = []
     ref = seq.GetReferentiel()
 #     print(seq.GetObjAffiches())
-    ref_tc = None
-    if ref.tr_com != []:
-        ref_tc = REFERENTIELS[ref.tr_com[0]]
+#     ref_tc = None
+#     if ref.tr_com != []:
+#         ref_tc = REFERENTIELS[ref.tr_com[0]]
         
     lstComp = []
     lstTyp = []
@@ -884,7 +884,10 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     for cod, comp in lstComp:    
         disc = comp.codeDiscipline
-        intit = comp.getCompetence(cod).intitule
+        if isinstance(comp, Referentiel.Fonctions):
+            intit = comp.getFonction(cod)[0]
+        else:
+            intit = comp.getCompetence(cod).intitule
         if len(intit) == 0: # Précaution nécessaire car bug : parfois == ""
             intit = " "
         lstTexteC.append(intit)

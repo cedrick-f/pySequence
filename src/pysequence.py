@@ -3157,7 +3157,7 @@ class Sequence(BaseDoc):
 #         if ref.tr_com != []:  # Tronc commun
 #             ref_tc = REFERENTIELS[ref.tr_com[0]]
 #         
-#         print("GetObjAffiches")
+#         print("GetObjAffiches", self.obj["C"].competences)
         for cmp in self.obj["C"].competences: # liste de codes depuis pysequence.Competences
             typ, cod = cmp[0], cmp[1:]
             comp = ref.getToutesCompetencesDict()[typ]
@@ -3317,10 +3317,12 @@ class Sequence(BaseDoc):
             d = self.prerequis
         else:
             d = self.obj
-        
+            
+#         print(" ", d["C"].competences, ref.getToutesCompetencesDict())
         maj = False
         toremove=[]
         for cc in d["C"].competences:
+#             print("  ", cc)
             filtre = self.GetFiltre(ref.getToutesCompetencesDict()[cc[0]], contexte)
             if filtre is not None and not (cc[1:] in filtre):
                 toremove.append(cc)
@@ -8465,7 +8467,10 @@ class Competences(ElementBase):
 # #         if dep is not None:
 #         seq = self.parent
         self.filtre = self.parent.GetFiltre(compRef, self.GetContext())#, self.filtre)
+#         if hasattr(compRef, 'GetDicFiltre'):
         dic_f = compRef.GetDicFiltre(self.filtre)
+#         else:
+#             dic_f = compRef
 #         print("GetPanelPropriete", self.filtre)
         return PanelPropriete_Competences(parent, self, code, dic_f, compRef)
     
@@ -8759,7 +8764,7 @@ class Competences(ElementBase):
             self.branches = {}
             for k, d in lst:
                 if (prerequis and d.pre) or (not prerequis and d.obj):
-#                     print("   ", d, doc)
+#                     print("   ", k, d, doc)
 #                     print("   >>>", doc.GetFiltre(d, ctx))
                     f = doc.GetFiltre(d, ctx,  niveau = 1)
 #                     print("   ", f)
@@ -8782,14 +8787,19 @@ class Competences(ElementBase):
         #
         # Les "Fonctions" (à faire !)
         #
-        if (len(ref.dicFonctions) > 0) and hasattr(self, 'arbre'):
-            self.codeBranche["Fct"] = CodeBranche(self.arbre, "")
-            self.branches["Fct"] = arbre.AppendItem(branche, ref.nomFonctions, 
-                                                   wnd = self.codeBranche[k], 
-                                                   data = (self, "Fct", ref.dicFonctions),
+#         if (len(ref.dicFonctions) > 0) and hasattr(self, 'arbre'):
+        if (ref.fonctions is not None) and hasattr(self, 'arbre'):
+            self.codeBranche["F"] = CodeBranche(self.arbre, "")
+            self.branches["F"] = arbre.AppendItem(branche, ref.fonctions._nom.Plur_(), 
+                                                   wnd = self.codeBranche["F"], 
+                                                   data = (self, "F", ref.fonctions),
                                                    image = self.arbre.images["Fct"])
-            self.codeBranche[k].SetBranche(self.branches["Fct"])
-            self.arbre.SetItemTextColour(self.branches["Fct"], 
+#             self.branches["Fct"] = arbre.AppendItem(branche, ref.nomFonctions, 
+#                                                    wnd = self.codeBranche[k], 
+#                                                    data = (self, "Fct", ref.dicFonctions),
+#                                                    image = self.arbre.images["Fct"])
+            self.codeBranche["F"].SetBranche(self.branches["F"])
+            self.arbre.SetItemTextColour(self.branches["F"], 
                                          couleur.GetCouleurWx(COUL_COMPETENCES))
 
         self.SetCodeBranche()
