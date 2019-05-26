@@ -183,6 +183,13 @@ def reduire_rect(x, y, w, h, f, b):
         Renvoie :
             rectangle réduit
     """
+    if type(b) == str:
+        if b[-2:] == 'px':
+            b = float(b[:-2])  # A revoir !!
+        elif b[-2:] == 'em':
+            b = float(b[:-2]) * f
+        elif b[-1] == '%':
+            b = float(b[:-1])/100 * max(w, h)
     ecart = f * b
     x += ecart
     y += ecart
@@ -197,13 +204,14 @@ def calcul_hauteur(fheight, le, nl):
         :le: coefficient d'inter-ligne
         :nl: nombre de lignes du texte
     """
-    return fheight*nl + fheight*(le-1.0)*(nl-1)
+    return fheight*(le*(nl-1)+1.0)
+#     return fheight*nl + fheight*(le-1.0)*(nl-1)
 
 
 
 def calcul_largeur(ctx, lt):
     """ Calcul la largeur effective d'un texte
-        :lt: lignes du texte
+        :lt: liste des lignes du texte
     """
     return max([ctx.text_extents(t)[2] for t in lt])
 
@@ -240,7 +248,7 @@ def show_text_rect(ctx, texte, rect, \
         print("show_text_rect", texte[:20], rect)
 
     if texte == "":
-        return 0, rect
+        return 0, rect, [texte]
     
     x, y, w, h = rect
     
@@ -250,11 +258,11 @@ def show_text_rect(ctx, texte, rect, \
     if orient == 'v':
         ctx.rotate(-pi/2)
         r = (-y-h, x, h, w)
-        fontSize, r = show_text_rect(ctx, texte, r, va, ha, le, pe, 
+        fontSize, r, lt = show_text_rect(ctx, texte, r, va, ha, le, pe, 
                                            b, fontsizeMinMax = fontsizeMinMax, fontsizePref = fontsizePref,
                                            wrap = wrap, couper = couper, coulBord = coulBord, tracer = tracer)
         ctx.rotate(pi/2)
-        return fontSize, r
+        return fontSize, r, lt
     
     
     
@@ -285,7 +293,7 @@ def show_text_rect(ctx, texte, rect, \
                                      le, pe, b, 
                                      wrap, couper, debug = debug)
     if lt == []:
-        return 0, (x, y, 0,0)
+        return 0, (x, y, 0,0), lt
     if debug: print("   fontSize 1:", fontSize, "H", wh[1])
     W, H = wh
     
@@ -304,7 +312,7 @@ def show_text_rect(ctx, texte, rect, \
             fontSize = fontsizeMax
         
         if not tracer:
-            return fontSize, (x, y, 0, 0)
+            return fontSize, (x, y, 0, 0), []
         
         ctx.set_font_size(fontSize)
         fheight = font_extents(ctx, fontSize)[2]
@@ -314,14 +322,14 @@ def show_text_rect(ctx, texte, rect, \
                                     fontSize, None, va = va, ha = ha, le = le, pe = pe,
                                     coulBord = coulBord, wrap = wrap, couper = couper,
                                     ext = ext)
-        return fontSize, rect_eff
+        return fontSize, rect_eff, [texte]
     
     
     
     if fontSize < fontsizeMin:
         if debug: print("   fontSize mini !", fontSize, fontsizeMin, texte)
         if not tracer or not forcer:
-            return fontsizeMin, (x, y, 0, 0)
+            return fontsizeMin, (x, y, 0, 0), []
         
         ctx.set_font_size(fontsizeMin)
         fheight = font_extents(ctx, fontsizeMin)[2]
@@ -331,7 +339,7 @@ def show_text_rect(ctx, texte, rect, \
                                     fontsizeMin, nLignesMaxi, va = va, ha = ha, le = le, pe = pe,
                                     coulBord = coulBord, wrap = wrap, couper = couper,
                                     ext = ext)
-        return fontsizeMin, rect_eff
+        return fontsizeMin, rect_eff, [texte]
     
     
     
@@ -389,7 +397,7 @@ def show_text_rect(ctx, texte, rect, \
     if debug: print("   fontSize 4 :", fontSize, va)
     
     if not tracer:
-        return fontSize, (x, y, W,H)
+        return fontSize, (x, y, W,H), lt
 
     if debug: print("H", h)
     ctx.set_font_size(fontSize)
@@ -397,7 +405,7 @@ def show_text_rect(ctx, texte, rect, \
                        le, hl, ha = ha, coulBord = coulBord)
 #                          va = va, ha = ha, le = le, pe = pe, coulBord = coulBord)
     
-    return fontSize, (X, Y, W, H)
+    return fontSize, (X, Y, W, H), lt
 
 
 
@@ -2937,10 +2945,177 @@ def font_extents(ctx, fontSize):
 
 
 def egal(x, y, epsilon = 0.1):
-    return abs(y-x) < epsilon
+    """ Test d'égalité de réeles POSITIFS
+        epsilon : en % du plus grand nombre
+    """
+    return abs(y-x) < epsilon*max(x,y)/100
 
 
 def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, 
+                  wrap = True, couper = True, debug = False):
+    """ Ajuste le <texte> dans un rectangle <w,h>
+        
+        le = espacement vertical des lignes (1.0 = "normal") = période en Y
+        (pe = espacement vertical des paragraphes (1.0 = "normal")) pas utilisé !
+        b = écart avec les bords du rectangle (1.0 = 1em)
+        
+        Options :
+            wrap = False : le texte reste sur une ligne
+            couper = False : les mots ne sont jamais coupés
+            
+        Renvoie :
+            liste des lignes
+            taille de la police
+            taille du rectangle effectif (W, H) SANS BORDURE
+    """
+    
+    
+    #
+    # On vérifie dans le cache qu'on n'a pas déja fait le boulot
+    #
+    if texte in CACHE.keys():
+        www, hhh, bbb, lee, pee, lt, fontSize, wh = CACHE[texte]
+#         if www == w and hhh == h and lee == le and pee == pe and bbb == b:
+        if egal(www, w) and egal(hhh, h) and egal(lee, le) and egal(pee, pe) and egal(bbb, b):
+#             print("CACHE", www, hhh, bbb, lee, pee)
+            return lt, fontSize, wh
+            
+    #
+    # Options de débuggage
+    #
+#     debug = True
+#     debug = texte == u'Les projets pédagogiques et technologiques'
+    if debug: print("ajuster_texte", texte, w, h)
+    if debug: print("  couper :", couper)
+
+
+    #
+    # Estimation de l'encombrement du texte (pour une taille de police de 1)
+    # 
+    ctx.set_font_size(1.0 * COEF)
+    fheight = font_extents(ctx, 1.0 * COEF)[2]
+
+    hl = fheight * le
+    if debug: print("  hl", hl)
+    
+    ecart = b * fheight * 2     # écart "total" (gauche + droite)
+    if debug: print("  ecart", ecart)
+    
+    # Ratio du rectangle, écarts compris
+    ratioRect = (w)/(h)
+    if debug: print("  ratio", ratioRect)
+    #
+    # Découpage du texte
+    #
+    i = 0
+#    tps = time.time()
+    if wrap:
+        width0 = ctx.text_extents(texte)[2]
+        if debug: print("width", width0)
+#         width = width / (width/ratioRect + hl - fheight) * hl
+        
+        delta = (1.0-1.0/le)**2 + 4*width0/(ratioRect*hl)
+        width = 0.5*((1.0/le-1.0)+sqrt(delta))*ratioRect*hl
+        if debug: print(">> nl", width/ratioRect/hl+1.0-1/le)
+        if debug: print(">> width", width)
+        
+        pas = ctx.text_extents('a')[2] # Largeur "type"
+        lignes = texte.splitlines()
+        
+        ancienWrap = width
+        ancienLt = []
+        ancienMaxw = 0
+        ancienRapport = 0
+        
+        continuer = True
+        ptes = [[ctx.text_extents(l[:i+1])[2] for i in range(len(l))] for l in lignes] 
+#         lptes = zip(lignes, ptes)
+        i = 0
+        while continuer:
+            lt = []
+            
+            # On découpe le texte
+            i += 1
+            
+            for l, pte in zip(lignes, ptes):
+                lt.extend(wordwrap(l, width, pte, breakLongWords = couper))
+                
+            if lt == []:
+                return lt, 1, 0
+            
+            if debug: print()
+            if debug: print("  lt", lt)
+            
+            # On mémorise la longueur de la plus longue ligne 
+            #    (en caractères et en unité Cairo)
+            maxw = calcul_largeur(ctx, lt)
+            if debug: print("  maxw", maxw)
+            
+            ht = calcul_hauteur(fheight, le, len(lt))
+            W, H = maxw + ecart, ht + ecart        # Echelle "1"
+            fontSize = min(w/W, h/H)
+            rapport = (W/H) / ratioRect
+            if debug: print("  rapports", maxw/ht, "/", ratioRect)
+            if debug: print("  rapport", rapport)
+            if rapport > 1:  # on a passé le cap ...
+                continuer = False
+                
+#                 if i > 1 and abs(ancienRapport-1) < abs(rapport-1):
+                if i > 1 and ancienFontSize > fontSize:
+                    width = ancienWrap
+                    lt = ancienLt
+                    maxw = ancienMaxw
+                    fontSize = ancienFontSize
+ 
+            else:
+                ancienWrap = width
+                
+                if width >= width0:#<= pas:# or (maxw == ancienMaxw and wrap < maxl) :
+                    continuer = False
+                width += pas     
+                ancienFontSize = fontSize
+                ancienLt = lt
+                ancienMaxw = maxw
+                ancienRapport = rapport
+            
+    #
+    # Pas de découpage du texte
+    #
+    else:
+        lt = texte.splitlines()
+        maxw = calcul_largeur(ctx, lt)
+
+#         c = max((maxw+ecart)/w, (hl*len(lt)+ecart)/h)
+#         ratioRect = (w*c)/(h*c)
+    
+    if debug: print("   >>", i)
+    
+
+    #
+    # Ajustement de la taille de police
+    #
+    ht = calcul_hauteur(fheight, le, len(lt))
+    W, H = maxw + ecart, ht + ecart         # Echelle "1"
+    fontSize = min(w/W, h/H)
+    
+#     W, H = W*fontSize, H*fontSize          # Echelle "reele"
+    W, H = maxw*fontSize, ht*fontSize        # Echelle "reele"
+    
+    fontSize *= COEF
+    if debug: print("  >>> fontSize :", fontSize)
+    
+    #
+    # On met le résultat du calcul dans le cache
+    #
+    CACHE[texte] = (w, h, b, le, pe, lt, fontSize, (W, H))
+    
+    return lt, fontSize, (W, H)
+
+
+
+
+
+def ajuster_texte2(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, 
                   wrap = True, couper = True, debug = False):
     """ Ajuste le <texte> dans un rectangle <w,h>
         
@@ -3019,7 +3194,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
             i += 1
             
             for l, pte in zip(lignes, ptes):
-                lt.extend(wordwrap(ctx, l, width, pte, breakLongWords = couper))
+                lt.extend(wordwrap(l, width, pte, breakLongWords = couper))
                 
             if lt == []:
                 return lt, 1, 0
@@ -3092,8 +3267,6 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     return lt, fontSize, (W, H)
 
 
-
-
 def ajuster_texte_fixe(ctx, texte, w, h, 
                        fontSize,
                        le = 0.8, pe = 1.0, 
@@ -3151,7 +3324,7 @@ def ajuster_texte_fixe(ctx, texte, w, h,
 #         print(ptes)
         lt = []
         for l, pte in zip(lignes, ptes):
-            lt.extend(wordwrap(ctx, l, w, pte, breakLongWords = couper))
+            lt.extend(wordwrap(l, w, pte, breakLongWords = couper))
     
     #
     # Pas de découpage du texte
@@ -3322,7 +3495,7 @@ def info(ctx, margeX, margeY):
 # Author:      Robin Dunn
 #----------------------------------------------------------------------
 
-def wordwrap(ctx, text, width, pte, breakLongWords=True):
+def wordwrap(text, width, pte, breakLongWords=True):
     """
     Returns a copy of text with newline characters inserted where long
     lines should be broken such that they will fit within the given
@@ -3334,22 +3507,13 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     """
     debug = False#text[:3] ==u'Ést'
 #    if debug: print "wordwrap", width, text
-   
-#    pas = ctx.text_extents('a')[2]
-    
-#    wid = width - pas - max([0] + [pte[i]-pte[i-1] for i in range(1,len(pte))])
-#    width += 3*pas
-    wid = width
 
-    wrapped_lines = []
     if debug: print("<<", text.splitlines())
     if debug: print("<<", text.split("\n"))
     if debug: print(type(text.splitlines()[0]), type(text.split("\n")[0]))
-    text = text.splitlines()
-    
-#    text = text.split("\n")
-    
-    for line in text:
+
+    wrapped_lines = []
+    for line in text.splitlines():
         idx = 0
         start = 0
         startIdx = 0
@@ -3363,7 +3527,7 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
                 spcIdx = idx
 
             # have we reached the max width?
-            if pte[idx] - start > wid and (spcIdx != -1 or breakLongWords):
+            if pte[idx] - start > width and (spcIdx != -1 or breakLongWords):
                 if spcIdx != -1:
                     idx = min(spcIdx + 1, len(pte) - 1)
                 wrapped_lines.append(line[startIdx : idx])
