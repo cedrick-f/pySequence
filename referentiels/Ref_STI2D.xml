@@ -5909,7 +5909,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_P1 B_tachesOnce="False" I_duree="36" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin de 1ère">
+    <Projet_P1 B_tachesOnce="False" I_duree="36" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin de 1re">
       <d_attributs>
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
