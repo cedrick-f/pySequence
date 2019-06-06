@@ -735,7 +735,7 @@ class PdfPanel(wx.Panel):
 
         if True:#NOT_USE_ADOBE:
             if HAS_PDFVIEWER:
-                self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
+                self.pdf = pdfViewer( self, -1, wx.DefaultPosition,
                                     wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
             else:
                 self.pdf = PanelBoutonPdf(self)

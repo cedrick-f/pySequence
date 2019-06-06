@@ -68,7 +68,15 @@ print("SYSTEM_ENCODING", SYSTEM_ENCODING)
 # quel répertoire  sans que l'utilisation de chemins
 # relatifs ne soit perturbée
 #
+# if getattr(sys, 'frozen', False):
+#     # If the application is run as a bundle, the pyInstaller bootloader
+#     # extends the sys module by a flag frozen=True and sets the app 
+#     # path into variable _MEIPASS'.
+#     PATH = sys._MEIPASS
+# else:
 PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+if PATH not in os.environ:
+    os.environ["PATH"] += os.pathsep + PATH
 # #PATH = os.path.split(PATH)[0]
 # os.chdir(PATH)
 sys.path.append(PATH)
@@ -249,9 +257,17 @@ TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tabl
 #print u"Dossier des tableaux Excel :", TABLE_PATH
 
 BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
+if not os.path.exists(BO_PATH):
+    BO_PATH = os.path.join(PATH, r'BO')
+
 DOSSIER_ICONES = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'icones')
+if not os.path.exists(DOSSIER_ICONES):
+    DOSSIER_ICONES = os.path.join(PATH, r'icones')
 #HTML_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'html')
+
 TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'templates')
+if not os.path.exists(TEMPLATE_PATH):
+    TEMPLATE_PATH = os.path.join(PATH, r'templates')
 
 
 #print "programdata", os.environ['ALLUSERSPROFILE']

@@ -1088,9 +1088,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def MiseAJourMenu(self):
         if hasattr(self, 'menuReg'):
             if register.IsRegistered():
-                self.menuReg.SetText("Désinscrire de la base de registre")
+                self.menuReg.SetItemLabel("Désinscrire de la base de registre")
             else:
-                self.menuReg.SetText("Inscrire dans la base de registre")
+                self.menuReg.SetItemLabel("Inscrire dans la base de registre")
             
     #############################################################################
     def MiseAJourToolBar(self):
@@ -14556,6 +14556,10 @@ class ArbreProgression(ArbreDoc):
     ####################################################################################
     def OnEndDrag(self, event):
         self.item = event.GetItem()
+        if self.item is None:
+            self.itemDrag = None
+            event.Skip()      
+            return
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
         

@@ -59,7 +59,12 @@ Element = type(ET.Element(None))
 
 import util_path
 #########################################################################################
-DOSSIER_REF = os.path.join(util_path.PATH, "..", "referentiels")
+DOSSIER_REF = os.path.join(os.path.abspath(os.path.join(util_path.PATH, os.pardir)), r'referentiels')
+if not os.path.exists(DOSSIER_REF):
+    DOSSIER_REF = os.path.join(util_path.PATH, r'referentiels')
+    
+    
+# DOSSIER_REF = os.path.join(util_path.PATH, "..", "referentiels")
 REFERENTIELS = {}
 ARBRE_REF = {}
 

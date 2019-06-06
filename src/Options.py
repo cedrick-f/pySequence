@@ -165,7 +165,8 @@ class Options:
 #                else:
 #                    config.set(titre, opt[0], opt[1])
         try:
-            config.write(open(self.fichierOpt,'w', encoding="utf-8"))
+            with open(self.fichierOpt,'w', encoding="utf-8") as f:
+                config.write(f)
         except:
             print("Erreur d'enregistrement des options")
 
@@ -179,7 +180,7 @@ class Options:
         config = configparser.ConfigParser()
         
         with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
-            config.readfp(fp)
+            config.read_file(fp)
             
 #         try :
 #             with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:

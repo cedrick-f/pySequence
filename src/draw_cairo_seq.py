@@ -1326,7 +1326,7 @@ class Cadre():
                 self.ctx.set_source_rgba (*c[:3], alpha)
 
                 hc = H_code()
-                f, r = show_text_rect(self.ctx, self.seance.code, (x, y, self.w, hc), ha = 'g', 
+                f, r, l = show_text_rect(self.ctx, self.seance.code, (x, y, self.w, hc), ha = 'g', 
                                           wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
                 
                 wc = r[2] + ecartX/2

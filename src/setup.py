@@ -119,6 +119,8 @@ if sys.platform == "win32":
 binpathincludes = []
 if sys.platform == "linux2":
     binpathincludes += ["/usr/lib"]
+else:
+    binpathincludes += ["C:/Windows/SysWOW64/downlevel"]
 
 # _browserModule = win32com.client.gencache.EnsureModule(
 #         "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}", 0, 1, 1)
@@ -149,6 +151,7 @@ build_exe_options = {'build_exe': 'build/bin',
                                   ],
                      "include_files": includefiles,
                      "bin_path_includes": binpathincludes,
+                     "bin_path_excludes": ["C:/Windows/WinSxS","C:/Program Files"], # pour éviter qu'il prenne des dll 64 bits !!
                      'bin_excludes' : ['libgdk-win32-2.0-0.dll', 'libgobject-2.0-0.dll', 'tcl85.dll',
                                               'tk85.dll', "UxTheme.dll", "mswsock.dll", "POWRPROF.dll",
                                               "QtCore4.dll", "QtGui4.dll" ],
