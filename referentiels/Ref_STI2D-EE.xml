@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -34,7 +34,6 @@
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
   </d_demarches>
-  <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs">
       <l_asso_contexte />
@@ -1160,28 +1159,28 @@
       <l_03 I_00="77" I_01="77" I_02="179" />
     </l_C>
     <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="C" S_05="O">
-      <l_03 I_00="102" I_01="127" I_02="102" />
+      <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
     </l_G>
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="G" S_05="N">
-      <l_03 I_00="179" I_01="77" I_02="77" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="C" S_05="O">
+      <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
     </l_D>
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="G" S_05="N">
-      <l_03 I_00="77" I_01="127" I_02="127" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="D" S_05="N">
+      <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
     </l_E>
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
-      <l_03 I_00="127" I_01="77" I_02="127" />
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="D" S_05="N">
+      <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
     </l_P>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="" S_05="">
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_AP S_00="E" S_01="P" />
+    <l_AP S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_C S_00="C" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_SA S_00="C" S_01="G" />
+    <l_SA S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
     <l_SS S_00="C" />
     <l_E S_00="C" />
     <l_R />
@@ -1215,7 +1214,7 @@
   <l_listeEnsSpecif />
   <l_listeNivTaxo />
   <l_listeSpecialites />
-  <l_listeSystemes />
+  <l_listeSystemes S_00="PE" />
   <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
   <l_listeTypeHorsClasse />
@@ -1379,7 +1378,11 @@
     </l_S>
   </d_seances>
   <d_specialite />
-  <d_systemes />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+  </d_systemes>
   <d_thematiques />
   <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
 </Referentiel>
