@@ -313,30 +313,32 @@ class XMLelem():
 
     ######################################################################################  
     def __eq__(self, ref):
-        """ Comparaison de deux référentiels
+        """ Comparaison de deux éléments
         """
+        
         if not isinstance(ref, type(self)):
             return False
         
         def egal(val1, val2):
+#             print("__eq__", val1, val2)
             if isinstance(val1, str) and isinstance(val2, str):
-#                if val1 != val2:#.replace("\n", "--"):
-#                    print "Erreur str : xml =", val1, "      xls =", val2#.replace("\n", "--")
+#                 if val1 != val2:#.replace("\n", "--"):
+#                     print("Erreur str : xml =", val1, "      xls =", val2)#.replace("\n", "--")
                 return val1 == val2#.replace("\n", "--")
             
             elif type(val1) == bool and type(val2) == bool:
-#                if val1 != val2:
-#                    print "Erreur bool: xml =", val1, "      xls =", val2
+#                 if val1 != val2:
+#                     print("Erreur bool: xml =", val1, "      xls =", val2)
                 return val1 == val2
             
             elif isinstance(val1, (int, float)) and isinstance(val2, (int, float)):
-#                if val1 != val2:
-#                    print "Erreur num: xml =", val1, "      xls =", val2
+#                 if val1 != val2:
+#                     print("Erreur num: xml =", val1, "      xls =", val2)
                 return val1 == val2
             
             elif type(val1) == list:
                 if len(val1) != len(val2):
-#                    print "Erreur list: xml =", val1, "      xls =", val2
+#                     print("Erreur list: xml =", val1, "      xls =", val2)
                     return False
                 
                 return all([egal(sval1, sval2) for sval1, sval2 in zip(val1, val2)])
@@ -348,9 +350,10 @@ class XMLelem():
             
             elif type(val1) == dict and type(val2) == dict:
                 if not egal(sorted(val1), sorted(val2)):
-#                    print "Erreur dict : xml =", val1, "      xls =", val2
+#                     print("Erreur dict : xml =", val1, "      xls =", val2)
                     return False
-                return all([egal(v, val2[k]) for k, v in list(val1.items())])
+#                 print("!")
+                return all([egal(v, val2[k]) for k, v in val1.items()])
                 
 #                 e = True
 #                 for k, v in val1.items():
@@ -364,20 +367,20 @@ class XMLelem():
                 return val1 == val2
             
             else:
-#                print "Erreur : xml =", val1, "      xls =", val2
-                return False
+#                 print("Erreur : xml =", val1, "      xls =", val2)
+                return val1 == val2
         
         for attr in dir(self):
-            if attr[0] != "_":
+            if attr[0] != "_": # attributs à ignorer
                 val1 = getattr(self, attr)
                 if isinstance(val1, (str, int, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-#                         print u"Différence", ""
-#                         print "  ", attr
-#                         print "  xml:", val1
-#                         print "  xls:", val2
-                        break
+                        print(u"Différence", "")
+                        print("  ", attr)
+                        print("  xml:", val1)
+                        print("  xls:", val2)
+#                         break
                         return False
         return True
 
@@ -387,7 +390,7 @@ class XMLelem():
         if competence.poids != {}:
 #                    print self.parties.keys()
             tot = {}
-            for p in list(self.parties.keys()):
+            for p in self.parties.keys():
                 tot[p] = 0
                 
             if competence.sousComp != {} :
@@ -408,7 +411,7 @@ class XMLelem():
             if debug: print("  tot", tot)
             
             coef = {}
-            for p in list(self.parties.keys()):
+            for p in self.parties.keys():
                 coef[p] = 1.0*tot[p]/100
             if debug: print("  coef", coef)
             
@@ -506,7 +509,7 @@ class XMLelem():
                     if debug: print(l, l.getType(), l.poids, l.estProjet(), prj)
 #                    print v0
                     if l.estProjet(): # Conduite ou Soutenance
-                        if prj == None or len([p for p in list(l.poids.keys()) if p in list(prj.parties.keys())]) > 0:#or l.getType() in prj.parties.keys():
+                        if prj == None or len([p for p in list(l.poids.keys()) if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
 #                        if l.getType() == v0[2].keys():
                             lst.append(l)
                 
@@ -640,28 +643,28 @@ class Referentiel(XMLelem):
         if nomFichier != "":
             self.importer(nomFichier)
 
-    ######################################################################################  
-    def __repr__(self):
-#        print "*********************"
-#        print self.Code
-#        print "positions_CI", self.positions_CI
-##        print "CI_BO :", self.CI_BO
-##        print "CI  :", self.CentresInterets
-##        print "Sav :", self.dicSavoirs
-##        print "dicSavoirs_Math", self.dicSavoirs_Math
-##        for p in self.getParams():
-##            v = getattr(self, p)
-##            if type(v) == dict:
-##                print p, v
-##        print "dicCompetences :", self.dicCompetences
-##        print "Mat :", self.dicSavoirs_Math
-##        print "Phy :", self.dicSavoirs_Phys
-#        print "Dem :", self.demarches
-##        print "Act :", self.activites
-##        print "Sea :", self.seances
-#        print "DeS :", self.demarcheSeance
-
-        return self.Code
+#     ######################################################################################  
+#     def __repr__(self):
+# #        print "*********************"
+# #        print self.Code
+# #        print "positions_CI", self.positions_CI
+# ##        print "CI_BO :", self.CI_BO
+# ##        print "CI  :", self.CentresInterets
+# ##        print "Sav :", self.dicSavoirs
+# ##        print "dicSavoirs_Math", self.dicSavoirs_Math
+# ##        for p in self.getParams():
+# ##            v = getattr(self, p)
+# ##            if type(v) == dict:
+# ##                print p, v
+# ##        print "dicCompetences :", self.dicCompetences
+# ##        print "Mat :", self.dicSavoirs_Math
+# ##        print "Phy :", self.dicSavoirs_Phys
+# #        print "Dem :", self.demarches
+# ##        print "Act :", self.activites
+# ##        print "Sea :", self.seances
+# #        print "DeS :", self.demarcheSeance
+# 
+#         return self.Code
     
     ######################################################################################  
     def initParam(self):
@@ -1408,7 +1411,7 @@ class Referentiel(XMLelem):
                         part = str(sh_co.cell(3,cp).value)
                         self._colParties.append((part, cp))
                         t = sh_co.cell(1,c).value
-                        for p in list(self.projets.values()):
+                        for p in self.projets.values():
                             if t == p.intitule:
                                 p.listeParties.append(part)
                                 p.parties[part] = sh_co.cell(2,cp).value
@@ -1418,7 +1421,7 @@ class Referentiel(XMLelem):
                 for part, col in list(set([cp for cp in self._colParties])):
                     self.parties[part] = sh_co.cell(2,col).value
                     
-                for p in list(self.projets.values()):
+                for p in self.projets.values():
         #            print "  importer", self, p
                     p.importer(wb)
         
@@ -2741,8 +2744,8 @@ class Projet(XMLelem):
         
     ##################################################################################################################
     def importer(self, wb):
-#        print "importer", self.parties.keys()
-        for part in list(self.parties.keys()):
+#         print("importer", self.parties.keys())
+        for part in self.parties.keys():
             #
             # Grilles d'évaluation projet
             #
@@ -2756,13 +2759,14 @@ class Projet(XMLelem):
             self.cellulesInfo[part] = {}
             for l in range(6, sh_g.nrows):
                 k = str(sh_g.cell(l,0).value)
+#                 print("k"+k+".")
                 if k != "":                                                                  
                     i = [sh_g.cell(l,1).value, # Feuille
                          [int0(sh_g.cell(l,2).value), # Ligne
                           int0(sh_g.cell(l,3).value), # Colonne
                           int0(sh_g.cell(l,4).value)], #Période
                           sh_g.cell(l,5).value]  # Préfixe
-                    if k in list(self.cellulesInfo[part].keys()):
+                    if k in self.cellulesInfo[part].keys():
                         self.cellulesInfo[part][k].append(i)
                     else:
                         self.cellulesInfo[part][k] = [i]
@@ -4323,7 +4327,7 @@ def chargerReferentiels():
             REFERENTIELS[ref.Code] = ref
 #            print ref.Code
 
-    for k, r in list(REFERENTIELS.items()):
+    for k, r in REFERENTIELS.items():
 #        print r
         r.completer()
 #         print "############################"+ k
@@ -4338,7 +4342,7 @@ def chargerReferentiels():
     #
     if not SAUVEGARDE:
         dicOk = {}
-        for k, r in list(REFERENTIELS.items()):
+        for k, r in REFERENTIELS.items():
 #             print DOSSIER_REF
             f = os.path.join(DOSSIER_REF, util_path.toFileEncoding("Ref_"+r.Enseignement[0]+".xml"))
             dicOk[k] = False
@@ -4359,7 +4363,7 @@ def chargerReferentiels():
                 enregistrer(r.Code, f)
                 dicOk[k] = None
                 
-        print("Référentiels modifiés :", [k for k, v in list(dicOk.items()) if not v])
+        print("Référentiels modifiés :", [k for k, v in dicOk.items() if not v])
     
     #
     # Construction de la structure en arbre
@@ -4388,18 +4392,18 @@ def chargerReferentiels():
     
     
     #  Types d'enseignement qui n'ont pas de tronc commun (parents)
-    for k, r in list(REFERENTIELS.items()):
+    for k, r in REFERENTIELS.items():
         if r.tr_com == []:
             ARBRE_REF[k] = []
     
     #  Types d'enseignement qui ont un tronc commun (enfants)
     d = []
-    for k, r in list(REFERENTIELS.items()):
+    for k, r in REFERENTIELS.items():
         if r.tr_com != []:
             ARBRE_REF[r.tr_com[0]].append(k)
             d.append(r.tr_com[0])
     
-    for k, r in list(REFERENTIELS.items()):
+    for k, r in REFERENTIELS.items():
         if "_"+r.Famille in list(ARBRE_REF.keys()):
             ARBRE_REF["_"+r.Famille].append(k)
         else:
@@ -4439,7 +4443,7 @@ chargerReferentiels()
 def sauvegarderOriginaux():
     global SAUVEGARDE
     SAUVEGARDE = True
-    for r in list(REFERENTIELS.values()):
+    for r in REFERENTIELS.values():
         f = os.path.join(DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
         enregistrer(r.Code, f)
         

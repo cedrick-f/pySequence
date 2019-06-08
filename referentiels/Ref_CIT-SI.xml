@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="1" S_AnneeDebut="Sec5" S_Code="Option CIT-SI" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th" S_abrevPb="Non" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s) proposée(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="1" S_AnneeDebut="Sec5" S_Code="Option CIT-SI" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th" S_abrevPb="Non" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s) proposée(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme CIT-SI" S_01="https://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/53/1/spe570_annexe_1062531.pdf" />
   </l_BO_URL>
@@ -46,7 +46,6 @@
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_EC>
   </d_demarches>
-  <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)$f" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />

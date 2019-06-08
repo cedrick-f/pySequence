@@ -237,6 +237,16 @@ class OldVersion(Exception):
 
 ####################################################################################
 #
+#   Classe permettant de gérer les écarts de version de référentiel
+#
+####################################################################################
+
+class DiffReferentiel(Exception):
+    pass
+
+
+####################################################################################
+#
 #   Evenement perso pour détecter une modification de la séquence
 #
 ####################################################################################
@@ -2739,7 +2749,22 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.parent.MiseAJourToolBar()
         return
 
+    #############################################################################
+    def VerifierReferentiel(self, nomFichier):
+        print("VerifierReferentiel", self.classe.GetReferentiel(), Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code])
+        e = self.classe.GetReferentiel() == Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code]
+        if not e:
+            print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
+            dlg = DiffRefChoix(self, nomFichier)
+            val = dlg.ShowModal()
+            dlg.Destroy()
+            if val == 1:
+                return 1
+            elif val == 2:
+                return 2
 
+#             raise DiffReferentiel
+                
  
 def Dialog_ErreurAccesFichier(nomFichier, win = None):
     messageErreur(win, 'Erreur !',
@@ -3066,6 +3091,7 @@ class FenetreSequence(FenetreDocument):
         
         ###############################################################################################################
         def ouvre(message):
+            nonlocal reparer
             count = 1
             Ok = True
             Annuler = False
@@ -3086,6 +3112,9 @@ class FenetreSequence(FenetreDocument):
                 err = self.classe.setBranche(classe, reparer = reparer)
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
+                
+                if self.VerifierReferentiel("séquence") == 1:
+                    reparer = True
                 
                 if len(err) > 0 :
                     Ok = False
@@ -3538,6 +3567,7 @@ class FenetreProjet(FenetreDocument):
         
         #################################################################################################
         def ouvre(message):
+            nonlocal reparer
             count = 1
             Ok = True
             Annuler = False
@@ -3557,7 +3587,10 @@ class FenetreProjet(FenetreDocument):
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
                 
-                if len(err) > 0 :
+                if self.VerifierReferentiel("projet") == 1:
+                    reparer = True
+                
+                if len(err)  > 0 :
                     Ok = False
                     message += get_err_message(err) 
                 message += "\n"
@@ -4351,7 +4384,8 @@ class FenetreProgression(FenetreDocument):
         
         
         #################################################################################################
-        def ouvre(message):         
+        def ouvre(message):
+            nonlocal reparer      
             count = 0
             Ok = True
             Annuler = False
@@ -4370,6 +4404,9 @@ class FenetreProgression(FenetreDocument):
                 err = self.classe.setBranche(classe, reparer = reparer)
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
+                
+                if self.VerifierReferentiel("progression") == 1:
+                    reparer = True
                 
                 if len(err) > 0 :
                     Ok = False
@@ -19289,6 +19326,56 @@ class DialogChoixDoc(wx.Dialog):
 
 #import pywintypes
 
+
+
+#############################################################################################################
+#
+# Dialog pour choisir l'action à réaliser en cas de référentiel modifié
+# 
+#############################################################################################################
+class DiffRefChoix(wx.Dialog):
+    def __init__(self, parent, nomFichier, 
+                 style=wx.DEFAULT_DIALOG_STYLE 
+                 ):
+
+        wx.Dialog.__init__(self, parent, -1, "Référentiel différent", style = style, size = wx.DefaultSize)
+        self.SetMinSize((200*SSCALE,100*SSCALE))
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        st = wx.StaticText(self, -1, f"Le référentiel intégré au fichier {nomFichier}\n" \
+                                     f"est différent du référentiel fourni par pySéquence.\n\n" \
+                                     f"Soit vous avez modifié sciemment ce référentiel,\n" \
+                                     f"Soit il a été mis à jour depuis la création du fichier.\n\n" \
+                                     f"Que souhaitez-vous faire ?"
+                                     
+                           )
+        
+        sizer.Add(st, 0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        
+        button = wx.Button(self, -1, "Remplacer le référentiel")
+        button.SetToolTip("Remplacer le référentiel intégré par celui fourni par pySéquence")
+        self.Bind(wx.EVT_BUTTON, self.OnRepl, button)
+        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        
+        button = wx.Button(self, -1, "Conserver le référentiel")
+        button.SetToolTip("Conserver le référentiel intégré")
+        self.Bind(wx.EVT_BUTTON, self.OnCons, button)
+        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        
+        self.SetSizer(sizer)
+        sizer.Fit(self)
+        
+        self.SetReturnCode(0)
+        
+
+    def OnRepl(self, event):
+        self.SetReturnCode(1)
+        self.EndModal(1)
+
+    def OnCons(self, event):
+        self.SetReturnCode(2)
+        self.EndModal(2)
+        
 
 
 ##########################################################################################################

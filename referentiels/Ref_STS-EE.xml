@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="Logo_STS_EL.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFonctions="Activités professionnelles" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Compétences associées" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="Logo_STS_EL.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
   </l_BO_URL>
@@ -24,163 +24,6 @@
     <l_P S_00="I" S_01="R" S_02="P" />
   </d_demarcheSeance>
   <d_demarches />
-  <d_dicFonctions>
-    <l_F1 S_00="Étude technique et économique">
-      <d_01>
-        <l_T1.1 S_00="Analyser les cahiers des charges et les appels d’offre">
-          <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C04" S_04="C05" S_05="C06" />
-        </l_T1.1>
-        <l_T1.2 S_00="Contribuer à l’analyse fonctionnelle">
-          <l_01 S_00="P" />
-        </l_T1.2>
-        <l_T1.3 S_00="Concevoir des solutions techniques et des processus de fabrication dans le respect du cahier des charges et des contraintes imposées par le procédé">
-          <l_01 S_00="C02" S_01="C03" S_02="C07" S_03="C08" />
-        </l_T1.3>
-        <l_T1.4 S_00="Réaliser les dossiers techniques de fabrication et d’exécution de chantier">
-          <l_01 S_00="C09" S_01="C10" S_02="C11" S_03="C12" S_04="C13" />
-        </l_T1.4>
-        <l_T1.5 S_00="Élaborer une offre adaptée (chiffrage et devis) au cahier des charges en déterminant les moyens d’exécution prévisionnels">
-          <l_01 S_00="C04" S_01="C05" S_02="C09" S_03="C11" />
-        </l_T1.5>
-        <l_T1.6 S_00="Analyser les causes d’un dysfonctionnement et faire évoluer les solutions techniques">
-          <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C07" S_04="C08" S_05="C09" S_06="C11" S_07="C14" S_08="C15" />
-        </l_T1.6>
-        <l_T1.7 S_00="Contribuer à la conception de la procédure de test, à la définition des moyens et à l’interprétation des résultats">
-          <l_01 S_00="P" />
-        </l_T1.7>
-        <l_T1.8 S_00="Répondre à un besoin de formation">
-          <l_01 S_00="C01" S_01="C04" S_02="C16" />
-        </l_T1.8>
-      </d_01>
-      <l_02 />
-    </l_F1>
-    <l_F2 S_00="Réalisation - exécution - industrialisation">
-      <d_01>
-        <l_T2.1 S_00="Contribuer au développement des produits en intégrant les contraintes de fabrication">
-          <l_01 S_00="P" />
-        </l_T2.1>
-        <l_T2.2 S_00="Adapter des solutions techniques y compris dans le cadre d’une prestation de service">
-          <l_01 S_00="C01" S_01="C02" S_02="C07" S_03="C09" S_04="C11" />
-        </l_T2.2>
-        <l_T2.3 S_00="Pour la partie électrique, régler les paramètres des procédés et mettre au point le processus de fabrication">
-          <l_01 S_00="C04" S_01="C06" S_02="C17" S_03="C18" S_04="C19" S_05="C20" />
-        </l_T2.3>
-        <l_T2.4 S_00="Proposer des améliorations de procédé et d’organisation">
-          <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C07" S_04="C14" />
-        </l_T2.4>
-        <l_T2.5 S_00="Réaliser un ouvrage, un équipement ou un produit en suivant un dossier de fabrication ou d’exécution de chantier">
-          <l_01 S_00="C01" S_01="C06" S_02="C21" />
-        </l_T2.5>
-        <l_T2.6 S_00="Appliquer les textes administratifs et réglementaires">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C17" S_04="C18" />
-        </l_T2.6>
-      </d_01>
-      <l_02 />
-    </l_F2>
-    <l_F3 S_00="Planification, suivi technique et maîtrise des coûts">
-      <d_01>
-        <l_T3.1 S_00="Programmer et assurer le suivi de la réalisation des prototypes et des essais">
-          <l_01 S_00="C01" S_01="C05" S_02="C15" S_03="C22" S_04="C23" S_05="C24" />
-        </l_T3.1>
-        <l_T3.2 S_00="Assurer le suivi de l’ensemble du cycle d’achat depuis la prescription">
-          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C24" S_04="C25" S_05="C26" />
-        </l_T3.2>
-        <l_T3.3 S_00="Organiser l’ordonnancement, la logistique et la gestion des flux de matière d’oeuvre, à partir des prévisions de commande et des moyens matériels disponibles">
-          <l_01 S_00="C04" S_01="C05" S_02="C23" S_03="C27" />
-        </l_T3.3>
-        <l_T3.4 S_00="Préparer, planifier l’intervention sur un chantier, une installation ou un équipement">
-          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C23" S_04="C25" />
-        </l_T3.4>
-        <l_T3.5 S_00="Suivre les coûts, les délais et la qualité de réalisation, dans le cadre d’une gestion de projet">
-          <l_01 S_00="C01" S_01="C04" S_02="C11" S_03="C24" S_04="C25" S_05="C26" />
-        </l_T3.5>
-        <l_T3.6 S_00="Rechercher et décider du recours à la sous-traitance">
-          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C11" S_04="C25" />
-        </l_T3.6>
-        <l_T3.7 S_00="Fournir un appui technique aux opérateurs de fabrication">
-          <l_01 S_00="C01" S_01="C03" S_02="C04" S_03="C16" S_04="C28" />
-        </l_T3.7>
-      </d_01>
-      <l_02 />
-    </l_F3>
-    <l_F4 S_00="Animation et coordination d'équipes">
-      <d_01>
-        <l_T4.1 S_00="Assurer une responsabilité hiérarchique dans le cadre d’un projet ou d’une réalisation">
-          <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C23" S_04="C24" S_05="C28" S_06="C29" />
-        </l_T4.1>
-        <l_T4.2 S_00="Assurer une gestion des ressources humaines dans le cadre de la responsabilité hiérarchique">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C28" />
-        </l_T4.2>
-        <l_T4.3 S_00="Animer des groupes de travail dans le cadre d’une procédure « qualité »">
-          <l_01 S_00="C01" S_01="C14" S_02="C28" />
-        </l_T4.3>
-        <l_T4.4 S_00="Accueillir les intervenants sur le chantier en appliquant les règles d’hygiène et de sécurité">
-          <l_01 S_00="C01" S_01="C13" S_02="C28" />
-        </l_T4.4>
-        <l_T4.5 S_00="Coordonner des actions de formation ou d’information technique client">
-          <l_01 S_00="P" />
-        </l_T4.5>
-        <l_T4.6 S_00="Participer à l’animation du réseau de distributeurs, d’installateurs et de bureaux d’études">
-          <l_01 S_00="P" />
-        </l_T4.6>
-      </d_01>
-      <l_02 />
-    </l_F4>
-    <l_F5 S_00="Essais - mise en service - contrôles">
-      <d_01>
-        <l_T5.1 S_00="Contrôler la conformité d’un produit ou d’un travail réalisé et Contrôler la conformité d’un produit ou d’un travail réalisé et mettre en place des actions correctives">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C13" S_04="C14" S_05="C17" S_06="C18" S_07="C19" S_08="C20" />
-        </l_T5.1>
-        <l_T5.2 S_00="Suivre les indicateurs d’assurance « qualité » d’un approvisionnement de composants ou de constituants de base">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C17" S_04="C18" />
-        </l_T5.2>
-        <l_T5.3 S_00="Réaliser les essais et les mesures nécessaires à la qualification d’un ouvrage, d’un équipement, d'un produit ou d'un moyen de production">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C13" S_04="C17" S_05="C18" S_06="C20" />
-        </l_T5.3>
-        <l_T5.4 S_00="Effectuer la mise en service dans le respect des règles de sécurité">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C10" S_04="C13" S_05="C14" S_06="C17" S_07="C18" S_08="C20" />
-        </l_T5.4>
-        <l_T5.5 S_00="Procéder à la réception avec le client">
-          <l_01 S_00="C01" S_01="C06" S_02="C17" S_03="C18" S_04="C28" />
-        </l_T5.5>
-      </d_01>
-      <l_02 />
-    </l_F5>
-    <l_F6 S_00="Maintenance - service après vente">
-      <d_01>
-        <l_T6.1 S_00="Organiser des interventions de maintenance, locales ou à distance.">
-          <l_01 S_00="C01" S_01="C06" S_02="C12" S_03="C15" S_04="C18" S_05="C23" S_06="C30" />
-        </l_T6.1>
-        <l_T6.2 S_00="Réaliser les réglages, corrections, expertises et dépannages sur une installation.">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C11" S_04="C14" S_05="C15" S_06="C19" S_07="C20" S_08="C31" />
-        </l_T6.2>
-      </d_01>
-      <l_02 />
-    </l_F6>
-    <l_F7 S_00="Relations clients - fournisseurs">
-      <d_01>
-        <l_T7.1 S_00="Conseiller techniquement le client ou l'orienter vers l’interlocuteur approprié">
-          <l_01 S_00="C01" S_01="C06" S_02="C07" S_03="C28" S_04="C32" />
-        </l_T7.1>
-        <l_T7.2 S_00="Collaborer avec les fournisseurs pour la conception en soutenant la solution retenue">
-          <l_01 S_00="P" />
-        </l_T7.2>
-        <l_T7.3 S_00="Participer aux négociations avec les fournisseurs et le client">
-          <l_01 S_00="P" />
-        </l_T7.3>
-        <l_T7.4 S_00="Informer le client sur l'état d’avancement des travaux">
-          <l_01 S_00="C01" S_01="C06" S_02="C25" S_03="C28" />
-        </l_T7.4>
-        <l_T7.5 S_00="Former le client à la prise en main et au dépannage de premier niveau de son installation">
-          <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C07" S_04="C16" S_05="C28" />
-        </l_T7.5>
-        <l_T7.6 S_00="Animer des réunions ou intervenir dans des conférences techniques">
-          <l_01 />
-        </l_T7.6>
-      </d_01>
-      <l_02 />
-    </l_F7>
-  </d_dicFonctions>
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte />
@@ -6803,6 +6646,167 @@
     <l_R />
     <l_S />
   </d_ensSpecifSeance>
+  <Fonctions_fonctions B_obj="True" B_pre="True" I_nivObj="0" S_abrDiscipline="" S_codeDiscipline="Tec" S_nomDiscipline="" S_nomGenerique="Activités professionnelles">
+    <l_asso_contexte />
+    <l_asso_type />
+    <d_dicFonctions>
+      <l_F1 S_00="Étude technique et économique">
+        <d_01>
+          <l_T1.1 S_00="Analyser les cahiers des charges et les appels d’offre">
+            <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C04" S_04="C05" S_05="C06" />
+          </l_T1.1>
+          <l_T1.2 S_00="Contribuer à l’analyse fonctionnelle">
+            <l_01 S_00="P" />
+          </l_T1.2>
+          <l_T1.3 S_00="Concevoir des solutions techniques et des processus de fabrication dans le respect du cahier des charges et des contraintes imposées par le procédé">
+            <l_01 S_00="C02" S_01="C03" S_02="C07" S_03="C08" />
+          </l_T1.3>
+          <l_T1.4 S_00="Réaliser les dossiers techniques de fabrication et d’exécution de chantier">
+            <l_01 S_00="C09" S_01="C10" S_02="C11" S_03="C12" S_04="C13" />
+          </l_T1.4>
+          <l_T1.5 S_00="Élaborer une offre adaptée (chiffrage et devis) au cahier des charges en déterminant les moyens d’exécution prévisionnels">
+            <l_01 S_00="C04" S_01="C05" S_02="C09" S_03="C11" />
+          </l_T1.5>
+          <l_T1.6 S_00="Analyser les causes d’un dysfonctionnement et faire évoluer les solutions techniques">
+            <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C07" S_04="C08" S_05="C09" S_06="C11" S_07="C14" S_08="C15" />
+          </l_T1.6>
+          <l_T1.7 S_00="Contribuer à la conception de la procédure de test, à la définition des moyens et à l’interprétation des résultats">
+            <l_01 S_00="P" />
+          </l_T1.7>
+          <l_T1.8 S_00="Répondre à un besoin de formation">
+            <l_01 S_00="C01" S_01="C04" S_02="C16" />
+          </l_T1.8>
+        </d_01>
+        <l_02 />
+      </l_F1>
+      <l_F2 S_00="Réalisation - exécution - industrialisation">
+        <d_01>
+          <l_T2.1 S_00="Contribuer au développement des produits en intégrant les contraintes de fabrication">
+            <l_01 S_00="P" />
+          </l_T2.1>
+          <l_T2.2 S_00="Adapter des solutions techniques y compris dans le cadre d’une prestation de service">
+            <l_01 S_00="C01" S_01="C02" S_02="C07" S_03="C09" S_04="C11" />
+          </l_T2.2>
+          <l_T2.3 S_00="Pour la partie électrique, régler les paramètres des procédés et mettre au point le processus de fabrication">
+            <l_01 S_00="C04" S_01="C06" S_02="C17" S_03="C18" S_04="C19" S_05="C20" />
+          </l_T2.3>
+          <l_T2.4 S_00="Proposer des améliorations de procédé et d’organisation">
+            <l_01 S_00="C01" S_01="C02" S_02="C03" S_03="C07" S_04="C14" />
+          </l_T2.4>
+          <l_T2.5 S_00="Réaliser un ouvrage, un équipement ou un produit en suivant un dossier de fabrication ou d’exécution de chantier">
+            <l_01 S_00="C01" S_01="C06" S_02="C21" />
+          </l_T2.5>
+          <l_T2.6 S_00="Appliquer les textes administratifs et réglementaires">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C17" S_04="C18" />
+          </l_T2.6>
+        </d_01>
+        <l_02 />
+      </l_F2>
+      <l_F3 S_00="Planification, suivi technique et maîtrise des coûts">
+        <d_01>
+          <l_T3.1 S_00="Programmer et assurer le suivi de la réalisation des prototypes et des essais">
+            <l_01 S_00="C01" S_01="C05" S_02="C15" S_03="C22" S_04="C23" S_05="C24" />
+          </l_T3.1>
+          <l_T3.2 S_00="Assurer le suivi de l’ensemble du cycle d’achat depuis la prescription">
+            <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C24" S_04="C25" S_05="C26" />
+          </l_T3.2>
+          <l_T3.3 S_00="Organiser l’ordonnancement, la logistique et la gestion des flux de matière d’oeuvre, à partir des prévisions de commande et des moyens matériels disponibles">
+            <l_01 S_00="C04" S_01="C05" S_02="C23" S_03="C27" />
+          </l_T3.3>
+          <l_T3.4 S_00="Préparer, planifier l’intervention sur un chantier, une installation ou un équipement">
+            <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C23" S_04="C25" />
+          </l_T3.4>
+          <l_T3.5 S_00="Suivre les coûts, les délais et la qualité de réalisation, dans le cadre d’une gestion de projet">
+            <l_01 S_00="C01" S_01="C04" S_02="C11" S_03="C24" S_04="C25" S_05="C26" />
+          </l_T3.5>
+          <l_T3.6 S_00="Rechercher et décider du recours à la sous-traitance">
+            <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C11" S_04="C25" />
+          </l_T3.6>
+          <l_T3.7 S_00="Fournir un appui technique aux opérateurs de fabrication">
+            <l_01 S_00="C01" S_01="C03" S_02="C04" S_03="C16" S_04="C28" />
+          </l_T3.7>
+        </d_01>
+        <l_02 />
+      </l_F3>
+      <l_F4 S_00="Animation et coordination d'équipes">
+        <d_01>
+          <l_T4.1 S_00="Assurer une responsabilité hiérarchique dans le cadre d’un projet ou d’une réalisation">
+            <l_01 S_00="C01" S_01="C04" S_02="C05" S_03="C23" S_04="C24" S_05="C28" S_06="C29" />
+          </l_T4.1>
+          <l_T4.2 S_00="Assurer une gestion des ressources humaines dans le cadre de la responsabilité hiérarchique">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C28" />
+          </l_T4.2>
+          <l_T4.3 S_00="Animer des groupes de travail dans le cadre d’une procédure « qualité »">
+            <l_01 S_00="C01" S_01="C14" S_02="C28" />
+          </l_T4.3>
+          <l_T4.4 S_00="Accueillir les intervenants sur le chantier en appliquant les règles d’hygiène et de sécurité">
+            <l_01 S_00="C01" S_01="C13" S_02="C28" />
+          </l_T4.4>
+          <l_T4.5 S_00="Coordonner des actions de formation ou d’information technique client">
+            <l_01 S_00="P" />
+          </l_T4.5>
+          <l_T4.6 S_00="Participer à l’animation du réseau de distributeurs, d’installateurs et de bureaux d’études">
+            <l_01 S_00="P" />
+          </l_T4.6>
+        </d_01>
+        <l_02 />
+      </l_F4>
+      <l_F5 S_00="Essais - mise en service - contrôles">
+        <d_01>
+          <l_T5.1 S_00="Contrôler la conformité d’un produit ou d’un travail réalisé et Contrôler la conformité d’un produit ou d’un travail réalisé et mettre en place des actions correctives">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C13" S_04="C14" S_05="C17" S_06="C18" S_07="C19" S_08="C20" />
+          </l_T5.1>
+          <l_T5.2 S_00="Suivre les indicateurs d’assurance « qualité » d’un approvisionnement de composants ou de constituants de base">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C17" S_04="C18" />
+          </l_T5.2>
+          <l_T5.3 S_00="Réaliser les essais et les mesures nécessaires à la qualification d’un ouvrage, d’un équipement, d'un produit ou d'un moyen de production">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C13" S_04="C17" S_05="C18" S_06="C20" />
+          </l_T5.3>
+          <l_T5.4 S_00="Effectuer la mise en service dans le respect des règles de sécurité">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C10" S_04="C13" S_05="C14" S_06="C17" S_07="C18" S_08="C20" />
+          </l_T5.4>
+          <l_T5.5 S_00="Procéder à la réception avec le client">
+            <l_01 S_00="C01" S_01="C06" S_02="C17" S_03="C18" S_04="C28" />
+          </l_T5.5>
+        </d_01>
+        <l_02 />
+      </l_F5>
+      <l_F6 S_00="Maintenance - service après vente">
+        <d_01>
+          <l_T6.1 S_00="Organiser des interventions de maintenance, locales ou à distance.">
+            <l_01 S_00="C01" S_01="C06" S_02="C12" S_03="C15" S_04="C18" S_05="C23" S_06="C30" />
+          </l_T6.1>
+          <l_T6.2 S_00="Réaliser les réglages, corrections, expertises et dépannages sur une installation.">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C11" S_04="C14" S_05="C15" S_06="C19" S_07="C20" S_08="C31" />
+          </l_T6.2>
+        </d_01>
+        <l_02 />
+      </l_F6>
+      <l_F7 S_00="Relations clients - fournisseurs">
+        <d_01>
+          <l_T7.1 S_00="Conseiller techniquement le client ou l'orienter vers l’interlocuteur approprié">
+            <l_01 S_00="C01" S_01="C06" S_02="C07" S_03="C28" S_04="C32" />
+          </l_T7.1>
+          <l_T7.2 S_00="Collaborer avec les fournisseurs pour la conception en soutenant la solution retenue">
+            <l_01 S_00="P" />
+          </l_T7.2>
+          <l_T7.3 S_00="Participer aux négociations avec les fournisseurs et le client">
+            <l_01 S_00="P" />
+          </l_T7.3>
+          <l_T7.4 S_00="Informer le client sur l'état d’avancement des travaux">
+            <l_01 S_00="C01" S_01="C06" S_02="C25" S_03="C28" />
+          </l_T7.4>
+          <l_T7.5 S_00="Former le client à la prise en main et au dépannage de premier niveau de son installation">
+            <l_01 S_00="C01" S_01="C04" S_02="C06" S_03="C07" S_04="C16" S_05="C28" />
+          </l_T7.5>
+          <l_T7.6 S_00="Animer des réunions ou intervenir dans des conférences techniques">
+            <l_01 />
+          </l_T7.6>
+        </d_01>
+        <l_02 />
+      </l_F7>
+    </d_dicFonctions>
+  </Fonctions_fonctions>
   <d_horsClasse />
   <d_labels>
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
@@ -6818,7 +6822,7 @@
   <l_listeEnsSpecif />
   <l_listeNivTaxo />
   <l_listeSpecialites />
-  <l_listeSystemes />
+  <l_listeSystemes S_00="PE" />
   <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
   <l_listeTypeHorsClasse />
@@ -6989,7 +6993,11 @@
     </l_S>
   </d_seances>
   <d_specialite />
-  <d_systemes />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+  </d_systemes>
   <d_thematiques />
   <l_tr_com />
 </Referentiel>

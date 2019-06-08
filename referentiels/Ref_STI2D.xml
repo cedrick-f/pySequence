@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="False" B_multiDemarches="True" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="STI" S_Famille="STI" S_FichierLogo="logo-sti2d-2019.png" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thématique(s)$f" S_nomDemarches="Nature(s)$f" S_nomDom="Domaine(s) du socle$m" S_nomEnsSpecif="Enseignement(s) spécifique(s)$m" S_nomFonctions="Fonction(s)$f" S_nomNivTaxo="Niveau(x) taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Spécialité(s)$f">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="False" B_multiDemarches="True" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="STI" S_Famille="STI" S_FichierLogo="logo-sti2d-2019.png" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thématique(s)$f" S_nomDemarches="Nature(s)$f" S_nomDom="Domaine(s) du socle$m" S_nomEnsSpecif="Enseignement(s) spécifique(s)$m" S_nomNivTaxo="Niveau(x) taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Spécialité(s)$f">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/61/0/spe591_annexe1_1063610.pdf" />
   </l_BO_URL>
@@ -34,7 +34,6 @@
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
   </d_demarches>
-  <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="True" I_nivObj="1" S_abrDiscipline="STI2D" S_codeDiscipline="SII" S_nomDiscipline="STI2D" S_nomGenerique="Compétence(s)$f" S_nomGeneriqueIndic="Indicateur(s) de performance$m">
       <l_asso_contexte S_00="O" S_01="O" />
