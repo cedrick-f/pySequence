@@ -366,6 +366,10 @@ class XMLelem():
 #                print "XMLelem", val1 == val2
                 return val1 == val2
             
+            elif isinstance(val1, Grammaire) and isinstance(val2, Grammaire):
+#                print "XMLelem", val1 == val2
+                return val1.egal(val2)
+            
             else:
 #                 print("Erreur : xml =", val1, "      xls =", val2)
                 return val1 == val2

@@ -645,7 +645,9 @@ class ElementBase(Grammaire):
 #        titre = titre.encode('utf-8') 
 #        titre = titre.replace(u"\n", u"<br>")
 #        self.elem.setAttribute("xlink:title", titre)
-     
+    
+        
+        
     def SetSVGLien(self, p, lien):
 #        print "SetSVGLien", lien
         
@@ -2776,12 +2778,15 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
 #         print("SupprimerSeance depuis :", self)
-#        print "   ", self.seances
+#         print("   ", [id(s) for s in self.seances])
+#         print("   ", item, id(self.arbre.GetItemPyData(item)))
         if len(self.seances) > 1: # On en laisse toujours une !!
             ref = self.GetReferentiel()
             seance = self.arbre.GetItemPyData(item)
-#            print " ---",  seance
+#             print(" ---",  seance)
+#             print("iiii",self.seances[1])
             self.seances.remove(seance)
+#             print("  >", [id(s) for s in self.seances])
             self.arbre.Delete(item)
             self.OrdonnerSeances()
             self.VerifPb()
@@ -9365,14 +9370,14 @@ class Seance(ElementAvecLien, ElementBase):
             self.AjouterListeSystemes(self.GetDocument().systemes)
 
 
-    ######################################################################################  
-    def __repr__(self):
-        t = self.code 
-#        t += " " +str(self.GetDuree()) + "h"
-#        t += " " +str(self.effectif)
-#        for s in self.seances:
-#            t += "  " + s.__repr__()
-        return t
+#     ######################################################################################  
+#     def __repr__(self):
+#         t = self.code 
+# #        t += " " +str(self.GetDuree()) + "h"
+# #        t += " " +str(self.effectif)
+# #        for s in self.seances:
+# #            t += "  " + s.__repr__()
+#         return t
     
     
     ######################################################################################  
@@ -10145,6 +10150,7 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def OrdonnerSeances(self):
+#         print("OrdonnerSeances", self, self.typeSeance)
         listeTypeSeance = self.GetReferentiel().listeTypeSeance
         dicType = {k:0 for k in listeTypeSeance}
         dicType[''] = 0
@@ -10393,7 +10399,8 @@ class Seance(ElementAvecLien, ElementBase):
     def AfficherMenuContextuel(self, itemArbre):
         ref = self.GetReferentiel()
         if itemArbre == self.branche:
-            listItems = [["Supprimer", 
+#             print("supp", itemArbre, id(self.arbre.GetItemPyData(itemArbre)))
+            listItems = [["Supprimer "+self.code, 
                           functools.partial(self.parent.SupprimerSeance, item = itemArbre), 
                           scaleImage(images.Icone_suppr_seance.GetBitmap())],
                          ["Créer un lien", 

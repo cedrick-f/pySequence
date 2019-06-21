@@ -63,7 +63,7 @@ class Grammaire():
         self.SetNomCode(nom_code)
         
         
-    def __eq__(self, gra):
+    def egal(self, gra):
         if hasattr(self, 'nom_obj') and hasattr(gra, 'nom_obj'):
             return self.nom_obj == gra.nom_obj and self.genre == gra.genre
         else:

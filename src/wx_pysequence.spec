@@ -16,32 +16,48 @@ datas = [('LICENSE.txt', '.'),
                      ('../referentiels/*.*', "./referentiels")
                      ]
                      
+                     
+datas += collect_data_files('wx.lib.wxcairo')                     
 datas += collect_data_files('cairocffi')
 datas += collect_data_files('reportlab')
 
+
+#import wx_pysequence
+#import pathlib
+#pys_dir = pathlib.Path(wx_pysequence.__file__).parent
+#pys_dll = [(str(dll), '.') for dll in pys_dir.glob('*.dll')]
+
+binaries = [('C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/python36.dll', '.'),
+           ]
+#binaries += pys_dll
+                      
 a = Analysis(['wx_pysequence.py'],
              pathex=['C:/Users/Cedrick/Documents/Developp/pysequence/src', 
-                     'C:/Users/Cedrick/Documents/Developp/pysequence/ressources/api-ms-win',
+                     #'C:/Users/Cedrick/Documents/Developp/pysequence/ressources/api-ms-win',
+                     'C:/Windows/SysWOW64/downlevel',
+                     #'C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/wx',
                      #'C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/enchant',
                      #'C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/cairocffi'
                      ],
-             binaries=[('C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/python36.dll', '.')
-                       ],
+             binaries=binaries,
              datas=datas,
-             hiddenimports=['_cffi_backend', 'cairocffi', 'wx', 'wx._xml', 'enchant', 
+             hiddenimports=['wx', 'wx._xml', 'wx.lib.wxcairo', 
+             				'_cffi_backend', 'cairocffi', 'enchant',
+             				'cairosvg',
                             'reportlab.graphics.barcode.common', 'reportlab.graphics.barcode.code128',
                             'reportlab.graphics.barcode.code93', 'reportlab.graphics.barcode.usps',
                             'reportlab.graphics.barcode.code39','reportlab.graphics.barcode.usps4s',
                             'reportlab.graphics.barcode.ecc200datamatrix'
                             ],
-             hookspath=[],
-             runtime_hooks=[],
-             excludes=['numpy'],
+             hookspath=['C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/cairocffi',
+             			'C:/Users/Cedrick/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/wx'],
+             runtime_hooks=['hook-wxcairo.py'],
+             excludes=['numpy', 'lib2to3'],
              win_no_prefer_redirects=True,
              win_private_assemblies=True,
              cipher=block_cipher,
              noarchive=False)
-a.binaries -= TOC([('sqlite3.dll', None, None),
+a.binaries -= TOC([
   ('libopenblas.JKAMQ5EVHIVCPXP2XZJB2RQPIN47S32M.gfortran-win32.dll', None, None),
 ])
 
@@ -60,7 +76,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=False,
-          console=False )
+          console=True )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

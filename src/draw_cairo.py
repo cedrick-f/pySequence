@@ -2979,7 +2979,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
         if egal(www, w) and egal(hhh, h) and egal(lee, le) and egal(pee, pe) and egal(bbb, b):
 #             print("CACHE", www, hhh, bbb, lee, pee)
             return lt, fontSize, wh
-            
+    
     #
     # Options de débuggage
     #

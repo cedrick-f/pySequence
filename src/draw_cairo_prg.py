@@ -231,6 +231,7 @@ def DefinirZones(prg, ctx):
     ref = prg.classe.referentiel
 #     competences = ref._listesCompetences_simple["S"]
     competences = ref.dicoCompetences["S"].get2Niveaux()
+    #print(ref.dicoCompetences["S"].get2Niveaux())
     N = 0
     for i, g1 in enumerate(competences):
         k1, l1 = g1
@@ -241,7 +242,10 @@ def DefinirZones(prg, ctx):
 #     else:
 #         wColComp = wColCompBase/2
 #     print("Ncomp :", N, wColCompBase, 0.2/N* COEF)
-    wColComp = min(wColCompBase, 0.2/N* COEF)
+    if N == 0:
+        wColComp = wColCompBase
+    else:
+        wColComp = min(wColCompBase, 0.2/N* COEF)
     
     
     tailleZComp[0] = 0
@@ -923,6 +927,7 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
         x, y = posZCIH[0] + ecartX /2, posZCIH[1] + ecartY /2
         w, h = tailleZCIH[0] - ecartX, tailleZCIH[1] - ecartY
         
+        if w < 0: w = 0
     
         
         if len(l) > 0:
