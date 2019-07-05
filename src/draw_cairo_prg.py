@@ -49,7 +49,7 @@ from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_r
                         DrawPeriodes, DrawCalendrier, COEF, info, Zone, \
                         BcoulPos, IcoulPos, ICoulComp, CoulAltern, ligne, rectangle_plein_biseau, \
                         rectangle_plein_fleche, rectangle_plein_doigt, \
-                        chargerParametres, sauverParametres
+                        surbrillance, chargerParametres, sauverParametres
 
 from math import log, pi
 from couleur import CouleurFloat2CSS
@@ -1100,7 +1100,11 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
     info(ctx, margeX, margeY)
     
-
+    if surRect is not None:
+#         print("Surbrillance")
+        for r in surRect:
+#             print("   ", r)
+            surbrillance(ctx, *r)
     
 
 ######################################################################################  
@@ -1524,6 +1528,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     doc = lienDoc.GetDoc()
     if doc is None:
         return
+    lienDoc.rect = []
     
     e = 0.0015 * COEF   # épaisseur du cadre
     x, y, w, h = rect
@@ -1605,7 +1610,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
     
     
-#    lienSeq.rect.append([x, y, tailleZTaches[0], h])
+    lienDoc.rect.append([x, y, tailleZTaches[0], h])
     prg.zones_sens.append(Zone([rect], obj = lienDoc))
 #     lienDoc.pt_caract = [(rect[:2], "Seq")]
     
