@@ -4923,10 +4923,12 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def Surbrillance(self, obj):
+#         print("Surbrillance", obj)
         self.surRect = None
         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
             self.surRect = obj.rect
 #         if self.surRect is not None:
+#         print(">>>>", self.surRect)
         self.Redessiner()
             
     
@@ -14554,7 +14556,7 @@ class ArbreProgression(ArbreDoc):
 
     ####################################################################################
     def EstMemeCategorie(self, obj1, obj2):
-        return (isinstance(obj1, pysequence.Prof) and isinstance(obj2, pysequence.Prof)) \
+        return type(obj1) is type(obj2) \
             or (isinstance(obj1, pysequence.LienSequence) and isinstance(obj2, pysequence.LienProjet)) \
             or (isinstance(obj2, pysequence.LienSequence) and isinstance(obj1, pysequence.LienProjet))
 
@@ -14581,7 +14583,8 @@ class ArbreProgression(ArbreDoc):
                     if isinstance(dataTarget, pysequence.Prof) and dataTarget != dataSource:
                         self.SetCursor(self.CurseurInsertApres)
                             
-                    elif dataTarget.GetPosition() <= dataSource.GetPosition():
+#                     elif dataTarget.GetPosition() <= dataSource.GetPosition():
+                    elif dataTarget.MemeRang(dataSource):
                         self.SetCursor(self.CurseurInsertApres)
                         
                     else:
@@ -14616,14 +14619,20 @@ class ArbreProgression(ArbreDoc):
                 self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur", 
                                         draw = True, verif = False) # Solution pour déclencher un "redessiner"
 
-            elif dataTarget.GetPosition() <= dataSource.GetPosition():
-                lst = self.progression.sequences_projets
-                s = lst.index(dataSource)
-                t = lst.index(dataTarget)
-                if t > s:
-                    lst.insert(t, lst.pop(s))
-                else:
-                    lst.insert(t+1, lst.pop(s))
+            
+#             elif dataTarget.GetPosition() <= dataSource.GetPosition():
+            elif dataTarget.MemeRang(dataSource):
+#                 lst = self.progression.sequences_projets
+#                 s = lst.index(dataSource)
+#                 t = lst.index(dataTarget)
+#                 if t > s:
+#                     lst.insert(t, lst.pop(s))
+#                 else:
+#                     lst.insert(t+1, lst.pop(s))
+
+                dataTarget.rang, dataSource.rang = dataSource.rang, dataTarget.rang
+                self.progression.Ordonner()
+                
                 
                 if isinstance(dataSource, pysequence.LienSequence):
                     self.GetApp().sendEvent(self.progression, modif = "Changement de position d'une Séquence", 

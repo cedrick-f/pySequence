@@ -6423,13 +6423,14 @@ class Progression(BaseDoc, Grammaire):
     def Ordonner(self):
 #         print "Ordonner"
     
-        listeSeqPrj = self.sequences_projets
+
                 
 #         print "  ", listeSeqPrj
-        listeSeqPrj.sort(key= lambda s : s.GetDoc().position)
+        self.sequences_projets.sort()#key= lambda s : s.GetDoc().position)
         
         self.brancheSeq.DeleteChildren(self.arbre)
-        for e in listeSeqPrj:
+        for r, e in enumerate(self.sequences_projets):
+            e.rang = r
             e.ConstruireArbre(self.arbre, self.brancheSeq) 
             
         self.VerifPb()
@@ -7273,6 +7274,7 @@ class ElementProgression():
         else:
             self.creneaux = [0,0]
         
+        self.rang = 0 # pour l'ordonnancement
     
     ######################################################################################  
     def __eq__(self, lien):
@@ -7282,20 +7284,48 @@ class ElementProgression():
     
     ######################################################################################  
     def __lt__(self, doc):
+        """ utilisé pour la fonction .sort() dans Progression.Ordonner()
+        """
         doc0 = self.GetDoc()
         doc1 = doc.GetDoc()
-        if doc0.GetPosition()[0] == doc1.GetPosition()[0]:
-            dp0 = doc0.GetPosition()[-1]-doc0.GetPosition()[0]
-            dp1 = doc1.GetPosition()[-1]-doc1.GetPosition()[0]
+        #print(doc0, "<", doc1, "?")
+        if doc0.position[0] == doc1.position[0]:
+            dp0 = doc0.position[1]-doc0.position[0]
+            dp1 = doc1.position[1]-doc1.position[0]
             if dp0 == dp1:
-                return dp0.GetNbCrenaux() < dp1.GetNbCrenaux()
+                c0, c1 = self.GetNbCrenaux() , doc.GetNbCrenaux()
+                if c0 == c1:
+                    return self.rang < doc.rang
+                else:
+                    return c0 < c1
             else:
                 return dp0 < dp1
         else:
-            return doc0.GetPosition()[0] < doc1.GetPosition()[0]
+            return doc0.position[0] < doc1.position[0]
         
     
-
+    ######################################################################################  
+    def MemeRang(self, doc):
+        """ Renvoie True si les éléments peuvent être placés au même rang
+            (utilisé pour Drag and Drop ou menu contextuel Monter/Descendre (à faire !)
+        """
+        doc0 = self.GetDoc()
+        doc1 = doc.GetDoc()
+        if doc0.position[0] == doc1.position[0]:
+            dp0 = doc0.position[1]-doc0.position[0]
+            dp1 = doc1.position[1]-doc1.position[0]
+            if dp0 == dp1:
+                c0, c1 = self.GetNbCrenaux() , doc.GetNbCrenaux()
+                if c0 == c1:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+        
+        
 #     ######################################################################################  
 #     def comp(self, lienSeq):
 #         """
@@ -7369,6 +7399,7 @@ class ElementProgression():
         root = ET.Element(self.codeXML)
         root.set("dir", toSystemEncoding(self.path))
         root.set("creneaux", "_".join([str(p) for p in self.creneaux]))
+        root.set("rang", str(self.rang))
         return root
     
     ######################################################################################  
@@ -7385,6 +7416,8 @@ class ElementProgression():
         if len(sp) == 1:
             sp = [sp[0], sp[0]]
         self.creneaux = [int(sp[0]), int(sp[1])]
+        
+        self.rang = int(branche.get("rang", "0"))
         
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
