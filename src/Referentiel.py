@@ -306,7 +306,8 @@ class XMLelem():
 
                 if _attr != None:
                     v = lect(branche, _attr.replace("\n", "--"))
-                    setattr(self, attr, v)
+                    if v != "None":
+                        setattr(self, attr, v)
 
         return self, nomerr
 
@@ -1691,6 +1692,7 @@ class Referentiel(XMLelem):
                     "nomEnsSpecif",
                     "nomNivTaxo",
                     ]:
+#             print(nom, getattr(self, nom))
             setattr(self, "_"+nom, Grammaire(getattr(self, nom)))
 #             print(getattr(self, "_"+nom))
         
@@ -1703,7 +1705,8 @@ class Referentiel(XMLelem):
         self._lstEffectifs.remove('C')
         self._lstEffectifs.remove('I')
         self._lstEffectifs = "".join(self._lstEffectifs)
-        for code in self._lstEffectifs:#'GDSTUEP':
+        for code in self._lstEffectifs+"CI":#'GDSTUEP':
+#             print("   ", self.effectifs[code])
 #             if not code in self.effectifs.keys():
 # #                 self.effectifs['S'] = [*self.effectifs['G']]
 # #                 self.effectifs['T'] = None
@@ -1716,11 +1719,15 @@ class Referentiel(XMLelem):
 #                     self.effectifs['S'][5] = constantes.MmActiv['S']
             if self.effectifs[code] is not None and len(self.effectifs[code]) == 2:
                 self.effectifs[code].append("")
-                self.effectifs[code].append((0,0,0))
+                self.effectifs[code].append(constantes.CouleursGroupes[code])
+            
             if self.effectifs[code] is not None and len(self.effectifs[code]) == 4:
                 self.effectifs[code].append(constantes.SubdivGrp[code])
                 self.effectifs[code].append(constantes.MmActiv[code])
 #             print(self.effectifs[code])
+            if self.effectifs[code][3] == [0,0,0]:
+                self.effectifs[code][3] = constantes.CouleursGroupes[code]
+                
             if self.effectifs[code][0] != "":
                 if self.effectifs[code][4] == "":
                     self.effectifs[code][4] = constantes.SubdivGrp[code]
@@ -3623,7 +3630,19 @@ class Competences(XMLelem):
             sc.getElemAssocies(dic, indice)
         return dic
         
+
+#################################################################################################################################
+#
+#        Effectif de Classe
+#
+#################################################################################################################################
+class Effectif(XMLelem):
+    def __init__(self):
+        self._codeXML = "Effectif"
+    
+    # pas implémenté
         
+              
 #################################################################################################################################
 #
 #        Savoir unique

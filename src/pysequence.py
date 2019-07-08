@@ -1187,6 +1187,9 @@ class Classe(ElementBase):
             return False
         
         self.setBranche(root)
+        if int(self.version.split(".")[0]) < 8:
+            self.setBranche(root, reparer = True)
+            
         self.app.fichierClasse = nomFichier
         
         return True
@@ -1346,12 +1349,15 @@ class Classe(ElementBase):
                 else:
 #                     try:
                     self.referentiel.initParam()
+#                     print("***", self.referentiel.nomSeances)
                     errr = self.referentiel.setBranche(brancheRef)[1]
+#                     print("***", self.referentiel.nomSeances)
 #                     print("errr", errr)
                     self.referentiel.corrigerVersion(errr)
+#                     print("***", self.referentiel.nomSeances)
                     self.referentiel.postTraiter()
                     self.referentiel.completer(forcer = True)
-
+#                     print("***", self.referentiel.nomSeances)
 #                     except:
 #                         self.referentiel.initParam()
 #                         self.referentiel.setBrancheV5(brancheRef)
@@ -9451,6 +9457,7 @@ class Seance(ElementAvecLien, ElementBase):
             (TODO : rajouter sélection effectif pour R et S)
         """
         ref = self.GetReferentiel()
+#         print("GetCodeEffectifParent", ref.effectifs)
         c = ref.effectifs[self.GetCodeEffectif()][4]
         if c =='':
             return 'C'

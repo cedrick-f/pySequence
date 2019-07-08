@@ -405,6 +405,8 @@ SubdivGrp  = {"G" : "C", # Par classe
               "U" : "C", # Par classe
               "E" : "G", # Par grp Eff réduit
               "P" : "G", # Par grp Eff réduit
+              "C" : "",
+              "I" : "C"
               }
 
 MmActiv    = {"G" : "O", 
@@ -414,6 +416,8 @@ MmActiv    = {"G" : "O",
               "U" : "N", 
               "E" : "N", 
               "P" : "N", 
+              "C" : "",
+              "I" : "N"
               }
 
 CouleursGroupes = {"C" : (77 , 77 , 179),
