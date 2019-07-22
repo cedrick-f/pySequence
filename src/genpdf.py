@@ -248,11 +248,11 @@ from xhtml2pdf import pisa
 #            pass
 #from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
-#    print "genererFicheValidationHTML"
+    print("genererFicheValidationHTML", nomFichierHTML)
     with open(nomFichierHTML,'r', encoding='utf-8') as f:
         sourceHtml = f.read()
 
-
+    print(sourceHtml)
     # Equipe pédagogique
     le = []
     for p in projet.equipe:
@@ -384,7 +384,7 @@ def genererFicheValidation(nomFichier, projet):
                    "Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
                    "Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire"]
         
-    elif ref.Famille == 'STI':
+    elif ref.Enseignement[0][:6] == 'STI2D-':
         en_tete = ["Bulletin officiel n°39 du 23 octobre 2014",
                    "Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
                    "Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
