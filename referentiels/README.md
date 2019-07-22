@@ -18,7 +18,7 @@ Voici un petit résumé de la procédure à suivre, les indications plus précis
 La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéquence_** ne démarrera plus si le fichier n'est pas conforme ! (mais il suffit de le supprimer pour revenir à la normale).
 
 Conseils :
- * Procéder par **petites étapes**, pour bien comprendre le lien entre le contenu du fichier, et surtout pour comprendre et corriger ce qui fait planter **_pySéquence_** au démarrage.
+ * Procéder par <span style="color:red">**petites étapes**</span>, pour bien comprendre le lien entre le contenu du fichier, et surtout pour comprendre et corriger ce qui fait planter **_pySéquence_** au démarrage.
  * Supprimer le fichier `.xml` à chaque modification du fichier `.xls` correspondant.
 
 **En cas de réussite, merci d'en faire profiter la communauté d'utilisateurs** : utiliser la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues) pour communiquer.
