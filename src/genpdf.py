@@ -250,7 +250,8 @@ from xhtml2pdf import pisa
 #            pass
 #from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
-    print("genererFicheValidationHTML", nomFichierHTML)
+#     print("genererFicheValidationHTML", nomFichierHTML)
+    Err = []
     with open(nomFichierHTML,'r', encoding='utf-8') as f:
         sourceHtml = f.read()
 
@@ -308,18 +309,25 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     resultFile = open(nomFichierPDF, "w+b")
 
     # convert HTML to PDF
-    print(sourceHtml)
-    pisaStatus = pisa.CreatePDF(
-                                sourceHtml,                # the HTML to convert
-                                dest=resultFile,
-                                show_error_as_pdf = True)           # file handle to recieve result
-
-    # close output file
-    resultFile.close()                 # close output file
+#     print(sourceHtml)
+    try:
+        pisaStatus = pisa.CreatePDF(sourceHtml,                # the HTML to convert
+                                    dest=resultFile,
+                                    show_error_as_pdf = True)           # file handle to recieve result
+        if pisaStatus.err != 0:
+            Err.append("Un des textes descriptifs du projet est peut-être trop grand !")
+    except:
+        Err.append("Le fichier HTML n'a pas pu être converti en PDF !\n\n" \
+                   "\tVeillez à en vérifier la syntaxe, notamment celle des style CSS.")
+    finally:
+        # close output file
+        resultFile.close()                 # close output file
 
 #    print pisaStatus.err
     # return True on success and False on errors
-    return pisaStatus.err == 0
+    
+        
+    return Err
 
 #
 #
@@ -327,6 +335,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 def genererFicheValidation(nomFichier, projet):
     """
     """
+    Err = []
 #     print("genererFicheValidation")
     #
     # Styles
@@ -394,8 +403,7 @@ def genererFicheValidation(nomFichier, projet):
                    "Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
         
     else:
-        messageErreur(None, "Erreur !",
-                            "Impossible de trouver le fichier HTML")
+        Err.append("Impossible de trouver le fichier HTML")
         return False
         
         
@@ -428,7 +436,7 @@ def genererFicheValidation(nomFichier, projet):
     
     story.append(Spacer(1, 5*mm))
     
-    styleSheet = getSampleStyleSheet()
+#     styleSheet = getSampleStyleSheet()
 
 
     #
@@ -505,12 +513,9 @@ def genererFicheValidation(nomFichier, projet):
     try:
         doc.build(story)
     except doctemplate.LayoutError as err:
-        print("Paragraphe trop grand")
-#        print err.message
-#        print type(err)
-#        print dir(err)
-        return False
-    return True
+        Err.append("Paragraphe trop grand")
+
+    return Err
     
 #genererFicheValidation(u"Intitulé du projet")
     
@@ -519,6 +524,8 @@ from Referentiel import DOSSIER_REF
 import constantes
 
 def genererDossierValidation(nomFichier, projet, fenDoc):
+    Err = []
+    
     dosstemp = tempfile.mkdtemp()
     fichertempV = os.path.join(dosstemp, "pdfvalid.pdf")
     fichertempF = os.path.join(dosstemp, "pdffiche.pdf")
@@ -530,15 +537,15 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
                                   projet.GetProjetRef().ficheValid)
     
     if os.path.isfile(nomFichierHTML):
-        Ok = genererFicheValidationHTML(fichertempV, nomFichierHTML, projet)
+        Err = genererFicheValidationHTML(fichertempV, nomFichierHTML, projet)
     else:
-        Ok = genererFicheValidation(fichertempV, projet)
+        Err = genererFicheValidation(fichertempV, projet)
     
     
-    if not Ok:
+    if len(Err) > 0:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
-        return False
+        return Err
 #     print("Ok", Ok)
     
     fenDoc.exporterFichePDF(fichertempF, pourDossierValidation = True)
@@ -571,7 +578,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     
     shutil.rmtree(dosstemp)
     wx.EndBusyCursor()
-    return True
+    return Err
 
 if sys.platform == "win32":  
     import grilles
@@ -770,6 +777,11 @@ class PdfPanel(wx.Panel):
 #            self.pdf = pdfViewer( self, -1, wx.DefaultPosition,
 #                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         sizer.Add(self.pdf, proportion=1, flag=wx.EXPAND)
+        
+        self.mess = wx.StaticText(self, -1, "")
+        sizer.Add(self.mess, proportion=1, flag=wx.EXPAND)
+        sizer.Show(self.mess, False)
+            
         self.SetSizer(sizer)
         self.sizer = sizer
         self.SetAutoLayout(True)
@@ -826,18 +838,22 @@ class PdfPanel(wx.Panel):
         fichertemp = os.path.join(self.dosstemp, "pdfdoss.pdf")
         
         wx.BeginBusyCursor()
-        Ok = genererDossierValidation(fichertemp, projet, fenDoc)
+        Err = genererDossierValidation(fichertemp, projet, fenDoc)
         wx.EndBusyCursor()
         
-        if Ok:
-            Ok = self.chargerFichierPDF(fichertemp)
+        if len(Err) == 0:
+            Err = self.chargerFichierPDF(fichertemp)
+        
+        self.sizer.Show(self.pdf, len(Err) == 0)
+        self.sizer.Show(self.mess, len(Err) > 0)
+        
+        if len(Err) > 0:
+            m = "Une erreur s'est porduite lors de la création ou l'affichage du fichier PDF.\n\n"
+            m += "\n".join(Err)
+            self.mess.SetLabel(m)
             
-        if not Ok:
-            m = "Une erreur s'est porduite lors de la création ou l'affichage du fichier PDF.\n" \
-                "Un des textes descriptifs du projet est peut-être trop grand !"
-            mess = wx.StaticText(self, -1, m)
-            self.sizer.Add(mess, proportion=1, flag=wx.EXPAND)
             self.sizer.Layout()
+    
     
     ######################################################################################################
     def supprimerDossierTemp(self):
@@ -859,7 +875,7 @@ class PdfPanel(wx.Panel):
         """ Affichage en interne du fichier PDF
              ou bien mise à jour du bouton d'affichage externe
         """
-        Ok = True
+        Err = []
         
         if isinstance(self.pdf, PanelBoutonPdf):
             self.pdf.MiseAJour(nomFichier)
@@ -869,20 +885,20 @@ class PdfPanel(wx.Panel):
             try:
                 self.pdf.LoadFile(nomFichier)
             except:
-                print("ERREUR pdfViewer", nomFichier)
-                Ok = False
-            wx.EndBusyCursor()    
+                Err.append("ERREUR pdfViewer")
+            finally:
+                wx.EndBusyCursor()    
                 
         elif isinstance(self.pdf, PDFWindow):
             wx.BeginBusyCursor()
             try:
                 self.pdf.LoadFile(nomFichier)
             except:
-                print("ERREUR PDFWindow", nomFichier)
-                Ok = False
-            wx.EndBusyCursor()
+                Err.append("ERREUR PDFWindow")
+            finally:
+                wx.EndBusyCursor()
         
-        return Ok
+        return Err
 
 
 class PanelBoutonPdf(wx.Panel):
