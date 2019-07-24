@@ -13,12 +13,46 @@ Voici un petit résumé de la procédure à suivre, les indications plus précis
 1. Repérer parmi les référentiels existant celui qui ce rapproche le plus de celui que vous souhaitez créer.
 2. Faire une copie du fichier `.xls` de ce référentiel et lui donner un nom simple mais explicite (pas d'espace - pas d'accents !).
 3. Modifier le contenu de ce nouveau fichier `.xls`.
-4. Relancer **_pySéquence_** pour voir les effets
+4. Relancer **_pySéquence 8_** pour voir les effets
 
-La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéquence_** ne démarrera plus si le fichier n'est pas conforme ! (mais il suffit de le supprimer pour revenir à la normale).
+La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéquence 8_** ne démarrera plus si le fichier n'est pas conforme ! (mais il suffit de le supprimer pour revenir à la normale).
 
-Conseils :
- * Procéder par **petites étapes**, pour bien comprendre le lien entre le contenu du fichier, et surtout pour comprendre et corriger ce qui fait planter **_pySéquence_** au démarrage.
+## Conseils
+ * Procéder par **petites étapes**, pour bien comprendre le lien entre le contenu du fichier, et surtout pour comprendre et corriger ce qui fait planter **_pySéquence 8_** au démarrage.
  * Supprimer le fichier `.xml` à chaque modification du fichier `.xls` correspondant.
 
 **En cas de réussite, merci d'en faire profiter la communauté d'utilisateurs** : utiliser la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues) pour communiquer.
+
+## Les fiches de validation de projet en HTML
+Les fiches de validation de projet doivent être des fichiers au format HTML. 
+**_pySéquence 8_** les convertis en PDF lors de l'affichage ou l'export de ces fiches.
+Les chemins (relatifs à `referentiels/`) de ces fichiers doivent être placés dans les cellules `Généralités_xxx!A19`.
+
+
+Les renseignements qu'elle contiennent proviennent des données saisies dans **_pySéquence 8_**, et sont intégrées dans le document HTML sous la forme `[[code]]` :
+
+
+Informations | Codes
+------------ | -----
+Généralités à propos du projet | codes des feuilles `Généralités_xxx` (`TIT`, `PB`, `ORI`, `CCF`, `OBJ`, `TYP`, `DEC`, `PAR`, `PRX`, `SRC`, `SYN`, `FIC`)
+Académie | `ACA`
+Établissement | `ETA`
+Session | `SES`
+Équipe pédagogique | `EQU`
+Présentation | `PRE`
+Liste des élèves ou étudiants | `ELE`
+Nombre d'élèves ou d'étudiants | `NBE`
+Tâches | `TCH`
+
+
+[Syntaxe spécifique au convertisseur HTML/PDF](https://xhtml2pdf.readthedocs.io/en/latest/format_html.html#)
+
+### Classes intégrées
+Il est possible de redéfinir les styles pour les classes suivantes
+ * `typologie` (tables) : cases à cocher du champ typologie (`TYP`)
+ * ...
+ 
+ 
+ 
+
+

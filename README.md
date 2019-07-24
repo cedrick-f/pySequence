@@ -58,7 +58,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 |Lien |Remarque|
 |---|---|
-|[pySequence_8.1.0.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.1.0)   |Dernière version "stable"|
+|[pySequence_8.1.13.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.1.13)   |Dernière version "stable"|
 |[pySequence_8.0-beta.35.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.0-beta.35)|Dernière version beta|
 
 
@@ -69,11 +69,19 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
  * Anciennes versions : [https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list](https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list)
 
 _**pySequence 8**_ existe :
- * pour Windows :
+ * pour **Windows** :
    * en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)
+     * Télécharger le fichier .ZIP
+     * Dézipper le tout dans un dossier (avec les droits d'écriture)
    * en version "installable"
- * pour Linux ou Mac :
-   * possible à partir des sources ... en suivant [cette méthode](https://github.com/cedrick-f/pySequence/blob/master/Installation_Windows_py3.md)
+     * Télécharger le fichier .EXE
+     * Lancer l'installation (droit administrateurs requis)
+     
+ * pour **Linux** ou **Mac** :
+   * possible à partir des sources :
+     * installation de Python et des dépendances en suivant [cette méthode](https://github.com/cedrick-f/pySequence/blob/master/Installation_Windows_py3.md)
+     * installation des sources de pySéquence (fichiers .ZIP des sources disponibles depuis chaque [release](https://github.com/cedrick-f/pySequence/releases))
+     * Le fichier .PY à lancer est wxpysequence.py
 
 
 ---
