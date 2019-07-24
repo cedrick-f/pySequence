@@ -47,6 +47,12 @@ Tâches | `TCH`
 
 [Syntaxe spécifique au convertisseur HTML/PDF](https://xhtml2pdf.readthedocs.io/en/latest/format_html.html#)
 
-
+### Classes intégrées
+Il est possible de redéfinir les styles pour les classes suivantes
+ * `typologie` (tables) : cases à cocher du champ typologie (`TYP`)
+ * ...
+ 
+ 
+ 
 
 
