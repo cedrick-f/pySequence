@@ -43,6 +43,8 @@ Présentation | `PRE`
 Liste des élèves ou étudiants | `ELE`
 Nombre d'élèves ou d'étudiants | `NBE`
 Tâches | `TCH`
+(Syntaxe spécifique au convertisseur HTML/PDF)[https://xhtml2pdf.readthedocs.io/en/latest/format_html.html#]
+
 
 
 
