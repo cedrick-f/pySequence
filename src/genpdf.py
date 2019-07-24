@@ -113,12 +113,12 @@ def liste(l, classe = "b"):
 def case(etat = False):
     return "<span style=\"font-family:wingdings\">&#253;</span>"
 
-def checkbox(etat = False):
+def checkbox(etat = False, size = 20):
     if etat:
         c = "CheckBox_checked.png"
     else:
         c = "CheckBox_unchecked.png"
-    return "<img src=\"{{MEDIA_URL}}/" + c + "\" height=\"12\" width=\"12\">&nbsp;&nbsp;"
+    return "<img src=\"{{MEDIA_URL}}/" + c + "\" height=\""+str(size)+"\" width=\""+str(size)+"\">&nbsp;&nbsp;"
 
 def remplaceCR(txt):
     return txt.replace("\n", "<br>")
@@ -156,7 +156,7 @@ def table_taches(taches, eleves, projet):
             
     return h
 
-def case_a_cocher(labels, etats):
+def case_a_cocher(labels, etats, size = 16):
     """
     :param labels: chaine de caractères comportant l'ensemble des libellé des cases
                     colonnes séparées par "\n\n"
@@ -173,7 +173,7 @@ def case_a_cocher(labels, etats):
         col = []
         cells.append(col)
         for t in c.split("\n"):
-            col.append([checkbox(e in etats)] + t.split(":"))
+            col.append([checkbox(e in etats, size = size)] + t.split(":"))
             e += 1
     lignes = list(map(list, zip_longest(*cells, fillvalue = [""]*3)))
     
@@ -182,13 +182,15 @@ def case_a_cocher(labels, etats):
     for l in lignes:
         tr = ""
         for c in l:
-            tr += encap(c[0], "td", ['style="width:16px"']) \
-                + encap(c[1], "td", ['style="width:36px ; vertical-align:middle"'])
+#             tr += encap(c[0], "td", ['style="width:16px"']) \
+#                 + encap(c[1], "td", ['style="width:36px ; vertical-align:middle"'])
+            tr += encap(c[0], "td", [f'style="width:{int(size*1.4)}px"']) \
+                + encap(c[1], "td", ['style="vertical-align:middle;"'])
             if len(c) > 2:
                 tr += encap(c[2], "td")
         html += encap(tr, "tr")
     
-    return encap(html, "table")#, ['style="border: 1px solid black"'])
+    return encap(html, "table", ['class="typologie"'])#, ['style="border: 1px solid black"'])
     
     
     
@@ -252,7 +254,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     with open(nomFichierHTML,'r', encoding='utf-8') as f:
         sourceHtml = f.read()
 
-    print(sourceHtml)
+    
     # Equipe pédagogique
     le = []
     for p in projet.equipe:
@@ -306,9 +308,11 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     resultFile = open(nomFichierPDF, "w+b")
 
     # convert HTML to PDF
+    print(sourceHtml)
     pisaStatus = pisa.CreatePDF(
                                 sourceHtml,                # the HTML to convert
-                                dest=resultFile,show_error_as_pdf = True)           # file handle to recieve result
+                                dest=resultFile,
+                                show_error_as_pdf = True)           # file handle to recieve result
 
     # close output file
     resultFile.close()                 # close output file
