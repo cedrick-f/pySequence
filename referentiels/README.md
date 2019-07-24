@@ -30,6 +30,8 @@ Les chemins (relatifs à `referentiels/`) de ces fichiers doivent être placés 
 
 
 Les renseignements qu'elle contiennent proviennent des données saisies dans **_pySéquence 8_**, et sont intégrées dans le document HTML sous la forme `[[code]]` :
+
+
 Informations | Codes
 ------------ | -----
 Généralités à propos du projet | codes des feuilles `Généralités_xxx` (`TIT`, `PB`, `ORI`, `CCF`, `OBJ`, `TYP`, `DEC`, `PAR`, `PRX`, `SRC`, `SYN`, `FIC`)
