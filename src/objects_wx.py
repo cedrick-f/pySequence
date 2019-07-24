@@ -1040,7 +1040,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(11, "&Ouvrir\tCtrl+O")
         
         submenu = wx.Menu()
-        file_menu.Append(14, "&Ouvrir un fichier récent", submenu)
+#         file_menu.Append(14, "&Ouvrir un fichier récent", submenu)
+        file_menu.AppendSubMenu(submenu, "&Ouvrir un fichier récent")
         self.filehistory = wx.FileHistory()
         self.filehistory.UseMenu(submenu)
         
