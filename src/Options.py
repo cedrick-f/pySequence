@@ -395,6 +395,7 @@ class Options:
 #        self.optClasse["Etablissement"] = u""
         
         self.optClasse["FichierClasse"] = r""
+        self.optClasse["Enseignement"] = ""
         
 #        self.optClasse["NombreRevues"] = 2
 #        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]

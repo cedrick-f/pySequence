@@ -1116,9 +1116,9 @@ class Classe(ElementBase):
 #        self.CI[num] = ci
         
     ######################################################################################  
-    def setDefaut(self):
+    def setDefaut(self, typ = 'SSI'):
 #        print "setDefaut Classe"
-        self.typeEnseignement = 'SSI'
+        self.typeEnseignement = typ
         self.specialite = []
         
         self.effectifs['C'] = constantes.Effectifs["C"]
@@ -1141,14 +1141,21 @@ class Classe(ElementBase):
     ######################################################################################  
     def Initialise(self, pourProjet, defaut = False):
         
-        # Força "défaut" ou pas de fichier Classe dans les options
-        if defaut or self.GetApp().parent.options.optClasse["FichierClasse"] == r"":
-            self.setDefaut()
+        options = self.GetApp().parent.options
+        typ = options.optClasse["Enseignement"]
+#         print("Initialise", typ)
+#         print(REFERENTIELS.keys())
+        if not (typ in REFERENTIELS.keys()):
+            typ = 'SSI'
+#         print("  >>", typ)
+        # Force à "défaut" ou pas de fichier Classe dans les options
+        if defaut or options.optClasse["FichierClasse"] == r"":
+            self.setDefaut(typ)
             
         else:
             # Impossible de charger le fichier Classe
-            if not self.ouvrir(self.GetApp().parent.options.optClasse["FichierClasse"]):
-                self.setDefaut()
+            if not self.ouvrir(options.optClasse["FichierClasse"]):
+                self.setDefaut(typ)
             
             
         self.referentiel = REFERENTIELS[self.typeEnseignement]

@@ -1856,7 +1856,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Récupération des dimensions des fenêtres
         #
 #         try:
-        self.options.definir()
+        #self.options.definir()
         self.options.valider(self)
         self.options.enregistrer()
 #         except PermissionError:
@@ -7557,6 +7557,8 @@ class PanelPropriete_Classe(PanelPropriete):
         self.ec.MiseAJourTypeEnseignement()
         
         self.Refresh()
+        
+        self.GetFenetreDoc().parent.options.optClasse["Enseignement"] = ref.Code
         
         self.sendEvent(modif = "Modification du type d'enseignement",
                        obj = self.classe, draw = True, verif = True)
