@@ -74,6 +74,10 @@ ARBRE_REF = {}
 #
 ########################################################################################
 ACTIVITES = ["AP", "ED", "P"]
+
+#            Primaire
+#                  Secondaire
+#                        Supérieur
 PERIODES = ['Pri', 'Sec', 'Sup']
 
 
@@ -2417,9 +2421,30 @@ class Referentiel(XMLelem):
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
         return self._bmp
 
+    
+    #########################################################################
+    def getPositionNum(self):
+        """ Renvoie sous forme de nombre entier
+            la position de l'enseignement dans la scolarité
+        """
+        p = self.AnneeDebut
+        if p[:3] in PERIODES:
+            i = (PERIODES.index(p[:3])+1) * 100
+        else:
+            i = 0
+            
+        try:
+            a = int(p[3:])
+        except:
+            a = 0
+        return i+a
+    
+    
     #########################################################################
     def getTypeEtab(self):
-        if self.Famille in ["STI", "SSI", "SI", "STS", "2nde", "ISN", "MPSI"]:
+#         if self.Famille in ["STI", "SSI", "SI", "STS", "2nde", "ISN", "MPSI"]:
+        print("getTypeEtab", self.getPositionNum())
+        if self.getPositionNum() >= 205:
             return 'L'  # Lycée
         else:
             return 'C'  # Collège
