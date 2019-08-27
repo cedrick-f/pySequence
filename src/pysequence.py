@@ -2734,12 +2734,15 @@ class Sequence(BaseDoc):
         """ Colle la séance présente dans le presse-papier (branche <bseance>)
             en première position
         """
-#        print "CollerElem 1ere pos"
+#         print("CollerElem", item, self.brancheSce)
         if hasattr(self, "brancheSce") and item == self.brancheSce:
             sea_avant = 0
         else:
-            sea_avant = self.arbre.GetItemPyData(item)
-            if not isinstance(sea_avant, Seance):
+            if item != None:
+                sea_avant = self.arbre.GetItemPyData(item)
+                if not isinstance(sea_avant, Seance):
+                    return
+            else:
                 return
                 
         if bseance == None:
@@ -3394,6 +3397,7 @@ class Sequence(BaseDoc):
         """ Affiche le menu contextuel associé à la séquence
             ... ou bien celui de itemArbre concerné ...
         """
+#         print("AfficherMenuContextuel", itemArbre)
         ref = self.GetReferentiel()
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([["Enregistrer", self.app.commandeEnregistrer, 
@@ -3438,8 +3442,9 @@ class Sequence(BaseDoc):
             elementCopie = GetObjectFromClipBoard('Seance')
             if elementCopie is not None:
                 listItems.append(["Coller", functools.partial(self.CollerElem, 
-                                                       bseance = elementCopie),
-                                                       getIconePaste()])
+                                                              item = itemArbre,
+                                                              bseance = elementCopie),
+                                                              getIconePaste()])
             
             self.app.AfficherMenuContextuel(listItems)
                 
@@ -10444,6 +10449,7 @@ class Seance(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
+#         print("AfficherMenuContextuel", itemArbre)
         ref = self.GetReferentiel()
         if itemArbre == self.branche:
 #             print("supp", itemArbre, id(self.arbre.GetItemPyData(itemArbre)))
@@ -10472,13 +10478,14 @@ class Seance(ElementAvecLien, ElementBase):
                 if not hasattr(self, 'GetNiveau') or self.GetNiveau() + dataSource.GetProfondeur() > 2:
                     return
                 
+                t = "Coller "
                 if self.typeSeance in ["R", "S"] : # la phase est la même
-                    t = "Coller dans"
+                    t += "dans"
                 else:
-                    t = "Coller après"
+                    t += "après"
                 listItems.append([t, functools.partial(self.CollerElem, 
-                                                                         item = itemArbre, 
-                                                                         bseance = elementCopie),
+                                                        item = itemArbre, 
+                                                        bseance = elementCopie),
                                   getIconePaste()])
                             
             self.GetApp().AfficherMenuContextuel(listItems)                      
