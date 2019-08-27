@@ -1606,7 +1606,12 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
     rect = (x + hTacheMini, y, w - hTacheMini, h)
     if rect[2] > 0:
-        show_text_rect(ctx, doc.intitule, rect, 
+#         print("intit", doc, len(doc.intitule.strip()) > 0)
+        if len(doc.intitule.strip()) > 0:
+            intit = doc.intitule
+        else:
+            intit = lienDoc.path
+        show_text_rect(ctx, intit, rect, 
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
     
     

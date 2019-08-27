@@ -58,7 +58,8 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
         self.remplace = False
         
         self.Bind(stc.EVT_STC_MODIFIED, self.OnModified)
-#         self.Bind(stc.EVT_STC_CHANGE, self.OnModified)
+#         self.Bind(stc.EVT_STC_CLIPBOARD_PASTE, self.OnModified)
+        self.Bind(stc.EVT_STC_CHANGE, self.OnModified)
 #        self.Bind(stc.EVT_STC_CHANGE, self.OnChange)
         
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)

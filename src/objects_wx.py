@@ -9189,8 +9189,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.intit.SetToolTip("")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
-#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
+        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intit)
+        
         
         #
         # Sélection du fichier de séquence
