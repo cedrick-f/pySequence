@@ -10086,11 +10086,15 @@ class Seance(ElementAvecLien, ElementBase):
         else:
             self.typeSeance = self.GetReferentiel().listeTypeSeance[typ]
         
+        if self.typeSeance in ["R","S"] and not hasattr(self, 'seances'):
+            self.seances = []
+        
         if hasattr(self, 'arbre'):
             self.SetCode()
             
         if self.typeSeance in ["R","S"] and len(self.seances) == 0: # Rotation ou Serie
             self.AjouterSeance()
+        
         
 #        try:
 #            self.GetPanelPropriete().AdapterAuType()
@@ -10173,7 +10177,7 @@ class Seance(ElementAvecLien, ElementBase):
 
         self.SetCodeBranche()
         
-        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        if self.typeSeance in ["R", "S"] and hasattr(self, 'seances'): # Séances en Rotation ou  Parallèle
             for sce in self.seances:
                 sce.SetCode()
             
