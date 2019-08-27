@@ -1827,9 +1827,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnCloseDoc(self, evt):
-#         print "OnClose doc"
+#         print("OnClose doc")
         fenDoc = self.GetNotebook().GetPage(evt.GetSelection())
-        fenDoc.quitter()
+        if fenDoc:
+            if not fenDoc.quitter():
+                evt.StopPropagation()
+                evt.Veto()
+#             print("   fin")
+
 #         evt.Skip() # Crash !
         
     
@@ -2588,9 +2593,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def quitter(self, event = None):
-# #         print("quitter")
-#         if event is not None:
-#             event.Skip()
+#         print("quitter")
+
         if self.fichierCourantModifie:
             texte = constantes.MESSAGE_FERMER[self.typ] % self.fichierCourant
 #            if self.fichierCourant != '':
@@ -2600,15 +2604,18 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                                       "Confirmation", wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
             retCode = dialog.ShowModal()
             if retCode == wx.ID_YES:
+#                 print("   YES")
                 self.commandeEnregistrer()
                 if event is not None: event.Skip()
                 return self.fermer()
     
             elif retCode == wx.ID_NO:
+#                 print("   NO")
                 if event is not None: event.Skip()
                 return self.fermer()
                  
             else:
+                if event is not None: event.StopPropagation()
                 return False
         
         else:            
