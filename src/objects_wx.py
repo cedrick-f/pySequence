@@ -10423,7 +10423,10 @@ class PanelPropriete_Seance(PanelPropriete):
 #                              #| wx.CB_SORT
 #                              )
             self.cbEff = cbEff
-            self.cbEff.Clear()
+            try:        # Erreur sous MacOS (?)
+                self.cbEff.Clear()
+            except:
+                pass
             
             classe = self.seance.GetDocument().classe
             def construire(lst, parent = None, m = None):
