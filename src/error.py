@@ -164,21 +164,21 @@ def SendBugReport(lines_tb):
 #        body="<HTML><BODY><P>"
         
         body = f"{version.__appname__} a rencontré une erreur le {now}"
-        body += f"%0AVersion : {version.__version__}"
-        body += "%0A%0ADescription d'une méthode pour reproduire l'erreur :"
-        body += "%0A%0A%0A%0A%0A"
-        body += "=================TraceBack====================%0A"
+        body += f"\nVersion : {version.__version__}"
+        body += "\n\nDescription d'une méthode pour reproduire l'erreur :"
+        body += "\n\n\n\n\n"
+        body += "=================TraceBack====================\n"
         #
         # Parcours du fichier
         #
         if os.path.isfile(util_path.ERROR_FILE):
             with open(util_path.ERROR_FILE,'r') as file_error:
                 for line in file_error.readlines():
-                    body+=line+"%0A"
+                    body+=line+"\n"
         else:
-            lines_tb = [line.replace("\n", "%0A") for line in lines_tb]
-            body+="%0A".join(lines_tb)
-        body += "%0A==============================================%0A%0A"
+#             lines_tb = [line.replace("\n", "%0A") for line in lines_tb]
+            body+="\n".join(lines_tb)
+        body += "\n==============================================\n\n"
         
 #         sys.stdout.close()
 #         file_log = open(util_path.LOG_FILE,'r')
@@ -190,9 +190,10 @@ def SendBugReport(lines_tb):
 #         body += u"L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__
 #        body+="</P></BODY></HTML>"
 #         file_error.close()
-        print(body)
-        body = body.replace('\n', '%0A')
+        
+        body = body.replace('\n', '%0D%0A')
         body = body.replace(' ', '%20')
+        body = body.replace("'", '%27')
         to_send="""mailto:%s?subject=%s&body=%s"""%(e_mail, subject, body)
 
         print("Envoi ...",to_send)
