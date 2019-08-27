@@ -1840,7 +1840,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnClose(self, evt):
-        print("OnClose app")
+#         print("OnClose app")
         
 #        try:
 #            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
@@ -2105,7 +2105,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def fermer(self):
-        print("Fermer", self)
+#         print("Fermer", self)
         self.delFichierSauvegarde()
         
         

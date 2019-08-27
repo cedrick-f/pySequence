@@ -4,7 +4,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="la mobilité des personnes et des biens" S_01="les structures et les constructions" S_02="les objets connectés" S_03="les produits d’assistance pour la santé et la sécurité" S_04="la compensation du handicap" S_05="l’augmentation ou le suivi des performances du corps humain" />
-  <l_Enseignement S_00="CIT-SI" S_01="Enseignement optionnel 2nde - CIT-SI--Conception et Innovation Technologique--Sciences de l'ingénieur" S_02="Option - 2nde" S_03="Enseignement optionnel Seconde" />
+  <l_Enseignement S_00="CIT-SI" S_01="Enseignement optionnel 2nde - CIT-SI--Conception et Innovation Technologique--Sciences de l'ingénieur" S_02="2nde" S_03="Enseignement optionnel Seconde" />
   <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
@@ -357,7 +357,7 @@
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
       <l_03 I_00="127" I_01="77" I_02="127" />
     </l_P>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="" S_05="">
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
   </d_effectifs>
