@@ -524,8 +524,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
 #         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnDocChanged)
         
+        # Pour drag&drop direct de fichiers
         file_drop_target = MyFileDropTarget(self)
-        nb.SetDropTarget(file_drop_target)
+        self.SetDropTarget(file_drop_target)
 #         self.tabmgr.GetManagedWindow().SetDropTarget(file_drop_target)
         
         
@@ -1910,8 +1911,10 @@ class MyFileDropTarget(wx.FileDropTarget):
         """
         When files are dropped, update the display
         """
+        print("OnDropFiles", filenames)
         self.window.dropFiles(filenames)
-
+        return True
+    
 
 ########################################################################################
 #
@@ -10928,7 +10931,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.seance.SetType(get_key(ref.seances, 
                                         self.cbType.GetStringSelection(), 1))
             self.seance.GetDocument().OrdonnerSeances()
-            if not self.seance.typeSeance in ["R","S"]:
+            if not self.seance.EstSeance_RS():
                 self.AdapterAuType()
             
             if self.seance.typeSeance in ACTIVITES:
@@ -10938,7 +10941,7 @@ class PanelPropriete_Seance(PanelPropriete):
             else:
                 self.seance.systemes = []
             
-            if not self.seance.typeSeance in ["R","S"]:   
+            if not self.seance.EstSeance_RS():   
                 if self.cbEff.IsEnabled() and self.cbEff.IsShown() and self.cbEff.GetClientData() != "":
                     self.seance.SetEffectif(self.cbEff.GetClientData())
                 else:
@@ -14181,9 +14184,8 @@ class ArbreSequence(ArbreDoc):
 
             # Insérer "dans"  (racine ou "R" ou "S")  .panelSeances
             if dataTarget == self.sequence \
-               or (isinstance(dataTarget, pysequence.Seance) and dataTarget.typeSeance in ["R","S"]):
-                if hasattr(dataSource.parent, 'typeSeance') \
-                      and dataSource.parent.typeSeance in ["R","S"] \
+               or (isinstance(dataTarget, pysequence.Seance) and dataTarget.EstSeance_RS()):
+                if dataSource.parent.EstSeance_RS() \
                       and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
                         return 0
                     
@@ -14206,8 +14208,7 @@ class ArbreSequence(ArbreDoc):
             elif isinstance(dataTarget, pysequence.Seance):
                 if dataTarget.parent != dataSource.parent:  # parents différents
 #                    print dataSource.typeSeance, dataTarget.GetListeTypes()
-                    if hasattr(dataSource.parent, 'typeSeance') \
-                      and dataSource.parent.typeSeance in ["R","S"] \
+                    if dataSource.parent.EstSeance_RS() \
                       and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
                         return 0
                         

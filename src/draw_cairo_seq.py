@@ -1658,7 +1658,7 @@ def DrawSeanceRacine(ctx, seance):
 #     x, cursY , w, h = bloc.Draw(posZSeances[0], cursY)
 #     if seance.typeSeance in "RS":
          
-    if seance.typeSeance in "RS" and len(seance.seances) > 0:
+    if seance.EstSeance_RS() and len(seance.seances) > 0:
         ce = seance.seances[0].effectif
     else:
         ce = seance.GetCodeEffectif()

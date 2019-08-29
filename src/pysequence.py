@@ -9452,12 +9452,18 @@ class Seance(ElementAvecLien, ElementBase):
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
     
-    
+    ######################################################################################  
+    def EstSeance_RS(self):
+        return hasattr(self, 'typeSeance') \
+            and len(self.typeSeance) == 1 \
+            and self.typeSeance in "RS"
+            
+            
     ######################################################################################  
     def GetTypeActivite(self):
         """ Renvoie le type de la première activité parmis les sous séances
         """
-        if self.typeSeance in "RS" and len(self.seances) > 0:
+        if self.EstSeance_RS() and len(self.seances) > 0:
             return self.seances[0].GetTypeActivite()
         else:
             return self.typeSeance
@@ -9486,7 +9492,7 @@ class Seance(ElementAvecLien, ElementBase):
         """
 #         print("GetCodeEffectif", self, self.typeSeance)
         
-        if self.typeSeance in "RS" and len(self.seances) > 0:
+        if self.EstSeance_RS() and len(self.seances) > 0:
             ref = self.GetReferentiel()
             e = ref.effectifs[self.seances[0].effectif][4]
             if e == '':
@@ -10086,13 +10092,13 @@ class Seance(ElementAvecLien, ElementBase):
         else:
             self.typeSeance = self.GetReferentiel().listeTypeSeance[typ]
         
-        if self.typeSeance in ["R","S"] and not hasattr(self, 'seances'):
+        if self.EstSeance_RS() and not hasattr(self, 'seances'):
             self.seances = []
         
         if hasattr(self, 'arbre'):
             self.SetCode()
             
-        if self.typeSeance in ["R","S"] and len(self.seances) == 0: # Rotation ou Serie
+        if self.EstSeance_RS() and len(self.seances) == 0: # Rotation ou Serie
             self.AjouterSeance()
         
         
@@ -10102,7 +10108,7 @@ class Seance(ElementAvecLien, ElementBase):
 #            pass
             
         
-        if self.EstSousSeance() and self.parent.typeSeance in ["R","S"]:
+        if self.EstSousSeance() and self.parent.EstSeance_RS():
             try: # Pas terrible mais pas trouvé mieux
                 self.parent.SignalerPb(self.parent.IsEffectifOk(), 0)
             except:
