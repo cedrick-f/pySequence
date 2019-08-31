@@ -45,7 +45,7 @@ from xlrd import open_workbook
 import constantes
 import couleur
 
-from widgets import scaleImage, Grammaire
+from widgets import scaleImage, Grammaire, locale2EN, locale2def
 
 import os
  
@@ -2412,7 +2412,9 @@ class Referentiel(XMLelem):
             elif self.Code == "SSI":
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
             elif self.FichierLogo != "":
+                locale2EN()
                 self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, util_path.toFileEncoding(self.FichierLogo)))
+                locale2def()
 #                try:
 #                    self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
 #                except:
@@ -2443,7 +2445,7 @@ class Referentiel(XMLelem):
     #########################################################################
     def getTypeEtab(self):
 #         if self.Famille in ["STI", "SSI", "SI", "STS", "2nde", "ISN", "MPSI"]:
-        print("getTypeEtab", self.getPositionNum())
+#         print("getTypeEtab", self.getPositionNum())
         if self.getPositionNum() >= 205:
             return 'L'  # Lycée
         else:

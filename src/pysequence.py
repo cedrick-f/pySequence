@@ -106,7 +106,7 @@ from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
                     getSingulier, getPluriel, getSingulierPluriel, Grammaire, et2ou, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
-                    getAncreFenetre, tronquer, getHoraireTxt, scaleImage#, chronometrer
+                    getAncreFenetre, tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
                     
 from Referentiel import REFERENTIELS, ACTIVITES
 import Referentiel
@@ -692,7 +692,9 @@ class ElementBase(Grammaire):
         self.image = None
         if data != "":
             try:
+                locale2EN()
                 self.image = PyEmbeddedImage(data).GetBitmap()
+                locale2def()
             except:
                 Ok = False
                 self.image = None

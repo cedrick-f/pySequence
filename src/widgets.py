@@ -47,7 +47,25 @@ import time, os, sys
 import  wx.lib.scrolledpanel as scrolled
 from wx.lib.wordwrap import wordwrap
 
-
+######################################################################################  
+#
+#   Fonctions de passage en locale EN momentané
+#    (pendant le chargement d'images PNG)
+#
+######################################################################################  
+loc = None
+def locale2EN():
+    """ Passage momentané en Anglais (bug de wxpython)
+    """
+    global loc
+    loc = wx.GetApp().locale.GetSystemLanguage()
+    wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        
+def locale2def():
+    """ Retour au locale par défaut
+    """
+    wx.GetApp().locale = wx.Locale(loc)
+        
 ######################################################################################  
 #
 #   Classe permettant de gérer la grammaire des éléments

@@ -175,7 +175,7 @@ from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     TextCtrl_Help, CloseFenHelp, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
-                    DisplayChoice, MyEditableListBox, intersection
+                    DisplayChoice, MyEditableListBox, intersection, locale2def, locale2EN
                     #, chronometrer
 
 
@@ -5536,8 +5536,11 @@ class PanelPropriete(scrolled.ScrolledPanel):
             # This returns a Python list of files that were selected.
             paths = dlg.GetPaths()#.decode(FILE_ENCODING)
             nomFichier = paths[0]
+            
             try:
+                locale2EN()
                 bmp = wx.Image(nomFichier).ConvertToBitmap()
+                locale2def()
             except:
                 messageErreur(self, "Erreur !",
                                     "Fichier image invalide !\n" \
@@ -7656,8 +7659,7 @@ class ListeCI(wx.Panel):
         # Liste
         #
         # Passage momentané en Anglais (bug de wxpython)
-        loc = wx.GetApp().locale.GetSystemLanguage()
-        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        locale2EN()
         
         
         self.list = ULC.UltimateListCtrl(self, wx.ID_ANY, 
@@ -7716,7 +7718,7 @@ class ListeCI(wx.Panel):
         self.sizer.Layout()
         
         
-        wx.GetApp().locale = wx.Locale(loc)
+        locale2def()
         
         
         self.OnChangeSelection()
@@ -9177,8 +9179,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         ref = self.sequence.GetReferentiel()
         
         # Passage momentané en Anglais (bug de wxpython)
-        loc = wx.GetApp().locale.GetSystemLanguage()
-        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        locale2EN()
         
         
         #
@@ -9286,7 +9287,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.sizer.AddGrowableCol(2)
         self.sizer.Layout()
     
-        wx.GetApp().locale = wx.Locale(loc)
+        locale2def()
     
 
     #############################################################################            
@@ -18175,8 +18176,7 @@ class URLSelectorCombo(wx.Panel):
     ###############################################################################################
     def CreateSelector(self):
         # Passage momentané en Anglais (bug de wxpython)
-        loc = wx.GetApp().locale.GetSystemLanguage()
-        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        locale2EN()
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         bsize = (16*SSCALE, 16*SSCALE)
         
@@ -18208,7 +18208,7 @@ class URLSelectorCombo(wx.Panel):
         file_drop_target = MyFileDropTarget(self)
         self.SetDropTarget(file_drop_target)
         
-        wx.GetApp().locale = wx.Locale(loc)
+        locale2def()
         
         return sizer
     
