@@ -10393,7 +10393,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.vcDuree.Destroy()
             del self.vcDuree
         
-        if not self.seance.typeSeance in ["R", "S"]:
+        if not self.seance.EstSeance_RS():
             vcDuree = VariableCtrl(self.pageGen, self.seance.duree, coef = 0.25, 
                                    signeEgal = True, slider = False, sizeh = 30,
                                    help = "Durée %s en heures" %ref._nomActivites.du_(),
@@ -10637,7 +10637,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Compétences
         #
-        if self.seance.typeSeance in ["R", "S"]:
+        if self.seance.EstSeance_RS():
             pass # Là, il faudrait cacher les onglets ...
         else:
             if hasattr(self, 'arbreCmp'):
@@ -10692,7 +10692,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Savoirs
         #
-        if self.seance.typeSeance in ["R", "S"]:
+        if self.seance.EstSeance_RS():
             pass # Là, il faudrait cacher les onglets ...
         else:
             if hasattr(self, 'arbreSav'):
