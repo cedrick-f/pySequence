@@ -85,14 +85,16 @@ _**pySequence 8**_ existe :
      * installation des sources de pySéquence (fichiers .ZIP des sources disponibles depuis chaque [release](https://github.com/cedrick-f/pySequence/releases))
      * Le fichier .PY à lancer est wxpysequence.py
 
+---
+
+
 ## Support
 1. En cas de problème, commencer par suivre les instructions du [support](https://github.com/cedrick-f/pySequence/blob/master/Support.md)
-1. Envoyer un message si pySéquence le propose :
-  1. Automatiquement en acceptant d'envoyer un message à partir de votre logiciel de messagerie
-  1. Manuellement en copiant/collant l'image de la fenêtre affichant le message
-  Dans tous les cas, il est important de bien expliquer comment reproduire le bug.
-1. Consulter les discussions de la [rubrique issues](https://github.com/cedrick-f/pySequence/issues)
-1. Poster un message de la [rubrique issues](https://github.com/cedrick-f/pySequence/issues)
+1. Si __*pySéquence*__ le propose, envoyer un message (dans tous les cas, il est important de bien expliquer comment reproduire le bug):
+   1. Automatiquement : en acceptant d'envoyer un message à partir de votre logiciel de messagerie
+   1. Manuellement : en copiant/collant l'image de la fenêtre affichant le message
+1. Consulter les discussions de la [rubrique issues](https://github.com/cedrick-f/pySequence/issues) : la réponse s'y trouve peut-être !
+1. Poster un message sur la [rubrique issues](https://github.com/cedrick-f/pySequence/issues)
 
 ---
 
