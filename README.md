@@ -14,6 +14,8 @@ _**pySequence 8**_ s'adresse particulièrement aux professeurs de _**[Sciences I
   * **STS : Electrotechnique** et **Systèmes Numériques** , **Maintenance de véhicule** ,  **Technique Services Materiels Agricoles**
   * **MPSI** (en travaux) 
   * **ISN** (en travaux)
+  * **SNT** (seconde)
+  * **Spécialité NSI** (_Informatique_ bac 2021)
   * .......
 
 et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/blob/master/referentiels/README.md).
@@ -58,7 +60,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 |Lien |Remarque|
 |---|---|
-|[pySequence_8.1.13.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.1.13)   |Dernière version "stable"|
+|[pySequence_8.1.14.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.1.14)   |Dernière version "stable"|
 |[pySequence_8.0-beta.35.zip](https://github.com/cedrick-f/pySequence/releases/tag/v8.0-beta.35)|Dernière version beta|
 
 
