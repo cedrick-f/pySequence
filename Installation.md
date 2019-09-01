@@ -10,6 +10,8 @@ _testé sous Windows, à partir des sources_
 Désinstaller toute ancienne version de Python, ainsi que les modules.
 Nettoyer le registre
 
+### Sous windows
+
 Package redistribuable Microsoft Visual C++ 2008 (x86)
 https://www.microsoft.com/fr-FR/download/details.aspx?id=29
 
@@ -22,6 +24,8 @@ https://www.python.org/downloads/
 
 ## Installations avec pip ##
 -------------------------
+
+### Mise à jour de pip sous Windows
 
 Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
 
