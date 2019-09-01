@@ -13,7 +13,7 @@ Il suffit de télécharger un pack parmi les [versions disponibles](https://gith
 
 Les sources de toutes les [versions disponibles](https://github.com/cedrick-f/pySequence/releases) sont fournies au format .zip ou .tar.gz
 
-[Procédure d'installation](https://github.com/cedrick-f/pySequence/installation_Windows_py3.md)
+[Procédure d'installation](https://github.com/cedrick-f/pySequence/installation.md)
 
 
 
