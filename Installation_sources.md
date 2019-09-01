@@ -1,31 +1,40 @@
-# Installation de pySéquence #
+# Installation de pySéquence 8 à partir des sources #
 **avec Python 3**
 
-_testé sous Windows, à partir des sources_
+_testé sous Windows_
 
 
 ## Préparation ##
 --------------
 
 Désinstaller toute ancienne version de Python, ainsi que les modules.
-Nettoyer le registre
+Nettoyer le registre (Windows)
+
+### Sous windows
 
 Package redistribuable Microsoft Visual C++ 2008 (x86)
 https://www.microsoft.com/fr-FR/download/details.aspx?id=29
 
-## Installations avec installeurs Windows ##
-### Python ###
-3.6
+## Installation de python ##
+-------------------------
+_version 3.6_
 
 https://www.python.org/downloads/
 
 
 ## Installations avec pip ##
 -------------------------
+Ouvrir une fenêtre de commande (ou console ou terminal), en mode administrateur.
+Accéder au dossier de pip :
 
-Depuis une fenêtre de commande (à modifier selon l'emplacement de Python):
+Sous Windows :
 
     cd C:\Users\{utilisateur}\AppData\Local\Programs\Python\Python36-32\scripts
+
+
+
+### Mise à jour de pip
+   
     pip install --upgrade pip
 
 ### wxpython ###
