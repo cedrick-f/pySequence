@@ -1,0 +1,26 @@
+[Classe]
+fichierclasse = 
+enseignement = NSI
+
+[Projet]
+nbrrevues = 2
+posrevues_00 = Ana
+posrevues_01 = Rea
+
+[Fichiers]
+fichiersrecents_00 = P:\SSI_BP\Projets 2020\Séchoir solaire\Séchoir_solaire.prj
+fichiersrecents_01 = C:\Users\Cedrick\Documents\Travail\Info\NSI\Les booléens.seq
+fichiersrecents_02 = C:\Users\Cedrick\Documents\Travail\Info\NSI\NSI.prg
+fichiersrecents_03 = C:\Users\Cedrick\Documents\Developp\pysequence\exemples\sequence 2 SI.seq
+fichiersrecents_04 = P:\SSI_BP\Projets 2020\Séchoir solaire\Deshydrateur_solaire.prj
+fichiersrecents_05 = C:\Users\Cedrick\Documents\Developp\pysequence\exemples\EE6 - ferme verticale v 08b18.prj
+fichiersrecents_06 = C:\Users\Cedrick\Documents\Travail\Info\NSI\Représentation des entiers.seq
+fichiersrecents_07 = P:\SSI_BP\Projets 2020\Robot collaboratif\Robot_collaboratif.prj
+fichiersrecents_08 = P:\SSI_BP\Projets 2020\Transport vaccin\Glacière_médicament.prj
+
+[Fenetre]
+position_00 = 1430
+position_01 = 0
+taille_00 = 1460
+taille_01 = 1570
+

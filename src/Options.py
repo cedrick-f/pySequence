@@ -206,7 +206,7 @@ class Options:
                         val = config.get(titreUtf, opt)
             return val
         
-        def lec(titreopt):
+        def lec(titreopt, type_option = int):
             titreopt = titreopt.lower()
             lst = list(zip(*config.items(titreUtf)))
             if len(lst) > 0 and titreopt in lst[0]:
@@ -230,7 +230,14 @@ class Options:
                     else:
                         return d
                 else:
-                    return []
+                    if type_option == int:
+                        return 0
+                    elif type_option == list:
+                        return []
+                    elif type_option == dict:
+                        return {}
+                    elif type_option == str:
+                        return ""
                 
 #            if type(opt) == int:
 #                opt = config.getint(titreUtf, titreopt)
@@ -285,14 +292,14 @@ class Options:
 #            self.typesOptions[titre][titreopt] = opt
 
         
-        for titre in list(self.typesOptions.keys()):
+        for titre in self.typesOptions.keys():
             titreUtf = titre#.encode('utf-8')
 #            print "   ", titreUtf, self.typesOptions[titre].keys()
             
-            for titreopt in list(self.typesOptions[titre].keys()):
+            for titreopt in self.typesOptions[titre].keys():
 #                opt = self.typesOptions[titre][titreopt]
-                
-                self.typesOptions[titre][titreopt] = lec(titreopt)
+                type_option = type(self.typesOptions[titre][titreopt])
+                self.typesOptions[titre][titreopt] = lec(titreopt, type_option)
 #            print "    >>", self.typesOptions[titre]
                 
 #                print titreopt, type(opt), opt
