@@ -1,6 +1,6 @@
 Voici quelques erreurs qui peuvent se produire et comment les résoudre :
 
-# Impossible de créer un nouveau document su la version 8.1.14 installable
+# Impossible de créer un nouveau document sur la version 8.1.14 installable
 ## Erreur :
 `TypeError : unhashable type: 'list'`
 
