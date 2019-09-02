@@ -89,7 +89,7 @@ _**pySequence 8**_ existe :
 
 
 ## Support
-1. En cas de problème, commencer par suivre les instructions du [support](https://github.com/cedrick-f/pySequence/blob/master/Support.md)
+1. En cas de problème, commencer par suivre les instructions du [support](https://github.com/cedrick-f/pySequence/blob/master/SUPPORT.md)
 1. Si __*pySéquence*__ le propose, envoyer un message (dans tous les cas, il est important de bien expliquer comment reproduire le bug):
    1. Automatiquement : en acceptant d'envoyer un message à partir de votre logiciel de messagerie
    1. Manuellement : en copiant/collant l'image de la fenêtre affichant le message
