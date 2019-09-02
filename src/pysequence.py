@@ -7539,9 +7539,9 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     def ConstruireArbre(self, arbre, branche):
 #         if self.sequence is None:
 #             return
-#        print "ConstruireArbre"
+#         print("ConstruireArbre")
         self.arbre = arbre
-            
+        
         
 #         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
@@ -7550,6 +7550,9 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
                                         image = self.arbre.images["Seq"])
 #         self.codeBranche.SetBranche(self.branche)
         if self.sequence is not None:
+            self.sequence.DefinirCouleurs()
+#             print(draw_cairo.BcoulPos)
+#             print(self.sequence.position[0])
             coul = draw_cairo.BcoulPos[self.sequence.position[0]]
             coul = [int(200*c) for c in coul]
             self.arbre.SetItemTextColour(self.branche, wx.Colour(*coul))
