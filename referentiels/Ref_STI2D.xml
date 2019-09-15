@@ -5794,28 +5794,28 @@
   <d_domaines />
   <d_effectifs>
     <l_C S_00="Effectif niveau" S_01="Effectif niveau" S_02="" S_04="" S_05="">
-      <l_03 F_00="77.0" F_01="77.0" F_02="179.0" />
+      <l_03 I_00="77" I_01="77" I_02="179" />
     </l_C>
     <l_G S_00="Division" S_01="Division" S_02="" S_04="C" S_05="O">
-      <l_03 F_00="102.0" F_01="127.0" F_02="102.0" />
+      <l_03 I_00="102" I_01="127" I_02="102" />
     </l_G>
     <l_D S_00="Effectif allégé" S_01="Effectif allégé" S_02="" S_04="C" S_05="O">
-      <l_03 F_00="179.0" F_01="77.0" F_02="77.0" />
+      <l_03 I_00="179" I_01="77" I_02="77" />
     </l_D>
     <l_S S_00="Ens. Spécifique" S_01="Enseignement Spécifique" S_02="" S_04="C" S_05="N">
-      <l_03 F_00="188.0" F_01="154.0" F_02="0.0" />
+      <l_03 I_00="188" I_01="154" I_02="0" />
     </l_S>
     <l_T S_00="E/P (E.Spé)" S_01="Étude et Projet (E.Spé)" S_02="" S_04="S" S_05="N">
-      <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
+      <l_03 I_00="77" I_01="127" I_02="127" />
     </l_T>
     <l_U S_00="A.P. (E.Spé)" S_01="Activité Pratique (E.Spé)" S_02="" S_04="S" S_05="N">
-      <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
+      <l_03 I_00="127" I_01="77" I_02="127" />
     </l_U>
     <l_E S_00="Étude ou Projet" S_01="Étude et Projet" S_02="" S_04="D" S_05="N">
-      <l_03 F_00="77.0" F_01="127.0" F_02="127.0" />
+      <l_03 I_00="77" I_01="127" I_02="127" />
     </l_E>
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="D" S_05="N">
-      <l_03 F_00="127.0" F_01="77.0" F_02="127.0" />
+      <l_03 I_00="127" I_01="77" I_02="127" />
     </l_P>
     <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
@@ -5836,16 +5836,16 @@
   </d_effectifsSeance>
   <d_ensSpecif>
     <l_AC S_00="Architecture et Construction" S_01="Architecture et Construction" S_02="">
-      <l_03 F_00="228.0" F_01="108.0" F_02="10.0" />
+      <l_03 I_00="228" I_01="108" I_02="10" />
     </l_AC>
     <l_EE S_00="Energie et Environnement" S_01="Energie et Environnement" S_02="">
-      <l_03 F_00="0.0" F_01="176.0" F_02="80.0" />
+      <l_03 I_00="0" I_01="176" I_02="80" />
     </l_EE>
     <l_ITEC S_00="Innovation Technologique et Eco-Conception" S_01="Innovation Technologique et Eco-Conception" S_02="">
-      <l_03 F_00="192.0" F_01="0.0" F_02="0.0" />
+      <l_03 I_00="192" I_01="0" I_02="0" />
     </l_ITEC>
     <l_SIN S_00="Systèmes d'Information et Numérique" S_01="Systèmes d'Information et Numérique" S_02="">
-      <l_03 F_00="147.0" F_01="205.0" F_02="221.0" />
+      <l_03 I_00="147" I_01="205" I_02="221" />
     </l_SIN>
   </d_ensSpecif>
   <d_ensSpecifSeance>

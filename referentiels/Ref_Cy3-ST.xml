@@ -1242,7 +1242,7 @@
     <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
       <l_03 I_00="127" I_01="77" I_02="127" />
     </l_P>
-    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="" S_05="">
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_I>
   </d_effectifs>

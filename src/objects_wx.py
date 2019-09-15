@@ -1107,7 +1107,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def MiseAJourToolBar(self):
         fenDoc = self.GetCurrentPage()
-        if fenDoc is not None and fenDoc.typ == 'prg':
+        if fenDoc is not None and fenDoc.typ == 'prg': #and hasattr(fenDoc, 'progression') 
             coderef = fenDoc.progression.GetReferentiel().Code
     #         print "   ", coderef
             btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
@@ -2762,10 +2762,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def VerifierReferentiel(self, nomFichier):
-        print("VerifierReferentiel", self.classe.GetReferentiel(), Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code])
+#         print("VerifierReferentiel", self.classe.GetReferentiel(), Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code])
         e = self.classe.GetReferentiel() == Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code]
         if not e:
-            print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
+#             print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
             dlg = DiffRefChoix(self, nomFichier)
             val = dlg.ShowModal()
             dlg.Destroy()
@@ -3599,7 +3599,9 @@ class FenetreProjet(FenetreDocument):
                     raise OldVersion
                 
                 if self.VerifierReferentiel("projet") == 1:
+#                     print("Remplacer ref")
                     reparer = True
+                    self.classe.setBranche(classe, reparer = reparer)
                 
                 if len(err)  > 0 :
                     Ok = False
@@ -4418,6 +4420,7 @@ class FenetreProgression(FenetreDocument):
                 
                 if self.VerifierReferentiel("progression") == 1:
                     reparer = True
+                    self.classe.setBranche(classe, reparer = reparer)
                 
                 if len(err) > 0 :
                     Ok = False
@@ -6646,7 +6649,7 @@ class PanelPropriete_Progression(PanelPropriete):
         self.nbrCreneaux = Variable("Nombre de créneaux", lstVal = self.GetDocument().nbrCreneaux, 
                                    typ = VAR_ENTIER_POS, bornes = [self.GetDocument().GetNbrCreneauxMini(),5])
         self.ctrlCreneaux = VariableCtrl(pageGen, self.nbrCreneaux, coef = 1, signeEgal = False,
-                                      help = "Nombre de créneaux horaire", sizeh = 40*SSCALE, 
+                                      help = "Nombre de créneaux horaires\nLa valeur mini est fixée\npar les séquences ou projets déjà définis", sizeh = 40*SSCALE, 
                                       sliderAGauche = True, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlCreneaux)
         sb.Add(self.ctrlCreneaux)
@@ -19377,12 +19380,12 @@ class DiffRefChoix(wx.Dialog):
         sizer.Add(st, 0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
         
         button = wx.Button(self, -1, "Remplacer le référentiel")
-        button.SetToolTip("Remplacer le référentiel intégré par celui fourni par pySéquence")
+        button.SetToolTip("Remplacer le référentiel intégré au document\npar celui fourni avec pySéquence")
         self.Bind(wx.EVT_BUTTON, self.OnRepl, button)
         sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
         
         button = wx.Button(self, -1, "Conserver le référentiel")
-        button.SetToolTip("Conserver le référentiel intégré")
+        button.SetToolTip("Conserver le référentiel intégré au document")
         self.Bind(wx.EVT_BUTTON, self.OnCons, button)
         sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
         

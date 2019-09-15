@@ -1200,7 +1200,7 @@ class Referentiel(XMLelem):
             """
             C = couleur.CouleurCSS2Float(sh.cell(l,c).value, bytes = True)
             if C is not None:
-                return C
+                return tuple([int(c) for c in C])
             
             xfx = sh.cell_xf_index(l, c)
             xf = wb.xf_list[xfx]
@@ -1215,10 +1215,13 @@ class Referentiel(XMLelem):
 #             print(wb.palette_record)
 #             print("coul", bgx)
 #             print("map", color_map)
+
+
             if color_map is None:
-                return defaut
-            else:
-                return color_map
+                color_map = defaut
+            color_map = tuple([int(c) for c in color_map])
+#             print("color_map", color_map)
+            return color_map
         
         #
         # Ouverture fichier EXCEL
@@ -1601,7 +1604,7 @@ class Referentiel(XMLelem):
                                         sh_g.cell(l,5).value, sh_g.cell(l,6).value]
                     
                 self.listeEffectifs.append(code)
-
+#                 print(code, self.effectifs[code][3])
         # Systèmes
 #         print(self.Code, range(l, sh_g.nrows))
         if len(range(l, sh_g.nrows)) > 1:
@@ -1710,6 +1713,7 @@ class Referentiel(XMLelem):
         self._lstEffectifs.remove('I')
         self._lstEffectifs = "".join(self._lstEffectifs)
         for code in self._lstEffectifs+"CI":#'GDSTUEP':
+#             print(code, self.effectifs[code][3])
 #             print("   ", self.effectifs[code])
 #             if not code in self.effectifs.keys():
 # #                 self.effectifs['S'] = [*self.effectifs['G']]
@@ -1739,7 +1743,7 @@ class Referentiel(XMLelem):
                     self.effectifs[code][5] = constantes.MmActiv[code]
                 
                 
-#             print(code, self.effectifs[code])
+#             print("  >>", self.effectifs[code][3])
                     
         # Les effectifs sous forme arborescente
         # exemple 'STI2D.xls' :

@@ -497,13 +497,14 @@ class Lien():
     
     ######################################################################################  
     def getBranche(self, branche):
-        branche.set("Lien", toSystemEncoding(self.path))
+        branche.set("Lien", toSystemEncoding(os.path.normpath(self.path)))
         branche.set("TypeLien", self.type)
         
         
     ######################################################################################  
     def setBranche(self, branche, pathseq):
         self.path = toFileEncoding(branche.get("Lien", r""))
+        self.path = os.path.normpath(self.path)
         self.type = branche.get("TypeLien", "")
         if self.type == "" and self.path != r"":
             self.EvalTypeLien(pathseq)
