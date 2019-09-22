@@ -1877,9 +1877,9 @@ class Referentiel(XMLelem):
 
 
     #########################################################################
-    def getPosRevuesDefaut(self, codePrj):
+    def getPosRevuesDefaut(self, codePrj, nbrRevues = None):
         if codePrj is not None:
-            return self.projets[codePrj].getPosRevuesDefaut()
+            return self.projets[codePrj].getPosRevuesDefaut(nbrRevues)
         else:
             return []
 
@@ -2665,8 +2665,20 @@ class Projet(XMLelem):
         return min(self.posRevues.keys())
     
     #########################################################################
-    def getPosRevuesDefaut(self):
-        return self.posRevues[self.getNbrRevuesDefaut()]
+    def getPosRevuesDefaut(self, nbrRevues = None):
+        """ Renvoie la liste des position des revues (Revue après Phase xxx)
+        """
+        print("**", self.posRevues, nbrRevues)
+        if nbrRevues is None:
+            nbrRevues = self.getNbrRevuesDefaut()
+            return self.posRevues[nbrRevues]
+        else:
+            if nbrRevues in self.posRevues.keys():
+                return self.posRevues[nbrRevues]
+            else:
+                print("ERREUR getPosRevuesDefaut")
+                return 
+                    
     
     #############################################################################
     def getNbrPeriodes(self):

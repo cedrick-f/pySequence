@@ -4136,24 +4136,42 @@ class Projet(BaseDoc, Grammaire):
         self.position = [int(sp[0]), int(sp[1])]
         
         
-        ref = self.GetProjetRef()
-        if ref is not None:
+        prj = self.GetProjetRef()
+        if prj is not None:
             if self.version == "": # Enregistré avec une version de pySequence > 5.7
                 if self.position[0] == 5:
                     print("Correction position")
-                    self.position = ref.getPeriodeEval()
+                    self.position = prj.getPeriodeEval()
     #        print "position", self.position
             self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
             
-            self.nbrRevues = eval(branche.get("NbrRevues", str(ref.getNbrRevuesDefaut())))
-            if not self.nbrRevues in ref.posRevues.keys():
-                self.nbrRevues = ref.getNbrRevuesDefaut()
-            self.positionRevues = branche.get("PosRevues", 
-                                              '-'.join(list(ref.posRevues[self.nbrRevues]))).split('-')
+            self.nbrRevues = int(branche.get("NbrRevues"))
+            #self.MiseAJourNbrRevues()
+#             if not self.nbrRevues in prj.posRevues.keys():
+#                 self.nbrRevues = prj.getNbrRevuesDefaut()
+            self.positionRevues = branche.get('PosRevues')
+            
+            
+            # Correction en cas de problème pour éviter les incohérences
+            if self.nbrRevues is None or self.positionRevues is None:
+                self.initRevues()
+            else:
+                self.positionRevues = self.positionRevues.split("-")
+            
+            
+            
+            if len(self.positionRevues) > self.nbrRevues:
+                self.positionRevues = self.positionRevues[:self.nbrRevues]
+            elif len(self.positionRevues) < self.nbrRevues:
+                # On réduit le nombre de revues aux nombre de positions !!
+                self.nbrRevues = len(self.positionRevues)
+                
+            
+            
+            
+#                                               '-'.join(list(ref.posRevues[self.nbrRevues]))).split('-')
     
-            if self.nbrRevues == 3: # Car par défaut c'est 2
-                self.MiseAJourNbrRevues()
-        
+#             if self.nbrRevues == 3: # Car par défaut c'est 2
             
         self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
 
@@ -4267,16 +4285,23 @@ class Projet(BaseDoc, Grammaire):
                 self.taches.append(tache)
 #        self.CorrigerIndicateursEleve()
         
+        
+        if not (min(prj.posRevues.keys()) <= self.nbrRevues <= max(prj.posRevues.keys())) :
+            print("> initRevues")
+            self.initRevues()
+            self.MiseAJourNbrRevues()
+                
+                
         # Pour récupérer les prj créés avec la version beta1
         if adapterVersion:
             self.taches.extend(tachesRevue)
         
-        if ref is not None:
+        if prj is not None:
             self.SetCompetencesRevuesSoutenance()
 
         if hasattr(self, 'panelPropriete'):
 #            if ancienneFam != self.classe.familleEnseignement:
-            self.initRevues()
+            #self.initRevues()
             
             self.MiseAJourNbrRevues()
            
@@ -4531,15 +4556,21 @@ class Projet(BaseDoc, Grammaire):
             e.MiseAJourCodeBranche()
     
     
+    #############################################################################
+    def initRevues(self):
+        print("initRevues",self.code)
+        self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut(self.code)
+        self.positionRevues = list(self.GetReferentiel().getPosRevuesDefaut(self.code, self.nbrRevues))
+        print("   ", self.nbrRevues, self.positionRevues)
     
             
     ######################################################################################  
     def MiseAJourNbrRevues(self):
         """ Opère les changements lorsque le nombre de revues a changé...
         """
-#        print "MiseAJourNbrRevues", self.nbrRevues
+        print("MiseAJourNbrRevues", self.nbrRevues, self.positionRevues)
         lstPhasesTaches = [k.phase for k in self.taches if k.phase in TOUTES_REVUES_EVAL]
-#        print "   ", lstPhasesTaches
+        print("   ", lstPhasesTaches)
         if self.nbrRevues == 3 and not _R3 in lstPhasesTaches: # on ajoute une revue
             self.positionRevues.append(self.positionRevues[-1])
             tache = Tache(self, intitule = self.GetProjetRef().phases[_R3][1], 
@@ -4557,6 +4588,7 @@ class Projet(BaseDoc, Grammaire):
             self.SupprimerTache(item = t.branche)
 #            revue2 = self.getTachesRevue()[1]
 #            revue2.panelPropriete = PanelPropriete_Tache(self.panelParent, revue2, revue = True)
+#         print("   ", self.nbrRevues, self.positionRevues)
         return
 
 
@@ -5194,7 +5226,7 @@ class Projet(BaseDoc, Grammaire):
     def GetListePhases(self, avecRevuesInter = False):
         """ Renvoie la liste ordonnée des phases dans le projet
         """
-#        print "GetListePhases",
+        print("GetListePhases")
         prj = self.GetProjetRef()
         if prj is None:
             return []
@@ -5202,12 +5234,12 @@ class Projet(BaseDoc, Grammaire):
         lst = [k for k in prj.listPhases if not k in prj.listPhasesEval]
 #        lst = list(self.GetReferentiel().listPhases_prj)
 #        print "  ", self.classe.GetReferentiel()
-#        print "  ", lst
+        print("  ", lst)
 #        print "  ", self.nbrRevues
-        lr = list(range(1, self.nbrRevues+1))
-        lr.reverse()
-
-        for r in lr:
+#         lr = list(range(1, self.nbrRevues+1))
+#         lr.reverse()
+#         print("     ", lr,  self.positionRevues)
+        for r in range(self.nbrRevues, 0, -1):
 #            print "     ", lr,  self.positionRevues[r-1]
             if self.positionRevues[r-1] in  lst:
                 lst.insert(lst.index(self.positionRevues[r-1])+1, "R"+str(r))
@@ -5345,12 +5377,7 @@ class Projet(BaseDoc, Grammaire):
         self.MiseAJour()
 
                 
-    #############################################################################
-    def initRevues(self):
-#        print "initRevues",self.code
-        self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut(self.code)
-        self.positionRevues = list(self.GetReferentiel().getPosRevuesDefaut(self.code))
-#        print self.nbrRevues, self.positionRevues
+    
         
 
     #############################################################################
@@ -13534,7 +13561,7 @@ class Eleve(Personne):
             
             compil = renvoie des dictionnaire plus simples
         """ 
-#         print "GetEvaluabilite", self
+        print("GetEvaluabilite", self)
         prj = self.GetProjetRef()
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
@@ -13624,7 +13651,7 @@ class Eleve(Personne):
                     ev[disc][part][grp] = [tx, tx >= seuil[disc][part]]
                     ev_tot[disc][part][1] = ev_tot[disc][part][1] and ev[disc][part][grp][1]
         
-#        print "   ", ev, ev_tot, seuil
+        print("   ", ev, ev_tot, seuil)
         
         
         

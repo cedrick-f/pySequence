@@ -327,6 +327,7 @@ def pourCent2(v, ajuster = False):
 
 ######################################################################################  
 def remplaceLF2Code(txt):
+#     print("remplaceLF2Code", txt)
     d = {"##13##" : ["\n",
                       "\u000D\u000A", #CRLF
                       "\u000A", #LF
@@ -336,9 +337,10 @@ def remplaceLF2Code(txt):
                       "\u2028", #LS
                       "\u2029", #LS
                       ]}
-    for k, lv in list(d.items()):
+    for k, lv in d.items():
         for v in lv:
             txt = txt.replace(v, k)
+#     print("  >>", txt)
     return txt
     
     

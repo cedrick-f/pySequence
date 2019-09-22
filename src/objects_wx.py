@@ -6805,6 +6805,7 @@ class PanelPropriete_Progression(PanelPropriete):
 ###################################################################################################
 class PanelOrganisation(wx.Panel):    
     def __init__(self, parent, panel, objet):
+        print("PanelOrganisation", objet.nbrRevues)
         wx.Panel.__init__(self, parent, -1)
         self.objet = objet
         self.parent = panel
@@ -6814,10 +6815,11 @@ class PanelOrganisation(wx.Panel):
         gbsizer = wx.GridBagSizer()
         titre = myStaticBox(self, -1, "Organisation")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-
+        
         self.nbrRevues = Variable("Nombre de revues",  
                                    lstVal = self.objet.nbrRevues, 
-                                   typ = VAR_ENTIER_POS, bornes = [2,3])
+                                   typ = VAR_ENTIER_POS,
+                                   bornes = [2,3])
         self.ctrlNbrRevues = VariableCtrl(self, self.nbrRevues, coef = 1, signeEgal = False,
                                 help = "Nombre de revues de projet (avec évaluation)", sizeh = 30*SSCALE, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrRevues)
@@ -6914,19 +6916,21 @@ class PanelOrganisation(wx.Panel):
         
     #############################################################################            
     def MiseAJourListe(self):
-#        print "MiseAJourListe"
+        print("MiseAJourListe", self.objet.nbrRevues)
 #        print self.objet.GetListeNomsPhases()
         prj = self.objet.GetProjetRef()
         if prj is None:
             return
         self.ctrlNbrRevues.redefBornes([min(prj.posRevues.keys()), max(prj.posRevues.keys())])
-        self.ctrlNbrRevues.setValeur(prj.getNbrRevuesDefaut())
+        self.ctrlNbrRevues.setValeur(self.objet.nbrRevues)
+#         self.ctrlNbrRevues.setValeur(prj.getNbrRevuesDefaut())
         self.liste.Set(self.objet.GetListeNomsPhases())
         self.Layout()
 
 
     #############################################################################            
     def EvtVariable(self, event):
+        print("EvtVariable NbrRevues")
         var = event.GetVar()
         if var == self.nbrRevues:
             if var.v[0] != self.objet.nbrRevues:
