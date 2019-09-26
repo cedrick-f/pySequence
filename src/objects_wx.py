@@ -172,7 +172,7 @@ from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, Grammaire, \
                     getPluriel, getSingulierPluriel, et2ou, \
-                    TextCtrl_Help, CloseFenHelp, \
+                    TextCtrl_Help, CloseFenHelp, DelayedResult, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
                     DisplayChoice, MyEditableListBox, intersection, locale2def, locale2EN
@@ -1990,7 +1990,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #########################################################################################################
     def sendEvent(self, doc = None, modif = "", draw = True, 
                   obj = None, verif = False):
-#         print("sendEvent", modif)
+#         print("sendEvent", modif, draw, verif)
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
         if doc != None:
@@ -2907,6 +2907,8 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
+        """ La Séquence a été modifiée
+        """
 #         print("OnDocModified", event.GetModif())
         
         # coupé pour accélération :
@@ -3416,6 +3418,10 @@ class FenetreProjet(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
+        """ Le Projet a été modifié ...
+        """
+#         print("OnDocModified Projet", event.GetModif(), event.GetVerif())
+        
         if event.GetModif() != "":
 #             print "OnDocModified", event.GetModif()
             self.classe.undoStack.do(event.GetModif())
@@ -3424,7 +3430,9 @@ class FenetreProjet(FenetreDocument):
         if event.GetDocument() == self.projet:
             if event.GetVerif():
                 self.projet.VerifPb()
+            
             self.projet.SetCompetencesRevuesSoutenance(miseAJourPanel = False)
+            
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
 
@@ -4250,6 +4258,8 @@ class FenetreProgression(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
+        """ La Progression a été modifiée ...
+        """
         if event.GetModif() != "":
 #            print "OnDocModified", event.GetModif()
             self.classe.undoStack.do(event.GetModif())
@@ -4829,16 +4839,18 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 #         print "Draw :", tps2 - tps1
         
 ####################################################################################
-from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow):
+# from wx.lib.delayedresult import startWorker
+class BaseFiche(wx.ScrolledWindow, DelayedResult):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
+        DelayedResult.__init__(self, self.Compute)
+        
 #         self.Freeze()
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
         
-        self.t = None
+#         self.t = None
         self.w, self.h = self.GetVirtualSize()
         self.buffer = wx.Bitmap(self.w, self.h)
         self.surRect = None
@@ -4848,8 +4860,8 @@ class BaseFiche(wx.ScrolledWindow):
         self.Bind(wx.EVT_SIZE, self.OnResize)
 #         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 
-        self.timer = wx.Timer(self)
-        self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
+#         self.timer = wx.Timer(self)
+#         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
 
         self.SizeUpdate()
 #         self.Thaw()
@@ -4992,7 +5004,7 @@ class BaseFiche(wx.ScrolledWindow):
     #############################################################################            
     def Redessiner(self, event = None):  
         
-#         print "Redessiner :",
+#         print("Redessiner")
         self.OnResize()    
 #         tps2 = time.clock() 
 #         print tps2 - tps1
@@ -5067,13 +5079,13 @@ class BaseFiche(wx.ScrolledWindow):
     def OnEraseBackground(self, event):
         pass # Or None
 
-    #-------------------------------------------------------------------------
-    def OnTimer(self, event):
-        # Start another thread which will update the bitmap
-        # But only if another is not still running!
-        if self.t is None:
-            self.timer.Stop()
-            self.t = startWorker(self.ComputationDone, self.Compute)
+#     #-------------------------------------------------------------------------
+#     def OnTimer(self, event):
+#         # Start another thread which will update the bitmap
+#         # But only if another is not still running!
+#         if self.t is None:
+#             self.timer.Stop()
+#             self.t = startWorker(self.ComputationDone, self.Compute)
 
     #-------------------------------------------------------------------------
     def SizeUpdate(self):
@@ -5110,22 +5122,22 @@ class BaseFiche(wx.ScrolledWindow):
 
 
 
-    #-------------------------------------------------------------------------
-    def ComputationDone(self, r):
-        # source : https://stackoverflow.com/questions/5732952/draw-on-image-buffer-memorydc-in-separate-thread
-        # When done, take bitmap and place it to the drawing buffer
-        # Invalidate panel, so it is redrawn
-        # But not if the later thread is waiting!
-#         temp = r.get()
-#         try:
-        if not self.timer.IsRunning():
-#             print("ComputationDone")
-#             self.buffer = temp
-            self.Refresh()
-            self.Update()
-#         except:
-#             print("Erreur Computation")
-        self.t = None
+#     #-------------------------------------------------------------------------
+#     def ComputationDone(self, r):
+#         # source : https://stackoverflow.com/questions/5732952/draw-on-image-buffer-memorydc-in-separate-thread
+#         # When done, take bitmap and place it to the drawing buffer
+#         # Invalidate panel, so it is redrawn
+#         # But not if the later thread is waiting!
+# #         temp = r.get()
+# #         try:
+#         if not self.timer.IsRunning():
+# #             print("ComputationDone")
+# #             self.buffer = temp
+#             self.Refresh()
+#             self.Update()
+# #         except:
+# #             print("Erreur Computation")
+#         self.t = None
         
         
         
@@ -6805,7 +6817,7 @@ class PanelPropriete_Progression(PanelPropriete):
 ###################################################################################################
 class PanelOrganisation(wx.Panel):    
     def __init__(self, parent, panel, objet):
-        print("PanelOrganisation", objet.nbrRevues)
+#         print("PanelOrganisation", objet.nbrRevues)
         wx.Panel.__init__(self, parent, -1)
         self.objet = objet
         self.parent = panel
@@ -6916,7 +6928,7 @@ class PanelOrganisation(wx.Panel):
         
     #############################################################################            
     def MiseAJourListe(self):
-        print("MiseAJourListe", self.objet.nbrRevues)
+#         print("MiseAJourListe", self.objet.nbrRevues)
 #        print self.objet.GetListeNomsPhases()
         prj = self.objet.GetProjetRef()
         if prj is None:

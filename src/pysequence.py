@@ -3554,7 +3554,7 @@ class Sequence(BaseDoc):
     def GetNbreSeances(self):
         n = 0
         for s in self.seances:
-            if s.typeSeance in ["R", "S"]:
+            if s.EstSeance_RS():
                 n += len(s.seances)
             n += 1
         return n
@@ -3566,7 +3566,7 @@ class Sequence(BaseDoc):
         l = []
         for s in self.seances:
             l.append(s)
-            if s.typeSeance in ["R", "S"]:
+            if s.EstSeance_RS():
                 l.extend(s.GetToutesSeances())
             
         return l 
@@ -4285,9 +4285,10 @@ class Projet(BaseDoc, Grammaire):
                 self.taches.append(tache)
 #        self.CorrigerIndicateursEleve()
         
-        
+        # On corrige si le nombre de revues n'est pas compatible avec les limites fixées par le référentiel#
+        # Il faut le faire après avoir chargé les tâches
         if not (min(prj.posRevues.keys()) <= self.nbrRevues <= max(prj.posRevues.keys())) :
-            print("> initRevues")
+#             print("> initRevues")
             self.initRevues()
             self.MiseAJourNbrRevues()
                 
@@ -4558,19 +4559,19 @@ class Projet(BaseDoc, Grammaire):
     
     #############################################################################
     def initRevues(self):
-        print("initRevues",self.code)
+#         print("initRevues",self.code)
         self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut(self.code)
         self.positionRevues = list(self.GetReferentiel().getPosRevuesDefaut(self.code, self.nbrRevues))
-        print("   ", self.nbrRevues, self.positionRevues)
+#         print("   ", self.nbrRevues, self.positionRevues)
     
             
     ######################################################################################  
     def MiseAJourNbrRevues(self):
         """ Opère les changements lorsque le nombre de revues a changé...
         """
-        print("MiseAJourNbrRevues", self.nbrRevues, self.positionRevues)
+#         print("MiseAJourNbrRevues", self.nbrRevues, self.positionRevues)
         lstPhasesTaches = [k.phase for k in self.taches if k.phase in TOUTES_REVUES_EVAL]
-        print("   ", lstPhasesTaches)
+#         print("   ", lstPhasesTaches)
         if self.nbrRevues == 3 and not _R3 in lstPhasesTaches: # on ajoute une revue
             self.positionRevues.append(self.positionRevues[-1])
             tache = Tache(self, intitule = self.GetProjetRef().phases[_R3][1], 
@@ -5226,7 +5227,7 @@ class Projet(BaseDoc, Grammaire):
     def GetListePhases(self, avecRevuesInter = False):
         """ Renvoie la liste ordonnée des phases dans le projet
         """
-        print("GetListePhases")
+#         print("GetListePhases")
         prj = self.GetProjetRef()
         if prj is None:
             return []
@@ -5234,7 +5235,7 @@ class Projet(BaseDoc, Grammaire):
         lst = [k for k in prj.listPhases if not k in prj.listPhasesEval]
 #        lst = list(self.GetReferentiel().listPhases_prj)
 #        print "  ", self.classe.GetReferentiel()
-        print("  ", lst)
+#         print("  ", lst)
 #        print "  ", self.nbrRevues
 #         lr = list(range(1, self.nbrRevues+1))
 #         lr.reverse()
@@ -9577,7 +9578,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         self.lien.getBranche(root)
         
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for sce in self.seances:
                 root.append(sce.getBranche())
             root.set("nbrRotations", str(self.nbrRotations.v[0]))
@@ -9646,7 +9647,7 @@ class Seance(ElementAvecLien, ElementBase):
 #        t1 = time.time()
 #        print "    t1", t1-t0
         
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             self.seances = []
             for sce in list(branche):
                 if sce.tag[:6] == "Seance":
@@ -9724,7 +9725,7 @@ class Seance(ElementAvecLien, ElementBase):
             for i, pt in enumerate(self.pts_caract):
                 lst.append((pt, self, i))
                 
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for sce in self.seances:
                 lst.extend(sce.GetPtCaract())
                 
@@ -9743,7 +9744,7 @@ class Seance(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def EnrichiSVGse(self, doc):
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for se in self.seances:
                 se.EnrichiSVG(doc, seance = True)
         else:
@@ -9752,7 +9753,7 @@ class Seance(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def EnrichiHTMLse(self, doc):
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for se in self.seances:
                 se.EnrichiHTML(doc, seance = True)
         else:
@@ -9771,7 +9772,7 @@ class Seance(ElementAvecLien, ElementBase):
         """
 #         print "GetEffectif", self, self.effectif
         eff = 0
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for sce in self.seances:
                 eff += sce.GetEffectif() #self.seances[0].GetEffectif()
 #        elif self.typeSeance == "S":
@@ -9856,7 +9857,7 @@ class Seance(ElementAvecLien, ElementBase):
         ep = self.GetClasse().GetEffectifNorm(self.GetCodeEffectifParent())
         
         
-        if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
+        if self.EstSeance_RS() and len(self.seances) > 0:
 #             print("IsEffectifOk", self)
 #            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
             eff = round(e, 4)
@@ -9951,7 +9952,7 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def GetProfondeur(self):
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             return 1+max([s.GetProfondeur() for s in self.seances])
         else:
             return 0
@@ -10033,7 +10034,7 @@ class Seance(ElementAvecLien, ElementBase):
         """ Modifie la durée des Rotation et séances en Parallèle et de tous leurs enfants
             après une modification de durée d'un des enfants
         """
-        if recurs and self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
+        if recurs and self.EstSousSeance() and self.parent.EstSeance_RS(): # séance en rotation (parent = séance "Rotation")
             self.parent.SetDuree(duree, recurs = False)
         
 #        return
@@ -10158,7 +10159,7 @@ class Seance(ElementAvecLien, ElementBase):
     ######################################################################################  
     def GetToutesSeances(self):
         l = []
-        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        if self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             l.extend(self.seances)
             for s in self.seances:
                 l.extend(s.GetToutesSeances())
@@ -10173,7 +10174,7 @@ class Seance(ElementAvecLien, ElementBase):
 #        self.tip.SetRichTexte()
 #        self.GetPanelPropriete().rtc.Ouvrir()
         
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for sce in self.seances:
                 sce.PubDescription() 
                 
@@ -10216,7 +10217,7 @@ class Seance(ElementAvecLien, ElementBase):
 
         self.SetCodeBranche()
         
-        if self.typeSeance in ["R", "S"] and hasattr(self, 'seances'): # Séances en Rotation ou  Parallèle
+        if self.EstSeance_RS() and hasattr(self, 'seances'): # Séances en Rotation ou  Parallèle
             for sce in self.seances:
                 sce.SetCode()
             
@@ -10238,7 +10239,7 @@ class Seance(ElementAvecLien, ElementBase):
         if hasattr(self, 'branche'):
             self.SetCodeBranche()
             
-        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        if self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for sce in self.seances:
                 sce.ConstruireArbre(arbre, self.branche)
             
@@ -10250,7 +10251,7 @@ class Seance(ElementAvecLien, ElementBase):
         dicType = {k:0 for k in listeTypeSeance}
         dicType[''] = 0
         RS = 0
-        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        if self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for i, sce in enumerate(self.seances):
                 sce.ordre = i
                 if sce.typeSeance in ['R', 'S']:
@@ -10320,7 +10321,7 @@ class Seance(ElementAvecLien, ElementBase):
             !! Uniquement pour les séances de type "Rotation" ou "Serie" !!
         """
         seance = Seance(self)
-        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        if self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             self.seances.append(seance)
             
         self.OrdonnerSeances()
@@ -10341,7 +10342,7 @@ class Seance(ElementAvecLien, ElementBase):
 
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
-        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        if self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             if len(self.seances) > 1: # On en laisse toujours une !!
                 seance = self.arbre.GetItemPyData(item)
                 self.seances.remove(seance)
@@ -10381,7 +10382,7 @@ class Seance(ElementAvecLien, ElementBase):
     
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        if self.typeSeance in ["R", "S"]:
+        if self.EstSeance_RS():
             for s in self.seances:
                 s.MiseAJourTypeEnseignement()
         else:
@@ -10411,7 +10412,7 @@ class Seance(ElementAvecLien, ElementBase):
 #            self.nSystemes = len(sequence.systemes)
 #            self.GetPanelPropriete().MiseAJourListeSystemes()
                                  
-        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        elif self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for s in self.seances:
                 s.MiseAJourNomsSystemes()
         
@@ -10420,7 +10421,7 @@ class Seance(ElementAvecLien, ElementBase):
         if self.typeSeance in ACTIVITES:
             del self.systemes[i]
 #            self.GetPanelPropriete().ConstruireListeSystemes()
-        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        elif self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for s in self.seances:
                 s.SupprimerSysteme(i)
 
@@ -10443,7 +10444,7 @@ class Seance(ElementAvecLien, ElementBase):
 #            if construire:
 #                self.GetPanelPropriete().ConstruireListeSystemes()
                 
-        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        elif self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for s in self.seances:
                 s.AjouterSysteme(systeme, nombre)
     
@@ -10463,7 +10464,7 @@ class Seance(ElementAvecLien, ElementBase):
                 self.AjouterSysteme(s, lstNSys[i], construire = False)
 #            self.GetPanelPropriete().ConstruireListeSystemes()
             
-        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        elif self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for s in self.seances:
                 s.AjouterListeSystemes(lstNSys) 
                 
@@ -10503,7 +10504,7 @@ class Seance(ElementAvecLien, ElementBase):
                           self.CreerLien, 
                           scaleImage(images.Icone_lien.GetBitmap())]]
             
-            if self.typeSeance in ["R", "S"]:
+            if self.EstSeance_RS():
                 listItems.append(["Ajouter %s" %ref._nomActivites.un_(), 
                                   self.AjouterSeance, 
                                   scaleImage(images.Icone_ajout_seance.GetBitmap())])
@@ -10522,7 +10523,7 @@ class Seance(ElementAvecLien, ElementBase):
                     return
                 
                 t = "Coller "
-                if self.typeSeance in ["R", "S"] : # la phase est la même
+                if self.EstSeance_RS() : # la phase est la même
                     t += "dans"
                 else:
                     t += "après"
@@ -11664,7 +11665,7 @@ class Tache(ElementAvecLien, ElementBase):
         if self.typeSeance in ACTIVITES:
             del self.systemes[i]
 #            self.GetPanelPropriete().ConstruireListeSystemes()
-        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+        elif self.EstSeance_RS() : # Séances en Rotation ou  Parallèle
             for s in self.seances:
                 s.SupprimerSysteme(i)
 
@@ -13561,11 +13562,12 @@ class Eleve(Personne):
             
             compil = renvoie des dictionnaire plus simples
         """ 
-        print("GetEvaluabilite", self)
+#         print("GetEvaluabilite", self)
         prj = self.GetProjetRef()
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
-
+#         print("   ", dicIndicateurs)
+        
         rs = {}
         lers = {}
         for disc, dic in prj._dicoGrpIndicateur.items():
@@ -13574,7 +13576,7 @@ class Eleve(Personne):
             for ph in dic.keys():
                 lers[disc][ph] = {}
                 rs[disc][ph] = 0
-#         print "   xx init :", rs, lers
+#         print("   xx init :", rs, lers)
         
         
         def getPoids(competence, code, poidsGrp):
@@ -13651,7 +13653,7 @@ class Eleve(Personne):
                     ev[disc][part][grp] = [tx, tx >= seuil[disc][part]]
                     ev_tot[disc][part][1] = ev_tot[disc][part][1] and ev[disc][part][grp][1]
         
-        print("   ", ev, ev_tot, seuil)
+#         print("   ", ev, ev_tot, seuil)
         
         
         

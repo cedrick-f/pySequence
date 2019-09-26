@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from wx.lib import delayedresult
 
 ##This file is part of pySequence
 #############################################################################
@@ -33,19 +34,23 @@ module undo
 Gestion des actions annuler/rétablir
 
 """
-
+from wx.lib.delayedresult import startWorker
 
 TAILLE = 20
 
 class UndoStack():
     def __init__(self, doc):
+        
         self.doc = doc
         self.stack = []
         self.index = 1 # Le curseur qui point sur l'état "actuel" (en partant de la fin)
         self.onUndoRedo = False # Flag pour geler le "do" (True = pas de nouveau "do")
 
-
+    
     def do(self, action):
+        startWorker(self.OnFinish, self.onDo, wargs=[action])
+        
+    def onDo(self, action):
         if not self.onUndoRedo:
             
             s = self.doc.getBranche()
@@ -64,7 +69,8 @@ class UndoStack():
             self.doc.setBranche(self.stack[-self.index][0])
 #            print self.doc, ": undo <<", len(self.stack), self.index, self.stack[-self.index][1]
             
-
+    def OnFinish(self, t):
+        pass
 
     def redo(self):
         if self.index > 1:

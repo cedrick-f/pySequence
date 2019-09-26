@@ -1418,13 +1418,13 @@ class Referentiel(XMLelem):
                     else:
                         n = col[i+1]
                     
-                    for j in range((n-c)//3):
+                    for j in range((n-c)//3): # Paquets de  3 colonnes ()
                         cp = c+j*3
                         part = str(sh_co.cell(3,cp).value)
                         self._colParties.append((part, cp))
-                        t = sh_co.cell(1,c).value
+                        t = sh_co.cell(1,c).value # Intitulé du projet ou code du projet
                         for p in self.projets.values():
-                            if t == p.intitule:
+                            if t == p.intitule or t == p.code: 
                                 p.listeParties.append(part)
                                 p.parties[part] = sh_co.cell(2,cp).value
                         self.compImposees[part] = False # Valeur par défaut
@@ -2668,7 +2668,7 @@ class Projet(XMLelem):
     def getPosRevuesDefaut(self, nbrRevues = None):
         """ Renvoie la liste des position des revues (Revue après Phase xxx)
         """
-        print("**", self.posRevues, nbrRevues)
+#         print("**", self.posRevues, nbrRevues)
         if nbrRevues is None:
             nbrRevues = self.getNbrRevuesDefaut()
             return self.posRevues[nbrRevues]
@@ -3387,7 +3387,7 @@ class Competences(XMLelem):
     
     #########################################################################
     def importer(self, feuille, ref, debug = False):
-        
+#         print("importer Compétences", ref._colParties)
         ###########################################################
         def getArbreComp(sh, rng, col, prems = False, debug = False):
             """ Construit la structure en arbre :
@@ -3446,6 +3446,7 @@ class Competences(XMLelem):
                         lignes = {}
                         revues = {}
                         for p, c in ref._colParties:
+#                             print("  ", ll, c)
                             v = int0(sh.cell(ll,c).value)                   # Colonne code partie projet
                             if v > 0:
                                 poids[p] = v

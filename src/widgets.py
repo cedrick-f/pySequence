@@ -2694,6 +2694,48 @@ def get_class( kls ):
         m = getattr(m, comp)            
     return m
 
+##########################################################################################
+#
+#    Classe permettant le traitement d'action avec délai
+#        (pour limiter la fréquence des actions longues ...)
+#
+##########################################################################################        
+from wx.lib.delayedresult import startWorker
+class DelayedResult():
+    def __init__(self, func):
+        self.t = None
+        self.func = func
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
 
+    #-------------------------------------------------------------------------
+    def OnTimer(self, event):
+        # Start another thread which will update the bitmap
+        # But only if another is not still running!
+        if self.t is None:
+            self.timer.Stop()
+            self.t = startWorker(self.ComputationDone, self.func)
+            
+#     def Compute(self):
+#         """ Fonction à surcharger
+#         """
+#         pass
+#     
+    #-------------------------------------------------------------------------
+    def ComputationDone(self, r):
+        # source : https://stackoverflow.com/questions/5732952/draw-on-image-buffer-memorydc-in-separate-thread
+        # When done, take bitmap and place it to the drawing buffer
+        # Invalidate panel, so it is redrawn
+        # But not if the later thread is waiting!
+#         temp = r.get()
+#         try:
+        if not self.timer.IsRunning():
+#             print("ComputationDone")
+#             self.buffer = temp
+            self.Refresh()
+            self.Update()
+#         except:
+#             print("Erreur Computation")
+        self.t = None
 
 
