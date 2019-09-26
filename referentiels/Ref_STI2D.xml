@@ -17,7 +17,7 @@
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
   </d_activites>
-  <d_compImposees B_C="False" B_S="False" />
+  <d_compImposees B_C1="False" B_C2="False" B_S1="False" B_S2="False" />
   <d_demarcheSeance>
     <l_ED S_00="P" />
     <l_AP S_00="I" S_01="R" S_02="P" />
@@ -47,7 +47,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids />
+          <d_poids I_C2="10" />
           <d_sousComp>
             <Competence_CO1.1 S_intitule="Justifier les choix des structures matérielles et/ou logicielles d’un produit, Identifier les flux mis en œuvre dans une approche de développement durable">
               <l_domaines />
@@ -55,7 +55,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Justifier les choix des structures matérielles et/ou logicielles d’un produit, Identifier les flux mis en œuvre dans une approche de développement durable">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="33.333333" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -67,7 +73,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Justifier le choix d’une solution selon des contraintes d’ergonomie et de design">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="33.333333" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -79,7 +91,13 @@
                 <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Justifier les solutions constructives d’un produit au regard des performances environnementales et estimer leur impact sur l’efficacité globale">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="33.333333" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -96,7 +114,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids />
+          <d_poids I_C2="10" />
           <d_sousComp>
             <Competence_CO2.1 S_intitule="Décoder le cahier des charges d’un produit, participer, si besoin, à sa modification">
               <l_domaines />
@@ -104,7 +122,13 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Décoder le cahier des charges d’un produit, participer, si besoin, à sa modification">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="50.0" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -116,7 +140,13 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Évaluer la compétitivité d’un produit d’un point de vue technique et économique">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="50.0" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -133,7 +163,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids />
+          <d_poids I_C2="10" />
           <d_sousComp>
             <Competence_CO3.1 S_intitule="Identifier et caractériser les fonctions et les constituants d’un produit ainsi que ses entrées/sorties">
               <l_domaines />
@@ -141,7 +171,13 @@
                 <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Identifier et caractériser les fonctions et les constituants d’un produit ainsi que ses entrées/sorties">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="25.0" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -153,7 +189,13 @@
                 <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Identifier et caractériser l’agencement matériel et/ou logiciel d’un produit">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="25.0" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -165,7 +207,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Identifier et caractériser le fonctionnement temporel d’un produit ou d’un processus">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="25.0" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -177,7 +225,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Identifier et caractériser des solutions techniques">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="25.0" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -194,7 +248,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids />
+          <d_poids I_C2="10" />
           <d_sousComp>
             <Competence_CO4.1 S_intitule="Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés">
               <l_domaines />
@@ -202,7 +256,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="33.333333" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -214,7 +274,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Décrire le fonctionnement et/ou l’exploitation d’un produit en utilisant l'outil de description le plus pertinent">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="33.333333" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -226,7 +292,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Présenter de manière argumentée des démarches, des résultats, y compris dans une langue étrangère">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="33.333333" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -243,7 +315,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids />
+          <d_poids I_C2="10" />
           <d_sousComp>
             <Competence_CO5.1 S_intitule="S’impliquer dans un groupe de projet">
               <l_domaines />
@@ -251,7 +323,13 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="S’impliquer dans un groupe de projet">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -263,7 +341,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Identifier et justifier un problème technique à partir de l’analyse globale d’un produit (approche matière – énergie – information)">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -275,7 +359,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Mettre en évidence les constituants d’un produit à partir des diagrammes pertinents">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -287,7 +377,13 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Planifier un projet (diagramme de Gantt, chemin critique) en utilisant les outils adaptés et en prenant en compte les données technico-économiques">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -299,7 +395,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -311,7 +413,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Participer à une étude de design d’un produit dans une démarche de développement durable">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -323,7 +431,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Définir la structure matérielle, la constitution d’un produit en fonction des caractéristiques technico-économiques et environnementales attendues">
+                  <d_ligne I_C2="0" />
+                  <d_poids F_C2="14.285714" />
+                  <d_revue I_C2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -345,7 +459,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Proposer et choisir des solutions constructives répondant aux contraintes et attentes d’une construction">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -357,7 +477,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Proposer et choisir des procédés de mise en œuvre d’un projet de construction et organiser les modalités de sa réalisation">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -369,7 +495,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Définir (ou modifier) la structure, les choix de constituants, les paramètres de fonctionnement d’une chaîne d’énergie afin de répondre à un cahier des charges ou à son évolution.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -381,7 +513,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Définir (ou modifier), paramétrer et programmer le système de gestion d’une chaîne d’énergie afin de répondre à un cahier des charges et d’améliorer la performance énergétique.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -393,7 +531,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Définir à l’aide d’un modeleur numérique, les formes et dimensions d’une pièce d’un produit à partir des contraintes fonctionnelles, de son procédé de réalisation et de son matériau ">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -405,7 +549,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Définir, à l’aide d’un modeleur numérique, les modifications d’un sous-ensemble mécanique à partir des contraintes fonctionnelles">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -417,7 +567,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Proposer/choisir l’architecture d’une solution logicielle et matérielle au regard de la définition d’un produit">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -429,7 +585,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Rechercher et écrire l’algorithme de fonctionnement puis programmer la réponse logicielle relative au traitement d’une problématique posée.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -457,7 +619,13 @@
                 <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Expliquer des éléments d’une modélisation multiphysique proposée relative au comportement de tout ou partie d’un produit">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -469,7 +637,13 @@
                 <l_00 S_00="I2D" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Identifier et régler des variables et des paramètres internes et externes utiles à une simulation mobilisant une modélisation multiphysique">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -481,7 +655,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Évaluer un écart entre le comportement du réel et les résultats fournis par le modèle en fonction des paramètres proposés, conclure sur la validité du modèle">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -493,7 +673,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Choisir pour une fonction donnée, un modèle de comportement à partir d’observations ou de mesures faites sur le produit">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -515,7 +701,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation d’un usage ou d’un comportement structurel, thermique, acoustique, etc… de tout ou partie d’une construction">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -527,7 +719,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation de procédés pour valider un moyen de réalisation">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -539,7 +737,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation énergétique (électrique, mécanique, thermique, lumineuse, …) de tout ou partie d’un produit connaissant les caractéristiques utiles et les paramètres externes et internes.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -551,7 +755,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation de la gestion de la chaîne de puissance">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -563,7 +773,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un sous-ensemble mécanique ou observer le comportement sous charges d’un assemblage">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -575,7 +791,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation de procédés pour valider les formes et dimensions d’une pièce">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -587,7 +809,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Simulation d’un comportement informationnel faisant intervenir un ou plusieurs constituants matériels et/ou traitements logiciels simples d’une chaîne d’information">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -615,7 +843,13 @@
                 <l_00 S_00="IT" S_01="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Réaliser et valider un prototype ou une maquette obtenus en réponse à tout ou partie du cahier des charges initial">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -627,7 +861,13 @@
                 <l_00 S_00="IT" S_01="I2D" S_02="2I2D" />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Mettre en œuvre un scénario de validation devant intégrer un protocole d’essais, de mesures et/ou d’observations sur le prototype ou la maquette, interpréter les résultats et qualifier le produit">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -649,7 +889,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Sur des ouvrages ou des maquettes physiques simplifiées et instrumentées pour étudier l’usage ou le comportement d’un ouvrage réel ou celui d’éléments constitutifs et valider des choix techniques">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -661,7 +907,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Des procédés de stockage, de production, de transformation, de récupération d’énergie pour aider à la conception d’une chaîne de puissance">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -673,7 +925,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Tout ou partie d'une chaîne de puissance associée à son système de gestion dans l’objectif d'en relever les performances énergétiques et d’en optimiser le fonctionnement ">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -685,7 +943,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Des procédés de réalisation pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l’obtention de pièces ">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -697,7 +961,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Mesurer des performances d’un constituant ou d’un sous-ensemble d’un produit">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -709,7 +979,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Des moyens matériels d’acquisition, de traitement, de stockage et de restitution de l’information pour aider à la conception d’une chaîne d’information">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -721,7 +997,13 @@
                     <l_00 S_00="2I2D" />
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
-                  <l_indicateurs />
+                  <l_indicateurs>
+                    <Indicateur_00 S_intitule="Des architectures matérielles et logicielles en réponse à une problématique posée">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
+                    </Indicateur_00>
+                  </l_indicateurs>
                   <l_infos />
                   <d_poids />
                   <d_sousComp />
@@ -5901,7 +6183,7 @@
     </l_4.0>
   </d_nivTaxo>
   <d_options />
-  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <d_parties S_C1="Conduite" S_C2="Conduite" S_S1="Soutenance" S_S2="Soutenance" />
   <l_periodes>
     <l_00 I_01="5" S_00="1_ère" />
     <l_01 I_01="5" S_00="T_ale" />
@@ -5925,7 +6207,7 @@
         <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
-        <d_C>
+        <d_C1>
           <l_Prof>
             <l_00 S_00="Revue 1" S_02="">
               <l_01 I_00="7" I_01="8" I_02="1" />
@@ -5981,8 +6263,8 @@
               <l_01 I_00="4" I_01="2" I_02="0" />
             </l_02>
           </l_Etab>
-        </d_C>
-        <d_S>
+        </d_C1>
+        <d_S1>
           <l_Tit>
             <l_00 S_00="Présentation" S_02="">
               <l_01 I_00="4" I_01="5" I_02="0" />
@@ -6003,17 +6285,17 @@
               <l_01 I_00="4" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
-        </d_S>
+        </d_S1>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="STS-EE _ Revues.xlsx" S_01="I" />
-        <l_S S_00="STS-EE _ Présentation.xlsx" S_01="I" />
+        <l_C1 S_00="STS-EE _ Revues.xlsx" S_01="I" />
+        <l_S1 S_00="STS-EE _ Présentation.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listTaches />
-      <l_listeParties S_00="C" S_01="S" />
-      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_listeParties S_00="C1" S_01="S1" />
+      <d_parties S_C1="Conduite" S_S1="Soutenance" />
       <l_periode I_00="5" />
       <d_phases>
         <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" />
@@ -6047,13 +6329,96 @@
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
-      <d_cellulesInfo />
-      <d_grilles />
+      <d_cellulesInfo>
+        <d_C2>
+          <l_Prof>
+            <l_00 S_00="Revue 1" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="1" />
+            </l_00>
+            <l_01 S_00="Revue 2" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="1" />
+            </l_01>
+            <l_02 S_00="Revue 3" S_02="">
+              <l_01 I_00="7" I_01="8" I_02="1" />
+            </l_02>
+          </l_Prof>
+          <l_Tit>
+            <l_00 S_00="Revue 1" S_02="">
+              <l_01 I_00="4" I_01="5" I_02="0" />
+            </l_00>
+            <l_01 S_00="Revue 2" S_02="">
+              <l_01 I_00="4" I_01="5" I_02="0" />
+            </l_01>
+            <l_02 S_00="Revue 3" S_02="">
+              <l_01 I_00="4" I_01="5" I_02="0" />
+            </l_02>
+          </l_Tit>
+          <l_Nom>
+            <l_00 S_00="Revue 1" S_02="">
+              <l_01 I_00="2" I_01="9" I_02="0" />
+            </l_00>
+            <l_01 S_00="Revue 2" S_02="">
+              <l_01 I_00="2" I_01="9" I_02="0" />
+            </l_01>
+            <l_02 S_00="Revue 3" S_02="">
+              <l_01 I_00="2" I_01="9" I_02="0" />
+            </l_02>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Revue 1" S_02="">
+              <l_01 I_00="3" I_01="9" I_02="0" />
+            </l_00>
+            <l_01 S_00="Revue 2" S_02="">
+              <l_01 I_00="3" I_01="9" I_02="0" />
+            </l_01>
+            <l_02 S_00="Revue 3" S_02="">
+              <l_01 I_00="3" I_01="9" I_02="0" />
+            </l_02>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Revue 1" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_00>
+            <l_01 S_00="Revue 2" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_01>
+            <l_02 S_00="Revue 3" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_02>
+          </l_Etab>
+        </d_C2>
+        <d_S2>
+          <l_Tit>
+            <l_00 S_00="Présentation" S_02="">
+              <l_01 I_00="4" I_01="5" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Nom>
+            <l_00 S_00="Présentation" S_02="">
+              <l_01 I_00="2" I_01="9" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Présentation" S_02="">
+              <l_01 I_00="3" I_01="9" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Présentation" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+        </d_S2>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C2 S_00="STS-EE _ Revues.xlsx" S_01="I" />
+        <l_S2 S_00="STS-EE _ Présentation.xlsx" S_01="I" />
+      </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listTaches />
-      <l_listeParties />
-      <d_parties />
+      <l_listeParties S_00="C2" S_01="S2" />
+      <d_parties S_C2="Conduite" S_S2="Soutenance" />
       <l_periode I_00="8" I_01="10" />
       <d_phases>
         <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" />
