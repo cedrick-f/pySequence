@@ -2616,7 +2616,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def __repr__(self):
-        return "Prj_ :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+        return "Prj_ :"#+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
 #         return self.code + " : " + self.intitule + u" (" + str(self.duree) + u"h)"
     
@@ -2794,7 +2794,13 @@ class Projet(XMLelem):
 #                             if v1.sousComp != {}:
 #                                 return v1.sousComp[comp]
 
-
+    ##################################################################################################################
+    def phaseDansPartie(self, phase, partie):
+        lstParties = self.phases[phase][3]
+        if len(lstParties) == 0:
+            return True
+        return partie in lstParties.split()
+    
         
     ##################################################################################################################
     def importer(self, wb):
@@ -2829,25 +2835,37 @@ class Projet(XMLelem):
         # Phases du projet
         #
         shp = wb.sheet_by_name("Phase_"+self.code)
-#            print self.Code
-        for co in range(5, shp.ncols):
+#         print(self.code)
+        for co in range(5, min(shp.ncols, 8)):
             if shp.cell(1,co).value != "":
+#                 print("  ", co, shp.cell(1,co).value)
 #                    print "   ", shp.cell(1,co).value
                 self.posRevues[int(shp.cell(1,co).value)] = []
         
         for l in range(2, shp.nrows):
             if shp.cell(l,0).value != "":
                 if shp.cell(l,1).value != "":
-                    self.phases[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, shp.cell(l,2).value, shp.cell(l,3).value]
+                    codePhase = str(shp.cell(l,0).value)
+                    self.phases[codePhase] = [shp.cell(l,1).value, # Abréviation
+                                              shp.cell(l,2).value, # Nom complet
+                                              shp.cell(l,3).value, # Code sur fiche
+                                              ""]                  # Parties concernées par la phase
+                    if shp.ncols > 8:
+                        self.phases[codePhase][3] = shp.cell(l,8).value
+                    # Phase d'évaluation ?
                     if shp.cell(l,4).value != "":
-                        self.listPhasesEval.append(shp.cell(l,0).value)
-                    self.listPhases.append(shp.cell(l,0).value)
+                        self.listPhasesEval.append(codePhase)
+                        
+                    self.listPhases.append(codePhase)
+                    
+                    # Postions des revues
                     for co in range(len(self.posRevues)):
                         if shp.cell(l,5+co).value != "":
-                            self.posRevues[int(shp.cell(1,co+5).value)].append(shp.cell(l,0).value)
+                            self.posRevues[int(shp.cell(1,co+5).value)].append(codePhase)
 #                            if shp.cell(l,6).value != "":
 #                                self.posRevues[3].append(shp.cell(l,0).value)
-        
+            
+                
         #
         # Taches du projet (si imposées)
         #

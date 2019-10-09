@@ -11348,7 +11348,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Elèves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.tache.GetReferentiel().labels["ELEVES"][2].plur_())
+            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.tache.GetReferentiel().labels["ELEVES"][2].Plur_())
 #            self.box.SetMinSize((150,-1))
 #             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             ebsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -18909,6 +18909,7 @@ class PopupInfo(wx.PopupWindow):
     def AjouterLien(self, Id, lien, elem):
 
         tag = self.soup.find(id = Id)
+        if tag is None: return
         
         if lien.type == 'u':
             a = self.soup.new_tag("a")

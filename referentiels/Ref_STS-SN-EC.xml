@@ -7024,15 +7024,15 @@
       <d_parties S_S1="Situation 1" />
       <l_periode I_00="2" />
       <d_phases>
-        <l_Ana S_00="Preparation" S_01="Preparation" S_02="prepa" />
-        <l_Con S_00="Mise en œuvre" S_01="Mise en œuvre" S_02="mis oeu" />
-        <l_DCo S_00="Recette" S_01="Recette" S_02="recet" />
-        <l_Rea S_00="Installation" S_01="Installation" S_02="inst" />
-        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Ana S_00="Preparation" S_01="Preparation" S_02="prepa" S_03="" />
+        <l_Con S_00="Mise en œuvre" S_01="Mise en œuvre" S_02="mis oeu" S_03="" />
+        <l_DCo S_00="Recette" S_01="Recette" S_02="recet" S_03="" />
+        <l_Rea S_00="Installation" S_01="Installation" S_02="inst" S_03="" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Con" S_01="Rea" />
@@ -7095,17 +7095,17 @@
       <d_parties S_S2="Situation 2" />
       <l_periode I_00="3" />
       <d_phases>
-        <l_Sup S_00="Superviser" S_01="Superviser" S_02="superv" />
-        <l_Ana S_00="Analyser" S_01="Analyser" S_02="ana" />
-        <l_Con S_00="Diagnostiquer" S_01="Diagnostiquer" S_02="diag" />
-        <l_Rea S_00="Depanner" S_01="Depanner" S_02="dep" />
-        <l_Val S_00="Traçabilité" S_01="Assurer la traçabilité" S_02="trac" />
-        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Sup S_00="Superviser" S_01="Superviser" S_02="superv" S_03="" />
+        <l_Ana S_00="Analyser" S_01="Analyser" S_02="ana" S_03="" />
+        <l_Con S_00="Diagnostiquer" S_01="Diagnostiquer" S_02="diag" S_03="" />
+        <l_Rea S_00="Depanner" S_01="Depanner" S_02="dep" S_03="" />
+        <l_Val S_00="Traçabilité" S_01="Assurer la traçabilité" S_02="trac" S_03="" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Sup" S_01="Ana" />
@@ -7244,15 +7244,15 @@
       <d_parties S_R2="Revue 2" S_R3="Revue 3" S_S="Soutenance" />
       <l_periode I_00="4" I_01="5" />
       <d_phases>
-        <l_Ana S_00="Besoin" S_01="Expression fonctionnelle du besoin" S_02="Expr" />
-        <l_Con S_00="Concept" S_01="Conception" S_02="Conc" />
-        <l_DCo S_00="Réal" S_01="Réalisation" S_02="Réal" />
-        <l_Rea S_00="Vérif" S_01="Vérification des performances attendues" S_02="Verif" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Ana S_00="Besoin" S_01="Expression fonctionnelle du besoin" S_02="Expr" S_03="" />
+        <l_Con S_00="Concept" S_01="Conception" S_02="Conc" S_03="" />
+        <l_DCo S_00="Réal" S_01="Réalisation" S_02="Réal" S_03="" />
+        <l_Rea S_00="Vérif" S_01="Vérification des performances attendues" S_02="Verif" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />

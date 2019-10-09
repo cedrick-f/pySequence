@@ -4345,16 +4345,16 @@
       <d_parties S_S1="PRJ1" />
       <l_periode I_00="1" />
       <d_phases>
-        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" />
-        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" />
-        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" />
-        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" />
-        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" S_03="" />
+        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" S_03="" />
+        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" S_03="" />
+        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" S_03="" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
@@ -4427,16 +4427,16 @@
       <d_parties S_C="PRJ2" />
       <l_periode I_00="2" />
       <d_phases>
-        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" />
-        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" />
-        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" />
-        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" />
-        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" S_03="" />
+        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" S_03="" />
+        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" S_03="" />
+        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" S_03="" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
@@ -4509,16 +4509,16 @@
       <d_parties S_S2="PRJ3" />
       <l_periode I_00="3" />
       <d_phases>
-        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" />
-        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" />
-        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" />
-        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" />
-        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" S_03="" />
+        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" S_03="" />
+        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" S_03="" />
+        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" S_03="" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />

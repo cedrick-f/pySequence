@@ -6298,15 +6298,15 @@
       <d_parties S_C1="Conduite" S_S1="Soutenance" />
       <l_periode I_00="5" />
       <d_phases>
-        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" />
-        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" />
-        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" />
-        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" />
+        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" S_03="" />
+        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" S_03="" />
+        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" S_03="" />
+        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__03 S_00="Ana" S_01="Rea" S_02="Val" />
@@ -6421,15 +6421,15 @@
       <d_parties S_C2="Conduite" S_S2="Soutenance" />
       <l_periode I_00="8" I_01="10" />
       <d_phases>
-        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" />
-        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" />
-        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" />
-        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" />
+        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" S_03="" />
+        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" S_03="" />
+        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" S_03="" />
+        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
         <l__03 S_00="Ana" S_01="Rea" S_02="Val" />

@@ -2000,8 +2000,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ######################################################################################  
     def ShowTip(self, x, y):
+        if self.curTip is None: return
+        
         X, Y, W, H = getDisplayPosSize()
-
         w, h = self.curTip.GetSize()
         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
         self.curTip.Show()
@@ -11008,7 +11009,8 @@ class Tache(ElementAvecLien, ElementBase):
         prj = self.GetProjetRef()
         return ((not self.phase in [_R1,_R2, _Rev, self.projet.getCodeLastRevue()]) \
                  or (codeIndic in self.indicateursMaxiEleve[0])) \
-               and (prj.getTypeIndicateur(codeIndic) == "S" or self.phase != 'XXX')
+               and prj.phaseDansPartie(self.phase,
+                                       prj.getTypeIndicateur(codeIndic)) #prj.getTypeIndicateur(codeIndic) == "S" or self.phase != 'XXX')
 
 
     ######################################################################################  
@@ -11202,6 +11204,7 @@ class Tache(ElementAvecLien, ElementBase):
         """
         err = []
         ref = self.GetProjetRef()
+        prjref = self.GetProjetRef()
         self.ordre = eval(branche.tag[5:])
         self.intitule  = branche.get("Intitule", "")
         
@@ -11284,8 +11287,8 @@ class Tache(ElementAvecLien, ElementBase):
                         indic = brancheInd.get("Indic"+str(i))
                         if indic != None:
                             lst = toList(indic)
-                        elif ref is not None:
-                            lst = [True]*len(ref._dicIndicateurs[e])
+                        elif prjref is not None:
+                            lst = [True]*len(prjref._dicIndicateurs[e])
                         else:
                             lst = []
                         for n,j in enumerate(lst):
@@ -11332,15 +11335,16 @@ class Tache(ElementAvecLien, ElementBase):
                                     
                                     # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                                     indic = eval(indic)-1
-                                    if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
+                                    if not prjref.phaseDansPartie(self.phase, prjref.getTypeIndicateur(codeindic)):
+#                                     if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
                                         continue
                                     
 #                                    try:
 #                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                         
-                                    if ref is not None and not code in ref._dicoIndicateurs_simple[disc]:
-                                        print("Erreur 1", code, "<>", ref._dicoIndicateurs_simple[disc])
+                                    if prjref is not None and not code in prjref._dicoIndicateurs_simple[disc]:
+                                        print("Erreur 1", code, "<>", prjref._dicoIndicateurs_simple[disc])
                                         err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                         return err
                                     
@@ -11366,13 +11370,14 @@ class Tache(ElementAvecLien, ElementBase):
                                         
                                     # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                                     indic = eval(indic)-1
-                                    if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
+                                    if not prjref.phaseDansPartie(self.phase, prjref.getTypeIndicateur(codeindic)):
+#                                     if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
                                         continue
                                     
 #                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                         
                                     # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                    if ref is not None and not code in ref._dicIndicateurs:
+                                    if prjref is not None and not code in prjref._dicIndicateurs:
                                         print("Erreur 2")
                                         err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                         return err
@@ -11401,18 +11406,19 @@ class Tache(ElementAvecLien, ElementBase):
                                 
                             # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                             indic = eval(indic)-1
-                            if ref is not None and self.phase == 'XXX' and ref.getTypeIndicateur(codeindic) == 'C':
+                            if not prjref.phaseDansPartie(self.phase, prjref.getTypeIndicateur(codeindic)):
+#                             if prjref is not None and self.phase == 'XXX' and prjref.getTypeIndicateur(codeindic) == 'C':
                                 continue
                             
                                 
 #                                try:
 #                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                            if ref is not None: 
-                                for disc, dic in ref._dicoIndicateurs_simple.items():
+                            if prjref is not None: 
+                                for disc, dic in prjref._dicoIndicateurs_simple.items():
                                     if code[0] == disc:
                                         if not code[1:] in dic.keys():
-                                            print("Erreur 3", code, "<>", ref._dicoIndicateurs_simple[disc])
+                                            print("Erreur 3", code, "<>", prjref._dicoIndicateurs_simple[disc])
                                             if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
                                                 err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                         else:
@@ -12723,14 +12729,26 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
             t = self.Sing_() + " " + str(self.id)
         return t
     
+    
+    ######################################################################################  
+    def GetIcone(self):
+        if len(self.logiciels) > 0 and self.logiciels[0] in self.arbre.images.keys():
+            image = self.arbre.images[self.logiciels[0]]
+        else:
+            image = self.arbre.images[self.code]
+        return image
+    
+    
     ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
         t = self.GetNom()
-        
+       
+            
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
+            self.arbre.SetItemImage(self.branche, self.GetIcone())
             
             
     ######################################################################################  
@@ -12773,18 +12791,16 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
 #         print self.logiciels
 #         image = scaleImage(constantes.IMG_LOGICIELS[self.logiciels[0]].GetBitmap())
 #         print image
-        if len(self.logiciels) > 0 and self.logiciels[0] in self.arbre.images.keys():
-            image = self.arbre.images[self.logiciels[0]]
-        else:
-            image = self.arbre.images[self.code]
+        
 #         try:
 #             image = constantes.IMG_LOGICIELS[self.logiciel[0]].GetBitmap()
 #         except:
 #             image = self.arbre.images[self.code]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
-                                        image = image)
+        self.branche = arbre.AppendItem(branche, "", data = self, 
+                                        wnd = self.codeBranche,
+                                        image = self.GetIcone())
         self.codeBranche.SetBranche(self.branche)
 
         
