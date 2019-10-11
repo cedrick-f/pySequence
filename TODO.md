@@ -5,6 +5,7 @@
 - [x] "Memory Error" lors de l'ouverture d'un document (se produit rarement) 
 - [ ] Problème de nom, de position et de duplication du menu "Fenêtre" quand on ferme un document.
 - [ ] Mode plein écran, sur écran n°2 : les popup apparaissent sur l'écran n°1 !
+- [ ] Retours à la lignes qui apparaissent sans prévenir dans les champs des propriétés des Projets
  
  
 # Fonctionnalités à apporter ou à améliorer
