@@ -18407,7 +18407,8 @@ class A_propos(wx.Dialog):
                                              "Emmanuel VIGNAUD (Ede SI-CIT-DIT 2nde)", \
                                              "Arnaud BULCKE (Techno Collège)", \
                                              "Laurent Moutoussamy (MPSI)", \
-                                             "André Forys (NSI)")), \
+                                             "André Forys (NSI)",
+                                             "Hubert Faigner (STS MS)")), \
                       
                       ("Remerciements : ", ("un grand merci aux très nombreux", \
                                              "utilisateurs qui ont pris le temps", \
@@ -18463,9 +18464,31 @@ class A_propos(wx.Dialog):
         if hasattr(t, 'SetLabelMarkup'): # wxpython 3.0
             t.SetLabelMarkup(txt )
         else:
-            t.SetLabe(txt.replace('<b>', '').replace('</b>', '') )
+            t.SetLabel(txt.replace('<b>', '').replace('</b>', '') )
+        
+        s = wx.BoxSizer()
+        s.Add(t, flag = wx.EXPAND)
+        descrip.SetSizer(s)
+        
+        # Dossiers
+        #-------------
+        dossiers = wx.Panel(nb, -1)
+        print(util_path.INSTALL_PATH)
+        td =  "Dossier d'installation : " + str(util_path.INSTALL_PATH) + "\n" \
+            + "Dossier de démarrage : " + str(util_path.PATH) + "\n" \
+            + "Dossier COMMUN pour les données : " + util_path.APP_DATA_PATH + "\n" \
+            + "Dossier USER pour les données : " + util_path.APP_DATA_PATH_USER
+
+        t = wx.StaticText(dossiers, -1,td,
+                          size = (400, -1))
+        
+        s = wx.BoxSizer()
+        s.Add(t, flag = wx.EXPAND)
+        dossiers.SetSizer(s)
+        
         nb.AddPage(descrip, "Description")
         nb.AddPage(auteurs, "Auteurs")
+        nb.AddPage(dossiers, "Dossiers")
         nb.AddPage(licence, "Licence")
         
         sizer.Add(wx.StaticText(self, wx.ID_ANY, "Informations et téléchargement :"),  
