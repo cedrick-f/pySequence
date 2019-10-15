@@ -2054,7 +2054,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ######################################################################################  
     def AjouterProf(self, event = None):
-        if len(self.equipe) < 5:
+        if len(self.equipe) < 8:
             e = Prof(self, len(self.equipe))
             self.equipe.append(e)
             if not hasattr(self, 'branchePrf'):
@@ -4507,8 +4507,15 @@ class Projet(BaseDoc, Grammaire):
                     self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
                     
                     k = param[1:].split("\n")
-                    titre = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
-                                             len(competence.sousComp) > 1)
+                    titre = self.GetReferentiel().dicoCompetences["S"]._nom
+                    if len(competence.sousComp) > 1:
+                        titre = titre.Plur_()
+                    else:
+                        titre = titre.Sing_()
+                    
+                    
+#                     titre = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
+#                                              len(competence.sousComp) > 1)
                     if len(k) > 1:
                         titre += " - ".join(k)
                     else:

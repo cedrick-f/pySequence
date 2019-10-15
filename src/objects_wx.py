@@ -4089,7 +4089,7 @@ class FenetreProjet(FenetreDocument):
             try:
                 genpdf.genererDossierValidation(nomFichier, self.projet, self)
                 os.startfile(nomFichier)
-            except IOError:
+            except (IOError, RuntimeError) as e:
                 messageErreur(self, "Erreur !",
                                   "Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
                                   " - qu'aucun fichier portant le méme nom n'est déja ouvert\n" \
