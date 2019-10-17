@@ -2796,6 +2796,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def phaseDansPartie(self, phase, partie):
+        if phase == '': return True
         lstParties = self.phases[phase][3]
         if len(lstParties) == 0:
             return True
