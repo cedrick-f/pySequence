@@ -131,7 +131,8 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
                             PanelPropriete_Support, PanelPropriete_LienProjet,\
                             PanelPropriete_Personne, getDisplayPosSize, URLDialog, \
-                            PanelPropriete_Groupe, PanelPropriete_Modele, SSCALE
+                            PanelPropriete_Groupe, PanelPropriete_Modele, \
+                            PanelPropriete_FS, SSCALE
 
 
 DEBUG = "beta" in version.__version__
@@ -719,6 +720,12 @@ class ElementBase(Grammaire):
     ######################################################################################  
     def getIconeDraw(self):
         return wx.NullBitmap
+    
+    ######################################################################################  
+    def GetOrdre(self):
+        """ Pour la fonction OnCompareItems() des arbres
+        """
+        return 0
     
 #     ######################################################################################  
 #     def getBranche_AUTO(self, branche, nom, v):
@@ -4075,10 +4082,16 @@ class Projet(BaseDoc, Grammaire):
         taches = ET.SubElement(projet, "Taches")
         for t in self.taches:
             taches.append(t.getBranche())
-#        
+        
+        fs = ET.SubElement(projet, "FonctionsService")
+        for f in self.fct_serv:
+            fs.append(f.getBranche())
+            
         eleves = ET.SubElement(projet, "Eleves")
         for e in self.eleves:
             eleves.append(e.getBranche())
+            
+        
             
         groupes = ET.SubElement(projet, "Groupes")
         for e in self.groupes:
@@ -4191,6 +4204,20 @@ class Projet(BaseDoc, Grammaire):
             if not Ok : 
                 err.append(constantes.Erreur(constantes.ERR_PRJ_SUPPORT))
         
+        
+        brancheFS = branche.find("FonctionsService")
+        self.fct_serv = []
+        if brancheFS is not None:
+            for f in list(brancheFS):
+                fs = FonctionService(self)
+                Ok = fs.setBranche(f)
+              
+                if not Ok : 
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_FS))
+                
+                self.fct_serv.append(fs)
+
+            
         brancheEle = branche.find("Eleves")
         self.eleves = []
         for e in list(brancheEle):
@@ -4201,6 +4228,8 @@ class Projet(BaseDoc, Grammaire):
             
             self.eleves.append(eleve)
             
+            
+        
         brancheGrp = branche.find("Groupes")
         self.groupes = []
         if brancheGrp != None:
@@ -5031,6 +5060,51 @@ class Projet(BaseDoc, Grammaire):
                 break
         return i + len(self.eleves)
     
+    
+    ######################################################################################  
+    def AjouterFS(self, event):
+        ref = self.GetReferentiel()
+        if len(self.fct_serv) > 0:
+            t = 1
+        else:
+            t = 0
+        fs = FonctionService(self, "", t)
+        self.fct_serv.append(fs)
+        
+        fs.ConstruireArbre(self.arbre, self.brancheFS)
+        self.arbre.Expand(self.brancheFS)
+        self.GetApp().sendEvent(modif = "Ajout "+ref._nomFS.de_())
+        self.OrdonnerFS()
+        self.arbre.SelectItem(fs.branche)
+
+        
+    
+    ######################################################################################  
+    def OrdonnerFS(self):
+        """
+        """
+        FP = [fs for fs in self.fct_serv if fs.type == 0]
+        FC = [fs for fs in self.fct_serv if fs.type == 1]
+        self.fct_serv = FP+FC
+#         print "OrdonnerFS"
+#         i = -1
+#         for i,fs in enumerate(self.fct_serv):
+#             fs.id = i
+#             
+        for fs in self.fct_serv:
+            fs.SetCode()
+    
+        self.arbre.Ordonner(self.brancheFS)
+        
+        
+    ######################################################################################  
+    def GetNewIdFS(self):
+        """ Renvoie le 1er numéro d'identification FS disponible
+        """
+#        print "GetNewIdFS", 
+        return len(self.fct_serv)
+    
+    
     ######################################################################################  
     def OnModifModeles(self):
         n = [m.id for m in self.support.modeles]
@@ -5078,6 +5152,17 @@ class Projet(BaseDoc, Grammaire):
         for e in self.eleves:
             e.ConstruireArbre(arbre, self.brancheElv) 
             
+        #
+        # Les fonctions de service
+        #
+        self.brancheFS = arbre.AppendItem(self.branche, self.GetReferentiel()._nomFS.Plur_(), 
+                                           data = "FS",
+                                           image = self.arbre.images["FS"])
+        for e in self.fct_serv:
+            e.ConstruireArbre(arbre, self.brancheFS) 
+        
+        
+        
         #
         # Les groupes
         #
@@ -10803,38 +10888,36 @@ class Seance(ElementAvecLien, ElementBase):
 
 ####################################################################################
 #
-#   Classe définissant les propriétés d'une fonction de service
+#   Classe définissant les propriétés d'une Fonction de Service
 #
 ####################################################################################
 class FonctionService(ElementAvecLien, ElementBase):
                   
-    def __init__(self, projet, intitule = "", 
+    def __init__(self, projet, intitule = "", typ = 0,
                  branche = None):
-        """ Séance :
-                panelParent = le parent wx pour contenir "panelPropriete"
-                phaseTache = phase de la tache parmi 'Ana', 'Con', 'Rea', 'Val'
+        """ Fonction de Service :
+                
         """
-#        print "__init__ tâche", phaseTache
-#         self.nom_obj = "Tâche"
-#         self.article_c_obj = "de la"
-#         self.article_obj = "la"
-        
         self.projet = projet
         ElementAvecLien.__init__(self)
         ElementBase.__init__(self, 500*SSCALE)
-#         self.tip.SetSize((, -1))
         
+        ref = self.GetReferentiel()
+        Grammaire.__init__(self, ref.nomFS)
         
         self.intitule  = intitule
         
         # Les élèves concernés (liste d'élèves)
         self.eleves = []        
     
-        # Le code de la fonction (affiché dans l'arbre et sur la fiche
-        self.code = ""
+        # Le code de la fonction
+        self.code = "FS"
         
         # La description de la fonction
         self.description = None
+        
+        # Type de FS : 0 = FP ; 1 = FC
+        self.type = typ
 
         # Une icône pour illustrer la fonction
         self.icone = None
@@ -10844,13 +10927,28 @@ class FonctionService(ElementAvecLien, ElementBase):
         if branche != None:
             self.setBranche(branche)
         
+
+    ######################################################################################  
+    def GetApp(self):
+        return self.projet.GetApp()
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        return self.projet
+    
+    ######################################################################################  
+    def GetPanelPropriete(self, parent):
+        return PanelPropriete_FS(parent, self)
+    
     
     ######################################################################################  
     def getBranche(self):
         """ Renvoie la branche XML de la fonction pour enregistrement
         """
-        root = ET.Element("FonctionService"+str(self.ordre))
+        root = ET.Element("FS"+str(self.GetOrdre()))
         root.set("Intitule", self.intitule)
+        
+        root.set("Type", str(self.type))
 
         self.lien.getBranche(root)
         
@@ -10861,11 +10959,6 @@ class FonctionService(ElementAvecLien, ElementBase):
         
         self.getBrancheImage(root)
         
-        brancheElv = ET.Element("Eleves")
-        root.append(brancheElv)
-        for i, e in enumerate(self.eleves):
-            brancheElv.set("Eleve"+str(i), str(e))
-        
         return root    
     
     
@@ -10873,30 +10966,86 @@ class FonctionService(ElementAvecLien, ElementBase):
     def setBranche(self, branche):
         """
         """
-        err = []
-        ref = self.GetProjetRef()
-        self.ordre = eval(branche.tag[5:])
+        Ok = True
+
         self.intitule  = branche.get("Intitule", "")
 
+        self.type = int(branche.get("Type", "0"))
+                        
         self.description = branche.get("Description", None)
         
         self.lien.setBranche(branche, self.GetPath())
         
-        self.setBrancheImage(branche)
+        Ok = Ok and self.setBrancheImage(branche)
         
         self.setBrancheIcone(branche)
         
-        brancheElv = branche.find("Eleves")
-        self.eleves = []
-        prj = self.GetDocument()
-        for i, e in enumerate(brancheElv.keys()):
-            if i < len(prj.eleves) + len(prj.groupes):
-                self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
-        
-        return err
-    
+        return Ok
     
 
+    ######################################################################################  
+    def SetIntitule(self, text):           
+        self.intitule = text
+        self.SetCode()
+
+
+    ######################################################################################  
+    def SetType(self, t):
+        self.type = t
+        self.GetDocument().OrdonnerFS()
+        
+        
+        
+    ######################################################################################  
+    def SetCode(self):
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, self.GetCode())
+            self.arbre.SetItemBold(self.branche, self.type == 0)
+            self.codeBranche.SetLabel(self.intitule)
+    
+    
+    ######################################################################################  
+    def GetOrdre(self):
+        try:
+            return self.GetDocument().fct_serv.index(self)
+        except:
+            return len(self.projet.fct_serv) # En dernier !!
+        
+         
+    ######################################################################################  
+    def GetCode(self):
+        if self.type == 0:
+            code = "FP"
+        else:
+            code = "FC"
+        num = str(1+self.GetOrdre())
+        
+        return code + num + " :"
+        
+        
+        
+    ######################################################################################  
+    def GetIcone(self):
+        image = self.arbre.images[self.code]
+        return image
+    
+    
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = CodeBranche(self.arbre, self.code)
+        image = self.GetIcone()
+            
+        self.branche = arbre.AppendItem(branche, "", wnd = self.codeBranche, 
+                                        data = self, image = image)
+        self.SetCode()
+        self.codeBranche.SetBranche(self.branche)
+        
+
+    
+    
+    
+    
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une compétence

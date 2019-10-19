@@ -92,13 +92,15 @@ ERR_PRJ_T_VERSION = 16
 ERR_PRJ_T_TYPENS = 32
 ERR_PRJ_C_TYPENS = 64 # Code du référentiel non trouvé
 ERR_PRJ_GROUPES = 128
+ERR_PRJ_FS = 256
 
 ERR_INCONNUE = 65536
 
-ERREURS = {ERR_PRJ_EQUIPE :     "Equipe pédagogique",
+ERREURS = {ERR_PRJ_EQUIPE :     "Équipe pédagogique",
            ERR_PRJ_SUPPORT :    "Support",
-           ERR_PRJ_ELEVES :     "Elève",
+           ERR_PRJ_ELEVES :     "Élève",
            ERR_PRJ_GROUPES :    "Groupe",
+           ERR_PRJ_FS :         "Fonction de service",
            ERR_PRJ_TACHES :     "Tâche : %s",
            ERR_PRJ_T_VERSION :  "Problème de version",
            ERR_PRJ_T_TYPENS :   "Type d'enseignement incompatible",
@@ -127,7 +129,9 @@ class Erreur():
             return ERREURS[self.num] %self.info
         else:
             return ERREURS[self.num]
-        
+
+
+
 MOIS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
         'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
@@ -278,7 +282,8 @@ imagesProjet = {"Prj" : images.Icone_projet,
                 "Tac" : images.Icone_Tache,
                 "Cla" : images.Icone_classe,
                 "Grp" : images.Icone_groupe,
-                "Mod" : images.Icone_modele
+                "Mod" : images.Icone_modele,
+                "FS"  : images.Icone_FS
                 }
 
 imagesProgression = {"Prg" : images.Icone_progression,

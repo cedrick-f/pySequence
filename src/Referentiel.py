@@ -721,6 +721,11 @@ class Referentiel(XMLelem):
         self.specialite = {}
         self.listeSpecialites = []
         
+        #
+        # Fonctions de Service
+        #
+        self.nomFS = "Fonction(s) de service$f"
+        
         
         #
         # Labels (
@@ -1690,6 +1695,7 @@ class Referentiel(XMLelem):
                     "nomSpe",
                     "nomCI",
                     "nomPb",
+                    "nomFS",
 #                     "nomFonctions",
                     "nomTaches",
                     "nomDemarches",

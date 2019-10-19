@@ -661,8 +661,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 # Projets ###############################################################
                 if tool.GetId() == 50:
                     tool.SetLabel("Ajouter %s" %ref.labels["ELEVES"][2].un_())
-                    tool.SetShortHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
-                    tool.SetLongHelp("Ajout d'%s au projet" %ref.labels["ELEVES"][2].un_())
+                    tool.SetShortHelp("Ajout %s au projet" %ref.labels["ELEVES"][2].de_())
+                    tool.SetLongHelp("Ajout %s au projet" %ref.labels["ELEVES"][2].de_())
                 
                 elif tool.GetId() == 54:
                     tool.SetLabel("Ajouter un groupe %s" %ref.labels["ELEVES"][2].de_plur_())
@@ -676,8 +676,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
                 elif tool.GetId() == 52:
                     tool.SetLabel("Ajouter %s" %ref._nomTaches.un_())
-                    tool.SetShortHelp("Ajout d'%s au projet" %ref._nomTaches.un_())
-                    tool.SetLongHelp("Ajout d'%s au projet" %ref._nomTaches.un_())
+                    tool.SetShortHelp("Ajout %s au projet" %ref._nomTaches.de_())
+                    tool.SetLongHelp("Ajout %s au projet" %ref._nomTaches.de_())
     
                 elif tool.GetId() == 53:
                     tool.SetLabel("Ajouter une revue")
@@ -689,11 +689,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     tool.SetShortHelp("Ajout d'un modèle numérique du support")
                     tool.SetLongHelp("Ajout d'un modèle numérique du support")
                     
+                elif tool.GetId() == 56:
+                    tool.SetLabel("Ajouter %s" %ref._nomFS.sing_())
+                    tool.SetShortHelp("Ajout %s au Projet" %ref._nomFS.de_())
+                    tool.SetLongHelp("Ajout %s au Projet" %ref._nomFS.de_())
+                
+                
                 # Séquences ##################################################################
                 elif tool.GetId() == 60:
                     tool.SetLabel("Ajouter %s" %ref._nomActivites.un_())
-                    tool.SetShortHelp("Ajout d'%s dans la séquence" %ref._nomActivites.un_())
-                    tool.SetLongHelp("Ajout d'%s dans la séquence" %ref._nomActivites.un_())
+                    tool.SetShortHelp("Ajout %s dans la Séquence" %ref._nomActivites.de_())
+                    tool.SetLongHelp("Ajout %s dans la Séquence" %ref._nomActivites.de_())
                     
                 elif tool.GetId() == 62:
                     tool.SetLabel("Ajouter un professeur")
@@ -702,8 +708,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     
                 elif tool.GetId() == 61:
                     tool.SetLabel("Ajouter %s" %et2ou(ref._nomSystemes.un_()))
-                    tool.SetShortHelp("Ajout d'%s" %et2ou(ref._nomSystemes.un_()))
-                    tool.SetLongHelp("Ajout d'%s" %et2ou(ref._nomSystemes.un_()))
+                    tool.SetShortHelp("Ajout %s" %et2ou(ref._nomSystemes.de_()))
+                    tool.SetLongHelp("Ajout %s" %et2ou(ref._nomSystemes.de_()))
                     
                 
                 # Progressions ###############################################################
@@ -746,6 +752,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     (51 , scaleImage(images.Icone_ajout_prof.GetBitmap(), *ts)),
                     
                     (0, None),
+                    
+                    (56 , scaleImage(images.Icone_ajout_FS.GetBitmap(), *ts)),
                     
                     (52 , scaleImage(images.Icone_ajout_tache.GetBitmap(), *ts)),
                     
@@ -930,6 +938,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.RemoveTool(53)
         self.tb.RemoveTool(54)
         self.tb.RemoveTool(55)
+        self.tb.RemoveTool(56)
         
         self.tb.RemoveTool(70)
         self.tb.RemoveTool(71)
@@ -1670,6 +1679,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue,      id=53)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterGroupe,      id=54)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.support.AjouterModele,      id=55)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterFS,      id=56)
                 
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
@@ -11200,10 +11210,89 @@ class PanelPropriete_Seance(PanelPropriete):
         
 
     
+####################################################################################
+#
+#   Classe définissant le panel de propriété d'une fonction de service
+#
+####################################################################################
+class PanelPropriete_FS(PanelPropriete):
+    def __init__(self, parent, FS):
+        
+        self.FS = FS
+        self.parent = parent
+        
+        PanelPropriete.__init__(self, parent, objet = self.FS)
+        
+        #
+        # Intitulé
+        #
+        box = myStaticBox(self, -1, "Intitulé")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        textctrl = TextCtrl_Help(self, "")
+        textctrl.SetTitre("Intitulé")
+        textctrl.SetToolTip("Intitulé")
+        self.textctrl = textctrl
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND)
+        self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, textctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, textctrl)
     
+        #
+        # Principale ou contrainte
+        #
+        ref = FS.GetReferentiel()
+        self.rdtype = wx.RadioBox(self, -1, label="Type de %s" %ref._nomFS.sing_(), 
+                                  choices=["Fonction Principale", "Fonction Contrainte"],
+                                  style = wx.RA_SPECIFY_COLS)
+        
+        
+        self.sizer.Add(self.rdtype, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        self.Bind(wx.EVT_RADIOBOX, self.OnChangeType, self.rdtype)
     
+        self.MiseAJour()
+        
+        
     
+    ############################################################################            
+    def GetDocument(self):
+        return self.FS.GetDocument()
     
+    #############################################################################            
+    def OnChangeType(self, event): 
+        self.FS.SetType(event.GetSelection())
+        
+    #############################################################################            
+    def EvtText(self, event):
+#         print "EvtText", self.FS.intitule
+        txt = self.textctrl.GetText()
+        ref = self.FS.GetReferentiel()
+        
+        if self.FS.intitule != txt:
+            event.Skip()
+            self.FS.SetIntitule(txt)
+            
+            modif = "Modification de l'intitulé %s" %ref._nomFS.du_()
+            
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif, draw = True, verif = False)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif, draw = True, verif = False)
+                    self.eventAttente = True
+                    
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
+#        print "MiseAJour panelPropriete Support"
+        self.textctrl.ChangeValue(self.FS.intitule)
+        self.rdtype.SetSelection(self.FS.type)
+        
+        if sendEvt:
+            self.sendEvent(draw = True, verif = True)
+
+        
+        
+        
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la tache
@@ -14431,10 +14520,12 @@ class ArbreProjet(ArbreDoc):
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
-        if hasattr(i1, 'ordre'):   # cas des tâches
+        if hasattr(i1, 'ordre'):   # cas des tâches, ...
             return int(i1.ordre - i2.ordre)
-        else:                   # cas des élèves/groupes
+        elif hasattr(i1, 'id'):   # cas des élèves/groupes
             return int(i1.id - i2.id)
+        else:# ???
+            return int(i1.GetOrdre() - i2.GetOrdre())
 #        if i1.phase == i2.phase:
 #            
 #        else:
