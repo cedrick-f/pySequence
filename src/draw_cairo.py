@@ -1511,7 +1511,14 @@ def getBitmapClasse(W, H, classe):
     ctx.set_source_rgba(1,1,1,1)
     ctx.paint()
 #     ctx.paint()
-    DrawClasse(ctx, (0,0,w,h), classe)
+    try:
+        DrawClasse(ctx, (0,0,w,h), classe)
+    except: # 2ème tentative
+        time.sleep(0.01)
+        try:
+            DrawClasse(ctx, (0,0,w,h), classe)
+        except:
+            pass
     
     return imagesurface
 
