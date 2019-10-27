@@ -5748,7 +5748,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position = PositionCtrl(self, self.sequence.position,    
 #                                      self.sequence.GetReferentiel().periodes)                      
                                      self.sequence.classe.GetPeriodes(),
-                                     totmax = self.sequence.GetReferentiel().getPeriodeSpe()[1]+1
+                                     totmax = self.sequence.GetReferentiel().getNbrPeriodes()
                                      )
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         self.Bind(wx.EVT_SLIDER, self.onChanged)
@@ -6038,7 +6038,7 @@ class PanelPropriete_Projet(PanelPropriete):
         ref = self.projet.GetReferentiel()
         self.position = PositionCtrl(pageGen, self.projet.position,
                                      ref.getPeriodeSpe(self.projet.classe.specialite),
-                                     totmax = ref.getPeriodeSpe()[1]+1,
+                                     totmax = ref.getNbrPeriodes(),
                                      projets = ref.projets)#wx.SL_AUTOTICKS |
         sb.Add(self.bmp, flag = wx.EXPAND|wx.TOP, border = 3)
         sb.Add(self.position, 1, flag = wx.EXPAND|wx.TOP, border = 3)
@@ -6481,7 +6481,7 @@ class PositionCtrl(wx.Panel):
             
         self.sel = RangeSlider(self, position, mini, maxi, projets, h = 18*SSCALE)
         
-        w1, w2, w3 = mini/totmax, (maxi-mini+1)/totmax, (totmax-maxi-1)/totmax
+#         w1, w2, w3 = 100*mini/totmax, 100*(maxi-mini+1)/totmax, 100*(totmax-maxi-1)/totmax
         self.sizer.AddStretchSpacer(100*mini/totmax)
         self.sizer.Add(self.sel, 100*(maxi-mini+1)/totmax  , flag = wx.EXPAND)
         self.sizer.AddStretchSpacer(100*(totmax-maxi-1)/totmax)
@@ -6489,7 +6489,6 @@ class PositionCtrl(wx.Panel):
         self.SetSizer(self.sizer)
         self.Bind(wx.EVT_SLIDER, self.OnSlide)
         
-        return
         
         
     def OnSlide(self, event):
@@ -9250,7 +9249,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300*SSCALE))
         self.position = PositionCtrl(self, self.sequence.position, 
                                      ref.getPeriodeSpe(self.sequence.classe.specialite),
-                                     totmax = ref.getPeriodeSpe()[1]+1)
+                                     totmax = ref.getNbrPeriodes())
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         self.Bind(wx.EVT_SLIDER, self.onChanged)
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
@@ -9563,7 +9562,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.bmp = wx.StaticBitmap(self, -1, self.projet.getBitmapPeriode(300*SSCALE))
         self.position = PositionCtrl(self, self.projet.position, 
                                      ref.getPeriodeSpe(self.projet.classe.specialite),
-                                     totmax = ref.getPeriodeSpe()[1]+1
+                                     totmax = ref.getNbrPeriodes()
                                      )
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         self.Bind(wx.EVT_SLIDER, self.onChanged)

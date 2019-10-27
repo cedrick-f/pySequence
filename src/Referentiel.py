@@ -1916,8 +1916,8 @@ class Referentiel(XMLelem):
               format : [début, fin], à partir de 0
               :spe: liste de code de spécialités
         """
-        
-        if spe is not None and len(self.listeSpecialites) > 0:
+#         print("getPeriodeSpe", spe)
+        if spe is not None and len(self.listeSpecialites) > 0 and len(spe) > 0:
             lp = []
             for s in spe:
                 lp.extend([self.specialite[s][4][0]-1, self.specialite[s][4][-1]-1])
