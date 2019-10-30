@@ -1094,8 +1094,12 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
 #     ctx.paint()
     try:
         DrawPeriodes(ctx, (0,0,w,h), position, periodes, projets)
-    except:
-        pass
+    except: # 2ème tentative
+        time.sleep(0.01)
+        try:
+            DrawPeriodes(ctx, (0,0,w,h), position, periodes, projets)
+        except:
+            pass
 
     return imagesurface
 

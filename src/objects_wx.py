@@ -6473,7 +6473,8 @@ class PositionCtrl(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.position = position
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-        projets = [[x-1 for x in p.periode] for p in list(projets.values())]
+#         print("projets", projets)
+        projets = [[x-1 for x in p.periode] for p in projets.values()]
         
         mini, maxi = periodes[0], periodes[-1]#0, sum(p[1] for p in periodes)-1
         if totmax == None:

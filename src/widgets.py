@@ -1262,7 +1262,7 @@ import wx.lib.agw.supertooltip as STT
 
 class ToolTip():
     # ATTENTION il faut modifier supertooltip.py
-    # ligne 499 : rajouter event.Skip()
+    # ligne 499 : OnDestroy() 1ere ligne --> rajouter event.Skip()
 
     def initToolTip(self):
         
@@ -1694,8 +1694,9 @@ class RangeSlider(wx.Panel):
     
     
     def GetZone(self, slider):
+#         print("zones", self.zones)
         for z in self.zones:
-            if slider.GetValue() >= z[0] and slider.GetValue() <= z[1]:
+            if slider.GetValue() >= z[0] and slider.GetValue() <= z[-1]:
                 return z
         return 
 
@@ -1707,10 +1708,10 @@ class RangeSlider(wx.Panel):
 
             if zoneMin is not None and zoneMin == zoneMax:
                 self.sldMin.SetValue(zoneMin[0])
-                self.sldMax.SetValue(zoneMin[1])
+                self.sldMax.SetValue(zoneMin[-1])
             elif zoneMin is not None and zoneMax is None:
                 self.sldMin.SetValue(zoneMin[0])
-                self.sldMax.SetValue(zoneMin[1])
+                self.sldMax.SetValue(zoneMin[-1])
             elif zoneMin is  None and zoneMax is not None:
                 self.sldMax.SetValue(self.sldMin.GetValue())
         
@@ -1720,10 +1721,10 @@ class RangeSlider(wx.Panel):
 
             if zoneMax is not None and zoneMin == zoneMax:
                 self.sldMin.SetValue(zoneMax[0])
-                self.sldMax.SetValue(zoneMax[1])
+                self.sldMax.SetValue(zoneMax[-1])
             elif zoneMax is not None and zoneMin is None:
                 self.sldMin.SetValue(zoneMax[0])
-                self.sldMax.SetValue(zoneMax[1])
+                self.sldMax.SetValue(zoneMax[-1])
             elif zoneMax is  None and zoneMin is not None:
                 self.sldMin.SetValue(self.sldMax.GetValue())
                 
