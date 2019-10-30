@@ -155,7 +155,7 @@ def safeParse(nomFichier, toplevelwnd):
         fichier.close()
         return root
     
-    except ET.ParseError:
+    except:# ET.ParseError:
         messageErreur(toplevelwnd, "Fichier corrompu", 
                           "Le fichier suivant est corrompu !!\n\n"\
                           "%s\n\n" \
@@ -6974,7 +6974,26 @@ class Progression(BaseDoc, Grammaire):
         return sequences
 
 
-
+    ########################################################################################################
+    def GetProjetsDossier(self, event = None):
+        projets = []
+        listeFichiersProjets = self.GetFichiersProjetsDossier()
+        for fichier, projet in listeFichiersProjets:
+#             print 
+#             print fichier
+            path = testRel(fichier, self.GetPath())
+#             print path
+#             path = os.path.join(path, os.path.split(fichier)[1])
+#             print path
+            lienSequence = LienSequence(self,  path)
+#             print "seq", self.GetPath(), fichier
+#             print "   ", testRel(self.GetPath(), fichier)
+            lienSequence.sequence = projet
+            projets.append(lienSequence)
+        
+        
+        
+        return projets
 
     ########################################################################################################
     def GetFichiersSequencesDossier(self, event = None, exclureExistant = False):    
