@@ -1273,7 +1273,7 @@ class Classe(ElementBase):
         # Référentiel
         #
         def ChargerRefOriginal():
-            print("Réparation = pas référentiel intégré !")
+#             print("Réparation = pas référentiel intégré !")
             if self.GetVersionNum() >= 5:
                 code = self.referentiel.setBrancheCodeV5(brancheRef)
 #                 print("   Code trouvé dans référentiel :", code)
@@ -1281,7 +1281,7 @@ class Classe(ElementBase):
                     self.typeEnseignement = code
                 
             if self.typeEnseignement in REFERENTIELS:
-                print("   TypeEnseignement :", self.typeEnseignement)
+#                 print("   TypeEnseignement :", self.typeEnseignement)
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
                 self.referentiel.postTraiter()
                 self.referentiel.completer(forcer = True)
@@ -6845,7 +6845,7 @@ class Progression(BaseDoc, Grammaire):
                 sequence.setBranche(root)
             return classe, sequence
         except:
-            print("Le fichier n'a pas pu être ouvert :", nomFichier)
+#             print("Le fichier n'a pas pu être ouvert :", nomFichier)
             if DEBUG:
                 raise
             return None, None
@@ -6885,7 +6885,7 @@ class Progression(BaseDoc, Grammaire):
                 projet.setBranche(root)
             return classe, projet
         except:
-            print("Le fichier n'a pas pu être ouvert :",nomFichier)
+#             print("Le fichier n'a pas pu être ouvert :",nomFichier)
             if DEBUG:
                 raise
             return None, None
