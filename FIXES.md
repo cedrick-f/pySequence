@@ -15,7 +15,7 @@ ValueError :  Invalid data buffer size
 ## Fix
 https://github.com/wxWidgets/Phoenix/issues/1350
 
-Fichier `viewer.py`, ligne 519 :
+Fichier `{Python}\Lib\site-packages\wx\pdfviewer\viewer.py`, ligne 519 :
 ```
     def RenderPage(self, gc, pageno, scale=1.0):
         " Render the set of pagedrawings into gc for specified page "
