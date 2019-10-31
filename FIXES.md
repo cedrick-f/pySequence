@@ -15,10 +15,37 @@ ValueError :  Invalid data buffer size
 ## Fix
 https://github.com/wxWidgets/Phoenix/issues/1350
 
+Fichier `viewer.py`, ligne 519 :
+```
+    def RenderPage(self, gc, pageno, scale=1.0):
+        " Render the set of pagedrawings into gc for specified page "
+        page = self.pdfdoc.loadPage(pageno)
+        matrix = fitz.Matrix(scale, scale)
+        try:
+            pix = page.getPixmap(matrix=matrix)   # MUST be keyword arg(s)
+            #bmp = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+            bmp = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
+            gc.DrawBitmap(bmp, 0, 0, pix.width, pix.height)
+            self.zoom_error = False
+        except (RuntimeError, MemoryError):
+            if not self.zoom_error:     # report once only
+                self.zoom_error = True
+                dlg = wx.MessageDialog(self.parent, 'Out of memory. Zoom level too high?',
+                              'pdf viewer' , wx.OK |wx.ICON_EXCLAMATION)
+                dlg.ShowModal()
+                dlg.Destroy()
+```
+Remplacer
+`bmp = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)`
+par 
+`bmp = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)`
+
+
+
 # Problème de curseur dans les zones de description
 
 ## Fix
-Modifier le fichier `{Python}\Lib\site-packages\wx\lib\agw\supertooltip.py` :
+Modifier le fichier `{Python}\Lib\site-packages\wx\lib\agw\supertooltip.py` , ligne 499 :
 ```
 ...
 def OnDestroy(self, event):
