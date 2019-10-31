@@ -525,12 +525,13 @@ import constantes
 
 def genererDossierValidation(nomFichier, projet, fenDoc):
     Err = []
-    
+#     print("genererDossierValidation")
     dosstemp = tempfile.mkdtemp()
     fichertempV = os.path.join(dosstemp, "pdfvalid.pdf")
     fichertempF = os.path.join(dosstemp, "pdffiche.pdf")
 #    fichertemp = os.path.join(dosstemp, "pdfdoss.pdf")
-    
+#     print("   ", fichertempV)
+#     print("   ", fichertempF)
     wx.BeginBusyCursor()
     
     nomFichierHTML = os.path.join(util_path.PATH, r"..", DOSSIER_REF, 
@@ -541,12 +542,13 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     else:
         Err = genererFicheValidation(fichertempV, projet)
     
+#     print("      ",Err)
     
     if len(Err) > 0:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
         return Err
-#     print("Ok", Ok)
+#     print("Ok1")
     
     fenDoc.exporterFichePDF(fichertempF, pourDossierValidation = True)
     
@@ -557,7 +559,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     doc.insertPDF(doc1) 
     doc.insertPDF(doc2)
     doc.save(nomFichier)
-    
+#     print("Ok2")
     doc1.close()
     doc2.close()
     doc.close()
@@ -840,13 +842,13 @@ class PdfPanel(wx.Panel):
         wx.BeginBusyCursor()
         Err = genererDossierValidation(fichertemp, projet, fenDoc)
         wx.EndBusyCursor()
-        
+#         print("1")
         if len(Err) == 0:
             Err = self.chargerFichierPDF(fichertemp)
-        
-        self.sizer.Show(self.pdf, len(Err) == 0)
+#         print("2")
+#         self.sizer.Show(self.pdf, len(Err) == 0)
         self.sizer.Show(self.mess, len(Err) > 0)
-        
+#         print("3")
         if len(Err) > 0:
             m = "Une erreur s'est porduite lors de la création ou l'affichage du fichier PDF.\n\n"
             m += "\n".join(Err)
