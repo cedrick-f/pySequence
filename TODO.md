@@ -13,7 +13,7 @@
 - [ ] Ajouter Logos de classe/établissement/enseignement
 - [ ] Implémenter les popup HTML dans les Projets et Progressions
 - [ ] Progression : prévoir le choix de l'affichage du récapitulatif des Savoirs (pour l'instant, uniquement Compétences)
-- [ ] Ajout colonne "Commentaires" dans feuilles Sav_x (et popup sur arbre de sélection)
+- [ ] Ajout colonne "Commentaires" dans feuilles Sav_x (et popup sur arbre de sélection) - initialisé dans Ref_Spe_NSI
 - [ ] Projet : ~~Ajout des Fonctions de service~~ (les faire apparaitre sur la fiche)
 - [x] ~~Autosave~~
 
