@@ -39,7 +39,7 @@ Différents widgets perso pour wx
 
 
 """
-
+import re
 import wx
 import wx.adv as adv
 import md_util
@@ -100,10 +100,27 @@ class Grammaire():
 
 #     def __repr__(self):
 #         return self.nom_obj
-#     
-
     
+    def getRacine(self, mot):
+        i = mot.find("(")
+        if i == -1:
+            return mot
+        return mot[:mot.find("(")]
         
+    def getFormeSP(self, mot):
+        f = re.search('\(([^)]+)', mot)
+        if f is None:
+            return ["", ""]
+        l = f.group(1).split('-')
+        if len(l) == 1:
+            l = [""]+l
+        return l
+
+    def getSingulier(self, txt):
+        return " ".join([self.getRacine(mot) + self.getFormeSP(mot)[0] for mot in txt.split()])
+        
+    def getPluriel(self, txt):
+        return " ".join([self.getRacine(mot) + self.getFormeSP(mot)[1] for mot in txt.split()])
     
     def voyelle(self, c):
         return c.lower() in "aeiouhéèàêîëïùû"
@@ -129,7 +146,7 @@ class Grammaire():
         
         if adj != "":
             adj += " "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + self.getSingulier(adj+self.nom_obj.lower())
     
     def au_(self, adj = ""):
         """ 
@@ -151,7 +168,7 @@ class Grammaire():
         
         if adj != "":
             adj += " "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + self.getSingulier(adj+self.nom_obj.lower())
     
     
     def ce_(self, adj = ""):
@@ -171,7 +188,7 @@ class Grammaire():
         
         if adj != "":
             adj += " "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + self.getSingulier(adj+self.nom_obj.lower())
     
     
     def de_(self, adj = ""):
@@ -184,7 +201,7 @@ class Grammaire():
         
         if adj != "":
             adj += " "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + self.getSingulier(adj+self.nom_obj.lower())
     
     
     def de_plur_(self, adj = ""):
@@ -197,14 +214,14 @@ class Grammaire():
         
         if adj != "":
             adj += " "
-        return a + getPluriel(adj+self.nom_obj.lower())
+        return a + self.getPluriel(adj+self.nom_obj.lower())
     
     def des_(self, adj = ""):
         """ article partitif pluriel + nom
         """
         if adj != "":
             adj += " "
-        return "des "+getPluriel(adj+self.nom_obj.lower())
+        return "des "+self.getPluriel(adj+self.nom_obj.lower())
     
     
     def les_(self, adj = ""):
@@ -212,7 +229,7 @@ class Grammaire():
         """
         if adj != "":
             adj += " "
-        return "les "+getPluriel(adj+self.nom_obj.lower())
+        return "les "+self.getPluriel(adj+self.nom_obj.lower())
     
     
     def le_(self, adj = ""):
@@ -228,7 +245,7 @@ class Grammaire():
         
         if adj != "":
             adj += " "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + self.getSingulier(adj+self.nom_obj.lower())
      
     
     
@@ -245,21 +262,21 @@ class Grammaire():
             a = ""
         if adj != "":
             adj += " "
-        return a + getSingulier(adj+self.nom_obj.lower())
+        return a + self.getSingulier(adj+self.nom_obj.lower())
     
 
     def sing_(self):
-        return getSingulier(self.nom_obj.lower())
+        return self.getSingulier(self.nom_obj.lower())
     
     def Sing_(self):
-        return getSingulier(self.nom_obj.capitalize())
+        return self.getSingulier(self.nom_obj.capitalize())
     
     
     def plur_(self):
-        return getPluriel(self.nom_obj.lower())
+        return self.getPluriel(self.nom_obj.lower())
     
     def Plur_(self):
-        return getPluriel(self.nom_obj.capitalize())
+        return self.getPluriel(self.nom_obj.capitalize())
     
     
     
@@ -276,6 +293,9 @@ def getSingulierPluriel(txt, pluriel):
         return getPluriel(txt)
     else:
         return getSingulier(txt)
+
+def getMots(txt):
+    return txt.split()
 
 def getPluriel(txt):
     return txt.replace("(", "").replace(")", "")

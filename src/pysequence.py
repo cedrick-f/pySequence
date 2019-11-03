@@ -104,7 +104,7 @@ from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
 from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
-                    getSingulier, getPluriel, getSingulierPluriel, Grammaire, et2ou, \
+                    Grammaire, et2ou, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     getAncreFenetre, tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
                     
@@ -2545,7 +2545,11 @@ class Sequence(BaseDoc):
     def Tip_DOM(self, p = None):
 #         print "Tip_DOM", self.domaine
         ref = self.GetReferentiel()
-        self.tip.SetWholeText("titre", getSingulierPluriel(ref.nomDom, len(self.domaine)>1))
+        if len(self.domaine)>1:
+            t = ref._nomDom.Plur_()
+        else:
+            t = ref._nomDom.Sing_()
+        self.tip.SetWholeText("titre", t)
         ld = [ref.domaines[d][1] for d in self.domaine]
 
         for d in ld:
@@ -4542,9 +4546,6 @@ class Projet(BaseDoc, Grammaire):
                     else:
                         titre = titre.Sing_()
                     
-                    
-#                     titre = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
-#                                              len(competence.sousComp) > 1)
                     if len(k) > 1:
                         titre += " - ".join(k)
                     else:
@@ -5195,7 +5196,6 @@ class Projet(BaseDoc, Grammaire):
             ... ou bien celui de itemArbre concerné ...
         """
 #         print "AfficherMenuContextuel"
-#         print self.arbre.GetItemText(itemArbre), getPluriel(self.GetLabelEleve())
         ref = self.GetReferentiel()
         
         if itemArbre == self.branche:
@@ -5776,6 +5776,8 @@ class Progression(BaseDoc, Grammaire):
         self.code = self.GetReferentiel().getCodeProjetDefaut()
         
         self.version = ""
+        
+        self.mode = "S"     # Mde d'affichage de la fiche : C = compétences - S = Savoirs
         
         if not ouverture:
             self.MiseAJourTypeEnseignement()
@@ -7213,23 +7215,8 @@ class Progression(BaseDoc, Grammaire):
 #                             print competence.sousComp.items()
                             lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
                             for k, v in lc:
-                                self.tip.AjouterElemListeDL('list', k, v.intitule)
-#                     elif len(competences) == 3:
-#                         
-#                 
-#                 
-#                 
-#                 
-#                 if competence is not None:
-#                     
-#                     nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
-#                     self.tip.SetWholeText("titre", nc + " " + k)
-#                     self.tip.SetWholeText("grp", groupe.intitule)
-#                     self.tip.SetWholeText("int", competence.intitule)
-#                     if len(competence.sousComp) > 0:
-#                         print competence.sousComp.items()
-#                         for k, v in competence.sousComp.items():
-#                             self.tip.AjouterElemListeDL('comp', k, v.intitule)
+                                self.tip.AjouterElemListeDL('list', k, v.intitule)                 
+
             
             elif type(obj) == list:
                 pass
@@ -8221,8 +8208,12 @@ class CentreInteret(ElementBase):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
+        if self.maxCI > 1:
+            t = self.GetReferentiel()._nomCI.Plur_()
+        else:
+            t = self.GetReferentiel()._nomCI.Sing_()
         self.branche = arbre.AppendItem(branche, 
-                                        getSingulierPluriel(self.GetReferentiel()._nomCI.Plur_(), self.maxCI > 1)+" :", 
+                                        t + " :", 
                                         wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         self.codeBranche.SetBranche(self.branche)
@@ -8248,7 +8239,7 @@ class CentreInteret(ElementBase):
 #             self.maxCI = maxCIref
         self.maxCI = maxCIref    
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, getPluriel(self.GetReferentiel().nomCI)+" :")
+            self.arbre.SetItemText(self.branche, self.GetReferentiel()._nomCI.Plur_()+" :")
 #        self.GetPanelPropriete().construire()
 
     
@@ -8498,11 +8489,7 @@ class CentreInteret(ElementBase):
 #     def GetTypCode(self, num):
 #         return self.competences[num][0], self.competences[num][1:]
 #     
-#     ######################################################################################  
-#     def GetNomGenerique(self, code = "S"):
-#         dic = self.GetReferentiel().getDicToutesCompetences()
-#         return getPluriel(dic[code].nomGenerique)  + u" ("+ dic[code].abrDiscipline+ u")"
-#     
+
 #     
 #     ######################################################################################  
 #     def GetCodeDiscipline(self, code = "S"):
@@ -8859,12 +8846,12 @@ class Competences(ElementBase):
     ######################################################################################  
     def GetNomGenerique(self, code = "S"):
         dic = self.GetReferentiel().getDicToutesCompetences()
-        return getPluriel(dic[code]._nom.Plur_())  + " ("+ dic[code].abrDiscipline+ ")"
+        return dic[code]._nom.Plur_()  + " ("+ dic[code].abrDiscipline+ ")"
     
     ######################################################################################  
     def GetNomGenerique_sing(self, code = "S"):
         dic = self.GetReferentiel().getDicToutesCompetences()
-        return getSingulier(dic[code]._nom.sing_())
+        return dic[code]._nom.sing_()
     
     ######################################################################################  
     def GetCodeDiscipline(self, code = "S"):
@@ -8917,9 +8904,7 @@ class Competences(ElementBase):
                                 message += "\n"+self.GetNomGenerique(k)+" :"
                             else:
                                 message += "\n"+self.GetNomGenerique_sing(k)+" :"
-                                
-                                
-#                             message += "\n"+getSingulierPluriel(ref.GetNomGeneriqueComp(k), len(ddif[k]) > 1 )+" :"
+
                             for d in ddif[k]:
                                 message += "\n"+d
                         
@@ -9317,7 +9302,6 @@ class Savoirs(ElementBase):
                                 message += "\n"+self.GetNomGenerique(k)+" :"
                             else:
                                 message += "\n"+self.GetNomGenerique_sing(k)+" :"
-#                             message += "\n"+getSingulierPluriel(ref.GetNomGeneriqueSav(k), len(ddif[k]) > 1 )+" :"
                             for d in ddif[k]:
                                 message += "\n"+d
              

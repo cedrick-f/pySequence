@@ -1386,7 +1386,8 @@ class Referentiel(XMLelem):
                     if sh_sa.cell(l,c).value != "": # il y en a !
                         self.dicoSavoirs[code].nivTaxo.append(sh_sa.cell(l,c).value)
 
-
+                
+                
                 
 
             
@@ -3653,9 +3654,9 @@ class Competences(XMLelem):
         ...]
         """
         lst0 = []
-        for k0, v0 in list(self.dicCompetences.items()):
+        for k0, v0 in self.dicCompetences.items():
             lst1 = []
-            for k1, v1 in list(v0.sousComp.items()):
+            for k1, v1 in v0.sousComp.items():
                 lst1.append(k1)
 #             lst1.sort()
             lst1 = constantes.trier(lst1)
@@ -3727,6 +3728,9 @@ class Savoir(XMLelem):
         self.nivTaxo = [[],[]]          # Liste des codes (Spe et EnsSpe) et niveau taxonomiques (sous la forme "Spe-Niveau")
         
         self.infos = []                 # des informations supplémentaires (str)
+        
+        self.commentaires = ""          # A finir !!
+        
 
 #     def __repr__(self):
 #         print("Savoir : ")
@@ -3736,6 +3740,7 @@ class Savoir(XMLelem):
     def copie(self):
         c = Savoir(self.intitule, self.poids)
         c.infos = self.infos[:]
+        c.commentaires = self.commentaires
         for i in range(len(self.elemAssocies)):
             c.elemAssocies[i] = self.elemAssocies[i][:]
         return c
@@ -3901,6 +3906,28 @@ class Savoirs(XMLelem):
         return dic_f0
     
     
+    #########################################################################
+    def get2Niveaux(self):
+        """
+        :return: une liste de listes (2 premiers niveaux)
+        
+        format :
+        [['A', ['A1', 'A2', 'A3']],
+        ['B', ['B1', 'B2']],
+        ...]
+        """
+        lst0 = []
+        for k0, v0 in self.dicSavoirs.items():
+            lst1 = []
+            for k1, v1 in v0.sousSav.items():
+                lst1.append(k1)
+#             lst1.sort()
+            lst1 = constantes.trier(lst1)
+            lst0.append([k0, lst1])
+#         lst0 = constantes.trier(lst0)
+        lst0.sort(key = lambda c:c[0])
+#         lst0.sort(key = lambda c:c[0])
+        return lst0
     
     ###########################################################
     def getSavoir(self, code, dic = None, c = 1):
@@ -3979,6 +4006,11 @@ class Savoirs(XMLelem):
                             d[code_sav].elemAssocies[c] = sh.cell(l,c+4).value.split()
                         for c in [7, 8]:
                             d[code_sav].nivTaxo[c-7] = sh.cell(l,c).value.split()
+                        
+                        if sh.ncols >= 11:
+                            d[code_sav].commentaires = sh.cell(l,10).value
+                            
+                            
                     return d
                         
                 
@@ -4003,6 +4035,9 @@ class Savoirs(XMLelem):
                             dic[code_sav].elemAssocies[c] = sh.cell(p,c+4).value.split()
                         for c in [7, 8]:
                             dic[code_sav].nivTaxo[c-7] = sh.cell(p,c).value.split()
+                            
+                        if sh.ncols >= 11:
+                            dic[code_sav].commentaires = sh.cell(p,10).value
 
                 return dic
         

@@ -171,7 +171,7 @@ import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, Grammaire, \
-                    getPluriel, getSingulierPluriel, et2ou, \
+                    et2ou, \
                     TextCtrl_Help, CloseFenHelp, DelayedResult, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
@@ -4594,7 +4594,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4851,7 +4851,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 # from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow, DelayedResult):
+class BaseFiche2(wx.ScrolledWindow, DelayedResult):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5863,7 +5863,11 @@ class PanelPropriete_Sequence(PanelPropriete):
         if len(self.sequence.domaine) > 1:
             if self.sizer.FindItemAtPosition((0,1)) is None:
                 ref = self.sequence.GetReferentiel()
-                titre = myStaticBox(self, -1, getSingulierPluriel(ref.nomDom, len(self.sequence.domaine)>1))
+                if len(self.sequence.domaine)>1:
+                    t = ref._nomDom.Plur_()
+                else:
+                    t = ref._nomDom.Sing_()
+                titre = myStaticBox(self, -1, t)
                 self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
                 
                 for dom in ref.listeDomaines:
@@ -8677,7 +8681,6 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Les Problématiques
         #
-#         sbpb = myStaticBox(self, -1, getPluriel(ref.nomPb), size = (200*SSCALE,-1))
 #         sbspb = wx.StaticBoxSizer(sbpb,wx.HORIZONTAL)
 
         self.panelPb = PanelProblematiques(self, self.CI)
@@ -8801,7 +8804,7 @@ class PanelPropriete_CI(PanelPropriete):
         
         
         
-        self.sendEvent(modif = "Modification des %s abordés" %getPluriel(ref.nomCI),
+        self.sendEvent(modif = "Modification des %s abordés" %ref._nomCI.plur_(),
                        draw = True, verif = True)
 
 
@@ -8895,7 +8898,7 @@ class PanelPropriete_CI(PanelPropriete):
         self.GererCases(l, p)
 #         print "MAJ_CI_perso", self.CI.CI_perso
         ref = self.CI.GetReferentiel()
-        self.sendEvent(modif = "Modification des %s personnalisés" %getPluriel(ref.nomCI),
+        self.sendEvent(modif = "Modification des %s personnalisés" %ref._nomCI.plur_(),
                        draw = True, verif = False)
         
         
@@ -9042,7 +9045,7 @@ class Panel_Cible(wx.Panel):
         #
         aide = wx.BitmapButton(self, -1, scaleImage(images.Bouton_Aide.GetBitmap()),
                                pos = (0,0))
-        aide.SetToolTip("Informations à propos de la cible des " + getPluriel(ref.nomCI))
+        aide.SetToolTip("Informations à propos de la cible des " + ref._nomCI.plur_())
         self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
             
             
@@ -9397,7 +9400,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.Layout()
         ref = self.sequenceCI.parent.classe.referentiel
-        self.sendEvent(modif = "Modification des %s abordés" %getPluriel(ref.nomCI),
+        self.sendEvent(modif = "Modification des %s abordés" %ref._nomCI.plur_(),
                        draw = True, verif = True)
 
 
@@ -15832,7 +15835,6 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-#         self.SetColumnText(0, getPluriel(compRef.nomGenerique) + " et " + compRef.nomGeneriqueIndic)
         self.SetColumnText(0, "%s et %s" %(compRef._nom.Plur_(),compRef._nomIndic.Plur_()))
         
         
