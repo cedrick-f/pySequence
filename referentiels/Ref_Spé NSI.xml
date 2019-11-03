@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="NSI" S_Famille="NSI" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="NSI" S_Famille="NSI" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="https://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/26/8/spe633_annexe_1063268.pdf" />
   </l_BO_URL>
@@ -193,7 +193,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Histoire de l'informatique">
+        <Savoir_1 S_commentaires="" S_intitule="Histoire de l'informatique">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -204,7 +204,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="Evènements clés de l'histoire de l'informatique">
+            <Savoir_1.1 S_commentaires="" S_intitule="Evènements clés de l'histoire de l'informatique">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -215,7 +215,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="Situer dans le temps les principaux évènements de l'histoire de l'informatique et leurs protagonistes">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Situer dans le temps les principaux évènements de l'histoire de l'informatique et leurs protagonistes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -231,7 +231,7 @@
             </Savoir_1.1>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_2 S_intitule="Représentation des données:Types et valeurs de base">
+        <Savoir_2 S_commentaires="" S_intitule="Représentation des données : types et valeurs de base">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -242,7 +242,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_2.1 S_intitule="Passer de la représentation d'une base à une autre.">
+            <Savoir_2.1 S_commentaires="" S_intitule="Passer de la représentation d'une base à une autre">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -254,7 +254,7 @@
               </l_nivTaxo>
               <d_sousSav />
             </Savoir_2.1>
-            <Savoir_2.2 S_intitule="Représentation binaire d'un nombre relatif">
+            <Savoir_2.2 S_commentaires="" S_intitule="Représentation binaire d'un nombre relatif">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -265,7 +265,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.2.1 S_intitule="Evaluer le nombre de bits nécessaires à l’écriture en base 2 d’un entier, de la somme ou du produit de deux nombres entiers;">
+                <Savoir_2.2.1 S_commentaires="" S_intitule="Evaluer le nombre de bits nécessaires à l’écriture en base 2 d’un entier, de la somme ou du produit de deux nombres entiers">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -277,7 +277,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.1>
-                <Savoir_2.2.2 S_intitule="Utiliser le complément à 2">
+                <Savoir_2.2.2 S_commentaires="" S_intitule="Utiliser le complément à 2">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -291,7 +291,7 @@
                 </Savoir_2.2.2>
               </d_sousSav>
             </Savoir_2.2>
-            <Savoir_2.3 S_intitule="Calculer sur quelques exemples la représentation de nombres réels : 0.1, 0.25 ou 1/3.">
+            <Savoir_2.3 S_commentaires="" S_intitule="Calculer sur quelques exemples la représentation de nombres réels : 0.1, 0.25 ou 1/3">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -303,7 +303,7 @@
               </l_nivTaxo>
               <d_sousSav />
             </Savoir_2.3>
-            <Savoir_2.4 S_intitule="Dresser la table d’une expression booléenne.">
+            <Savoir_2.4 S_commentaires="" S_intitule="Dresser la table d’une expression booléenne">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -315,7 +315,7 @@
               </l_nivTaxo>
               <d_sousSav />
             </Savoir_2.4>
-            <Savoir_2.5 S_intitule="Encodage">
+            <Savoir_2.5 S_commentaires="" S_intitule="Encodage">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -326,7 +326,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.5.1 S_intitule="Identifier l’intérêt des différents systèmes d’encodage.">
+                <Savoir_2.5.1 S_commentaires="" S_intitule="Identifier l’intérêt des différents systèmes d’encodage">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -338,7 +338,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.5.1>
-                <Savoir_2.5.2 S_intitule="Convertir un fichier texte dans différents formats d’encodage. ">
+                <Savoir_2.5.2 S_commentaires="" S_intitule="Convertir un fichier texte dans différents formats d’encodage">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -354,7 +354,7 @@
             </Savoir_2.5>
           </d_sousSav>
         </Savoir_2>
-        <Savoir_3 S_intitule="Représentation des données:Types construits">
+        <Savoir_3 S_commentaires="" S_intitule="Représentation des données : types construits">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -365,7 +365,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_3.1 S_intitule="Écrire une fonction renvoyant un p-uplet de valeurs. ">
+            <Savoir_3.1 S_commentaires="" S_intitule="Écrire une fonction renvoyant un p-uplet de valeurs">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -377,7 +377,7 @@
               </l_nivTaxo>
               <d_sousSav />
             </Savoir_3.1>
-            <Savoir_3.2 S_intitule="Tableaux">
+            <Savoir_3.2 S_commentaires="" S_intitule="Tableaux">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -388,7 +388,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.2.1 S_intitule="Lire et modifier les éléments d’un tableau grâce à leurs index.">
+                <Savoir_3.2.1 S_commentaires="" S_intitule="Lire et modifier les éléments d’un tableau grâce à leurs index">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -400,7 +400,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.1>
-                <Savoir_3.2.2 S_intitule="Construire un tableau par compréhension.">
+                <Savoir_3.2.2 S_commentaires="" S_intitule="Construire un tableau par compréhension">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -412,7 +412,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.2>
-                <Savoir_3.2.3 S_intitule="Utiliser des tableaux de tableaux pour représenter des matrices : notation a [i] [j].">
+                <Savoir_3.2.3 S_commentaires="" S_intitule="Utiliser des tableaux de tableaux pour représenter des matrices : notation a[i][j]">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -424,7 +424,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.3>
-                <Savoir_3.2.4 S_intitule="Itérer sur les éléments d’un tableau. ">
+                <Savoir_3.2.4 S_commentaires="" S_intitule="Itérer sur les éléments d’un tableau">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -438,7 +438,7 @@
                 </Savoir_3.2.4>
               </d_sousSav>
             </Savoir_3.2>
-            <Savoir_3.3 S_intitule="Dictionnaires">
+            <Savoir_3.3 S_commentaires="" S_intitule="Dictionnaires">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -449,7 +449,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.3.1 S_intitule="Construire une entrée de dictionnaire.">
+                <Savoir_3.3.1 S_commentaires="" S_intitule="Construire une entrée de dictionnaire">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -461,7 +461,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.3.1>
-                <Savoir_3.3.2 S_intitule="Itérer sur les éléments d’un dictionnaire">
+                <Savoir_3.3.2 S_commentaires="" S_intitule="Itérer sur les éléments d’un dictionnaire">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -477,7 +477,7 @@
             </Savoir_3.3>
           </d_sousSav>
         </Savoir_3>
-        <Savoir_4 S_intitule="Traitement de données en tables">
+        <Savoir_4 S_commentaires="" S_intitule="Traitement de données">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -488,7 +488,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_4.1 S_intitule="Tables">
+            <Savoir_4.1 S_commentaires="" S_intitule="Traitement des données en tables">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -499,7 +499,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_4.1.1 S_intitule="Importer une table depuis un fichier texte tabulé ou un fichier CSV.">
+                <Savoir_4.1.1 S_commentaires="" S_intitule="Importer une table depuis un fichier texte tabulé ou un fichier CSV">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -511,7 +511,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.1.1>
-                <Savoir_4.1.2 S_intitule="Rechercher les lignes d’une table vérifiant des critères exprimés en logique propositionnelle. ">
+                <Savoir_4.1.2 S_commentaires="" S_intitule="Rechercher les lignes d’une table vérifiant des critères exprimés en logique propositionnelle">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -523,7 +523,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.1.2>
-                <Savoir_4.1.3 S_intitule="Trier une table suivant une colonne. ">
+                <Savoir_4.1.3 S_commentaires="" S_intitule="Trier une table suivant une colonne">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -535,7 +535,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.1.3>
-                <Savoir_4.1.4 S_intitule="Construire une nouvelle table en combinant les données de deux tables. ">
+                <Savoir_4.1.4 S_commentaires="" S_intitule="Construire une nouvelle table en combinant les données de deux tables">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -551,7 +551,7 @@
             </Savoir_4.1>
           </d_sousSav>
         </Savoir_4>
-        <Savoir_5 S_intitule="Interaction entre l'homme et la machine sur le Web">
+        <Savoir_5 S_commentaires="" S_intitule="Interaction entre l'homme et la machine sur le Web">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -562,7 +562,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_5.1 S_intitule="Composants graphiques">
+            <Savoir_5.1 S_commentaires="" S_intitule="Composants graphiques">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -573,7 +573,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_5.1.1 S_intitule="Identifier les différents composants graphiques permettant d’interagir avec une application Web.  ">
+                <Savoir_5.1.1 S_commentaires="" S_intitule="Identifier les différents composants graphiques permettant d’interagir avec une application Web">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -585,7 +585,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.1.1>
-                <Savoir_5.1.2 S_intitule="Identifier les événements que les fonctions associées aux différents composants graphiques sont capables de traiter">
+                <Savoir_5.1.2 S_commentaires="" S_intitule="Identifier les événements que les fonctions associées aux différents composants graphiques sont capables de traiter">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -597,7 +597,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.1.2>
-                <Savoir_5.1.3 S_intitule="Analyser et modifier les méthodes exécutées lors d’un clic sur un bouton d’une page Web. ">
+                <Savoir_5.1.3 S_commentaires="" S_intitule="Analyser et modifier les méthodes exécutées lors d’un clic sur un bouton d’une page Web">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -611,7 +611,7 @@
                 </Savoir_5.1.3>
               </d_sousSav>
             </Savoir_5.1>
-            <Savoir_5.2 S_intitule="Mode Client/Serveur">
+            <Savoir_5.2 S_commentaires="" S_intitule="Mode Client/Serveur">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -622,7 +622,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_5.2.1 S_intitule="Distinguer ce qui est exécuté sur le client ou sur le serveur et dans quel ordre. ">
+                <Savoir_5.2.1 S_commentaires="" S_intitule="Distinguer ce qui est exécuté sur le client ou sur le serveur et dans quel ordre">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -634,7 +634,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.2.1>
-                <Savoir_5.2.2 S_intitule="Distinguer ce qui est mémorisé dans le client et retransmis au serveur. ">
+                <Savoir_5.2.2 S_commentaires="" S_intitule="Distinguer ce qui est mémorisé dans le client et retransmis au serveur">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -646,7 +646,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.2.2>
-                <Savoir_5.2.3 S_intitule="Reconnaître quand et pourquoi la transmission est chiffrée. ">
+                <Savoir_5.2.3 S_commentaires="" S_intitule="Reconnaître quand et pourquoi la transmission est chiffrée">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -660,7 +660,7 @@
                 </Savoir_5.2.3>
               </d_sousSav>
             </Savoir_5.2>
-            <Savoir_5.3 S_intitule="Formulaires">
+            <Savoir_5.3 S_commentaires="" S_intitule="Formulaires">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -671,7 +671,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_5.3.1 S_intitule="Analyser le fonctionnement d’un formulaire simple. ">
+                <Savoir_5.3.1 S_commentaires="" S_intitule="Analyser le fonctionnement d’un formulaire simple">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -683,7 +683,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.3.1>
-                <Savoir_5.3.2 S_intitule="Distinguer les transmissions de paramètres par les requêtes POST ou GET. ">
+                <Savoir_5.3.2 S_commentaires="" S_intitule="Distinguer les transmissions de paramètres par les requêtes POST ou GET">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -699,7 +699,7 @@
             </Savoir_5.3>
           </d_sousSav>
         </Savoir_5>
-        <Savoir_6 S_intitule="Architectures matérielles et systèmes d'exploitation">
+        <Savoir_6 S_commentaires="" S_intitule="Architectures matérielles et systèmes d'exploitation">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -710,7 +710,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_6.1 S_intitule="Architecture matérielle">
+            <Savoir_6.1 S_commentaires="" S_intitule="Architecture matérielle">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -721,7 +721,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_6.1.1 S_intitule="Distinguer les rôles et les caractéristiques des différents constituants d’une machine.">
+                <Savoir_6.1.1 S_commentaires="" S_intitule="Distinguer les rôles et les caractéristiques des différents constituants d’une machine">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -733,7 +733,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_6.1.1>
-                <Savoir_6.1.2 S_intitule="Dérouler l’exécution d’une séquence d’instructions simples du type langage machine. ">
+                <Savoir_6.1.2 S_commentaires="" S_intitule="Dérouler l’exécution d’une séquence d’instructions simples du type langage machine">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -747,7 +747,7 @@
                 </Savoir_6.1.2>
               </d_sousSav>
             </Savoir_6.1>
-            <Savoir_6.2 S_intitule="Réseaux">
+            <Savoir_6.2 S_commentaires="" S_intitule="Réseaux">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -758,7 +758,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_6.2.1 S_intitule="Mettre en évidence l’intérêt du découpage des données en paquets et de leur encapsulation.">
+                <Savoir_6.2.1 S_commentaires="" S_intitule="Mettre en évidence l’intérêt du découpage des données en paquets et de leur encapsulation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -770,7 +770,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_6.2.1>
-                <Savoir_6.2.2 S_intitule="Dérouler le fonctionnement d’un protocole simple de récupération de perte de paquets (bit alterné). ">
+                <Savoir_6.2.2 S_commentaires="" S_intitule="Dérouler le fonctionnement d’un protocole simple de récupération de perte de paquets (bit alterné)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -782,7 +782,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_6.2.2>
-                <Savoir_6.2.3 S_intitule="Simuler ou mettre en œuvre un réseau.  ">
+                <Savoir_6.2.3 S_commentaires="" S_intitule="Simuler ou mettre en œuvre un réseau">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -796,7 +796,7 @@
                 </Savoir_6.2.3>
               </d_sousSav>
             </Savoir_6.2>
-            <Savoir_6.3 S_intitule="Systèmes d'exploitation">
+            <Savoir_6.3 S_commentaires="" S_intitule="Systèmes d'exploitation">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -807,7 +807,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_6.3.1 S_intitule="Identifier les fonctions d'un système d'exploitation">
+                <Savoir_6.3.1 S_commentaires="" S_intitule="Identifier les fonctions d'un système d'exploitation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -819,7 +819,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_6.3.1>
-                <Savoir_6.3.2 S_intitule="Utiliser les commandes de base en ligne de commande.">
+                <Savoir_6.3.2 S_commentaires="" S_intitule="Utiliser les commandes de base en ligne de commande">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -831,7 +831,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_6.3.2>
-                <Savoir_6.3.3 S_intitule="Gérer les droits et permissions d'accès au fichiers.">
+                <Savoir_6.3.3 S_commentaires="" S_intitule="Gérer les droits et permissions d'accès au fichiers">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -845,7 +845,7 @@
                 </Savoir_6.3.3>
               </d_sousSav>
             </Savoir_6.3>
-            <Savoir_4.4 S_intitule="Entrées/Sorties">
+            <Savoir_4.4 S_commentaires="" S_intitule="Entrées/Sorties">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -856,7 +856,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_6.4.1 S_intitule="Identifier le rôle des capteurs et actionneurs.">
+                <Savoir_6.4.1 S_commentaires="" S_intitule="Identifier le rôle des capteurs et actionneurs">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -868,7 +868,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_6.4.1>
-                <Savoir_6.4.2 S_intitule="Réaliser par programmation une IHM répondant à un cahier des charges donné. ">
+                <Savoir_6.4.2 S_commentaires="" S_intitule="Réaliser par programmation une IHM répondant à un cahier des charges donné">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -884,7 +884,7 @@
             </Savoir_4.4>
           </d_sousSav>
         </Savoir_6>
-        <Savoir_7 S_intitule="Langages de programmation">
+        <Savoir_7 S_commentaires="" S_intitule="Langages de programmation">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -895,7 +895,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_7.1 S_intitule="Langages de programmation">
+            <Savoir_7.1 S_commentaires="" S_intitule="Constructions élémentaires">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -906,7 +906,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_7.1.1 S_intitule="Mettre en évidence un corpus de constructions élémentaires. ">
+                <Savoir_7.1.1 S_commentaires="" S_intitule="Mettre en évidence un corpus de constructions élémentaires">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -918,21 +918,9 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_7.1.1>
-                <Savoir_7.1.2 S_intitule="Repérer, dans un nouveau langage de programmation les traits communs et les traits particuliers à ce langage.">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_7.1.2>
               </d_sousSav>
             </Savoir_7.1>
-            <Savoir_7.2 S_intitule="Spécifications">
+            <Savoir_7.2 S_commentaires="" S_intitule="Diversité et unité des langages de programmation">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -943,7 +931,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_7.2.1 S_intitule="Prototyper une fonction. ">
+                <Savoir_7.2.1 S_commentaires="" S_intitule="Repérer, dans un nouveau langage de programmation les traits communs et les traits particuliers à ce langage">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -955,33 +943,9 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_7.2.1>
-                <Savoir_7.2.2 S_intitule="Décrire les préconisations sur les argumeznts">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_7.2.2>
-                <Savoir_7.2.3 S_intitule="Décrire des postconditions sur les résultats. ">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_7.2.3>
               </d_sousSav>
             </Savoir_7.2>
-            <Savoir_7.3 S_intitule="Tests">
+            <Savoir_7.3 S_commentaires="" S_intitule="Spécifications">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -992,7 +956,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_7.3.1 S_intitule="Utiliser des jeux de tests. ">
+                <Savoir_7.3.1 S_commentaires="" S_intitule="Prototyper une fonction">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1004,7 +968,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_7.3.1>
-                <Savoir_7.3.2 S_intitule="Utiliser la documentation d’une bibliothèque. ">
+                <Savoir_7.3.2 S_commentaires="" S_intitule="Décrire les préconisations sur les arguments">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1016,22 +980,21 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_7.3.2>
+                <Savoir_7.3.3 S_commentaires="" S_intitule="Décrire des postconditions sur les résultats">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.3.3>
               </d_sousSav>
             </Savoir_7.3>
-          </d_sousSav>
-        </Savoir_7>
-        <Savoir_8 S_intitule="Algorithmique">
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_infos />
-          <l_nivTaxo>
-            <l_00 />
-            <l_01 />
-          </l_nivTaxo>
-          <d_sousSav>
-            <Savoir_8.1 S_intitule="Ecriture d'algorithmes">
+            <Savoir_7.4 S_commentaires="" S_intitule="Mise au point de programmes">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1042,7 +1005,70 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_8.1.1 S_intitule="Écrire un algorithme de recherche d’une occurrence sur des valeurs de type quelconque.">
+                <Savoir_7.4.1 S_commentaires="" S_intitule="Utiliser des jeux de tests">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.4.1>
+              </d_sousSav>
+            </Savoir_7.4>
+            <Savoir_7.5 S_commentaires="" S_intitule="Utilisation de bibliothèques">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_7.5.1 S_commentaires="" S_intitule="Utiliser la documentation d’une bibliothèque">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.5.1>
+              </d_sousSav>
+            </Savoir_7.5>
+          </d_sousSav>
+        </Savoir_7>
+        <Savoir_8 S_commentaires="" S_intitule="Algorithmique">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_8.1 S_commentaires="" S_intitule="Ecriture d'algorithmes">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_8.1.1 S_commentaires="" S_intitule="Écrire un algorithme de recherche d’une occurrence sur des valeurs de type quelconque">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1054,7 +1080,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_8.1.1>
-                <Savoir_8.1.2 S_intitule="Écrire un algorithme de recherche d’un extrémum, de calcul d’une moyenne. ">
+                <Savoir_8.1.2 S_commentaires="" S_intitule="Écrire un algorithme de recherche d’un extrémum, de calcul d’une moyenne">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1068,7 +1094,7 @@
                 </Savoir_8.1.2>
               </d_sousSav>
             </Savoir_8.1>
-            <Savoir_8.2 S_intitule="Algorithmes de tri">
+            <Savoir_8.2 S_commentaires="" S_intitule="Algorithmes de tri">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1079,7 +1105,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_8.2.1 S_intitule="Écrire un algorithme de tri.">
+                <Savoir_8.2.1 S_commentaires="" S_intitule="Écrire un algorithme de tri">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1091,7 +1117,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_8.2.1>
-                <Savoir_8.2.2 S_intitule="Décrire un invariant de boucle qui prouve la correction des tris par insertion et par sélection">
+                <Savoir_8.2.2 S_commentaires="" S_intitule="Décrire un invariant de boucle qui prouve la correction des tris par insertion et par sélection">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1105,7 +1131,7 @@
                 </Savoir_8.2.2>
               </d_sousSav>
             </Savoir_8.2>
-            <Savoir_8.3 S_intitule="Algorithmes d'apprentissage">
+            <Savoir_8.3 S_commentaires="" S_intitule="Algorithmes d'apprentissage">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1116,7 +1142,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_8.3.1 S_intitule="Écrire un algorithme qui prédit la classe d’un élément en fonction de la classe majoritaire de ses k plus proches voisins. ">
+                <Savoir_8.3.1 S_commentaires="" S_intitule="Écrire un algorithme qui prédit la classe d’un élément en fonction de la classe majoritaire de ses k plus proches voisins">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1130,7 +1156,7 @@
                 </Savoir_8.3.1>
               </d_sousSav>
             </Savoir_8.3>
-            <Savoir_8.4 S_intitule="Dichotomie">
+            <Savoir_8.4 S_commentaires="" S_intitule="Dichotomie">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1141,7 +1167,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_8.4.1 S_intitule="Montrer la terminaison de la recherche dichotomique à l’aide d’un variant de boucle. ">
+                <Savoir_8.4.1 S_commentaires="" S_intitule="Montrer la terminaison de la recherche dichotomique à l’aide d’un variant de boucle">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1155,7 +1181,7 @@
                 </Savoir_8.4.1>
               </d_sousSav>
             </Savoir_8.4>
-            <Savoir_8.5 S_intitule="Algorithmes gloutons">
+            <Savoir_8.5 S_commentaires="" S_intitule="Algorithmes gloutons">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1166,7 +1192,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_8.5.1 S_intitule="Résoudre un problème grâce à un algorithme glouton">
+                <Savoir_8.5.1 S_commentaires="" S_intitule="Résoudre un problème grâce à un algorithme glouton">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1190,7 +1216,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Première">
+        <Savoir_1 S_commentaires="" S_intitule="Première">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1201,7 +1227,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="Analyse">
+            <Savoir_1.1 S_commentaires="" S_intitule="Analyse">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1212,7 +1238,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="Second degré">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Second degré">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1223,7 +1249,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.1.1 S_intitule="Forme canonique d’une fonction polynôme de degré deux">
+                    <Savoir_1.1.1.1 S_commentaires="" S_intitule="Forme canonique d’une fonction polynôme de degré deux">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1235,7 +1261,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.1>
-                    <Savoir_1.1.1.2 S_intitule="Équation du second degré, discriminant">
+                    <Savoir_1.1.1.2 S_commentaires="" S_intitule="Équation du second degré, discriminant">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1247,7 +1273,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.2>
-                    <Savoir_1.1.1.3 S_intitule="Signe du trinôme">
+                    <Savoir_1.1.1.3 S_commentaires="" S_intitule="Signe du trinôme">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1261,7 +1287,7 @@
                     </Savoir_1.1.1.3>
                   </d_sousSav>
                 </Savoir_1.1.1>
-                <Savoir_1.1.2 S_intitule="Étude de fonctions">
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Étude de fonctions">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1272,7 +1298,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.2.1 S_intitule="Fonctions de référence">
+                    <Savoir_1.1.2.1 S_commentaires="" S_intitule="Fonctions de référence">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1284,7 +1310,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.1>
-                    <Savoir_1.1.2.2 S_intitule="Sens de variation des fonctions                ">
+                    <Savoir_1.1.2.2 S_commentaires="" S_intitule="Sens de variation des fonctions                ">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1298,7 +1324,7 @@
                     </Savoir_1.1.2.2>
                   </d_sousSav>
                 </Savoir_1.1.2>
-                <Savoir_1.1.3 S_intitule="Dérivation">
+                <Savoir_1.1.3 S_commentaires="" S_intitule="Dérivation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1309,7 +1335,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.3.1 S_intitule="Nombre dérivé d’une fonction en un point">
+                    <Savoir_1.1.3.1 S_commentaires="" S_intitule="Nombre dérivé d’une fonction en un point">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1321,7 +1347,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.1>
-                    <Savoir_1.1.3.2 S_intitule="Tangente à la courbe représentative d’une fonction dérivable en un point">
+                    <Savoir_1.1.3.2 S_commentaires="" S_intitule="Tangente à la courbe représentative d’une fonction dérivable en un point">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1333,7 +1359,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.2>
-                    <Savoir_1.1.3.3 S_intitule="Fonction dérivée">
+                    <Savoir_1.1.3.3 S_commentaires="" S_intitule="Fonction dérivée">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1345,7 +1371,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.3>
-                    <Savoir_1.1.3.4 S_intitule="Dérivée des fonctions usuelles">
+                    <Savoir_1.1.3.4 S_commentaires="" S_intitule="Dérivée des fonctions usuelles">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1357,7 +1383,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.4>
-                    <Savoir_1.1.3.5 S_intitule="Dérivée d’une somme, d’un produit et d’un quotient">
+                    <Savoir_1.1.3.5 S_commentaires="" S_intitule="Dérivée d’une somme, d’un produit et d’un quotient">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1369,7 +1395,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.5>
-                    <Savoir_1.1.3.6 S_intitule="Lien entre signe de la dérivée et sens de variation">
+                    <Savoir_1.1.3.6 S_commentaires="" S_intitule="Lien entre signe de la dérivée et sens de variation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1381,7 +1407,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.6>
-                    <Savoir_1.1.3.7 S_intitule="Extremum d’une fonction">
+                    <Savoir_1.1.3.7 S_commentaires="" S_intitule="Extremum d’une fonction">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1395,7 +1421,7 @@
                     </Savoir_1.1.3.7>
                   </d_sousSav>
                 </Savoir_1.1.3>
-                <Savoir_1.1.4 S_intitule="Suites">
+                <Savoir_1.1.4 S_commentaires="" S_intitule="Suites">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1406,7 +1432,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.4.1 S_intitule="Modes de génération d’une suite numérique">
+                    <Savoir_1.1.4.1 S_commentaires="" S_intitule="Modes de génération d’une suite numérique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1418,7 +1444,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.1>
-                    <Savoir_1.1.4.2 S_intitule="Suites arithmétiques et suites géométriques">
+                    <Savoir_1.1.4.2 S_commentaires="" S_intitule="Suites arithmétiques et suites géométriques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1430,7 +1456,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.2>
-                    <Savoir_1.1.4.3 S_intitule="Sens de variation d’une suite numérique">
+                    <Savoir_1.1.4.3 S_commentaires="" S_intitule="Sens de variation d’une suite numérique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1442,7 +1468,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.3>
-                    <Savoir_1.1.4.4 S_intitule="Approche de la notion de limite d’une suite à partir d’exemples">
+                    <Savoir_1.1.4.4 S_commentaires="" S_intitule="Approche de la notion de limite d’une suite à partir d’exemples">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1456,7 +1482,7 @@
                     </Savoir_1.1.4.4>
                   </d_sousSav>
                 </Savoir_1.1.4>
-                <Savoir_1.1.5 S_intitule="Étude de fonctions">
+                <Savoir_1.1.5 S_commentaires="" S_intitule="Étude de fonctions">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1467,7 +1493,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.5.1 S_intitule="Fonctions de référence">
+                    <Savoir_1.1.5.1 S_commentaires="" S_intitule="Fonctions de référence">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1479,7 +1505,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.5.1>
-                    <Savoir_1.1.5.2 S_intitule="Sens de variation des fonctions ">
+                    <Savoir_1.1.5.2 S_commentaires="" S_intitule="Sens de variation des fonctions ">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1495,7 +1521,7 @@
                 </Savoir_1.1.5>
               </d_sousSav>
             </Savoir_1.1>
-            <Savoir_1.2 S_intitule="Géométrie">
+            <Savoir_1.2 S_commentaires="" S_intitule="Géométrie">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1506,7 +1532,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.2.1 S_intitule="Géométrie plane">
+                <Savoir_1.2.1 S_commentaires="" S_intitule="Géométrie plane">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1517,7 +1543,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.2.1.1 S_intitule="Condition de colinéarité de deux vecteurs">
+                    <Savoir_1.2.1.1 S_commentaires="" S_intitule="Condition de colinéarité de deux vecteurs">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1529,7 +1555,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.1>
-                    <Savoir_1.2.1.2 S_intitule="Vecteur directeur d’une droite">
+                    <Savoir_1.2.1.2 S_commentaires="" S_intitule="Vecteur directeur d’une droite">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1541,7 +1567,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.2>
-                    <Savoir_1.2.1.3 S_intitule="Équation cartésienne d’une droite">
+                    <Savoir_1.2.1.3 S_commentaires="" S_intitule="Équation cartésienne d’une droite">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1553,7 +1579,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.3>
-                    <Savoir_1.2.1.4 S_intitule="Expression d’un vecteur du plan en fonction de deux vecteurs non colinéaires">
+                    <Savoir_1.2.1.4 S_commentaires="" S_intitule="Expression d’un vecteur du plan en fonction de deux vecteurs non colinéaires">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1567,7 +1593,7 @@
                     </Savoir_1.2.1.4>
                   </d_sousSav>
                 </Savoir_1.2.1>
-                <Savoir_1.2.2 S_intitule="Trigonométrie">
+                <Savoir_1.2.2 S_commentaires="" S_intitule="Trigonométrie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1578,7 +1604,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.2.2.1 S_intitule="Cercle trigonométrique">
+                    <Savoir_1.2.2.1 S_commentaires="" S_intitule="Cercle trigonométrique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1590,7 +1616,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.1>
-                    <Savoir_1.2.2.2 S_intitule="Radian">
+                    <Savoir_1.2.2.2 S_commentaires="" S_intitule="Radian">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1602,7 +1628,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.2>
-                    <Savoir_1.2.2.3 S_intitule="Mesure d’un angle orienté, mesure principale">
+                    <Savoir_1.2.2.3 S_commentaires="" S_intitule="Mesure d’un angle orienté, mesure principale">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1616,7 +1642,7 @@
                     </Savoir_1.2.2.3>
                   </d_sousSav>
                 </Savoir_1.2.2>
-                <Savoir_1.2.3 S_intitule="Produit scalaire dans le plan">
+                <Savoir_1.2.3 S_commentaires="" S_intitule="Produit scalaire dans le plan">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1627,7 +1653,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.2.3.1 S_intitule="Définition, propriétés">
+                    <Savoir_1.2.3.1 S_commentaires="" S_intitule="Définition, propriétés">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1639,7 +1665,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.3.1>
-                    <Savoir_1.2.3.2 S_intitule="Vecteur normal à une droite">
+                    <Savoir_1.2.3.2 S_commentaires="" S_intitule="Vecteur normal à une droite">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1651,7 +1677,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.3.2>
-                    <Savoir_1.2.3.3 S_intitule="Applications du produit scalaire : calculs d’angles et de longueurs ; formules d’addition et de duplication des cosinus et sinus">
+                    <Savoir_1.2.3.3 S_commentaires="" S_intitule="Applications du produit scalaire : calculs d’angles et de longueurs ; formules d’addition et de duplication des cosinus et sinus">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1667,7 +1693,7 @@
                 </Savoir_1.2.3>
               </d_sousSav>
             </Savoir_1.2>
-            <Savoir_1.3 S_intitule="Statistiques et probabilités">
+            <Savoir_1.3 S_commentaires="" S_intitule="Statistiques et probabilités">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1678,7 +1704,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.3.1 S_intitule="Statistique descriptive, analyse de données">
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Statistique descriptive, analyse de données">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1689,7 +1715,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.1.1 S_intitule="Caractéristiques de dispersion : variance, écart-type">
+                    <Savoir_1.3.1.1 S_commentaires="" S_intitule="Caractéristiques de dispersion : variance, écart-type">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1701,7 +1727,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.1.1>
-                    <Savoir_1.3.1.2 S_intitule="Diagramme en boîte">
+                    <Savoir_1.3.1.2 S_commentaires="" S_intitule="Diagramme en boîte">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1715,7 +1741,7 @@
                     </Savoir_1.3.1.2>
                   </d_sousSav>
                 </Savoir_1.3.1>
-                <Savoir_1.3.2 S_intitule="Probabilités">
+                <Savoir_1.3.2 S_commentaires="" S_intitule="Probabilités">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1726,7 +1752,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.2.1 S_intitule="Variable aléatoire discrète et loi de probabilité">
+                    <Savoir_1.3.2.1 S_commentaires="" S_intitule="Variable aléatoire discrète et loi de probabilité">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1738,7 +1764,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.1>
-                    <Savoir_1.3.2.2 S_intitule="Espérance, variance et écart-type">
+                    <Savoir_1.3.2.2 S_commentaires="" S_intitule="Espérance, variance et écart-type">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1750,7 +1776,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.2>
-                    <Savoir_1.3.2.3 S_intitule="Modèle de la répétition d’expériences identiques et indépendantes à deux ou trois issues">
+                    <Savoir_1.3.2.3 S_commentaires="" S_intitule="Modèle de la répétition d’expériences identiques et indépendantes à deux ou trois issues">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1762,7 +1788,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.3>
-                    <Savoir_1.3.2.4 S_intitule="Épreuve de Bernoulli, loi de Bernoulli">
+                    <Savoir_1.3.2.4 S_commentaires="" S_intitule="Épreuve de Bernoulli, loi de Bernoulli">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1774,7 +1800,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.4>
-                    <Savoir_1.3.2.5 S_intitule="Schéma de Bernoulli, loi binomiale (loi du nombre de succès)">
+                    <Savoir_1.3.2.5 S_commentaires="" S_intitule="Schéma de Bernoulli, loi binomiale (loi du nombre de succès)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1786,7 +1812,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.5>
-                    <Savoir_1.3.2.6 S_intitule="Coefficients binomiaux, triangle de Pascal">
+                    <Savoir_1.3.2.6 S_commentaires="" S_intitule="Coefficients binomiaux, triangle de Pascal">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1798,7 +1824,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.6>
-                    <Savoir_1.3.2.7 S_intitule="Espérance, variance et écart-type de la loi binomiale">
+                    <Savoir_1.3.2.7 S_commentaires="" S_intitule="Espérance, variance et écart-type de la loi binomiale">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1812,7 +1838,7 @@
                     </Savoir_1.3.2.7>
                   </d_sousSav>
                 </Savoir_1.3.2>
-                <Savoir_1.3.3 S_intitule="Échantillonnage">
+                <Savoir_1.3.3 S_commentaires="" S_intitule="Échantillonnage">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1823,7 +1849,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.3.1 S_intitule="Utilisation de la loi binomiale pour une prise de décision à partir d’une fréquence">
+                    <Savoir_1.3.3.1 S_commentaires="" S_intitule="Utilisation de la loi binomiale pour une prise de décision à partir d’une fréquence">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1841,7 +1867,7 @@
             </Savoir_1.3>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_T S_intitule="Terminale">
+        <Savoir_T S_commentaires="" S_intitule="Terminale">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1852,7 +1878,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_T.1 S_intitule="Analyse">
+            <Savoir_T.1 S_commentaires="" S_intitule="Analyse">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1863,7 +1889,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.1.1 S_intitule="Suites ">
+                <Savoir_T.1.1 S_commentaires="" S_intitule="Suites ">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1874,7 +1900,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.1.1.1 S_intitule="Raisonnement par récurrence">
+                    <Savoir_T.1.1.1 S_commentaires="" S_intitule="Raisonnement par récurrence">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1886,7 +1912,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.1.1>
-                    <Savoir_T.1.1.2 S_intitule="Limite finie ou infinie d’une suite">
+                    <Savoir_T.1.1.2 S_commentaires="" S_intitule="Limite finie ou infinie d’une suite">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1898,7 +1924,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.1.2>
-                    <Savoir_T.1.1.3 S_intitule="Limites et comparaison">
+                    <Savoir_T.1.1.3 S_commentaires="" S_intitule="Limites et comparaison">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1910,7 +1936,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.1.3>
-                    <Savoir_T.1.1.4 S_intitule="Opérations sur les limites">
+                    <Savoir_T.1.1.4 S_commentaires="" S_intitule="Opérations sur les limites">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1922,7 +1948,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.1.4>
-                    <Savoir_T.1.1.5 S_intitule="Comportement à l’infini de la suite q^n">
+                    <Savoir_T.1.1.5 S_commentaires="" S_intitule="Comportement à l’infini de la suite q^n">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1934,7 +1960,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.1.5>
-                    <Savoir_T.1.1.6 S_intitule="Suite majorée, minorée, bornée">
+                    <Savoir_T.1.1.6 S_commentaires="" S_intitule="Suite majorée, minorée, bornée">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1948,7 +1974,7 @@
                     </Savoir_T.1.1.6>
                   </d_sousSav>
                 </Savoir_T.1.1>
-                <Savoir_T.1.2 S_intitule="Limites de fonctions">
+                <Savoir_T.1.2 S_commentaires="" S_intitule="Limites de fonctions">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1959,7 +1985,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.1.2.1 S_intitule="Limite finie ou infinie d'une fonction à l'infini">
+                    <Savoir_T.1.2.1 S_commentaires="" S_intitule="Limite finie ou infinie d'une fonction à l'infini">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1971,7 +1997,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.2.1>
-                    <Savoir_T.1.2.2 S_intitule="Limite infinie d’une fonction en un point">
+                    <Savoir_T.1.2.2 S_commentaires="" S_intitule="Limite infinie d’une fonction en un point">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1983,7 +2009,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.2.2>
-                    <Savoir_T.1.2.3 S_intitule="Limites d'une somme, d'un produit, d'un quotient ou d'une composée de deux fonctions">
+                    <Savoir_T.1.2.3 S_commentaires="" S_intitule="Limites d'une somme, d'un produit, d'un quotient ou d'une composée de deux fonctions">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -1995,7 +2021,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.2.3>
-                    <Savoir_T.1.2.4 S_intitule="Limites et comparaisons">
+                    <Savoir_T.1.2.4 S_commentaires="" S_intitule="Limites et comparaisons">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2007,7 +2033,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.2.4>
-                    <Savoir_T.1.2.5 S_intitule="Asymptote parallèle à l'un des axes de coordonnées">
+                    <Savoir_T.1.2.5 S_commentaires="" S_intitule="Asymptote parallèle à l'un des axes de coordonnées">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2021,7 +2047,7 @@
                     </Savoir_T.1.2.5>
                   </d_sousSav>
                 </Savoir_T.1.2>
-                <Savoir_T.1.3 S_intitule="Continuité sur un intervalle, théorème des valeurs intermédiaires">
+                <Savoir_T.1.3 S_commentaires="" S_intitule="Continuité sur un intervalle, théorème des valeurs intermédiaires">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2033,7 +2059,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.3>
-                <Savoir_T.1.4 S_intitule="Calculs de dérivées : compléments">
+                <Savoir_T.1.4 S_commentaires="" S_intitule="Calculs de dérivées : compléments">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2045,7 +2071,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.4>
-                <Savoir_T.1.5 S_intitule="Fonctions sinus et cosinus">
+                <Savoir_T.1.5 S_commentaires="" S_intitule="Fonctions sinus et cosinus">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2057,7 +2083,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.5>
-                <Savoir_T.1.6 S_intitule="Fonction exponentielle">
+                <Savoir_T.1.6 S_commentaires="" S_intitule="Fonction exponentielle">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2069,7 +2095,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.6>
-                <Savoir_T.1.7 S_intitule="Fonction logarithme népérien">
+                <Savoir_T.1.7 S_commentaires="" S_intitule="Fonction logarithme népérien">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2081,7 +2107,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.7>
-                <Savoir_T.1.8 S_intitule="Intégration">
+                <Savoir_T.1.8 S_commentaires="" S_intitule="Intégration">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2092,7 +2118,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.1.8.1 S_intitule="Définition de l'intégrale d'une fonction continue et positive sur[a,b comme aire sous la courbe">
+                    <Savoir_T.1.8.1 S_commentaires="" S_intitule="Définition de l'intégrale d'une fonction continue et positive sur[a,b comme aire sous la courbe">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2104,7 +2130,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.8.1>
-                    <Savoir_T.1.8.2 S_intitule="Notation">
+                    <Savoir_T.1.8.2 S_commentaires="" S_intitule="Notation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2116,7 +2142,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.8.2>
-                    <Savoir_T.1.8.3 S_intitule="Primitive d’une fonction continue sur un intervalle">
+                    <Savoir_T.1.8.3 S_commentaires="" S_intitule="Primitive d’une fonction continue sur un intervalle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2128,7 +2154,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.8.3>
-                    <Savoir_T.1.8.4 S_intitule="Théorème : toute fonction continue sur un intervalle admet des primitives">
+                    <Savoir_T.1.8.4 S_commentaires="" S_intitule="Théorème : toute fonction continue sur un intervalle admet des primitives">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2140,7 +2166,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.8.4>
-                    <Savoir_T.1.8.5 S_intitule="Intégrale d’une fonction continue de signe quelconque">
+                    <Savoir_T.1.8.5 S_commentaires="" S_intitule="Intégrale d’une fonction continue de signe quelconque">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2152,7 +2178,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.8.5>
-                    <Savoir_T.1.8.6 S_intitule="Linéarité, positivité, relation de Chasles">
+                    <Savoir_T.1.8.6 S_commentaires="" S_intitule="Linéarité, positivité, relation de Chasles">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2164,7 +2190,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.1.8.6>
-                    <Savoir_T.1.8.7 S_intitule="Valeur moyenne">
+                    <Savoir_T.1.8.7 S_commentaires="" S_intitule="Valeur moyenne">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2180,7 +2206,7 @@
                 </Savoir_T.1.8>
               </d_sousSav>
             </Savoir_T.1>
-            <Savoir_T.2 S_intitule="Géométrie">
+            <Savoir_T.2 S_commentaires="" S_intitule="Géométrie">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -2191,7 +2217,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.2.1 S_intitule="Nombres complexes">
+                <Savoir_T.2.1 S_commentaires="" S_intitule="Nombres complexes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2202,7 +2228,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.1.1 S_intitule="Forme algébrique, conjugué">
+                    <Savoir_T.2.1.1 S_commentaires="" S_intitule="Forme algébrique, conjugué">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2214,7 +2240,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.1.1>
-                    <Savoir_T.2.1.2 S_intitule="Somme, produit, quotient">
+                    <Savoir_T.2.1.2 S_commentaires="" S_intitule="Somme, produit, quotient">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2226,7 +2252,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.1.2>
-                    <Savoir_T.2.1.3 S_intitule="Équation du second degré à coefficients réels">
+                    <Savoir_T.2.1.3 S_commentaires="" S_intitule="Équation du second degré à coefficients réels">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2238,7 +2264,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.1.3>
-                    <Savoir_T.2.1.4 S_intitule="Représentation géométrique">
+                    <Savoir_T.2.1.4 S_commentaires="" S_intitule="Représentation géométrique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2250,7 +2276,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.1.4>
-                    <Savoir_T.2.1.5 S_intitule="Affixe d'un point, d'un vecteur">
+                    <Savoir_T.2.1.5 S_commentaires="" S_intitule="Affixe d'un point, d'un vecteur">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2262,7 +2288,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.1.5>
-                    <Savoir_T.2.1.6 S_intitule="Forme trigonométrique">
+                    <Savoir_T.2.1.6 S_commentaires="" S_intitule="Forme trigonométrique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2276,7 +2302,7 @@
                     </Savoir_T.2.1.6>
                   </d_sousSav>
                 </Savoir_T.2.1>
-                <Savoir_T.2.2 S_intitule="Droites et plans">
+                <Savoir_T.2.2 S_commentaires="" S_intitule="Droites et plans">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2287,7 +2313,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.2.1 S_intitule="Positions relatives de droites et de plans : intersection et parallélisme">
+                    <Savoir_T.2.2.1 S_commentaires="" S_intitule="Positions relatives de droites et de plans : intersection et parallélisme">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2299,7 +2325,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.2.1>
-                    <Savoir_T.2.2.2 S_intitule="Orthogonalité : de deux droites ; d’une droite et d’un plan&quot;">
+                    <Savoir_T.2.2.2 S_commentaires="" S_intitule="Orthogonalité : de deux droites ; d’une droite et d’un plan&quot;">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2313,7 +2339,7 @@
                     </Savoir_T.2.2.2>
                   </d_sousSav>
                 </Savoir_T.2.2>
-                <Savoir_T.2.3 S_intitule="Géométrie vectorielle">
+                <Savoir_T.2.3 S_commentaires="" S_intitule="Géométrie vectorielle">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2324,7 +2350,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.3.1 S_intitule="Caractérisation d'un plan">
+                    <Savoir_T.2.3.1 S_commentaires="" S_intitule="Caractérisation d'un plan">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2336,7 +2362,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.3.1>
-                    <Savoir_T.2.3.2 S_intitule="Vecteurs coplanaires">
+                    <Savoir_T.2.3.2 S_commentaires="" S_intitule="Vecteurs coplanaires">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2348,7 +2374,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.3.2>
-                    <Savoir_T.2.3.3 S_intitule="Décomposition d'un vecteur">
+                    <Savoir_T.2.3.3 S_commentaires="" S_intitule="Décomposition d'un vecteur">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2360,7 +2386,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.3.3>
-                    <Savoir_T.2.3.4 S_intitule="Repérage">
+                    <Savoir_T.2.3.4 S_commentaires="" S_intitule="Repérage">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2372,7 +2398,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.3.4>
-                    <Savoir_T.2.3.5 S_intitule="Représentation paramétrique d'une droite&quot;">
+                    <Savoir_T.2.3.5 S_commentaires="" S_intitule="Représentation paramétrique d'une droite&quot;">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2386,7 +2412,7 @@
                     </Savoir_T.2.3.5>
                   </d_sousSav>
                 </Savoir_T.2.3>
-                <Savoir_T.2.4 S_intitule="Produit scalaire">
+                <Savoir_T.2.4 S_commentaires="" S_intitule="Produit scalaire">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2397,7 +2423,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.4.1 S_intitule="Produit scalaire de deux vecteurs dans l’espace">
+                    <Savoir_T.2.4.1 S_commentaires="" S_intitule="Produit scalaire de deux vecteurs dans l’espace">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2409,7 +2435,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.4.1>
-                    <Savoir_T.2.4.2 S_intitule="Vecteur normal à un plan">
+                    <Savoir_T.2.4.2 S_commentaires="" S_intitule="Vecteur normal à un plan">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2421,7 +2447,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.4.2>
-                    <Savoir_T.2.4.3 S_intitule="Équation cartésienne d’un plan">
+                    <Savoir_T.2.4.3 S_commentaires="" S_intitule="Équation cartésienne d’un plan">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2437,7 +2463,7 @@
                 </Savoir_T.2.4>
               </d_sousSav>
             </Savoir_T.2>
-            <Savoir_T.3 S_intitule="Probabilités et statistique">
+            <Savoir_T.3 S_commentaires="" S_intitule="Probabilités et statistique">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -2448,7 +2474,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.3.1 S_intitule="Conditionnement, indépendance ">
+                <Savoir_T.3.1 S_commentaires="" S_intitule="Conditionnement, indépendance ">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2459,7 +2485,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.1.1 S_intitule="Conditionnement par un événement de probabilité non nulle">
+                    <Savoir_T.3.1.1 S_commentaires="" S_intitule="Conditionnement par un événement de probabilité non nulle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2471,7 +2497,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.1>
-                    <Savoir_T.3.1.2 S_intitule="Indépendance de deux événements">
+                    <Savoir_T.3.1.2 S_commentaires="" S_intitule="Indépendance de deux événements">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2485,7 +2511,7 @@
                     </Savoir_T.3.1.2>
                   </d_sousSav>
                 </Savoir_T.3.1>
-                <Savoir_T.3.2 S_intitule="Notion de loi à densité">
+                <Savoir_T.3.2 S_commentaires="" S_intitule="Notion de loi à densité">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2496,7 +2522,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.2.1 S_intitule="Loi à densité sur un intervalle">
+                    <Savoir_T.3.2.1 S_commentaires="" S_intitule="Loi à densité sur un intervalle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2508,7 +2534,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.1>
-                    <Savoir_T.3.2.2 S_intitule="Loi uniforme sur [a,b">
+                    <Savoir_T.3.2.2 S_commentaires="" S_intitule="Loi uniforme sur [a,b">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2520,7 +2546,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.2>
-                    <Savoir_T.3.2.3 S_intitule="Espérance d’une variable aléatoire suivant une loi uniforme">
+                    <Savoir_T.3.2.3 S_commentaires="" S_intitule="Espérance d’une variable aléatoire suivant une loi uniforme">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2532,7 +2558,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.3>
-                    <Savoir_T.3.2.4 S_intitule="Lois exponentielles">
+                    <Savoir_T.3.2.4 S_commentaires="" S_intitule="Lois exponentielles">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2544,7 +2570,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.4>
-                    <Savoir_T.3.2.5 S_intitule="Espérance d’une variable aléatoire suivant une loi exponentielle">
+                    <Savoir_T.3.2.5 S_commentaires="" S_intitule="Espérance d’une variable aléatoire suivant une loi exponentielle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2556,7 +2582,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.5>
-                    <Savoir_T.3.2.6 S_intitule="Loi normale centrée réduite">
+                    <Savoir_T.3.2.6 S_commentaires="" S_intitule="Loi normale centrée réduite">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2568,7 +2594,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.6>
-                    <Savoir_T.3.2.7 S_intitule="Théorème de Moivre Laplace">
+                    <Savoir_T.3.2.7 S_commentaires="" S_intitule="Théorème de Moivre Laplace">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2582,7 +2608,7 @@
                     </Savoir_T.3.2.7>
                   </d_sousSav>
                 </Savoir_T.3.2>
-                <Savoir_T.3.3 S_intitule="Intervalle de fluctuation">
+                <Savoir_T.3.3 S_commentaires="" S_intitule="Intervalle de fluctuation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2593,7 +2619,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.3.1 S_intitule="                                    ">
+                    <Savoir_T.3.3.1 S_commentaires="" S_intitule="                                    ">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2607,7 +2633,7 @@
                     </Savoir_T.3.3.1>
                   </d_sousSav>
                 </Savoir_T.3.3>
-                <Savoir_T.3.4 S_intitule="Estimation">
+                <Savoir_T.3.4 S_commentaires="" S_intitule="Estimation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2618,7 +2644,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.4.1 S_intitule="Intervalle de confiance">
+                    <Savoir_T.3.4.1 S_commentaires="" S_intitule="Intervalle de confiance">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2630,7 +2656,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.4.1>
-                    <Savoir_T.3.4.2 S_intitule="Niveau de confiance">
+                    <Savoir_T.3.4.2 S_commentaires="" S_intitule="Niveau de confiance">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2648,7 +2674,7 @@
             </Savoir_T.3>
           </d_sousSav>
         </Savoir_T>
-        <Savoir_A S_intitule="Algorithmique">
+        <Savoir_A S_commentaires="" S_intitule="Algorithmique">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -2659,7 +2685,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_A.1 S_intitule="Instructions élémentaires">
+            <Savoir_A.1 S_commentaires="" S_intitule="Instructions élémentaires">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -2671,7 +2697,7 @@
               </l_nivTaxo>
               <d_sousSav />
             </Savoir_A.1>
-            <Savoir_A.2 S_intitule="Boucle et itérateur, instruction conditionnelle">
+            <Savoir_A.2 S_commentaires="" S_intitule="Boucle et itérateur, instruction conditionnelle">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -2693,7 +2719,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Première">
+        <Savoir_1 S_commentaires="" S_intitule="Première">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -2704,7 +2730,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="Observer : couleurs et images">
+            <Savoir_1.1 S_commentaires="" S_intitule="Observer : couleurs et images">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -2715,7 +2741,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="L’œil; modèle de l’œil réduit">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="L’œil; modèle de l’œil réduit">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2726,7 +2752,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.1.1 S_intitule="Lentilles minces convergentes: images réelle et virtuelle">
+                    <Savoir_1.1.1.1 S_commentaires="" S_intitule="Lentilles minces convergentes: images réelle et virtuelle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2738,7 +2764,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.1>
-                    <Savoir_1.1.1.2 S_intitule="Distance focale, vergence">
+                    <Savoir_1.1.1.2 S_commentaires="" S_intitule="Distance focale, vergence">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2750,7 +2776,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.2>
-                    <Savoir_1.1.1.3 S_intitule="Relation de conjugaison ; grandissement">
+                    <Savoir_1.1.1.3 S_commentaires="" S_intitule="Relation de conjugaison ; grandissement">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2762,7 +2788,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.3>
-                    <Savoir_1.1.1.4 S_intitule="Accommodation">
+                    <Savoir_1.1.1.4 S_commentaires="" S_intitule="Accommodation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2774,7 +2800,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.4>
-                    <Savoir_1.1.1.5 S_intitule="Fonctionnements comparés de l’œil et d’un appareil photographique">
+                    <Savoir_1.1.1.5 S_commentaires="" S_intitule="Fonctionnements comparés de l’œil et d’un appareil photographique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2788,7 +2814,7 @@
                     </Savoir_1.1.1.5>
                   </d_sousSav>
                 </Savoir_1.1.1>
-                <Savoir_1.1.2 S_intitule="Couleur des objets">
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Couleur des objets">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2799,7 +2825,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.2.1 S_intitule="Synthèse additive, synthèse soustractive">
+                    <Savoir_1.1.2.1 S_commentaires="" S_intitule="Synthèse additive, synthèse soustractive">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2811,7 +2837,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.1>
-                    <Savoir_1.1.2.2 S_intitule="Absorption, diffusion, transmission">
+                    <Savoir_1.1.2.2 S_commentaires="" S_intitule="Absorption, diffusion, transmission">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2823,7 +2849,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.2>
-                    <Savoir_1.1.2.3 S_intitule="Vision des couleurs et trichromie. Daltonisme">
+                    <Savoir_1.1.2.3 S_commentaires="" S_intitule="Vision des couleurs et trichromie. Daltonisme">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2835,7 +2861,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.3>
-                    <Savoir_1.1.2.4 S_intitule="Principe de la restitution des couleurs par un écran plat (ordinateur, téléphone portable, etc.)               ">
+                    <Savoir_1.1.2.4 S_commentaires="" S_intitule="Principe de la restitution des couleurs par un écran plat (ordinateur, téléphone portable, etc.)               ">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2849,7 +2875,7 @@
                     </Savoir_1.1.2.4>
                   </d_sousSav>
                 </Savoir_1.1.2>
-                <Savoir_1.1.3 S_intitule="Sources de lumière colorée">
+                <Savoir_1.1.3 S_commentaires="" S_intitule="Sources de lumière colorée">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2860,7 +2886,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.3.1 S_intitule="Différentes sources de lumière: étoiles, lampes variées, laser, DEL, etc">
+                    <Savoir_1.1.3.1 S_commentaires="" S_intitule="Différentes sources de lumière: étoiles, lampes variées, laser, DEL, etc">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2872,7 +2898,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.1>
-                    <Savoir_1.1.3.2 S_intitule="Domaines des ondes électromagnétiques">
+                    <Savoir_1.1.3.2 S_commentaires="" S_intitule="Domaines des ondes électromagnétiques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2884,7 +2910,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.2>
-                    <Savoir_1.1.3.3 S_intitule="Couleur des corps chauffés. Loi de Wien">
+                    <Savoir_1.1.3.3 S_commentaires="" S_intitule="Couleur des corps chauffés. Loi de Wien">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2896,7 +2922,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.3>
-                    <Savoir_1.1.3.4 S_intitule="Interaction lumière-matière: émission et absorption">
+                    <Savoir_1.1.3.4 S_commentaires="" S_intitule="Interaction lumière-matière: émission et absorption">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2908,7 +2934,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.4>
-                    <Savoir_1.1.3.5 S_intitule="Quantification des niveaux d’énergie de la matière">
+                    <Savoir_1.1.3.5 S_commentaires="" S_intitule="Quantification des niveaux d’énergie de la matière">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2920,7 +2946,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.5>
-                    <Savoir_1.1.3.6 S_intitule="Modèle corpusculaire de la lumière: le photon. Énergie d’un photon">
+                    <Savoir_1.1.3.6 S_commentaires="" S_intitule="Modèle corpusculaire de la lumière: le photon. Énergie d’un photon">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2932,7 +2958,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.6>
-                    <Savoir_1.1.3.7 S_intitule="Relation dans les échanges d’énergie">
+                    <Savoir_1.1.3.7 S_commentaires="" S_intitule="Relation dans les échanges d’énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2944,7 +2970,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.3.7>
-                    <Savoir_1.1.3.8 S_intitule="Spectre solaire">
+                    <Savoir_1.1.3.8 S_commentaires="" S_intitule="Spectre solaire">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2958,7 +2984,7 @@
                     </Savoir_1.1.3.8>
                   </d_sousSav>
                 </Savoir_1.1.3>
-                <Savoir_1.1.4 S_intitule="Matières colorées">
+                <Savoir_1.1.4 S_commentaires="" S_intitule="Matières colorées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -2969,7 +2995,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.4.1 S_intitule="Synthèse soustractive">
+                    <Savoir_1.1.4.1 S_commentaires="" S_intitule="Synthèse soustractive">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2981,7 +3007,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.1>
-                    <Savoir_1.1.4.2 S_intitule="Colorants, pigments ; extraction et synthèse">
+                    <Savoir_1.1.4.2 S_commentaires="" S_intitule="Colorants, pigments ; extraction et synthèse">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -2993,7 +3019,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.2>
-                    <Savoir_1.1.4.3 S_intitule="Réaction chimique: réactif limitant, stœchiométrie, notion d’avancement">
+                    <Savoir_1.1.4.3 S_commentaires="" S_intitule="Réaction chimique: réactif limitant, stœchiométrie, notion d’avancement">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3005,7 +3031,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.3>
-                    <Savoir_1.1.4.4 S_intitule="Dosage de solutions colorées par étalonnage. Loi de Beer-Lambert">
+                    <Savoir_1.1.4.4 S_commentaires="" S_intitule="Dosage de solutions colorées par étalonnage. Loi de Beer-Lambert">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3017,7 +3043,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.4>
-                    <Savoir_1.1.4.5 S_intitule="Molécules organiques colorées: structures moléculaires, molécules à liaisons conjuguées">
+                    <Savoir_1.1.4.5 S_commentaires="" S_intitule="Molécules organiques colorées: structures moléculaires, molécules à liaisons conjuguées">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3029,7 +3055,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.5>
-                    <Savoir_1.1.4.6 S_intitule="Indicateurs colorés">
+                    <Savoir_1.1.4.6 S_commentaires="" S_intitule="Indicateurs colorés">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3041,7 +3067,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.6>
-                    <Savoir_1.1.4.7 S_intitule="Liaison covalente">
+                    <Savoir_1.1.4.7 S_commentaires="" S_intitule="Liaison covalente">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3053,7 +3079,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.7>
-                    <Savoir_1.1.4.8 S_intitule="Formules de Lewis; géométrie des molécules">
+                    <Savoir_1.1.4.8 S_commentaires="" S_intitule="Formules de Lewis; géométrie des molécules">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3065,7 +3091,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.8>
-                    <Savoir_1.1.4.9 S_intitule="Rôle des doublets non liants">
+                    <Savoir_1.1.4.9 S_commentaires="" S_intitule="Rôle des doublets non liants">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3077,7 +3103,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.4.9>
-                    <Savoir_1.1.4.10 S_intitule="Isomérie Z/E">
+                    <Savoir_1.1.4.10 S_commentaires="" S_intitule="Isomérie Z/E">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3093,7 +3119,7 @@
                 </Savoir_1.1.4>
               </d_sousSav>
             </Savoir_1.1>
-            <Savoir_1.2 S_intitule="Comprendre : lois et modèles">
+            <Savoir_1.2 S_commentaires="" S_intitule="Comprendre : lois et modèles">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -3104,7 +3130,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.2.1 S_intitule="Cohésion et transformations de la matière">
+                <Savoir_1.2.1 S_commentaires="" S_intitule="Cohésion et transformations de la matière">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3115,7 +3141,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.2.1.1 S_intitule="La matière à différentes échelles: du noyau à la galaxie">
+                    <Savoir_1.2.1.1 S_commentaires="" S_intitule="La matière à différentes échelles: du noyau à la galaxie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3127,7 +3153,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.1>
-                    <Savoir_1.2.1.2 S_intitule="Particules élémentaires: électrons, neutrons, protons. Charge élémentaire e">
+                    <Savoir_1.2.1.2 S_commentaires="" S_intitule="Particules élémentaires: électrons, neutrons, protons. Charge élémentaire e">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3139,7 +3165,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.2>
-                    <Savoir_1.2.1.3 S_intitule="Interactions fondamentales: interactions forte et faible, électromagnétique, gravitationnelle">
+                    <Savoir_1.2.1.3 S_commentaires="" S_intitule="Interactions fondamentales: interactions forte et faible, électromagnétique, gravitationnelle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3151,7 +3177,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.3>
-                    <Savoir_1.2.1.4 S_intitule="Cohésion du noyau, stabilité">
+                    <Savoir_1.2.1.4 S_commentaires="" S_intitule="Cohésion du noyau, stabilité">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3163,7 +3189,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.4>
-                    <Savoir_1.2.1.5 S_intitule="Radioactivité naturelle et artificielle. Activité">
+                    <Savoir_1.2.1.5 S_commentaires="" S_intitule="Radioactivité naturelle et artificielle. Activité">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3175,7 +3201,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.5>
-                    <Savoir_1.2.1.6 S_intitule="Réactions de fission et de fusion">
+                    <Savoir_1.2.1.6 S_commentaires="" S_intitule="Réactions de fission et de fusion">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3187,7 +3213,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.6>
-                    <Savoir_1.2.1.7 S_intitule="Lois deconservation dans les réactions nucléaires">
+                    <Savoir_1.2.1.7 S_commentaires="" S_intitule="Lois deconservation dans les réactions nucléaires">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3199,7 +3225,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.7>
-                    <Savoir_1.2.1.8 S_intitule="Défaut de masse, énergie libérée">
+                    <Savoir_1.2.1.8 S_commentaires="" S_intitule="Défaut de masse, énergie libérée">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3211,7 +3237,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.8>
-                    <Savoir_1.2.1.9 S_intitule="Réactions nucléaires et aspects énergétiques associés">
+                    <Savoir_1.2.1.9 S_commentaires="" S_intitule="Réactions nucléaires et aspects énergétiques associés">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3223,7 +3249,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.9>
-                    <Savoir_1.2.1.10 S_intitule="Ordre de grandeur des énergies mises en jeu">
+                    <Savoir_1.2.1.10 S_commentaires="" S_intitule="Ordre de grandeur des énergies mises en jeu">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3235,7 +3261,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.10>
-                    <Savoir_1.2.1.11 S_intitule="Solide ionique. Interaction de Van der Waals, liaison hydrogène">
+                    <Savoir_1.2.1.11 S_commentaires="" S_intitule="Solide ionique. Interaction de Van der Waals, liaison hydrogène">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3247,7 +3273,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.11>
-                    <Savoir_1.2.1.12 S_intitule="Electronégativité">
+                    <Savoir_1.2.1.12 S_commentaires="" S_intitule="Electronégativité">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3259,7 +3285,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.12>
-                    <Savoir_1.2.1.13 S_intitule="Effet du caractère polaire d'un solvant lors d'une dissolution">
+                    <Savoir_1.2.1.13 S_commentaires="" S_intitule="Effet du caractère polaire d'un solvant lors d'une dissolution">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3271,7 +3297,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.13>
-                    <Savoir_1.2.1.14 S_intitule="Variation de température et transformation physique d'un système par transfert thermique">
+                    <Savoir_1.2.1.14 S_commentaires="" S_intitule="Variation de température et transformation physique d'un système par transfert thermique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3283,7 +3309,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.14>
-                    <Savoir_1.2.1.15 S_intitule="Nomenclature des alcanes et des alcools ; formule semi-développée">
+                    <Savoir_1.2.1.15 S_commentaires="" S_intitule="Nomenclature des alcanes et des alcools ; formule semi-développée">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3295,7 +3321,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.15>
-                    <Savoir_1.2.1.16 S_intitule="Lien entre les températures de changement d'état et la structure moléculaire dans le cas de l'eau, des alcools et des alcanes">
+                    <Savoir_1.2.1.16 S_commentaires="" S_intitule="Lien entre les températures de changement d'état et la structure moléculaire dans le cas de l'eau, des alcools et des alcanes">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3307,7 +3333,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.16>
-                    <Savoir_1.2.1.17 S_intitule="Miscibilité des alcools avec l'eau">
+                    <Savoir_1.2.1.17 S_commentaires="" S_intitule="Miscibilité des alcools avec l'eau">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3319,7 +3345,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.1.17>
-                    <Savoir_1.2.1.18 S_intitule="Réactions chimiques et aspects énergétiques associés">
+                    <Savoir_1.2.1.18 S_commentaires="" S_intitule="Réactions chimiques et aspects énergétiques associés">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3333,7 +3359,7 @@
                     </Savoir_1.2.1.18>
                   </d_sousSav>
                 </Savoir_1.2.1>
-                <Savoir_1.2.2 S_intitule="Champs et forces">
+                <Savoir_1.2.2 S_commentaires="" S_intitule="Champs et forces">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3344,7 +3370,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.2.2.1 S_intitule="Exemples de champs scalaires et vectoriels: pression, température, vitesse dans un fluide">
+                    <Savoir_1.2.2.1 S_commentaires="" S_intitule="Exemples de champs scalaires et vectoriels: pression, température, vitesse dans un fluide">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3356,7 +3382,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.1>
-                    <Savoir_1.2.2.2 S_intitule="Champ magnétique: sources de champ magnétique (Terre, aimant, courant)">
+                    <Savoir_1.2.2.2 S_commentaires="" S_intitule="Champ magnétique: sources de champ magnétique (Terre, aimant, courant)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3368,7 +3394,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.2>
-                    <Savoir_1.2.2.3 S_intitule="Champ électrostatique">
+                    <Savoir_1.2.2.3 S_commentaires="" S_intitule="Champ électrostatique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3380,7 +3406,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.3>
-                    <Savoir_1.2.2.4 S_intitule="Champ de pesanteur local">
+                    <Savoir_1.2.2.4 S_commentaires="" S_intitule="Champ de pesanteur local">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3392,7 +3418,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.4>
-                    <Savoir_1.2.2.5 S_intitule="Loi de la gravitation ; champ de gravitation">
+                    <Savoir_1.2.2.5 S_commentaires="" S_intitule="Loi de la gravitation ; champ de gravitation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3404,7 +3430,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.2.5>
-                    <Savoir_1.2.2.6 S_intitule="Lien entre le champ de gravitation et le champ de pesanteur">
+                    <Savoir_1.2.2.6 S_commentaires="" S_intitule="Lien entre le champ de gravitation et le champ de pesanteur">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3418,7 +3444,7 @@
                     </Savoir_1.2.2.6>
                   </d_sousSav>
                 </Savoir_1.2.2>
-                <Savoir_1.2.3 S_intitule="Formes et principe de conservation de l’énergie">
+                <Savoir_1.2.3 S_commentaires="" S_intitule="Formes et principe de conservation de l’énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3429,7 +3455,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.2.3.1 S_intitule="Énergie d’un point matériel en mouvement dans le champ de pesanteur uniforme: énergie cinétique, énergie potentielle de pesanteur, conservation ou non conservation de l’énergie mécanique">
+                    <Savoir_1.2.3.1 S_commentaires="" S_intitule="Énergie d’un point matériel en mouvement dans le champ de pesanteur uniforme: énergie cinétique, énergie potentielle de pesanteur, conservation ou non conservation de l’énergie mécanique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3441,7 +3467,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.3.1>
-                    <Savoir_1.2.3.2 S_intitule="Frottements ; transferts thermiques ; dissipation d’énergie">
+                    <Savoir_1.2.3.2 S_commentaires="" S_intitule="Frottements ; transferts thermiques ; dissipation d’énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3453,7 +3479,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.3.2>
-                    <Savoir_1.2.3.3 S_intitule="Formes d’énergie">
+                    <Savoir_1.2.3.3 S_commentaires="" S_intitule="Formes d’énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3465,7 +3491,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.2.3.3>
-                    <Savoir_1.2.3.4 S_intitule="Principe de conservation de l’énergie">
+                    <Savoir_1.2.3.4 S_commentaires="" S_intitule="Principe de conservation de l’énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3481,7 +3507,7 @@
                 </Savoir_1.2.3>
               </d_sousSav>
             </Savoir_1.2>
-            <Savoir_1.3 S_intitule="Agir : défis du XXIème siècle">
+            <Savoir_1.3 S_commentaires="" S_intitule="Agir : défis du XXIème siècle">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -3492,7 +3518,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.3.1 S_intitule="Convertir l’énergie et économiser les ressources">
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Convertir l’énergie et économiser les ressources">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3503,7 +3529,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.1.1 S_intitule="Ressources énergétiques renouvelables ou non ; durées caractéristiques associées">
+                    <Savoir_1.3.1.1 S_commentaires="" S_intitule="Ressources énergétiques renouvelables ou non ; durées caractéristiques associées">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3515,7 +3541,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.1.1>
-                    <Savoir_1.3.1.2 S_intitule="Transport et stockage de l’énergie ; énergie électrique">
+                    <Savoir_1.3.1.2 S_commentaires="" S_intitule="Transport et stockage de l’énergie ; énergie électrique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3527,7 +3553,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.1.2>
-                    <Savoir_1.3.1.3 S_intitule="Production de l’énergie électrique ; puissance">
+                    <Savoir_1.3.1.3 S_commentaires="" S_intitule="Production de l’énergie électrique ; puissance">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3539,7 +3565,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.1.3>
-                    <Savoir_1.3.1.4 S_intitule="Conversion d’énergie dans un générateur, un récepteur">
+                    <Savoir_1.3.1.4 S_commentaires="" S_intitule="Conversion d’énergie dans un générateur, un récepteur">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3551,7 +3577,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.1.4>
-                    <Savoir_1.3.1.5 S_intitule="Loi d’Ohm. Effet Joule">
+                    <Savoir_1.3.1.5 S_commentaires="" S_intitule="Loi d’Ohm. Effet Joule">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3563,7 +3589,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.1.5>
-                    <Savoir_1.3.1.6 S_intitule="Notion de rendement de conversion">
+                    <Savoir_1.3.1.6 S_commentaires="" S_intitule="Notion de rendement de conversion">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3577,7 +3603,7 @@
                     </Savoir_1.3.1.6>
                   </d_sousSav>
                 </Savoir_1.3.1>
-                <Savoir_1.3.2 S_intitule="Stockage et conversion de l’énergie chimique">
+                <Savoir_1.3.2 S_commentaires="" S_intitule="Stockage et conversion de l’énergie chimique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3588,7 +3614,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.2.1 S_intitule="Énergie libérée lors de la combustion d’un hydrocarbure ou d’un alcool">
+                    <Savoir_1.3.2.1 S_commentaires="" S_intitule="Énergie libérée lors de la combustion d’un hydrocarbure ou d’un alcool">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3600,7 +3626,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.1>
-                    <Savoir_1.3.2.2 S_intitule="Piles salines, piles alcalines, piles à combustible. Accumulateurs">
+                    <Savoir_1.3.2.2 S_commentaires="" S_intitule="Piles salines, piles alcalines, piles à combustible. Accumulateurs">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3612,7 +3638,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.2>
-                    <Savoir_1.3.2.3 S_intitule="Polarité des électrodes, réactions aux électrodes">
+                    <Savoir_1.3.2.3 S_commentaires="" S_intitule="Polarité des électrodes, réactions aux électrodes">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3624,7 +3650,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.3>
-                    <Savoir_1.3.2.4 S_intitule="Oxydant, réducteur, couple oxydant/réducteur, réaction d’oxydo-réduction">
+                    <Savoir_1.3.2.4 S_commentaires="" S_intitule="Oxydant, réducteur, couple oxydant/réducteur, réaction d’oxydo-réduction">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3636,7 +3662,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.2.4>
-                    <Savoir_1.3.2.5 S_intitule="Modèle par transfert d’électrons">
+                    <Savoir_1.3.2.5 S_commentaires="" S_intitule="Modèle par transfert d’électrons">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3650,7 +3676,7 @@
                     </Savoir_1.3.2.5>
                   </d_sousSav>
                 </Savoir_1.3.2>
-                <Savoir_1.3.3 S_intitule="Synthétiser des molécules et fabriquer de nouveaux matériaux">
+                <Savoir_1.3.3 S_commentaires="" S_intitule="Synthétiser des molécules et fabriquer de nouveaux matériaux">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3661,7 +3687,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.3.1 S_intitule="Nanochimie">
+                    <Savoir_1.3.3.1 S_commentaires="" S_intitule="Nanochimie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3673,7 +3699,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.3.1>
-                    <Savoir_1.3.3.2 S_intitule="Synthèse ou hémisynthèse de molécules complexes, biologiquement actives">
+                    <Savoir_1.3.3.2 S_commentaires="" S_intitule="Synthèse ou hémisynthèse de molécules complexes, biologiquement actives">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3685,7 +3711,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.3.2>
-                    <Savoir_1.3.3.3 S_intitule="Alcools, aldéhydes, cétones: nomenclature, oxydations">
+                    <Savoir_1.3.3.3 S_commentaires="" S_intitule="Alcools, aldéhydes, cétones: nomenclature, oxydations">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3697,7 +3723,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.3.3>
-                    <Savoir_1.3.3.4 S_intitule="Acides carboxyliques: nomenclature, caractère acide,solubilité et pH">
+                    <Savoir_1.3.3.4 S_commentaires="" S_intitule="Acides carboxyliques: nomenclature, caractère acide,solubilité et pH">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3709,7 +3735,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.3.4>
-                    <Savoir_1.3.3.5 S_intitule="Obtention d’un acide carboxylique ou d’une cétone; rendement d’une synthèse">
+                    <Savoir_1.3.3.5 S_commentaires="" S_intitule="Obtention d’un acide carboxylique ou d’une cétone; rendement d’une synthèse">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3721,7 +3747,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.3.5>
-                    <Savoir_1.3.3.6 S_intitule="Synthèses et propriétés de matériaux amorphes (verres), de matériaux organisés (solides cristallins, céramiques) et de matières plastiques">
+                    <Savoir_1.3.3.6 S_commentaires="" S_intitule="Synthèses et propriétés de matériaux amorphes (verres), de matériaux organisés (solides cristallins, céramiques) et de matières plastiques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3735,7 +3761,7 @@
                     </Savoir_1.3.3.6>
                   </d_sousSav>
                 </Savoir_1.3.3>
-                <Savoir_1.3.4 S_intitule="Créer et innover">
+                <Savoir_1.3.4 S_commentaires="" S_intitule="Créer et innover">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3746,7 +3772,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.3.4.1 S_intitule="Culture scientifique et technique">
+                    <Savoir_1.3.4.1 S_commentaires="" S_intitule="Culture scientifique et technique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3758,7 +3784,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.4.1>
-                    <Savoir_1.3.4.2 S_intitule="Relation science-société">
+                    <Savoir_1.3.4.2 S_commentaires="" S_intitule="Relation science-société">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3770,7 +3796,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.3.4.2>
-                    <Savoir_1.3.4.3 S_intitule="Métiers de l’activité scientifique (partenariat avec une institution de recherche, une entreprise, etc.)">
+                    <Savoir_1.3.4.3 S_commentaires="" S_intitule="Métiers de l’activité scientifique (partenariat avec une institution de recherche, une entreprise, etc.)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3788,7 +3814,7 @@
             </Savoir_1.3>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_T S_intitule="Terminale">
+        <Savoir_T S_commentaires="" S_intitule="Terminale">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -3799,7 +3825,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_T.1 S_intitule="Mesure et incertitude">
+            <Savoir_T.1 S_commentaires="" S_intitule="Mesure et incertitude">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -3810,7 +3836,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.1.1 S_intitule="Erreurs et notions associées">
+                <Savoir_T.1.1 S_commentaires="" S_intitule="Erreurs et notions associées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3822,7 +3848,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.1>
-                <Savoir_T.1.2 S_intitule="Incertitudes et notions associées">
+                <Savoir_T.1.2 S_commentaires="" S_intitule="Incertitudes et notions associées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3834,7 +3860,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_T.1.2>
-                <Savoir_T.1.3 S_intitule="Expression et acceptabilité du résultat">
+                <Savoir_T.1.3 S_commentaires="" S_intitule="Expression et acceptabilité du résultat">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3848,7 +3874,7 @@
                 </Savoir_T.1.3>
               </d_sousSav>
             </Savoir_T.1>
-            <Savoir_T.2 S_intitule="Observer : ondes et matière">
+            <Savoir_T.2 S_commentaires="" S_intitule="Observer : ondes et matière">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -3859,7 +3885,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.2.1 S_intitule="Rayonnements dans l'univers">
+                <Savoir_T.2.1 S_commentaires="" S_intitule="Rayonnements dans l'univers">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3870,7 +3896,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.1.1 S_intitule="Absorbtion de rayonnements par l'atmosphère terrestre">
+                    <Savoir_T.2.1.1 S_commentaires="" S_intitule="Absorbtion de rayonnements par l'atmosphère terrestre">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3884,7 +3910,7 @@
                     </Savoir_T.2.1.1>
                   </d_sousSav>
                 </Savoir_T.2.1>
-                <Savoir_T.2.2 S_intitule="Les ondes dans la matière">
+                <Savoir_T.2.2 S_commentaires="" S_intitule="Les ondes dans la matière">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3895,7 +3921,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.2.1 S_intitule="Houle, ondes sismiques, ondes sonores">
+                    <Savoir_T.2.2.1 S_commentaires="" S_intitule="Houle, ondes sismiques, ondes sonores">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3907,7 +3933,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.2.1>
-                    <Savoir_T.2.2.2 S_intitule="Magnitude d'un séisme sur l'echelle de Richter">
+                    <Savoir_T.2.2.2 S_commentaires="" S_intitule="Magnitude d'un séisme sur l'echelle de Richter">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3919,7 +3945,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.2.2>
-                    <Savoir_T.2.2.3 S_intitule="Niveau d'intensité sonore">
+                    <Savoir_T.2.2.3 S_commentaires="" S_intitule="Niveau d'intensité sonore">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3933,7 +3959,7 @@
                     </Savoir_T.2.2.3>
                   </d_sousSav>
                 </Savoir_T.2.2>
-                <Savoir_T.2.3 S_intitule="Détecteurs d'ondes et de particules">
+                <Savoir_T.2.3 S_commentaires="" S_intitule="Détecteurs d'ondes et de particules">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3944,7 +3970,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.3.1 S_intitule="Ondes mécaniques et electromagnétiques">
+                    <Savoir_T.2.3.1 S_commentaires="" S_intitule="Ondes mécaniques et electromagnétiques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3956,7 +3982,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.3.1>
-                    <Savoir_T.2.3.2 S_intitule="Photons, particules élémentaires ou non">
+                    <Savoir_T.2.3.2 S_commentaires="" S_intitule="Photons, particules élémentaires ou non">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3970,7 +3996,7 @@
                     </Savoir_T.2.3.2>
                   </d_sousSav>
                 </Savoir_T.2.3>
-                <Savoir_T.2.4 S_intitule="Caractéristiques des ondes">
+                <Savoir_T.2.4 S_commentaires="" S_intitule="Caractéristiques des ondes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -3981,7 +4007,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.4.1 S_intitule="Ondes progressives, grandeurs physiques associées">
+                    <Savoir_T.2.4.1 S_commentaires="" S_intitule="Ondes progressives, grandeurs physiques associées">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -3993,7 +4019,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.4.1>
-                    <Savoir_T.2.4.2 S_intitule="Retard">
+                    <Savoir_T.2.4.2 S_commentaires="" S_intitule="Retard">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4005,7 +4031,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.4.2>
-                    <Savoir_T.2.4.3 S_intitule="Ondes progressives périodiques, ondes sinusoïdales">
+                    <Savoir_T.2.4.3 S_commentaires="" S_intitule="Ondes progressives périodiques, ondes sinusoïdales">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4017,7 +4043,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.4.3>
-                    <Savoir_T.2.4.4 S_intitule="Ondes sonores et ultrasonores">
+                    <Savoir_T.2.4.4 S_commentaires="" S_intitule="Ondes sonores et ultrasonores">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4029,7 +4055,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.4.4>
-                    <Savoir_T.2.4.5 S_intitule="Analyse spectrale. Hauteur et timbre">
+                    <Savoir_T.2.4.5 S_commentaires="" S_intitule="Analyse spectrale. Hauteur et timbre">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4043,7 +4069,7 @@
                     </Savoir_T.2.4.5>
                   </d_sousSav>
                 </Savoir_T.2.4>
-                <Savoir_T.2.5 S_intitule="Propriétés des ondes">
+                <Savoir_T.2.5 S_commentaires="" S_intitule="Propriétés des ondes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4054,7 +4080,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.5.1 S_intitule="Diffraction">
+                    <Savoir_T.2.5.1 S_commentaires="" S_intitule="Diffraction">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4066,7 +4092,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.5.1>
-                    <Savoir_T.2.5.2 S_intitule="Influence relative de la taille de l’ouverture ou de l’obstacle et de la longueur d’onde sur le phénomène de diffraction">
+                    <Savoir_T.2.5.2 S_commentaires="" S_intitule="Influence relative de la taille de l’ouverture ou de l’obstacle et de la longueur d’onde sur le phénomène de diffraction">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4078,7 +4104,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.5.2>
-                    <Savoir_T.2.5.3 S_intitule="Cas des ondes lumineuses monochromatiques, cas de la lumière blanche">
+                    <Savoir_T.2.5.3 S_commentaires="" S_intitule="Cas des ondes lumineuses monochromatiques, cas de la lumière blanche">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4090,7 +4116,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.5.3>
-                    <Savoir_T.2.5.4 S_intitule="Interférences">
+                    <Savoir_T.2.5.4 S_commentaires="" S_intitule="Interférences">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4102,7 +4128,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.5.4>
-                    <Savoir_T.2.5.5 S_intitule="Cas des ondes lumineuses monochromatiques, cas de la lumière blanche. Couleurs interférentielles">
+                    <Savoir_T.2.5.5 S_commentaires="" S_intitule="Cas des ondes lumineuses monochromatiques, cas de la lumière blanche. Couleurs interférentielles">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4114,7 +4140,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.5.5>
-                    <Savoir_T.2.5.6 S_intitule="Effet Doppler">
+                    <Savoir_T.2.5.6 S_commentaires="" S_intitule="Effet Doppler">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4128,7 +4154,7 @@
                     </Savoir_T.2.5.6>
                   </d_sousSav>
                 </Savoir_T.2.5>
-                <Savoir_T.2.6 S_intitule="Analyse spectrale">
+                <Savoir_T.2.6 S_commentaires="" S_intitule="Analyse spectrale">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4139,7 +4165,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.2.6.1 S_intitule="Spectres UV-visible">
+                    <Savoir_T.2.6.1 S_commentaires="" S_intitule="Spectres UV-visible">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4151,7 +4177,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.6.1>
-                    <Savoir_T.2.6.2 S_intitule="Spectres IR">
+                    <Savoir_T.2.6.2 S_commentaires="" S_intitule="Spectres IR">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4163,7 +4189,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.2.6.2>
-                    <Savoir_T.2.6.3 S_intitule="Spectres RMN du proton">
+                    <Savoir_T.2.6.3 S_commentaires="" S_intitule="Spectres RMN du proton">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4179,7 +4205,7 @@
                 </Savoir_T.2.6>
               </d_sousSav>
             </Savoir_T.2>
-            <Savoir_T.3 S_intitule="Comprendre : lois et modèles">
+            <Savoir_T.3 S_commentaires="" S_intitule="Comprendre : lois et modèles">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -4190,7 +4216,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.3.1 S_intitule="Temps, cinématique et dynamique newtoniennes">
+                <Savoir_T.3.1 S_commentaires="" S_intitule="Temps, cinématique et dynamique newtoniennes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4201,7 +4227,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.1.1 S_intitule="Description du mouvement d’un point au cours du temps: vecteurs position, vitesse et accélération">
+                    <Savoir_T.3.1.1 S_commentaires="" S_intitule="Description du mouvement d’un point au cours du temps: vecteurs position, vitesse et accélération">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4213,7 +4239,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.1>
-                    <Savoir_T.3.1.2 S_intitule="Référentiel galiléen">
+                    <Savoir_T.3.1.2 S_commentaires="" S_intitule="Référentiel galiléen">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4225,7 +4251,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.2>
-                    <Savoir_T.3.1.3 S_intitule="Lois de Newton : principe d’inertie et principe des actions réciproques">
+                    <Savoir_T.3.1.3 S_commentaires="" S_intitule="Lois de Newton : principe d’inertie et principe des actions réciproques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4237,7 +4263,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.3>
-                    <Savoir_T.3.1.4 S_intitule="Conservation de la quantité de mouvement d’un système isolé">
+                    <Savoir_T.3.1.4 S_commentaires="" S_intitule="Conservation de la quantité de mouvement d’un système isolé">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4249,7 +4275,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.4>
-                    <Savoir_T.3.1.5 S_intitule="Mouvement d’un satellite">
+                    <Savoir_T.3.1.5 S_commentaires="" S_intitule="Mouvement d’un satellite">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4261,7 +4287,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.5>
-                    <Savoir_T.3.1.6 S_intitule="Révolution de la Terre autour du Soleil">
+                    <Savoir_T.3.1.6 S_commentaires="" S_intitule="Révolution de la Terre autour du Soleil">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4273,7 +4299,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.1.6>
-                    <Savoir_T.3.1.7 S_intitule="Lois de Kepler">
+                    <Savoir_T.3.1.7 S_commentaires="" S_intitule="Lois de Kepler">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4287,7 +4313,7 @@
                     </Savoir_T.3.1.7>
                   </d_sousSav>
                 </Savoir_T.3.1>
-                <Savoir_T.3.2 S_intitule="Mesure du temps et oscillateur, amortissement">
+                <Savoir_T.3.2 S_commentaires="" S_intitule="Mesure du temps et oscillateur, amortissement">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4298,7 +4324,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.2.1 S_intitule="Travail d’une force">
+                    <Savoir_T.3.2.1 S_commentaires="" S_intitule="Travail d’une force">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4310,7 +4336,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.1>
-                    <Savoir_T.3.2.2 S_intitule="Force conservative; énergie potentielle">
+                    <Savoir_T.3.2.2 S_commentaires="" S_intitule="Force conservative; énergie potentielle">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4322,7 +4348,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.2>
-                    <Savoir_T.3.2.3 S_intitule="Forces non conservatives : exemple des frottements">
+                    <Savoir_T.3.2.3 S_commentaires="" S_intitule="Forces non conservatives : exemple des frottements">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4334,7 +4360,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.3>
-                    <Savoir_T.3.2.4 S_intitule="Énergie mécanique">
+                    <Savoir_T.3.2.4 S_commentaires="" S_intitule="Énergie mécanique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4346,7 +4372,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.4>
-                    <Savoir_T.3.2.5 S_intitule="Étude énergétique des oscillations libres d’un système mécanique">
+                    <Savoir_T.3.2.5 S_commentaires="" S_intitule="Étude énergétique des oscillations libres d’un système mécanique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4358,7 +4384,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.5>
-                    <Savoir_T.3.2.6 S_intitule="Dissipation d’énergie">
+                    <Savoir_T.3.2.6 S_commentaires="" S_intitule="Dissipation d’énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4370,7 +4396,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.2.6>
-                    <Savoir_T.3.2.7 S_intitule="Définition du temps atomique">
+                    <Savoir_T.3.2.7 S_commentaires="" S_intitule="Définition du temps atomique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4384,7 +4410,7 @@
                     </Savoir_T.3.2.7>
                   </d_sousSav>
                 </Savoir_T.3.2>
-                <Savoir_T.3.3 S_intitule="Temps et relativité restreinte">
+                <Savoir_T.3.3 S_commentaires="" S_intitule="Temps et relativité restreinte">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4395,7 +4421,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.3.1 S_intitule="Invariance de la vitesse de la lumière et caractère relatif du temps">
+                    <Savoir_T.3.3.1 S_commentaires="" S_intitule="Invariance de la vitesse de la lumière et caractère relatif du temps">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4407,7 +4433,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.3.1>
-                    <Savoir_T.3.3.2 S_intitule="Postulat d’Einstein. Tests expérimentaux de l’invariance de la vitesse de la lumière">
+                    <Savoir_T.3.3.2 S_commentaires="" S_intitule="Postulat d’Einstein. Tests expérimentaux de l’invariance de la vitesse de la lumière">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4419,7 +4445,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.3.2>
-                    <Savoir_T.3.3.3 S_intitule="Notion d’événement. Temps propre">
+                    <Savoir_T.3.3.3 S_commentaires="" S_intitule="Notion d’événement. Temps propre">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4431,7 +4457,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.3.3>
-                    <Savoir_T.3.3.4 S_intitule="Dilatation des durées">
+                    <Savoir_T.3.3.4 S_commentaires="" S_intitule="Dilatation des durées">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4443,7 +4469,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.3.4>
-                    <Savoir_T.3.3.5 S_intitule="Preuves expérimentales">
+                    <Savoir_T.3.3.5 S_commentaires="" S_intitule="Preuves expérimentales">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4457,7 +4483,7 @@
                     </Savoir_T.3.3.5>
                   </d_sousSav>
                 </Savoir_T.3.3>
-                <Savoir_T.3.4 S_intitule="Temps et évolution chimique: cinétique et catalyse">
+                <Savoir_T.3.4 S_commentaires="" S_intitule="Temps et évolution chimique: cinétique et catalyse">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4468,7 +4494,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.4.1 S_intitule="Réactions lentes, rapides ; durée d'une réaction chimique">
+                    <Savoir_T.3.4.1 S_commentaires="" S_intitule="Réactions lentes, rapides ; durée d'une réaction chimique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4480,7 +4506,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.4.1>
-                    <Savoir_T.3.4.2 S_intitule="Facteurs cinétiques. Évolution d'une quantité de matière au cours du temps">
+                    <Savoir_T.3.4.2 S_commentaires="" S_intitule="Facteurs cinétiques. Évolution d'une quantité de matière au cours du temps">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4492,7 +4518,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.4.2>
-                    <Savoir_T.3.4.3 S_intitule="Temps de demi-réaction">
+                    <Savoir_T.3.4.3 S_commentaires="" S_intitule="Temps de demi-réaction">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4504,7 +4530,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.4.3>
-                    <Savoir_T.3.4.4 S_intitule="Catalyse homogène, hétérogène et enzymatique">
+                    <Savoir_T.3.4.4 S_commentaires="" S_intitule="Catalyse homogène, hétérogène et enzymatique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4518,7 +4544,7 @@
                     </Savoir_T.3.4.4>
                   </d_sousSav>
                 </Savoir_T.3.4>
-                <Savoir_T.3.5 S_intitule="Représentation spatiale des molécules">
+                <Savoir_T.3.5 S_commentaires="" S_intitule="Représentation spatiale des molécules">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4529,7 +4555,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.5.1 S_intitule="Chiralité: définition, approche historique">
+                    <Savoir_T.3.5.1 S_commentaires="" S_intitule="Chiralité: définition, approche historique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4541,7 +4567,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.1>
-                    <Savoir_T.3.5.2 S_intitule="Représentation de Cram">
+                    <Savoir_T.3.5.2 S_commentaires="" S_intitule="Représentation de Cram">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4553,7 +4579,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.2>
-                    <Savoir_T.3.5.3 S_intitule="Carbone asymétrique">
+                    <Savoir_T.3.5.3 S_commentaires="" S_intitule="Carbone asymétrique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4565,7 +4591,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.3>
-                    <Savoir_T.3.5.4 S_intitule="Chiralité des acides α-aminés">
+                    <Savoir_T.3.5.4 S_commentaires="" S_intitule="Chiralité des acides α-aminés">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4577,7 +4603,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.4>
-                    <Savoir_T.3.5.5 S_intitule="Énantiomérie, mélange racémique, diastéréoisomérie">
+                    <Savoir_T.3.5.5 S_commentaires="" S_intitule="Énantiomérie, mélange racémique, diastéréoisomérie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4589,7 +4615,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.5>
-                    <Savoir_T.3.5.6 S_intitule="Conformation: rotation autour d’une liaison simple ; conformation la plus stable">
+                    <Savoir_T.3.5.6 S_commentaires="" S_intitule="Conformation: rotation autour d’une liaison simple ; conformation la plus stable">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4601,7 +4627,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.6>
-                    <Savoir_T.3.5.7 S_intitule="Formule topologique des molécules organiques">
+                    <Savoir_T.3.5.7 S_commentaires="" S_intitule="Formule topologique des molécules organiques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4613,7 +4639,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.5.7>
-                    <Savoir_T.3.5.8 S_intitule="Propriétés biologiques et stéréoisomérie">
+                    <Savoir_T.3.5.8 S_commentaires="" S_intitule="Propriétés biologiques et stéréoisomérie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4627,7 +4653,7 @@
                     </Savoir_T.3.5.8>
                   </d_sousSav>
                 </Savoir_T.3.5>
-                <Savoir_T.3.6 S_intitule="Transformation en chimie organique">
+                <Savoir_T.3.6 S_commentaires="" S_intitule="Transformation en chimie organique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4638,7 +4664,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.6.1 S_intitule="Aspect macroscopique">
+                    <Savoir_T.3.6.1 S_commentaires="" S_intitule="Aspect macroscopique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4650,7 +4676,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.6.1>
-                    <Savoir_T.3.6.2 S_intitule="Aspect microscopique">
+                    <Savoir_T.3.6.2 S_commentaires="" S_intitule="Aspect microscopique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4664,7 +4690,7 @@
                     </Savoir_T.3.6.2>
                   </d_sousSav>
                 </Savoir_T.3.6>
-                <Savoir_T.3.7 S_intitule="Réaction chimique par échange de proton">
+                <Savoir_T.3.7 S_commentaires="" S_intitule="Réaction chimique par échange de proton">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4675,7 +4701,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.7.1 S_intitule="Le pH: définition, mesure">
+                    <Savoir_T.3.7.1 S_commentaires="" S_intitule="Le pH: définition, mesure">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4687,7 +4713,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.7.1>
-                    <Savoir_T.3.7.2 S_intitule="Théorie de Brönsted">
+                    <Savoir_T.3.7.2 S_commentaires="" S_intitule="Théorie de Brönsted">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4699,7 +4725,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.7.2>
-                    <Savoir_T.3.7.3 S_intitule="Réactions quasi-totales en faveur des produits">
+                    <Savoir_T.3.7.3 S_commentaires="" S_intitule="Réactions quasi-totales en faveur des produits">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4711,7 +4737,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.7.3>
-                    <Savoir_T.3.7.4 S_intitule="Réaction entre un acide fort et une base forte">
+                    <Savoir_T.3.7.4 S_commentaires="" S_intitule="Réaction entre un acide fort et une base forte">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4723,7 +4749,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.7.4>
-                    <Savoir_T.3.7.5 S_intitule="Contrôle du pH: solution tampon ; rôle en milieu biologique">
+                    <Savoir_T.3.7.5 S_commentaires="" S_intitule="Contrôle du pH: solution tampon ; rôle en milieu biologique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4737,7 +4763,7 @@
                     </Savoir_T.3.7.5>
                   </d_sousSav>
                 </Savoir_T.3.7>
-                <Savoir_T.3.8 S_intitule="Du macroscopique au microscopique">
+                <Savoir_T.3.8 S_commentaires="" S_intitule="Du macroscopique au microscopique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4748,7 +4774,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.8.1 S_intitule="Constante d’Avogadro">
+                    <Savoir_T.3.8.1 S_commentaires="" S_intitule="Constante d’Avogadro">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4762,7 +4788,7 @@
                     </Savoir_T.3.8.1>
                   </d_sousSav>
                 </Savoir_T.3.8>
-                <Savoir_T.3.9 S_intitule="Transferts d'énergie entre systèmes macroscopiques">
+                <Savoir_T.3.9 S_commentaires="" S_intitule="Transferts d'énergie entre systèmes macroscopiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4773,7 +4799,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.9.1 S_intitule="Notions de système et d’énergie interne ; interprétation microscopique">
+                    <Savoir_T.3.9.1 S_commentaires="" S_intitule="Notions de système et d’énergie interne ; interprétation microscopique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4785,7 +4811,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.9.1>
-                    <Savoir_T.3.9.2 S_intitule="Capacité thermique">
+                    <Savoir_T.3.9.2 S_commentaires="" S_intitule="Capacité thermique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4797,7 +4823,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.9.2>
-                    <Savoir_T.3.9.3 S_intitule="Transferts thermiques : conduction, convection, rayonnement">
+                    <Savoir_T.3.9.3 S_commentaires="" S_intitule="Transferts thermiques : conduction, convection, rayonnement">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4809,7 +4835,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.9.3>
-                    <Savoir_T.3.9.4 S_intitule="Flux thermique ; Résistance thermique">
+                    <Savoir_T.3.9.4 S_commentaires="" S_intitule="Flux thermique ; Résistance thermique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4821,7 +4847,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.9.4>
-                    <Savoir_T.3.9.5 S_intitule="Notion d'irréversibilité">
+                    <Savoir_T.3.9.5 S_commentaires="" S_intitule="Notion d'irréversibilité">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4833,7 +4859,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.9.5>
-                    <Savoir_T.3.9.6 S_intitule="Bilan d'énergie">
+                    <Savoir_T.3.9.6 S_commentaires="" S_intitule="Bilan d'énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4847,7 +4873,7 @@
                     </Savoir_T.3.9.6>
                   </d_sousSav>
                 </Savoir_T.3.9>
-                <Savoir_T.3.10 S_intitule="Transfert quantites d'énergie">
+                <Savoir_T.3.10 S_commentaires="" S_intitule="Transfert quantites d'énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4858,7 +4884,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.10.1 S_intitule="Emission et absorbtion quantiques">
+                    <Savoir_T.3.10.1 S_commentaires="" S_intitule="Emission et absorbtion quantiques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4870,7 +4896,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.10.1>
-                    <Savoir_T.3.10.2 S_intitule="Émission stimulée et amplification d’une onde lumineuse">
+                    <Savoir_T.3.10.2 S_commentaires="" S_intitule="Émission stimulée et amplification d’une onde lumineuse">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4882,7 +4908,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.10.2>
-                    <Savoir_T.3.10.3 S_intitule="Oscillateur optique : principe du laser">
+                    <Savoir_T.3.10.3 S_commentaires="" S_intitule="Oscillateur optique : principe du laser">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4894,7 +4920,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.10.3>
-                    <Savoir_T.3.10.4 S_intitule="Transition d'énergie : electronique, vibratoire">
+                    <Savoir_T.3.10.4 S_commentaires="" S_intitule="Transition d'énergie : electronique, vibratoire">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4908,7 +4934,7 @@
                     </Savoir_T.3.10.4>
                   </d_sousSav>
                 </Savoir_T.3.10>
-                <Savoir_T.3.11 S_intitule="Dualité onde-particule">
+                <Savoir_T.3.11 S_commentaires="" S_intitule="Dualité onde-particule">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4919,7 +4945,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.3.11.1 S_intitule="Photon et onde lumineuse">
+                    <Savoir_T.3.11.1 S_commentaires="" S_intitule="Photon et onde lumineuse">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4931,7 +4957,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.11.1>
-                    <Savoir_T.3.11.2 S_intitule="Particule matérielle et onde de matière ; relation de de Broglie">
+                    <Savoir_T.3.11.2 S_commentaires="" S_intitule="Particule matérielle et onde de matière ; relation de de Broglie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4943,7 +4969,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.3.11.2>
-                    <Savoir_T.3.11.3 S_intitule="Interférences photon par photon, particule de matière par particule de matière">
+                    <Savoir_T.3.11.3 S_commentaires="" S_intitule="Interférences photon par photon, particule de matière par particule de matière">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4959,7 +4985,7 @@
                 </Savoir_T.3.11>
               </d_sousSav>
             </Savoir_T.3>
-            <Savoir_T.4 S_intitule="Agir : défis du XXIème siècle">
+            <Savoir_T.4 S_commentaires="" S_intitule="Agir : défis du XXIème siècle">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -4970,7 +4996,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_T.4.1 S_intitule="Enjeux énergétiques">
+                <Savoir_T.4.1 S_commentaires="" S_intitule="Enjeux énergétiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -4981,7 +5007,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.4.1.1 S_intitule="Nouvelles chaînes énergétiques">
+                    <Savoir_T.4.1.1 S_commentaires="" S_intitule="Nouvelles chaînes énergétiques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -4993,7 +5019,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.1.1>
-                    <Savoir_T.4.1.2 S_intitule="Économies d’énergie">
+                    <Savoir_T.4.1.2 S_commentaires="" S_intitule="Économies d’énergie">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5007,7 +5033,7 @@
                     </Savoir_T.4.1.2>
                   </d_sousSav>
                 </Savoir_T.4.1>
-                <Savoir_T.4.2 S_intitule="Apport de la chimie au respect de l’environnement">
+                <Savoir_T.4.2 S_commentaires="" S_intitule="Apport de la chimie au respect de l’environnement">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -5018,7 +5044,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.4.2.1 S_intitule="Chimie durable">
+                    <Savoir_T.4.2.1 S_commentaires="" S_intitule="Chimie durable">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5030,7 +5056,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.2.1>
-                    <Savoir_T.4.2.2 S_intitule="Valorisation du dioxyde de carbone">
+                    <Savoir_T.4.2.2 S_commentaires="" S_intitule="Valorisation du dioxyde de carbone">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5044,7 +5070,7 @@
                     </Savoir_T.4.2.2>
                   </d_sousSav>
                 </Savoir_T.4.2>
-                <Savoir_T.4.3 S_intitule="Contrôle de qualité par dosage">
+                <Savoir_T.4.3 S_commentaires="" S_intitule="Contrôle de qualité par dosage">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -5055,7 +5081,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.4.3.1 S_intitule="Dosage par étalonnage">
+                    <Savoir_T.4.3.1 S_commentaires="" S_intitule="Dosage par étalonnage">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5067,7 +5093,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.3.1>
-                    <Savoir_T.4.3.2 S_intitule="Dosage par titrage direct">
+                    <Savoir_T.4.3.2 S_commentaires="" S_intitule="Dosage par titrage direct">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5081,7 +5107,7 @@
                     </Savoir_T.4.3.2>
                   </d_sousSav>
                 </Savoir_T.4.3>
-                <Savoir_T.4.4 S_intitule="Synthétiser des molécules, fabriquer de nouveaux matériaux">
+                <Savoir_T.4.4 S_commentaires="" S_intitule="Synthétiser des molécules, fabriquer de nouveaux matériaux">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -5092,7 +5118,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.4.4.1 S_intitule="Stratégie de la synthèse organique">
+                    <Savoir_T.4.4.1 S_commentaires="" S_intitule="Stratégie de la synthèse organique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5104,7 +5130,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.4.1>
-                    <Savoir_T.4.4.2 S_intitule="Sélectivité en chimie organique">
+                    <Savoir_T.4.4.2 S_commentaires="" S_intitule="Sélectivité en chimie organique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5118,7 +5144,7 @@
                     </Savoir_T.4.4.2>
                   </d_sousSav>
                 </Savoir_T.4.4>
-                <Savoir_T.4.5 S_intitule="Transmettre et stocker de l’information">
+                <Savoir_T.4.5 S_commentaires="" S_intitule="Transmettre et stocker de l’information">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -5129,7 +5155,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.4.5.1 S_intitule="Chaîne de transmission d’informations">
+                    <Savoir_T.4.5.1 S_commentaires="" S_intitule="Chaîne de transmission d’informations">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5141,7 +5167,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.5.1>
-                    <Savoir_T.4.5.2 S_intitule="Images numériques">
+                    <Savoir_T.4.5.2 S_commentaires="" S_intitule="Images numériques">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5153,7 +5179,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.5.2>
-                    <Savoir_T.4.5.3 S_intitule="Signal analogique et signal numérique">
+                    <Savoir_T.4.5.3 S_commentaires="" S_intitule="Signal analogique et signal numérique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5165,7 +5191,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.5.3>
-                    <Savoir_T.4.5.4 S_intitule="Propriétés physiques de transmission">
+                    <Savoir_T.4.5.4 S_commentaires="" S_intitule="Propriétés physiques de transmission">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5177,7 +5203,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.5.4>
-                    <Savoir_T.4.5.5 S_intitule="Stockage optique">
+                    <Savoir_T.4.5.5 S_commentaires="" S_intitule="Stockage optique">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5191,7 +5217,7 @@
                     </Savoir_T.4.5.5>
                   </d_sousSav>
                 </Savoir_T.4.5>
-                <Savoir_T.4.6 S_intitule="Créer et innover">
+                <Savoir_T.4.6 S_commentaires="" S_intitule="Créer et innover">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -5202,7 +5228,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_T.4.6.1 S_intitule="Culture scientifique et technique ; relation science-société">
+                    <Savoir_T.4.6.1 S_commentaires="" S_intitule="Culture scientifique et technique ; relation science-société">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -5214,7 +5240,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_T.4.6.1>
-                    <Savoir_T.4.6.2 S_intitule="Métiers de l’activité scientifique (partenariat avec une institution de recherche, une entreprise, etc.)">
+                    <Savoir_T.4.6.2 S_commentaires="" S_intitule="Métiers de l’activité scientifique (partenariat avec une institution de recherche, une entreprise, etc.)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
