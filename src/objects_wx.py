@@ -3138,6 +3138,7 @@ class FenetreSequence(FenetreDocument):
                 
                 if self.VerifierReferentiel("séquence") == 1:
                     reparer = True
+                    self.classe.setBranche(classe, reparer = reparer)
                 
                 if len(err) > 0 :
                     Ok = False
@@ -19503,22 +19504,22 @@ class DiffRefChoix(wx.Dialog):
         st = wx.StaticText(self, -1, f"Le référentiel intégré au fichier {nomFichier}\n" \
                                      f"est différent du référentiel fourni par pySéquence.\n\n" \
                                      f"Soit vous avez modifié sciemment ce référentiel,\n" \
-                                     f"Soit il a été mis à jour depuis la création du fichier.\n\n" \
+                                     f"Soit il a été mis à jour depuis la création du fichier {nomFichier}.\n\n" \
                                      f"Que souhaitez-vous faire ?"
                                      
                            )
         
-        sizer.Add(st, 0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(st, 0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 10)
         
         button = wx.Button(self, -1, "Remplacer le référentiel")
         button.SetToolTip("Remplacer le référentiel intégré au document\npar celui fourni avec pySéquence")
         self.Bind(wx.EVT_BUTTON, self.OnRepl, button)
-        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 15)
         
         button = wx.Button(self, -1, "Conserver le référentiel")
         button.SetToolTip("Conserver le référentiel intégré au document")
         self.Bind(wx.EVT_BUTTON, self.OnCons, button)
-        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 15)
         
         self.SetSizer(sizer)
         sizer.Fit(self)
