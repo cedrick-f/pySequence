@@ -1,9 +1,9 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="NSI" S_Famille="NSI" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="NSI" S_Famille="NSI" S_FichierLogo="" S_abrevCI="Cf" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Concept(s) fondament(al-aux)$m" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="https://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/26/8/spe633_annexe_1063268.pdf" />
   </l_BO_URL>
   <l_BO_dossier S_00="SSI" />
-  <l_CentresInterets />
+  <l_CentresInterets S_00="Données" S_01="Algorithmes" S_02="Langages" S_03="Machines" S_04="Interfaces" />
   <l_Enseignement S_00="Spé NSI" S_01="Spécialité Numérique et Sciences Informatiques" S_02="Spé NSI" S_03="Numérique et Sciences de l'Informatique" />
   <d_aColNon />
   <d_activites>
@@ -242,7 +242,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_2.1 S_commentaires="" S_intitule="Passer de la représentation d'une base à une autre">
+            <Savoir_2.1 S_commentaires="" S_intitule="Écriture d’un entier positif dans une base b⩾2">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -252,9 +252,22 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav />
+              <d_sousSav>
+                <Savoir_2.1.1 S_commentaires="" S_intitule="Passer de la représentation d'une base à une autre">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.1.1>
+              </d_sousSav>
             </Savoir_2.1>
-            <Savoir_2.2 S_commentaires="" S_intitule="Représentation binaire d'un nombre relatif">
+            <Savoir_2.2 S_commentaires="" S_intitule="Représentation binaire d'un entier relatif">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -291,7 +304,7 @@
                 </Savoir_2.2.2>
               </d_sousSav>
             </Savoir_2.2>
-            <Savoir_2.3 S_commentaires="" S_intitule="Calculer sur quelques exemples la représentation de nombres réels : 0.1, 0.25 ou 1/3">
+            <Savoir_2.3 S_commentaires="" S_intitule="Représentation approximative des nombres réels : notion de nombre flottant">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -301,9 +314,22 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav />
+              <d_sousSav>
+                <Savoir_2.3.1 S_commentaires="" S_intitule="Calculer sur quelques exemples la représentation de nombres réels : 0.1, 0.25 ou 1/3">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.3.1>
+              </d_sousSav>
             </Savoir_2.3>
-            <Savoir_2.4 S_commentaires="" S_intitule="Dresser la table d’une expression booléenne">
+            <Savoir_2.4 S_commentaires="" S_intitule="Valeurs booléennes : 0, 1 - Opérateurs booléens : and, or, not - Expressions booléennes">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -313,9 +339,22 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav />
+              <d_sousSav>
+                <Savoir_2.4.1 S_commentaires="" S_intitule="Dresser la table d’une expression booléenne">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.4.1>
+              </d_sousSav>
             </Savoir_2.4>
-            <Savoir_2.5 S_commentaires="" S_intitule="Encodage">
+            <Savoir_2.5 S_commentaires="" S_intitule="Représentation d’un texte en machine - Exemples des encodages ASCII, ISO-8859-1, Unicode">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -365,7 +404,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_3.1 S_commentaires="" S_intitule="Écrire une fonction renvoyant un p-uplet de valeurs">
+            <Savoir_3.1 S_commentaires="" S_intitule="p-uplets , p-uplets nommés">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -375,9 +414,22 @@
                 <l_00 />
                 <l_01 />
               </l_nivTaxo>
-              <d_sousSav />
+              <d_sousSav>
+                <Savoir_3.1.1 S_commentaires="" S_intitule="Écrire une fonction renvoyant un p-uplet de valeurs">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.1.1>
+              </d_sousSav>
             </Savoir_3.1>
-            <Savoir_3.2 S_commentaires="" S_intitule="Tableaux">
+            <Savoir_3.2 S_commentaires="" S_intitule="Tableau indexé - tableau donné en compréhension">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -438,7 +490,7 @@
                 </Savoir_3.2.4>
               </d_sousSav>
             </Savoir_3.2>
-            <Savoir_3.3 S_commentaires="" S_intitule="Dictionnaires">
+            <Savoir_3.3 S_commentaires="" S_intitule="Dictionnaires par clés et valeurs">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -562,7 +614,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_5.1 S_commentaires="" S_intitule="Composants graphiques">
+            <Savoir_5.1 S_commentaires="" S_intitule="Modalités de l’interaction entre l’homme et la machine">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -585,33 +637,9 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.1.1>
-                <Savoir_5.1.2 S_commentaires="" S_intitule="Identifier les événements que les fonctions associées aux différents composants graphiques sont capables de traiter">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_5.1.2>
-                <Savoir_5.1.3 S_commentaires="" S_intitule="Analyser et modifier les méthodes exécutées lors d’un clic sur un bouton d’une page Web">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_5.1.3>
               </d_sousSav>
             </Savoir_5.1>
-            <Savoir_5.2 S_commentaires="" S_intitule="Mode Client/Serveur">
+            <Savoir_5.2 S_commentaires="" S_intitule="Événements">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -622,7 +650,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_5.2.1 S_commentaires="" S_intitule="Distinguer ce qui est exécuté sur le client ou sur le serveur et dans quel ordre">
+                <Savoir_5.2.1 S_commentaires="" S_intitule="Identifier les événements que les fonctions associées aux différents composants graphiques sont capables de traiter">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -634,33 +662,9 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.2.1>
-                <Savoir_5.2.2 S_commentaires="" S_intitule="Distinguer ce qui est mémorisé dans le client et retransmis au serveur">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_5.2.2>
-                <Savoir_5.2.3 S_commentaires="" S_intitule="Reconnaître quand et pourquoi la transmission est chiffrée">
-                  <l_elemAssocies>
-                    <l_00 />
-                    <l_01 />
-                  </l_elemAssocies>
-                  <l_infos />
-                  <l_nivTaxo>
-                    <l_00 />
-                    <l_01 />
-                  </l_nivTaxo>
-                  <d_sousSav />
-                </Savoir_5.2.3>
               </d_sousSav>
             </Savoir_5.2>
-            <Savoir_5.3 S_commentaires="" S_intitule="Formulaires">
+            <Savoir_5.3 S_commentaires="" S_intitule="Interaction avec l’utilisateur dans une page Web">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -671,7 +675,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_5.3.1 S_commentaires="" S_intitule="Analyser le fonctionnement d’un formulaire simple">
+                <Savoir_5.3.1 S_commentaires="" S_intitule="Analyser et modifier les méthodes exécutées lors d’un clic sur un bouton d’une page Web">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -683,7 +687,20 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_5.3.1>
-                <Savoir_5.3.2 S_commentaires="" S_intitule="Distinguer les transmissions de paramètres par les requêtes POST ou GET">
+              </d_sousSav>
+            </Savoir_5.3>
+            <Savoir_5.4 S_commentaires="" S_intitule="Interaction client-serveur - Requêtes HTTP, réponses du serveur">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_5.4.1 S_commentaires="" S_intitule="Distinguer ce qui est exécuté sur le client ou sur le serveur et dans quel ordre">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -694,9 +711,70 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav />
-                </Savoir_5.3.2>
+                </Savoir_5.4.1>
+                <Savoir_5.4.2 S_commentaires="" S_intitule="Distinguer ce qui est mémorisé dans le client et retransmis au serveur">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_5.4.2>
+                <Savoir_5.4.3 S_commentaires="" S_intitule="Reconnaître quand et pourquoi la transmission est chiffrée">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_5.4.3>
               </d_sousSav>
-            </Savoir_5.3>
+            </Savoir_5.4>
+            <Savoir_5.5 S_commentaires="" S_intitule="Formulaire d’une page Web">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_5.5.1 S_commentaires="" S_intitule="Analyser le fonctionnement d’un formulaire simple">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_5.5.1>
+                <Savoir_5.5.2 S_commentaires="" S_intitule="Distinguer les transmissions de paramètres par les requêtes POST ou GET">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_5.5.2>
+              </d_sousSav>
+            </Savoir_5.5>
           </d_sousSav>
         </Savoir_5>
         <Savoir_6 S_commentaires="" S_intitule="Architectures matérielles et systèmes d'exploitation">
@@ -710,7 +788,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_6.1 S_commentaires="" S_intitule="Architecture matérielle">
+            <Savoir_6.1 S_commentaires="" S_intitule="Modèle d’architecture séquentielle (von Neumann)">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -747,7 +825,7 @@
                 </Savoir_6.1.2>
               </d_sousSav>
             </Savoir_6.1>
-            <Savoir_6.2 S_commentaires="" S_intitule="Réseaux">
+            <Savoir_6.2 S_commentaires="" S_intitule="Transmission de données dans un réseau - Protocoles de communication - Architecture d’un réseau">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -845,7 +923,7 @@
                 </Savoir_6.3.3>
               </d_sousSav>
             </Savoir_6.3>
-            <Savoir_4.4 S_commentaires="" S_intitule="Entrées/Sorties">
+            <Savoir_4.4 S_commentaires="" S_intitule="Périphériques d’entrée et de sortie - Interface Homme-Machine (IHM)">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -5287,6 +5365,7 @@
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_AP S_00="E" S_01="P" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_HC S_00="I" S_01="P" />
     <l_C S_00="C" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_SA S_00="C" S_01="G" />
@@ -5300,6 +5379,7 @@
     <l_ED />
     <l_AP />
     <l_P />
+    <l_HC />
     <l_C />
     <l_TD />
     <l_SA />
@@ -5308,7 +5388,11 @@
     <l_R />
     <l_S />
   </d_ensSpecifSeance>
-  <d_horsClasse />
+  <d_horsClasse>
+    <l_HC S_00="Activité maison" S_01="Activité à la maison" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
+  </d_horsClasse>
   <d_labels>
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
@@ -5325,9 +5409,9 @@
   <l_listeSpecialites />
   <l_listeSystemes S_00="PE" />
   <l_listeThematiques />
-  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" />
-  <l_listeTypeHorsClasse />
-  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" />
+  <l_listeTypeHorsClasse S_00="HC" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="C" S_05="TD" S_06="SA" S_07="SS" S_08="E" S_09="R" S_10="S" />
   <d_nivTaxo />
   <d_options />
   <d_parties S_C="Évaluation d'un projet et soutenance orale" S_S="Dialogue argumenté" />
@@ -5450,6 +5534,9 @@
     <l_P S_00="Projet" S_01="Activité de projet" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
+    <l_HC S_00="Activité maison" S_01="Activité à la maison" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
     <l_C S_00="Cours" S_01="Cours" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_C>
