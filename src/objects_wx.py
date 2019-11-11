@@ -4308,11 +4308,11 @@ class FenetreProgression(FenetreDocument):
         """
         wx.BeginBusyCursor()
         if doc.GetType() == 'seq':
-            t = "La %s sera engegistrée" %doc.nom_obj
+            t = "La %s sera engegistrée" %doc.sing_()
             n = "nouvelle"
             e = '.seq'
         elif doc.GetType() == 'prj':
-            t = "Le %s sera engegistré" %doc.nom_obj
+            t = "Le %s sera engegistré" %doc.sing_()
             n = "nouveau"
             e = '.prj'
         dlg = wx.TextEntryDialog(self, "Nom du fichier %s\n\n"\
@@ -4330,8 +4330,8 @@ class FenetreProgression(FenetreDocument):
                                              "Voulez-vous :\n"\
                                              " - l'ouvrir comme %s %s de la Progression : OUI\n"\
                                              " - écraser le fichier existant (toutes les données seront perdues) : NON\n"\
-                                             " - choisir un autre nom pour la %s : ANNULER" %(doc.nom_obj, n, doc.nom_obj, doc.nom_obj),
-                                       "%s existante" %doc.nom_obj,
+                                             " - choisir un autre nom pour la %s : ANNULER" %(doc.sing_(), n, doc.sing_(), doc.sing_()),
+                                       "%s existante" %doc.sing_(),
                                        wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION |wx.YES_DEFAULT
                                        )
                 res = dlg.ShowModal()
@@ -13926,6 +13926,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         self.root = root
         
         self.itemDrag = None
+        self.fctDrop = None
         
         #
         # Gestion des évenements
@@ -14677,52 +14678,124 @@ class ArbreProgression(ArbreDoc):
 #                else:
 #                    return -1
         
-    ####################################################################################
-    def EstMovable(self, obj):
-        return isinstance(obj, pysequence.LienSequence) \
-            or isinstance(obj, pysequence.LienProjet) \
-            or isinstance(obj, pysequence.Prof)
+#     ####################################################################################
+#     def EstMovable(self, obj):
+#         return isinstance(obj, pysequence.LienSequence) \
+#             or isinstance(obj, pysequence.LienProjet) \
+#             or isinstance(obj, pysequence.Prof)
 
 
-    ####################################################################################
-    def EstMemeCategorie(self, obj1, obj2):
-        return type(obj1) is type(obj2) \
-            or (isinstance(obj1, pysequence.LienSequence) and isinstance(obj2, pysequence.LienProjet)) \
-            or (isinstance(obj2, pysequence.LienSequence) and isinstance(obj1, pysequence.LienProjet))
+#     ####################################################################################
+#     def EstMemeCategorie(self, obj1, obj2):
+#         return type(obj1) is type(obj2) \
+#             or (isinstance(obj1, pysequence.LienSequence) and isinstance(obj2, pysequence.LienProjet)) \
+#             or (isinstance(obj2, pysequence.LienSequence) and isinstance(obj1, pysequence.LienProjet))
 
 
     ####################################################################################
     def OnMove(self, event):
+        event.Skip()
         
         if not self.HasFocus():
             self.SetFocusIgnoringChildren()
         
         if self.itemDrag != None:
+            self.fctDrop = None
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
+            
             if item != None:
                 dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
-                
+                print("dataTarget", dataTarget, type(dataTarget))
                 if dataTarget == dataSource:
                     self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+                    return
+                    
+#                 if not dataSource.EstMovable() or not dataSource.EstMemeCategorie(dataTarget):
+#                     self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+#                     return
+#                     print("Movable :", dataSource.EstMovable(), 
+#                           "- EstMemeCategorie :", dataSource.EstMemeCategorie(dataTarget))
                 
-                elif not self.EstMovable(dataSource) or not self.EstMemeCategorie(dataSource, dataTarget):
-                    self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
-                
-                else:
-                    if isinstance(dataTarget, pysequence.Prof) and dataTarget != dataSource:
-                        self.SetCursor(self.CurseurInsertApres)
-                            
+                if isinstance(dataTarget, pysequence.Prof):
+                    self.SetCursor(self.CurseurInsertApres)
+                    self.fctDrop = self.InsererApres
+                    return
 #                     elif dataTarget.GetPosition() <= dataSource.GetPosition():
-                    elif dataTarget.MemeRang(dataSource):
-                        self.SetCursor(self.CurseurInsertApres)
-                        
-                    else:
-                        self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                if isinstance(dataSource, pysequence.Prof) \
+                  and dataTarget == "Prf":
+                    self.SetCursor(self.CurseurInsertApres)
+                    self.fctDrop = self.InsererApres
+                    return
+                    
+                if isinstance(dataTarget, pysequence.ElementProgression)  \
+                  and dataTarget.MemeRang(dataSource):
+                    self.SetCursor(self.CurseurInsertApres)
+                    self.fctDrop = self.InsererApres
+                    return
+                    
+                if isinstance(dataSource, pysequence.ElementProgression) \
+                  and dataTarget == "Seq":
+                    self.SetCursor(self.CurseurInsertApres)
+                    self.fctDrop = self.InsererApres
+                    return
+                  
+                  
+                  
+                self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+#                         print("MemeRang :", dataTarget.MemeRang(dataSource))
 
-        event.Skip()
+        
 
+    ####################################################################################
+    def InsererApres(self, dataSource, dataTarget):
+        """ Déplace dataSource Après dataTarget
+            On suppose que la compatibilité des deux datas a déjà été vérifiée
+        """
+        if isinstance(dataTarget, pysequence.Prof):
+            lst = self.progression.equipe
+            s = lst.index(dataSource)
+            t = lst.index(dataTarget)
+            if t > s:
+                lst.insert(t, lst.pop(s))
+            else:
+                lst.insert(t+1, lst.pop(s))
+            
+            self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur", 
+                                    draw = True, verif = False) # Solution pour déclencher un "redessiner"
+        
+        elif dataTarget == "Prf":
+            lst = self.progression.equipe
+            s = lst.index(dataSource)
+            lst.insert(0, lst.pop(s))
 
+            self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur", 
+                                    draw = True, verif = False) # Solution pour déclencher un "redessiner"
+        
+        
+        elif isinstance(dataTarget, pysequence.ElementProgression):
+            dataSource.rang = dataTarget.rang + 1
+            self.progression.Ordonner()
+            
+            if isinstance(dataSource, pysequence.LienSequence):
+                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'une Séquence", 
+                                        draw = True, verif = True) # Solution pour déclencher un "redessiner"
+            else:
+                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un Projet", 
+                                        draw = True, verif = True) # Solution pour déclencher un "redessiner"
+        
+        elif dataTarget == "Seq":
+            dataSource.rang = -1
+            self.progression.Ordonner()
+            
+            if isinstance(dataSource, pysequence.LienSequence):
+                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'une Séquence", 
+                                        draw = True, verif = True) # Solution pour déclencher un "redessiner"
+            else:
+                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un Projet", 
+                                        draw = True, verif = True) # Solution pour déclencher un "redessiner"
+            
+    
     ####################################################################################
     def OnEndDrag(self, event):
         self.item = event.GetItem()
@@ -14733,52 +14806,18 @@ class ArbreProgression(ArbreDoc):
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
         
-        if dataTarget == dataSource:
-            pass
-        
-        elif self.EstMemeCategorie(dataSource, dataTarget):
-            if isinstance(dataTarget, pysequence.Prof) and dataTarget != dataSource:
-                lst = self.progression.equipe
-                s = lst.index(dataSource)
-                t = lst.index(dataTarget)
-                if t > s:
-                    lst.insert(t, lst.pop(s))
-                else:
-                    lst.insert(t+1, lst.pop(s))
-                
-                self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur", 
-                                        draw = True, verif = False) # Solution pour déclencher un "redessiner"
-
-            
-#             elif dataTarget.GetPosition() <= dataSource.GetPosition():
-            elif dataTarget.MemeRang(dataSource):
-#                 lst = self.progression.sequences_projets
-#                 s = lst.index(dataSource)
-#                 t = lst.index(dataTarget)
-#                 if t > s:
-#                     lst.insert(t, lst.pop(s))
-#                 else:
-#                     lst.insert(t+1, lst.pop(s))
-
-                dataTarget.rang, dataSource.rang = dataSource.rang, dataTarget.rang
-                self.progression.Ordonner()
-                
-                
-                if isinstance(dataSource, pysequence.LienSequence):
-                    self.GetApp().sendEvent(self.progression, modif = "Changement de position d'une Séquence", 
-                                            draw = True, verif = True) # Solution pour déclencher un "redessiner"
-                else:
-                    self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un Projet", 
-                                            draw = True, verif = True) # Solution pour déclencher un "redessiner"
-        
-        
-            self.SortChildren(self.GetItemParent(self.item))
+        if self.fctDrop is not None:
+            self.fctDrop(dataSource, dataTarget)
+            if type(dataTarget) == str : # Déjà item parent de la rubrique à trier
+                self.SortChildren(self.item)
+            else:
+                self.SortChildren(self.GetItemParent(self.item))
         
         self.itemDrag = None
+        self.fctDrop = None
         event.Skip()            
 
     
-
 
 
 

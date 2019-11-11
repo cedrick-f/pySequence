@@ -808,6 +808,18 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
             _x += dx
             _x0 = _x
         
+        #
+        # Bilan des compétences abordées
+        #
+        dicComp, nbrComp = prg.GetCompetencesAbordees()
+        DrawBoutonCompetence(ctx, prg, None, dicComp, posZOrganis[1] + htitre, 
+                             h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, 
+                             nbr = nbrComp)
+        
+        
+        
+        
+        
     
     elif prg.mode == "S": # Expérimental !!
         #
@@ -882,12 +894,12 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
         
         
         #
-        # Bilan des compétences abordées
+        # Bilan des Savoirs abordés
         #
-        dicComp, nbrComp = prg.GetCompetencesAbordees()
-        DrawBoutonCompetence(ctx, prg, None, dicComp, posZOrganis[1] + htitre, 
+        dicSav, nbrSav = prg.GetSavoirsAbordes()
+        DrawBoutonSavoir(ctx, prg, None, dicSav, posZOrganis[1] + htitre, 
                              h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, 
-                             nbr = nbrComp)
+                             nbr = nbrSav)
             
       
         
@@ -1604,6 +1616,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     """ Dessine le cadre d'une séquence ou d'un projet
         Avec une petite flèche pour démarrer le croisement avec les compétences
     """
+#     print("DrawSequenceProjet", rect)
     global yTaches
     doc = lienDoc.GetDoc()
     if doc is None:

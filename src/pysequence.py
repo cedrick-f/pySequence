@@ -672,7 +672,14 @@ class ElementBase(Grammaire):
 #             self.getBranche_AUTO(root, e, getattr(self, e))
 #         return root
 
-
+    ####################################################################################
+    def EstMovable(self):
+        return False
+    
+    ####################################################################################
+    def EstMemeCategorie(self, obj):
+        return type(self) is type(obj)
+        
     ######################################################################################  
     def getBrancheImage(self, root, nom = "Image"):
         if self.image != None:
@@ -3871,6 +3878,8 @@ class Projet(BaseDoc, Grammaire):
         duree = 0
         for t in self.taches:
             duree += t.GetDuree()
+        if duree == 0:
+            return 1
         return duree
                   
     ######################################################################################  
@@ -3892,13 +3901,18 @@ class Projet(BaseDoc, Grammaire):
     
     ######################################################################################  
     def creerTachesRevue(self):
+        projet = self.GetProjetRef()
+        if projet is None:
+            return []
+        
         lst = []
         if self.nbrRevues == 2:
             lr = [_R1, _R2, "S"]
         else:
             lr = TOUTES_REVUES_EVAL_SOUT
+            
         for p in lr:
-            lst.append(Tache(self, intitule = self.GetProjetRef().phases[p][1], 
+            lst.append(Tache(self, intitule = projet.phases[p][1], 
                              phaseTache = p, duree = 0))
         return lst
     
@@ -4301,13 +4315,14 @@ class Projet(BaseDoc, Grammaire):
                     num = len(tachesRevue)-1
                 else:
                     num = eval(phase[1])-1
+#                 print("tachesRevue", tachesRevue, num)
+                if 0 <= num < len(tachesRevue):
+                    e = tachesRevue[num].setBranche(e)
+                    err.extend(e)
+                    if len(e) > 0:
+                        err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, phase))
                 
-                e = tachesRevue[num].setBranche(e)
-                err.extend(e)
-                if len(e) > 0:
-                    err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, phase))
-            
-                self.taches.append(tachesRevue[num])
+                    self.taches.append(tachesRevue[num])
                 adapterVersion = False
             else:
                 tache = Tache(self, branche = e)
@@ -4321,10 +4336,11 @@ class Projet(BaseDoc, Grammaire):
         
         # On corrige si le nombre de revues n'est pas compatible avec les limites fixées par le référentiel#
         # Il faut le faire après avoir chargé les tâches
-        if not (min(prj.posRevues.keys()) <= self.nbrRevues <= max(prj.posRevues.keys())) :
-#             print("> initRevues")
-            self.initRevues()
-            self.MiseAJourNbrRevues()
+        if prj is not None:
+            if not (min(prj.posRevues.keys()) <= self.nbrRevues <= max(prj.posRevues.keys())) :
+    #             print("> initRevues")
+                self.initRevues()
+                self.MiseAJourNbrRevues()
                 
                 
         # Pour récupérer les prj créés avec la version beta1
@@ -5271,6 +5287,19 @@ class Projet(BaseDoc, Grammaire):
         lst = list(set(lst))
         lst.sort()
         return lst
+    
+    ######################################################################################       
+    def GetSavoirsUtil(self):
+        """ Renvoie les listes des codes 
+            des Savoirs utiles au projet
+            (pour tracé fiche)
+        """
+        lst = []
+        for t in self.taches:
+            lst.extend(t.GetSavoirsUtil())
+        lst = list(set(lst))
+        lst.sort()
+        return lst
 
     
     ######################################################################################       
@@ -5278,6 +5307,14 @@ class Projet(BaseDoc, Grammaire):
         """ Renvoie la liste des compétences visées (objectifs) 
         """
         return self.GetCompetencesUtil()
+    
+    
+    ######################################################################################       
+    def GetSavoirsVises(self):
+        """ Renvoie la liste des Savoirs visés (objectifs) 
+        """
+        return self.GetSavoirsUtil()
+    
     
     ######################################################################################  
     def GetNbrPhases(self):
@@ -6145,6 +6182,26 @@ class Progression(BaseDoc, Grammaire):
             return l, c
         else:
             return [], []
+        
+    ######################################################################################  
+    def GetSavoirsAbordes(self):
+        """ Renvoie un bilan des Savoirs abordés dans les Séquence et les Projets de la Progression
+            sous la forme d'une liste de tuples (code, nombre d'occurences)
+            
+        """
+#         print "GetSavoirsAbordes"
+        lstSav = []
+        for sp in self.sequences_projets:
+            doc = sp.GetDoc()
+            if doc is not None:
+                lstSav.extend(doc.GetSavoirsVises())
+ 
+        l = [(k, lstSav.count(k)) for k in lstSav]
+        if l != []:
+            l, c = list(zip(*list(set(l))))
+            return l, c
+        else:
+            return [], []
                 
 
     ######################################################################################  
@@ -6574,7 +6631,7 @@ class Progression(BaseDoc, Grammaire):
         
         self.brancheSeq.DeleteChildren(self.arbre)
         for r, e in enumerate(self.sequences_projets):
-            e.rang = r
+            e.rang = 2*r
             e.ConstruireArbre(self.arbre, self.brancheSeq) 
             
         self.VerifPb()
@@ -6887,7 +6944,7 @@ class Progression(BaseDoc, Grammaire):
                 projet.setBranche(root)
             return classe, projet
         except:
-#             print("Le fichier n'a pas pu être ouvert :",nomFichier)
+            print("Le fichier n'a pas pu être ouvert :",nomFichier)
             if DEBUG:
                 raise
             return None, None
@@ -7441,11 +7498,11 @@ class ElementProgression():
             dp0 = doc0.position[1]-doc0.position[0]
             dp1 = doc1.position[1]-doc1.position[0]
             if dp0 == dp1:
-                c0, c1 = self.GetNbCrenaux() , doc.GetNbCrenaux()
-                if c0 == c1:
-                    return self.rang < doc.rang
-                else:
-                    return c0 < c1
+#                 c0, c1 = self.GetNbCrenaux() , doc.GetNbCrenaux()
+#                 if c0 == c1:
+                return self.rang < doc.rang
+#                 else:
+#                     return c0 < c1
             else:
                 return dp0 < dp1
         else:
@@ -7459,20 +7516,27 @@ class ElementProgression():
         """
         doc0 = self.GetDoc()
         doc1 = doc.GetDoc()
-        if doc0.position[0] == doc1.position[0]:
+        if doc0.position[0] == doc1.position[0]:        # même début
             dp0 = doc0.position[1]-doc0.position[0]
             dp1 = doc1.position[1]-doc1.position[0]
             if dp0 == dp1:
-                c0, c1 = self.GetNbCrenaux() , doc.GetNbCrenaux()
-                if c0 == c1:
-                    return True
-                else:
-                    return False
+                return True                            # même durée
+#                 c0, c1 = self.GetNbCrenaux() , doc.GetNbCrenaux()
+#                 if c0 == c1:                            # même nbr de 
+#                     return True
+#                 else:
+#                     return False
             else:
                 return False
         else:
             return False
         
+    
+    
+    ####################################################################################
+    def EstMovable(self):
+        return True
+    
         
 #     ######################################################################################  
 #     def comp(self, lienSeq):
@@ -7523,7 +7587,7 @@ class ElementProgression():
         doc = self.GetDoc()
         if doc is not None:
             return doc.GetDuree()
-        return 0
+        return 1
     
     
     ######################################################################################  
@@ -7570,6 +7634,7 @@ class ElementProgression():
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
+    
     
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False):
@@ -7640,7 +7705,15 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     def __repr__(self):
         return "LienSeq : "+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
+    ####################################################################################
+    def EstMovable(self):
+        return True
     
+    ####################################################################################
+    def EstMemeCategorie(self, obj):
+        return isinstance(obj, LienSequence)   \
+                or isinstance(obj, LienProjet)
+                
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         if self.sequence is not None:
@@ -7802,7 +7875,15 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
     def __repr__(self):
         return "LienPrj :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
+    ####################################################################################
+    def EstMovable(self):
+        return True
     
+    ####################################################################################
+    def EstMemeCategorie(self, obj):
+        return isinstance(obj, LienSequence)   \
+                or isinstance(obj, LienProjet)
+                
     ######################################################################################  
     def GetDoc(self):
         return self.projet
@@ -7848,9 +7929,9 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
     
     ######################################################################################  
     def ChargerProjet(self, reparer = False):
-#         print("ChargerProjet", self.path)
+        print("ChargerProjet", self.path)
         classe, projet = self.GetDocument().OuvrirFichierPrj(self.path, reparer = reparer)
-#         print("   ", classe.typeEnseignement , self.GetReferentiel().Code)
+        print("   ", classe.typeEnseignement , self.GetReferentiel().Code)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.projet = projet
 
@@ -8208,10 +8289,10 @@ class CentreInteret(ElementBase):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
-        if self.maxCI > 1:
-            t = self.GetReferentiel()._nomCI.Plur_()
-        else:
+        if self.maxCI == 1:
             t = self.GetReferentiel()._nomCI.Sing_()
+        else:
+            t = self.GetReferentiel()._nomCI.Plur_()
         self.branche = arbre.AppendItem(branche, 
                                         t + " :", 
                                         wnd = self.codeBranche, data = self,
@@ -11103,6 +11184,7 @@ class Tache(ElementAvecLien, ElementBase):
         self.phase = phaseTache
         
         self.compVisees = [] # codes des compétences visées (uniquement pour projest non évalués)
+        self.savVises = []
         
         if branche != None:
             self.setBranche(branche)
@@ -11136,6 +11218,11 @@ class Tache(ElementAvecLien, ElementBase):
     def GetApp(self):
         return self.projet.GetApp()
 
+    ####################################################################################
+    def EstMovable(self):
+        return True
+    
+    
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Tache(parent, self)
@@ -11284,7 +11371,28 @@ class Tache(ElementAvecLien, ElementBase):
 #            lst.append(i.split('_')[0])
         return lst
 
-            
+
+    ######################################################################################  
+    def GetSavoirsUtil(self):
+#        print "GetSavoirsUtil", self.indicateursEleve
+        lst = []
+        for e in self.indicateursEleve.values():
+            for i in e:
+                ci = i.split('_')[0]
+                if not ci in lst:
+                    lst.append(ci)
+        
+        for e in self.savVises:
+            if not e in lst:
+                lst.append(e)
+                    
+                    
+#        for i in self.indicateursEleve[0]:
+#            lst.append(i.split('_')[0])
+        return lst
+    
+    
+    
     ######################################################################################  
     def IndicateursEleveDefaut(self):
         """ Format pour les indicateurs de performance mobilisés par élève
@@ -13018,7 +13126,11 @@ class Personne(ElementBase):
     def GetApp(self):
         return self.doc.GetApp()
 
-
+    ####################################################################################
+    def EstMovable(self):
+        return True
+    
+    
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Personne(parent, self)
