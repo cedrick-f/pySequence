@@ -4927,6 +4927,9 @@ class Projet(BaseDoc, Grammaire):
         elif isinstance(data, Modele):
             self.support.SupprimerModele(item = item)
             
+        elif isinstance(data, FonctionService):
+            self.SupprimerFS(item = item)
+            
 #        elif isinstance(data, LienSequence):
 #            self.SupprimerLienSequence(item = item)           
         
@@ -5100,7 +5103,17 @@ class Projet(BaseDoc, Grammaire):
         self.arbre.SelectItem(fs.branche)
 
         
-    
+    ######################################################################################  
+    def SupprimerFS(self, item):
+        ref = self.GetReferentiel()
+        fs = self.arbre.GetItemPyData(item)
+        self.fct_serv.remove(fs)
+        self.arbre.Delete(item)
+        
+        self.GetApp().sendEvent(modif = "Suppression "+ref._nomFS.de_())
+        self.OrdonnerFS()
+#         self.arbre.SelectItem(fs.branche)
+        
     ######################################################################################  
     def OrdonnerFS(self):
         """
