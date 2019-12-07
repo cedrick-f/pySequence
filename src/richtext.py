@@ -844,7 +844,7 @@ class RichTextPanel(wx.Panel):
         doBind( tbar.AddTool(-1, "", _rt_alignright.GetBitmap(), kind = wx.ITEM_CHECK,
                             shortHelp="Aligner à droite"), self.OnAlignRight, self.OnUpdateAlignRight)
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, "", _rt_list.GetBitmap(), kind = wx.ITEM_CHECK,
+        doBind( tbar.AddTool(-1, "", images._rt_list.GetBitmap(), kind = wx.ITEM_CHECK,
                             shortHelp="Liste à puce"), self.OnListPuce, self.OnUpdateListPuce)
 #         doBind( tbar.AddTool(-1, _rt_list.GetBitmap(),
 #                             shortHelpString=u""), self.OnListPuce)
@@ -855,9 +855,9 @@ class RichTextPanel(wx.Panel):
                             shortHelp="Augmenter le retrait"), self.OnIndentMore)
         
         tbar.AddSeparator()
-        doBind( tbar.AddTool(-1, "", _rt_hless.GetBitmap(), 
+        doBind( tbar.AddTool(-1, "", images._rt_hless.GetBitmap(), 
                             shortHelp="Diminuer le niveau hierarchique"), self.OnHeaderLess)
-        doBind( tbar.AddTool(-1, "", _rt_hmore.GetBitmap(), 
+        doBind( tbar.AddTool(-1, "", images._rt_hmore.GetBitmap(), 
                             shortHelp="Augmenter le niveau hierarchique"), self.OnHeaderMore)
         
         

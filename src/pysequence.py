@@ -150,18 +150,23 @@ def safeParse(nomFichier, toplevelwnd):
     fichier = open(nomFichier,'r', encoding='utf-8')
     parser = ET.XMLParser(encoding="utf-8")
     
-    try:
-        root = ET.parse(fichier, parser = parser).getroot()
-        fichier.close()
-        return root
+    root = ET.parse(fichier, parser = parser).getroot()
+    fichier.close()
+    return root
     
-    except:# ET.ParseError:
-        messageErreur(toplevelwnd, "Fichier corrompu", 
-                          "Le fichier suivant est corrompu !!\n\n"\
-                          "%s\n\n" \
-                          "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-        fichier.close()
-        
+    
+#     try:
+#         root = ET.parse(fichier, parser = parser).getroot()
+#         fichier.close()
+#         return root
+#     
+#     except:# ET.ParseError:
+#         messageErreur(toplevelwnd, "Fichier corrompu", 
+#                           "Le fichier suivant est corrompu !!\n\n"\
+#                           "%s\n\n" \
+#                           "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+#         fichier.close()
+#         
     
 
 #######################################################################################  
@@ -5814,7 +5819,7 @@ class Progression(BaseDoc, Grammaire):
         
         self.version = ""
         
-        self.mode = "S"     # Mde d'affichage de la fiche : C = compétences - S = Savoirs
+        self.mode = "C"     # Mde d'affichage de la fiche : C = compétences - S = Savoirs
         
         if not ouverture:
             self.MiseAJourTypeEnseignement()
@@ -5951,6 +5956,23 @@ class Progression(BaseDoc, Grammaire):
         return False
     
     
+    ######################################################################################  
+    def SetMode(self, m):
+        """ Modifie le mode d'affichage
+        """
+        if m in ("C","S"):
+            self.mode = m
+        elif m == 0:
+            self.mode = "C"
+        elif m == 1:
+            self.mode = "S"
+    
+    
+    ######################################################################################  
+    def GetModeInt(self):
+        if self.mode == "S": return 1
+        return 0
+        
     
     ######################################################################################  
     def GetRectangles(self):
@@ -6302,6 +6324,8 @@ class Progression(BaseDoc, Grammaire):
         if self.commentaires != "":
             progression.set("Commentaires", self.commentaires)
         
+        progression.set("Mode", self.mode)
+        
         equipe = ET.SubElement(progression, "Equipe")
         for p in self.equipe:
             equipe.append(p.getBranche())
@@ -6336,6 +6360,8 @@ class Progression(BaseDoc, Grammaire):
         self.lien.setBranche(branche, self.GetPath())
         
         self.commentaires = branche.get("Commentaires", "")
+        
+        self.mode = branche.get("Mode", "C")
         
         Ok = self.setBrancheImage(branche)
                 
@@ -13150,7 +13176,7 @@ class Personne(ElementBase):
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
-#        print "getBranche", supprime_accent(self.titre)
+#         print("getBranche", constantes.supprime_accent(self.titre).capitalize())
         root = ET.Element(toSystemEncoding(constantes.supprime_accent(self.titre).capitalize()))
         
         root.set("Id", str(self.id))

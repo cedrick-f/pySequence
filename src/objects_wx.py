@@ -4594,7 +4594,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4851,7 +4851,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 # from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow, DelayedResult):
+class BaseFiche(wx.ScrolledWindow, DelayedResult):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -6641,7 +6641,7 @@ class PanelPropriete_Progression(PanelPropriete):
         textctrl.SetToolTip("")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,0), (1,2),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
@@ -6683,19 +6683,37 @@ class PanelPropriete_Progression(PanelPropriete):
         pageGen.sizer.Add(sb, (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
         
         
+        #
+        # Mode
+        #
+        ref = self.GetDocument().GetReferentiel()
+        dic = ref.getDicToutesCompetences()
+        c = dic["S"]._nom.Plur_()
+        dic = ref.getDicTousSavoirs()
+        s = dic["S"]._nom.Plur_()
+        self.mdbox = wx.RadioBox(pageGen, -1, "Mode d'affichage",
+                                 majorDimension = 1, style = wx.RA_SPECIFY_COLS,
+                                 choices = [c, s])
+        
+        self.Bind(wx.EVT_RADIOBOX, self.EvtMode)
+        pageGen.sizer.Add(self.mdbox, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        
+        
+        
+        
         
         #
         # Lien
         #
         lsizer = self.CreateLienSelect(pageGen)
-        pageGen.sizer.Add(lsizer, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(lsizer, (2,0), (1, 3), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         #
         # Image
         #
         isizer = self.CreateImageSelect(pageGen)
-        pageGen.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        pageGen.sizer.Add(isizer, (0,3), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
 
 
@@ -6725,6 +6743,8 @@ class PanelPropriete_Progression(PanelPropriete):
         
         # La page "Généralités"
         self.textctrl.SetValue(self.GetDocument().intitule, False)
+        
+        self.mdbox.SetSelection(self.progression.GetModeInt())
         
         self.Layout()
         
@@ -6774,7 +6794,14 @@ class PanelPropriete_Progression(PanelPropriete):
 #             self.sendEvent(modif = u"Modification de l'image de la Progression")
 #             
 #         dlg.Destroy()
-        
+    
+    #############################################################################            
+    def EvtMode(self, event):
+        self.progression.SetMode(self.mdbox.GetSelection())
+        self.sendEvent(modif = "Modification du mode d'affichage de la Progresion", 
+                       draw = True, verif = False)
+    
+    
     #############################################################################            
     def EvtText(self, event):
 #        print "EvtText",
@@ -11867,7 +11894,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
             self.GetDocument().MiseAJourDureeEleves()
     
-            self.sendEvent(modif = "Modification du taux d'implication de l'%s dans la tâche" %self.GetReferentiel().labels["ELEVES"][2].le_(), 
+            self.sendEvent(modif = "Modification du taux d'implication de l'%s dans la tâche" %self.GetDocument().GetReferentiel().labels["ELEVES"][2].le_(), 
                            draw = True, verif = False) 
             
 
@@ -14227,30 +14254,124 @@ class ArbreSequence(ArbreDoc):
             self.SetFocusIgnoringChildren()
             
         if self.itemDrag != None:
-#             if hasattr(self, "lastItem"):
-#                 self.RefreshSubtree(self.lastItem)
-            
+            self.fctDrop = None
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             
             if item != None:
                 dataTarget = self.GetItemPyData(item)
+                dataSource = self.GetItemPyData(self.itemDrag)
+                
                 if dataTarget == "Sea":
                     dataTarget = self.sequence
-                
-#                 print "dataTarget", dataTarget
-                
-#                 if isinstance(dataTarget, PanelPropriete_Racine):
-                
-#                     print "       >>", dataTarget
                     
-                dataSource = self.GetItemPyData(self.itemDrag)
-                a = self.getActionDnD(dataSource, dataTarget)
-                if a == 0:
-                    self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
-                elif a == 1:
-                    self.SetCursor(self.CurseurInsertDans)
-                elif a == 2 or a == 3 or a == 4:
-                    self.SetCursor(self.CurseurInsertApres)
+                
+                
+                
+                
+                
+                
+                
+                if isinstance(dataSource, pysequence.Seance) and dataTarget != dataSource:
+                    if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
+                        self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                        return 0
+        
+        
+                    # Insérer "dans"  (racine ou "R" ou "S")  .panelSeances
+                    if dataTarget == self.sequence \
+                       or (isinstance(dataTarget, pysequence.Seance) and dataTarget.EstSeance_RS()):
+                        if dataSource.EstSousSeance() and dataSource.parent.EstSeance_RS() \
+                              and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
+                            self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                            return
+                            
+                        elif not dataSource in dataTarget.seances:    # parents différents
+        #                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
+                            if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 1:
+                                self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                                return
+                            
+                            elif not dataSource.typeSeance in dataTarget.seances[0].GetListeTypes():
+                                self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                                return
+                            
+                            else:
+                                self.SetCursor(self.CurseurInsertDans)
+                                self.fctDrop = self.InsererDans
+                            
+                        else:
+                            self.SetCursor(self.CurseurInsertApres)
+                            self.fctDrop = self.InsererApres
+        #                    print "2"
+                            return 2
+                    
+                    # Insérer "aprés"
+                    elif isinstance(dataTarget, pysequence.Seance):
+                        if dataTarget.parent != dataSource.parent:  # parents différents
+        #                    print dataSource.typeSeance, dataTarget.GetListeTypes()
+                            if dataSource.parent.EstSeance_RS() \
+                              and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
+                                self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                                return 0
+                                
+                            elif not dataSource.typeSeance in dataTarget.GetListeTypes():
+                                self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+        #                        print "0-4"
+                                return 0
+                            
+                            elif dataTarget.parent == dataSource:
+                                self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                                return 0
+                            
+                            else:
+                                self.fctDrop = self.InsererApresDansDiff
+                                self.SetCursor(self.CurseurInsertApres)
+        #                        print "3"
+                                return 3
+                        else:
+                            self.fctDrop = self.InsererApresDansMeme
+                            self.SetCursor(self.CurseurInsertApres)
+        #                    print "4"
+                            return 4
+                    
+                    else:
+                        self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+                        return 0
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+#                 a = self.getActionDnD(dataSource, dataTarget)
+#                 if a == 0:
+#                     self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
+#                 elif a == 1:
+#                     self.SetCursor(self.CurseurInsertDans)
+#                 elif a == 2 or a == 3 or a == 4:
+#                     self.SetCursor(self.CurseurInsertApres)
 
 #                 self.lastItem = item
                 
@@ -14364,74 +14485,161 @@ class ArbreSequence(ArbreDoc):
         return 0
 
     ####################################################################################
+    
+    
+    
+    ####################################################################################
     def OnEndDrag(self, event):
-        """ Gestion des glisser-déposer
-        """
-        self.item = event.GetItem() 
-        if self.item is not None:
-            dataTarget = self.GetItemPyData(self.item)
-            if dataTarget == "Sea":
-                dataTarget = self.sequence
-    #         if isinstance(dataTarget, PanelPropriete_Racine):
-    #             dataTarget = self.sequence
-            
-            dataSource = self.GetItemPyData(self.itemDrag)
+        self.item = event.GetItem()
+        if self.item is None:
+            self.itemDrag = None
+            event.Skip()      
+            return
+        dataTarget = self.GetItemPyData(self.item)
+        dataSource = self.GetItemPyData(self.itemDrag)
+        
+        if self.fctDrop is not None:
             tx = "Changement de position de la Séance"
-            a = self.getActionDnD(dataSource, dataTarget)
-#             print "OnEndDrag", a
-            if a == 1:
-                lstS = dataSource.parent.seances
-                lstT = dataTarget.seances
-                s = lstS.index(dataSource)
-                lstT.insert(0, lstS.pop(s))
-                dataSource.parent = dataTarget
-                
-                self.sequence.OrdonnerSeances()
-                self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
-            
-            elif a == 2:
-                lst = dataSource.parent.seances
-                s = lst.index(dataSource)
-                lst.insert(0, lst.pop(s))
-                   
-                self.sequence.OrdonnerSeances() 
-                if dataTarget == self.sequence:
-                    self.SortChildren(self.item)
-                else:
-                    self.SortChildren(self.GetItemParent(self.item))
-                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
-            
-            elif a == 3:
-                lstT = dataTarget.parent.seances
-                lstS = dataSource.parent.seances
-                s = lstS.index(dataSource)
-                t = lstT.index(dataTarget)
-                lstT[t+1:t+1] = [dataSource]
-                del lstS[s]
-                p = dataSource.parent
-                dataSource.parent = dataTarget.parent
-                
-                self.sequence.OrdonnerSeances()
-                self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
-            
-            elif a == 4:
-                lst = dataTarget.parent.seances
-                s = lst.index(dataSource)
-                t = lst.index(dataTarget)
-                
-                if t > s:
-                    lst.insert(t, lst.pop(s))
-                else:
-                    lst.insert(t+1, lst.pop(s))
-                   
-                self.sequence.OrdonnerSeances() 
+            self.fctDrop(dataSource, dataTarget)
+            if type(dataTarget) == str : # Déjà item parent de la rubrique à trier
+                self.SortChildren(self.item)
+            else:
                 self.SortChildren(self.GetItemParent(self.item))
-                self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
-                    
+            self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
+            
+            
+            
         self.itemDrag = None
-        event.Skip()
+        self.fctDrop = None
+        event.Skip()       
+    
+    
+    
+    ####################################################################################
+    def InsererDans(self, dataSource, dataTarget):
+        lstS = dataSource.parent.seances
+        lstT = dataTarget.seances
+        s = lstS.index(dataSource)
+        lstT.insert(0, lstS.pop(s))
+        dataSource.parent = dataTarget
+        
+        self.sequence.OrdonnerSeances()
+        self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
+        
+    
+    
+    ####################################################################################
+    def InsererApres(self, dataSource, dataTarget):
+        lst = dataSource.parent.seances
+        s = lst.index(dataSource)
+        lst.insert(0, lst.pop(s))
+           
+        self.sequence.OrdonnerSeances() 
+#         if dataTarget == self.sequence:
+#             self.SortChildren(self.item)
+#         else:
+#             self.SortChildren(self.GetItemParent(self.item))
+                
+        
+    ####################################################################################
+    def InsererApresDansDiff(self, dataSource, dataTarget):
+        lstT = dataTarget.parent.seances
+        lstS = dataSource.parent.seances
+        s = lstS.index(dataSource)
+        t = lstT.index(dataTarget)
+        lstT[t+1:t+1] = [dataSource]
+        del lstS[s]
+        p = dataSource.parent
+        dataSource.parent = dataTarget.parent
+        
+        self.sequence.OrdonnerSeances()
+        self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+        
+    
+    ####################################################################################
+    def InsererApresDansMeme(self, dataSource, dataTarget):
+        lst = dataTarget.parent.seances
+        s = lst.index(dataSource)
+        t = lst.index(dataTarget)
+        
+        if t > s:
+            lst.insert(t, lst.pop(s))
+        else:
+            lst.insert(t+1, lst.pop(s))
+           
+        self.sequence.OrdonnerSeances() 
+        self.SortChildren(self.GetItemParent(self.item))
+        
+        
+#     ####################################################################################
+#     def OnEndDrag2(self, event):
+#         """ Gestion des glisser-déposer
+#         """
+#         self.item = event.GetItem() 
+#         if self.item is not None:
+#             dataTarget = self.GetItemPyData(self.item)
+#             if dataTarget == "Sea":
+#                 dataTarget = self.sequence
+#     #         if isinstance(dataTarget, PanelPropriete_Racine):
+#     #             dataTarget = self.sequence
+#             
+#             dataSource = self.GetItemPyData(self.itemDrag)
+#             tx = "Changement de position de la Séance"
+#             a = self.getActionDnD(dataSource, dataTarget)
+# #             print "OnEndDrag", a
+#             if a == 1:
+#                 lstS = dataSource.parent.seances
+#                 lstT = dataTarget.seances
+#                 s = lstS.index(dataSource)
+#                 lstT.insert(0, lstS.pop(s))
+#                 dataSource.parent = dataTarget
+#                 
+#                 self.sequence.OrdonnerSeances()
+#                 self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
+#                 self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
+#             
+#             elif a == 2:
+#                 lst = dataSource.parent.seances
+#                 s = lst.index(dataSource)
+#                 lst.insert(0, lst.pop(s))
+#                    
+#                 self.sequence.OrdonnerSeances() 
+#                 if dataTarget == self.sequence:
+#                     self.SortChildren(self.item)
+#                 else:
+#                     self.SortChildren(self.GetItemParent(self.item))
+#                 self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
+#             
+#             elif a == 3:
+#                 lstT = dataTarget.parent.seances
+#                 lstS = dataSource.parent.seances
+#                 s = lstS.index(dataSource)
+#                 t = lstT.index(dataTarget)
+#                 lstT[t+1:t+1] = [dataSource]
+#                 del lstS[s]
+#                 p = dataSource.parent
+#                 dataSource.parent = dataTarget.parent
+#                 
+#                 self.sequence.OrdonnerSeances()
+#                 self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+#                 self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
+#             
+#             elif a == 4:
+#                 lst = dataTarget.parent.seances
+#                 s = lst.index(dataSource)
+#                 t = lst.index(dataTarget)
+#                 
+#                 if t > s:
+#                     lst.insert(t, lst.pop(s))
+#                 else:
+#                     lst.insert(t+1, lst.pop(s))
+#                    
+#                 self.sequence.OrdonnerSeances() 
+#                 self.SortChildren(self.GetItemParent(self.item))
+#                 self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
+#                     
+#         self.itemDrag = None
+#         event.Skip()
         
     
 #     ####################################################################################
@@ -14706,7 +14914,7 @@ class ArbreProgression(ArbreDoc):
             if item != None:
                 dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
-                print("dataTarget", dataTarget, type(dataTarget))
+#                 print("dataTarget", dataTarget, type(dataTarget))
                 if dataTarget == dataSource:
                     self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
                     return
@@ -14723,7 +14931,7 @@ class ArbreProgression(ArbreDoc):
                     return
 #                     elif dataTarget.GetPosition() <= dataSource.GetPosition():
                 if isinstance(dataSource, pysequence.Prof) \
-                  and dataTarget == "Prf":
+                  and dataTarget == "Equ":
                     self.SetCursor(self.CurseurInsertApres)
                     self.fctDrop = self.InsererApres
                     return
@@ -14764,7 +14972,7 @@ class ArbreProgression(ArbreDoc):
             self.GetApp().sendEvent(self.progression, modif = "Changement de position d'un professeur", 
                                     draw = True, verif = False) # Solution pour déclencher un "redessiner"
         
-        elif dataTarget == "Prf":
+        elif dataTarget == "Equ":
             lst = self.progression.equipe
             s = lst.index(dataSource)
             lst.insert(0, lst.pop(s))
