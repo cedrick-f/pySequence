@@ -5104,7 +5104,7 @@ class Projet(BaseDoc, Grammaire):
 
         
     ######################################################################################  
-    def SupprimerFS(self, item):
+    def SupprimerFS(self, event = None, item = None):
         ref = self.GetReferentiel()
         fs = self.arbre.GetItemPyData(item)
         self.fct_serv.remove(fs)
@@ -5265,7 +5265,10 @@ class Projet(BaseDoc, Grammaire):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Support):
-            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), FonctionService):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)         
             
         elif self.arbre.GetItemText(itemArbre) == ref.labels["ELEVES"][2].plur_(): # Eleve
             self.app.AfficherMenuContextuel([["Ajouter "+ ref.labels["ELEVES"][2].un_(), self.AjouterEleve, 
@@ -5291,7 +5294,9 @@ class Projet(BaseDoc, Grammaire):
             self.app.AfficherMenuContextuel([["Ajouter un Professeur", self.AjouterProf, 
                                               scaleImage(images.Icone_ajout_prof.GetBitmap())]])
                                              
-        
+        elif self.arbre.GetItemText(itemArbre) == ref._nomFS.Plur_():
+            self.app.AfficherMenuContextuel([["Ajouter %s" %ref._nomFS.un_(), self.AjouterFS, 
+                                              scaleImage(images.Icone_ajout_FS.GetBitmap())]])
             
     ######################################################################################       
     def GetCompetencesUtil(self):
@@ -11165,7 +11170,17 @@ class FonctionService(ElementAvecLien, ElementBase):
         self.codeBranche.SetBranche(self.branche)
         
 
-    
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.GetApp().AfficherMenuContextuel([["Supprimer", 
+                                                     functools.partial(self.GetDocument().SupprimerFS, item = itemArbre), 
+                                                     scaleImage(images.Icone_suppr_FS.GetBitmap())],
+                                                    ["Ajouter %s" %self.GetReferentiel()._nomFS.un_(), 
+                                                     self.GetDocument().AjouterFS, 
+                                                     scaleImage(images.Icone_ajout_FS.GetBitmap())],
+                                                    ])
+         
     
     
     
