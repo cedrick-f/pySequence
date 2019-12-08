@@ -46,6 +46,7 @@ import md_util
 import time, os, sys
 import  wx.lib.scrolledpanel as scrolled
 from wx.lib.wordwrap import wordwrap
+import images
 
 ######################################################################################  
 #
@@ -1367,11 +1368,16 @@ class ToolTip():
 # Une fenêtre d'aide unique
 FenHelp = None
 
-def GetImgHelp():
-    return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
+# Echelle
+SSCALE = 1.0
 
-def GetIconHelp():
-    return wx.ArtProvider.GetIcon(wx.ART_HELP, wx.ART_FRAME_ICON, (16, 16))
+def GetImgHelp(size):
+#     return wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
+    return scaleImage(images.Bouton_Aide.GetBitmap(), *size)
+
+def GetIconHelp(size):
+#     return wx.ArtProvider.GetIcon(wx.ART_HELP, wx.ART_FRAME_ICON, (16, 16))
+    return scaleImage(images.Bouton_Aide.GetBitmap(), *size)
 
 def CloseFenHelp():
     global FenHelp
@@ -1394,7 +1400,7 @@ class BaseGestionFenHelp():
         ws, hs = wx.ClientDisplayRect()[2:]
         FenHelp = md_util.MDFrame(wx.GetActiveWindow(), self.titre, self.md, 
                                   pos = (ws-w, 0), size = (w, hs))
-        FenHelp.SetIcon(GetIconHelp())
+        FenHelp.SetIcon(GetIconHelp((16*SSCALE, 16*SSCALE)))
         FenHelp.Bind(wx.EVT_CLOSE, self.OnClose)
 #        print self.titre
 #        print FenHelp.GetBestHeight()
@@ -1417,7 +1423,7 @@ class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
     def __init__(self, parent, Id, titre, img = None, md = ""):
         wx.StaticBox.__init__(self, parent, Id, titre)
         if img == None:
-            img = GetImgHelp()
+            img = GetImgHelp((16*SSCALE, 16*SSCALE))
         self.md = md
         self.titre = titre
         self.bouton = wx.BitmapButton(self, -1, img, style=wx.BORDER_NONE| wx.TAB_TRAVERSAL |wx.WS_EX_TRANSIENT)
@@ -1512,10 +1518,13 @@ class CheckBoxValue(wx.CheckBox):
 import orthographe
 
 class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
-    def __init__(self, parent, titre = "", md = ""):
+    def __init__(self, parent, titre = "", md = "", scale = 1.0):
+        global SSCALE
+        SSCALE = scale
+        
         orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)
         
-        img = GetImgHelp()
+        img = GetImgHelp((16*SSCALE, 16*SSCALE))
         img.SetMaskColour("white")
         self.bouton = wx.BitmapButton(self, -1, img, style=wx.BORDER_NONE)
 #        self.bouton = buttons.GenBitmapButton(self, -1, img, style=wx.BORDER_NONE)

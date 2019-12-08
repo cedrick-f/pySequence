@@ -5711,7 +5711,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         #
         titre = myStaticBox(self, -1, ref.labels["SEQINT"][2].sing_())
         sb = wx.StaticBoxSizer(titre)
-        textctrl = TextCtrl_Help(self, "")
+        textctrl = TextCtrl_Help(self, "", scale = SSCALE)
         textctrl.SetTitre(ref.labels["SEQINT"][1], sequence.getIcone())
         textctrl.SetToolTip("")
                     
@@ -5728,7 +5728,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         #
         titre = myStaticBox(self, -1, "Commentaires")
         sb = wx.StaticBoxSizer(titre)
-        commctrl = TextCtrl_Help(self, "")
+        commctrl = TextCtrl_Help(self, "", scale = SSCALE)
         commctrl.SetTitre("Commentaires sur la Séquence", sequence.getIcone())
         commctrl.SetToolTip("")
                     
@@ -5960,7 +5960,7 @@ class PanelPropriete_Projet(PanelPropriete):
         page.SetBackgroundColour(bg_color)
         self.nb.AddPage(page, "")
 #        ctrl = orthographe.STC_ortho(page, -1)#, u"", style=wx.TE_MULTILINE)
-        ctrl = TextCtrl_Help(page, titre, helpText)
+        ctrl = TextCtrl_Help(page, titre, helpText, scale = SSCALE)
 #         page.Bind(stc.EVT_STC_CHANGE, fct, ctrl)
         page.Bind(stc.EVT_STC_MODIFIED, fct, ctrl)
 #        page.Bind(wx.EVT_TEXT, fct, ctrl)
@@ -5992,7 +5992,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         self.titre = myStaticBox(pageGen, -1, "")
         sb = wx.StaticBoxSizer(self.titre)
-        textctrl = TextCtrl_Help(pageGen, "")
+        textctrl = TextCtrl_Help(pageGen, "", scale = SSCALE)
         
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
@@ -6010,7 +6010,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.tit_pb = myStaticBox(pageGen, -1, "")
         sb = wx.StaticBoxSizer(self.tit_pb)
 #        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-        self.commctrl = TextCtrl_Help(pageGen, "")
+        self.commctrl = TextCtrl_Help(pageGen, "", scale = SSCALE)
                                               
                                               
         sb.Add(self.commctrl, 1, flag = wx.EXPAND)
@@ -6267,7 +6267,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 titreInt = myStaticBox(self.pages['DEC'], -1, "Intitulés des différentes parties")
                 sb = wx.StaticBoxSizer(titreInt)
                 
-                self.intctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][1])#, u"", style=wx.TE_MULTILINE)
+                self.intctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][1], scale = SSCALE)#, u"", style=wx.TE_MULTILINE)
                 self.intctrl.SetTitre("Intitulés des différentes parties")
                 self.intctrl.SetToolTip("Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               "Les groupes %s sont désignés par des lettres (A, B, C, ...)\n" \
@@ -6280,7 +6280,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 
                 titreInt = myStaticBox(self.pages['DEC'], -1, "Énoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
-                self.enonctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)       
+                self.enonctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][3], scale = SSCALE)#, u"", style=wx.TE_MULTILINE)       
                 self.enonctrl.SetToolTip("Énoncés du besoin des parties du projet confiées à chaque groupe")
                 self.enonctrl.SetTitre("Énoncés du besoin des différentes parties du projet")
         
@@ -6636,7 +6636,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         self.titre = myStaticBox(pageGen, -1, "Intitulé de la Progression")
         sb = wx.StaticBoxSizer(self.titre)
-        textctrl = TextCtrl_Help(pageGen, "")
+        textctrl = TextCtrl_Help(pageGen, "", scale = SSCALE)
         textctrl.SetTitre("Intitulé de la Progression", self.progression.getIcone())
         textctrl.SetToolTip("")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -6885,13 +6885,15 @@ class PanelOrganisation(wx.Panel):
         self.liste = liste
         self.Bind(wx.EVT_LISTBOX, self.EvtListBox, self.liste)
         
-        buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = bsize)
+#         buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = bsize)
+        buttonUp = wx.BitmapButton(self, 11, scaleImage(images.go_up.GetBitmap(), *bsize))
         gbsizer.Add(buttonUp, (1,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonUp)
         buttonUp.SetToolTip("Monter la revue")
         self.buttonUp = buttonUp
         
-        buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = bsize)
+#         buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = bsize)
+        buttonDown = wx.BitmapButton(self, 12, scaleImage(images.go_down.GetBitmap(), *bsize))
         gbsizer.Add(buttonDown, (2,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonDown)
         buttonDown.SetToolTip("Descendre la revue")
@@ -9239,7 +9241,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         ref = self.sequence.GetReferentiel()
         
         # Passage momentané en Anglais (bug de wxpython)
-        locale2EN()
+#         locale2EN()
         
         
         #
@@ -9247,7 +9249,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         sbi = myStaticBox(self, -1, "Intitulé de la Séquence", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
-        self.intit = TextCtrl_Help(self, "")
+        self.intit = TextCtrl_Help(self, "", scale = SSCALE)
         self.intit.SetMinSize((-1, 20*SSCALE))
         self.intit.SetTitre("Intitulé de la Séquence", self.sequence.getIcone())
         self.intit.SetToolTip("")
@@ -9264,7 +9266,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250*SSCALE, -1),
                                  style = wx.TE_PROCESS_ENTER)
-        bt2 = wx.BitmapButton(self, 101, wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE))
+#         bt2 = wx.BitmapButton(self, 101, wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE))
+        bt2 = wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), 16*SSCALE, 16*SSCALE))
         bt2.SetToolTip("Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnText, self.texte)
@@ -9347,7 +9350,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.sizer.AddGrowableCol(2)
         self.sizer.Layout()
     
-        locale2def()
+#         locale2def()
     
 
     #############################################################################            
@@ -9561,7 +9564,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         sbi = myStaticBox(self, -1, "Intitulé du Projet", size = (200*SSCALE,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
-        self.intit = TextCtrl_Help(self, "")
+        self.intit = TextCtrl_Help(self, "", scale = SSCALE)
         self.intit.SetTitre("Intitulé du Projet", self.projet.getIcone())
         self.intit.SetToolTip("")
         
@@ -9577,7 +9580,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250*SSCALE, -1),
                                  style = wx.TE_PROCESS_ENTER)
-        bt2 = wx.BitmapButton(self, 101, wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE))
+        bt2 = wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), 16*SSCALE, 16*SSCALE))
         bt2.SetToolTip("Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnText, self.texte)
@@ -9633,7 +9636,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         sbp = myStaticBox(self, -1, ref._nomPb.Sing_(), size = (200*SSCALE,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
-        self.panelPb = TextCtrl_Help(self, "")
+        self.panelPb = TextCtrl_Help(self, "", scale = SSCALE)
         self.panelPb.SetTitre(ref.nomPb)
         self.panelPb.SetToolTip("")
         
@@ -11259,7 +11262,7 @@ class PanelPropriete_FS(PanelPropriete):
         #
         box = myStaticBox(self, -1, "Intitulé")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        textctrl = TextCtrl_Help(self, "")
+        textctrl = TextCtrl_Help(self, "", scale = SSCALE)
         textctrl.SetTitre("Intitulé")
         textctrl.SetToolTip("Intitulé")
         self.textctrl = textctrl
@@ -13480,7 +13483,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         box = myStaticBox(self, -1, "Nom du support")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        textctrl = TextCtrl_Help(self, "")
+        textctrl = TextCtrl_Help(self, "", scale = SSCALE)
         textctrl.SetTitre("Nom du support")
         textctrl.SetToolTip("Le support est le matériel ou logiciel\n" \
                                   "sur lequel %s réalisent\n" \
@@ -13719,7 +13722,7 @@ class PanelPropriete_Modele(PanelPropriete):
         #
         box = myStaticBox(self, -1, "Intitulé du modèle")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        textctrl = TextCtrl_Help(self, "")
+        textctrl = TextCtrl_Help(self, "", scale = SSCALE)
         textctrl.SetTitre("Intitulé du modele")
         textctrl.SetToolTip("Un modèle numérique peut être\n" \
                                   "une maquette numérique\n" \
@@ -18536,19 +18539,24 @@ class URLSelectorCombo(wx.Panel):
     ###############################################################################################
     def CreateSelector(self):
         # Passage momentané en Anglais (bug de wxpython)
-        locale2EN()
+#         locale2EN()
+        loc = wx.GetApp().locale.GetSystemLanguage()
+        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         bsize = (16*SSCALE, 16*SSCALE)
         
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
         self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
         if self.dossier:
-            bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
+#             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
+            bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
             bt1.SetToolTip("Sélectionner un dossier")
             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
             self.bt1 = bt1
             sizer.Add(bt1)
-        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
+#         bt2 =wx.BitmapButton(self, 101, images.wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
+        bt2 =wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), *bsize))
         bt2.SetToolTip("Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
@@ -18557,7 +18565,8 @@ class URLSelectorCombo(wx.Panel):
         sizer.Add(bt2)
         sizer.Add(self.texte,1,flag = wx.EXPAND)
         
-        self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
+#         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
+        self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
         self.btnlien.SetToolTip("Ouvrir le lien externe")
         self.btnlien.Show(self.lien.path != "")
         self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
@@ -18568,7 +18577,8 @@ class URLSelectorCombo(wx.Panel):
         file_drop_target = MyFileDropTarget(self)
         self.SetDropTarget(file_drop_target)
         
-        locale2def()
+#         locale2def()
+        wx.GetApp().locale = wx.Locale(loc)
         
         return sizer
     
@@ -19880,7 +19890,10 @@ class Panel_Details(wx.Panel):
         self.SetFocus()
         event.Skip()
         
-        
+    ######################################################################################################
+    def OnResize(self, event = None):
+        pass
+    
     ######################################################################################################
     def OnPageChanged(self, event):
         pass

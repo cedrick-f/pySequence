@@ -52,7 +52,7 @@ import richtext
 
 import PyRTFParser
 
-from widgets import messageErreur
+from widgets import messageErreur, scaleImage
 from util_path import toSystemEncoding
 
 import images
@@ -180,7 +180,7 @@ class StyleDeTexte:
 
 #########################################################################################
 class FrameRapport(wx.Frame):
-    def __init__(self, parent, fichierCourant, doc, typ, eleve = None, hide = False):
+    def __init__(self, parent, fichierCourant, doc, typ, eleve = None, hide = False, scale = 1.0):
         wx.Frame.__init__(self, parent, -1, "Tâches élèves détaillées",
                             size=(700, 500))#,
 #                            style = wx.DEFAULT_FRAME_STYLE)
@@ -190,6 +190,7 @@ class FrameRapport(wx.Frame):
         self.SetMinSize((700, -1))
 
         self.parent = parent
+        self.scale = scale
         
         self.SetIcon(images.getlogoIcon())
         
@@ -578,14 +579,15 @@ class FrameRapport(wx.Frame):
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
         
         # Passage momentané en Anglais (bug de wxpython)
-        loc = wx.GetApp().locale.GetSystemLanguage()
-        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+#         loc = wx.GetApp().locale.GetSystemLanguage()
+#         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
         
         
         tbar = self.CreateToolBar()
         doBind( tbar.AddTool(-1, "", _rt_save.GetBitmap(),
                             shortHelp="Enregistrer"), self.OnFileSave)
-        bmp = wx.ArtProvider.GetBitmap(wx.ART_PRINT).ConvertToImage().Rescale(17,17,wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
+#         bmp = wx.ArtProvider.GetBitmap(wx.ART_PRINT).ConvertToImage().Rescale(17,17,wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
+        bmp = scaleImage(images.Icone_print.GetBitmap(), 16*self.scale, 16*self.scale)
         doBind( tbar.AddTool(-1, "", bmp,
                             shortHelp="Imprimer le rapport"), self.OnDoPrint)
         
@@ -637,7 +639,7 @@ class FrameRapport(wx.Frame):
                 ))
         self.Bind(wx.EVT_COMBOBOX, self.OnApplyStyle)
         
-        wx.GetApp().locale = wx.Locale(loc)
+#         wx.GetApp().locale = wx.Locale(loc)
         
         tbar.Realize()
 
