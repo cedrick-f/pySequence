@@ -82,7 +82,7 @@ from reportlab.pdfbase import _fontdata_enc_pdfdoc
 from reportlab.pdfbase import _fontdata_enc_macexpert
 # end of workaround
 
-from widgets import messageErreur
+from widgets import messageErreur, FullScreenWin
 import time
 
 import sys
@@ -739,10 +739,12 @@ import fitz
 def getPDFViewer():
     return get_min_adobe_version()
 
-class PdfPanel(wx.Panel):
+class PdfPanel(wx.Panel, FullScreenWin):
     def __init__(self, parent):
 
         wx.Panel.__init__(self, parent, id=-1)
+        
+        
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -789,6 +791,12 @@ class PdfPanel(wx.Panel):
         self.SetAutoLayout(True)
     
         self.pdf.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        
+    
+        FullScreenWin.__init__(self, self.pdf)
+        
+        
+        
 #         self.Bind(wx.EVT_CLOSE, self.OnClose )
 #         self.pdf.Bind(wx.EVT_WINDOW_DESTROY, self.OnClose)
 #         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
@@ -829,7 +837,8 @@ class PdfPanel(wx.Panel):
         self.pdf.SetFocus()
         event.Skip()
         
-        
+
+    
     ######################################################################################################
     def MiseAJour(self, projet, fenDoc):
         """ Génération d'un fichier PDF temporaire pour affichage

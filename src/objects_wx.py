@@ -171,7 +171,7 @@ import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, Grammaire, \
-                    et2ou, \
+                    et2ou, FullScreenWin, \
                     TextCtrl_Help, CloseFenHelp, DelayedResult, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
@@ -1023,7 +1023,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.fsframe = wx.Frame(self, -1)
             self.fsframe.SetPosition(pos)
             win.Reparent(self.fsframe)
+            
             win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+            
             self.fsframe.ShowFullScreen(True, style=wx.FULLSCREEN_ALL)
             win.OnResize()
         else:
@@ -1730,7 +1732,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnKey(self, evt):
-#         print "OnKey2"
+        print("OnKey2")
         keycode = evt.GetKeyCode()
 #         print "!!", keycode
         if keycode == wx.WXK_ESCAPE:
@@ -7722,7 +7724,7 @@ class ListeCI(wx.Panel):
         # Liste
         #
         # Passage momentané en Anglais (bug de wxpython)
-        locale2EN()
+#         locale2EN()
         
         
         self.list = ULC.UltimateListCtrl(self, wx.ID_ANY, 
@@ -7781,7 +7783,7 @@ class ListeCI(wx.Panel):
         self.sizer.Layout()
         
         
-        locale2def()
+#         locale2def()
         
         
         self.OnChangeSelection()
@@ -18540,8 +18542,8 @@ class URLSelectorCombo(wx.Panel):
     def CreateSelector(self):
         # Passage momentané en Anglais (bug de wxpython)
 #         locale2EN()
-        loc = wx.GetApp().locale.GetSystemLanguage()
-        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+#         loc = wx.GetApp().locale.GetSystemLanguage()
+#         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
         
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         bsize = (16*SSCALE, 16*SSCALE)
@@ -18578,7 +18580,7 @@ class URLSelectorCombo(wx.Panel):
         self.SetDropTarget(file_drop_target)
         
 #         locale2def()
-        wx.GetApp().locale = wx.Locale(loc)
+#         wx.GetApp().locale = wx.Locale(loc)
         
         return sizer
     
@@ -19801,7 +19803,7 @@ class DiffRefChoix(wx.Dialog):
 #  Panel pour l'affichage des BO
 #
 ##########################################################################################################
-class Panel_BO(wx.Panel):
+class Panel_BO(wx.Panel, FullScreenWin):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -19814,14 +19816,14 @@ class Panel_BO(wx.Panel):
         self.SetSizer(self.sizer)
         
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-
+        FullScreenWin.__init__(self, self)
 
     ######################################################################################################
     def OnEnter(self, event):
         self.SetFocus()
         event.Skip()
         
-        
+
     ######################################################################################################
     def OnPageChanged(self, event):
         pass
@@ -19866,7 +19868,7 @@ class Panel_BO(wx.Panel):
 #  Panel pour l'affichage des tâches détailles par élève
 #
 ##########################################################################################################
-class Panel_Details(wx.Panel):
+class Panel_Details(wx.Panel, FullScreenWin):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -19878,21 +19880,17 @@ class Panel_Details(wx.Panel):
         
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
-        
-        
         self.SetSizer(self.sizer)
         
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-
+        FullScreenWin.__init__(self, self.nb)
+        
 
     ######################################################################################################
     def OnEnter(self, event):
         self.SetFocus()
         event.Skip()
         
-    ######################################################################################################
-    def OnResize(self, event = None):
-        pass
     
     ######################################################################################################
     def OnPageChanged(self, event):

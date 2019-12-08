@@ -1358,6 +1358,30 @@ class ToolTip():
 #         event.Skip()
 
 
+##################################################################################################################################################################
+#
+#    Classe pour gérer le plein écran
+#
+##################################################################################################################################################################
+
+class FullScreenWin():
+    """ Classe pour gérer le plein écran
+        A attribuer aux fenêtres qui doivent être mises en plein écran
+        
+        winToBind : fenetre qui recoit les Bind()
+        masterWin : fenetre qui possède la fonction OnKey()
+    """
+    def __init__(self, winToBind):
+        winToBind.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+        
+    ######################################################################################################
+    def OnResize(self, event = None):
+        pass
+    
+    ######################################################################################################
+    def OnKey(self, event = None):
+        wx.GetApp().GetTopWindow().OnKey(event)
+#         self.masterWin.OnKey(event)
 
 ##################################################################################################################################################################
 #

@@ -807,8 +807,8 @@ class RichTextPanel(wx.Panel):
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
                 
         # Passage momentané en Anglais (bug de wxpython)
-        loc = wx.GetApp().locale.GetSystemLanguage()
-        wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+#         loc = wx.GetApp().locale.GetSystemLanguage()
+#         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
 #        tbar = self.CreateToolBar()
         
         tbar = wx.ToolBar(self)
@@ -874,7 +874,7 @@ class RichTextPanel(wx.Panel):
         doBind( tbar.AddTool(-1, "", images.Bouton_lien.GetBitmap(), 
                             shortHelp="Insérer un lien"), self.OnURL)
         
-        wx.GetApp().locale = wx.Locale(loc)
+#         wx.GetApp().locale = wx.Locale(loc)
         
         try:
             tbar.Realize()

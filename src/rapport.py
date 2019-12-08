@@ -1505,8 +1505,14 @@ class RapportRTF(rt.RichTextCtrl):
         self.parent = parent   
          
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
 
 
+    ######################################################################################################
+    def OnKey(self, event = None):
+        wx.GetApp().GetTopWindow().OnKey(event)
+        
+        
     ######################################################################################################
     def OnEnter(self, event):
         self.SetFocus()
