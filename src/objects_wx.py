@@ -1732,7 +1732,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnKey(self, evt):
-        print("OnKey2")
+#         print("OnKey2")
         keycode = evt.GetKeyCode()
 #         print "!!", keycode
         if keycode == wx.WXK_ESCAPE:
