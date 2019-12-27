@@ -89,7 +89,7 @@ class Options:
         
         
         # Le fichier où seront sauvées les options
-        self.fichierOpt = os.path.join(util_path.APP_DATA_PATH, "sequence.cfg")
+        self.fichierOpt = os.path.join(util_path.APP_DATA_PATH_USER, "sequence.cfg")
         
         
 

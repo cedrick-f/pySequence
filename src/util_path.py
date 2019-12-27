@@ -256,9 +256,12 @@ print("Dossier USER pour les données :", APP_DATA_PATH_USER)
 TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tables')
 #print u"Dossier des tableaux Excel :", TABLE_PATH
 
-BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
+# BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
+BO_PATH = os.path.join(os.path.abspath(APP_DATA_PATH), r'BO')
+
 if not os.path.exists(BO_PATH):
-    BO_PATH = os.path.join(PATH, r'BO')
+    os.mkdir(BO_PATH)
+#     BO_PATH = os.path.join(PATH, r'BO')
 
 DOSSIER_ICONES = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'icones')
 if not os.path.exists(DOSSIER_ICONES):

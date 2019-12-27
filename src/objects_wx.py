@@ -48,6 +48,7 @@ Les principaux éléments du GUI de **pySéquence**.
 ####################################################################################
 # Outils système
 import os, sys
+import urllib.request
 import util_path
 import shutil
 import uuid # Pour autosave
@@ -2785,7 +2786,34 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 return 2
 
 #             raise DiffReferentiel
-                
+               
+               
+    #############################################################################
+    def TelechargerBO(self):
+        print("TelechargerBO")
+        ref = self.GetDocument().GetReferentiel()
+        print(ref.Code)
+        
+        path = os.path.join(util_path.BO_PATH, ref.Code)
+        if not os.path.exists(path):
+            os.mkdir(path)
+        
+        l = []
+        for tit, url in ref.BO_URL:
+            print("   ", url)
+            if os.path.splitext(url)[1] == ".pdf":
+                f, h = urllib.request.urlretrieve(url, os.path.join(path, tit+".pdf"))
+                l.append(os.path.basename(f))
+
+
+        lst = "\n"+CHAR_POINT.join(l)
+        messageInfo(self, "Téléchargements terminés", 
+                    "Les documents suivants on été téléchargés\n"  + lst \
+                    + "\n\nIls sont dans le dossier : %s" %path \
+                    + "\n\net sont désormais consultables depuis l'onglet \"Bulletins Officiels\"")
+        print(" : ", l)
+
+
  
 def Dialog_ErreurAccesFichier(nomFichier, win = None):
     messageErreur(win, 'Erreur !',
@@ -5438,7 +5466,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         
-#         self.Bind(wx.EVT_SIZE, self.OnResize)
+        self.Bind(wx.EVT_SIZE, self.OnResize)
         
 
 
@@ -7117,6 +7145,11 @@ class PanelPropriete_Classe(PanelPropriete):
         self.sbBO = sbBO
 #        self.SetLienBO()
         
+        # Bouton "télécharger"
+        btn_bo = wx.Button(pageGen, -1, "Télécharger")
+        btn_bo.SetToolTip("Télécharger l'ensemble des documents officiels pour y accéder via l'onglet Bulletins Officiels")
+        pageGen.Bind(wx.EVT_BUTTON, self.EvtBnt_BO, btn_bo)
+        self.sbBO.Add(btn_bo, flag = wx.EXPAND)
         
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(1)
@@ -7311,6 +7344,10 @@ class PanelPropriete_Classe(PanelPropriete):
 #            self.classe.etablissement = event.GetString()
 #            self.sendEvent()
             
+    ######################################################################################  
+    def EvtBnt_BO(self, evt):
+        self.GetFenetreDoc().TelechargerBO()
+    
             
     ######################################################################################  
     def EvtComboAcad(self, evt = None, modif = True):
@@ -7653,7 +7690,10 @@ class PanelPropriete_Classe(PanelPropriete):
         self.tb.EnableTool(31, etat)
         self.pasVerrouille = etat
 
-        
+
+
+
+
 class ListeCI(wx.Panel):
 
     def __init__(self, parent, prems = 1, pref = "CI"):
@@ -12798,7 +12838,7 @@ class PanelPropriete_Personne(PanelPropriete):
             qui y sont enregistrés
         
         """
-        nomFichier = os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS)
+        nomFichier = os.path.join(util_path.APP_DATA_PATH_USER, constantes.FICHIER_PROFS)
         
         if not os.path.exists(nomFichier):
             return []
@@ -12900,7 +12940,8 @@ class PanelPropriete_Personne(PanelPropriete):
         
         
         # Enregistrement en XML
-        enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS))
+        enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH_USER, 
+                                            constantes.FICHIER_PROFS))
         messageInfo(self, "Enregistrement réussi", 
                     "Le professeur %s a bien été ajouté." %self.personne.GetNomPrenom())
 
@@ -19735,18 +19776,21 @@ class Panel_BO(wx.Panel, FullScreenWin):
     ######################################################################################################
     def Construire(self, ref):
 #         print("Construire Panel_BO")
-        if ref.BO_dossier == "":
-            return
+#         if ref.BO_dossier == "":
+#             return
         
         wx.BeginBusyCursor()
         
         lst_pdf = []
-        for d in ref.BO_dossier:
-            path = os.path.join(util_path.BO_PATH, toFileEncoding(d))
-            for root, dirs, files in os.walk(path):
-                for f in files:
-                    if os.path.splitext(f)[1] == ".pdf":
-                        lst_pdf.append(os.path.join(root, f))
+#         for d in ref.BO_dossier:
+        path = os.path.join(util_path.BO_PATH, ref.Code)
+        if not os.path.exists(path):
+            return
+        
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if os.path.splitext(f)[1] == ".pdf":
+                    lst_pdf.append(os.path.join(root, f))
             
       
 #        print self.nb.GetPageCount()
