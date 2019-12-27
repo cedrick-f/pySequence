@@ -1557,10 +1557,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnAppelOuvrir(self, evt):
+        print("OnAppelOuvrir")
         wx.CallAfter(self.ouvrir, evt.GetFile())
         
         
-#        print "OnAppelOuvrir"
+#        
         
         
         
@@ -1894,10 +1895,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        print ">>", toutferme
         if toutferme:
             evt.Skip()
-#             wx.GetApp()._ipc.Exit()
-#             wx.CallAfter(sys.exit)
-#             wx.CallAfter(self.Destroy)
-#             self.Destroy()
+
 
 
 
@@ -3685,13 +3683,6 @@ class FenetreProjet(FenetreDocument):
 #            dlg.top()
             dlg.update(count, message)
             
-#            dlg.Raise()
-#             wx.CallAfter(dlg.Destroy)
-
-#            wx.CallAfter(self.fiche.Show)
-#            wx.CallAfter(self.fiche.Redessiner)
-            return
-        
         
         
         ################################################################################################
@@ -3758,10 +3749,6 @@ class FenetreProjet(FenetreDocument):
         else:
             dlg.update(nbr_etapes, message)
             dlg.Close() 
-    
-#        self.SetTitre()
-#         wx.CallAfter(self.fiche.Show)
-#         wx.CallAfter(self.fiche.Redessiner)
         
 
         #
@@ -4578,8 +4565,6 @@ class FenetreProgression(FenetreDocument):
 #        self.progression.MiseAJourTypeEnseignement()
         self.parent.MiseAJourToolBar()
          
-#         wx.CallAfter(self.fiche.Show)
-#         wx.CallAfter(self.fiche.Redessiner)
          
         # Mise en liste undo/redo
         self.classe.undoStack.do("Ouverture de la Classe")
@@ -4836,20 +4821,6 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 
 
 
-#         if threadDraw.isAlive():
-#             threadDraw.join()
-#         
-#         threadDraw = ThreadDraw()
-#         threadDraw.set_param(ctx, self.GetDoc())
-#         threadDraw.start()
-#         
-#         wx.CallAfter(threadDraw.join)
-
-
-
-
-#         tps2 = time.clock() 
-#         print "Draw :", tps2 - tps1
         
 ####################################################################################
 # from wx.lib.delayedresult import startWorker
@@ -5051,7 +5022,7 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 
     #-------------------------------------------------------------------------
     def OnResize(self, event = None):
-#         print "OnResize"
+#         print("OnResize")
         if not self.IsShownOnScreen():
             return
         
@@ -5068,8 +5039,8 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         self.Refresh()
         self.Update()
         # After drawing empty bitmap start update
-        wx.CallAfter(self.SizeUpdate)
-#         self.SizeUpdate()
+#         wx.CallAfter(self.SizeUpdate)
+        self.SizeUpdate()
         
 
 #     #############################################################################            
@@ -5408,11 +5379,11 @@ class PanelConteneur(wx.Panel):
         # Destruction de l'ancien panel
         #
         if self.panel is not None:
-#            print "Destroy", self.panel
+            print("Destroy", self.panel)
 #            try:
 #            self.bsizer.Remove(self.panel)
             try:
-                self.panel.Destroy()
+                self.panel.DestroyLater()
             except:
                 pass
 #            except:
@@ -5467,9 +5438,9 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         
-        self.Bind(wx.EVT_SIZE, self.OnResize)
+#         self.Bind(wx.EVT_SIZE, self.OnResize)
         
-#        wx.CallAfter(self.Show)
+
 
 
     ######################################################################################              
@@ -5666,33 +5637,7 @@ class PanelPropriete_Racine(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         if texte is not None:
             wx.StaticText(self, -1, "" + texte)
-        return
-#     
-#         self.Hide() # Sans ça cela provoque des problèmes d'affichage
-#         
-#         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
-#         wx.CallAfter(self.rtc.SetFocus)
-#         
-#         sizer = wx.BoxSizer(wx.VERTICAL)
-#         sizer.Add(self.rtc, 1,flag = wx.EXPAND)
-#         self.SetSizer(sizer)
-# 
-#         out = io.StringIO()
-#         handler = rt.RichTextXMLHandler()
-#         buff = self.rtc.GetBuffer()
-# #        buff.AddHandler(handler)
-#         out.write(texte)
-#         out.seek(0)
-#         handler.LoadStream(buff, out)
-#         self.rtc.Refresh()
-#         
-#         sizer.Layout()
-#         self.Layout()
-#         
-#        wx.CallAfter(self.Show)
-        
-#    def GetNiveau(self):
-#        return 0
+
      
 
 ####################################################################################
@@ -5711,7 +5656,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         #
         # Intitulé
         #
-        titre = myStaticBox(self, -1, ref.labels["SEQINT"][2].sing_())
+        titre = myStaticBox(self, -1, ref.labels["SEQINT"][2].Sing_())
         sb = wx.StaticBoxSizer(titre)
         textctrl = TextCtrl_Help(self, "", scale = SSCALE)
         textctrl.SetTitre(ref.labels["SEQINT"][1], sequence.getIcone())
@@ -5777,7 +5722,6 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.MiseAJour()
         
         self.sizer.Layout()
-#        wx.CallAfter(self.Layout)
         self.Layout()
         
 #        self.Fit()
@@ -5936,7 +5880,6 @@ class PanelPropriete_Projet(PanelPropriete):
         
         self.Layout()
         self.FitInside()
-#         wx.CallAfter(self.PostSizeEvent)
 
         self.MiseAJourTypeEnseignement()
         self.MiseAJour()
@@ -6594,7 +6537,6 @@ class PanelPropriete_Progression(PanelPropriete):
         
         self.Layout()
         self.FitInside()
-        wx.CallAfter(self.PostSizeEvent)
         
         self.MiseAJourTypeEnseignement()
         self.MiseAJour()
@@ -7238,8 +7180,6 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.Layout()
         
-#        wx.CallAfter(self.cb_type.CollapseAll)
-#        wx.CallAfter(self.Thaw)
         
         
     ######################################################################################              
@@ -8767,7 +8707,8 @@ class PanelPropriete_CI(PanelPropriete):
             t = self.group_ctrls[i][1]
             t.SetLabel(tronquerDC(ci, l, self))
 #         self.sizer.Layout()
-        wx.CallAfter(self.Thaw)
+
+        self.Thaw()
      
     #############################################################################            
     def OnText(self, event):
@@ -11541,21 +11482,8 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Mise en place
         #
-#         self.Layout()
-#         self.FitInside()
-#        wx.CallAfter(self.PostSizeEvent)
-#         self.Show()
         self.Refresh()
     
-#        wx.CallAfter(self.Layout)
-        
-#    ####################################################################################
-#    def getListTaches(self): 
-#        """ Renvoie la liste des tâches encore disponibles = pas déja sélectionnées
-#        """
-#        prj = self.tache.GetProjetRef()
-#        l = [t+" "+prj.taches[t][1] for t in prj.listTaches if not t in [tt.intitule for tt in self.tache.projet.taches]]
-#        return l
      
     ####################################################################################
     def OnPageChanged(self, event):
@@ -11748,7 +11676,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     ############################################################################            
     def SetCompetences(self):
-#        print "SetCompetences"
+        print("SetCompetences")
         
         self.GetDocument().MiseAJourDureeEleves()
         
@@ -13269,7 +13197,7 @@ class PanelPropriete_Groupe(PanelPropriete):
     
     #############################################################################            
     def OnClick(self, event):
-#         print "OnClick"
+        print("OnClick")
         event.Skip()
         wx.CallAfter(self.SetList)
     
@@ -14116,17 +14044,16 @@ class ArbreDoc(CT.CustomTreeCtrl):
 #         tps3 = time.clock() 
         
         
-        wx.CallAfter(self.panelProp.Thaw)
-        wx.CallAfter(wx.EndBusyCursor)
+#         wx.CallAfter(self.panelProp.Thaw)
+#         wx.CallAfter(wx.EndBusyCursor)
+        self.panelProp.Thaw()
+        wx.EndBusyCursor()
+        
         
         if event is not None:
             event.Skip()
         
 
-#         print "AffichePanel :", tps2 - tps1,  tps3 - tps2
-        
-#         wx.CallAfter(self.SetFocus)
-#         wx.CallAfter(self.Raise)
 
     ####################################################################################
     def OnBeginDrag(self, event):
@@ -15806,17 +15733,6 @@ class ArbreCompetences(HTL.HyperTreeList):
             
         self.Refresh()                
         wx.CallAfter(self.pp.SetCompetences)
-        
-#     ####################################################################################
-#     def OnItemCheck(self, event, item = None):
-# #        print "OnItemCheck"
-#         if event != None:
-#             item = event.GetItem()
-#             event.Skip()
-# 
-#         self.AjouterEnleverCompetencesItem(item)
-#         
-#         wx.CallAfter(self.pp.SetCompetences)
 
 
     ####################################################################################
@@ -18142,7 +18058,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
 #         item, flags = self.tree.HitTest(evt.GetPosition())
             ev = wx.TreeEvent(wx.EVT_TREE_ITEM_GETTOOLTIP.typeId, self.tree, item)
             self.GetComboCtrl().GetEventHandler().ProcessEvent(ev)
-#         wx.CallAfter(self.tree.Refresh)
+
 #         self.tree.SetToolTip("aaa")
         evt.Skip()
         
@@ -18984,31 +18900,19 @@ class myProgressDialog(wx.Dialog):
 #         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
         self.CenterOnParent()
-        self.SetMinSize((400*SSCALE, -1))
-#         self.GetParent().Enable(False)
-#         wx.Frame.Show(self)
-        
-        
-#         self.Show()#WindowModal()
-#         print "fini"
-
-#     def Show(self):
-#         self.CenterOnParent()
-#         self.GetParent().Enable(False)
-#         wx.Frame.Show(self)
-#         self.Raise()
-        
+        self.SetMinSize((400*SSCALE, -1))        
         
 
 
 
-    def OnDestroy(self, event):
-        try:
-            self.GetParent().Enable(True)
-        except:
-            pass
-        event.Skip()
-    
+#     def OnDestroy(self, event):
+#         try:
+#             self.GetParent().Enable(True)
+#         except:
+#             pass
+#         event.Skip()
+
+
     def update(self, count, message):
 #         print "Update", count
         self.SetMessage(message)

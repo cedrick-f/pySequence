@@ -1931,6 +1931,7 @@ class RapportRTF(rt.RichTextCtrl):
             handler = PyRTFParser.PyRichTextRTFHandler()
             # Save the file with the custom RTF Handler.
             # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
+            print(nomFichierDefaut)
             handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
         
 

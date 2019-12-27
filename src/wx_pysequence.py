@@ -220,14 +220,14 @@ class SingleInstApp(wx.App):
 #        wx.Yield()
         
     def DestroySplashScreen(self):
-        print("DestroySplashScreen")
+#         print("DestroySplashScreen")
         if self.splash is not None:
             self.splash.Show(False)
             self.splash.Destroy()
             self.splash = None
             
     def Cleanup(self):
-        print("Cleanup")
+#         print("Cleanup")
         
         # Need to cleanup instance checker on exit
         if hasattr(self, '_checker'):
@@ -259,7 +259,7 @@ class SingleInstApp(wx.App):
         """ Interface for subclass to open new window
             on ipc notification.
         """
-        print("DoOpenNewWindow", arg)
+#         print("DoOpenNewWindow", arg)
         self.frame.AppelOuvrir(arg)
         
 
