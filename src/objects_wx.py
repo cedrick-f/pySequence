@@ -19791,6 +19791,7 @@ class Panel_BO(wx.Panel, FullScreenWin):
 #         for d in ref.BO_dossier:
         path = os.path.join(util_path.BO_PATH, ref.Code)
         if not os.path.exists(path):
+            wx.EndBusyCursor()
             return
         
         for root, dirs, files in os.walk(path):

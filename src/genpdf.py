@@ -404,7 +404,7 @@ def genererFicheValidation(nomFichier, projet):
         
     else:
         Err.append("Impossible de trouver le fichier HTML")
-        return False
+        return Err
         
         
     for l in en_tete:
