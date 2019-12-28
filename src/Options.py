@@ -138,7 +138,7 @@ class Options:
                     sav(nom+"_"+format(i, "02d"), v)
        
             elif type(val) == dict:
-                for k,v in list(val.items()):
+                for k,v in val.items():
                     sav(nom+"."+k, v)
             
             else:
@@ -147,10 +147,10 @@ class Options:
                 config.set(titre, nom, str(val).replace('%', '%%'))
 
 
-        for titre,dicopt in list(self.typesOptions.items()):
+        for titre,dicopt in self.typesOptions.items():
 #             titre = titre.encode('utf-8')
             config.add_section(titre)
-            for nom, val in list(dicopt.items()):
+            for nom, val in dicopt.items():
                 sav(nom, val)
 #                if type(opt[1]) == list:
 #                    for i,v in enumerate(opt[1]):nom

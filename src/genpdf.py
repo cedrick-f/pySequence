@@ -608,7 +608,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
             feuille = grille.getSheets()[-1]
 #        print "   ", feuille
         # Création du fichier temporaire PDF
-        nomGrille = r"grille"+str(i)+r".pdf"
+        nomGrille = "grille"+str(i)+".pdf"
         fichertempV = os.path.join(dosstemp, nomGrille)
         
         # Activation des feuilles "grilles"

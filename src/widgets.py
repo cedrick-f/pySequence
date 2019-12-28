@@ -47,6 +47,7 @@ import time, os, sys
 import  wx.lib.scrolledpanel as scrolled
 from wx.lib.wordwrap import wordwrap
 import images
+from pathvalidate import sanitize_filepath
 
 ######################################################################################  
 #
@@ -320,7 +321,7 @@ def getNomFichier(prefixe, intitule, extension = r""):
     nomFichier = prefixe+"_"+intitule
     for c in ["\t", "\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
         nomFichier = nomFichier.replace(c, r"_")
-    return nomFichier+extension
+    return sanitize_filepath(nomFichier+extension)
 
 ######################################################################################  
 def rallonge(txt):

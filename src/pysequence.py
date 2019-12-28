@@ -98,6 +98,7 @@ import constantes
 import proprietes
 
 from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
+from pathvalidate import sanitize_filepath
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
@@ -13549,8 +13550,9 @@ class Eleve(Personne):
                     nomFichiers[fo] = os.path.join(dirpath, self.GetDocument().getNomFichierDefaut(prefixe))
                 else:
                     nomFichiers[fo] = os.path.join(dirpath, self.getNomFichierDefaut(prefixe))
+                
                 nomFichiers[fo] += grilles.EXT_EXCEL
-                nomFichiers[fo] = (parts, nomFichiers[fo])
+                nomFichiers[fo] = (parts, sanitize_filepath(nomFichiers[fo]))
                 
 #         print "   >", nomFichiers
         return nomFichiers
@@ -13573,7 +13575,7 @@ class Eleve(Personne):
             dirpath = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
         
         f = "Tâches détaillées _ " + self.GetNomPrenom() + ".rtf"
-        return os.path.join(dirpath, f)
+        return sanitize_filepath(os.path.join(dirpath, f))
     
     
 
