@@ -579,6 +579,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnReparer, id=33)
         self.Bind(wx.EVT_MENU, self.OnRecupEtab, id=34)
         self.Bind(wx.EVT_MENU, self.OnRecupFeries, id=35)
+        self.Bind(wx.EVT_MENU, self.telechargerBO, id=36)
         
         self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
         
@@ -1092,6 +1093,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.menuRep = tool_menu.Append(33, "Ouvrir et réparer un fichier")
         tool_menu.Append(34, "Récupérer les noms d'établissement")
         tool_menu.Append(35, "Récupérer les jours fériés")
+        tool_menu.Append(36, "Télécharger les documents officiels")
 
         self.tool_menu = tool_menu
         
@@ -1647,6 +1649,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if page != None:
             page.genererFicheValidation(event)
     
+    
+    #############################################################################
+    def telechargerBO(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.TelechargerBO()
     
     ###############################################################################################
     def OnDocClosed(self, evt = None):   
@@ -2790,9 +2798,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                
     #############################################################################
     def TelechargerBO(self):
-        print("TelechargerBO")
+#         print("TelechargerBO")
         ref = self.GetDocument().GetReferentiel()
-        print(ref.Code)
+#         print(ref.Code)
         
         path = os.path.join(util_path.BO_PATH, ref.Code)
         if not os.path.exists(path):
@@ -2800,19 +2808,17 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         l = []
         for tit, url in ref.BO_URL:
-            print("   ", url)
             if os.path.splitext(url)[1] == ".pdf":
                 f, h = urllib.request.urlretrieve(url, os.path.join(path, tit+".pdf"))
                 l.append(os.path.basename(f))
 
-
-        lst = "\n"+CHAR_POINT.join(l)
+        s = "\n"+CHAR_POINT
+        lst = s.join(l)
         messageInfo(self, "Téléchargements terminés", 
-                    "Les documents suivants on été téléchargés\n"  + lst \
-                    + "\n\nIls sont dans le dossier : %s" %path \
+                    "Les documents suivants ont été téléchargés\n"  + lst \
+                    + "\n\nIls sont placés dans le dossier : %s" %path \
                     + "\n\net sont désormais consultables depuis l'onglet \"Bulletins Officiels\"")
-        print(" : ", l)
-
+  
 
  
 def Dialog_ErreurAccesFichier(nomFichier, win = None):
@@ -7147,7 +7153,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         # Bouton "télécharger"
         btn_bo = wx.Button(pageGen, -1, "Télécharger")
-        btn_bo.SetToolTip("Télécharger l'ensemble des documents officiels pour y accéder via l'onglet Bulletins Officiels")
+        btn_bo.SetToolTip("Télécharger l'ensemble des documents officiels pour y accéder via l'onglet \"Bulletins Officiels\"")
         pageGen.Bind(wx.EVT_BUTTON, self.EvtBnt_BO, btn_bo)
         self.sbBO.Add(btn_bo, flag = wx.EXPAND)
         
