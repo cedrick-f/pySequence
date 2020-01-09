@@ -5017,10 +5017,12 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         if zone is not None:
             x, y = self.ClientToScreen((x, y))
             self.GetDoc().Click(zone, x, y)
+            obj = zone.obj
         else:
             self.GetDoc().HideTip()
-            
+            obj = None
         evt.Skip()
+        return obj
     
     
     #############################################################################            
@@ -5033,8 +5035,9 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
     #############################################################################            
     def OnRClick(self, evt):
         item = self.OnClick(evt)
-        if item != None:
-            self.GetDoc().AfficherMenuContextuel(item)
+        print("OnRClick", item)
+        if item != None and hasattr(item, "branche"):
+            self.GetDoc().AfficherMenuContextuel(item.branche)
             
             
 #     #############################################################################            
@@ -5437,7 +5440,7 @@ class PanelConteneur(wx.Panel):
         # Destruction de l'ancien panel
         #
         if self.panel is not None:
-            print("Destroy", self.panel)
+#             print("Destroy", self.panel)
 #            try:
 #            self.bsizer.Remove(self.panel)
             try:
