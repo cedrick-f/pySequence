@@ -375,6 +375,9 @@ def InitCurseur():
 def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
+        
+        surRect : élément en surbrilance (rectangle ou objet)
+        
     """
     global rEff
 #    print "Draw séquence"
@@ -1117,9 +1120,16 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
     
     if surRect is not None:
 #         print("Surbrillance")
-        for r in surRect:
-#             print("   ", r)
-            surbrillance(ctx, *r)
+        if type(surRect) == list:
+            for r in surRect:
+    #             print("   ", r)
+                surbrillance(ctx, *r)
+        elif hasattr(surRect, 'rect'):
+            for r in surRect.rect:
+    #             print("   ", r)
+                surbrillance(ctx, *r)
+                
+            
 
 
 

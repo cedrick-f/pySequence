@@ -4719,20 +4719,37 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 #                 self.Refresh()
             
     
+#     #############################################################################            
+#     def Surbrillance(self, obj):
+# #         if self.saved:
+# #             self.ctx.restore()
+# #             self.saved = False
+#         
+#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+# #             self.ctx.save()
+# #             self.saved = True
+#             self.Redessiner(surRect = obj.rect)
+#                 
+# #             self.GetDoc().surbrillance = None
+            
+    #############################################################################            
+    def MiseAJourSur(self, obj):
+        """ Met l'objet <obj> en surbrillance
+        """
+        self.surRect = obj
+#         self.surRect = None
+#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+#             self.surRect = obj.rect
+    
     #############################################################################            
     def Surbrillance(self, obj):
-#         if self.saved:
-#             self.ctx.restore()
-#             self.saved = False
+        """ Met l'objet <obj> en surbrillance
+            et redessine
+        """
+#         print("Surbrillance", obj)
+        self.MiseAJourSur(obj)
+        self.Redessiner()
         
-        if hasattr(obj, 'rect') and hasattr(self, "ctx"):
-#             self.ctx.save()
-#             self.saved = True
-            self.Redessiner(surRect = obj.rect)
-                
-#             self.GetDoc().surbrillance = None
-            
-            
     #############################################################################            
     def OnClick(self, evt):
         self.GetDoc().HideTip()
@@ -4846,12 +4863,12 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
     
     #############################################################################            
-    def Draw(self, ctx, surRect = None):
+    def Draw(self, ctx):
 #         global threadDraw
 #         tps1 = time.clock()
         
         self.GetDoc().DefinirCouleurs()
-        self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = surRect)
+        self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
 
 
 
@@ -4964,15 +4981,22 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 #                 self.Refresh()
             
     
+    #############################################################################            
+    def MiseAJourSur(self, obj):
+        """ Met l'objet <obj> en surbrillance
+        """
+        self.surRect = obj
+#         self.surRect = None
+#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+#             self.surRect = obj.rect
     
     #############################################################################            
     def Surbrillance(self, obj):
+        """ Met l'objet <obj> en surbrillance
+            et redessine
+        """
 #         print("Surbrillance", obj)
-        self.surRect = None
-        if hasattr(obj, 'rect') and hasattr(self, "ctx"):
-            self.surRect = obj.rect
-#         if self.surRect is not None:
-#         print(">>>>", self.surRect)
+        self.MiseAJourSur(obj)
         self.Redessiner()
             
     
@@ -10927,6 +10951,7 @@ class PanelPropriete_Seance(PanelPropriete):
         t = ""
         if hasattr(self, 'vcDuree') and event.GetId() == self.vcDuree.GetId():
             self.seance.SetDuree(event.GetVar().v[0])
+            self.seance.GetFiche().MiseAJourSur(self.seance)
             t = "Modification de la durée %s" %ref._nomActivites.du_()
         
         elif hasattr(self, 'vcNombre') and event.GetId() == self.vcNombre.GetId():

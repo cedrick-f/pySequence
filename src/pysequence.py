@@ -655,7 +655,12 @@ class ElementBase(Grammaire):
 #        self.elem.setAttribute("xlink:title", titre)
     
         
-        
+    ######################################################################################  
+    def GetFiche(self):
+        return self.GetApp().fiche
+    
+    
+    ######################################################################################  
     def SetSVGLien(self, p, lien):
 #        print "SetSVGLien", lien
         
@@ -10256,6 +10261,7 @@ class Seance(ElementAvecLien, ElementBase):
         """ Modifie la durée des Rotation et séances en Parallèle et de tous leurs enfants
             après une modification de durée d'un des enfants
         """
+#         print("SetDuree", duree, )
         if recurs and self.EstSousSeance() and self.parent.EstSeance_RS(): # séance en rotation (parent = séance "Rotation")
             self.parent.SetDuree(duree, recurs = False)
         
