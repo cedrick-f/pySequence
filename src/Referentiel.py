@@ -3127,7 +3127,7 @@ class Projet(XMLelem):
     #########################################################################    
     def getClefDic(self, dicattr, nom, num = None):
         """ Renvoie la clef associée à une valeur dans un dictionnaire
-            num est utilisé pour rechercher avec le numiemme élément d'une valeur de type liste
+            num est utilisé pour rechercher avec le num-ième élément d'une valeur de type list
         """
         dic = getattr(self, dicattr)
         for k,v in dic.items():

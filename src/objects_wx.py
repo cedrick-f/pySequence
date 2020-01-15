@@ -4625,6 +4625,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
         self.enCours = False
         self.saved = False
+        self.surRect = None
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
@@ -4824,7 +4825,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
             ctx = wx.lib.wxcairo.ContextFromDC(dc)
             
             self.normalize(ctx)
-            self.Draw(ctx, surRect = surRect)
+            self.Draw(ctx)#, surRect = surRect)
 #             if r is not None:
 #                 draw_cairo.surbrillance(ctx, *r)
 
@@ -5028,14 +5029,14 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
     #############################################################################            
     def OnDClick(self, evt):
         item = self.OnClick(evt)
-        if item != None:
-            self.GetDoc().AfficherLien(item)
+        if item != None and hasattr(item, "branche"):
+            self.GetDoc().AfficherLien(item.branche)
             
             
     #############################################################################            
     def OnRClick(self, evt):
         item = self.OnClick(evt)
-        print("OnRClick", item)
+#         print("OnRClick", item)
         if item != None and hasattr(item, "branche"):
             self.GetDoc().AfficherMenuContextuel(item.branche)
             
@@ -6935,38 +6936,44 @@ class PanelOrganisation(wx.Panel):
         """
      
         revue = self.liste.GetStringSelection()
-        ref = self.objet.GetProjetRef()
+        prj = self.objet.GetProjetRef()
+        if prj is None or revue[:5] != "Revue":
+            return
         
-        if ref is not None and revue[:5] == "Revue":
-            i = event.GetId()
+        i = event.GetId()
+        
+        posRevue = self.liste.GetSelection()
+        numRevue = eval(revue[-1])
+
+#         print("OnClick", numRevue, posRevue)
+        if i == 11 and posRevue-2 >= 0:
+            nouvPosRevue = posRevue-2   # Montée
+            monte = True
             
-            posRevue = self.liste.GetSelection()
-            numRevue = eval(revue[-1])
-    
-            if i == 11 and posRevue-2 >= 0:
-                nouvPosRevue = posRevue-2   # Montée
-                monte = True
-            elif i == 12 and posRevue < self.liste.GetCount() - 1:
-                nouvPosRevue = posRevue+1   # Descente
-                monte = False
-            else: 
-                return
-#            print posRevue, ">>", nouvPosRevue, self.liste.GetString(nouvPosRevue), toSystemEncoding(self.liste.GetString(nouvPosRevue))
-            itemPrecedent = ref.getClefDic('phases', self.liste.GetString(nouvPosRevue).lstrip(), 0)
+        elif i == 12 and posRevue < self.liste.GetCount() - 1:
+            nouvPosRevue = posRevue+1   # Descente
+            monte = False
             
-#            itemPrecedent = constantes.getCodeNomCourt(self.liste.'(nouvPosRevue), 
-#                                                       self.objet.GetTypeEnseignement(simple = True))
-            j=1
-            while itemPrecedent in TOUTES_REVUES_EVAL:
-                itemPrecedent = ref.getClefDic('phases', self.liste.GetString(nouvPosRevue-j), 0)
-#                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
-#                                                           self.objet.GetTypeEnseignement(simple = True))
-                j += 1
-            self.objet.positionRevues[numRevue-1] = itemPrecedent
         else: 
             return
+#            print posRevue, ">>", nouvPosRevue, self.liste.GetString(nouvPosRevue), toSystemEncoding(self.liste.GetString(nouvPosRevue))
+        itemPrecedent = prj.getClefDic('phases', self.liste.GetString(nouvPosRevue).lstrip(), 0)
+        
+#            itemPrecedent = constantes.getCodeNomCourt(self.liste.'(nouvPosRevue), 
+#                                                       self.objet.GetTypeEnseignement(simple = True))
+        j=1
+        while itemPrecedent in TOUTES_REVUES_EVAL:
+            itemPrecedent = prj.getClefDic('phases', self.liste.GetString(nouvPosRevue-j).lstrip(), 0)
+#                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
+#                                                           self.objet.GetTypeEnseignement(simple = True))
+            j += 1
+#         print("  itemPrecedent", itemPrecedent)
+        if itemPrecedent is None:
+            return
+        self.objet.positionRevues[numRevue-1] = itemPrecedent
           
         self.MiseAJourListe()
+        
         self.liste.SetStringSelection(revue)
         if hasattr(self.objet, 'OrdonnerTaches'):
             self.objet.OrdonnerTaches()
@@ -6982,6 +6989,7 @@ class PanelOrganisation(wx.Panel):
         prj = self.objet.GetProjetRef()
         if prj is None:
             return
+        
         self.ctrlNbrRevues.redefBornes([min(prj.posRevues.keys()), max(prj.posRevues.keys())])
         self.ctrlNbrRevues.setValeur(self.objet.nbrRevues)
 #         self.ctrlNbrRevues.setValeur(prj.getNbrRevuesDefaut())

@@ -12,7 +12,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2011-2013 Cédrick FAURY
+## Copyright (C) 2011-2020 Cédrick FAURY
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,11 +28,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-'''
-Created on 26 oct. 2011 
 
-@author: Cedrick FAURY
-'''
 # Pour débuggage
 #import time
 
@@ -839,6 +835,16 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
         info(ctx, margeX, margeY)
     
     
+    if surRect is not None:
+#         print("Surbrillance")
+        if type(surRect) == list:
+            for r in surRect:
+    #             print("   ", r)
+                surbrillance(ctx, *r)
+        elif hasattr(surRect, 'rect'):
+            for r in surRect.rect:
+    #             print("   ", r)
+                surbrillance(ctx, *r)
     
 
 ######################################################################################  

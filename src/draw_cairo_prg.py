@@ -12,7 +12,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2011-2016 Cédrick FAURY
+## Copyright (C) 2011-2020 Cédrick FAURY
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,11 +28,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-'''
-Created on 26 oct. 2011 
 
-@author: Cedrick FAURY
-'''
 # Pour débuggage
 #import time
 import sys
@@ -356,17 +352,7 @@ def DefinirZones(prg, ctx):
     # Hauteur des périodes
     hPeriode = (tailleZTaches[1]-ecartTacheY)/ref.getNbrPeriodes()-ecartTacheY
 
-#     # Hauteurs des Sequences-Projets par période
-#     a = [0.0]*ref.getNbrPeriodes()
-#     b = a[:]
 
-#     print ref.getPeriodesListe()
-#     for p in range(ref.getNbrPeriodes()):
-#         calculCoefCalcH(prg, ctx, hTacheMini, p)
-#     for creneau in range(constantes.NBR_CRENEAU):
-#         calculCoefCalcH(prg, ctx, hTacheMini, creneau)
-#         if a < 0: # Trop de séquences -> on réduit !
-#             calculCoefCalcH(prg, ctx, hTacheMini/2, creneau)
 
     
 def Arranger(prg):
@@ -478,41 +464,7 @@ def getCoefCalcH(case):
     return a, b
 
 
-
-
-
-# def calculCoefCalcH2(prg, ctx, hm, periode):
-#     global a, b
-# #    print "calculCoefCalcH", hm
-#     
-# #     sommeEcarts = (prg.GetNbrPeriodesEffectif()-1)*ecartTacheY
-# #    print "sommeEcarts", sommeEcarts
-#     # Calcul des paramètres de la fonction hauteur = f(durée)
-#     # hauteur = a * log(durée) + b
-#     b[periode] = 0.0
-#     a[periode] = 1.0
-#     h = 0.0 #ecartTacheY
-#     nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
-# 
-#     for t in prg.sequences_projets:
-#         h += calcH_doc(t.GetDoc(), periode)
-# #        print "    ", t, t.GetDoc().GetDuree(), h
-#         nt += 1
-# 
-#     b[periode] = hm # Hauteur mini
-#     
-#     hFixe = 0.0 #sommeEcarts
-#     if h != 0:
-#         a[periode] = (hPeriode - hFixe - b[periode]*nt) / h
-
-#    print ">>> a,b :", a, b
     
-    
-#######################################################################################  
-#def getCoulComp(partie, alpha = 1.0):
-#    if partie in ICoulComp.keys():
-#        return (ICoulComp[partie][0], ICoulComp[partie][1], ICoulComp[partie][2], alpha)  
-#    return (ICoulComp[''][0], ICoulComp[''][1], ICoulComp[''][2], alpha)
     
 ######################################################################################  
 def getPts(lst_rect):
@@ -1189,11 +1141,18 @@ def Draw(ctx, prg, mouchard = False, surRect = None):
     #
     info(ctx, margeX, margeY)
     
+
+            
     if surRect is not None:
 #         print("Surbrillance")
-        for r in surRect:
-#             print("   ", r)
-            surbrillance(ctx, *r)
+        if type(surRect) == list:
+            for r in surRect:
+    #             print("   ", r)
+                surbrillance(ctx, *r)
+        elif hasattr(surRect, 'rect'):
+            for r in surRect.rect:
+    #             print("   ", r)
+                surbrillance(ctx, *r)
     
 
 ######################################################################################  

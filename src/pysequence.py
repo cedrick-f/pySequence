@@ -5359,9 +5359,10 @@ class Projet(BaseDoc, Grammaire):
 
     ######################################################################################  
     def GetListeNomsPhases(self, avecRevuesInter = False):
-#        print "GetListeNomsPhases"
+#         print("GetListeNomsPhases", self.GetListePhases())
         lst = []
         prj = self.GetProjetRef()
+#         print("   ", prj.listPhases, prj.listPhasesEval)
         for p in self.GetListePhases():
             if p in prj.listPhases:#[:-1]:
                 n = prj.phases[p][0]
@@ -5373,7 +5374,7 @@ class Projet(BaseDoc, Grammaire):
                 if not p in TOUTES_REVUES_EVAL_SOUT:
                     n = "     "+n
                 lst.append(n)
-                
+#         print(">>", lst)
 #        for p in self.GetListePhases():
 #            if p in constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)].keys():
 #                lst.append(constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)][p])
@@ -5386,7 +5387,7 @@ class Projet(BaseDoc, Grammaire):
     def GetListePhases(self, avecRevuesInter = False):
         """ Renvoie la liste ordonnée des phases dans le projet
         """
-#         print("GetListePhases")
+#         print("GetListePhases", self.nbrRevues)
         prj = self.GetProjetRef()
         if prj is None:
             return []
@@ -5394,11 +5395,11 @@ class Projet(BaseDoc, Grammaire):
         lst = [k for k in prj.listPhases if not k in prj.listPhasesEval]
 #        lst = list(self.GetReferentiel().listPhases_prj)
 #        print "  ", self.classe.GetReferentiel()
-#         print("  ", lst)
+#         print("   ", lst)
 #        print "  ", self.nbrRevues
 #         lr = list(range(1, self.nbrRevues+1))
 #         lr.reverse()
-#         print("     ", lr,  self.positionRevues)
+#         print("   ", self.positionRevues)
         for r in range(self.nbrRevues, 0, -1):
 #            print "     ", lr,  self.positionRevues[r-1]
             if self.positionRevues[r-1] in  lst:
@@ -5406,12 +5407,7 @@ class Projet(BaseDoc, Grammaire):
 #        print "  ", lst
         return lst
         
-#        # Ancienne version (marche pas avec les Rev)
-#        p = []
-#        for t in self.taches:
-#            if ((not t.phase in p) or t.phase == "Rev") and t.phase != "":
-#                p.append(t.phase)
-#        return len(p)
+
         
     ######################################################################################  
     def GetIntituleTaches(self):
