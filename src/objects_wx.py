@@ -4125,11 +4125,13 @@ class FenetreProjet(FenetreDocument):
                 os.startfile(nomFichier)
             except (IOError, RuntimeError) as e:
                 messageErreur(self, "Erreur !",
-                                  "Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+                                  "Impossible d'enregistrer le fichier suivant :\n\n%s\n\nVérifier :\n" \
                                   " - qu'aucun fichier portant le méme nom n'est déja ouvert\n" \
-                                  " - que le dossier choisi n'est pas protégé en écriture\n\n" \
-                                  + nomFichier)
-                wx.EndBusyCursor()
+                                  " - que le dossier choisi n'est pas protégé en écriture\n\n" %nomFichier)
+                try:
+                    wx.EndBusyCursor()
+                except:
+                    pass
             
 #            for t, f in tf:
 #                try:
