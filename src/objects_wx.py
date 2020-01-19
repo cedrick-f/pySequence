@@ -4094,7 +4094,7 @@ class FenetreProjet(FenetreDocument):
 #            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
 #                nomFichier = nomFichier.replace(c, "_")
 #            return nomFichier+".pdf"
-        
+#         print("genererFicheValidation")
         mesFormats = "PDF (.pdf)|*.pdf"
         nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], ".pdf")
         dlg = wx.FileDialog(self, "Enregistrer le dossier de validation",
@@ -4119,9 +4119,16 @@ class FenetreProjet(FenetreDocument):
             nomFichier = path
 #            nomFichier = getNomFichier("FicheValidation", self.projet)
 #            nomFichier = os.path.join(path, nomFichier)
-
+#             print(nomFichier)
+            err = genpdf.genererDossierValidation(nomFichier, self.projet, self)
+            if len(err) > 0:
+                m = "\n - ".join(err)
+                messageErreur(self, "Erreur !",
+                                  "Impossible de générer le dossier de validation :\n\n" +m
+                                  )
+                return
+            
             try:
-                genpdf.genererDossierValidation(nomFichier, self.projet, self)
                 os.startfile(nomFichier)
             except (IOError, RuntimeError) as e:
                 messageErreur(self, "Erreur !",
