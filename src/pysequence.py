@@ -2154,7 +2154,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     
 ####################################################################################################          
-class Sequence(BaseDoc):
+class Sequence(BaseDoc, Grammaire):
     """Document de type Séquence pédagogique
     
         :param app: Fenêtre où s'affiche la Séquence

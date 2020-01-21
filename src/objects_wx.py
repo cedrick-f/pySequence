@@ -5693,7 +5693,9 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
 
 
-
+    ######################################################################################  
+    def OnPathModified(self, lien = "", marquerModifier = True):
+        self.GetDocument().OnPathModified()
 
 
 ####################################################################################
@@ -18677,16 +18679,7 @@ class URLSelectorCombo(wx.Panel):
         if lien is not None:
             self.lien.path = lien
             self.lien.EvalLien(lien, self.pathseq)
-        
-#         if typ is not None:
-#             self.lien.type = typ
-#         else:
-#             self.lien.EvalTypeLien(self.pathseq)
-#         print(">>", self.lien)
-        
-#         self.texte.ChangeValue(self.lien.path)
-        
-        
+
         try:
             self.texte.ChangeValue(self.lien.path)
         except: # Ca ne devrait pas arriver ... et pourtant ça arrive !
