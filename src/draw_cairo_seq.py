@@ -767,9 +767,9 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
 #         wS = rect_width
 #         wSe = rect_width
         
-        wC = rect_width*taille(lstTexteC)/(ltot)
-        wS = rect_width*taille(lstTexteS)/(ltot)
-        wSe = rect_width*taille(lstTexteSe)/(ltot)
+        wC  = rect_width * taille(lstTexteC)/(ltot)
+        wS  = rect_width * taille(lstTexteS)/(ltot)
+        wSe = rect_width * taille(lstTexteSe)/(ltot)
         
         # Création des deux zones
         maxFontSize = 0.011 * COEF
@@ -816,7 +816,7 @@ def Draw(ctx, seq, mouchard = False, entete = False, surRect = None):
             seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["S"]))
 #             seq.prerequis["S"].pt_caract = (r[i][:2], i)
         
-            
+#         print("lstTexteSe", lstTexteSe, rectSe)
         lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteSe), lstTexteSe, 
                                    rectSe, 
                                    0.05*rect_width, 0.1, va = 'c')

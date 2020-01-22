@@ -2396,17 +2396,18 @@ def liste_code_texte(ctx, lstCodes, lstTexte, rect,
                 ctx.set_source_rgb (lstCoul[i][0], lstCoul[i][1], lstCoul[i][2])
 #                else:
 #                    ctx.set_source_rgb (0, 0, 0)
+#             print("show", w,wt,eh)
+            if w - wt - eh > 0:
+                show_text_rect(ctx, lstTexte[i], 
+                               (x + wt + eh, y+i*hl, 
+                                w - wt - eh, hl), 
+                               b = 0, ha = 'g', va = va, 
+                               fontsizeMinMax = (-1, maxFontSize))
                 
-            show_text_rect(ctx, lstTexte[i], 
-                           (x + wt + eh, y+i*hl, 
-                            w - wt - eh, hl), 
-                           b = 0, ha = 'g', va = va, 
-                           fontsizeMinMax = (-1, maxFontSize))
-            ly.append(y+i*hl)
-            
+                
             rect = (x, y+i*hl, w, hl)
             lstRect.append(rect)
-            
+        
             # Un rectangle invisible pour la séléction
             ep = ctx.get_line_width()
             co = ctx.get_source().get_rgba()
@@ -2419,6 +2420,9 @@ def liste_code_texte(ctx, lstCodes, lstTexte, rect,
             ctx.stroke()
             ctx.set_line_width(ep)
             ctx.set_source_rgba (co[0],co[1],co[2],co[3])
+            
+            ly.append(y+i*hl)
+            
 #            ctx.restore()
 
 
@@ -3013,6 +3017,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4,
     if debug: print("  ecart", ecart)
     
     # Ratio du rectangle, écarts compris
+
     ratioRect = (w)/(h)
     if debug: print("  ratio", ratioRect)
     #
