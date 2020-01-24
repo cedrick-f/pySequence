@@ -9273,7 +9273,13 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def construire(self):
         print("construire")
-        ref = self.sequence.GetReferentiel()
+        if self.sequence is not None:
+            classe = self.sequence.classe
+            ref = self.sequence.GetReferentiel()
+        else:
+            classe = self.GetDocument().classe
+            ref = classe.GetReferentiel()
+            
         
         # Passage momentané en Anglais (bug de wxpython)
 #         locale2EN()
@@ -9286,7 +9292,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, "", scale = SSCALE)
         self.intit.SetMinSize((-1, 20*SSCALE))
-        self.intit.SetTitre("Intitulé de la Séquence", self.sequence.getIcone())
+        self.intit.SetTitre("Intitulé de la Séquence", 
+                            images.Icone_sequence.GetBitmap())
         self.intit.SetToolTip("")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
@@ -9314,16 +9321,22 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Position de la séquence
         #
+        if self.sequence is not None:
+            bmp = self.sequence.getBitmapPeriode(300*SSCALE)
+        else:
+            bmp = classe.getBitmapPeriode(300*SSCALE)
         titre = myStaticBox(self, -1, "Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300*SSCALE))
-        self.position = PositionCtrl(self, self.sequence.position, 
-                                     ref.getPeriodeSpe(self.sequence.classe.specialite),
-                                     totmax = ref.getNbrPeriodes())
-#         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
-        self.Bind(wx.EVT_SLIDER, self.onChanged)
+        self.bmp = wx.StaticBitmap(self, -1, bmp)
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
-        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        
+        if self.sequence is not None:
+            self.position = PositionCtrl(self, self.sequence.position, 
+                                         ref.getPeriodeSpe(classe.specialite),
+                                         totmax = ref.getNbrPeriodes())
+    #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+            self.Bind(wx.EVT_SLIDER, self.onChanged)
+            sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
         
         
         
@@ -9336,7 +9349,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize(size)
         self.apercu = StaticBitmapZoom(self, -1, size = size)
-        self.apercu.SetLargeBitmap(self.sequence.GetApercu(self.maxX))
+        if self.sequence is not None:
+            self.apercu.SetLargeBitmap(self.sequence.GetApercu(self.maxX))
         sbs1.Add(self.apercu, 1)
         self.size = size
         
@@ -9368,10 +9382,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         sbp = myStaticBox(self, -1, ref._nomPb.Plur_(), size = (200*SSCALE,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
-        
-        self.panelPb = PanelProblematiques(self, self.sequence.CI)
-        
-        sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
+        if self.sequence is not None:
+            self.panelPb = PanelProblematiques(self, self.sequence.CI)
+            sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
 
         #
         # Mise en place
@@ -9506,8 +9519,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #         print("MiseAJour PanelPropriete_LienSequence", self.lien, sendEvt)
 
 #        self.intit.SetLabel(self.sequence.intitule)
-        
-        self.intit.SetValue(self.sequence.intitule, False)
+        if self.sequence is not None:
+            self.intit.SetValue(self.sequence.intitule, False)
 #         SetValue  : voir orthographe.STC_ortho
 #         ChangeValue ?
 
@@ -9553,7 +9566,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Aperçu
         #
-        self.apercu.SetLargeBitmap(self.sequence.GetApercu(self.maxX))
+        if self.sequence is not None:
+            self.apercu.SetLargeBitmap(self.sequence.GetApercu(self.maxX))
         self.lien.SetLabel()
 
         self.Layout()
@@ -18862,6 +18876,7 @@ class StaticBitmapZoom(wx.StaticBitmap):
         
         self.Bind(wx.EVT_MOTION, self.OnMove)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.W, self.H = 0, 0
 
     def SetLargeBitmap(self, largeBitmap):
         self.largeBitmap = largeBitmap
@@ -18869,18 +18884,20 @@ class StaticBitmapZoom(wx.StaticBitmap):
         self.OnLeave()
     
     def OnLeave(self, event = None):
-        self.SetBitmap(self.largeBitmap.ConvertToImage().Scale(*self.GetSize()).ConvertToBitmap())
+        if hasattr(self, 'largeBitmap'):
+            self.SetBitmap(self.largeBitmap.ConvertToImage().Scale(*self.GetSize()).ConvertToBitmap())
         
     def OnMove(self, event):
-        x, y = event.GetPosition()
-        w, h = self.GetSize()
-        x, y = (w-self.W)*x/w, (h-self.H)*y/h
-        
-        
-#        self.popup = wx.PopupTransientWindow(self)
-        img = self.largeBitmap.ConvertToImage().Resize(self.GetSize(), (x, y))
-        self.SetBitmap(img.ConvertToBitmap())
-        self.Refresh()
+        if hasattr(self, 'largeBitmap'):
+            x, y = event.GetPosition()
+            w, h = self.GetSize()
+            x, y = (w-self.W)*x/w, (h-self.H)*y/h
+            
+            
+    #        self.popup = wx.PopupTransientWindow(self)
+            img = self.largeBitmap.ConvertToImage().Resize(self.GetSize(), (x, y))
+            self.SetBitmap(img.ConvertToBitmap())
+            self.Refresh()
 
 class myStaticBox(wx.StaticBox):
     def __init__(self, *args, **kargs):

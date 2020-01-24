@@ -306,22 +306,21 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     
     sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(util_path.PATH, r"..", DOSSIER_REF))
     
-    resultFile = open(nomFichierPDF, "w+b")
+    with open(nomFichierPDF, "w+b") as resultFile:
+        # convert HTML to PDF
+        print(sourceHtml)
+        try:
+            pisaStatus = pisa.CreatePDF(sourceHtml,                # the HTML to convert
+                                        dest=resultFile,
+                                        show_error_as_pdf = True)           # file handle to recieve result
+            if pisaStatus.err != 0:
+                Err.append("Un des textes descriptifs du projet est peut-être trop grand !")
+        except:
+            Err.append("Le fichier HTML n'a pas pu être converti en PDF !\n\n" \
+                       "\tVeillez à en vérifier la syntaxe, notamment celle des style CSS.")
+        finally:
+            # close output file
 
-    # convert HTML to PDF
-#     print(sourceHtml)
-    try:
-        pisaStatus = pisa.CreatePDF(sourceHtml,                # the HTML to convert
-                                    dest=resultFile,
-                                    show_error_as_pdf = True)           # file handle to recieve result
-        if pisaStatus.err != 0:
-            Err.append("Un des textes descriptifs du projet est peut-être trop grand !")
-    except:
-        Err.append("Le fichier HTML n'a pas pu être converti en PDF !\n\n" \
-                   "\tVeillez à en vérifier la syntaxe, notamment celle des style CSS.")
-    finally:
-        # close output file
-        resultFile.close()                 # close output file
 
 #    print pisaStatus.err
     # return True on success and False on errors

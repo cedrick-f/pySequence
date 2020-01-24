@@ -7762,8 +7762,8 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
                 
     ######################################################################################  
     def GetPanelPropriete(self, parent):
-        if self.sequence is not None:
-            return PanelPropriete_LienSequence(parent, self)
+#         if self.sequence is not None:
+        return PanelPropriete_LienSequence(parent, self)
     
     ######################################################################################  
     def GetDoc(self):
