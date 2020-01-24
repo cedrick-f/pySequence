@@ -1425,7 +1425,7 @@ class BaseGestionFenHelp():
         ws, hs = wx.ClientDisplayRect()[2:]
         FenHelp = md_util.MDFrame(wx.GetActiveWindow(), self.titre, self.md, 
                                   pos = (ws-w, 0), size = (w, hs))
-        FenHelp.SetIcon(GetIconHelp((16*SSCALE, 16*SSCALE)))
+        FenHelp.SetIcon(wx.Icon(GetIconHelp((16*SSCALE, 16*SSCALE))))
         FenHelp.Bind(wx.EVT_CLOSE, self.OnClose)
 #        print self.titre
 #        print FenHelp.GetBestHeight()
