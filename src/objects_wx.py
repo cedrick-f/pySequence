@@ -662,14 +662,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             for tool in self.tools[fenDoc.typ]:
                 # Projets ###############################################################
                 if tool.GetId() == 50:
-                    tool.SetLabel("Ajouter %s" %ref.labels["ELEVES"][2].un_())
-                    tool.SetShortHelp("Ajout %s au projet" %ref.labels["ELEVES"][2].de_())
-                    tool.SetLongHelp("Ajout %s au projet" %ref.labels["ELEVES"][2].de_())
+                    tool.SetLabel("Ajouter %s" %ref.getLabel("ELEVES").un_())
+                    tool.SetShortHelp("Ajout %s au projet" %ref.getLabel("ELEVES").de_())
+                    tool.SetLongHelp("Ajout %s au projet" %ref.getLabel("ELEVES").de_())
                 
                 elif tool.GetId() == 54:
-                    tool.SetLabel("Ajouter un groupe %s" %ref.labels["ELEVES"][2].de_plur_())
-                    tool.SetShortHelp("Ajout d'un groupe %s au projet" %ref.labels["ELEVES"][2].de_plur_())
-                    tool.SetLongHelp("Ajout d'un groupe %s au projet" %ref.labels["ELEVES"][2].de_plur_())
+                    tool.SetLabel("Ajouter un groupe %s" %ref.getLabel("ELEVES").de_plur_())
+                    tool.SetShortHelp("Ajout d'un groupe %s au projet" %ref.getLabel("ELEVES").de_plur_())
+                    tool.SetLongHelp("Ajout d'un groupe %s au projet" %ref.getLabel("ELEVES").de_plur_())
                 
                 elif tool.GetId() == 51:
                     tool.SetLabel("Ajouter un professeur")
@@ -3374,7 +3374,7 @@ class FenetreProjet(FenetreDocument):
         #
 #         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
         self.pageDetails = Panel_Details(self.nb)
-        self.nb.AddPage(self.pageDetails, "Tâches %s détaillées" %self.projet.GetReferentiel().labels["ELEVES"][2].plur_())
+        self.nb.AddPage(self.pageDetails, "Tâches %s détaillées" %self.projet.GetReferentiel().getLabel("ELEVES").plur_())
         
         #
         # Dossier de validation
@@ -4167,7 +4167,7 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.nb.SetPageText(1, "Tâches %s détaillées" %self.projet.GetReferentiel().labels["ELEVES"][2].plur_())
+        self.nb.SetPageText(1, "Tâches %s détaillées" %self.projet.GetReferentiel().getLabel("ELEVES").plur_())
         self.parent.OnDocChanged()
     
 #class ThreadRedess(Thread):
@@ -5729,10 +5729,10 @@ class PanelPropriete_Sequence(PanelPropriete):
         #
         # Intitulé
         #
-        titre = myStaticBox(self, -1, ref.labels["SEQINT"][2].Sing_())
+        titre = myStaticBox(self, -1, ref.getLabel("SEQINT").Sing_())
         sb = wx.StaticBoxSizer(titre)
         textctrl = TextCtrl_Help(self, "", scale = SSCALE)
-        textctrl.SetTitre(ref.labels["SEQINT"][1], sequence.getIcone())
+        textctrl.SetTitre(ref.getLabelAide("SEQINT"), sequence.getIcone())
         textctrl.SetToolTip("")
                     
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -6289,7 +6289,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.intctrl.SetTitre("Intitulés des différentes parties")
                 self.intctrl.SetToolTip("Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               "Les groupes %s sont désignés par des lettres (A, B, C, ...)\n" \
-                                              "et leur effectif est indiqué." %self.projet.GetReferentiel().labels["ELEVES"][2].de_plur_())
+                                              "et leur effectif est indiqué." %self.projet.GetReferentiel().getLabel("ELEVES").de_plur_())
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
 #                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intctrl)
                 self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intctrl)
@@ -8216,11 +8216,11 @@ class PanelEffectifsClasse(wx.Panel):
         #
         # Effectif de la classe
         #
-        self.vEffClas.n = "Nombre %s" %ref.labels["ELEVES"][2].de_plur_()
+        self.vEffClas.n = "Nombre %s" %ref.getLabel("ELEVES").de_plur_()
         self.cEffClas.Renommer(self.vEffClas.n)
         self.cEffClas.SetBackgroundColour(coulGrp['C'].ChangeLightness(180))
         self.cEffClas.SetForegroundColour(coulGrp["C"])
-        self.cEffClas.SetHelp("Nombre %s dans la %s" %(ref.labels["ELEVES"][2].de_plur_(),ref.effectifs["C"][1]))
+        self.cEffClas.SetHelp("Nombre %s dans la %s" %(ref.getLabel("ELEVES").de_plur_(),ref.effectifs["C"][1]))
         
 
         # widgets + variables
@@ -8391,11 +8391,11 @@ class PanelEffectifsClasse(wx.Panel):
 #         bsizerClasse.Add(sizerClasse_b)
 #         
 #         # Effectif de la classe
-#         self.vEffClas = Variable("Nombre %s" %ref.labels["ELEVES"][2].de_plur_(),  
+#         self.vEffClas = Variable("Nombre %s" %ref.getLabel("ELEVES").de_plur_(),  
 #                             lstVal = classe.effectifs['C'], 
 #                             typ = VAR_ENTIER_POS, bornes = [4,80])
 #         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-#                                 help = "Nombre %s dans la %s" %(ref.labels["ELEVES"][2].de_plur_(),ref.effectifs["C"][1]), 
+#                                 help = "Nombre %s dans la %s" %(ref.getLabel("ELEVES").de_plur_(),ref.effectifs["C"][1]), 
 #                                 sizeh = 30*SSCALE, 
 #                                 color = coulClasse, scale = SSCALE)
 #         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
@@ -9272,7 +9272,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def construire(self):
-        
+        print("construire")
         ref = self.sequence.GetReferentiel()
         
         # Passage momentané en Anglais (bug de wxpython)
@@ -11507,7 +11507,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Elèves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.tache.GetReferentiel().labels["ELEVES"][2].Plur_())
+            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.tache.GetReferentiel().getLabel("ELEVES").Plur_())
 #            self.box.SetMinSize((150,-1))
 #             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             ebsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -11538,7 +11538,7 @@ class PanelPropriete_Tache(PanelPropriete):
                             " - les résultats attendus\n" \
                             " - les différentes étapes\n" \
                             " - la répartition du travail entre %s\n"\
-                            " - ..." %self.tache.GetReferentiel().labels["ELEVES"][2].les_())
+                            " - ..." %self.tache.GetReferentiel().getLabel("ELEVES").les_())
         tc.SetTitre("Description détaillée de la tâche")
      
 
@@ -11920,7 +11920,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
             self.GetDocument().MiseAJourDureeEleves()
     
-            self.sendEvent(modif = "Modification du taux d'implication de l'%s dans la tâche" %self.GetDocument().GetReferentiel().labels["ELEVES"][2].le_(), 
+            self.sendEvent(modif = "Modification du taux d'implication de l'%s dans la tâche" %self.GetDocument().GetReferentiel().getLabel("ELEVES").le_(), 
                            draw = True, verif = False) 
             
 
@@ -12015,7 +12015,7 @@ class PanelPropriete_Tache(PanelPropriete):
         if prj is not None and not prj._pasdIndic:
             self.ConstruireCasesEleve()
         
-        self.sendEvent(modif = "Changement d'%s concerné par la tâche" %self.GetDocument().GetReferentiel().labels["ELEVES"][2].le_(), 
+        self.sendEvent(modif = "Changement d'%s concerné par la tâche" %self.GetDocument().GetReferentiel().getLabel("ELEVES").le_(), 
                        draw = True, verif = True)    
 
 
@@ -13081,7 +13081,7 @@ class PanelPropriete_Personne(PanelPropriete):
 #         label = self.lb.GetString(index)
         self.personne.AjouterEnleverModele(index)
         
-        self.sendEvent(modif = "Modification des modèles associés à %s" %self.personne.GetReferentiel().labels["ELEVES"][2].le_(), 
+        self.sendEvent(modif = "Modification des modèles associés à %s" %self.personne.GetReferentiel().getLabel("ELEVES").le_(), 
                        draw = False, verif = False)
         
     #############################################################################            
@@ -13256,7 +13256,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         # Elèves
         #
         ref = groupe.GetReferentiel()
-        n = ref.labels["ELEVES"][2].Plur_()
+        n = ref.getLabel("ELEVES").Plur_()
         titre = myStaticBox(self, -1, "%s du groupe" %n)
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
@@ -13264,7 +13264,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.list_ctrl = EditableListCtrl(self, -1,
                                          img = (images.Icone_ajout_eleve.GetBitmap(),
                                                 images.Icone_suppr_eleve.GetBitmap()),
-                                          hlp = ("Ajouter %s au groupe" %ref.labels["ELEVES"][2].un_(), 
+                                          hlp = ("Ajouter %s au groupe" %ref.getLabel("ELEVES").un_(), 
                                                  "Supprimer la selection"))
         self.list_ctrl.InsertColumn(0, 'Nom')
         self.list_ctrl.InsertColumn(1, 'Prénom')
@@ -13303,7 +13303,7 @@ class PanelPropriete_Groupe(PanelPropriete):
             l.append((n, p))
         self.groupe.SetListEleves(l)
         ref = self.groupe.GetReferentiel()
-        self.sendEvent(modif = "Modification de la liste %s du groupe." %ref.labels["ELEVES"][2].des_(),
+        self.sendEvent(modif = "Modification de la liste %s du groupe." %ref.getLabel("ELEVES").des_(),
                            obj = self.groupe, draw = False, verif = False)
     
     #############################################################################            
@@ -13511,7 +13511,7 @@ class PanelPropriete_Support(PanelPropriete):
         textctrl.SetTitre("Nom du support")
         textctrl.SetToolTip("Le support est le matériel ou logiciel\n" \
                                   "sur lequel %s réalisent\n" \
-                                  "les modélisations et expérimentations." %self.support.GetReferentiel().labels["ELEVES"][2].les_())
+                                  "les modélisations et expérimentations." %self.support.GetReferentiel().getLabel("ELEVES").les_())
         self.textctrl = textctrl
         bsizer.Add(textctrl, 1, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -14103,7 +14103,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             self.item = item
         data = self.GetItemPyData(self.item)
-#         print("OnSelChanged", data)
+        print("OnSelChanged", data)
         if isinstance(data, tuple) and hasattr(data[0], 'GetPanelPropriete'):
             panelPropriete = data[0].GetPanelPropriete(self.panelProp, data[1], data[2])
         elif hasattr(data, 'GetPanelPropriete'):
@@ -16130,7 +16130,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 self.SetColumnWidth(i+1, 0)
             
             self.colEleves = len(prj.parties.keys())+1
-            self.AddColumn(tache.GetReferentiel().labels["ELEVES"][2].plur_())#(u"Eleves")
+            self.AddColumn(tache.GetReferentiel().getLabel("ELEVES").plur_())#(u"Eleves")
             self.SetColumnWidth(self.colEleves, 0)
         
         

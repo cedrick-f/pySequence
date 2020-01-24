@@ -1561,13 +1561,13 @@ class Classe(ElementBase):
                         eff_str = str(mini) + "-" + str(maxi)
                     else:
                         eff_str = str(mini)
-                    eleves = ref.labels["ELEVES"][2].plur_()
+                    eleves = ref.getLabel("ELEVES").plur_()
                 else:
                     eff_str = str(lsteff[n])
                     if lsteff[n] == 1:
-                        eleves = ref.labels["ELEVES"][2].sing_()
+                        eleves = ref.getLabel("ELEVES").sing_()
                     else:
-                        eleves = ref.labels["ELEVES"][2].plur_()
+                        eleves = ref.getLabel("ELEVES").plur_()
                 if eleve:
                     return eff_str+" "+eleves
                 else:
@@ -3122,7 +3122,7 @@ class Sequence(BaseDoc, Grammaire):
         #
         # Les objectifs
         #
-        self.brancheObj = arbre.AppendItem(self.branche, ref.labels["OBJEC"][2].Plur_(), #Titres[2], 
+        self.brancheObj = arbre.AppendItem(self.branche, ref.getLabel("OBJEC").Plur_(), #Titres[2], 
                                            image = self.arbre.images["Obj"], 
                                            data = "Obj")
         for obj in self.obj.values():
@@ -4974,7 +4974,7 @@ class Projet(BaseDoc, Grammaire):
             
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.GetApp().sendEvent(modif = "Ajout d'"+ self.GetReferentiel().labels["ELEVES"][2].un_())
+            self.GetApp().sendEvent(modif = "Ajout d'"+ self.GetReferentiel().getLabel("ELEVES").un_())
             self.OrdonnerEleves()
             self.arbre.SelectItem(e.branche)
             
@@ -4990,7 +4990,7 @@ class Projet(BaseDoc, Grammaire):
             
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.GetApp().sendEvent(modif = "Ajout d'un Groupe "+ self.GetReferentiel().labels["ELEVES"][2].de_plur_())
+            self.GetApp().sendEvent(modif = "Ajout d'un Groupe "+ self.GetReferentiel().getLabel("ELEVES").de_plur_())
             self.OrdonnerEleves()
             self.arbre.SelectItem(e.branche)
 #             self.AjouterEleveDansPanelTache()
@@ -5018,7 +5018,7 @@ class Projet(BaseDoc, Grammaire):
         for i, e in enumerate(self.eleves):
             e.SetCode()
 
-        self.GetApp().sendEvent(modif = "Suppression d'"+ self.GetReferentiel().labels["ELEVES"][2].un_())
+        self.GetApp().sendEvent(modif = "Suppression d'"+ self.GetReferentiel().getLabel("ELEVES").un_())
         
         
     ######################################################################################  
@@ -5040,7 +5040,7 @@ class Projet(BaseDoc, Grammaire):
         for i, e in enumerate(self.groupes):
             e.SetCode()
 
-        self.GetApp().sendEvent(modif = "Suppression d'un groupe "+ self.GetReferentiel().labels["ELEVES"][2].de_plur_())
+        self.GetApp().sendEvent(modif = "Suppression d'un groupe "+ self.GetReferentiel().getLabel("ELEVES").de_plur_())
     
     ######################################################################################  
     def OrdonnerEleves(self):
@@ -5187,7 +5187,7 @@ class Projet(BaseDoc, Grammaire):
         # Les élèves
         #
 #         print(self.GetReferentiel().labels["ELEVES"][2])
-        self.brancheElv = arbre.AppendItem(self.branche, self.GetReferentiel().labels["ELEVES"][2].Plur_(), 
+        self.brancheElv = arbre.AppendItem(self.branche, self.GetReferentiel().getLabel("ELEVES").Plur_(), 
                                            data = "Ele",
                                            image = self.arbre.images["Grp"])
         for e in self.eleves:
@@ -5276,10 +5276,10 @@ class Projet(BaseDoc, Grammaire):
         elif isinstance(self.arbre.GetItemPyData(itemArbre), FonctionService):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)         
             
-        elif self.arbre.GetItemText(itemArbre) == ref.labels["ELEVES"][2].plur_(): # Eleve
-            self.app.AfficherMenuContextuel([["Ajouter "+ ref.labels["ELEVES"][2].un_(), self.AjouterEleve, 
+        elif self.arbre.GetItemText(itemArbre) == ref.getLabel("ELEVES").plur_(): # Eleve
+            self.app.AfficherMenuContextuel([["Ajouter "+ ref.getLabel("ELEVES").un_(), self.AjouterEleve, 
                                               scaleImage(images.Icone_ajout_eleve.GetBitmap())],
-                                             ["Ajouter un groupe "+ ref.labels["ELEVES"][2].de_plur_(), self.AjouterGroupe, 
+                                             ["Ajouter un groupe "+ ref.getLabel("ELEVES").de_plur_(), self.AjouterGroupe, 
                                               scaleImage(images.Icone_ajout_groupe.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
@@ -5523,7 +5523,7 @@ class Projet(BaseDoc, Grammaire):
 #        print "position", self.position
         
         if hasattr(self, 'brancheElv'):
-            self.brancheElv.SetText(self.GetReferentiel().labels["ELEVES"][2].plur_())
+            self.brancheElv.SetText(self.GetReferentiel().getLabel("ELEVES").plur_())
             self.arbre.Layout()
             self.arbre.Refresh()
         
@@ -7413,7 +7413,7 @@ class Progression(BaseDoc, Grammaire):
             
             lst_elv = [p.GetNomPrenom() for p in self.eleves]
             
-            html = t.render(titre = ref.labels["ELEVES"][2].Plur_(),
+            html = t.render(titre = ref.getLabel("ELEVES").Plur_(),
                             lst_elv = lst_elv,
                             )
     
@@ -13348,7 +13348,7 @@ class Personne(ElementBase):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("tit", self.GetReferentiel().labels["ELEVES"][2].sing_(), bold = True, size=6)
+        self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").sing_(), bold = True, size=6)
         
         if hasattr(self, 'referent'):
             bold = self.referent
@@ -13395,7 +13395,8 @@ class Eleve(Personne):
         Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 550*SSCALE)
         Grammaire.__init__(self, self.GetReferentiel().labels["ELEVES"][0])
         
-        self.titre = self.GetReferentiel().labels["ELEVES"][2].sing_()
+#         self.titre = self.GetReferentiel().labels["ELEVES"][2].sing_()
+        self.titre = self.sing_()
  
         self.modeles = []
         

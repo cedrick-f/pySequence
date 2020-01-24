@@ -2284,9 +2284,24 @@ class Referentiel(XMLelem):
         
         
         
+    #########################################################################
+    def getLabel(self, code):
+        """ Retourne le "label" (type Grammaire) associé au code donné
+        """
+        if code in self.labels:
+            return self.labels[code][2]
+        else:
+            return Grammaire(code)
     
-    
-    
+    #########################################################################
+    def getLabelAide(self, code):
+        """ Retourne l'aide du "label" (type str) associé au code donné
+        """
+        if code in self.labels:
+            return self.labels[code][1]
+        else:
+            return code
+        
     #########################################################################
     def getSavoir(self, code):
         """ Renvoie un savoir d'après son code
