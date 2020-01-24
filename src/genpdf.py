@@ -318,9 +318,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
         except:
             Err.append("Le fichier HTML n'a pas pu être converti en PDF !\n\n" \
                        "\tVeillez à en vérifier la syntaxe, notamment celle des style CSS.")
-        finally:
-            # close output file
-
+        
 
 #    print pisaStatus.err
     # return True on success and False on errors

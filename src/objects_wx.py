@@ -199,7 +199,6 @@ from rapport import FrameRapport, RapportRTF
 from math import sin, cos, pi
 
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
-
 import Referentiel
 
 
@@ -6527,7 +6526,9 @@ class PositionCtrl(wx.Panel):
         return self.sel.GetRange()
         
         
-    def MiseAJour(self):
+    def MiseAJour(self, position = None):
+        if position is not None:
+            self.position = position
         self.SetValue(self.position)
         
 
@@ -9270,9 +9271,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
     def GetDocument(self):
         return self.lien.parent
 
+
     #############################################################################            
     def construire(self):
-        print("construire")
+#         print("construire")
         if self.sequence is not None:
             classe = self.sequence.classe
             ref = self.sequence.GetReferentiel()
@@ -9280,10 +9282,6 @@ class PanelPropriete_LienSequence(PanelPropriete):
             classe = self.GetDocument().classe
             ref = classe.GetReferentiel()
             
-        
-        # Passage momentané en Anglais (bug de wxpython)
-#         locale2EN()
-        
         
         #
         # Intitulé de la séquence
@@ -9331,20 +9329,20 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
         
         if self.sequence is not None:
-            self.position = PositionCtrl(self, self.sequence.position, 
-                                         ref.getPeriodeSpe(classe.specialite),
-                                         totmax = ref.getNbrPeriodes())
-    #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
-            self.Bind(wx.EVT_SLIDER, self.onChanged)
-            sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
-        
-        
+            position = self.sequence.position
+        else:
+            position = [0, 0]
+        self.position = PositionCtrl(self, position, 
+                                     ref.getPeriodeSpe(classe.specialite),
+                                     totmax = ref.getNbrPeriodes())
+        self.Bind(wx.EVT_SLIDER, self.onChanged)
+        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
         
         
         #
         # Aperçu de la séquence
         #
-        size = (141*SSCALE,200*SSCALE) # Rapport A4
+        size = (141*SSCALE, 200*SSCALE) # Rapport A4
         sb1 = myStaticBox(self, -1, "Aperçu de la Séquence", size = size)
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize(size)
@@ -9403,11 +9401,12 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def onChanged(self, evt):
-        self.sequence.SetPosition(self.position.GetRange())
-        self.SetBitmapPosition()
-        self.GetDocument().Ordonner()
-        t = "Changement de position de la séquence"
-        self.GetDocument().GererDependants(self.sequence, t)
+        if self.sequence is not None:
+            self.sequence.SetPosition(self.position.GetRange())
+            self.SetBitmapPosition()
+            self.GetDocument().Ordonner()
+            t = "Changement de position de la séquence"
+            self.GetDocument().GererDependants(self.sequence, t)
         
         
         
@@ -9428,7 +9427,13 @@ class PanelPropriete_LienSequence(PanelPropriete):
         if dlg.ShowModal() == wx.ID_OK:
             self.lien.path = testRel(dlg.GetPath(), 
                                      self.GetDocument().GetPath())
-            self.MiseAJour(sendEvt = True)
+            self.lien.ChargerSequence()
+            self.lien.GetApp().arbre.ReSelectItem(self.lien.branche)
+#             
+#             self.__init__(self.parent, self.lien)
+#             self.sequence = self.lien.sequence
+#             self.construire()
+#             self.MiseAJour(sendEvt = True)
         dlg.Destroy()
         
         self.SetFocus()
@@ -9519,8 +9524,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #         print("MiseAJour PanelPropriete_LienSequence", self.lien, sendEvt)
 
 #        self.intit.SetLabel(self.sequence.intitule)
-        if self.sequence is not None:
-            self.intit.SetValue(self.sequence.intitule, False)
+        if self.sequence is None:
+            return
+        
+        self.intit.SetValue(self.sequence.intitule, False)
 #         SetValue  : voir orthographe.STC_ortho
 #         ChangeValue ?
 
@@ -14035,6 +14042,13 @@ class ArbreDoc(CT.CustomTreeCtrl):
 #     def OnKey(self, evt):
 #         print "OnKey"
     
+    
+    ###############################################################################################
+    def ReSelectItem(self, item):
+        self.SelectItem(item, select=False)
+        self.SelectItem(item)
+        
+        
     ###############################################################################################
     def OnKeyDown(self, evt):
 #         print "OnKeyDown"
@@ -14117,7 +14131,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         else:
             self.item = item
         data = self.GetItemPyData(self.item)
-        print("OnSelChanged", data)
+#         print("OnSelChanged", data)
         if isinstance(data, tuple) and hasattr(data[0], 'GetPanelPropriete'):
             panelPropriete = data[0].GetPanelPropriete(self.panelProp, data[1], data[2])
         elif hasattr(data, 'GetPanelPropriete'):
@@ -14126,7 +14140,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
             panelPropriete = self.GetPanelPropriete(self.panelProp, data)
         else:
             print("err : ", data)
-        
+#         print("   >>", panelPropriete)
         if panelPropriete is None:
             panelPropriete = self.GetPanelPropriete(self.panelProp, data.toolTip)
         
@@ -17739,10 +17753,13 @@ class PanelProblematiques(wx.Panel):
 
 
     ####################################################################################
-    def MiseAJour(self):
+    def MiseAJour(self, CI = None):
 #         print "MiseAJour Pb"
 #         print self.CI.Pb
 #         self.PbPerso.SetStrings(u"")
+        if CI is not None:
+            self.CI = CI
+        
         if hasattr(self, 'arbre'):
             for b in self.branche:
                 self.arbre.CheckItem2(b, False)

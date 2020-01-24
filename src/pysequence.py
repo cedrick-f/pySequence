@@ -1774,7 +1774,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
         
     ######################################################################################  
     def GetApp(self):
-        return self.app
+        return self.app  # de type FenentreDocument
     
     ######################################################################################  
     def SetPath(self, path):
