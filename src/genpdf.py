@@ -291,6 +291,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
               'SRC' : remplaceCR(projet.src_finance),
               'TYP' : TY,
               'PRE' : remplaceCR(projet.problematique),
+              'PB'  : remplaceCR(projet.problematique),
               'EQU' : NP,
               'ELE' : NE,
               'OBJ' : remplaceCR(projet.production),
