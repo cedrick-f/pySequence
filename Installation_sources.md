@@ -1,5 +1,5 @@
 # Installation de pySéquence 8 à partir des sources #
-**avec Python 3**
+**avec Python 3.6**
 
 _testé sous Windows_
 
