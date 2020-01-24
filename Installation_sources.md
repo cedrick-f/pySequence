@@ -104,6 +104,13 @@ Sous Windows :
 
     pip install jinja2
 
+
+### pathvalidate ###
+0.29.0
+
+    pip install pathvalidate
+    
+    
 ### rsvg (en cours de développement) ###
 (source : https://github.com/jmcb/python-rsvg-dependencies)
 
