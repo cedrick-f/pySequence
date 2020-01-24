@@ -555,11 +555,16 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     doc = fitz.open()
     doc.insertPDF(doc1) 
     doc.insertPDF(doc2)
-    doc.save(nomFichier)
+    try:
+        doc.save(nomFichier)
+    except:
+        Err.append("Impossible d'enregistrer le fichier :\n%s" %nomFichier)
+    finally:
+        doc.close()
 #     print("Ok2")
     doc1.close()
     doc2.close()
-    doc.close()
+    
     
 #     merger = PdfFileMerger()
 #     input1 = open(fichertempV, "rb")
