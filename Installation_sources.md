@@ -1,5 +1,5 @@
 # Installation de pySéquence 8 à partir des sources #
-**avec Python 3**
+**avec Python 3.6**
 
 _testé sous Windows_
 
@@ -104,6 +104,13 @@ Sous Windows :
 
     pip install jinja2
 
+
+### pathvalidate ###
+0.29.0
+
+    pip install pathvalidate
+    
+    
 ### rsvg (en cours de développement) ###
 (source : https://github.com/jmcb/python-rsvg-dependencies)
 
