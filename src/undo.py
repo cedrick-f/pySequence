@@ -39,13 +39,16 @@ from wx.lib.delayedresult import startWorker
 TAILLE = 20
 
 class UndoStack():
-    def __init__(self, doc):
+    def __init__(self, doc, postfcn):
         
         self.doc = doc
         self.stack = []
         self.index = 1 # Le curseur qui point sur l'état "actuel" (en partant de la fin)
         self.onUndoRedo = False # Flag pour geler le "do" (True = pas de nouveau "do")
-
+        self.postfcn = postfcn
+    
+    def __repr__(self):
+        return "["+', '.join(self.getStack())+"]"
     
     def do(self, action):
         startWorker(self.OnFinish, self.onDo, wargs=[action])
@@ -53,12 +56,14 @@ class UndoStack():
     def onDo(self, action):
         if not self.onUndoRedo:
             
-            s = self.doc.getBranche()
+            s = self.doc.getBrancheUndo()
             if self.index > 1:
                 del self.stack[-self.index+1:]
                 self.index = 1
             self.stack.append((s, action))
-            del self.stack[:-TAILLE]
+            del self.stack[:-TAILLE] # limite la taille du stack
+#             print("do", self.index, self.getStack())
+            self.postfcn()
 #            self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
             
 #            print self.doc, ": do =", len(self.stack), self.index, action
@@ -66,7 +71,9 @@ class UndoStack():
     def undo(self):
         if self.index < TAILLE:
             self.index += 1
-            self.doc.setBranche(self.stack[-self.index][0])
+#             print("undo", self.index, self.getStack())
+            self.doc.setBrancheUndo(self.stack[-self.index][0])
+            self.postfcn()
 #            print self.doc, ": undo <<", len(self.stack), self.index, self.stack[-self.index][1]
             
     def OnFinish(self, t):
@@ -75,7 +82,8 @@ class UndoStack():
     def redo(self):
         if self.index > 1:
             self.index -= 1
-            self.doc.setBranche(self.stack[-self.index][0])
+            self.doc.setBrancheUndo(self.stack[-self.index][0])
+            self.postfcn()
 #            print self.doc, ": redo >>", len(self.stack), self.index, self.stack[-self.index][1]
             
 

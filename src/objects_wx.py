@@ -965,7 +965,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         """ Mise à jour des boutons (et menus)
             après une opération undo ou redo
         """
-#        print "miseAJourUndo"
+#         print("miseAJourUndo")
         try:
             doc = self.GetDocActif()
         except:
@@ -1736,7 +1736,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
         wx.CallAfter(self.MiseAJourToolBar)
         
-        self.miseAJourUndo()
+#         self.miseAJourUndo()
 
 
     ###############################################################################################
@@ -2006,8 +2006,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         return self.panelProp.panel
 
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = "", draw = True, 
-                  obj = None, verif = False):
+    def sendEvent(self, doc = None, modif = "",
+                  draw = True, verif = False):
 #         print("sendEvent", modif, draw, verif)
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
@@ -2220,23 +2220,27 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 self.fichierSauvegarde = ""
             except:
                 pass
-            
     
+    
+    #############################################################################
+    def miseAJourUndo(self):
+        self.parent.miseAJourUndo()
+        
+        
     #############################################################################
     def commandeRedo(self, event = None):
         wx.BeginBusyCursor()
         doc = self.GetDocument()
         doc.undoStack.setOnUndoRedo()
-        doc.classe.undoStack.setOnUndoRedo()
+#         doc.classe.undoStack.setOnUndoRedo()
         
         doc.undoStack.redo()
-        doc.classe.undoStack.redo()
-        
+#         doc.classe.undoStack.redo()
         
         self.restaurer()
         
         doc.undoStack.resetOnUndoRedo()
-        doc.classe.undoStack.resetOnUndoRedo()
+#         doc.classe.undoStack.resetOnUndoRedo()
         
         wx.EndBusyCursor()
         
@@ -2245,19 +2249,15 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         wx.BeginBusyCursor()
         doc = self.GetDocument()
         doc.undoStack.setOnUndoRedo()
-        doc.classe.undoStack.setOnUndoRedo()
-#        t0 = time.time()
+#         doc.classe.undoStack.setOnUndoRedo()
+
         doc.undoStack.undo()
-#        t1 = time.time()
-#        print "  ", t1-t0
-        
-        doc.classe.undoStack.undo()
-#        t2 = time.time()
-#        print "  ", t2-t1
+#         doc.classe.undoStack.undo()
         
         self.restaurer()
         doc.undoStack.resetOnUndoRedo()
-        doc.classe.undoStack.resetOnUndoRedo()
+#         doc.classe.undoStack.resetOnUndoRedo()
+        
         wx.EndBusyCursor()
     
     
@@ -2913,9 +2913,9 @@ class FenetreSequence(FenetreDocument):
             #
             # Mise en liste undo/redo
             #    
-            self.classe.undoStack.do("Nouvelle Classe")
+#             self.classe.undoStack.do("Nouvelle Classe")
             self.sequence.undoStack.do("Nouvelle Séquence")
-            self.parent.miseAJourUndo()
+#             self.parent.miseAJourUndo()
             
             
 #     ###############################################################################################
@@ -2952,35 +2952,35 @@ class FenetreSequence(FenetreDocument):
     def OnDocModified(self, event):
         """ La Séquence a été modifiée
         """
-#         print("OnDocModified", event.GetModif())
+#         print("OnDocModified :", event.GetModif())
         
         # coupé pour accélération :
 #         if event.GetModif() != "":
 #             self.classe.undoStack.do(event.GetModif())
 #             self.sequence.undoStack.do(event.GetModif())
         
-        if event.GetDocument() == self.sequence:
-            if event.GetModif() != "":
-                self.sequence.undoStack.do(event.GetModif())
-                
-            if event.GetVerif():
-                self.sequence.VerifPb()
-            if event.GetDraw():
-                wx.CallAfter(self.fiche.Redessiner)
-            self.MarquerFichierCourantModifie()
+#         if event.GetDocument() == self.sequence:
+        if event.GetModif() != "":
+            self.sequence.undoStack.do(event.GetModif())
+            
+        if event.GetVerif():
+            self.sequence.VerifPb()
+        if event.GetDraw():
+            wx.CallAfter(self.fiche.Redessiner)
+        self.MarquerFichierCourantModifie()
             
             
-        elif event.GetDocument() == self.classe:
-            if event.GetModif() != "":
-                self.classe.undoStack.do(event.GetModif())
-            
-            if event.GetVerif():
-                self.sequence.VerifPb()
-            if event.GetDraw():
-                wx.CallAfter(self.fiche.Redessiner)
-            self.MarquerFichierCourantModifie()
+#         elif event.GetDocument() == self.classe:
+#             if event.GetModif() != "":
+#                 self.classe.undoStack.do(event.GetModif())
+#             
+#             if event.GetVerif():
+#                 self.sequence.VerifPb()
+#             if event.GetDraw():
+#                 wx.CallAfter(self.fiche.Redessiner)
+#             self.MarquerFichierCourantModifie()
         
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
         
         
 #     ###############################################################################################
@@ -3061,7 +3061,7 @@ class FenetreSequence(FenetreDocument):
         
         self.fiche.Redessiner()
 
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
         
         
     ###############################################################################################
@@ -3279,9 +3279,9 @@ class FenetreSequence(FenetreDocument):
         #
         # Mise en liste undo/redo
         #    
-        self.classe.undoStack.do("Ouverture de la Classe")
+#         self.classe.undoStack.do("Ouverture de la Classe")
         self.sequence.undoStack.do("Ouverture de la Séquence")
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
         
         self.definirNomFichierCourant(nomFichier)
         
@@ -3400,9 +3400,9 @@ class FenetreProjet(FenetreDocument):
             #
             # Mise en liste undo/redo
             #    
-            self.classe.undoStack.do("Nouvelle Classe")
+#             self.classe.undoStack.do("Nouvelle Classe")
             self.projet.undoStack.do("Nouveau Projet")
-            self.parent.miseAJourUndo()
+#             self.parent.miseAJourUndo()
             
     #############################################################################
     def CleanClose(self):
@@ -3468,7 +3468,7 @@ class FenetreProjet(FenetreDocument):
         
         if event.GetModif() != "":
 #             print "OnDocModified", event.GetModif()
-            self.classe.undoStack.do(event.GetModif())
+#             self.classe.undoStack.do(event.GetModif())
             self.projet.undoStack.do(event.GetModif())
             
         if event.GetDocument() == self.projet:
@@ -3485,7 +3485,7 @@ class FenetreProjet(FenetreDocument):
         elif event.GetDocument() == self.classe:
             self.MarquerFichierCourantModifie()
             
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
         
         
 #     ###############################################################################################
@@ -3541,7 +3541,7 @@ class FenetreProjet(FenetreDocument):
         
 #        self.fiche.Redessiner()
 
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
 
     
     ###############################################################################################
@@ -3787,9 +3787,9 @@ class FenetreProjet(FenetreDocument):
         #
         # Mise en liste undo/redo
         #
-        self.classe.undoStack.do("Ouverture de la Classe")
+#         self.classe.undoStack.do("Ouverture de la Classe")
         self.projet.undoStack.do("Ouverture du Projet")
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
         
         self.definirNomFichierCourant(nomFichier)
         
@@ -4275,9 +4275,9 @@ class FenetreProgression(FenetreDocument):
             #
             # Mise en liste undo/redo
             #    
-            self.classe.undoStack.do("Nouvelle Classe")
+#             self.classe.undoStack.do("Nouvelle Classe")
             self.progression.undoStack.do("Nouvelle Progression")
-            self.parent.miseAJourUndo()
+#             self.parent.miseAJourUndo()
 
     ###############################################################################################
     def GetDocument(self):
@@ -4304,7 +4304,7 @@ class FenetreProgression(FenetreDocument):
         """
         if event.GetModif() != "":
 #            print "OnDocModified", event.GetModif()
-            self.classe.undoStack.do(event.GetModif())
+#             self.classe.undoStack.do(event.GetModif())
             self.progression.undoStack.do(event.GetModif())
         
         if event.GetDocument() == self.progression:
@@ -4321,7 +4321,7 @@ class FenetreProgression(FenetreDocument):
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
         
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
 
    
     
@@ -4609,9 +4609,9 @@ class FenetreProgression(FenetreDocument):
          
          
         # Mise en liste undo/redo
-        self.classe.undoStack.do("Ouverture de la Classe")
+#         self.classe.undoStack.do("Ouverture de la Classe")
         self.progression.undoStack.do("Ouverture de la Progression")
-        self.parent.miseAJourUndo()
+#         self.parent.miseAJourUndo()
         
         
         
@@ -5534,12 +5534,12 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def onUndoRedo(self):
         """ Renvoie True si on est en phase de Undo/Redo
         """
-        return self.GetDocument().undoStack.onUndoRedo or self.GetDocument().classe.undoStack.onUndoRedo
+        return self.GetDocument().undoStack.onUndoRedo# or self.GetDocument().classe.undoStack.onUndoRedo
     
     
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = "", draw = False, obj = None, verif = False):
-        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, obj = obj, verif = verif)
+    def sendEvent(self, doc = None, modif = "", draw = False, verif = False):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, verif = verif)
         self.eventAttente = False
         
     
@@ -7140,7 +7140,7 @@ class PanelPropriete_Classe(PanelPropriete):
                          )
 
         pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
-        pageGen.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
+#         pageGen.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
         sh.Add(self.cba, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
         sb.Add(sh, flag = wx.EXPAND)
         
@@ -7428,7 +7428,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de l'académie",
-                           obj = self.classe, draw = True, verif = False)
+                           draw = True, verif = False)
             
     
     ######################################################################################  
@@ -7455,7 +7455,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de la ville",
-                           obj = self.classe, draw = True, verif = False)
+                           draw = True, verif = False)
         
             
         
@@ -7469,7 +7469,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.AfficherAutre(False)
         
         self.sendEvent(modif = "Modification de l'établissement",
-                       obj = self.classe, draw = True, verif = False)
+                       draw = True, verif = False)
      
 
     ######################################################################################  
@@ -7669,7 +7669,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.GetFenetreDoc().parent.options.optClasse["Enseignement"] = ref.Code
         
         self.sendEvent(modif = "Modification du type d'enseignement",
-                       obj = self.classe, draw = True, verif = True)
+                       draw = True, verif = True)
         
         
     ######################################################################################  
@@ -8302,7 +8302,7 @@ class PanelEffectifsClasse(wx.Panel):
             
         self.classe.GetApp().sendEvent(self.classe, 
                                        modif = "Modification du découpage de la Classe",
-                                       obj = self.classe, draw = True, verif = True)
+                                       draw = True, verif = True)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -10290,7 +10290,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         cbType.SetInitialSize() 
         
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
+#         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
         
         
         tsizer.Add(titre, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
@@ -10468,6 +10468,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.AdapterAuType()
         self.MiseAJour()
+        self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox)
         
         #
         # Mise en place
@@ -10493,7 +10494,7 @@ class PanelPropriete_Seance(PanelPropriete):
     def AdapterAuType(self):
         """ Adapte le panel au type de séance
         """
-#         print "AdapterAuType", self.seance
+#         print("AdapterAuType", self.seance)
 
         ref = self.GetReferentiel()
         
@@ -10859,7 +10860,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         
         
-        self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox)
+#         self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox)
         
         
         
@@ -11021,7 +11022,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #         if hasattr(self, 'cbEff'):
 #             print("EvtComboBox", event.GetEventObject(), self.cbEff)
         if event.GetEventObject() == self.cbType:
-#             print("EvtComboBox type")
+#             print("EvtComboBox type", self)
             ref = self.GetReferentiel()
             event.Skip()
             # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
@@ -11048,25 +11049,23 @@ class PanelPropriete_Seance(PanelPropriete):
     #        print self.GetReferentiel().seances
     #         print(self.cbType.GetStringSelection())
     
-    
             self.seance.SetType(get_key(ref.seances, 
                                         self.cbType.GetStringSelection(), 1))
             self.seance.GetDocument().OrdonnerSeances()
             if not self.seance.EstSeance_RS():
                 self.AdapterAuType()
-            
             if self.seance.typeSeance in ACTIVITES:
                 if not deja:
                     for sy in self.seance.GetDocument().systemes:
                         self.seance.AjouterSysteme(sy, construire = False)
             else:
                 self.seance.systemes = []
-            
             if not self.seance.EstSeance_RS():   
                 if self.cbEff.IsEnabled() and self.cbEff.IsShown() and self.cbEff.GetClientData() != "":
                     self.seance.SetEffectif(self.cbEff.GetClientData())
                 else:
                     self.seance.SetEffectif("C")
+
     #         print(self.seance.typeSeance, ref.effectifsSeance)
     #         if self.seance.typeSeance in list(ref.effectifsSeance.keys())\
     #             and len(ref.effectifsSeance[self.seance.typeSeance]) > 0:
@@ -11078,7 +11077,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.ConstruireListeSystemes()
             self.Layout()
     #        print "ok"
-            self.sendEvent(modif = "Modification du type %s" %ref._nomActivites.de_(), 
+            self.sendEvent(modif = "Modification du type %s (%s)" %(ref._nomActivites.de_(), self.seance.code), 
                            draw = True, verif = True)
 
 
@@ -13226,7 +13225,7 @@ class PanelPropriete_Groupe(PanelPropriete):
                          )
 
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
-        self.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
+#         self.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
         sh.Add(self.cba, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
         sb.Add(sh, flag = wx.EXPAND)
         
@@ -19611,7 +19610,7 @@ class PopupInfo(wx.PopupWindow):
     def onUndoRedo(self):
         """ Renvoie True si on est en phase de Undo/Redo
         """
-        return self.GetDocument().undoStack.onUndoRedo or self.GetDocument().classe.undoStack.onUndoRedo
+        return self.GetDocument().undoStack.onUndoRedo# or self.GetDocument().classe.undoStack.onUndoRedo
 
      
     #########################################################################################################

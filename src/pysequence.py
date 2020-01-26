@@ -1085,7 +1085,7 @@ class Classe(ElementBase):
         
         self.intitule = intitule
         
-        self.undoStack = UndoStack(self)
+#         self.undoStack = UndoStack(self)
         
         self.verrouillee = False
         self.specialite = []
@@ -1102,7 +1102,7 @@ class Classe(ElementBase):
         
         self.Initialise(pourProjet)
         
-        self.undoStack.do("Création de la Classe")
+#         self.undoStack.do("Création de la Classe")
             
         
 
@@ -1740,8 +1740,8 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.dependants = [] # Liste de documents dépendants (à enregistrer aussi)
 
         # Gestion des Undo/Redo
-        self.undoStack = UndoStack(self)
-        wx.CallAfter(self.undoStack.do, "Création "+self.du_())
+        self.undoStack = UndoStack(self, self.GetApp().miseAJourUndo)
+#         wx.CallAfter(self.undoStack.do, "Création "+self.du_())
         
         self.path = ""
         
@@ -1779,6 +1779,16 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ######################################################################################  
     def SetPath(self, path):
         self.path = path
+        
+    
+    ######################################################################################  
+    def getBrancheUndo(self):
+        return self.getBranche(), self.classe.getBranche()
+    
+    ######################################################################################  
+    def setBrancheUndo(self, branches):
+        self.setBranche(branches[0])
+        self.classe.setBranche(branches[1])
         
     
     ######################################################################################  
