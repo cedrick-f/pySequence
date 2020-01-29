@@ -144,29 +144,30 @@ def b64(img):
         
         
 
-def safeParse(nomFichier, toplevelwnd):
+def safeParse(nomFichier, toplevelwnd, silencieux = False):
     if not os.path.isfile(nomFichier):
         return
     
     fichier = open(nomFichier,'r', encoding='utf-8')
     parser = ET.XMLParser(encoding="utf-8")
+#     print(nomFichier)
+#     root = ET.parse(fichier, parser = parser).getroot()
+#     fichier.close()
+#     return root
     
-    root = ET.parse(fichier, parser = parser).getroot()
-    fichier.close()
-    return root
     
-    
-#     try:
-#         root = ET.parse(fichier, parser = parser).getroot()
-#         fichier.close()
-#         return root
-#     
-#     except:# ET.ParseError:
-#         messageErreur(toplevelwnd, "Fichier corrompu", 
-#                           "Le fichier suivant est corrompu !!\n\n"\
-#                           "%s\n\n" \
-#                           "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-#         fichier.close()
+    try:
+        root = ET.parse(fichier, parser = parser).getroot()
+        fichier.close()
+        return root
+     
+    except:# ET.ParseError:
+        if not silencieux:
+            messageErreur(toplevelwnd, "Fichier corrompu", 
+                              "Le fichier suivant est corrompu !!\n\n"\
+                              "%s\n\n" \
+                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+        fichier.close()
 #         
     
 
@@ -6924,7 +6925,8 @@ class Progression(BaseDoc, Grammaire):
   
   
     ########################################################################################################
-    def OuvrirFichierSeq(self, nomFichier, reparer = False):
+    def OuvrirFichierSeq(self, nomFichier, reparer = False,
+                         silencieux = False):
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
 #        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
@@ -6938,7 +6940,7 @@ class Progression(BaseDoc, Grammaire):
                 return classe, sequence
         
 #        print "///", nomFichier
-        root = safeParse(nomFichier, None)
+        root = safeParse(nomFichier, None, silencieux = silencieux)
         if root is None:
             return None,  None
         
@@ -6967,7 +6969,8 @@ class Progression(BaseDoc, Grammaire):
     
     
     ########################################################################################################
-    def OuvrirFichierPrj(self, nomFichier, reparer = False):
+    def OuvrirFichierPrj(self, nomFichier, reparer = False,
+                         silencieux = False):
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
         for prj in self.GetApp().parent.GetDocumentsOuverts('prj'):
@@ -6979,7 +6982,7 @@ class Progression(BaseDoc, Grammaire):
                 classe = projet.classe
                 return classe, projet
 
-        root = safeParse(nomFichier, None)
+        root = safeParse(nomFichier, None, silencieux = silencieux)
         if root is None:
             return None,  None
         
@@ -7158,7 +7161,7 @@ class Progression(BaseDoc, Grammaire):
         for f in l:
             dlg.Update(count, toSystemEncoding(f))
       
-            classe, sequence = self.OuvrirFichierSeq(f)
+            classe, sequence = self.OuvrirFichierSeq(f, silencieux = True)
 #                print classe.typeEnseignement ,  self.referentiel.Code
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
 #                lienSequence = LienSequence(self,  testRel(f, self.GetPath()))
@@ -7222,7 +7225,7 @@ class Progression(BaseDoc, Grammaire):
         for f in l:
             dlg.Update(count, toSystemEncoding(f))
       
-            classe, projet = self.OuvrirFichierPrj(f)
+            classe, projet = self.OuvrirFichierPrj(f, silencieux = True)
 
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
                 fichiers_projets.append((f, projet))

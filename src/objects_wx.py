@@ -1477,7 +1477,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #                 print("doc=",child)
                 if child != None:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
-                
+#                     print("xxx", doc)
+                   
                     
             # Le Fichier est déja ouvert
             else:
@@ -1492,8 +1493,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 if retCode == wx.ID_YES:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
             
-
-            if not reparer and doc is not None:
+            if doc[0] is None:
+                child.fermer()
+                
+            if not reparer and doc[0] is not None:
 #                 print "Ajout1", nomFichier
                 self.filehistory.AddFileToHistory(nomFichier)
             
