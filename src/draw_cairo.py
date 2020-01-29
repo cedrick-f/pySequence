@@ -1547,6 +1547,7 @@ def get_apercu(doc, larg, prop = 0.7071, entete = False):
     s = 1.0*larg/prop/COEF
     ctx.scale(s, s) 
 #    ctx.scale(mult, mult) 
+    doc.DefinirCouleurs()
     doc.draw.Draw(ctx, doc, entete = entete)
     
     del ctx

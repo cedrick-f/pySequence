@@ -565,7 +565,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False,
         for i,e in enumerate(prj.groupes) : 
             e.pts_caract = []
             l.append(e.GetNomPrenom())
-                
+        
         #
         # Graduation
         #

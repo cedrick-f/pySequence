@@ -1477,6 +1477,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #                 print("doc=",child)
                 if child != None:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
+                    
 #                     print("xxx", doc)
                    
                     
@@ -1493,10 +1494,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 if retCode == wx.ID_YES:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
             
-            if doc[0] is None:
+            if doc is None:
                 child.fermer()
                 
-            if not reparer and doc[0] is not None:
+            if not reparer and doc is not None:
 #                 print "Ajout1", nomFichier
                 self.filehistory.AddFileToHistory(nomFichier)
             
@@ -3141,7 +3142,7 @@ class FenetreSequence(FenetreDocument):
         root = pysequence.safeParse(nomFichier, wx.GetTopLevelParent(self))
         if root is None:
             dlg.Close()
-            return None, "", 0, False, True
+            return None#, "", 0, False, True
 
         
         #################################################################################################
@@ -3342,7 +3343,9 @@ class FenetreProjet(FenetreDocument):
             #
             self.projet = pysequence.Projet(self, self.classe)
             self.classe.SetDocument(self.projet)
+#             print("___-111", self.projet.code)   
             self.projet.MiseAJourTypeEnseignement()
+#             print("___-11", self.projet.code)   
         
         else:
             self.projet = projet
@@ -3621,7 +3624,7 @@ class FenetreProjet(FenetreDocument):
         root = pysequence.safeParse(nomFichier, dlg)
         if root is None:
             dlg.Close()
-            return None, "", 0, False, True
+            return None#, "", 0, False, True
         
 
             
@@ -3673,9 +3676,9 @@ class FenetreProjet(FenetreDocument):
                 message += "Construction de la structure du projet...\t"
                 dlg.update(count, message)
                 count += 1
-                
+#                 print("___-2", self.projet.code) 
                 self.projet.code = self.projet.GetReferentiel().getCodeProjetDefaut()
-                
+#                 print("___-1", self.projet.code) 
                 # Derniére vérification
                 if self.projet.GetProjetRef() == None:
                     print("Pas bon référentiel")
@@ -4443,7 +4446,7 @@ class FenetreProgression(FenetreDocument):
         root = pysequence.safeParse(nomFichier, dlg)
         if root is None:
             dlg.Close()
-            return None, "", 0, False, True
+            return None#, "", 0, False, True
          
         
         #################################################################################################

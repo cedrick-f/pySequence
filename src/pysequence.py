@@ -58,6 +58,8 @@ from jinja2 import Template
 from bs4 import BeautifulSoup
 
 import version
+from version import DEBUG
+
 import textwrap
 import base64
 
@@ -136,7 +138,7 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             PanelPropriete_FS, SSCALE
 
 
-DEBUG = "beta" in version.__version__
+
 
 
 def b64(img):
@@ -3800,9 +3802,11 @@ class Projet(BaseDoc, Grammaire):
         
         # code désignant le type de projet
 #        print "init Projet"
-#        print "   ", self.GetReferentiel()
+#        print "   ", self.GetReferentiel()   
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-  
+           
+        
+        
         self.position = self.GetPeriodeDefaut()
 #        print "position0", self.position
         self.nbrParties = 1
@@ -3851,6 +3855,7 @@ class Projet(BaseDoc, Grammaire):
         # Le module de dessin
         self.draw = draw_cairo_prj
         
+           
         
         
         
@@ -4189,7 +4194,7 @@ class Projet(BaseDoc, Grammaire):
             sp = [sp[0], sp[0]]
         self.position = [int(sp[0]), int(sp[1])]
         
-        
+#         print("___0", self.code)   
         prj = self.GetProjetRef()
         if prj is not None:
             if self.version == "": # Enregistré avec une version de pySequence > 5.7
@@ -4221,7 +4226,7 @@ class Projet(BaseDoc, Grammaire):
                 self.nbrRevues = len(self.positionRevues)
                 
             
-            
+#         print("___1", self.code)   
             
 #                                               '-'.join(list(ref.posRevues[self.nbrRevues]))).split('-')
     
@@ -4261,6 +4266,8 @@ class Projet(BaseDoc, Grammaire):
         brancheEle = branche.find("Eleves")
         self.eleves = []
         for e in list(brancheEle):
+            
+#             print("   ", self.GetProjetRef())
             eleve = Eleve(self)
             Ok = eleve.setBranche(e)
             if not Ok : 
@@ -6988,8 +6995,9 @@ class Progression(BaseDoc, Grammaire):
         
         classe = Classe(self.GetApp())
         projet = Projet(self.GetApp(), classe, ouverture = True)
+        projet.code = self.GetReferentiel().getCodeProjetDefaut()
         classe.SetDocument(projet)
-
+#         print("___-1", projet.code)   
         try:
             rprojet = root.find("Projet")
             rclasse = root.find("Classe")

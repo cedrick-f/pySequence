@@ -55,6 +55,10 @@ __mail__ = "cedrick.faury#ac-clermont.fr"
 print(__version__)
 
 
+DEBUG = "beta" in __version__
+DEBUG = True
+
+
 ###############################################################################################
 def GetVersion_cxFreeze():
     return __version__.replace("-beta", "")
