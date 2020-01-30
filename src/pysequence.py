@@ -5238,13 +5238,13 @@ class Projet(BaseDoc, Grammaire):
             t.ConstruireArbre(arbre, self.brancheTac)
         
 
-    ######################################################################################  
-    def reconstruireBrancheSeances(self, b1, b2):
-        self.arbre.DeleteChildren(self.brancheSce)
-        for sce in self.seances:
-            sce.ConstruireArbre(self.arbre, self.brancheSce) 
-        self.arbre.Expand(b1.branche)
-        self.arbre.Expand(b2.branche)
+#     ######################################################################################  
+#     def reconstruireBrancheSeances(self, b1, b2):
+#         self.arbre.DeleteChildren(self.brancheSce)
+#         for sce in self.seances:
+#             sce.ConstruireArbre(self.arbre, self.brancheSce) 
+#         self.arbre.Expand(b1.branche)
+#         self.arbre.Expand(b2.branche)
         
     
         
@@ -5532,13 +5532,16 @@ class Projet(BaseDoc, Grammaire):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement projet"
+#         print("MiseAJourTypeEnseignement projet")
 
         self.code = self.GetReferentiel().getCodeProjetDefaut()
         self.classe.MiseAJourTypeEnseignement()
         
         self.position = self.GetPeriodeDefaut()
 #        print "position", self.position
+        
+        self.initRevues()
+        self.MiseAJourNbrRevues()
         
         if hasattr(self, 'brancheElv'):
             self.brancheElv.SetText(self.GetReferentiel().getLabel("ELEVES").plur_())

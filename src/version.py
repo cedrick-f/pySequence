@@ -48,7 +48,7 @@ import wx
 
 __appname__= "pySéquence 8"
 __author__ = "Cédrick FAURY"
-__version__ = "8.3.3"
+__version__ = "8.3.4"
 __urlapi__ = "https://api.github.com/repos/cedrick-f/pySequence"
 __url__ = "https://github.com/cedrick-f/pySequence"
 __mail__ = "cedrick.faury#ac-clermont.fr"
@@ -56,7 +56,7 @@ print(__version__)
 
 
 DEBUG = "beta" in __version__
-DEBUG = True
+# DEBUG = True
 
 
 ###############################################################################################

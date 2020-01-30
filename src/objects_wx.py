@@ -220,7 +220,7 @@ import threading
 # import pysequence   # déplacé à la fin
 
 SSCALE = 1.0 # Facteur d'échelle à appliquer à toutes les dimensions des widgets
-DEBUG = "beta" in version.__version__
+DEBUG = version.DEBUG
 
 
 
@@ -6998,7 +6998,7 @@ class PanelOrganisation(wx.Panel):
             if monte:
                 self.objet.VerifierIndicRevue(numRevue)
             self.parent.sendEvent(modif = "Déplacement de la revue",
-                                  obj = self.objet, draw = True, verif = True)
+                                  draw = True, verif = True)
         
     #############################################################################            
     def MiseAJourListe(self):
@@ -11343,6 +11343,7 @@ class PanelPropriete_FS(PanelPropriete):
         
         
         self.sizer.Add(self.rdtype, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.AddGrowableRow(0)
         
         self.Bind(wx.EVT_RADIOBOX, self.OnChangeType, self.rdtype)
     
@@ -13330,7 +13331,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.groupe.SetListEleves(l)
         ref = self.groupe.GetReferentiel()
         self.sendEvent(modif = "Modification de la liste %s du groupe." %ref.getLabel("ELEVES").des_(),
-                           obj = self.groupe, draw = False, verif = False)
+                       draw = False, verif = False)
     
     #############################################################################            
     def GetDocument(self):
@@ -13365,7 +13366,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de l'académie",
-                           obj = self.groupe, draw = True, verif = False)
+                           draw = True, verif = False)
             
     
     ######################################################################################  
@@ -13392,7 +13393,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         
         if modif:
             self.sendEvent(modif = "Modification de la ville",
-                           obj = self.groupe, draw = True, verif = False)
+                           draw = True, verif = False)
         
             
         
@@ -13406,7 +13407,7 @@ class PanelPropriete_Groupe(PanelPropriete):
 #        self.AfficherAutre(False)
 
         self.sendEvent(modif = "Modification de l'établissement",
-                       obj = self.groupe, draw = True, verif = False)
+                       draw = True, verif = False)
 
 
 
@@ -13438,7 +13439,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.groupe.SetCode()
         
         self.sendEvent(modif = "Modification du type d'enseignement",
-                       obj = self.groupe, draw = True, verif = True)
+                       draw = True, verif = True)
         
 
     
@@ -13943,7 +13944,7 @@ class PanelPropriete_Modele(PanelPropriete):
         self.modele.logiciels = self.cb_type.GetAllChecked()
 #         print self.modele.logiciels
         self.sendEvent(modif = "Modification du logiciel du Modèle",
-                       obj = self.modele, draw = False, verif = False)
+                       draw = False, verif = False)
         
 
 ####################################################################################
@@ -14564,7 +14565,8 @@ class ArbreSequence(ArbreDoc):
                 self.SortChildren(self.item)
             else:
                 self.SortChildren(self.GetItemParent(self.item))
-            self.GetApp().sendEvent(self.sequence, modif = tx, draw = True, verif = True) # Solution pour déclencher un "redessiner"
+            self.GetApp().sendEvent(self.sequence, modif = tx, 
+                                    draw = True, verif = True) # Solution pour déclencher un "redessiner"
             
             
             
@@ -16957,7 +16959,7 @@ class Panel_SelectEnseignement(wx.Panel):
             self.sizer.Layout()
             
             self.panelClasse.sendEvent(modif = "Modification de la spécialité",
-                                       obj = self.classe, draw = True, verif = True)
+                                       draw = True, verif = True)
         
         if self.groupe is not None:
             self.groupe.specialite = list(self.rb_spe.GetCheckedStrings())
