@@ -2638,7 +2638,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def __repr__(self):
-        return "Prj_ :"#+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+        return "Prj_ :"+self.code#+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
 #         return self.code + " : " + self.intitule + u" (" + str(self.duree) + u"h)"
     

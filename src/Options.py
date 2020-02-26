@@ -459,7 +459,7 @@ class Options:
         # Projet
         #
         if doc != None and doc.GetType() == 'prj':
-            self.optProjet["NbrRevues"] = doc.nbrRevues
+            self.optProjet["NbrRevues"] = doc.getNbrRevues()
             self.optProjet["PosRevues"] = doc.positionRevues
         
 #        #

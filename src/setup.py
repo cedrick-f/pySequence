@@ -51,7 +51,8 @@ print(sys.getdefaultencoding())
 
 from version import __version__, GetVersion_cxFreeze, __mail__, __appname__
 
-import cairocffi
+#import wx
+#import cairocffi
 # import cairocffi.ffi_build
     
 

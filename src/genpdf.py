@@ -309,7 +309,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     
     with open(nomFichierPDF, "w+b") as resultFile:
         # convert HTML to PDF
-        print(sourceHtml)
+#         print(sourceHtml)
         try:
             pisaStatus = pisa.CreatePDF(sourceHtml,                # the HTML to convert
                                         dest=resultFile,

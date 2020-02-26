@@ -3692,7 +3692,7 @@ class FenetreProjet(FenetreDocument):
 #                         print self.projet.GetProjetRef()._dicoCompetences['S']['O7'].sousComp.items()
                         self.projet.GetProjetRef().normaliserPoidsComp(self.projet.GetProjetRef()._dicoCompetences['S']['O7'], reset = True)
 #                         print self.projet.GetProjetRef()._dicoCompetences['S']['O7'].sousComp.items()
-                
+#                 print("setBranche ...")
                 err = self.projet.setBranche(projet)
                 
                 if len(err) > 0 :
@@ -3758,6 +3758,7 @@ class FenetreProjet(FenetreDocument):
         #
         # Finalisation
         #
+        print("finalisation", self.projet.taches)
         try:
             message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
         except:
@@ -5815,7 +5816,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sequence.SetPosition(self.position.GetRange())
         self.SetBitmapPosition()
         self.sendEvent(modif = "Changement de position de la Séquence",
-                       obj = self.sequence, draw = True, verif = False)
+                       draw = True, verif = False)
         
         
     #############################################################################            
@@ -6077,12 +6078,13 @@ class PanelPropriete_Projet(PanelPropriete):
 #        self.position.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
 
 
+
         #
         # Organisation (nombre et positions des revues)
         #
-        self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
-        pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        #   Dans MiseAJour()
         
+
         
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(1)
@@ -6102,9 +6104,10 @@ class PanelPropriete_Projet(PanelPropriete):
 #        print "onChanged", event.GetSelection(), event.GetEventObject()
         self.projet.SetPosition(self.position.GetRange())
         self.MiseAJourPosition()
+        self.MiseAJour()
         
         self.sendEvent(modif = "Changement de position du Projet",
-                       obj = self.projet, draw = True, verif = True)
+                       draw = True, verif = True)
         
         
     #############################################################################            
@@ -6221,44 +6224,46 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def MiseAJourTypeEnseignement(self, sendEvt = False):
         
-        ref = self.projet.GetProjetRef()
+        prj = self.projet.GetProjetRef()
 #        print "MiseAJourTypeEnseignement projet", ref.code
         
         CloseFenHelp()
         
-        if ref is None:
+        if prj is None:
             return
         
         #
         # Page "Généralités"
         #
-        self.titre.SetLabel(ref.attributs['TIT'][0])
-        self.textctrl.MiseAJour(ref.attributs['TIT'][0], ref.attributs['TIT'][3])
+        self.titre.SetLabel(prj.attributs['TIT'][0])
+        self.textctrl.MiseAJour(prj.attributs['TIT'][0], prj.attributs['TIT'][3])
         self.textctrl.SetToolTip("Titre, résumé, intitulé, description synthétique du projet")
-        self.textctrl.SetTitre(ref.attributs['TIT'][0])
+        self.textctrl.SetTitre(prj.attributs['TIT'][0])
         
-        self.tit_pb.SetLabel(ref.attributs['PB'][0])
-        self.commctrl.MiseAJour(ref.attributs['PB'][0], ref.attributs['PB'][3])
-        self.commctrl.SetToolTip(ref.attributs['PB'][1] + constantes.TIP_PB_LIMITE)
-        self.commctrl.SetTitre(ref.attributs['PB'][0])
+        self.tit_pb.SetLabel(prj.attributs['PB'][0])
+        self.commctrl.MiseAJour(prj.attributs['PB'][0], prj.attributs['PB'][3])
+        self.commctrl.SetToolTip(prj.attributs['PB'][1] + constantes.TIP_PB_LIMITE)
+        self.commctrl.SetTitre(prj.attributs['PB'][0])
         
 #         self.MiseAJourPosition()
         wx.CallLater(0, self.MiseAJourPosition) # py3 : pour éviter les MemoryError !!
-        self.panelOrga.MiseAJourListe()
+        if hasattr(self, 'panelOrga'):
+            self.panelOrga.MiseAJourListe()
         
         
         #
         # Pages simples
         #
         for k in ['ORI', 'CCF', 'OBJ', 'SYN']:
-            if ref.attributs[k][0] != "":
+            if prj.attributs[k][0] != "":
                 if not k in list(self.pages.keys()):
-                    self.pages[k] = self.creerPageSimple(self.EvtText,ref.attributs[k][0],  ref.attributs[k][3])
+                    self.pages[k] = self.creerPageSimple(self.EvtText,prj.attributs[k][0],  
+                                                         prj.attributs[k][3])
                 else:
-                    self.pages[k][1].MiseAJour(ref.attributs[k][0], ref.attributs[k][3])
-                self.nb.SetPageText(self.GetPageNum(self.pages[k][0]), ref.attributs[k][0])
-                self.pages[k][1].SetToolTip(ref.attributs[k][1])
-                self.pages[k][1].SetTitre(ref.attributs[k][0])
+                    self.pages[k][1].MiseAJour(prj.attributs[k][0], prj.attributs[k][3])
+                self.nb.SetPageText(self.GetPageNum(self.pages[k][0]), prj.attributs[k][0])
+                self.pages[k][1].SetToolTip(prj.attributs[k][1])
+                self.pages[k][1].SetTitre(prj.attributs[k][0])
             else:
                 if k in list(self.pages.keys()):
                     self.nb.DeletePage(self.GetPageNum(self.pages[k][0]))
@@ -6271,13 +6276,13 @@ class PanelPropriete_Projet(PanelPropriete):
         
         # La page "sous parties" ('DEC')
         
-        if ref.attributs['DEC'][0] != "":
+        if prj.attributs['DEC'][0] != "":
             if not 'DEC' in list(self.pages.keys()):
                 self.pages['DEC'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['DEC'].SetBackgroundColour(bg_color)
                 
-                self.nb.AddPage(self.pages['DEC'], ref.attributs['DEC'][0])
+                self.nb.AddPage(self.pages['DEC'], prj.attributs['DEC'][0])
                 
                 self.nbrParties = Variable("Nombre de sous parties",  
                                            lstVal = self.projet.nbrParties, 
@@ -6290,7 +6295,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 titreInt = myStaticBox(self.pages['DEC'], -1, "Intitulés des différentes parties")
                 sb = wx.StaticBoxSizer(titreInt)
                 
-                self.intctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][1], scale = SSCALE)#, u"", style=wx.TE_MULTILINE)
+                self.intctrl = TextCtrl_Help(self.pages['DEC'], "", prj.attributs['DEC'][1], scale = SSCALE)#, u"", style=wx.TE_MULTILINE)
                 self.intctrl.SetTitre("Intitulés des différentes parties")
                 self.intctrl.SetToolTip("Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               "Les groupes %s sont désignés par des lettres (A, B, C, ...)\n" \
@@ -6303,7 +6308,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 
                 titreInt = myStaticBox(self.pages['DEC'], -1, "Énoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
-                self.enonctrl = TextCtrl_Help(self.pages['DEC'], "", ref.attributs['DEC'][3], scale = SSCALE)#, u"", style=wx.TE_MULTILINE)       
+                self.enonctrl = TextCtrl_Help(self.pages['DEC'], "", prj.attributs['DEC'][3], scale = SSCALE)#, u"", style=wx.TE_MULTILINE)       
                 self.enonctrl.SetToolTip("Énoncés du besoin des parties du projet confiées à chaque groupe")
                 self.enonctrl.SetTitre("Énoncés du besoin des différentes parties du projet")
         
@@ -6318,8 +6323,8 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.pages['DEC'].sizer.Layout()
             else:
 #                print "MiseAJour :", ref.attributs['DEC'][1]
-                self.intctrl.MiseAJour("", ref.attributs['DEC'][1])
-                self.enonctrl.MiseAJour("", ref.attributs['DEC'][3])
+                self.intctrl.MiseAJour("", prj.attributs['DEC'][1])
+                self.enonctrl.MiseAJour("", prj.attributs['DEC'][3])
         else:
             if 'DEC' in list(self.pages.keys()):
                 self.nb.DeletePage(self.GetPageNum(self.pages['DEC']))
@@ -6328,15 +6333,15 @@ class PanelPropriete_Projet(PanelPropriete):
         
         # La page "typologie" ('TYP')
         
-        if ref.attributs['TYP'][0] != "":
+        if prj.attributs['TYP'][0] != "":
             if not 'TYP' in list(self.pages.keys()):
                 self.pages['TYP'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['TYP'].SetBackgroundColour(bg_color)
                 
-                self.nb.AddPage(self.pages['TYP'], ref.attributs['TYP'][0])
+                self.nb.AddPage(self.pages['TYP'], prj.attributs['TYP'][0])
                 
-                lab = ref.attributs['TYP'][2].replace("\n\n", "\n")
+                lab = prj.attributs['TYP'][2].replace("\n\n", "\n")
                 liste = lab.split("\n")
                 self.lb = wx.CheckListBox(self.pages['TYP'], -1, (80*SSCALE, 50*SSCALE), wx.DefaultSize, liste)
                 self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.lb)
@@ -6354,24 +6359,24 @@ class PanelPropriete_Projet(PanelPropriete):
         
         # La page "Partenariat" ('PAR')
 #        print "xxx ", ref.attributs
-        if ref.attributs['PAR'][0] != "":
+        if prj.attributs['PAR'][0] != "":
             if not 'PAR' in list(self.pages.keys()):
                 self.parctrl = {}
                 self.pages['PAR'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['PAR'].SetBackgroundColour(bg_color)
                 
-                self.nb.AddPage(self.pages['PAR'], ref.attributs['PAR'][0])
+                self.nb.AddPage(self.pages['PAR'], prj.attributs['PAR'][0])
                 
                 for i, k in enumerate(['PAR', 'PRX', 'SRC']):
-                    titreInt = myStaticBox(self.pages['PAR'], -1, ref.attributs[k][0])
+                    titreInt = myStaticBox(self.pages['PAR'], -1, prj.attributs[k][0])
                     sb = wx.StaticBoxSizer(titreInt)
                 
                     self.parctrl[k] = orthographe.STC_ortho(self.pages['PAR'], -1)#, u"", style=wx.TE_MULTILINE)
                     
-                    self.parctrl[k].SetTitre(ref.attributs['PAR'][0])
+                    self.parctrl[k].SetTitre(prj.attributs['PAR'][0])
 
-                    self.parctrl[k].SetToolTip(ref.attributs[k][1])
+                    self.parctrl[k].SetToolTip(prj.attributs[k][1])
 #                    self.pages['PAR'].Bind(wx.EVT_TEXT, self.EvtText, self.parctrl[k])
 #                     self.pages['PAR'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.parctrl[k])
                     self.pages['PAR'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.parctrl[k])
@@ -6387,7 +6392,8 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.nb.DeletePage(self.GetPageNum(self.pages['PAR']))
                 del self.pages['PAR']
                 self.parctrl = {}
-        
+    
+    
     #############################################################################            
     def MiseAJourPosition(self, sendEvt = False):
         self.SetBitmapPosition()
@@ -6401,7 +6407,8 @@ class PanelPropriete_Projet(PanelPropriete):
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
 #         print("MiseAJour Projet", sendEvt)
 
-        ref = self.projet.GetProjetRef()
+        prj = self.projet.GetProjetRef()
+        ref = self.projet.GetReferentiel()
         
         # La page "Généralités"
         self.textctrl.SetValue(self.projet.intitule, False)
@@ -6418,26 +6425,43 @@ class PanelPropriete_Projet(PanelPropriete):
             self.pages['SYN'][1].SetValue(self.projet.synoptique, False)
         
         # La page "typologie" ('TYP')
-        if ref is not None and ref.attributs['TYP'][0] != "":
+        if prj is not None and prj.attributs['TYP'][0] != "":
             for t in self.projet.typologie:
                 self.lb.Check(t)
                 
         # La page "sous parties" ('DEC')
-        if ref is not None and ref.attributs['DEC'][0] != "":
+        if prj is not None and prj.attributs['DEC'][0] != "":
             self.intctrl.SetValue(self.projet.intituleParties, False)
             self.enonctrl.SetValue(self.projet.besoinParties, False)
             self.nbrParties.v[0] = self.projet.nbrParties
             self.ctrlNbrParties.mofifierValeursSsEvt()
         
         # La page "Partenariat" ('PAR')
-        if ref is not None and ref.attributs['PAR'][0] != "":
+        if prj is not None and prj.attributs['PAR'][0] != "":
             self.parctrl['PAR'].SetValue(self.projet.partenariat, False)
             self.parctrl['PRX'].SetValue(self.projet.montant, False)
             self.parctrl['SRC'].SetValue(self.projet.src_finance, False)
                     
         self.MiseAJourPosition()
-     
-        self.panelOrga.MiseAJourListe()
+        
+#         print("code", self.projet.code)
+        if not hasattr(self, 'panelOrga') and self.projet.code in ref.projets:
+            self.panelOrga = PanelOrganisation(self.pageGen, self, self.projet)
+            self.pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        else:
+            # Pas d'évaluation = pas de revues
+            if hasattr(self, 'panelOrga'):
+                try:
+                    self.pageGen.sizer.Detach(self.panelOrga)
+                except:
+                    pass
+                self.panelOrga.Destroy()
+                del self.panelOrga
+                
+        if hasattr(self, 'panelOrga'):
+            self.panelOrga.MiseAJourListe()
+        
+        self.pageGen.Layout()
         self.Layout()
         
         if sendEvt:
@@ -6883,7 +6907,7 @@ class PanelPropriete_Progression(PanelPropriete):
 ###################################################################################################
 class PanelOrganisation(wx.Panel):    
     def __init__(self, parent, panel, objet):
-#         print("PanelOrganisation", objet.nbrRevues)
+#         print("PanelOrganisation", objet.getNbrRevues())
         wx.Panel.__init__(self, parent, -1)
         self.objet = objet
         self.parent = panel
@@ -6895,7 +6919,7 @@ class PanelOrganisation(wx.Panel):
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
         self.nbrRevues = Variable("Nombre de revues",  
-                                   lstVal = self.objet.nbrRevues, 
+                                   lstVal = self.objet.getNbrRevues(), 
                                    typ = VAR_ENTIER_POS,
                                    bornes = [2,3])
         self.ctrlNbrRevues = VariableCtrl(self, self.nbrRevues, coef = 1, signeEgal = False,
@@ -7002,14 +7026,17 @@ class PanelOrganisation(wx.Panel):
         
     #############################################################################            
     def MiseAJourListe(self):
-#         print("MiseAJourListe", self.objet.nbrRevues)
+#         print("MiseAJourListe", self.objet.getNbrRevues())
 #        print self.objet.GetListeNomsPhases()
         prj = self.objet.GetProjetRef()
         if prj is None:
             return
+#         print("MiseAJourListe", prj.posRevues)
         
-        self.ctrlNbrRevues.redefBornes([min(prj.posRevues.keys()), max(prj.posRevues.keys())])
-        self.ctrlNbrRevues.setValeur(self.objet.nbrRevues)
+        mini, maxi = min(prj.posRevues.keys()), max(prj.posRevues.keys())
+        self.ctrlNbrRevues.redefBornes([mini, maxi])
+        self.ctrlNbrRevues.setValeur(self.objet.getNbrRevues())
+        self.ctrlNbrRevues.Show(mini != maxi)
 #         self.ctrlNbrRevues.setValeur(prj.getNbrRevuesDefaut())
         self.liste.Set(self.objet.GetListeNomsPhases())
         self.Layout()
@@ -7017,15 +7044,16 @@ class PanelOrganisation(wx.Panel):
 
     #############################################################################            
     def EvtVariable(self, event):
-        print("EvtVariable NbrRevues")
+        
         var = event.GetVar()
+        print("EvtVariable NbrRevues", var.v[0])
         if var == self.nbrRevues:
-            if var.v[0] != self.objet.nbrRevues:
-                self.objet.nbrRevues = var.v[0]
+            if var.v[0] != self.objet.getNbrRevues():
+                self.objet.setNbrRevues(var.v[0])
                 self.objet.MiseAJourNbrRevues()
                 self.MiseAJourListe()
                 self.parent.sendEvent(modif = "Modification du nombre de revues",
-                                      obj = self.objet, draw = True, verif = True)
+                                      draw = True, verif = True)
 
 
 
@@ -7270,14 +7298,16 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.ec.Onsize)
         
+        
         self.Layout()
         
         
         
     ######################################################################################              
     def OnResize(self, evt = None):
-        self.nb.SetMinSize((-1,self.GetClientSize()[1]))
         self.Layout()
+        self.nb.SetMinSize((-1,self.GetClientSize()[1]))
+        
         if evt:
             evt.Skip()
     
@@ -7313,7 +7343,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.MiseAJour()
         
         self.sendEvent(modif = "Ouverture d'une Classe",
-                       obj = self.classe, draw = True, verif = True)
+                       draw = True, verif = True)
     
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -7374,7 +7404,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.classe.doc.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJour()
         self.sendEvent(modif = "Réinitialisation des paramètres de Classe",
-                       obj = self.classe, draw = True, verif = True)
+                       draw = True, verif = True)
         
         
 #    #############################################################################            
