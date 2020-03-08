@@ -34,6 +34,14 @@ Pour que les projets soient correctement pris en compte, il faut qu'il y ait cor
 ou bien
 `Généralités!B26` = `Comp_S!L2`
 
+#### Cellules à renseigner
+ * "Tit" : intitulé du Projet
+ * "Des" : description complète du sujet (intitulé + problématique)
+ * "Nom" : nom de l'élève/étudiant
+ * "Pre" : prénom de l'élève/étudiant
+ * "N-P" : nom et prénom de l'élève/étudiant
+ * "Etab": nom de l'établissement
+ * "Sess": session
 
 ## Les fiches de validation de projet en HTML
 Les fiches de validation de projet doivent être des fichiers au format HTML. 
