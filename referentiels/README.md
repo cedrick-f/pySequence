@@ -42,6 +42,8 @@ ou bien
  * "N-P" : nom et prénom de l'élève/étudiant
  * "Etab": nom de l'établissement
  * "Sess": session
+ * "Prof" : liste des membres du jury
+ * "EtabPrf" : liste des établissements des membres du jury
 
 ## Les fiches de validation de projet en HTML
 Les fiches de validation de projet doivent être des fichiers au format HTML. 
