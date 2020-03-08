@@ -3758,7 +3758,7 @@ class FenetreProjet(FenetreDocument):
         #
         # Finalisation
         #
-        print("finalisation", self.projet.taches)
+#         print("finalisation", self.projet.taches)
         try:
             message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
         except:
@@ -3942,7 +3942,8 @@ class FenetreProjet(FenetreDocument):
             for e in self.projet.eleves:
                 message += "  "+e.GetNomPrenom()+"\n"
                 dlgb.update(count, message)
-                log.extend(e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False, win = dlgb))
+                log.extend(e.GenererGrille(nomFichiers = nomFichiers[e.id], 
+                                           messageFin = False, win = dlgb))
                 
 #                 dlgb.Refresh()
                 count += 1
@@ -18830,7 +18831,8 @@ class A_propos(wx.Dialog):
                                              "Arnaud BULCKE (Techno Collège)", \
                                              "Laurent Moutoussamy (MPSI)", \
                                              "André Forys (NSI)",
-                                             "Hubert Faigner (STS MS)")), \
+                                             "Hubert Faigner (STS MS)",
+                                             "Ludovic FROMAGEOT (STS CPI)")), \
                       
                       ("Remerciements : ", ("un grand merci aux très nombreux", \
                                              "utilisateurs qui ont pris le temps", \

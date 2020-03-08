@@ -258,7 +258,7 @@ def modifierGrille(doc, tableaux, eleve):
         :param eleve: Elève concerné par la grille à modifier
         :type eleve: pysequence.Eleve
     """
-#     print "modifierGrille", eleve, tableaux
+#     print("modifierGrille", eleve, tableaux)
     
     log = []
     ref = doc.GetReferentiel()
@@ -326,7 +326,7 @@ def modifierGrille(doc, tableaux, eleve):
              "Sess": str(doc.annee+1)
              }
 #     print schem
-    for parts, t in list(tableaux.values()):
+    for parts, t in tableaux.values():
         for part in parts:
 #             print ">>>", part
             dicInfo = prj.cellulesInfo[part]
@@ -353,7 +353,7 @@ def modifierGrille(doc, tableaux, eleve):
     for part, grille in list(prj.grilles.items()):
         dicInfo = prj.cellulesInfo[part]
         ts = [t for parts, t in list(tableaux.values()) if part in parts]
-        if "Prof" in list(dicInfo.keys()):
+        if "Prof" in dicInfo:
             for t in ts:
                 f, lcp , pre = dicInfo["Prof"][0] 
                 l, c, p = lcp # ligne, colonne, période
@@ -362,44 +362,64 @@ def modifierGrille(doc, tableaux, eleve):
                 if f in t.getSheets():
                     nf = t.getSheetNum(f)
                     profs = [pr.GetNomPrenom() for pr in doc.equipe]
-                    for i in range(5):
+                    
+                    if p == 0:
+                        profs = "\n".join(profs)
                         try:
-                            if i < len(profs):
-                                t.setCell(nf, l, c, profs[i])
-                            else:
-                                t.setCell(nf, l, c, '')
+                            t.setCell(nf, l, c, profs)
                         except:
                             pass
-    #                        log.append(u"Impossible d'écrire dans la cellule "\
-    #                                   + part + str(nf) + " " + str(l) + " " + str(c))
-                        l += p
+                            log.append(u"Impossible d'écrire dans la cellule "\
+                                       + part + str(nf) + " " + str(l) + " " + str(c))
+
+                    else:
+                        for i in range(len(profs)):
+                            try:
+                                if i < len(profs):
+                                    t.setCell(nf, l, c, profs[i])
+                                else:
+                                    t.setCell(nf, l, c, '')
+                            except:
+                                pass
+                                log.append(u"Impossible d'écrire dans la cellule "\
+                                           + part + str(nf) + " " + str(l) + " " + str(c))
+                            l += p
                 else:
                     log.append("Feuille \"" + f + "\" non trouvée")
         
-        if "EtabPrf" in list(dicInfo.keys()):
+        if "EtabPrf" in dicInfo:
             for t in ts:
                 f, lcp , pre = dicInfo["EtabPrf"][0] 
                 l, c, p = lcp # ligne, colonne, période
                 if grille[1] == 'C': # fichier "Collectif"
-                    f = f+str(eleve.id+1)
+                    f += str(eleve.id+1)
                 if f in t.getSheets():
                     nf = t.getSheetNum(f)
                     profs = [doc.classe.etablissement for pr in doc.equipe]
-                    for i in range(5):
+                    if p == 0:
+                        profs = "\n".join(profs)
                         try:
-                            if i < len(profs):
-                                t.setCell(nf, l, c, profs[i])
-                            else:
-                                t.setCell(nf, l, c, '')
+                            t.setCell(nf, l, c, profs)
                         except:
                             pass
-    #                        log.append(u"Impossible d'écrire dans la cellule "\
-    #                                   + part + str(nf) + " " + str(l) + " " + str(c))
-                        l += p
+                            log.append(u"Impossible d'écrire dans la cellule "\
+                                       + part + str(nf) + " " + str(l) + " " + str(c))
+                    else:
+                        for i in range(5):
+                            try:
+                                if i < len(profs):
+                                    t.setCell(nf, l, c, profs[i])
+                                else:
+                                    t.setCell(nf, l, c, '')
+                            except:
+                                pass
+                                log.append(u"Impossible d'écrire dans la cellule "\
+                                           + part + str(nf) + " " + str(l) + " " + str(c))
+                            l += p
                 else:
                     log.append("Feuille \"" + f + "\" non trouvée")
                 
-#    print "log",log
+#     print("log",log)
     return list(set(log))
     
     

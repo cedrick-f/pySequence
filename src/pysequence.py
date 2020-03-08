@@ -4698,7 +4698,7 @@ class Projet(BaseDoc, Grammaire):
     def MiseAJourNbrRevues(self):
         """ Opère les changements lorsque le nombre de revues a changé...
         """
-        print("MiseAJourNbrRevues", self.positionRevues)
+#         print("MiseAJourNbrRevues", self.positionRevues)
         lstPhasesTaches = [k.phase for k in self.taches if k.phase in TOUTES_REVUES_EVAL]
 #         print("   ", lstPhasesTaches, [k.phase for k in self.taches])
         
@@ -13697,8 +13697,8 @@ class Eleve(Personne):
             :rtype: list
         
         """
-#         print "GenererGrille élève", self
-#         print "  ", nomFichiers
+#         print("GenererGrille élève", self)
+#         print("  ", nomFichiers)
         
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(dirpath)

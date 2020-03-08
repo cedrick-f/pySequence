@@ -1,0 +1,3160 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_CPI" S_Famille="STS" S_FichierLogo="Logo_STS_CPI.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="https://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/BTS_CPI_-_Referentiel.pdf" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="MS" />
+  <l_CentresInterets S_00="Analyser l'expression d'un besoin" S_01="Rédiger un cahier des charges fonctionnel" S_02="Concevoir une solution technique relative à un mécanisme" S_03="Choisir une solution technique relative à un mécanisme" S_04="Pré-industrialiser une solution technique" S_05="Définir une solution technique optimisée" S_06="Participer à la vie d'un bureau d'études" />
+  <l_Enseignement S_00="STS-CPI" S_01="BTS - Conception des Produits Industriels" S_02="STS" S_03="Section de Technicien Supérieur" />
+  <d_aColNon />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_AP S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+  </d_demarches>
+  <d_dicoCompetences>
+    <Competences_S B_obj="True" B_pre="False" I_nivObj="0" S_abrDiscipline="Ens Pro" S_codeDiscipline="SII" S_nomDiscipline="Enseignement Pro" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicCompetences>
+        <Competence_C1 S_intitule="S'intégrer dans un environnement professionnel, assurer une veille technologique et capitaliser l'expérience">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C1.1 S_intitule="Respecter des référentiels internes ou externe">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'ensemble des référentiels est respecté scrupuleusement">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.1>
+            <Competence_C1.2 S_intitule="Intégrer une action d'étude dans une démarche &quot;qualité&quot;">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les procédures relatives à la démarche qualité sont identifiées et respectées">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.2>
+            <Competence_C1.3 S_intitule="Contribuer à l'archivage, à la traçabilité de l'étude et à la capitalisation des expériences dans les bases de données techniques de l'entreprise, participer à l'alimentation d'un système de gestion de données techniques">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Tous les éléments essentiels sont répertoriés et ajoutés à l'archive de l'entreprise">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les procédures d'utilisation du système de gestion de données sont scrupuleusement respectées">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="La traçabilité respecte les standards de l'entreprise et du donneur d'ordre.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.3>
+            <Competence_C1.4 S_intitule="Maîtriser le bon usage des outils de communication technique">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La communication technique est maîtrisée sur la forme et les outils sont adaptées aux besoins et aux interlocuteurs.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.4>
+            <Competence_C1.5 S_intitule="Elaborer et suivre l'évolution d'un dossier technique de produit.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les évolutions techniques de son champ d'activité sont identifiées et capitalisées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.5>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C1>
+        <Competence_C2 S_intitule="Rechercher une information dans une documentation technique, dans un réseau local ou à distance.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C2.1 S_intitule="Mettre en œuvre une démarche de recherche d'information.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'information recherchée est réordonnée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La démarche pour l'obtention de l'information sont efficients">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.1>
+            <Competence_C2.2 S_intitule="Classer, hiérarchiser des informations">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La démarche et les critères de choix pour l'obtention de l'information sont efficients">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.2>
+            <Competence_C2.3 S_intitule="Synthétiser une information.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La synthèse proposée résume les points importants">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C2>
+        <Competence_C3 S_intitule="Formuler et transmettre des informations, communiquer sous forme écrite et orale y compris en anglais.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C3.1 S_intitule="Choisir une stratégie et des supports de communication">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'objectif, le public visé, le message sont clairement identifiés">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les outils de communication choisis sont adaptés au message et aux interlocuteurs et respecte les standards de communication de l'entreprise.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.1>
+            <Competence_C3.2 S_intitule="Lire et rédiger un compte-rendu, un document technique en français et en anglais">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le document technique est décodé de manière univoque">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="le compte-rendu écrit est lisible et concis">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.2>
+            <Competence_C3.3 S_intitule="Présenter oralement un rapport en français et en agnlais">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'expression orale est claire">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les messages sont concis et sans ambiguïté">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le vocabulaire est pertinent et précis">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.3>
+            <Competence_C3.4 S_intitule="Participer à un échange technique en français et en anglais">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le vocabulaire technique est pertinent et précis">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les échanges techniques avec les interlocuteurs son compréhansibles.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C3>
+        <Competence_C4 S_intitule="S'impliquer dans un groupe projet et argumenter des choix techniques.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C4.1 S_intitule="Argumenter, au sein d'un groupe projet, les solutions techniques et économiques proposées en exploitant les outils adaptés.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les critères techniques et économiques retenus sont pertinents">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="L'argumentation est logique et objective.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.1>
+            <Competence_C4.2 S_intitule="Travailler en équipe et adopter les postures d'écoute, de discussion, de prise en compte d'avis, de participation.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les interventions sont pertinentes">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La définition du rôle tenu au sein du groupe est pertinente.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.2>
+            <Competence_C4.3 S_intitule="Rendre compte et participer à la capitalisation des solutiuons techniques de l'entreprise.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les moyens de communication retenus sont pertinents et maîtrisés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les descriptions techniques sont exactes et précises.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.3>
+            <Competence_C4.4 S_intitule="Respecter la durée d'étude attendue en phase avec le jalonnement d'un projet, recenser les éléments du coût et rendre compte.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les jalons du projet sont identifiés et respectés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La durée d'étude est respectée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les éléments impactant les coûts de l'étude sont identifiés">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les informations sont concises et claires.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C4>
+        <Competence_C5 S_intitule="Elaborer ou participer à l'élaboration d'un cahier des charges fonctionnel">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C5.1 S_intitule="Décoder un besoin et/ou élaborer un cahier des charges initial.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les éléments essentiels du cahier des charges sont correctement extraits.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="L'expression du besoin est correctement traduite.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.1>
+            <Competence_C5.2 S_intitule="Recenser les contraintes d'une étude.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les contraintes techniques sont identifiées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les contraintes technico-économiques sont hierarchisées au regard de l'expression du besoin et du trityque &quot;qualité/coût/délai&quot;.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les exigences du cycle de vie sont prises en compte.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les aspects normatifs sont pris en compte.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.2>
+            <Competence_C5.3 S_intitule="Formuler et synthétiser un cahier des charges fonctionnel résultant d'une verbalisation écrite et orale.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La frontière de l'étude est correctement définie.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les fonctions de service sont identifiées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les fonctions de service sont caractérisées: critères-niveaux-flexibilités/">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les fonctions de service sont classées au regard de la hiérarchisation des contraintes technico-économiques.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.3>
+            <Competence_C5.4 S_intitule="Participer à l'élaboration d'un devis d'une affaire.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les délais de recherche d'informations sont respectés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les moyens liés à l'étude sont correctement inventoriés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les prototypes pouvant être liés sont identifiés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C5>
+        <Competence_C6 S_intitule="Recenser et spécifier des technologies et des moyens de réalisation.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs>
+            <Indicateur_00 S_intitule="Les moyens techniques de production internes et externes sont caractérisés.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les critères choisis sont en adéquation avec le besoin exprimé.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="L'inventaire des moyens techniques de production est correct.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_02>
+          </l_indicateurs>
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C6>
+        <Competence_C7 S_intitule="Concevoir et définir, à l'aide d'un logiciel de CAO et des outils de simulation associés, un système, un outillage ou des pièces mécaniques satisfaisant au cahier des charges fonctionnel.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C7.1 S_intitule="Elaborer la maquette numérique de conception préliminaire du produit à l'aide d'un modeleur volumique, paramétrable, variationnel.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'arbre d'assemblage est organisé en sous-ensemble(s) fonctionnel(s) et/ou structurel(s) comprenant les solutions constructives à numériser.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="L'arbre d'assemblage est organisé en cohérence avec la méthodologie de conception utilisée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le mode de création est adapté et évolutif selon le niveau de définition de la maquette numérique (volume, surface, filaire).">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Le positionnement des pièces est correctement contraint dans le respect des mobilités relatives.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.1>
+            <Competence_C7.2 S_intitule="Formaliser les spécifications de fonctionnement.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les spécifications de bon fonctionnement du composant dans son contexte et/ou recommandés par les constructeurs sont recensées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les spécifications de fonctionnement sont déclinées sur les documents techniques appropriés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.2>
+            <Competence_C7.3 S_intitule="Générer une maquette numérique robuste de l'ensemble étudié.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La mise en contrainte à chaque niveau de l'assemblage est univoque et minimale.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le paramétrage géométrique est établi en cohérence avec le principe et les contraintes fonctionnelles de conception et de procédé envisagé.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le choix des paramètres assure la robustesse au sein de la maquette numérique et sa partabilité attendue.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.3>
+            <Competence_C7.4 S_intitule="Utiliser un logiciel de simulation pour optimiser / valider la conception détaillée d'un mécanisme.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'outil de simulation retenu est adapté à la validation du critère énoncé.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le modèle numérique est isolé et les données nécessaires sont introduites correctement.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les résultats de simulation sont analysés et les conséquences sur la conception détaillée mises en œuvre.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Une assistance à la modélisation associée à la simulation est proposée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.4>
+            <Competence_C7.5 S_intitule="Elaborer la maquette numérique définitive.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les pièces sont modélisées en respectant les règles d'obtention des formes associées aux procédés retenus.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les matériaux et autres indications de nomenclature sont associés au modèle.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.5>
+            <Competence_C7.6 S_intitule="Générer les représentations graphiques dérivées en mobilisant les fonctionnalités des modeleurs volumiques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les représentations graphiques dérivées sont complétées et légendées des informations techniques associées en adéquation avec le point de vue du destinataire.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les documents sont conformes aux attentes du client.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.6>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C7>
+        <Competence_C8 S_intitule="Imaginer et proposer des solutions techniques en réponse à un cahier des charges.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C8.1 S_intitule="Analyser et comparer les solutions techniques associées aux fonctions techniques, argumenter.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La décomposition en fonctions techniques est réalisée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les familles de solutions sont adaptées aux fonctions techniques.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les critères de comparaison sont identifiés et pertinents.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C8.1>
+            <Competence_C8.2 S_intitule="Concevoir des solutions techniques en mobilisant les méthodes de créativité tout en respectant les contraintes de la propriété industrielle.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La méthode de créativité employée est adaptée à la problématique technique.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La solution choisie est pertinente au regard du principe retenu.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le recherche des antériorités de brevets existants des soltions proposées a été effectuée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Un rapport synthétique de recherche est fourni.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C8.2>
+            <Competence_C8.3 S_intitule="Rechercher et expliciter un principe de solution.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le reformulation du problème comme donnée d'entrée de la méthode de créativité est correctement enoncée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Au terme de la recherche, les principes retenus sont pertinents vis-à-vis de la méthode de créativité et sont explicités par une description synthétique.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C8.3>
+            <Competence_C8.4 S_intitule="Proposer ou expliciter sous forme de schéma, commenté, légendé, une solution constructive.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le choix du type de croquis et/ou schéma est pertinent pour décrire la solution constructive.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les schémas et croquis sont lisibles et clairs">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les normes pour les schémas normalisés sont respectées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les légendes sont pertinentes et précises.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="Les commentaires sont pertinents et clairs.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_04>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C8.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C8>
+        <Competence_C9 S_intitule="Dimensionner tout ou partie d'une chaîne d'énergie en autonomie et/ou en collaboration avec un spécialiste.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C9.1 S_intitule="Mobiliser les connaissances de mécanique dans l'objectif d'établir des relations d'entrées-sorties de mécanismes plans ou spatiaux se prêtant à une modélisation simple.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les données de l'étude sont correctement identifiées: les paramètres d'entrée et de sortie, les données d'entrée - vitesse de rotation par exemple -, les données de sortie - course ou débattement souhaité, vitesse attendue, accélération tolérable, précision attendue.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les relations liant les paramètres d'entrée et de sortie sont correctement établies, d'un point de vue géométrique, cinématique ou énergétique (logique de flux).">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le rendement est correctement pris en compte dans le cas d'une approche énergétique.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Le degré d'hyperstatique constaté est rpis en compte dans la conception du système.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C9.1>
+            <Competence_C9.2 S_intitule="Prédimensionner les éléments de structure et/ou les actionneurs essentiels au projet">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La frontière d'étude est correctement définie, au regard du problème à résoudre.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les conditions aux limites sont correctement identifiées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les hypothèses de travail proposées sont justifiées. L'incidence sur les conditions aux limites est identifiée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les actions mécaniques nécessaires sont correctement déterminées, par un calcul statique ou dynamique.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="Les sollicitations mécaniques sont correctement déterminées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_04>
+                <Indicateur_05 S_intitule="Un pré-dimensionnement de la géométrie de certaines pièces, en regard d'un matériau, est correctement effectué par l'étude des contraintes et/ou des déformées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_05>
+                <Indicateur_06 S_intitule="La typologie d'actionneurs est identifiée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_06>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C9.2>
+            <Competence_C9.3 S_intitule="Améliorer par itération une géométrie ou une architecture informatique des comportements mécaniques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le modèle retenu en collaboration éventuelle avec un spécialiste est adapté au logiciel de simulation.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les données de simulation sont introduites correctement en cohérence avec l'étude attendue.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les résultats pertinents sont identifiés et analysés au regard de l'objectif fonctionnel.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Des propositions correctives d'évolution des paramètres sont faites en accord avec le chef de projet.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C9.3>
+            <Competence_C9.4 S_intitule="Dimensionner et choisir un composant standard en exploitant une base de données industrielle, mécanique ou électrique.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les critères de sélection sont hiérarchisés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les technologies envisageables sont sélectionnées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les données complémentaires nécessaires sont recueillies.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Le modèle d'étude est déterminé et les hypothèses simplificatrices retenues sont justifiées.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="L'utilisation d'un catalogue, d'un logiciel, d'une base de données technique est efficiente.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_04>
+                <Indicateur_05 S_intitule="Le dialogue avec un spécialiste est constructif.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_05>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C9.4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C9>
+        <Competence_C10 S_intitule="Optimiser le choix d'une solution technique en tenant compte des contraintes technico économiques.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs>
+            <Indicateur_00 S_intitule="Les procédures qualité de l'entreprise sont respectées.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les fonctions techniques élémentaires associées à la solution technique sont répertoriées.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les fonctions techniques élémentaires sont hiérarchisées et/ou classifiées selon un critère de choix technique.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les fonctions techniques élémentaires sont hiérarchisées et/ou classifiées selon un critère de choix économique.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Une démarche d'optimisation est mobilisée de façon cohérente seule ou en équipe avec un ou des spécialistes.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_04>
+            <Indicateur_05 S_intitule="La solution technique est optimisée conformément à l'objectif défini et intégrée à l'étude.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_05>
+            <Indicateur_06 S_intitule="Les outils d'optimisation utilisés sont pertinents et bien utilisés (outil de la méthode APTE, grille AMDEC, etc.)">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_06>
+          </l_indicateurs>
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C10>
+        <Competence_C11 S_intitule="Dimensionner tout ou partie d'une chaîne d'énergie en autonomie et/ou en collaboration avec un spécialiste.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C11.1 S_intitule="Collaborer au choix d'un matériau et d'un procédé d'élaboration compatibles avec les fonctions et formes de la pièce.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le choix du matériau est correctement justifé.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le choix du procédé est correctement justifié.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C11.1>
+            <Competence_C11.2 S_intitule="Intégrer les exigences ou proposition d'un spécialiste.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les critères retenus sont justifiés au regard du cahier des charges.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le compromis matériau-géométrie-procédé-coût est justifié.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le modèle numérique est correctement modifié.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C11.2>
+            <Competence_C11.3 S_intitule="Collaborer à la définition/ au choix des moyens de réalisation en réponse à un besoin de conception et de fabrication.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le choix du couple produit/procédé est compatible au regard des contraintes de production.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La solution est valide d'un point de vue économique et/ou environnemental.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="La définition des moyens est en adéquation avec leur aptitude.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C11.3>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C11>
+        <Competence_C12 S_intitule="Intégrer l'éco-conception dans la conception d'un produit.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs>
+            <Indicateur_00 S_intitule="Les contraintes environnementales, utilisées pour la caractérisation des fonctions de service, existent.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="La comparaison des solutions retenues, selon une analyse multicritères explicite, existe et est rationnelle. Elle permet d'optimiser les trois piliers du développement durable.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Un choix de composant standard et/ou sous traité optimisant les impacts environnementaux du cycle de vie du produit existe.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="La définition des pièces et du système en formes et dimensions optimsant les impacts environnementaux du cycle de vie du produit est pertinente.">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
+          </l_indicateurs>
+          <l_infos />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C12>
+        <Competence_C13 S_intitule="Intégrer le prototypage dans la conception et la réalisation d'un produit.">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C13.1 S_intitule="Participer à une boucle itérative de validation d'une géométrie ou d'une architecture à partir de la réalisation d'un prototype.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les fonctions, géométries ou comportement à valider sont identifiés et pertinents.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les itérations de prototypage convergent vers l'amélioration de la réponse aux besoins indentifiés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'évolution de la géomtrie du système en fonction des résultats du prototypage est pertinente.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Des prototypes physiques permettant de valider ces besoins existent.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C13.1>
+            <Competence_C13.2 S_intitule="Valider le comportment du système conçu au regard du cahier des charges fonctionnel.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La démarche de validation (expérimentation) au regard des comportements à valider est pertinente.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La démarche de validation est réalisée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'interprétation des résultats de la démarche est argumentée et pertinente.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les comportements du prototype sont validés ou invalidés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C13.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C13>
+        <Competence_C14 S_intitule="Elaborer le dossier de définition d'un produit mécanique (pièces cotées et tolérancées)">
+          <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_indicateurs />
+          <l_infos />
+          <d_poids />
+          <d_sousComp>
+            <Competence_C14.1 S_intitule="Réaliser des mises en plan normées (ensembles, sous-ensembles, nomenclatures).">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le respect de la normalisation et de la lisibilité de la mise en plan d'un ensemble sont assurés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le respect de la normalisation et de la lisibilité de la mise en plan de définition d'une pièce sont assurés.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le renseignement de la nomenclature associée au dessin d'ensemble est exhaustif.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les spécifications de fonctionnement sont correctement reportées (jeux, ajustements, …).">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C14.1>
+            <Competence_C14.2 S_intitule="Réaliser un dessin de définition de pièce, coté, tolérancé.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Une démarche expicite de spécification est mobilisée et permet de garantir la traçabilité.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les spécifications de fonctionnement (chaînes de cotes, conditions géométriques, états de surface) sont correctement traduites.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'identification des surfaces ou groupes de surfaces fonctionnelles est exhaustive et chaque surface (ou GSF) est associée à une fonction technique…">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="La spécification des fonctions techniques est exacte et justifiée.">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="Le cartouche est renseigné (tolérances générales, matériaux, indices de révisions, reérage,…)">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
+                </Indicateur_04>
+              </l_indicateurs>
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C14.2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_C14>
+      </d_dicCompetences>
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
+    <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="S10" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Savoirs">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicSElemAssocies />
+      <d_dicSavoirs>
+        <Savoir_1 S_commentaires="" S_intitule="Programme">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_1.1 S_commentaires="" S_intitule="Fonctions d'une variable réelle">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.1>
+            <Savoir_1.2 S_commentaires="" S_intitule="Calcul intégral">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.2>
+            <Savoir_1.3 S_commentaires="" S_intitule="Equations différentielles">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.3>
+            <Savoir_1.4 S_commentaires="" S_intitule="Statistique descriptive">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.4>
+            <Savoir_1.5 S_commentaires="" S_intitule="Probabilités 1">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.5>
+            <Savoir_1.6 S_commentaires="" S_intitule="Probabilités 2">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.6>
+            <Savoir_1.7 S_commentaires="" S_intitule="Statistique inférentielle">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.7>
+            <Savoir_1.8 S_commentaires="" S_intitule="Configurations géométriques">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.8>
+            <Savoir_1.9 S_commentaires="" S_intitule="calcul vectoriel">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.9>
+          </d_sousSav>
+        </Savoir_1>
+        <Savoir_2 S_commentaires="" S_intitule="Programme complémentaire (non évalué)">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_2.1 S_commentaires="" S_intitule="Modélisation géométrique">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_2.1>
+            <Savoir_2.2 S_commentaires="" S_intitule="Calcul matriciel">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_2.2>
+          </d_sousSav>
+        </Savoir_2>
+      </d_dicSavoirs>
+      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
+    </Savoirs_M>
+    <Savoirs_P B_obj="False" B_pre="True" S_abrDiscipline="S11" S_codeDiscipline="Phy" S_nomDiscipline="Physique et Chimie" S_nomGenerique="Savoirs">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicSElemAssocies />
+      <d_dicSavoirs>
+        <Savoir_A S_commentaires="" S_intitule="Matière - matériaux">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_A.1 S_commentaires="" S_intitule="Cohésion de la matière">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_A.1.1 S_commentaires="" S_intitule="La classification périodique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.1.1>
+                <Savoir_A.1.2 S_commentaires="" S_intitule="Edifices (molécules, ions) covalents, géométrie, polarité.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.1.2>
+                <Savoir_A.1.3 S_commentaires="" S_intitule="Interaction ionique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.1.3>
+                <Savoir_A.1.4 S_commentaires="" S_intitule="Interaction métallique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.1.4>
+                <Savoir_A.1.5 S_commentaires="" S_intitule="Interaction de Van der Waals et liaison hydrogène">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.1.5>
+              </d_sousSav>
+            </Savoir_A.1>
+            <Savoir_A.2 S_commentaires="" S_intitule="Métaux et alliages">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_A.2.1 S_commentaires="" S_intitule="Modèle du cristal parfait, existance de différentes structures cristallines">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.2.1>
+                <Savoir_A.2.2 S_commentaires="" S_intitule="Cristaux métalliques">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.2.2>
+                <Savoir_A.2.3 S_commentaires="" S_intitule="Alliages">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.2.3>
+                <Savoir_A.2.4 S_commentaires="" S_intitule="Changement d'état d'un métal ou d'un alliage">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.2.4>
+                <Savoir_A.2.5 S_commentaires="" S_intitule="Diagrammes d'équilibre binaires solide - liquide isobares">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.2.5>
+              </d_sousSav>
+            </Savoir_A.2>
+            <Savoir_A.3 S_commentaires="" S_intitule="Céramiques">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_A.3.1 S_commentaires="" S_intitule="Céramiques">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.3.1>
+              </d_sousSav>
+            </Savoir_A.3>
+            <Savoir_A.4 S_commentaires="" S_intitule="Polymères">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_A.4.1 S_commentaires="" S_intitule="Les matériaux polymères: généralités">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.4.1>
+                <Savoir_A.4.2 S_commentaires="" S_intitule="Polymère, macromolécules, monomère, motif, réactions de polymérisation, degré de polymérisation">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.4.2>
+                <Savoir_A.4.3 S_commentaires="" S_intitule="Classification des polymères">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.4.3>
+                <Savoir_A.4.4 S_commentaires="" S_intitule="Propriétés mécaniques des polymères">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.4.4>
+                <Savoir_A.4.5 S_commentaires="" S_intitule="Viellisement d'un matériau polymère, valorisation des déchets de polymères: recyclage, valorisation énergétique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_A.4.5>
+              </d_sousSav>
+            </Savoir_A.4>
+          </d_sousSav>
+        </Savoir_A>
+        <Savoir_B S_commentaires="" S_intitule="Optique">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_B>
+        <Savoir_C S_commentaires="" S_intitule="Electricité">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_C>
+        <Savoir_D S_commentaires="" S_intitule="Comportement dynamique des systèmes.">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav />
+        </Savoir_D>
+        <Savoir_E S_commentaires="" S_intitule="Mécanique des fluides">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_E.1 S_commentaires="" S_intitule="Statique des fluides">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_E.1.1 S_commentaires="" S_intitule="Pression dans un fluide">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_E.1.1>
+                <Savoir_E.1.2 S_commentaires="" S_intitule="Principe fondamental de l'hydrostatique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_E.1.2>
+              </d_sousSav>
+            </Savoir_E.1>
+            <Savoir_E.2 S_commentaires="" S_intitule="Dynamique des fluides incompressibles">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_E.2.1 S_commentaires="" S_intitule="Débit massique et débit volumique, conservation du débit.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_E.2.1>
+                <Savoir_E.2.2 S_commentaires="" S_intitule="Conservation de l'énergie, théorème de Bernouilli">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_E.2.2>
+                <Savoir_E.2.3 S_commentaires="" S_intitule="Viscosité">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_E.2.3>
+                <Savoir_E.2.4 S_commentaires="" S_intitule="Perte en charge en régime laminaire">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_E.2.4>
+                <Savoir_5.1.5 S_commentaires="" S_intitule="Conversion numérique analogique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_5.1.5>
+              </d_sousSav>
+            </Savoir_E.2>
+          </d_sousSav>
+        </Savoir_E>
+      </d_dicSavoirs>
+      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
+    </Savoirs_P>
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="EP" S_codeDiscipline="SII" S_nomDiscipline="Enseignement Pro" S_nomGenerique="Savoirs">
+      <l_asso_contexte />
+      <l_asso_type />
+      <d_dicSElemAssocies />
+      <d_dicSavoirs>
+        <Savoir_1 S_commentaires="" S_intitule="Démarche de conception et gestion de projet">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_1.1 S_commentaires="" S_intitule="Ingénierie système et analyse fonctionnelle">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Approche globale">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.1.1>
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Approche métier: description externe">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.1.2>
+                <Savoir_1.1.3 S_commentaires="" S_intitule="Approche métier: description interne">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.1.3>
+              </d_sousSav>
+            </Savoir_1.1>
+            <Savoir_1.2 S_commentaires="" S_intitule="Organisation de l'entreprise industrielle">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_1.2>
+            <Savoir_1.3 S_commentaires="" S_intitule="Compétitivité des produits industriels">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Méthodes et outils de compétitivité">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.3.1>
+                <Savoir_1.3.2 S_commentaires="" S_intitule="Créativité et outils de recherche de solutions">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.3.2>
+                <Savoir_1.3.3 S_commentaires="" S_intitule="Analyse de la valeur">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.3.3>
+              </d_sousSav>
+            </Savoir_1.3>
+            <Savoir_1.4 S_commentaires="" S_intitule="Développement durable et éco conception">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_1.4.1 S_commentaires="" S_intitule="Contexte du développement durable">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.4.1>
+                <Savoir_1.4.2 S_commentaires="" S_intitule="Normalisation et réglementation">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.4.2>
+                <Savoir_1.4.3 S_commentaires="" S_intitule="Méthode et outils d'éco conception">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_1.4.3>
+              </d_sousSav>
+            </Savoir_1.4>
+          </d_sousSav>
+        </Savoir_1>
+        <Savoir_2 S_commentaires="" S_intitule="Chaine numérique">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_2.1 S_commentaires="" S_intitule="Concept de &quot;chaîne numérique&quot;">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_2.1>
+            <Savoir_2.2 S_commentaires="" S_intitule="Simulation">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_2.2>
+            <Savoir_2.3 S_commentaires="" S_intitule="Outils de conception et repésentation numériques">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_2.3.1 S_commentaires="" S_intitule="Modeleurs volumiques paramétriques">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.3.1>
+                <Savoir_2.3.2 S_commentaires="" S_intitule="Méthode de conception">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.3.2>
+                <Savoir_2.3.3 S_commentaires="" S_intitule="Relation au système de production">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_2.3.3>
+              </d_sousSav>
+            </Savoir_2.3>
+            <Savoir_2.4 S_commentaires="" S_intitule="Représentations graphiques dérivées des maquettes numériques">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_2.4>
+          </d_sousSav>
+        </Savoir_2>
+        <Savoir_3 S_commentaires="" S_intitule="Comportement des systèmes mécaniques">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_3.1 S_commentaires="" S_intitule="Chaîne d'énergie">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_3.1.1 S_commentaires="" S_intitule="Analogie Mécanique-Electrique-Hydraulique">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.1.1>
+                <Savoir_3.1.2 S_commentaires="" S_intitule="Composants de conversion d'énergie et de commande">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.1.2>
+                <Savoir_3.1.3 S_commentaires="" S_intitule="Méthodes de dimensionnement d'une motorisation">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.1.3>
+              </d_sousSav>
+            </Savoir_3.1>
+            <Savoir_3.2 S_commentaires="" S_intitule="Etude des comportements mécaniques des pièces et des systèmes">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_3.2.1 S_commentaires="" S_intitule="Modélisation des mécanismes">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.1>
+                <Savoir_3.2.2 S_commentaires="" S_intitule="Mouvements relatifs entre solides dans le cas d'une translation ou d'une rotation autour d'un axe fixe">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.2>
+                <Savoir_3.2.3 S_commentaires="" S_intitule="Mouvements plans">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.3>
+                <Savoir_3.2.4 S_commentaires="" S_intitule="Modélisation des actions mécaniques">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.4>
+                <Savoir_3.2.5 S_commentaires="" S_intitule="Comportement mécanique des pièces et des systèmes">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.5>
+                <Savoir_3.2.6 S_commentaires="" S_intitule="Résistance des matériaux">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.6>
+                <Savoir_3.2.7 S_commentaires="" S_intitule="Mécanique des fluides">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_3.2.7>
+              </d_sousSav>
+            </Savoir_3.2>
+          </d_sousSav>
+        </Savoir_3>
+        <Savoir_4 S_commentaires="" S_intitule="Matériaux et traitements">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_4.1 S_commentaires="" S_intitule="Structure et caractéristiques des matériaux:">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_4.1>
+            <Savoir_4.2 S_commentaires="" S_intitule="Domaine d'utilisation et traitement des matériaux:">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_4.2>
+            <Savoir_4.3 S_commentaires="" S_intitule="Interaction fonction matériau-géométrie-procédé-coût">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_4.3>
+          </d_sousSav>
+        </Savoir_4>
+        <Savoir_5 S_commentaires="" S_intitule="Technologie des mécanismes">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_5.1 S_commentaires="" S_intitule="Solutions constructives associées aux liaisons">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_5.1>
+            <Savoir_5.2 S_commentaires="" S_intitule="Eléments de transmission de puissance">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_5.2>
+            <Savoir_5.3 S_commentaires="" S_intitule="Eléments de conversion d'énergie">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_5.3>
+            <Savoir_5.4 S_commentaires="" S_intitule="Capteurs">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_5.4>
+            <Savoir_5.5 S_commentaires="" S_intitule="Recherche documentaire">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav />
+            </Savoir_5.5>
+          </d_sousSav>
+        </Savoir_5>
+        <Savoir_6 S_commentaires="" S_intitule="Spécification et processus de contrôle">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_6.1 S_commentaires="" S_intitule="Spécification des produits">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_6.1.1 S_commentaires="" S_intitule="Défauts des surfaces réelles">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_6.1.1>
+                <Savoir_6.1.2 S_commentaires="" S_intitule="Types de tolérances et de spécifications">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_6.1.2>
+                <Savoir_6.1.3 S_commentaires="" S_intitule="Démarche de détermination des spécifications d'un produit">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_6.1.3>
+                <Savoir_6.1.4 S_commentaires="" S_intitule="Relation entre métrologie et tolérancement normalisé">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_6.1.4>
+              </d_sousSav>
+            </Savoir_6.1>
+            <Savoir_6.2 S_commentaires="" S_intitule="Processus de contrôle">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_6.2.1 S_commentaires="" S_intitule="Instruments, outillages et protocoles de contrôle">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_6.2.1>
+              </d_sousSav>
+            </Savoir_6.2>
+          </d_sousSav>
+        </Savoir_6>
+        <Savoir_7 S_commentaires="" S_intitule="Technologie des procédés">
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
+          <l_infos />
+          <l_nivTaxo>
+            <l_00 />
+            <l_01 />
+          </l_nivTaxo>
+          <d_sousSav>
+            <Savoir_7.1 S_commentaires="" S_intitule="Interaction conception industrialisation, optimisation de la relation produit-matériau-procédé">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_7.1.1 S_commentaires="" S_intitule="Procédés d'obtention">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.1.1>
+                <Savoir_7.1.2 S_commentaires="" S_intitule="Optimisation du choix des procédés de réalisation selon les critères suivants:">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav>
+                    <Savoir_7.1.2.1 S_commentaires="" S_intitule="Forme et état de la matière d'œuvre entrante utilisable">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_7.1.2.1>
+                    <Savoir_7.1.2.2 S_commentaires="" S_intitule="Caractéristiques physiques">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_7.1.2.2>
+                    <Savoir_7.1.2.3 S_commentaires="" S_intitule="Caractéristiques environnementales et économiques">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_7.1.2.3>
+                    <Savoir_7.1.2.4 S_commentaires="" S_intitule="Productivité">
+                      <l_elemAssocies>
+                        <l_00 />
+                        <l_01 />
+                      </l_elemAssocies>
+                      <l_infos />
+                      <l_nivTaxo>
+                        <l_00 />
+                        <l_01 />
+                      </l_nivTaxo>
+                      <d_sousSav />
+                    </Savoir_7.1.2.4>
+                  </d_sousSav>
+                </Savoir_7.1.2>
+                <Savoir_7.1.3 S_commentaires="" S_intitule="Relation caractéristiques de l'optimisation de la relation produit-matériau-procédé">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.1.3>
+                <Savoir_7.1.4 S_commentaires="" S_intitule="Méthodes de choix et procédures associées à la relation Produit-matériau-procédé">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.1.4>
+                <Savoir_7.1.5 S_commentaires="" S_intitule="Optimisation d'un produit réalisé selon un procédé et un processus donné.">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.1.5>
+              </d_sousSav>
+            </Savoir_7.1>
+            <Savoir_7.2 S_commentaires="" S_intitule="Création de prototypes de pièces et de mécanismes">
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_infos />
+              <l_nivTaxo>
+                <l_00 />
+                <l_01 />
+              </l_nivTaxo>
+              <d_sousSav>
+                <Savoir_7.2.1 S_commentaires="" S_intitule="Finalités et méthodologie du prototypage">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.2.1>
+                <Savoir_7.2.2 S_commentaires="" S_intitule="Domaines d'utilisation des prototypes">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.2.2>
+                <Savoir_7.2.3 S_commentaires="" S_intitule="Préparations CAO liées au prototypage">
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
+                  <l_infos />
+                  <l_nivTaxo>
+                    <l_00 />
+                    <l_01 />
+                  </l_nivTaxo>
+                  <d_sousSav />
+                </Savoir_7.2.3>
+              </d_sousSav>
+            </Savoir_7.2>
+          </d_sousSav>
+        </Savoir_7>
+      </d_dicSavoirs>
+      <l_nivTaxo S_00="Spe" S_01="EnsSpe" />
+    </Savoirs_S>
+  </d_dicoSavoirs>
+  <d_domaines />
+  <d_effectifs>
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="" S_04="" S_05="">
+      <l_03 I_00="77" I_01="77" I_02="179" />
+    </l_C>
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="" S_04="C" S_05="O">
+      <l_03 I_00="102" I_01="127" I_02="102" />
+    </l_G>
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="" S_04="G" S_05="N">
+      <l_03 I_00="179" I_01="77" I_02="77" />
+    </l_D>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="" S_04="G" S_05="N">
+      <l_03 I_00="77" I_01="127" I_02="127" />
+    </l_E>
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="" S_04="G" S_05="N">
+      <l_03 I_00="127" I_01="77" I_02="127" />
+    </l_P>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="" S_04="C" S_05="N">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_AP S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_HC S_00="I" />
+    <l_ST S_00="I" />
+    <l_C S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_SA S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_SS S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_E S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_R />
+    <l_S />
+  </d_effectifsSeance>
+  <d_ensSpecif />
+  <d_ensSpecifSeance>
+    <l_ED />
+    <l_AP />
+    <l_P />
+    <l_HC />
+    <l_ST />
+    <l_C />
+    <l_TD />
+    <l_SA />
+    <l_SS />
+    <l_E />
+    <l_R />
+    <l_S />
+  </d_ensSpecifSeance>
+  <Fonctions_fonctions B_obj="True" B_pre="True" I_nivObj="0" S_abrDiscipline="" S_codeDiscipline="Tec" S_nomDiscipline="" S_nomGenerique="Activités professionnelles">
+    <l_asso_contexte />
+    <l_asso_type />
+    <d_dicFonctions>
+      <l_A1 S_00="Participer à la réponse à une affaire">
+        <d_01>
+          <l_A1-T1 S_00="Analyser un cahier des charges initial de produit et/ou reformuler un besoin">
+            <l_01 S_00="C3" S_01="C5" />
+          </l_A1-T1>
+          <l_A1-T2 S_00="Participer à la prise en compte de l'environnement de l'étude">
+            <l_01 S_00="C2" S_01="C4" S_02="C5" />
+          </l_A1-T2>
+          <l_A1-T3 S_00="Elaborer tout ou partie d'un cahier des charges fonctionnel en collaboration avec un chef de projet ou un chargé d'affaires">
+            <l_01 S_00="C5" />
+          </l_A1-T3>
+          <l_A1-T4 S_00="Fournir les éléments techniques permettant d'établir un devis estimatif et les argumetner">
+            <l_01 S_00="C1" S_01="C4" S_02="C5" S_03="C6" />
+          </l_A1-T4>
+        </d_01>
+        <l_02 />
+      </l_A1>
+      <l_A2 S_00="Conception préliminaire">
+        <d_01>
+          <l_A2-T1 S_00="Consulter des bases de données techniques, recenser les contraintes de production et de logistique, classer et analyser la documentation réunie">
+            <l_01 S_00="C2" S_01="C3" S_02="C6" />
+          </l_A2-T1>
+          <l_A2-T2 S_00="Rechercher, analyser et représenter rapidement des solutions en relation avec les principes technologiques relatifs au besoin de conception">
+            <l_01 S_00="C4" S_01="C6" S_02="C8" />
+          </l_A2-T2>
+          <l_A2-T3 S_00="Elaborer la maquette 3D de conception préliminaire">
+            <l_01 S_00="C1" S_01="C7" />
+          </l_A2-T3>
+          <l_A2-T4 S_00="Elaborer des relations &quot;d'entrées-sorties&quot; pour les systèmes &quot;simples&quot; de transformation de mouvement et de transmission de puissance">
+            <l_01 S_00="C8" S_01="C9" />
+          </l_A2-T4>
+          <l_A2-T5 S_00="Participer à la recherche des solutions de pré dimensionnement de tout ou partie des éléments structurant de la solution et/ou de la chaîne d'énergie.">
+            <l_01 S_00="C9" />
+          </l_A2-T5>
+          <l_A2-T6 S_00="Exploiter des simulations du comportement de tout ou partie d'un mécanisme à partir d'un modèle numérique 3D et d'outils informatiques métiers pour valider ou non une solution.">
+            <l_01 S_00="C7" S_01="C8" S_02="C9" />
+          </l_A2-T6>
+          <l_A2-T7 S_00="Discriminer les solutions constructives possibles, en prenant en compte le triptyque &quot;qualité/coût/délai&quot; en rapport avec le CDC, et intégrer les évolutions à la maquette numérique de conception préliminaire.">
+            <l_01 S_00="C7" S_01="C10" />
+          </l_A2-T7>
+        </d_01>
+        <l_02 />
+      </l_A2>
+      <l_A3 S_00="Conception détaillée">
+        <d_01>
+          <l_A3-T1 S_00="Dimensionner puis choisir les composants standard ou sous-traités non définis lors de l'étude préliminaire">
+            <l_01 S_00="C9" S_01="C12" S_02="C14" />
+          </l_A3-T1>
+          <l_A3-T2 S_00="Collaborer à l'étude de pré industrialisation des produits entre spécialistes de la conception et de la réalisation pour optimiser la relation &quot;produit (fonction et géométrie) - matériau - procédé - coût&quot;.">
+            <l_01 S_00="C1" S_01="C2" S_02="C3" S_03="C4" S_04="C6" S_05="C10" S_06="C11" S_07="C12" />
+          </l_A3-T2>
+          <l_A3-T3 S_00="Prendre en compte et optimiser la conception au regard des exigences du cycle de vie du produit">
+            <l_01 S_00="C7" S_01="C10" S_02="C12" />
+          </l_A3-T3>
+          <l_A3-T4 S_00="Participer à, ou suivre la réalisation d'un prototype de tout ou partie d'un mécanisme pour optimiser et valider une conception">
+            <l_01 S_00="C11" S_01="C13" />
+          </l_A3-T4>
+          <l_A3-T5 S_00="Finaliser une maquette numérique 3D structurée, robuste et évolutive de l'étude">
+            <l_01 S_00="C7" S_01="C14" />
+          </l_A3-T5>
+          <l_A3-T6 S_00="Réaliser les dessins de définition en mobilisant la spécification géométrique et dimensionnelle dans un principe de cotation &quot;au juste suffisant&quot; fonctionnel">
+            <l_01 S_00="C7" S_01="C14" />
+          </l_A3-T6>
+          <l_A3-T7 S_00="Participer aux essais et à la validation des conditions de fonctionnement de tout ou partie d'un  système réalisé">
+            <l_01 S_00="C11" S_01="C13" S_02="C14" />
+          </l_A3-T7>
+          <l_A3-T8 S_00="Elaborer le dossier technique de définition du produit">
+            <l_01 S_00="C1" S_01="C7" S_02="C14" />
+          </l_A3-T8>
+          <l_A3-T9 S_00="Elaborer, à partir du modèle défintif, des représentations graphiques dérivées (notices de fonctionnement, images, vidéo de rendu réaliste, éclatés…)">
+            <l_01 S_00="C7" S_01="C14" />
+          </l_A3-T9>
+        </d_01>
+        <l_02 />
+      </l_A3>
+      <l_A4 S_00="Participer à la vie d'un bureau d'études">
+        <d_01>
+          <l_A4-T1 S_00="Appliquer le processus de traçabilité (gestion des modifications, archivage) d'une étude">
+            <l_01 S_00="C1" />
+          </l_A4-T1>
+          <l_A4-T2 S_00="Collaborer au sein d'un groupe et argumenter en vue de valider une étude (revue technique, revue de projet, capitalisation d'expérience…)">
+            <l_01 S_00="C2" S_01="C4" />
+          </l_A4-T2>
+          <l_A4-T3 S_00="Formuler et transmettre une information technique de façon écrite et orale en français et en anglais">
+            <l_01 />
+          </l_A4-T3>
+        </d_01>
+        <l_02 />
+      </l_A4>
+    </d_dicFonctions>
+  </Fonctions_fonctions>
+  <d_horsClasse>
+    <l_HC S_00="Hors Classe" S_01="Temps hors classe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
+    <l_ST S_00="Stage" S_01="Stage" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ST>
+  </d_horsClasse>
+  <d_labels>
+    <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+    <l_ELEVES S_00="Étudiant(s)$m" S_01="Étudiant" />
+    <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+  </d_labels>
+  <l_listCompetences S_00="S" />
+  <l_listProblematiques />
+  <l_listSavoirs S_00="M" S_01="P" S_02="S" />
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeDomaines />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeEnsSpecif />
+  <l_listeNivTaxo />
+  <l_listeSpecialites />
+  <l_listeSystemes S_00="PE" />
+  <l_listeThematiques />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" />
+  <l_listeTypeHorsClasse S_00="HC" S_01="ST" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" S_10="R" S_11="S" />
+  <d_nivTaxo />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="5" S_00="Année 1" />
+    <l_01 I_01="5" S_00="Année 2" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ B_tachesOnce="False" I_duree="210" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-MV_projet.html" S_intitule="Projet en entreprise">
+      <d_attributs>
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_PB S_00="Problématique/thème" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Mise en situation / Expression du besoin" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectifs" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Option" S_01="" S_02="Véhicules particuliers--Véhicules de transport routier--Motocycles" S_03="" />
+        <l_DEC S_00="Activités du groupe" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_PRX S_00="Moyens à mettre en œuvre" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_ S_00="" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Prof>
+            <l_00 S_00="U51 PHASE 1 Conduite de projet" S_02="">
+              <l_01 I_00="59" I_01="3" I_02="0" />
+            </l_00>
+          </l_Prof>
+          <l_N-P>
+            <l_00 S_00="U51 PHASE 1 Conduite de projet" S_02="Candidat : ">
+              <l_01 I_00="1" I_01="5" I_02="0" />
+            </l_00>
+          </l_N-P>
+        </d_C>
+        <d_S>
+          <l_Prof>
+            <l_00 S_00="U51 PHASES 2+3 Soutenance 40MIN" S_02="">
+              <l_01 I_00="66" I_01="3" I_02="0" />
+            </l_00>
+          </l_Prof>
+          <l_N-P>
+            <l_00 S_00="U51 PHASES 2+3 Soutenance 40MIN" S_02="Candidat : ">
+              <l_01 I_00="1" I_01="5" I_02="0" />
+            </l_00>
+          </l_N-P>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille_BTS_CPI_U51.xlsx" S_01="I" />
+        <l_S S_00="Grille_BTS_CPI_U51.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties S_00="C" S_01="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="7" I_01="8" />
+      <d_phases>
+        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" S_03="" />
+        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" S_03="" />
+        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" S_03="" />
+        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" S_03="" />
+      </d_phases>
+      <d_posRevues>
+        <l__03 S_00="Ana" S_01="Rea" S_02="Val" />
+      </d_posRevues>
+      <d_taches />
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_HC S_00="Hors Classe" S_01="Temps hors classe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
+    <l_ST S_00="Stage" S_01="Stage" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ST>
+    <l_C S_00="Cours" S_01="Cours" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_TD>
+    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SA>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+  </d_seances>
+  <d_specialite />
+  <d_systemes>
+    <l_PE I_04="0" S_00="Produit d’étude" S_01="Produit d’étude" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_PE>
+  </d_systemes>
+  <d_thematiques />
+  <l_tr_com />
+</Referentiel>
