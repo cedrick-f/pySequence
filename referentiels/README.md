@@ -17,11 +17,33 @@ Voici un petit résumé de la procédure à suivre, les indications plus précis
 
 La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéquence 8_** ne démarrera plus si le fichier n'est pas conforme ! (mais il suffit de le supprimer pour revenir à la normale).
 
-## Conseils
+
+
+### Conseils généraux
  * Procéder par **petites étapes**, pour bien comprendre le lien entre le contenu du fichier, et surtout pour comprendre et corriger ce qui fait planter **_pySéquence 8_** au démarrage.
  * Supprimer le fichier `.xml` à chaque modification du fichier `.xls` correspondant.
 
 **En cas de réussite, merci d'en faire profiter la communauté d'utilisateurs** : utiliser la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues) pour communiquer.
+
+
+### Cas des Projets
+Les référentiels d'enseignement peuvent imposer plusieurs **Projets** (avec ou sans évaluation) : définis sur la feuille `Généralités`
+Chaque projet est découpé en plusieurs **parties** (typiquement "conduite" et "soutenance"), définies sur la feuille des compétences `Comp_S`, à partir de la colonne `L`.
+Pour que les projets soient correctement pris en compte, il faut qu'il y ait correspondance entre les _codes_ ou les _noms_ des projets entre ces deux feuilles :
+`Généralités!B25` = `Comp_S!L2`
+ou bien
+`Généralités!B26` = `Comp_S!L2`
+
+#### Cellules à renseigner
+ * "Tit" : intitulé du Projet
+ * "Des" : description complète du sujet (intitulé + problématique)
+ * "Nom" : nom de l'élève/étudiant
+ * "Pre" : prénom de l'élève/étudiant
+ * "N-P" : nom et prénom de l'élève/étudiant
+ * "Etab": nom de l'établissement
+ * "Sess": session
+ * "Prof" : liste des membres du jury
+ * "EtabPrf" : liste des établissements des membres du jury
 
 ## Les fiches de validation de projet en HTML
 Les fiches de validation de projet doivent être des fichiers au format HTML. 
