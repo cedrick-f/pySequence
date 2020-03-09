@@ -6178,17 +6178,17 @@ class PanelPropriete_Projet(PanelPropriete):
             maj = True
 #             obj = 'commctrl'
             
-        elif 'PAR' in list(self.parctrl.keys()) and event.GetEventObject() == self.parctrl['PAR']:
+        elif 'PAR' in self.parctrl and event.GetEventObject() == self.parctrl['PAR']:
             self.projet.partenariat = self.parctrl['PAR'].GetText()
             maj = False
 #             obj = 'PAR'
             
-        elif 'PRX' in list(self.parctrl.keys()) and event.GetEventObject() == self.parctrl['PRX']:
+        elif 'PRX' in self.parctrl and event.GetEventObject() == self.parctrl['PRX']:
             self.projet.montant = self.parctrl['PRX'].GetText()
             maj = False
 #             obj = 'PRX'
             
-        elif 'SRC' in list(self.parctrl.keys()) and event.GetEventObject() == self.parctrl['SRC']:
+        elif 'SRC' in self.parctrl and event.GetEventObject() == self.parctrl['SRC']:
             self.projet.src_finance = self.parctrl['SRC'].GetText()
             maj = False
 #             obj = 'SRC'
@@ -6354,14 +6354,14 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.pages['TYP'].sizer.Layout()
                 
         else:
-            if 'TYP' in list(self.pages.keys()):
+            if 'TYP' in self.pages:
                 self.nb.DeletePage(self.GetPageNum(self.pages['TYP']))
                 del self.pages['TYP']
         
         # La page "Partenariat" ('PAR')
 #        print "xxx ", ref.attributs
         if prj.attributs['PAR'][0] != "":
-            if not 'PAR' in list(self.pages.keys()):
+            if not 'PAR' in self.pages:
                 self.parctrl = {}
                 self.pages['PAR'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
@@ -6389,7 +6389,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.pages['PAR'].sizer.Layout()
                 
         else:
-            if 'PAR' in list(self.pages.keys()):
+            if 'PAR' in self.pages:
                 self.nb.DeletePage(self.GetPageNum(self.pages['PAR']))
                 del self.pages['PAR']
                 self.parctrl = {}
@@ -6438,7 +6438,7 @@ class PanelPropriete_Projet(PanelPropriete):
             self.ctrlNbrParties.mofifierValeursSsEvt()
         
         # La page "Partenariat" ('PAR')
-        if prj is not None and prj.attributs['PAR'][0] != "":
+        if prj is not None and prj.attributs['PAR'][0] != "" and hasattr(self, 'parctrl'):
             self.parctrl['PAR'].SetValue(self.projet.partenariat, False)
             self.parctrl['PRX'].SetValue(self.projet.montant, False)
             self.parctrl['SRC'].SetValue(self.projet.src_finance, False)
