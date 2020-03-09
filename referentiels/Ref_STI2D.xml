@@ -56,7 +56,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Justifier les choix des structures matérielles et/ou logicielles d’un produit, Identifier les flux mis en œuvre dans une approche de développement durable">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="33.333333" />
                   <d_revue I_C2="0" />
@@ -74,7 +74,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Justifier le choix d’une solution selon des contraintes d’ergonomie et de design">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="33.333333" />
                   <d_revue I_C2="0" />
@@ -92,7 +92,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Justifier les solutions constructives d’un produit au regard des performances environnementales et estimer leur impact sur l’efficacité globale">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="33.333333" />
                   <d_revue I_C2="0" />
@@ -123,7 +123,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les critères du cahier des charges sont explicités et les principaux points de vigilance relatifs au projet sont identifiés au regard du besoin">
+                <Indicateur_00 S_intitule="Décoder le cahier des charges d’un produit, participer, si besoin, à sa modification">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="50.0" />
                   <d_revue I_C2="0" />
@@ -141,7 +141,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les principaux paramètres de compétitivité du produit (innovation, contraintes environnementales, sociétales et économiques…) sont identifiés">
+                <Indicateur_00 S_intitule="Évaluer la compétitivité d’un produit d’un point de vue technique et économique">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="50.0" />
                   <d_revue I_C2="0" />
@@ -172,7 +172,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Identifier et caractériser les fonctions et les constituants d’un produit ainsi que ses entrées/sorties">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="25.0" />
                   <d_revue I_C2="0" />
@@ -190,7 +190,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Identifier et caractériser l’agencement matériel et/ou logiciel d’un produit">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="25.0" />
                   <d_revue I_C2="0" />
@@ -208,7 +208,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Identifier et caractériser le fonctionnement temporel d’un produit ou d’un processus">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="25.0" />
                   <d_revue I_C2="0" />
@@ -226,7 +226,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Identifier et caractériser des solutions techniques">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="25.0" />
                   <d_revue I_C2="0" />
@@ -257,7 +257,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="La présentation est synthétique et s'appuie sur des outils pertinents">
+                <Indicateur_00 S_intitule="Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="33.333333" />
                   <d_revue I_C2="0" />
@@ -275,7 +275,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Décrire le fonctionnement et/ou l’exploitation d’un produit en utilisant l'outil de description le plus pertinent">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="33.333333" />
                   <d_revue I_C2="0" />
@@ -293,7 +293,7 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Présenter de manière argumentée des démarches, des résultats, y compris dans une langue étrangère">
                   <d_ligne I_C2="0" />
                   <d_poids F_C2="33.333333" />
                   <d_revue I_C2="0" />
@@ -324,9 +324,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="S’impliquer dans un groupe de projet">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -342,9 +342,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les problèmes techniques proposés sont en lien avec le besoin exprimé">
+                <Indicateur_00 S_intitule="Identifier et justifier un problème technique à partir de l’analyse globale d’un produit (approche matière – énergie – information)">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -360,9 +360,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Mettre en évidence les constituants d’un produit à partir des diagrammes pertinents">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -378,9 +378,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les différentes phases du projet sont identifiées et présentées avec un outil adapté">
+                <Indicateur_00 S_intitule="Planifier un projet (diagramme de Gantt, chemin critique) en utilisant les outils adaptés et en prenant en compte les données technico-économiques">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -396,16 +396,11 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="La démarche de créativité mise en œuvre pour rechercher des solutions est présentée">
+                <Indicateur_00 S_intitule="Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
-                <Indicateur_01 S_intitule="Le choix de la solution (logiciels, matériaux, constituants) retenue est argumenté au regard des performances">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
-                  <d_revue I_C2="0" />
-                </Indicateur_01>
               </l_indicateurs>
               <l_infos />
               <d_poids />
@@ -419,9 +414,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Participer à une étude de design d’un produit dans une démarche de développement durable">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -437,9 +432,9 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
+                <Indicateur_00 S_intitule="Définir la structure matérielle, la constitution d’un produit en fonction des caractéristiques technico-économiques et environnementales attendues">
                   <d_ligne I_C2="0" />
-                  <d_poids F_C2="6.25" />
+                  <d_poids F_C2="14.285714" />
                   <d_revue I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -465,10 +460,10 @@
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Proposer et choisir des solutions constructives répondant aux contraintes et attentes d’une construction">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -483,10 +478,10 @@
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Proposer et choisir des procédés de mise en œuvre d’un projet de construction et organiser les modalités de sa réalisation">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -501,10 +496,10 @@
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Définir (ou modifier) la structure, les choix de constituants, les paramètres de fonctionnement d’une chaîne d’énergie afin de répondre à un cahier des charges ou à son évolution.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -519,10 +514,10 @@
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Définir (ou modifier), paramétrer et programmer le système de gestion d’une chaîne d’énergie afin de répondre à un cahier des charges et d’améliorer la performance énergétique.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -537,10 +532,10 @@
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Définir à l’aide d’un modeleur numérique, les formes et dimensions d’une pièce d’un produit à partir des contraintes fonctionnelles, de son procédé de réalisation et de son matériau ">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -555,10 +550,10 @@
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Définir, à l’aide d’un modeleur numérique, les modifications d’un sous-ensemble mécanique à partir des contraintes fonctionnelles">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -573,10 +568,10 @@
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Proposer/choisir l’architecture d’une solution logicielle et matérielle au regard de la définition d’un produit">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -591,10 +586,10 @@
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="6.25" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Rechercher et écrire l’algorithme de fonctionnement puis programmer la réponse logicielle relative au traitement d’une problématique posée.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -616,7 +611,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C2="10" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO6.1 S_intitule="Expliquer des éléments d’une modélisation multiphysique proposée relative au comportement de tout ou partie d’un produit">
               <l_domaines />
@@ -625,10 +620,10 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="9.090909" />
-                  <d_revue I_C2="0" />
+                <Indicateur_00 S_intitule="Expliquer des éléments d’une modélisation multiphysique proposée relative au comportement de tout ou partie d’un produit">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -643,10 +638,10 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="9.090909" />
-                  <d_revue I_C2="0" />
+                <Indicateur_00 S_intitule="Identifier et régler des variables et des paramètres internes et externes utiles à une simulation mobilisant une modélisation multiphysique">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -661,10 +656,10 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="9.090909" />
-                  <d_revue I_C2="0" />
+                <Indicateur_00 S_intitule="Évaluer un écart entre le comportement du réel et les résultats fournis par le modèle en fonction des paramètres proposés, conclure sur la validité du modèle">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -679,10 +674,10 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="9.090909" />
-                  <d_revue I_C2="0" />
+                <Indicateur_00 S_intitule="Choisir pour une fonction donnée, un modèle de comportement à partir d’observations ou de mesures faites sur le produit">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -707,10 +702,10 @@
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation d’un usage ou d’un comportement structurel, thermique, acoustique, etc… de tout ou partie d’une construction">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -725,10 +720,10 @@
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation de procédés pour valider un moyen de réalisation">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -743,10 +738,10 @@
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation énergétique (électrique, mécanique, thermique, lumineuse, …) de tout ou partie d’un produit connaissant les caractéristiques utiles et les paramètres externes et internes.">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -761,10 +756,10 @@
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation de la gestion de la chaîne de puissance">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -779,10 +774,10 @@
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un sous-ensemble mécanique ou observer le comportement sous charges d’un assemblage">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -797,10 +792,10 @@
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation de procédés pour valider les formes et dimensions d’une pièce">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -815,10 +810,10 @@
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="9.090909" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Simulation d’un comportement informationnel faisant intervenir un ou plusieurs constituants matériels et/ou traitements logiciels simples d’une chaîne d’information">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -840,7 +835,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C2="10" />
+          <d_poids />
           <d_sousComp>
             <Competence_CO7.1 S_intitule="Réaliser et valider un prototype ou une maquette obtenus en réponse à tout ou partie du cahier des charges initial">
               <l_domaines />
@@ -849,16 +844,11 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="Les moyens mobilisés pour la réalisation du prototype sont adaptés">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="10.0" />
-                  <d_revue I_C2="0" />
+                <Indicateur_00 S_intitule="Réaliser et valider un prototype ou une maquette obtenus en réponse à tout ou partie du cahier des charges initial">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
-                <Indicateur_01 S_intitule="Le prototype réalisé permet de valider les performances attendues">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="10.0" />
-                  <d_revue I_C2="0" />
-                </Indicateur_01>
               </l_indicateurs>
               <l_infos />
               <d_poids />
@@ -872,10 +862,10 @@
                 <l_01 />
               </l_elemAssocies>
               <l_indicateurs>
-                <Indicateur_00 S_intitule="A définir">
-                  <d_ligne I_C2="0" />
-                  <d_poids F_C2="10.0" />
-                  <d_revue I_C2="0" />
+                <Indicateur_00 S_intitule="Mettre en œuvre un scénario de validation devant intégrer un protocole d’essais, de mesures et/ou d’observations sur le prototype ou la maquette, interpréter les résultats et qualifier le produit">
+                  <d_ligne />
+                  <d_poids />
+                  <d_revue />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -900,10 +890,10 @@
                     <l_01 S_00="AC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Sur des ouvrages ou des maquettes physiques simplifiées et instrumentées pour étudier l’usage ou le comportement d’un ouvrage réel ou celui d’éléments constitutifs et valider des choix techniques">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -918,10 +908,10 @@
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Des procédés de stockage, de production, de transformation, de récupération d’énergie pour aider à la conception d’une chaîne de puissance">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -936,10 +926,10 @@
                     <l_01 S_00="EE" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Tout ou partie d'une chaîne de puissance associée à son système de gestion dans l’objectif d'en relever les performances énergétiques et d’en optimiser le fonctionnement ">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -954,10 +944,10 @@
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Des procédés de réalisation pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l’obtention de pièces ">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -972,10 +962,10 @@
                     <l_01 S_00="ITEC" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Mesurer des performances d’un constituant ou d’un sous-ensemble d’un produit">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -990,10 +980,10 @@
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Des moyens matériels d’acquisition, de traitement, de stockage et de restitution de l’information pour aider à la conception d’une chaîne d’information">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -1008,10 +998,10 @@
                     <l_01 S_00="SIN" />
                   </l_elemAssocies>
                   <l_indicateurs>
-                    <Indicateur_00 S_intitule="A définir">
-                      <d_ligne I_C2="0" />
-                      <d_poids F_C2="10.0" />
-                      <d_revue I_C2="0" />
+                    <Indicateur_00 S_intitule="Des architectures matérielles et logicielles en réponse à une problématique posée">
+                      <d_ligne />
+                      <d_poids />
+                      <d_revue />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -6163,6 +6153,7 @@
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
     <l_PROBL S_00="Enjeu(x) sociétal$m" S_01="" />
+    <l_PRJVAL S_00="Fiche de définition de projet" S_01="Fiche de définition de projet" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="P" />
   <l_listProblematiques />
@@ -6200,15 +6191,15 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_P1 B_tachesOnce="False" I_duree="36" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P1" S_ficheValid="" S_intitule="Projet de fin de 1ère">
+    <Projet_P1 B_tachesOnce="False" I_duree="36" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P1" S_ficheValid="STI2D_IT_projet.html" S_intitule="Projet de fin de 1ère">
       <d_attributs>
         <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="L’__intitulé du projet__ doit déjà donner du sens à l’étude proposée, il doit être le plus explicite possible. Il est exprimé par un __nom dérivé d’un verbe d’action__ qui représente la fonction à développer pour satisfaire le besoin. --Pour construire cet intitulé, il faut répondre aux questions suivantes :-- -- * « à qui ou à quoi le produit rend-il service ? », -- * « sur qui ou sur quoi agit-il ? » -- * et enfin « Dans quel but ? » ----ce qui permet d’introduire l’aspect _développement durable_." />
-        <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="### Contexte--La description du contexte doit mettre en évidence les 3 points suivants :---- *  La situation externe ;-- *  L’environnement du projet ;-- *  Les insatisfactions et/ou les pistes d’amélioration.--### Fonctionnalités--L’ensemble des fonctionnalités se traduit sous la forme d’une ou plusieurs fonctions de service essentielles. En STI2D, les fonctions de service à satisfaire sont majoritairement des fonctions d’usage. L'expression d'une fonction de service doit laisser la plus grande latitude possible au concepteur du produit dans sa recherche de solutions. C'est pourquoi l'expression d'une fonction de service ne contient pas, sauf nécessité ou choix délibéré et bien pesé, de référence à une solution technique particulière.--### Caractéristiques fonctionnelles--Les caractéristiques fonctionnelles expriment, pour chacune des fonctions de service précédentes, le (ou les) critère(s) essentiel(s) d'appréciation qui permettront de juger que le service est bien rendu par le produit.--### Caractéristiques techniques--Les caractéristiques techniques précisent, dans l'esprit des niveaux caractérisant les critères d'une fonction de service au sens de la norme NF EN16271, les performances nominales attendues par le produit pour le service en question, et la plage d'acceptabilité autour de la valeur nominale.----Extrait de la norme NF EN16271 : &quot;_ une fonction de service est une action demandée à un produit ou réalisée par lui, afin de satisfaire une partie du besoin d'un utilisateur.--Les fonctions de service sont soit des fonctions d'usage soit des fonctions d'estime. _&quot;--### Domaine d'étude--Le domaine d’étude doit porter sur :---- *  Compétitivité et développement durable ;-- *  Innovation et développement durable ;-- *  Eco-conception et développement durable.----### Thème d'étude--Le thème d’étude peut porter sur les loisirs, la santé, l’habitat, les transports, etc…" />
-        <l_ORI S_00="Origine" S_01="Partenariat, thématique, concours…" S_02="" S_03="Il faut expliciter l’origine du besoin exprimé (un tiers par exemple) ou identifié (un élève par exemple) qui a conduit à mettre en place ce projet. L’origine de la proposition peut être précédée par l'énoncé de l'insatisfaction." />
+        <l_PB S_00="Le besoin initial" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="### Contexte--La description du contexte doit mettre en évidence les 3 points suivants :---- *  La situation externe ;-- *  L’environnement du projet ;-- *  Les insatisfactions et/ou les pistes d’amélioration.--### Fonctionnalités--L’ensemble des fonctionnalités se traduit sous la forme d’une ou plusieurs fonctions de service essentielles. En STI2D, les fonctions de service à satisfaire sont majoritairement des fonctions d’usage. L'expression d'une fonction de service doit laisser la plus grande latitude possible au concepteur du produit dans sa recherche de solutions. C'est pourquoi l'expression d'une fonction de service ne contient pas, sauf nécessité ou choix délibéré et bien pesé, de référence à une solution technique particulière.--### Caractéristiques fonctionnelles--Les caractéristiques fonctionnelles expriment, pour chacune des fonctions de service précédentes, le (ou les) critère(s) essentiel(s) d'appréciation qui permettront de juger que le service est bien rendu par le produit.--### Caractéristiques techniques--Les caractéristiques techniques précisent, dans l'esprit des niveaux caractérisant les critères d'une fonction de service au sens de la norme NF EN16271, les performances nominales attendues par le produit pour le service en question, et la plage d'acceptabilité autour de la valeur nominale.----Extrait de la norme NF EN16271 : &quot;_ une fonction de service est une action demandée à un produit ou réalisée par lui, afin de satisfaire une partie du besoin d'un utilisateur.--Les fonctions de service sont soit des fonctions d'usage soit des fonctions d'estime. _&quot;--### Domaine d'étude--Le domaine d’étude doit porter sur :---- *  Compétitivité et développement durable ;-- *  Innovation et développement durable ;-- *  Eco-conception et développement durable.----### Thème d'étude--Le thème d’étude peut porter sur les loisirs, la santé, l’habitat, les transports, etc…" />
+        <l_ORI S_00="Thème sociétal" S_01="Partenariat, thématique, concours…" S_02="" S_03="Il faut expliciter l’origine du besoin exprimé (un tiers par exemple) ou identifié (un élève par exemple) qui a conduit à mettre en place ce projet. L’origine de la proposition peut être précédée par l'énoncé de l'insatisfaction." />
         <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="Le coût est une indication qui engage la réalisation effective des solutions proposées. Il est préférable d’indiquer un coût moyen, tout en s’appuyant au maximum sur les systèmes, modules et composants présents  dans les laboratoires.--Cela ne doit pas être une clé d’entrée dans le projet. (Il n’y a pas de relation directe entre coût et qualité de la réalisation).----Le coût est un élément qui implique l'acceptation préalable du chef d’établissement puisque cela engage un budget. Cette acceptation se traduit par la signature de la fiche de validation par le chef d’établissement.----Si le projet implique l'utilisation de solutions techniques ou d'équipements particuliers pour faciliter et garantir sa faisabilité, il est possible de l'indiquer. ----On peut aussi indiquer à titre indicatif les différentes solutions possibles. Ceci sert à apprécier la faisabilité du projet." />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
-        <l_TYP S_00="" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="Découpage du projet" S_01="Cette partie est complétée si le projet confié au groupe ne représente qu’une partie énoncée dans l’intitulé du projet." S_02="" S_03="Cette partie est complétée si le projet confié au groupe ne représente qu’une partie détaillée dans l’énoncé général du besoin." />
+        <l_OBJ S_00="La finalité du produit" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
+        <l_TYP S_00="Production finale" S_01="Production finale" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="Cette partie est complétée si le projet confié au groupe ne représente qu’une partie détaillée dans l’énoncé général du besoin." />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
         <l_PRX S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
@@ -6323,7 +6314,7 @@
       </d_posRevues>
       <d_taches />
     </Projet_P1>
-    <Projet_P2 B_tachesOnce="False" I_duree="72" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P2" S_ficheValid="" S_intitule="Projet Terminale">
+    <Projet_P2 B_tachesOnce="False" I_duree="72" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P2" S_ficheValid="STI2D_IT_projet.html" S_intitule="Projet Terminale">
       <d_attributs>
         <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="L’__intitulé du projet__ doit déjà donner du sens à l’étude proposée, il doit être le plus explicite possible. Il est exprimé par un __nom dérivé d’un verbe d’action__ qui représente la fonction à développer pour satisfaire le besoin. --Pour construire cet intitulé, il faut répondre aux questions suivantes :-- -- * « à qui ou à quoi le produit rend-il service ? », -- * « sur qui ou sur quoi agit-il ? » -- * et enfin « Dans quel but ? » ----ce qui permet d’introduire l’aspect _développement durable_." />
         <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="### Contexte--La description du contexte doit mettre en évidence les 3 points suivants :---- *  La situation externe ;-- *  L’environnement du projet ;-- *  Les insatisfactions et/ou les pistes d’amélioration.--### Fonctionnalités--L’ensemble des fonctionnalités se traduit sous la forme d’une ou plusieurs fonctions de service essentielles. En STI2D, les fonctions de service à satisfaire sont majoritairement des fonctions d’usage. L'expression d'une fonction de service doit laisser la plus grande latitude possible au concepteur du produit dans sa recherche de solutions. C'est pourquoi l'expression d'une fonction de service ne contient pas, sauf nécessité ou choix délibéré et bien pesé, de référence à une solution technique particulière.--### Caractéristiques fonctionnelles--Les caractéristiques fonctionnelles expriment, pour chacune des fonctions de service précédentes, le (ou les) critère(s) essentiel(s) d'appréciation qui permettront de juger que le service est bien rendu par le produit.--### Caractéristiques techniques--Les caractéristiques techniques précisent, dans l'esprit des niveaux caractérisant les critères d'une fonction de service au sens de la norme NF EN16271, les performances nominales attendues par le produit pour le service en question, et la plage d'acceptabilité autour de la valeur nominale.----Extrait de la norme NF EN16271 : &quot;_ une fonction de service est une action demandée à un produit ou réalisée par lui, afin de satisfaire une partie du besoin d'un utilisateur.--Les fonctions de service sont soit des fonctions d'usage soit des fonctions d'estime. _&quot;--### Domaine d'étude--Le domaine d’étude doit porter sur :---- *  Compétitivité et développement durable ;-- *  Innovation et développement durable ;-- *  Eco-conception et développement durable.----### Thème d'étude--Le thème d’étude peut porter sur les loisirs, la santé, l’habitat, les transports, etc…" />
