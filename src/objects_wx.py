@@ -6105,6 +6105,7 @@ class PanelPropriete_Projet(PanelPropriete):
 #        print "onChanged", event.GetSelection(), event.GetEventObject()
         self.projet.SetPosition(self.position.GetRange())
         self.MiseAJourPosition()
+        self.MiseAJourTypeEnseignement()
         self.MiseAJour()
         
         self.sendEvent(modif = "Changement de position du Projet",
@@ -6257,7 +6258,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         for k in ['ORI', 'CCF', 'OBJ', 'SYN']:
             if prj.attributs[k][0] != "":
-                if not k in list(self.pages.keys()):
+                if not k in self.pages:
                     self.pages[k] = self.creerPageSimple(self.EvtText,prj.attributs[k][0],  
                                                          prj.attributs[k][3])
                 else:
@@ -6266,7 +6267,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.pages[k][1].SetToolTip(prj.attributs[k][1])
                 self.pages[k][1].SetTitre(prj.attributs[k][0])
             else:
-                if k in list(self.pages.keys()):
+                if k in self.pages:
                     self.nb.DeletePage(self.GetPageNum(self.pages[k][0]))
                     del self.pages[k]
                 
@@ -6278,7 +6279,7 @@ class PanelPropriete_Projet(PanelPropriete):
         # La page "sous parties" ('DEC')
         
         if prj.attributs['DEC'][0] != "":
-            if not 'DEC' in list(self.pages.keys()):
+            if not 'DEC' in self.pages:
                 self.pages['DEC'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['DEC'].SetBackgroundColour(bg_color)
@@ -6327,7 +6328,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.intctrl.MiseAJour("", prj.attributs['DEC'][1])
                 self.enonctrl.MiseAJour("", prj.attributs['DEC'][3])
         else:
-            if 'DEC' in list(self.pages.keys()):
+            if 'DEC' in self.pages:
                 self.nb.DeletePage(self.GetPageNum(self.pages['DEC']))
                 del self.pages['DEC']
         
@@ -6335,7 +6336,7 @@ class PanelPropriete_Projet(PanelPropriete):
         # La page "typologie" ('TYP')
         
         if prj.attributs['TYP'][0] != "":
-            if not 'TYP' in list(self.pages.keys()):
+            if not 'TYP' in self.pages:
                 self.pages['TYP'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['TYP'].SetBackgroundColour(bg_color)
@@ -6416,13 +6417,13 @@ class PanelPropriete_Projet(PanelPropriete):
         self.commctrl.SetValue(self.projet.problematique, False)
 
         # Les pages simples
-        if 'ORI' in list(self.pages.keys()):
+        if 'ORI' in self.pages:
             self.pages['ORI'][1].SetValue(self.projet.origine, False)
-        if 'CCF' in list(self.pages.keys()):
+        if 'CCF' in self.pages:
             self.pages['CCF'][1].SetValue(self.projet.contraintes, False)
-        if 'OBJ' in list(self.pages.keys()):
+        if 'OBJ' in self.pages:
             self.pages['OBJ'][1].SetValue(self.projet.production, False)
-        if 'SYN' in list(self.pages.keys()):
+        if 'SYN' in self.pages:
             self.pages['SYN'][1].SetValue(self.projet.synoptique, False)
         
         # La page "typologie" ('TYP')
@@ -6474,52 +6475,8 @@ class PanelPropriete_Projet(PanelPropriete):
         self.position.Enable(etat)
         
 
-# class wx.Panel):
-#     def __init__(self, parent, position, periodes, projets = {}):
-#         wx.Panel.__init__(self, parent, -1)
-#         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-#         radio = []
-#         periodes_prj = [p.periode for p in projets.values()]
-#         self.position = position
-#         
-# #        print "periodes_prj", periodes_prj
-#         num = 1
-#         for an, np in periodes:
-#             p = 1
-#             while p <= np:
-#                 if num == 0:
-#                     s = wx.RB_GROUP
-#                 else:
-#                     s = 0
-#                 
-#                 l = 1
-#                 for pr in periodes_prj:
-#                     if len(pr) > 0 and num == pr[0]:
-#                         l = pr[-1] - pr[0] +1
-#                         break
-#                     
-#                 radio.append(wx.RadioButton(self, num, "", style = s))
-#                 sizer = wx.BoxSizer(wx.VERTICAL)
-#                 sizer.Add(radio[-1], flag = wx.ALIGN_CENTER_HORIZONTAL)
-#                 radio[-1].SetToolTip(an+' '+str(p))
-#                 self.sizer.Add(sizer, l, flag = wx.ALIGN_RIGHT|wx.EXPAND)
-#                 self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio, radio[-1] )
-#                 num += l
-#                 p += l
-#         self.radio = radio
-#         self.SetSizer(self.sizer)
-#         
-#         
-#     def OnRadio(self, event):
-#         wx.PostEvent(self.Parent, event)
-#         
-# 
-#     def SetValue(self, pos):
-#         self.radio[pos].SetValue(True)
-#         
-#         
-#     def MiseAJour(self):
-#         self.SetValue(self.position)
+
+
 
 class PositionCtrl(wx.Panel):
     def __init__(self, parent, position, periodes, totmax = None, projets = {}):
