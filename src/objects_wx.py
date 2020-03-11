@@ -133,6 +133,11 @@ import orthographe
 import wx.stc  as  stc
 import wx.richtext as rt
 
+from drag_file import *
+
+import lien
+
+
 ########################################################################
 try:
     from agw import genericmessagedialog as GMD
@@ -219,7 +224,9 @@ import threading
 # from pysequence import *
 # import pysequence   # déplacé à la fin
 
-SSCALE = 1.0 # Facteur d'échelle à appliquer à toutes les dimensions des widgets
+from dpi_aware import *
+
+# Pour débugger
 DEBUG = version.DEBUG
 
 
@@ -417,13 +424,13 @@ class BoutonToolBar():
 #
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
-    def __init__(self, parent, fichier, echelle, options = []):
-        global SSCALE, DEBUG
+    def __init__(self, parent, fichier, options = []):
+        global DEBUG
         aui.AuiMDIParentFrame.__init__(self, parent, -1, 
                                        version.GetAppnameVersion(), 
                                        style=wx.DEFAULT_FRAME_STYLE)
         
-        SSCALE = echelle
+     
         DEBUG = DEBUG or "d" in options
         
         
@@ -1911,31 +1918,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
 
 
-########################################################################################
-#
-#
-#  Gestion des drag & drop de fichiers
-#     pour ouverture ...
-#
-#
-########################################################################################
-class MyFileDropTarget(wx.FileDropTarget):
-    """"""
- 
-    #----------------------------------------------------------------------
-    def __init__(self, window):
-        """Constructor"""
-        wx.FileDropTarget.__init__(self)
-        self.window = window
- 
-    #----------------------------------------------------------------------
-    def OnDropFiles(self, x, y, filenames):
-        """
-        When files are dropped, update the display
-        """
-        print("OnDropFiles", filenames)
-        self.window.dropFiles(filenames)
-        return True
+
     
 
 ########################################################################################
@@ -2138,7 +2121,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.CleanClose()
         self.parent.OnDocClosed()
         
-        self.mgr.UnInit()
+        try:
+            self.mgr.UnInit()
+        except:
+            pass
 # #         del self.mgr
 #         self.mgr.Destroy()
         
@@ -5640,14 +5626,15 @@ class PanelPropriete(scrolled.ScrolledPanel):
         
         if sendEvt:
             self.sendEvent(modif = "Modification de l'illustration "+self.objet.du_(),
-                           obj = self, draw = False, verif = False)
+                           draw = False, verif = False)
             
             
     #############################################################################            
     def CreateLienSelect(self, parent):
         box = myStaticBox(parent, -1, "Lien externe")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.selec = URLSelectorCombo(parent, self.objet.lien, self.objet.GetPath())
+        self.selec = lien.URLSelectorCombo(parent, self.objet.lien, self.objet.GetPath())
+        self.Bind(lien.EVT_PATH_MODIFIED, self.OnPathModified)
         bsizer.Add(self.selec, flag = wx.EXPAND)
         
         
@@ -5701,7 +5688,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
 
     ######################################################################################  
-    def OnPathModified(self, lien = "", marquerModifier = True):
+    def OnPathModified(self, evt):
         self.GetDocument().OnPathModified()
 
 
@@ -6084,15 +6071,17 @@ class PanelPropriete_Projet(PanelPropriete):
         # Organisation (nombre et positions des revues)
         #
         #   Dans MiseAJour()
-        
-
-        
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(1)
-    
+
 
 
         
+        
+        
+        
+        
+
     #############################################################################            
     def getBitmapPeriode(self, larg):
         return self.projet.getBitmapPeriode(larg)
@@ -6142,7 +6131,7 @@ class PanelPropriete_Projet(PanelPropriete):
             self.projet.SetText(nt)
             #self.textctrl.ChangeValue(nt)
             maj = True
-            obj = 'intit'
+            #obj = 'intit'
             
         elif 'ORI' in list(self.pages.keys()) and event.GetEventObject() == self.pages['ORI'][1]:
             self.projet.origine = self.pages['ORI'][1].GetText()
@@ -6228,6 +6217,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
         prj = self.projet.GetProjetRef()
 #        print "MiseAJourTypeEnseignement projet", ref.code
+        doc = self.GetDocument()
         
         CloseFenHelp()
         
@@ -6251,6 +6241,52 @@ class PanelPropriete_Projet(PanelPropriete):
         wx.CallLater(0, self.MiseAJourPosition) # py3 : pour éviter les MemoryError !!
         if hasattr(self, 'panelOrga'):
             self.panelOrga.MiseAJourListe()
+        
+        
+        
+        #
+        # La page "sysML"
+        #
+        if prj.attributs['SML'][0] != "":
+            doc.UpdateSysML()
+            if not 'SML' in self.pages:
+                self.pages['SML'] = PanelPropriete(self.nb, objet = doc)
+                bg_color = self.Parent.GetBackgroundColour()
+                self.pages['SML'].SetBackgroundColour(bg_color)
+                
+                self.nb.AddPage(self.pages['SML'], prj.attributs['SML'][0])
+                
+                lab = prj.attributs['SML'][2].replace("\n\n", "\n")
+                liste = lab.split("\n")
+                
+                for i, n in enumerate(liste):
+                    code = "SML"+str(i)
+                    
+                    sb = myStaticBox(self.pages['SML'], -1, n)
+                    sbs = wx.StaticBoxSizer(sb, wx.VERTICAL)
+                    ps = Panel_Select_sysML(self.pages['SML'], doc, code)
+                    sbs.Add(ps, flag = wx.EXPAND)
+                    self.pages['SML'].sizer.Add(sbs, (0,i), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+                
+                    
+                self.pages['SML'].sizer.AddGrowableRow(0)
+                
+            else:
+#                print "MiseAJour :", ref.attributs['SML'][1]
+                self.intctrl.MiseAJour("", prj.attributs['SML'][1])
+                self.enonctrl.MiseAJour("", prj.attributs['SML'][3])
+        else:
+            if 'SML' in self.pages:
+                self.nb.DeletePage(self.GetPageNum(self.pages['SML']))
+                del self.pages['SML']
+        
+        
+        
+        
+
+
+        
+        
         
         
         #
@@ -6333,7 +6369,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 del self.pages['DEC']
         
         
-        # La page "typologie" ('TYP')
+        # La page "typologie" ('TYP') : cases à cocher
         
         if prj.attributs['TYP'][0] != "":
             if not 'TYP' in self.pages:
@@ -11287,8 +11323,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.seance.lien.path), self.seance.lien.type,
-                           marquerModifier = False)
+        self.selec.SetPath(toSystemEncoding(self.seance.lien.path), self.seance.lien.type)
 #         self.btnlien.Show(self.seance.lien.path != "")
         self.sizer.Layout()
         
@@ -12681,8 +12716,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path), self.systeme.lien.type,
-                           marquerModifier = False)
+        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path), self.systeme.lien.type)
 #         self.btnlien.Show(len(self.systeme.lien.path) > 0)
         self.Layout()
 
@@ -12858,7 +12892,7 @@ class PanelPropriete_Personne(PanelPropriete):
             bt_sizer.Add(bt_s)
             self.sizer.Add(bt_sizer, (1,0), (1,2), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
             
-        self.MiseAJour(marquerModifier = False)
+        self.MiseAJour()
         
         self.sizer.AddGrowableRow(0)
         self.sizer.AddGrowableCol(1)
@@ -13110,7 +13144,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.ConstruireSelectGrille()
         
     #############################################################################            
-    def MiseAJour(self, sendEvt = False, marquerModifier = True):
+    def MiseAJour(self, sendEvt = False):
 #         print "MiseAJour panelPropriete Personne", self.personne
 #         print self.personne.grille
         self.textctrln.ChangeValue(self.personne.nom)
@@ -13122,8 +13156,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.personne.GetDocument().SetReferent(self.personne, self.cbInt.IsChecked())
         if hasattr(self, 'SelectGrille'):
             for k, select in list(self.SelectGrille.items()):
-                select.SetPath(toSystemEncoding(self.personne.grille[k].path),
-                               marquerModifier)
+                select.SetPath(toSystemEncoding(self.personne.grille[k].path))
 #            self.OnPathModified()
 
         if hasattr(self, 'lb'):
@@ -13467,9 +13500,10 @@ class PanelSelectionGrille(wx.Panel):
         self.eleve = eleve
         self.codeGrille = codeGrille
         titre = wx.StaticText(self, -1, eleve.GetProjetRef().parties[codeGrille])
-        self.SelectGrille = URLSelectorCombo(self, eleve.grille[codeGrille], 
+        self.SelectGrille = lien.URLSelectorCombo(self, eleve.grille[codeGrille], 
                                              eleve.GetDocument().GetPath(), 
                                              dossier = False, ext = "Classeur Excel (*.xls*)|*.xls*")
+        self.Bind(lien.EVT_PATH_MODIFIED, self.OnPathModified)
 #         self.btnlien = wx.Button(self, -1, u"Ouvrir")
 #         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
 #         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
@@ -13492,15 +13526,15 @@ class PanelSelectionGrille(wx.Panel):
                 
                 
     #############################################################################            
-    def SetPath(self, path, marquerModifier):  
-        self.SelectGrille.SetPath(path, 'f', marquerModifier = marquerModifier)          
+    def SetPath(self, path):#, marquerModifier):  
+        self.SelectGrille.SetPath(path, 'f')#, marquerModifier = marquerModifier)          
                 
                 
     ######################################################################################  
-    def OnPathModified(self, lien = "", marquerModifier = True):
+    def OnPathModified(self, evt):#lien = "", marquerModifier = True):
 #         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
         self.selec.MiseAJour()
-        self.Parent.OnPathModified(lien, marquerModifier)
+        self.Parent.OnPathModified(evt.lien)#, marquerModifier)
                 
                 
                 
@@ -18503,7 +18537,8 @@ class URLDialog(wx.Dialog):
 #        label.SetHelpText("This is the help text for the label")
         box.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
-        url = URLSelectorCombo(self, lien, pathseq)
+        url = lien.URLSelectorCombo(self, lien, pathseq)
+        self.Bind(lien.EVT_PATH_MODIFIED, self.OnPathModified)
 #        text.SetHelpText("Here's some help text for field #1")
         box.Add(url, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
         self.url = url
@@ -18549,199 +18584,199 @@ class URLDialog(wx.Dialog):
 
 
 
-class URLSelectorCombo(wx.Panel):
-    def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
-#         print "init URLSelectorCombo", pathseq
-        
-        wx.Panel.__init__(self, parent, -1)
-        self.SetMaxSize((-1,22*SSCALE))
-        
-        self.ext = ext
-        self.dossier = dossier
-        self.lien = lien
-        
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        
-        
-        lsizer = self.CreateSelector()
-        
-        
-        
-        sizer.Add(lsizer, 1, flag = wx.EXPAND)
-        self.SetSizerAndFit(sizer)
-        
-        self.SetPathSeq(pathseq)
-
-    
-    
-    ###############################################################################################
-    def CreateSelector(self):
-        # Passage momentané en Anglais (bug de wxpython)
-#         locale2EN()
-#         loc = wx.GetApp().locale.GetSystemLanguage()
-#         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
-        
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        bsize = (16*SSCALE, 16*SSCALE)
-        
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
-        self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
-        if self.dossier:
-#             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
-            bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
-            bt1.SetToolTip("Sélectionner un dossier")
-            self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
-            self.bt1 = bt1
-            sizer.Add(bt1)
-#         bt2 =wx.BitmapButton(self, 101, images.wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
-        bt2 =wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), *bsize))
-        bt2.SetToolTip("Sélectionner un fichier")
-        self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
-        self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
-        self.bt2 = bt2
-        
-        sizer.Add(bt2)
-        sizer.Add(self.texte,1,flag = wx.EXPAND)
-        
-#         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
-        self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
-        self.btnlien.SetToolTip("Ouvrir le lien externe")
-        self.btnlien.Show(self.lien.path != "")
-        self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
-        sizer.Add(self.btnlien)
-         
-        
-        # Pour drag&drop direct de fichiers !! (expérimental)
-        file_drop_target = MyFileDropTarget(self)
-        self.SetDropTarget(file_drop_target)
-        
-#         locale2def()
-#         wx.GetApp().locale = wx.Locale(loc)
-        
-        return sizer
-    
-    
-    #############################################################################            
-    def OnClickLien(self, event):
-        self.lien.Afficher(self.pathseq)
-
-
-    ###############################################################################################
-    # Overridden from ComboCtrl, called when the combo button is clicked
-    def OnClick(self, event):
-        
-        if event.GetId() == 100:
-            dlg = wx.DirDialog(self, "Sélectionner un dossier",
-                          style=wx.DD_DEFAULT_STYLE,
-                          defaultPath = toSystemEncoding(self.pathseq)
-                           #| wx.DD_DIR_MUST_EXIST
-                           #| wx.DD_CHANGE_DIR
-                           )
-            if dlg.ShowModal() == wx.ID_OK:
-                self.SetPath(dlg.GetPath(), 'd')
-    
-            dlg.Destroy()
-            
-        else:
-            dlg = wx.FileDialog(self, "Sélectionner un fichier",
-                                wildcard = self.ext,
-                                defaultDir = toSystemEncoding(self.pathseq),
-    #                           defaultPath = globdef.DOSSIER_EXEMPLES,
-                               style = wx.DD_DEFAULT_STYLE
-                               #| wx.DD_DIR_MUST_EXIST
-                               #| wx.DD_CHANGE_DIR
-                               )
-    
-            if dlg.ShowModal() == wx.ID_OK:
-                self.SetPath(dlg.GetPath(), 'f')
-    
-            dlg.Destroy()
-        
-        self.MiseAJour()
-        
-        self.SetFocus()
-
-
-    ###############################################################################################
-    def Enable(self, etat):
-        self.texte.Enable(etat)
-        self.bt2.Enable(etat)
-        if hasattr(self, "bt1"):
-            self.bt1.Enable(etat)
-        
-        
-    ###############################################################################################
-    def MiseAJour(self):
+# class URLSelectorCombo(wx.Panel):
+#     def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
+# #         print "init URLSelectorCombo", pathseq
+#         
+#         wx.Panel.__init__(self, parent, -1)
+#         self.SetMaxSize((-1,22*SSCALE))
+#         
+#         self.ext = ext
+#         self.dossier = dossier
+#         self.lien = lien
+#         
+#         sizer = wx.BoxSizer(wx.VERTICAL)
+#         
+#         
+#         lsizer = self.CreateSelector()
+#         
+#         
+#         
+#         sizer.Add(lsizer, 1, flag = wx.EXPAND)
+#         self.SetSizerAndFit(sizer)
+#         
+#         self.SetPathSeq(pathseq)
+# 
+#     
+#     
+#     ###############################################################################################
+#     def CreateSelector(self):
+#         # Passage momentané en Anglais (bug de wxpython)
+# #         locale2EN()
+# #         loc = wx.GetApp().locale.GetSystemLanguage()
+# #         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+#         
+#         sizer = wx.BoxSizer(wx.HORIZONTAL)
+#         bsize = (16*SSCALE, 16*SSCALE)
+#         
+#         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
+#         self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
+#         if self.dossier:
+# #             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
+#             bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
+#             bt1.SetToolTip("Sélectionner un dossier")
+#             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
+#             self.bt1 = bt1
+#             sizer.Add(bt1)
+# #         bt2 =wx.BitmapButton(self, 101, images.wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
+#         bt2 =wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), *bsize))
+#         bt2.SetToolTip("Sélectionner un fichier")
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+#         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
+#         self.bt2 = bt2
+#         
+#         sizer.Add(bt2)
+#         sizer.Add(self.texte,1,flag = wx.EXPAND)
+#         
+# #         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
+#         self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
+#         self.btnlien.SetToolTip("Ouvrir le lien externe")
 #         self.btnlien.Show(self.lien.path != "")
-        self.marquerValid()
-
-
-    ###############################################################################################
-    def dropFiles(self, file_list):
-        for path in file_list:
-            self.SetPath(path, 'f')
-            return
-            
-    ##########################################################################################
-    def EvtText(self, event):
-#         self.lien.EvalLien(event.GetString(), self.pathseq)
-#         if not self.lien.ok:
-#             self.lien.EvalTypeLien(self.pathseq)
-        self.SetPath(event.GetString())
-
-
-    ##########################################################################################
-    def GetPath(self):
-        return self.lien
-    
-    
-    ##########################################################################################
-    def SetPath(self, lien = None, typ = None, marquerModifier = True):
-        """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
-            
-        """
-#         print("SetPath", self.lien)
-#         print "   ", lien, typ
-        if lien is not None:
-            self.lien.path = lien
-            self.lien.EvalLien(lien, self.pathseq)
-
-        try:
-            self.texte.ChangeValue(self.lien.path)
-        except: # Ca ne devrait pas arriver ... et pourtant ça arrive !
-            self.lien.path = self.lien.path.decode(FILE_ENCODING)
-#             self.lien.path = self.lien.path.encode(SYSTEM_ENCODING)
-            self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
-
-        self.MiseAJour()
-        
-        
-        if hasattr(self.Parent, 'GetPanelRacine'):
-            self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
-        
-        
-    ##########################################################################################
-    def SetPathSeq(self, pathseq):
-        self.pathseq = pathseq
-
-    
-    ##########################################################################################
-    def marquerValid(self):
-        if self.lien.ok:
-            self.texte.SetBackgroundColour(
-                 wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-            self.btnlien.SetToolTip("Ouvrir le lien externe")
-            
-        else:
-            self.texte.SetBackgroundColour("pink")
-            self.texte.SetFocus()
-            self.btnlien.SetToolTip("Le lien est invalide")
-        
-        self.btnlien.Enable(self.lien.ok)
-        self.Refresh()
-        
-        
-        
+#         self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+#         sizer.Add(self.btnlien)
+#          
+#         
+#         # Pour drag&drop direct de fichiers !! (expérimental)
+#         file_drop_target = MyFileDropTarget(self)
+#         self.SetDropTarget(file_drop_target)
+#         
+# #         locale2def()
+# #         wx.GetApp().locale = wx.Locale(loc)
+#         
+#         return sizer
+#     
+#     
+#     #############################################################################            
+#     def OnClickLien(self, event):
+#         self.lien.Afficher(self.pathseq)
+# 
+# 
+#     ###############################################################################################
+#     # Overridden from ComboCtrl, called when the combo button is clicked
+#     def OnClick(self, event):
+#         
+#         if event.GetId() == 100:
+#             dlg = wx.DirDialog(self, "Sélectionner un dossier",
+#                           style=wx.DD_DEFAULT_STYLE,
+#                           defaultPath = toSystemEncoding(self.pathseq)
+#                            #| wx.DD_DIR_MUST_EXIST
+#                            #| wx.DD_CHANGE_DIR
+#                            )
+#             if dlg.ShowModal() == wx.ID_OK:
+#                 self.SetPath(dlg.GetPath(), 'd')
+#     
+#             dlg.Destroy()
+#             
+#         else:
+#             dlg = wx.FileDialog(self, "Sélectionner un fichier",
+#                                 wildcard = self.ext,
+#                                 defaultDir = toSystemEncoding(self.pathseq),
+#     #                           defaultPath = globdef.DOSSIER_EXEMPLES,
+#                                style = wx.DD_DEFAULT_STYLE
+#                                #| wx.DD_DIR_MUST_EXIST
+#                                #| wx.DD_CHANGE_DIR
+#                                )
+#     
+#             if dlg.ShowModal() == wx.ID_OK:
+#                 self.SetPath(dlg.GetPath(), 'f')
+#     
+#             dlg.Destroy()
+#         
+#         self.MiseAJour()
+#         
+#         self.SetFocus()
+# 
+# 
+#     ###############################################################################################
+#     def Enable(self, etat):
+#         self.texte.Enable(etat)
+#         self.bt2.Enable(etat)
+#         if hasattr(self, "bt1"):
+#             self.bt1.Enable(etat)
+#         
+#         
+#     ###############################################################################################
+#     def MiseAJour(self):
+# #         self.btnlien.Show(self.lien.path != "")
+#         self.marquerValid()
+# 
+# 
+#     ###############################################################################################
+#     def dropFiles(self, file_list):
+#         for path in file_list:
+#             self.SetPath(path, 'f')
+#             return
+#             
+#     ##########################################################################################
+#     def EvtText(self, event):
+# #         self.lien.EvalLien(event.GetString(), self.pathseq)
+# #         if not self.lien.ok:
+# #             self.lien.EvalTypeLien(self.pathseq)
+#         self.SetPath(event.GetString())
+# 
+# 
+#     ##########################################################################################
+#     def GetPath(self):
+#         return self.lien
+#     
+#     
+#     ##########################################################################################
+#     def SetPath(self, lien = None, typ = None, marquerModifier = True):
+#         """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
+#             
+#         """
+# #         print("SetPath", self.lien)
+# #         print "   ", lien, typ
+#         if lien is not None:
+#             self.lien.path = lien
+#             self.lien.EvalLien(lien, self.pathseq)
+# 
+#         try:
+#             self.texte.ChangeValue(self.lien.path)
+#         except: # Ca ne devrait pas arriver ... et pourtant ça arrive !
+#             self.lien.path = self.lien.path.decode(FILE_ENCODING)
+# #             self.lien.path = self.lien.path.encode(SYSTEM_ENCODING)
+#             self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
+# 
+#         self.MiseAJour()
+#         
+#         
+#         if hasattr(self.Parent, 'GetPanelRacine'):
+#             self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
+#         
+#         
+#     ##########################################################################################
+#     def SetPathSeq(self, pathseq):
+#         self.pathseq = pathseq
+# 
+#     
+#     ##########################################################################################
+#     def marquerValid(self):
+#         if self.lien.ok:
+#             self.texte.SetBackgroundColour(
+#                  wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
+#             self.btnlien.SetToolTip("Ouvrir le lien externe")
+#             
+#         else:
+#             self.texte.SetBackgroundColour("pink")
+#             self.texte.SetFocus()
+#             self.btnlien.SetToolTip("Le lien est invalide")
+#         
+#         self.btnlien.Enable(self.lien.ok)
+#         self.Refresh()
+#         
+#         
+#         
         
         
 #############################################################################################################
@@ -18796,7 +18831,8 @@ class A_propos(wx.Dialog):
                                              "de nous signaler les dysfonctionnements,", \
                                              "et de nous faire part de leurs remarques.",)),
                       
-                      ("Crédits : ",       ("Icones :\n - https://fr.icons8.com\nwww.iconfinder.com",)))
+                      ("Crédits : ",       ("Icones :\n - https://fr.icons8.com\nwww.iconfinder.com"\
+                                            "\n https://thenounproject.com/term/broken-image/583402/",)))
 
         for ac in lstActeurs:
             t = wx.StaticText(auteurs, -1, ac[0])
@@ -19611,8 +19647,8 @@ class PopupInfo(wx.PopupWindow):
 
      
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = "", draw = False, obj = None, verif = False):
-        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, obj = obj, verif = verif)
+    def sendEvent(self, doc = None, modif = "", draw = False, verif = False):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, verif = verif)
         self.eventAttente = False
         
         
@@ -19885,6 +19921,124 @@ class Panel_BO(wx.Panel, FullScreenWin):
         wx.EndBusyCursor()
         
         
+##########################################################################################################
+#
+#  Panel pour l'affichage des diagrammes SysML
+#
+##########################################################################################################
+from pdf2image import convert_from_path
+class Panel_Select_sysML(wx.Panel, FullScreenWin):
+    def __init__(self, parent, doc, code):
+        self.doc = doc
+        
+        self.lien = doc.sysML[code]
+        
+        wx.Panel.__init__(self, parent, -1)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        self.selec = lien.URLSelectorCombo(self, self.lien, doc.GetPath(), dossier = False)
+        self.Bind(lien.EVT_PATH_MODIFIED, self.OnPathModified)
+        self.sizer.Add(self.selec, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        
+        self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.SetImage()
+        self.sizer.Add(self.image, flag = wx.EXPAND)#, flag = wx.EXPAND)
+        
+        self.SetSizer(self.sizer)
+        self.Layout()
+    
+    
+    #############################################################################            
+    def GetDocument(self):
+        return self.doc
+    
+    
+    #########################################################################################################
+    def sendEvent(self, doc = None, modif = "", draw = False, verif = False):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw = draw, verif = verif)
+    
+    
+    #########################################################################################################
+    def OnPathModified(self, evt):
+        print("OnPathModified, sysML", self.lien)
+        self.SetImage() 
+    
+    
+    #########################################################################################################
+    def MiseAJour(self, titre = "image", prefixe = "l'"):
+        self.boxImg.SetLabel(titre.capitalize())
+        self.btImg.SetToolTip("Sélectionner un fichier image pour %s" %prefixe+titre)
+        self.btSupImg.SetToolTip("Supprimer %s" %prefixe+titre)
+    
+    
+    #############################################################################            
+    def SetImage(self, sendEvt = False):
+        print("SetImage", self.lien)
+        try:
+            img = wx.Image(self.lien.path).ConvertToBitmap()
+        except:
+            try:
+                img = convert_from_path(self.lien.path, 200)
+            except:
+                if os.path.isfile(self.lien.path):
+                    img = images.Icone_noimg.GetBitmap()
+                else:
+                    img = None
+        
+        if img != None:
+            self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
+        else:
+            self.image.SetBitmap(wx.NullBitmap)
+        
+        self.sizer.Layout()
+        self.Layout()
+        
+        if sendEvt:
+            self.sendEvent(modif = "Modification du fichier sysML",
+                           draw = False, verif = False)
+            
+            
+    #############################################################################            
+    def OnSupprImage(self, event):
+        self.lien.reset()
+        self.SetImage(True)
+        
+        
+#     #############################################################################            
+#     def OnClickImage(self, event):
+#         doc = self.GetDocument()
+#         mesFormats = "Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+#                        "Tous les fichiers|*.*'"
+#         
+#         dlg = wx.FileDialog(
+#                             self, message="Ouvrir une image",
+# #                            defaultDir = self.DossierSauvegarde, 
+#                             defaultFile = "",
+#                             wildcard = mesFormats,
+#                             style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
+#                             )
+#             
+#         # Show the dialog and retrieve the user response. If it is the OK response, 
+#         # process the data.
+#         if dlg.ShowModal() == wx.ID_OK:
+#             # This returns a Python list of files that were selected.
+#             paths = dlg.GetPaths()#.decode(FILE_ENCODING)
+#             nomFichier = paths[0]
+#             
+#             try:
+#                 locale2EN()
+#                 bmp = wx.Image(nomFichier).ConvertToBitmap()
+#                 locale2def()
+#             except:
+#                 messageErreur(self, "Erreur !",
+#                                     "Fichier image invalide !\n" \
+#                                  )
+#                 dlg.Destroy()
+#                 return
+#             doc.sysML[self.code].setPath(nomFichier)
+#             self.SetImage(True)
+#         
+#         dlg.Destroy()
         
 ##########################################################################################################
 #

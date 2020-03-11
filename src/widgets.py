@@ -49,6 +49,13 @@ from wx.lib.wordwrap import wordwrap
 import images
 from pathvalidate import sanitize_filepath
 
+
+
+
+    
+    
+    
+    
 ######################################################################################  
 #
 #   Fonctions de passage en locale EN momentané

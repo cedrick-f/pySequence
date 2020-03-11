@@ -6198,14 +6198,14 @@
         <l_ORI S_00="Thème sociétal" S_01="Partenariat, thématique, concours…" S_02="" S_03="Il faut expliciter l’origine du besoin exprimé (un tiers par exemple) ou identifié (un élève par exemple) qui a conduit à mettre en place ce projet. L’origine de la proposition peut être précédée par l'énoncé de l'insatisfaction." />
         <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="Le coût est une indication qui engage la réalisation effective des solutions proposées. Il est préférable d’indiquer un coût moyen, tout en s’appuyant au maximum sur les systèmes, modules et composants présents  dans les laboratoires.--Cela ne doit pas être une clé d’entrée dans le projet. (Il n’y a pas de relation directe entre coût et qualité de la réalisation).----Le coût est un élément qui implique l'acceptation préalable du chef d’établissement puisque cela engage un budget. Cette acceptation se traduit par la signature de la fiche de validation par le chef d’établissement.----Si le projet implique l'utilisation de solutions techniques ou d'équipements particuliers pour faciliter et garantir sa faisabilité, il est possible de l'indiquer. ----On peut aussi indiquer à titre indicatif les différentes solutions possibles. Ceci sert à apprécier la faisabilité du projet." />
         <l_OBJ S_00="La finalité du produit" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
-        <l_TYP S_00="Production finale" S_01="Production finale" S_02="" S_03="" />
+        <l_TYP S_00="" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="Cette partie est complétée si le projet confié au groupe ne représente qu’une partie détaillée dans l’énoncé général du besoin." />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
-        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_PRX S_00="test" S_01="test" S_02="tttest" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="Production finale" S_01="Production finale" S_02="" S_03="" />
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
-        <l_ S_00="" S_01="" S_02="" S_03="" />
+        <l_SML S_00="sysML" S_01="Diagrammes sysML" S_02="Expression du besoin--Missions du système--Contexte du système--Cas d'utilisation--Exigences" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C1>

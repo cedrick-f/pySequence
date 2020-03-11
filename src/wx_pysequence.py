@@ -69,74 +69,13 @@ import wx
 locale = wx.Locale.GetSystemLanguage()
 print("Locale :", locale, '(FR:',wx.LANGUAGE_FRENCH, ';EN:' , wx.LANGUAGE_ENGLISH, ')')
 
-
-
 import version
 
 
-# Sources :
-# https://stackoverflow.com/questions/12471772/what-is-better-way-of-getting-windows-version-in-python
-# https://stackoverflow.com/questions/44398075/can-dpi-scaling-be-enabled-disabled-programmatically-on-a-per-session-basis
+# Facteur d'échelle à appliquer à toutes les dimensions des widgets
+from dpi_aware import *
+set_screen_scale()
 
-def get_winver():
-    wv = sys.getwindowsversion()
-    if hasattr(wv, 'service_pack_major'):  # python >= 2.7
-        sp = wv.service_pack_major or 0
-    else:
-        import re
-        r = re.search("\s\d$", wv.service_pack)
-        sp = int(r.group(0)) if r else 0
-    return (wv.major, wv.minor, sp)
-
-
-  
-  
-SSCALE = 1.0
-if 'win' in sys.platform:
-    import ctypes
-#     import platform
-#     print "platform", platform.platform()
-    # Query DPI Awareness (Windows 10 and 8)
-#     awareness = ctypes.c_int()
-#     errorCode = ctypes.windll.shcore.GetProcessDpiAwareness(0, ctypes.addressof(awareness))
-#     print "awareness", awareness.value
-    user32 = ctypes.windll.user32
-    screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
-#     print "screensize", screensize
-    
-    WIN_8 = (6, 2, 0)
-    WIN_7 = (6, 1, 0)
-    WIN_SERVER_2008 = (6, 0, 1)
-    WIN_VISTA_SP1 = (6, 0, 1)
-    WIN_VISTA = (6, 0, 0)
-    WIN_SERVER_2003_SP2 = (5, 2, 2)
-    WIN_SERVER_2003_SP1 = (5, 2, 1)
-    WIN_SERVER_2003 = (5, 2, 0)
-    WIN_XP_SP3 = (5, 1, 3)
-    WIN_XP_SP2 = (5, 1, 2)
-    WIN_XP_SP1 = (5, 1, 1)
-    WIN_XP = (5, 1, 0)
-    
-#     print "windows", get_winver()
-    
-    if get_winver() >= WIN_8:
-        # Set DPI Awareness  (Windows 10 and 8)
-        errorCode = ctypes.windll.shcore.SetProcessDpiAwareness(2)
-        # the argument is the awareness level, which can be 0, 1 or 2:
-        # for 1-to-1 pixel control I seem to need it to be non-zero (I'm using level 2)
-    elif get_winver() >= WIN_VISTA:
-        # Set DPI Awareness  (Windows 7 and Vista)
-        success = user32.SetProcessDPIAware()
-        # behaviour on later OSes is undefined, although when I run it on my Windows 10 machine, it seems to work with effects identical to SetProcessDpiAwareness(1)
-
-    screensize2 = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
-#     print "screensize2", screensize2
-    
-    # Facteur d'échelle : 
-    # tout ce qui est sensé être en PIXEL doit être multiplié par ce facteur
-    SSCALE = 1.0*screensize2[0]/screensize[0]
-    print(("Facteur d'echelle :", SSCALE))
-    
 
 
 FILE_ENCODING = sys.getfilesystemencoding()
@@ -399,7 +338,8 @@ class MySplashScreen(adv.SplashScreen):
 
         options, fichier = GetArgs()
 
-        self.frame = objects_wx.FenetrePrincipale(None, fichier, SSCALE, options)
+        self.frame = objects_wx.FenetrePrincipale(None, fichier, 
+                                                  options)
         self.frame.Show()
         self.parent.frame = self.frame
         

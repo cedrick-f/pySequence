@@ -70,6 +70,7 @@ import images
 # Graphiques vectoriels
 import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 
+from lien import *
 
 
 # Pour passer des arguments aux callback
@@ -239,16 +240,16 @@ def safeParse(nomFichier, toplevelwnd, silencieux = False):
     
 
     
-if sys.platform == 'darwin':
-    def openFolder(path):
-        subprocess.check_call(['open', '--', path])
-elif sys.platform == 'linux2':
-    def openFolder(path):
-        subprocess.check_call(['xdg-open', '--', path])
-elif sys.platform == 'win32':
-    def openFolder(path):
-#         subprocess.Popen(["explorer", path], shell=True)
-        subprocess.call(['explorer', path.encode(sys.getfilesystemencoding())], shell=True)
+# if sys.platform == 'darwin':
+#     def openFolder(path):
+#         subprocess.check_call(['open', '--', path])
+# elif sys.platform == 'linux2':
+#     def openFolder(path):
+#         subprocess.check_call(['xdg-open', '--', path])
+# elif sys.platform == 'win32':
+#     def openFolder(path):
+# #         subprocess.Popen(["explorer", path], shell=True)
+#         subprocess.call(['explorer', path.encode(sys.getfilesystemencoding())], shell=True)
     
 
 # import chardet
@@ -260,265 +261,261 @@ import re
 
 
 
-####################################################################################
-#
-#   Objet lien vers un fichier, un dossier ou bien un site web
-#
-####################################################################################
-regex = re.compile(
-        r'^(?:http|ftp)s?://' # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
-        r'localhost|' #localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
-        r'(?::\d+)?' # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
-class Lien():
-    def __init__(self, path = "", typ = ""):
-        self.path = path # Impérativement toujours encodé en FILE_ENCODING !!
-        self.type = typ
-        self.ok = False  # Etat du lien (False = lien rompu)
-        
-    ######################################################################################  
-    def __repr__(self):
-        return self.type + " : " + toSystemEncoding(self.path)
-    
-    
-    ######################################################################################  
-    def __neq__(self, l):
-        if self.typ != l.typ:
-            return True
-        elif self.path != l.path:
-            return True
-        return False
-    
-    
-    ######################################################################################  
-    def DialogCreer(self, pathseq):
-        dlg = URLDialog(None, self, pathseq)
-        dlg.ShowModal()
-        dlg.Destroy() 
-            
 
-    ######################################################################################  
-    def Afficher(self, pathseq, fenSeq = None):
-        """ Lance l'affichage du contenu du lien
-            <pathseq> = chemin de l'application pour déterminer le chemin absolu
-        """
-#         print "Afficher", self.type, self.path
-        path = self.GetAbsPath(pathseq)
-#         print "   ", path
-#         print "   ", path.decode("unicode-escape")
-#         print "   ", path.encode(sys.getfilesystemencoding())
-        
-        if self.type == "f":
-            if os.path.exists(path):
-                try:
-                    os.startfile(path)
-                except:
-                    messageErreur(None, "Ouverture impossible",
-                                  "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(path))
-            else:
-                messageErreur(None, "Chemin non trouvé",
-                                  "Le fichiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))        
-            
-                
-        elif self.type == 'd':
-            if os.path.isdir(path):
-                openFolder(path)
-#                 try:
-# #                     subprocess.Popen(["explorer", path])
-#                     
-#                 except:
-#                     messageErreur(None, u"Ouverture impossible",
-#                                   u"Impossible d'accéder au dossier\n\n%s\n" %toSystemEncoding(path))
-            else:
-                messageErreur(None, "Chemin non trouvé",
-                                  "Le dossiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))
-
-
-        elif self.type == 'u':
-            try:
-                webbrowser.open(self.path)
-            except:
-                messageErreur(None, "Ouverture impossible",
-                              "Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
-            
-                
-                
-        elif self.type == 's':
-            if os.path.isfile(path):
-#                self.Show(False)
-                child = fenSeq.commandeNouveau()
-                child.ouvrir(path)
-
-  
-    ######################################################################################  
-    def EvalTypeLien(self, pathseq):
-        """ Evaluation du de self.lien.path
-            par rapport à pathseq
-            et attribue un type
-        """
-#         print("EvalTypeLien", self, pathseq)
-        abspath = self.GetAbsPath(pathseq)
-        
-        if os.path.exists(abspath):
-            relpath = testRel(abspath, pathseq)
-            if os.path.isfile(abspath):
-                self.type = 'f'
-
-            elif os.path.isdir(abspath):
-                self.type = 'd'
-            
-            self.path = relpath
-            self.ok = True
-                
-        elif re.match(regex, self.path):
-            self.type = 'u'
-            self.ok = True
-        
-        else:
-            self.type = ''
-            self.ok = False
-        
-        
-        
-    ######################################################################################  
-    def EvalLien(self, path, pathseq):
-        """ Teste la validité du chemin <path> (SYSTEM_ENCODING)
-             par rapport au dossier de référence <pathseq> (FILE_ENCODING)
-             
-             et change self.path (FILE_ENCODING)
-             
-        """
-#         print("EvalLien", path, pathseq, os.path.exists(pathseq))
-#         print " >", chardet.detect(bytes(path))
-#         print " >", chardet.detect(bytes(pathseq))
-        
-        
-        if path == "" or path.split() == []:
-            self.path = r""
-            self.type = ""
-            return
-        
-        self.EvalTypeLien(pathseq)
-#         path = toFileEncoding(path)
-#        pathseq = toFileEncoding(pathseq)
-#         abspath = self.GetAbsPath(pathseq, path)
-#         print("   abs :", abspath)
+# class Lien():
+#     def __init__(self, path = "", typ = ""):
+#         self.path = path # Impérativement toujours encodé en FILE_ENCODING !!
+#         self.type = typ
+#         self.ok = False  # Etat du lien (False = lien rompu)
 #         
-#         EvalTypeLien
-#         relpath = testRel(abspath, pathseq)
+#     ######################################################################################  
+#     def __repr__(self):
+#         return self.type + " : " + toSystemEncoding(self.path)
+#     
+#     ######################################################################################  
+#     def reset(self):
+#         self.path = ""
+#         self.type = ""
+#         self.ok = False
+#     
+#     
+#     ######################################################################################  
+#     def setPath(self, path):
+#         self.path = path
+#     
+#     ######################################################################################  
+#     def __neq__(self, l):
+#         if self.typ != l.typ:
+#             return True
+#         elif self.path != l.path:
+#             return True
+#         return False
+#     
+#     
+#     ######################################################################################  
+#     def DialogCreer(self, pathseq):
+#         dlg = URLDialog(None, self, pathseq)
+#         dlg.ShowModal()
+#         dlg.Destroy() 
+#             
 # 
-# #         relpath = testRel(abspath, pathseq)
-# #         print "   rel :", relpath
-# #         
-# #         print "   ", os.getcwd()
-# #         print "   ", os.curdir
+#     ######################################################################################  
+#     def Afficher(self, pathseq, fenSeq = None):
+#         """ Lance l'affichage du contenu du lien
+#             <pathseq> = chemin de l'application pour déterminer le chemin absolu
+#         """
+# #         print "Afficher", self.type, self.path
+#         path = self.GetAbsPath(pathseq)
+# #         print "   ", path
+# #         print "   ", path.decode("unicode-escape")
+# #         print "   ", path.encode(sys.getfilesystemencoding())
+#         
+#         if self.type == "f":
+#             if os.path.exists(path):
+#                 try:
+#                     os.startfile(path)
+#                 except:
+#                     messageErreur(None, "Ouverture impossible",
+#                                   "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(path))
+#             else:
+#                 messageErreur(None, "Chemin non trouvé",
+#                                   "Le fichiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))        
+#             
+#                 
+#         elif self.type == 'd':
+#             if os.path.isdir(path):
+#                 openFolder(path)
+# #                 try:
+# # #                     subprocess.Popen(["explorer", path])
+# #                     
+# #                 except:
+# #                     messageErreur(None, u"Ouverture impossible",
+# #                                   u"Impossible d'accéder au dossier\n\n%s\n" %toSystemEncoding(path))
+#             else:
+#                 messageErreur(None, "Chemin non trouvé",
+#                                   "Le dossiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))
+# 
+# 
+#         elif self.type == 'u':
+#             try:
+#                 webbrowser.open(self.path)
+#             except:
+#                 messageErreur(None, "Ouverture impossible",
+#                               "Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
+#             
+#                 
+#                 
+#         elif self.type == 's':
+#             if os.path.isfile(path):
+# #                self.Show(False)
+#                 child = fenSeq.commandeNouveau()
+#                 child.ouvrir(path)
+# 
+#   
+#     ######################################################################################  
+#     def EvalTypeLien(self, pathseq):
+#         """ Evaluation du de self.lien.path
+#             par rapport à pathseq
+#             et attribue un type
+#         """
+# #         print("EvalTypeLien", self, pathseq)
+#         abspath = self.GetAbsPath(pathseq)
 #         
 #         if os.path.exists(abspath):
+#             relpath = testRel(abspath, pathseq)
 #             if os.path.isfile(abspath):
 #                 self.type = 'f'
-#                 self.path = relpath
-#                 self.ok = True
+# 
 #             elif os.path.isdir(abspath):
 #                 self.type = 'd'
-#                 self.path = relpath
-#                 self.ok = True
-        
-            
-#         else:
+#             
+#             self.path = relpath
+#             self.ok = True
+#                 
+#         elif re.match(regex, self.path):
 #             self.type = 'u'
-#             self.path = path
-        
-#         print " >>>", self
-              
-    ######################################################################################  
-    def GetAbsPath(self, pathseq, path = None):
-        """ Renvoie le chemin absolu du lien
-            grace au chemin du document <pathseq>
-        """
-#         print("GetAbsPath", path, pathseq)
-        if path == None:
-            path = self.path
-            
-        if path == ".":
-            return pathseq
-        
-        cwd = os.getcwd()
-        if pathseq != "":
-            try:
-                os.chdir(pathseq)
-            except:
-                pass
-        
-#         print os.path.exists(path)
-#         print os.path.exists(os.path.abspath(path))
-#         print os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING))
-        
-        # Immonde bricolage !!
-#         if os.path.exists(os.path.abspath(path)) and os.path.exists(os.path.abspath(path)):#.decode(util_path.FILE_ENCODING)):
-#             path = path.decode(util_path.FILE_ENCODING)
-        
-        path = os.path.abspath(path)#.decode(util_path.FILE_ENCODING)
-        
-        
-        
-        
-#         print("  abs >", path)
-        if os.path.exists(path):
-            path = path
-        else:
-#             print(path, "n'existe pas !")
-            try:
-                path = os.path.join(pathseq, path)
-            except UnicodeDecodeError:
-                pathseq = toFileEncoding(pathseq)
-                path = os.path.join(pathseq, path)
-        
-        
-        os.chdir(cwd)
-        return path
-    
-    
-    ######################################################################################  
-    def GetRelPath(self, pathseq, path = None):
-        """ Renvoie le chemin relatif du lien
-            grace au chemin du document <pathseq>
-        """
-        if path == None:
-            path = self.path
-            
-        if self.type != 'f' and self.type != 'd':
-            return path
-        
-#        path = self.GetEncode(path)
-        if os.path.exists(path):
-            path = path
-        else:
-            try:
-                path = os.path.join(pathseq, path)
-            except UnicodeDecodeError:
-                pathseq = toFileEncoding(pathseq)
-                path = os.path.join(pathseq, path)
-        return path
-    
-    
-    ######################################################################################  
-    def getBranche(self, branche):
-        branche.set("Lien", toSystemEncoding(os.path.normpath(self.path)))
-        branche.set("TypeLien", self.type)
-        
-        
-    ######################################################################################  
-    def setBranche(self, branche, pathseq):
-        self.path = toFileEncoding(branche.get("Lien", r""))
-        self.path = os.path.normpath(self.path)
-        self.type = branche.get("TypeLien", "")
-        if self.type == "" and self.path != r"":
-            self.EvalTypeLien(pathseq)
-        return True
+#             self.ok = True
+#         
+#         else:
+#             self.type = ''
+#             self.ok = False
+#         
+#         
+#         
+#     ######################################################################################  
+#     def EvalLien(self, path, pathseq):
+#         """ Teste la validité du chemin <path> (SYSTEM_ENCODING)
+#              par rapport au dossier de référence <pathseq> (FILE_ENCODING)
+#              
+#              et change self.path (FILE_ENCODING)
+#              
+#         """
+# #         print("EvalLien", path, pathseq, os.path.exists(pathseq))
+# #         print " >", chardet.detect(bytes(path))
+# #         print " >", chardet.detect(bytes(pathseq))
+#         
+#         
+#         if path == "" or path.split() == []:
+#             self.path = r""
+#             self.type = ""
+#             return
+#         
+#         self.EvalTypeLien(pathseq)
+# #         path = toFileEncoding(path)
+# #        pathseq = toFileEncoding(pathseq)
+# #         abspath = self.GetAbsPath(pathseq, path)
+# #         print("   abs :", abspath)
+# #         
+# #         EvalTypeLien
+# #         relpath = testRel(abspath, pathseq)
+# # 
+# # #         relpath = testRel(abspath, pathseq)
+# # #         print "   rel :", relpath
+# # #         
+# # #         print "   ", os.getcwd()
+# # #         print "   ", os.curdir
+# #         
+# #         if os.path.exists(abspath):
+# #             if os.path.isfile(abspath):
+# #                 self.type = 'f'
+# #                 self.path = relpath
+# #                 self.ok = True
+# #             elif os.path.isdir(abspath):
+# #                 self.type = 'd'
+# #                 self.path = relpath
+# #                 self.ok = True
+#         
+#             
+# #         else:
+# #             self.type = 'u'
+# #             self.path = path
+#         
+# #         print " >>>", self
+#               
+#     ######################################################################################  
+#     def GetAbsPath(self, pathdoc, path = None):
+#         """ Renvoie le chemin absolu du lien
+#             grace au chemin du document <pathdoc>
+#         """
+# #         print("GetAbsPath", path, pathseq)
+#         if path == None:
+#             path = self.path
+#             
+#         if path == ".":
+#             return pathdoc
+#         
+#         cwd = os.getcwd()
+#         if pathdoc != "":
+#             try:
+#                 os.chdir(pathdoc)
+#             except:
+#                 pass
+#         
+# #         print os.path.exists(path)
+# #         print os.path.exists(os.path.abspath(path))
+# #         print os.path.exists(os.path.abspath(path).decode(util_path.FILE_ENCODING))
+#         
+#         # Immonde bricolage !!
+# #         if os.path.exists(os.path.abspath(path)) and os.path.exists(os.path.abspath(path)):#.decode(util_path.FILE_ENCODING)):
+# #             path = path.decode(util_path.FILE_ENCODING)
+#         
+#         path = os.path.abspath(path)#.decode(util_path.FILE_ENCODING)
+#         
+# #         print("  abs >", path)
+#         if os.path.exists(path):
+#             path = path
+#         else:
+# #             print(path, "n'existe pas !")
+#             try:
+#                 path = os.path.join(pathdoc, path)
+#             except UnicodeDecodeError:
+#                 pathdoc = toFileEncoding(pathdoc)
+#                 path = os.path.join(pathdoc, path)
+#         
+#         
+#         os.chdir(cwd)
+#         return path
+#     
+#     
+#     ######################################################################################  
+#     def GetRelPath(self, pathdoc, path = None):
+#         """ Renvoie le chemin relatif du lien
+#             grace au chemin du document <pathdoc>
+#         """
+#         if path == None:
+#             path = self.path
+#             
+#         if self.type != 'f' and self.type != 'd':
+#             return path
+#         
+# #        path = self.GetEncode(path)
+#         if os.path.exists(path):
+#             path = path
+#         else:
+#             try:
+#                 path = os.path.join(pathdoc, path)
+#             except UnicodeDecodeError:
+#                 pathdoc = toFileEncoding(pathdoc)
+#                 path = os.path.join(pathdoc, path)
+#         return path
+#     
+#     
+#     ######################################################################################  
+#     def getBranche(self, branche):
+#         branche.set("Lien", toSystemEncoding(os.path.normpath(self.path)))
+#         branche.set("TypeLien", self.type)
+#         
+#         
+#     ######################################################################################  
+#     def setBranche(self, branche, pathdoc):
+#         self.path = toFileEncoding(branche.get("Lien", r""))
+#         self.path = os.path.normpath(self.path)
+#         self.type = branche.get("TypeLien", "")
+#         if self.type == "" and self.path != r"":
+#             self.EvalTypeLien(pathdoc)
+#         return True
 
 
 
@@ -557,6 +554,10 @@ class ElementAvecLien():
     ######################################################################################  
     def GetPath(self):
         return self.GetDocument().GetPath()
+    
+    ######################################################################################  
+    def GetDir(self):
+        return os.path.dirname(self.GetPath())
     
     ######################################################################################  
     def GetLien(self):
@@ -1746,6 +1747,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.undoStack = UndoStack(self, self.GetApp().miseAJourUndo)
 #         wx.CallAfter(self.undoStack.do, "Création "+self.du_())
         
+        # Chemin du fichier
         self.path = ""
         
         self.proprietes = proprietes.ProprietesDoc(self)
@@ -1800,6 +1802,10 @@ class BaseDoc(ElementBase, ElementAvecLien):
             return os.path.split(self.app.fichierCourant)[0]
         else:
             return self.path
+    
+#     ######################################################################################  
+#     def GetDir(self):
+#         return os.path.dirname(self.GetPath())
     
     
 #     ######################################################################################  
@@ -3820,7 +3826,7 @@ class Projet(BaseDoc, Grammaire):
         
         self.taches = self.creerTachesRevue()
 
-        
+        self.sysML = {}
         
         #
         # Spécifiquement pour la fiche de validation
@@ -4120,6 +4126,21 @@ class Projet(BaseDoc, Grammaire):
             groupes.append(e.getBranche())
             
         #
+        # sysML
+        #
+        sysml = ET.SubElement(projet, "sysML")
+        prj = self.GetProjetRef()
+        if prj.attributs['SML'][0] != "":
+            lab = prj.attributs['SML'][2].replace("\n\n", "\n")
+            liste = lab.split("\n")
+            for i, n in enumerate(liste):
+                code = "SML"+str(i)
+                l = ET.SubElement(sysml, "Lien_"+str(i))
+                if code in self.sysML:
+                    self.sysML[code].getBranche(l)
+                else:
+                    Lien().getBranche(l)
+        #
         # pour la fiche de validation
         #
         projet.set("Origine", remplaceLF2Code(self.origine))
@@ -4162,7 +4183,6 @@ class Projet(BaseDoc, Grammaire):
         self.problematique = remplaceCode2LF(branche.get("Problematique", ""))
         
         self.commentaires = branche.get("Commentaires", "")
-        
         
         
         sp = branche.get("Position", "0_0")
@@ -4359,8 +4379,23 @@ class Projet(BaseDoc, Grammaire):
                      break
             
         
+        #
+        # sysML
+        #
+        branchesysml = branche.find("sysML")
+        prj = self.GetProjetRef()
+        if prj.attributs['SML'][0] != "":
+            lab = prj.attributs['SML'][2].replace("\n\n", "\n")
+            liste = lab.split("\n")
+            for i, n in enumerate(liste):
+                code = "SML"+str(i)
+                br = branchesysml.find("Lien_"+str(i))
+                if br is not None:
+                    if not code in self.sysML:
+                        self.sysML[code] = Lien()
+                    self.sysML[code].setBranche(br, self.path)
         
-        
+        print("sysML", self.sysML)
         
 #         print("  revues2", self.getNbrRevues(), self.positionRevues)
         
@@ -5595,8 +5630,21 @@ class Projet(BaseDoc, Grammaire):
         self.app.SetTitre()
         self.DefinirCouleurs()
         self.SetCompetencesRevuesSoutenance()
-        
-        
+    
+    
+    #############################################################################
+    def UpdateSysML(self):
+        prj = self.GetProjetRef()
+        if prj.attributs['SML'][0] != "":
+            lab = prj.attributs['SML'][2].replace("\n\n", "\n")
+            liste = lab.split("\n")
+            
+            for i, n in enumerate(liste):
+                code = "SML"+str(i)
+                if not code in self.sysML:
+                    self.sysML[code] = Lien()
+    
+    
     #############################################################################
     def MiseAJourTypeEnseignement(self):#, changeFamille = False):
 #         print("MiseAJourTypeEnseignement projet")
