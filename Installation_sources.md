@@ -108,7 +108,14 @@ Sous Windows :
 ### pathvalidate ###
 0.29.0
 
-    pip install pathvalidate
+    pip install pathvalidate 
+
+
+### pdf2image ###
+1.12.1
+
+    pip install pdf2image   
+    
     
     
 ### rsvg (en cours de développement) ###
