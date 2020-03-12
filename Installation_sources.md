@@ -110,11 +110,6 @@ Sous Windows :
 
     pip install pathvalidate 
 
-
-### pdf2image ###
-1.12.1
-
-    pip install pdf2image   
     
     
     
