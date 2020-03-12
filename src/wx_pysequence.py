@@ -72,6 +72,7 @@ print("Locale :", locale, '(FR:',wx.LANGUAGE_FRENCH, ';EN:' , wx.LANGUAGE_ENGLIS
 import version
 
 
+
 # Facteur d'échelle à appliquer à toutes les dimensions des widgets
 from dpi_aware import *
 set_screen_scale()

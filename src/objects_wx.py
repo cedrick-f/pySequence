@@ -19926,7 +19926,7 @@ class Panel_BO(wx.Panel, FullScreenWin):
 #  Panel pour l'affichage des diagrammes SysML
 #
 ##########################################################################################################
-from pdf2image import convert_from_path
+import fitz
 class Panel_Select_sysML(wx.Panel, FullScreenWin):
     def __init__(self, parent, doc, code):
         self.doc = doc
@@ -19936,14 +19936,16 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
         wx.Panel.__init__(self, parent, -1)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         
-        self.selec = lien.URLSelectorCombo(self, self.lien, doc.GetPath(), dossier = False)
+        self.selec = lien.URLSelector(self, self.lien, doc.GetPath(), dossier = False)
         self.Bind(lien.EVT_PATH_MODIFIED, self.OnPathModified)
-        self.sizer.Add(self.selec, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        self.sizer.Add(self.selec, flag = wx.ALIGN_TOP|wx.EXPAND)
         
         self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.image.SetToolTip("Cliquer pour ouvrir le lien externe")
+        self.sizer.Add(self.image, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)#, flag = wx.EXPAND)
         self.SetImage()
-        self.sizer.Add(self.image, flag = wx.EXPAND)#, flag = wx.EXPAND)
         
+        self.FitInside()
         self.SetSizer(self.sizer)
         self.Layout()
     
@@ -19961,7 +19963,7 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     #########################################################################################################
     def OnPathModified(self, evt):
         print("OnPathModified, sysML", self.lien)
-        self.SetImage() 
+        self.SetImage(sendEvt = True) 
     
     
     #########################################################################################################
@@ -19978,8 +19980,18 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
             img = wx.Image(self.lien.path).ConvertToBitmap()
         except:
             try:
-                img = convert_from_path(self.lien.path, 200)
+                print("ouverture", self.lien.path)
+                doc = fitz.open(self.lien.path)
+                page = doc.loadPage(0)
+                pix = page.getPixmap()
+                if pix.alpha:
+                    img = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+                else:
+                    img = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
+                
             except:
+#                 if DEBUG:
+#                     raise
                 if os.path.isfile(self.lien.path):
                     img = images.Icone_noimg.GetBitmap()
                 else:
@@ -19987,10 +19999,12 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
         
         if img != None:
             self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
+            self.image.Bind(wx.EVT_LEFT_DOWN, self.OnClicImage)
         else:
             self.image.SetBitmap(wx.NullBitmap)
+            
         
-        self.sizer.Layout()
+        self.Parent.Layout()
         self.Layout()
         
         if sendEvt:
@@ -20002,8 +20016,14 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     def OnSupprImage(self, event):
         self.lien.reset()
         self.SetImage(True)
+    
+    
+    #############################################################################            
+    def OnClicImage(self, event):
+        self.lien.Afficher(self.doc.GetPath())
         
         
+          
 #     #############################################################################            
 #     def OnClickImage(self, event):
 #         doc = self.GetDocument()
