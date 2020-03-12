@@ -34,9 +34,7 @@
 """
 Module genpdf
 *************
-
 Génération de documents PDF.
-
 
 """
 
@@ -45,6 +43,12 @@ from  constantes import ellipsizer, getAnneeScolaireStr, \
 import util_path
 import os.path
 from itertools import zip_longest
+
+import sys
+from xhtml2pdf import pisa
+
+from file2bmp import *
+
 #from textwrap import wrap
 #import csv
 
@@ -85,9 +89,10 @@ from reportlab.pdfbase import _fontdata_enc_macexpert
 from widgets import messageErreur, FullScreenWin
 import time
 
-import sys
 if sys.platform == "win32" :
     from register import EnableProtectedModeReader, GetProtectedModeReader
+
+
 
 #
 # Elements HTML
@@ -104,7 +109,7 @@ def gras(s):
 def parag(s):
     return "<p>"+s+"</p>"
 
-def liste(l, classe = "b"):
+def listeeee(l, classe = "b"):
     s = ""
     for e in l:
         s += "<li>"+e+"</li>"
@@ -119,6 +124,11 @@ def checkbox(etat = False, size = 20):
     else:
         c = "CheckBox_unchecked.png"
     return "<img src=\"{{MEDIA_URL}}/" + c + "\" height=\""+str(size)+"\" width=\""+str(size)+"\">&nbsp;&nbsp;"
+
+
+def image(src, s = "width:100%; height=auto;"):
+    return "<img src=\"" + src + "\" style=\""+s+"\">"
+
 
 def remplaceCR(txt):
     return txt.replace("\n", "<br>")
@@ -233,22 +243,9 @@ logging.getLogger("xhtml2pdf").addHandler(PisaNullHandler())
 
 
 #
-import sys
-
-from xhtml2pdf import pisa
 
 
-#if sys.platform == "win32" :
-#    from xhtml2pdf import pisa
-#else:
-#    try:
-#        import ho.pisa as pisa
-#    except:
-#        try:
-#            from xhtml2pdf import pisa
-#        except:
-#            pass
-#from xhtml2pdf import pisa
+
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 #     print("genererFicheValidationHTML", nomFichierHTML)
     Err = []
@@ -265,14 +262,14 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
         if p.discipline != 'Tec':
             np = italic(np)
         le.append(np)
-    NP = liste(le) 
+    NP = listeeee(le) 
     
     # Elèves
     le = []
     for p in projet.eleves:
         np = p.GetNomPrenom()
         le.append(np)
-    NE = liste(le) 
+    NE = listeeee(le) 
     
     # Typologie (cases à cocher)
 #     typo = projet.GetProjetRef().attributs['TYP'][2].split(u"\n")
@@ -298,15 +295,36 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
               'SYN' : remplaceCR(projet.synoptique),
               'ORI' : remplaceCR(projet.origine),
               'CCF' : remplaceCR(projet.contraintes),
-              'TCH' : table_taches(projet.GetProjetRef().taches, projet.eleves, projet.GetProjetRef())}
+              'TCH' : table_taches(projet.GetProjetRef().taches, projet.eleves, projet.GetProjetRef()),
+              'EFG' : str(len(projet.eleves)),
+              'RTE' : ""
+              }
     
 #    print champs['TCH']
     
+    # Les champs standards
     for code, val in champs.items():
         sourceHtml = sourceHtml.replace("[["+code+"]]", val)
     
+    asupp = []
+    # Les diagrammes sysML
+    prj = projet.GetProjetRef()
+    if prj.attributs['SML'][0] != "":
+        for i, n in enumerate(prj.attributs['SML'][2]):
+            code = "SML"+str(i)
+            if code in projet.sysML:
+                nf = file2imgfile(os.path.abspath(projet.sysML[code].GetAbsPath(projet.GetPath())))
+                if nf is not None:
+                    sourceHtml = sourceHtml.replace("[[ML"+str(i+1)+"]]", 
+                                                    image(nf[0]))
+                    if nf[1]:
+                        asupp.append(nf[0])
+                
+        
+    # Le dossier "media"
     sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(util_path.PATH, r"..", DOSSIER_REF))
     
+    # Conversion en PDF
     with open(nomFichierPDF, "w+b") as resultFile:
         # convert HTML to PDF
 #         print(sourceHtml)
@@ -320,7 +338,11 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
             Err.append("Le fichier HTML n'a pas pu être converti en PDF !\n\n" \
                        "\tVeillez à en vérifier la syntaxe, notamment celle des style CSS.")
         
-
+    for f in asupp:
+        os.remove(f)
+        
+        
+        
 #    print pisaStatus.err
     # return True on success and False on errors
     
@@ -585,8 +607,15 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     wx.EndBusyCursor()
     return Err
 
+
+
+
 if sys.platform == "win32":  
     import grilles
+
+
+
+
 
 def genererGrillePDF(nomFichier, grilles_feuilles):
 #    print "genererGrillePDF" 

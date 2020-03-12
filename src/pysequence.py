@@ -4131,9 +4131,7 @@ class Projet(BaseDoc, Grammaire):
         sysml = ET.SubElement(projet, "sysML")
         prj = self.GetProjetRef()
         if prj.attributs['SML'][0] != "":
-            lab = prj.attributs['SML'][2].replace("\n\n", "\n")
-            liste = lab.split("\n")
-            for i, n in enumerate(liste):
+            for i, n in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 l = ET.SubElement(sysml, "Lien_"+str(i))
                 if code in self.sysML:
@@ -4385,9 +4383,7 @@ class Projet(BaseDoc, Grammaire):
         branchesysml = branche.find("sysML")
         prj = self.GetProjetRef()
         if prj.attributs['SML'][0] != "":
-            lab = prj.attributs['SML'][2].replace("\n\n", "\n")
-            liste = lab.split("\n")
-            for i, n in enumerate(liste):
+            for i, n in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 br = branchesysml.find("Lien_"+str(i))
                 if br is not None:
@@ -4395,7 +4391,7 @@ class Projet(BaseDoc, Grammaire):
                         self.sysML[code] = Lien()
                     self.sysML[code].setBranche(br, self.path)
         
-        print("sysML", self.sysML)
+#         print("sysML", self.sysML)
         
 #         print("  revues2", self.getNbrRevues(), self.positionRevues)
         
@@ -5636,10 +5632,7 @@ class Projet(BaseDoc, Grammaire):
     def UpdateSysML(self):
         prj = self.GetProjetRef()
         if prj.attributs['SML'][0] != "":
-            lab = prj.attributs['SML'][2].replace("\n\n", "\n")
-            liste = lab.split("\n")
-            
-            for i, n in enumerate(liste):
+            for i, n in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 if not code in self.sysML:
                     self.sysML[code] = Lien()

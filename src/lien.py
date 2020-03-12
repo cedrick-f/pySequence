@@ -11,7 +11,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2014 C�drick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
 ##
 ## pyS�quence : aide � la construction
 ## de S�quences et Progressions p�dagogiques
@@ -170,13 +170,13 @@ class Lien():
             par rapport à pathref
             et attribue un type
         """
-        print("EvalTypeLien\n  ", self.path, "\n  ", pathref)
+#         print("EvalTypeLien\n  ", self.path, "\n  ", pathref)
 #         print("   ", os.path.commonpath([pathref, self.path]))
                            
                            
         abspath = self.GetAbsPath(pathref)
         
-        print("   ", abspath, self.abs)
+#         print("   ", abspath, self.abs)
             
         if os.path.exists(abspath):
             relpath = testRel(abspath, pathref)
@@ -579,7 +579,7 @@ class URLSelectorCombo(wx.Panel):
         """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
             
         """
-        print("SetPath", lien)
+#         print("SetPath", lien)
 #         print "   ", lien, typ
         if lien is not None:
             self.lien.path = lien

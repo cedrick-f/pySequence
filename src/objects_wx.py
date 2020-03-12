@@ -225,6 +225,7 @@ import threading
 # import pysequence   # déplacé à la fin
 
 from dpi_aware import *
+from file2bmp import *
 
 # Pour débugger
 DEBUG = version.DEBUG
@@ -1077,7 +1078,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             file_menu.Append(17, "&Générer les grilles d'évaluation projet\tCtrl+G")
             file_menu.Append(20, "&Générer les grilles d'évaluation projet en PDF\tCtrl+P")
         
-        file_menu.Append(19, "&Générer le dossier de validation projet\tAlt+V")
+        self.menuDos = file_menu.Append(19, "&Générer le dossier de projet\tAlt+V")
         
         file_menu.Append(25, "Générer le dossier complet (archive &Zip)\tAlt+Z")
         
@@ -1095,7 +1096,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if sys.platform == "win32":# and util_path.INSTALL_PATH != None:
     #        tool_menu.Append(31, u"Options")
             self.menuReg = tool_menu.Append(32, "a")
-            self.MiseAJourMenu()
+            
         self.menuRep = tool_menu.Append(33, "Ouvrir et réparer un fichier")
         tool_menu.Append(34, "Récupérer les noms d'établissement")
         tool_menu.Append(35, "Récupérer les jours fériés")
@@ -1113,6 +1114,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         mb.Append(tool_menu, "&Outils")
         mb.Append(help_menu, "&Aide")
         
+        self.MiseAJourMenu()
+        
         self.SetMenuBar(mb)
     
     
@@ -1123,6 +1126,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.menuReg.SetItemLabel("Désinscrire de la base de registre")
             else:
                 self.menuReg.SetItemLabel("Inscrire dans la base de registre")
+        
+        fenDoc = self.GetCurrentPage()
+        if fenDoc is not None:
+            ref = fenDoc.GetDocument().GetReferentiel()
+            self.menuDos.SetItemLabel("&Générer %s\tAlt+V" %ref.getLabel("PRJVAL").le_())
+        
             
     #############################################################################
     def MiseAJourToolBar(self):
@@ -1746,6 +1755,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.tb.Realize()
             
         wx.CallAfter(self.MiseAJourToolBar)
+        wx.CallAfter(self.MiseAJourMenu)
         
 #         self.miseAJourUndo()
 
@@ -4090,7 +4100,8 @@ class FenetreProjet(FenetreDocument):
 #         print("genererFicheValidation")
         mesFormats = "PDF (.pdf)|*.pdf"
         nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], ".pdf")
-        dlg = wx.FileDialog(self, "Enregistrer le dossier de validation",
+        ref = self.projet.GetReferentiel()
+        dlg = wx.FileDialog(self, "Enregistrer %s" %ref.getLabel("PRJVAL").le_(),
                             defaultFile = nomFichier,
                             wildcard = mesFormats,
 #                           defaultPath = globdef.DOSSIER_EXEMPLES,
@@ -4115,9 +4126,10 @@ class FenetreProjet(FenetreDocument):
 #             print(nomFichier)
             err = genpdf.genererDossierValidation(nomFichier, self.projet, self)
             if len(err) > 0:
+                ref = self.projet.GetReferentiel()
                 m = "\n - ".join(err)
                 messageErreur(self, "Erreur !",
-                                  "Impossible de générer le dossier de validation :\n\n" +m
+                                  "Impossible de générer %s :\n\n" %ref.getLabel("PRJVAL").le_() +m
                                   )
                 return
             
@@ -6256,10 +6268,9 @@ class PanelPropriete_Projet(PanelPropriete):
                 
                 self.nb.AddPage(self.pages['SML'], prj.attributs['SML'][0])
                 
-                lab = prj.attributs['SML'][2].replace("\n\n", "\n")
-                liste = lab.split("\n")
+             
                 
-                for i, n in enumerate(liste):
+                for i, n in enumerate(prj.attributs['SML'][2]):
                     code = "SML"+str(i)
                     
                     sb = myStaticBox(self.pages['SML'], -1, n)
@@ -19926,7 +19937,7 @@ class Panel_BO(wx.Panel, FullScreenWin):
 #  Panel pour l'affichage des diagrammes SysML
 #
 ##########################################################################################################
-import fitz
+
 class Panel_Select_sysML(wx.Panel, FullScreenWin):
     def __init__(self, parent, doc, code):
         self.doc = doc
@@ -19962,7 +19973,7 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     
     #########################################################################################################
     def OnPathModified(self, evt):
-        print("OnPathModified, sysML", self.lien)
+#         print("OnPathModified, sysML", self.lien)
         self.SetImage(sendEvt = True) 
     
     
@@ -19975,27 +19986,35 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     
     #############################################################################            
     def SetImage(self, sendEvt = False):
-        print("SetImage", self.lien)
-        try:
-            img = wx.Image(self.lien.path).ConvertToBitmap()
-        except:
-            try:
-                print("ouverture", self.lien.path)
-                doc = fitz.open(self.lien.path)
-                page = doc.loadPage(0)
-                pix = page.getPixmap()
-                if pix.alpha:
-                    img = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
-                else:
-                    img = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
-                
-            except:
-#                 if DEBUG:
-#                     raise
-                if os.path.isfile(self.lien.path):
-                    img = images.Icone_noimg.GetBitmap()
-                else:
-                    img = None
+#         print("SetImage", self.lien)
+        if os.path.isfile(self.lien.path):
+            defaut = images.Icone_noimg.GetBitmap()
+        else:
+            defaut = None
+            
+        img = file2bmp(self.lien.path, defaut)
+        
+        
+#         try:
+#             img = wx.Image(self.lien.path).ConvertToBitmap()
+#         except:
+#             try:
+#                 print("ouverture", self.lien.path)
+#                 doc = fitz.open(self.lien.path)
+#                 page = doc.loadPage(0)
+#                 pix = page.getPixmap()
+#                 if pix.alpha:
+#                     img = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+#                 else:
+#                     img = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
+#                 
+#             except:
+# #                 if DEBUG:
+# #                     raise
+#                 if os.path.isfile(self.lien.path):
+#                     img = images.Icone_noimg.GetBitmap()
+#                 else:
+#                     img = None
         
         if img != None:
             self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))

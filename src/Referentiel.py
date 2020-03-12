@@ -3124,7 +3124,11 @@ class Projet(XMLelem):
         #
         if self.attributs["FIC"][0] == "":
             self.attributs["FIC"][0] = "Fiche de lots de travaux" # Noms des "fiches de lots de travaux" ou "tâches détaillées"
-
+        
+        if 'SML' in self.attributs and self.attributs['SML'][0] != "":
+            lab = self.attributs['SML'][2].replace("\n\n", "\n")
+            self.attributs['SML'][2] = lab.split("\n")
+            
 #        lst.extend()
 
 
