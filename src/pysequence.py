@@ -4382,7 +4382,7 @@ class Projet(BaseDoc, Grammaire):
         #
         branchesysml = branche.find("sysML")
         prj = self.GetProjetRef()
-        if prj.attributs['SML'][0] != "":
+        if 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
             for i, n in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 br = branchesysml.find("Lien_"+str(i))
@@ -13738,14 +13738,14 @@ class Eleve(Personne):
             :rtype: list
         
         """
-#         print("GenererGrille élève", self)
+#         print("GenererGrille élève", self, messageFin)
 #         print("  ", nomFichiers)
         
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(dirpath)
             if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
                 return []
-#             print "  >>> Fichiers :", nomFichiers
+#             print("  >>> Fichiers :", nomFichiers)
         
         
         prj = self.GetDocument().GetProjetRef()
@@ -13833,7 +13833,7 @@ class Eleve(Personne):
         # Mise à our du panel de Propriétés courant
         panelProp = app.GetPanelProp()
         if hasattr(panelProp, 'MiseAJour'):
-            panelProp.MiseAJour(sendEvt = False, marquerModifier = True)
+            panelProp.MiseAJour(sendEvt = False)#, marquerModifier = True)
         
         #
         # Message de fin
@@ -13845,7 +13845,7 @@ class Eleve(Personne):
             else:
                 t += "de la grille"
             t += "\n\n"
-            t += "\n".join(list(nomFichiers.values()))
+            t += "\n".join([f for n,f in nomFichiers.values()])
             t += "\n\nterminée avec "
             if len(log) == 0:
                 t += "succès !"
