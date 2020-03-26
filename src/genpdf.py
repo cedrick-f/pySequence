@@ -634,7 +634,13 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     g = []
     for i, grille_feuille in enumerate(grilles_feuilles):
         grille, feuille = grille_feuille
-        grille = grilles.PyExcel(grille)
+        try:
+            grille = grilles.PyExcel(grille)
+        except Exception as err:
+            wx.EndBusyCursor()
+            messageErreur(self, "Erreur !", err.args[0])
+            return False
+            
         g.append(grille)
         if feuille is None:
             feuille = grille.getSheets()[-1]

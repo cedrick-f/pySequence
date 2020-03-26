@@ -136,7 +136,7 @@ import wx.richtext as rt
 from drag_file import *
 
 import lien
-
+import grilles
 
 ########################################################################
 try:
@@ -1132,6 +1132,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             ref = fenDoc.GetDocument().GetReferentiel()
             self.menuDos.SetItemLabel("&Générer %s\tAlt+V" %ref.getLabel("PRJVAL").le_())
         
+        if sys.platform == "win32":
+            self.file_menu.Enable(17, grilles.EXT_EXCEL != None)
+            self.file_menu.Enable(20, grilles.EXT_EXCEL != None)
+            
             
     #############################################################################
     def MiseAJourToolBar(self):
@@ -2164,11 +2168,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         """
         menu = wx.Menu()
         
-        for nom, fct, img in items:
+        for nom, fct, img, ena in items:
             item = wx.MenuItem(menu, wx.ID_ANY, nom)
             if img != None:
                 item.SetBitmap(img)
-            item1 = menu.Append(item)    
+            item1 = menu.Append(item) 
+            item.Enable(ena)
             self.Bind(wx.EVT_MENU, fct, item1)
         
         self.PopupMenu(menu)
@@ -3891,6 +3896,7 @@ class FenetreProjet(FenetreDocument):
             :return: la liste des codes d'erreur
             :rtype: list
         """
+#         print("genererGrilles")
         log = []
         
         dlg = wx.DirDialog(self, message = "Emplacement des grilles", 
@@ -3904,6 +3910,7 @@ class FenetreProjet(FenetreDocument):
             dlg.Destroy()
             
             message = "Génération des grilles d'évaluation\n\n"
+            
             dlgb = myProgressDialog   ("Génération des grilles",
                                         message,
                                         maximum = len(self.projet.eleves) + 1,
@@ -3926,12 +3933,16 @@ class FenetreProjet(FenetreDocument):
                 
             nomFichiers = {}
             for e in self.projet.eleves:
-                nomFichiers[e.id] = e.GetNomGrilles(dirpath)
-#            print "nomFichiers", nomFichiers
+                nomFichiers[e.id] = e.GetNomGrilles(dirpath, win = dlgb)
+                if nomFichiers[e.id] is None:
+                    dlgb.Destroy()
+                    return ["Opération annulée"]
+#             print("nomFichiers", nomFichiers)
+            
             
             if not self.projet.TesterExistanceGrilles(nomFichiers, dirpath, dlgb):
                 dlgb.Destroy()
-                return
+                return []
             count += 1
             message += "Traitement de la grille de :\n"
             
@@ -4014,10 +4025,16 @@ class FenetreProjet(FenetreDocument):
             for e in self.projet.eleves:
                 if len(e.grille) == 0: # Pas de fichier grille connu pour cet élève
                     nomFichiers[e.id] = e.GetNomGrilles(dirpath)
+                    if nomFichiers[e.id] is None:
+                        dlgb.Destroy()
+                        return ["Opération annulée"]
                 else:
                     for g in list(e.grille.values()):
                         if not os.path.exists(g.path): # Le fichier grille pour cet élève n'a pas été trouvé
                             nomFichiers[e.id] = e.GetNomGrilles(dirpath)
+                            if nomFichiers[e.id] is None:
+                                dlgb.Destroy()
+                                return ["Opération annulée"]
 #            print "nomFichiers grille", nomFichiers
             
             # Si des fichiers existent avec le méme nom, on demande si on peut les écraser
@@ -4043,7 +4060,8 @@ class FenetreProjet(FenetreDocument):
 #                 dlgb.Refresh()
                     
                 if e.id in list(nomFichiers.keys()):
-                    e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False, win = dlgb)
+                    e.GenererGrille(nomFichiers = nomFichiers[e.id], 
+                                    messageFin = False, win = dlgb)
 
                 for k, g in list(e.grille.items()):
 #                    grille = os.path.join(toFileEncoding(pathprj), toFileEncoding(g.path))
@@ -13678,9 +13696,12 @@ class PanelPropriete_Support(PanelPropriete):
         ok = self.clip.GetData(self.x)
         self.clip.Close()
         if ok:
-            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", self.collerImage, None
-                                              ]
-                                            ])
+            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", 
+                                                          self.collerImage, 
+                                                          None,
+                                                          True
+                                                          ]
+                                                        ])
             
             
 #     #############################################################################            
@@ -13918,9 +13939,12 @@ class PanelPropriete_Modele(PanelPropriete):
         ok = self.clip.GetData(self.x)
         self.clip.Close()
         if ok:
-            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", self.collerImage, None
-                                              ]
-                                            ])
+            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", 
+                                                          self.collerImage, 
+                                                          None,
+                                                          True
+                                                          ]
+                                                        ])
             
 
     #############################################################################            

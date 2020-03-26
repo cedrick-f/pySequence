@@ -89,8 +89,12 @@ def ouvrirXLS(fichier):
     err = 0
 #     print "ouvrirXLS", fichier
     if os.path.isfile(fichier):
+#         tableau = PyExcel(fichier)
         try:
             tableau = PyExcel(fichier)
+        except Exception as err:
+            messageErreur(self, "Erreur !", err.args[0])
+            err = 1
         except:
             err = 1
     else:
@@ -113,11 +117,11 @@ def getTableau(win, nomFichier):
         
             
     """
-#     print "getTableau", nomFichier
+#     print("getTableau", nomFichier)
     
 
     tableau, err, fichierPB = ouvrirXLS(nomFichier)
-                                      
+
     #
     # Gestion des éventuelles erreurs
     #
@@ -128,6 +132,7 @@ def getTableau(win, nomFichier):
         messageErreur(win, "Lancement d'Excel impossible !",
                       "L'erreur peut avoir une des causes suivantes :\n" \
                       " - L'application Excel n'est pas installée.\n" \
+                      " - Excel n'est pas prêt (opération en cours)\n"
                       " - Le fichier original de la grille n'a pas la bonne extention.\n"
                       )
         
@@ -142,22 +147,43 @@ def getTableau(win, nomFichier):
 
 import threading
 
+def getXlApp():
+#     xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+    try:
+        xlApp = win32com.client.GetActiveObject('Excel.Application')  # voir aussi avec DispatchEx ? ou bien win32com.client.gencache.EnsureDispatch("Excel.Application")
+    except:
+        try:
+            xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+        except:
+            try:
+                xlApp = win32com.client.gencache.EnsureDispatch('Excel.Application')
+            except:
+                try:
+                    xlApp = win32com.client.DispatchEx('Excel.Application')
+                except:
+                    raise Exception("Impossible d'ouvrir Excel")
+
+    return xlApp
+
+
 
 def getExentionExcel():
     global EXT_EXCEL
     import pythoncom
     pythoncom.CoInitialize()
     try:
-        xlApp = win32com.client.Dispatch('Excel.Application')
-        print(xlApp, end=' ')
+        xlApp = getXlApp()
+#         xlApp = win32com.client.Dispatch('Excel.Application')
     except :
         print("pas Excel")
         return
-    
-    if float(xlApp.Version) < 12:
-        EXT_EXCEL = ".xls"
-    else:
-        EXT_EXCEL = ".xlsx"
+    try:
+        if float(xlApp.Version) < 12:
+            EXT_EXCEL = ".xls"
+        else:
+            EXT_EXCEL = ".xlsx"
+    except: # Excel est installé mais pas disponible
+        EXT_EXCEL = ""
     
     
     del xlApp       # Parfois très lent, d'où le thread ...
@@ -633,9 +659,31 @@ xlTypePDF = 0
 xlQualityStandard = 0
 xlLandscape = 1
 
+
+
+
+
 class PyExcel:
     def __init__(self,filename=None):
-        self.xlApp = win32com.client.dynamic.Dispatch('Excel.Application')  # voir aussi avec DispatchEx ? ou bien win32com.client.gencache.EnsureDispatch("Excel.Application")
+        # Ouverture d'EXcel
+        self.xlApp = getXlApp()
+#         try:
+#             self.xlApp = win32com.client.GetActiveObject('Excel.Application')  # voir aussi avec DispatchEx ? ou bien win32com.client.gencache.EnsureDispatch("Excel.Application")
+#         except:
+#             try:
+#                 self.xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+#             except:
+#                 try:
+#                     self.xlApp = win32com.client.gencache.EnsureDispatch('Excel.Application')
+#                 except:
+#                     try:
+#                         self.xlApp = win32com.client.DispatchEx('Excel.Application')
+#                     except:
+#                         raise Exception("Impossible d'ouvrir Excel")
+        
+        # Déclenche une erreur si Excel est occupé :
+        print("Excel :", self.xlApp)
+        
         if filename:
             self.filename = filename
             self.xlBook = self.xlApp.Workbooks.Open(filename)
@@ -643,6 +691,7 @@ class PyExcel:
             self.xlBook = self.xlApp.Workbooks.Add()
             self.filename=''
         self.xlBook.Application.DisplayAlerts = False
+        
 
     def save(self, newfilename=None, ConflictResolution = 1):
         if newfilename:
