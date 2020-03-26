@@ -39,7 +39,7 @@ La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéq
  * **Labels** : quelques dénominations particulières au référentiel
  * **Phase_** (_une feuille par projet_): dénomination des différentes phase de chaque projet
  * **Grille_ _** (_une feuille par projet et par partie_): nom du fichier "grille d'évaluation" et cellules à renseigner
- * **Généralités_** (_une feuille par projet_) : éléments à renseigner, spécifiques au référentiel, pour définir le projet (voir [Cas des Projets](#Cas des Projets) )
+ * **Généralités_** (_une feuille par projet_) : éléments à renseigner, spécifiques au référentiel, pour définir le projet (voir [Cas des Projets](###Cas-des-Projets) )
  
 
 ### Cas des Projets
