@@ -25,6 +25,22 @@ La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéq
 
 **En cas de réussite, merci d'en faire profiter la communauté d'utilisateurs** : utiliser la rubrique [Issues](https://github.com/cedrick-f/pySequence/issues) pour communiquer.
 
+### Signification des onglets (feuilles de calcul)
+ * **Généralités** : nom du référentiel, répartition dans la(les) années de formation, lien vers les programmes officiels, dénomination des éventuels projets, ...
+ * **CI** : liste des Centres d'intérêt / Thématiques / ... (le vocabulaire dépend du référentiel)
+ * **Sav_S** : Savoirs / Connaissances / ... (le vocabulaire dépend du référentiel) de la discipline concernée par la séquence ou le projet
+ * **Sav_** : Savoirs / Connaissances / ... (le vocabulaire dépend du référentiel) d'autres disciplines, et qui peuvent apparaitre dans les objectifs et/ou les prérequis
+ * **Comp_S** : Compétence / Capacité / ... (le vocabulaire dépend du référentiel) de la discipline concernée par la séquence ou le projet
+ * **Comp_** (_autant que nécessaire_) : Compétence / Capacité / ... (le vocabulaire dépend du référentiel) d'autres disciplines, et qui peuvent apparaitre dans les objectifs et/ou les prérequis
+ * **Th** : Thèmes / Thématiques / ... (le vocabulaire dépend du référentiel) (voir exemple dans `Ref_Cycle4.xls`)
+ * **Spe** : Spécialités de l'enseignement (voir exemple dans `Ref_STI2D.xls`)
+ * **Dom** : Domaines (voir exemple dans `Ref_Cycle4.xls`)
+ * **Séance** : beaucoup d'informations sur l'organisation des séances (Nature, Type d'activité, Effectifs, dénomonation du Matériel, Enseignements spécifiques, Niveaux taxonomiques (voir `Ref_STI2D.xls` pour un exemple assez complet)
+ * **Labels** : quelques dénominations particulières au référentiel
+ * **Phase_** (_une feuille par projet_): dénomination des différentes phase de chaque projet
+ * **Grille_ _** (_une feuille par projet et par partie_): nom du fichier "grille d'évaluation" et cellules à renseigner
+ * **Généralités_** (_une feuille par projet_) : éléments à renseigner, spécifiques au référentiel, pour définir le projet (voir [Cas des Projets](#Cas des Projets) )
+ 
 
 ### Cas des Projets
 Les référentiels d'enseignement peuvent imposer plusieurs **Projets** (avec ou sans évaluation) : définis sur la feuille `Généralités`
