@@ -40,6 +40,9 @@ La procédure est relativement longue, complexe, et **"sans filet"** : **_pySéq
  * **Phase_** (_une feuille par projet_): dénomination des différentes phase de chaque projet
  * **Grille_ _** (_une feuille par projet et par partie_): nom du fichier "grille d'évaluation" et cellules à renseigner
  * **Généralités_** (_une feuille par projet_) : éléments à renseigner, spécifiques au référentiel, pour définir le projet (voir [Cas des Projets](###Cas-des-Projets) )
+ * **Fonctions** : Activités professionelles (voir exemple dans `Ref_STS_EE.xls`)
+ * **Taches_** (_une feuille par projet_) : Tâches prédéfinies pour le projet (voir exemple dans `Ref_STS_SN.xls`)
+ 
  
 
 ### Cas des Projets
