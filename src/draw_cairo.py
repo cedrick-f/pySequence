@@ -692,7 +692,6 @@ IcoulPos = []
 ICoulComp = []
 CoulAltern = []
 fontPos = 0.014 * COEF 
-import couleur
 
 ######################################################################################  
 def DefinirCouleurs(n1, n2, n3):
