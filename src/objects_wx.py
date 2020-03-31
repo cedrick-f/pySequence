@@ -14426,7 +14426,7 @@ class ArbreSequence(ArbreDoc):
                     elif isinstance(dataTarget, pysequence.Seance):
                         if dataTarget.parent != dataSource.parent:  # parents différents
         #                    print dataSource.typeSeance, dataTarget.GetListeTypes()
-                            if dataSource.parent.EstSeance_RS() \
+                            if dataSource.EstSousSeance() and dataSource.parent.EstSeance_RS() \
                               and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
                                 self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
                                 return 0
