@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="AC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="AC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -359,7 +359,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Projet technologique">
+        <Savoir_1 S_commentaires="" S_intitule="Projet technologique">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -370,7 +370,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="La démarche de projet">
+            <Savoir_1.1 S_commentaires="" S_intitule="La démarche de projet">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -381,7 +381,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="Environnement économique et professionnel">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Environnement économique et professionnel">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -393,7 +393,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.1.1>
-                <Savoir_1.1.2 S_intitule="Planification d'un projet de construction : découpage en phase, diagramme de Gantt, notion de chemin critique">
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Planification d'un projet de construction : découpage en phase, diagramme de Gantt, notion de chemin critique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -405,7 +405,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.1.2>
-                <Savoir_1.1.3 S_intitule="Pilotage d'un projet : revue de projet, notion de coût et de budget, élaboration d'un bilan d'expérience en vue de traçabilité. Travail collaboratif : ENT, base de données, formats d'échange, carte mentale, flux opérationnels">
+                <Savoir_1.1.3 S_commentaires="" S_intitule="Pilotage d'un projet : revue de projet, notion de coût et de budget, élaboration d'un bilan d'expérience en vue de traçabilité. Travail collaboratif : ENT, base de données, formats d'échange, carte mentale, flux opérationnels">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -417,7 +417,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.1.3>
-                <Savoir_1.1.4 S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique">
+                <Savoir_1.1.4 S_commentaires="" S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -429,7 +429,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.1.4>
-                <Savoir_1.1.5 S_intitule="Outils de communication technique : croquis, maquette, représentation normalisée, modeleur volumique et module métier, notice descriptive">
+                <Savoir_1.1.5 S_commentaires="" S_intitule="Outils de communication technique : croquis, maquette, représentation normalisée, modeleur volumique et module métier, notice descriptive">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -443,7 +443,7 @@
                 </Savoir_1.1.5>
               </d_sousSav>
             </Savoir_1.1>
-            <Savoir_1.2 S_intitule="Projet architectural">
+            <Savoir_1.2 S_commentaires="" S_intitule="Projet architectural">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -454,7 +454,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.2.1 S_intitule="Analyse fonctionnelle adaptée à la construction. Organigramme fonctionnel">
+                <Savoir_1.2.1 S_commentaires="" S_intitule="Analyse fonctionnelle adaptée à la construction. Organigramme fonctionnel">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -466,7 +466,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.1>
-                <Savoir_1.2.2 S_intitule="Conception bioclimatique. Système porteurs. Conformité aux règlementations">
+                <Savoir_1.2.2 S_commentaires="" S_intitule="Conception bioclimatique. Système porteurs. Conformité aux règlementations">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -478,7 +478,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.2>
-                <Savoir_1.2.3 S_intitule="Association de dispositions constructives et de performances attendues : - isolation thermique et acoustique, éclairage, qualité de l'air - accessibilité du cadre bâti pour personnes en situation de handicap, prédimensionnements architecturaux, architecture bioclimatique">
+                <Savoir_1.2.3 S_commentaires="" S_intitule="Association de dispositions constructives et de performances attendues : - isolation thermique et acoustique, éclairage, qualité de l'air - accessibilité du cadre bâti pour personnes en situation de handicap, prédimensionnements architecturaux, architecture bioclimatique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -492,7 +492,7 @@
                 </Savoir_1.2.3>
               </d_sousSav>
             </Savoir_1.2>
-            <Savoir_1.3 S_intitule="Etablir une organisation de réalisation          ">
+            <Savoir_1.3 S_commentaires="" S_intitule="Etablir une organisation de réalisation          ">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -503,7 +503,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.3.1 S_intitule="Phasage des opérations. Logistique de chantier. Validations de procédés de mise en oeuvre. Impact carbone. Tri des déchets">
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Phasage des opérations. Logistique de chantier. Validations de procédés de mise en oeuvre. Impact carbone. Tri des déchets">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -519,7 +519,7 @@
             </Savoir_1.3>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_2 S_intitule="Conception d'un ouvrage">
+        <Savoir_2 S_commentaires="" S_intitule="Conception d'un ouvrage">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -530,7 +530,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_2.1 S_intitule="Paramètres influant la conception">
+            <Savoir_2.1 S_commentaires="" S_intitule="Paramètres influant la conception">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -541,7 +541,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.1.1 S_intitule="Repérage des caractéristiques propres de solutions architecturales : - articulation entre les grandes étapes de l'histoire des constructions et leur contexte socio-économique - principales réalisations des bâtisseurs depuis le XVIII° siècle - composition architecturale : vocabulaire, éléments de syntaxe, proportion, échelle - références culturelles, historiques, sociales">
+                <Savoir_2.1.1 S_commentaires="" S_intitule="Repérage des caractéristiques propres de solutions architecturales : - articulation entre les grandes étapes de l'histoire des constructions et leur contexte socio-économique - principales réalisations des bâtisseurs depuis le XVIII° siècle - composition architecturale : vocabulaire, éléments de syntaxe, proportion, échelle - références culturelles, historiques, sociales">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -553,7 +553,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.1>
-                <Savoir_2.1.2 S_intitule="Le confort : - hygromthermique - acoustique - visuel - repiratoire">
+                <Savoir_2.1.2 S_commentaires="" S_intitule="Le confort : - hygromthermique - acoustique - visuel - repiratoire">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -565,7 +565,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.2>
-                <Savoir_2.1.3 S_intitule="Choix des sources d'énergie du projet : - transformation de l'énergie - coût des énergies - association de sources d'énergie - cheminement physique des flux de fluide dans une construction">
+                <Savoir_2.1.3 S_commentaires="" S_intitule="Choix des sources d'énergie du projet : - transformation de l'énergie - coût des énergies - association de sources d'énergie - cheminement physique des flux de fluide dans une construction">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -577,7 +577,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.3>
-                <Savoir_2.1.4 S_intitule="Infrastructure et superstructure : - éléments de géologie, caractéristiques physiques et mécaniques des sols - éléments de structure porteuse - éléments d'enveloppe du bâtiment - cloisonnement">
+                <Savoir_2.1.4 S_commentaires="" S_intitule="Infrastructure et superstructure : - éléments de géologie, caractéristiques physiques et mécaniques des sols - éléments de structure porteuse - éléments d'enveloppe du bâtiment - cloisonnement">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -589,7 +589,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.4>
-                <Savoir_2.1.5 S_intitule="Aménagement du territoire : - typologies des ouvrages (ponts, routes, barrages, lieu de production d'énergie) - impact environnemental lié à l'aménagement de l'espace public">
+                <Savoir_2.1.5 S_commentaires="" S_intitule="Aménagement du territoire : - typologies des ouvrages (ponts, routes, barrages, lieu de production d'énergie) - impact environnemental lié à l'aménagement de l'espace public">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -601,7 +601,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.5>
-                <Savoir_2.1.6 S_intitule="Aménagement urbain : - distribution des fluides, des énergies - collecte et traitement des effluents - aménagement des espaces communs - éclairage public">
+                <Savoir_2.1.6 S_commentaires="" S_intitule="Aménagement urbain : - distribution des fluides, des énergies - collecte et traitement des effluents - aménagement des espaces communs - éclairage public">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -615,7 +615,7 @@
                 </Savoir_2.1.6>
               </d_sousSav>
             </Savoir_2.1>
-            <Savoir_2.2 S_intitule="Solutions technologiques">
+            <Savoir_2.2 S_commentaires="" S_intitule="Solutions technologiques">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -626,7 +626,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.2.1 S_intitule="Maîtrise des consommations d'énergie : -performances thermiques du bâti - gains passifs (enveloppe, écrans solaire, éclairage naturel). Maîtrise des pertes : - températures ambiantes de confort intermittence des consignes - gestion d'éclairage et d'écrans solaires - récupération d'énergie - pilotage d'énergie - pilotage global de l'énergie sur site">
+                <Savoir_2.2.1 S_commentaires="" S_intitule="Maîtrise des consommations d'énergie : -performances thermiques du bâti - gains passifs (enveloppe, écrans solaire, éclairage naturel). Maîtrise des pertes : - températures ambiantes de confort intermittence des consignes - gestion d'éclairage et d'écrans solaires - récupération d'énergie - pilotage d'énergie - pilotage global de l'énergie sur site">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -638,7 +638,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.1>
-                <Savoir_2.2.2 S_intitule="Assurer la stabilité : - charmente - porteurs verticaux et horizontaux - liaison au sol, stabilité des terres, drainage">
+                <Savoir_2.2.2 S_commentaires="" S_intitule="Assurer la stabilité : - charmente - porteurs verticaux et horizontaux - liaison au sol, stabilité des terres, drainage">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -650,7 +650,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.2>
-                <Savoir_2.2.3 S_intitule="Le confort : - thermique - acoustique - visuel - respiratoire">
+                <Savoir_2.2.3 S_commentaires="" S_intitule="Le confort : - thermique - acoustique - visuel - respiratoire">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -664,7 +664,7 @@
                 </Savoir_2.2.3>
               </d_sousSav>
             </Savoir_2.2>
-            <Savoir_2.3 S_intitule="Modélisations, essais et simulations">
+            <Savoir_2.3 S_commentaires="" S_intitule="Modélisations, essais et simulations">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -675,7 +675,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.3.1 S_intitule=" Etude des structures : - modélisation, degré d'hyperstaticité, typologie des charges, descente de charges, force portante du sol, sollicitations et déformations des structures - comportement élastique, élastoplastique - rupture fragile, ductilité - coefficients de sécurité - moment quadratique, principe de superposition, répartition des déformations dans une section de poutre soumise à de la flexion simple">
+                <Savoir_2.3.1 S_commentaires="" S_intitule=" Etude des structures : - modélisation, degré d'hyperstaticité, typologie des charges, descente de charges, force portante du sol, sollicitations et déformations des structures - comportement élastique, élastoplastique - rupture fragile, ductilité - coefficients de sécurité - moment quadratique, principe de superposition, répartition des déformations dans une section de poutre soumise à de la flexion simple">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -687,7 +687,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.1>
-                <Savoir_2.3.2 S_intitule=" Confort hygromthermique : - caractéristiques et comportements thermiques des matériaux et parois">
+                <Savoir_2.3.2 S_commentaires="" S_intitule=" Confort hygromthermique : - caractéristiques et comportements thermiques des matériaux et parois">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -699,7 +699,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.2>
-                <Savoir_2.3.3 S_intitule=" Confort acoustique : - transmission du bruit au travers d'une paroi - les pièges à sons - loi de masse - phénomène de résonnance - temps de réverbération">
+                <Savoir_2.3.3 S_commentaires="" S_intitule=" Confort acoustique : - transmission du bruit au travers d'une paroi - les pièges à sons - loi de masse - phénomène de résonnance - temps de réverbération">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -711,7 +711,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.3>
-                <Savoir_2.3.4 S_intitule=" Confort visuel : - éclairement, luminance, facteur de lumière du jour - stratégie de l'éclairement naturel">
+                <Savoir_2.3.4 S_commentaires="" S_intitule=" Confort visuel : - éclairement, luminance, facteur de lumière du jour - stratégie de l'éclairement naturel">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -723,7 +723,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.4>
-                <Savoir_2.3.5 S_intitule=" Confort respiratoire : - conditions d'hygiène, pollution - renouvellement d'air, VMC">
+                <Savoir_2.3.5 S_commentaires="" S_intitule=" Confort respiratoire : - conditions d'hygiène, pollution - renouvellement d'air, VMC">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -739,7 +739,7 @@
             </Savoir_2.3>
           </d_sousSav>
         </Savoir_2>
-        <Savoir_3 S_intitule="Vie de la construction">
+        <Savoir_3 S_commentaires="" S_intitule="Vie de la construction">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -750,7 +750,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_3.1 S_intitule="Améliorer les performances de la construction">
+            <Savoir_3.1 S_commentaires="" S_intitule="Améliorer les performances de la construction">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -761,7 +761,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.1.1 S_intitule="Protection anti intrusion. Gestion des accès. Pilotage d'automatismes (volets, brise-soleil... Réseaux Voix, Données, Images. Centralisation des commandes. Instrumentation d'équipements (relevé et affichage de consommation, etc.). Pilotage à distance (téléphone, internet, etc.). Asservissement de systèmes (coupure du chauffage sur ouverture de fenêtre, etc.)">
+                <Savoir_3.1.1 S_commentaires="" S_intitule="Protection anti intrusion. Gestion des accès. Pilotage d'automatismes (volets, brise-soleil... Réseaux Voix, Données, Images. Centralisation des commandes. Instrumentation d'équipements (relevé et affichage de consommation, etc.). Pilotage à distance (téléphone, internet, etc.). Asservissement de systèmes (coupure du chauffage sur ouverture de fenêtre, etc.)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -773,7 +773,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.1>
-                <Savoir_3.1.2 S_intitule="Gestion du réseau de transport. Comptage et facturation de l'énergie. Impact environnemental,">
+                <Savoir_3.1.2 S_commentaires="" S_intitule="Gestion du réseau de transport. Comptage et facturation de l'énergie. Impact environnemental,">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -787,7 +787,7 @@
                 </Savoir_3.1.2>
               </d_sousSav>
             </Savoir_3.1>
-            <Savoir_3.2 S_intitule="Gestion de la vie d'une construction">
+            <Savoir_3.2 S_commentaires="" S_intitule="Gestion de la vie d'une construction">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -798,7 +798,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.2.1 S_intitule="Cycle vie de l'ouvrage : - matériaux de la construction (extraction, transformation, mise en oeuvre) - énergie grise - procédés et matériels de déconstruction - législation en vigueur - traçabilité">
+                <Savoir_3.2.1 S_commentaires="" S_intitule="Cycle vie de l'ouvrage : - matériaux de la construction (extraction, transformation, mise en oeuvre) - énergie grise - procédés et matériels de déconstruction - législation en vigueur - traçabilité">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -810,7 +810,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.1>
-                <Savoir_3.2.2 S_intitule="- Planification de la déconstruction d'un ouvrage - typologie des déchets, valorisation, traitements">
+                <Savoir_3.2.2 S_commentaires="" S_intitule="- Planification de la déconstruction d'un ouvrage - typologie des déchets, valorisation, traitements">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -822,7 +822,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.2>
-                <Savoir_3.2.3 S_intitule="Inventorier la nature des pathologies : - histoire des matériaux de la construction, leur évolution dans le temps - nature et évolutions des sols">
+                <Savoir_3.2.3 S_commentaires="" S_intitule="Inventorier la nature des pathologies : - histoire des matériaux de la construction, leur évolution dans le temps - nature et évolutions des sols">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -834,7 +834,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.3>
-                <Savoir_3.2.4 S_intitule="- Techniques de relevé des constructions (imagerie, topographie, métré, prélèvement d'échantillon)">
+                <Savoir_3.2.4 S_commentaires="" S_intitule="- Techniques de relevé des constructions (imagerie, topographie, métré, prélèvement d'échantillon)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -905,6 +905,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />

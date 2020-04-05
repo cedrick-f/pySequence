@@ -391,6 +391,7 @@
     <l_SEQINT S_00="Problématiques proposées" S_01="Problématiques proposées" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques>

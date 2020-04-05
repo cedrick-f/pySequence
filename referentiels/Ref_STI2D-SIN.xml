@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -410,7 +410,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Projet technologique">
+        <Savoir_1 S_commentaires="" S_intitule="Projet technologique">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -421,7 +421,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="La démarche de projet">
+            <Savoir_1.1 S_commentaires="" S_intitule="La démarche de projet">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -432,7 +432,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="Les projets industriels">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Les projets industriels">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -443,7 +443,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.1.1 S_intitule="Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \&quot;joint venture\&quot;)">
+                    <Savoir_1.1.1.1 S_commentaires="" S_intitule="Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \&quot;joint venture\&quot;)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -455,7 +455,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.1>
-                    <Savoir_1.1.1.2 S_intitule="Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)">
+                    <Savoir_1.1.1.2 S_commentaires="" S_intitule="Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -467,7 +467,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.2>
-                    <Savoir_1.1.1.3 S_intitule="Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)">
+                    <Savoir_1.1.1.3 S_commentaires="" S_intitule="Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -481,7 +481,7 @@
                     </Savoir_1.1.1.3>
                   </d_sousSav>
                 </Savoir_1.1.1>
-                <Savoir_1.1.2 S_intitule="Les projets pédagogiques et technologiques">
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Les projets pédagogiques et technologiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -492,7 +492,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.2.1 S_intitule="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)">
+                    <Savoir_1.1.2.1 S_commentaires="" S_intitule="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -504,7 +504,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.1>
-                    <Savoir_1.1.2.2 S_intitule="Animation d'une revue de projet ou management d'une équipe projet">
+                    <Savoir_1.1.2.2 S_commentaires="" S_intitule="Animation d'une revue de projet ou management d'une équipe projet">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -516,7 +516,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.2>
-                    <Savoir_1.1.2.3 S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)">
+                    <Savoir_1.1.2.3 S_commentaires="" S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -532,7 +532,7 @@
                 </Savoir_1.1.2>
               </d_sousSav>
             </Savoir_1.1>
-            <Savoir_1.2 S_intitule="Mise en oeuvre d'un système">
+            <Savoir_1.2 S_commentaires="" S_intitule="Mise en oeuvre d'un système">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -543,7 +543,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.2.1 S_intitule="Décodage des notices techniques d'un système et des procédures d'installation">
+                <Savoir_1.2.1 S_commentaires="" S_intitule="Décodage des notices techniques d'un système et des procédures d'installation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -555,7 +555,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.1>
-                <Savoir_1.2.2 S_intitule="Compte-rendu de la mise en oeuvre d'un système, en utilisant un langage technique précis">
+                <Savoir_1.2.2 S_commentaires="" S_intitule="Compte-rendu de la mise en oeuvre d'un système, en utilisant un langage technique précis">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -567,7 +567,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.2>
-                <Savoir_1.2.3 S_intitule="Identification des dysfonctionnements et/ou description des solutions">
+                <Savoir_1.2.3 S_commentaires="" S_intitule="Identification des dysfonctionnements et/ou description des solutions">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -581,7 +581,7 @@
                 </Savoir_1.2.3>
               </d_sousSav>
             </Savoir_1.2>
-            <Savoir_1.3 S_intitule="Description et représentation          ">
+            <Savoir_1.3 S_commentaires="" S_intitule="Description et représentation          ">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -592,7 +592,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.3.1 S_intitule="Décodage d'un cahier des charges fonctionnel décrivant un besoin exprimé">
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Décodage d'un cahier des charges fonctionnel décrivant un besoin exprimé">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -604,7 +604,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.1>
-                <Savoir_1.3.2 S_intitule="Identification des fonctions définies par l'expression du besoin. Caractérisation de leurs performances à partir de mesures, conclusions sur leur conformité au regard du cahier des charges">
+                <Savoir_1.3.2 S_commentaires="" S_intitule="Identification des fonctions définies par l'expression du besoin. Caractérisation de leurs performances à partir de mesures, conclusions sur leur conformité au regard du cahier des charges">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -616,7 +616,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.2>
-                <Savoir_1.3.3 S_intitule="Propositions d'évolutions pour chaque fonction caractérisée à partir d'un schéma de principe relatif à son fonctionnement, en repérant les constituants des chaînes d'énergie et d'information">
+                <Savoir_1.3.3 S_commentaires="" S_intitule="Propositions d'évolutions pour chaque fonction caractérisée à partir d'un schéma de principe relatif à son fonctionnement, en repérant les constituants des chaînes d'énergie et d'information">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -628,7 +628,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.3>
-                <Savoir_1.3.4 S_intitule="Réalisation d'une représentation fonctionnelle (schémas blocs, norme SysML)">
+                <Savoir_1.3.4 S_commentaires="" S_intitule="Réalisation d'une représentation fonctionnelle (schémas blocs, norme SysML)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -640,7 +640,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.4>
-                <Savoir_1.3.5 S_intitule="Représentation du comportement des constituants (dans les domaines temporel et/ou fréquentiel)">
+                <Savoir_1.3.5 S_commentaires="" S_intitule="Représentation du comportement des constituants (dans les domaines temporel et/ou fréquentiel)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -656,7 +656,7 @@
             </Savoir_1.3>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_2 S_intitule="Maquettage des solutions constructives">
+        <Savoir_2 S_commentaires="" S_intitule="Maquettage des solutions constructives">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -667,7 +667,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_2.1 S_intitule="Conception fonctionnelle d'un système local">
+            <Savoir_2.1 S_commentaires="" S_intitule="Conception fonctionnelle d'un système local">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -678,7 +678,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.1.1 S_intitule="Acquisition, conditionnement et filtrage d'une information (sous forme analogique)">
+                <Savoir_2.1.1 S_commentaires="" S_intitule="Acquisition, conditionnement et filtrage d'une information (sous forme analogique)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -690,7 +690,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.1>
-                <Savoir_2.1.2 S_intitule="Conversion d'une information (CAN et CNA)">
+                <Savoir_2.1.2 S_commentaires="" S_intitule="Conversion d'une information (CAN et CNA)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -702,7 +702,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.2>
-                <Savoir_2.1.3 S_intitule="Traitement d'une information numérique">
+                <Savoir_2.1.3 S_commentaires="" S_intitule="Traitement d'une information numérique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -714,7 +714,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.3>
-                <Savoir_2.1.4 S_intitule="Traitement d'une information analogique">
+                <Savoir_2.1.4 S_commentaires="" S_intitule="Traitement d'une information analogique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -726,7 +726,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.4>
-                <Savoir_2.1.5 S_intitule="Traitement programmé et composants programmables">
+                <Savoir_2.1.5 S_commentaires="" S_intitule="Traitement programmé et composants programmables">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -738,7 +738,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.5>
-                <Savoir_2.1.6 S_intitule="Modulation, démodulation d'un signal porteur d'une information : amplitude, fréquence, phase">
+                <Savoir_2.1.6 S_commentaires="" S_intitule="Modulation, démodulation d'un signal porteur d'une information : amplitude, fréquence, phase">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -750,7 +750,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.6>
-                <Savoir_2.1.7 S_intitule="Multiplexage d'une information et codage d'une transmission en bande de base">
+                <Savoir_2.1.7 S_commentaires="" S_intitule="Multiplexage d'une information et codage d'une transmission en bande de base">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -762,7 +762,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.7>
-                <Savoir_2.1.8 S_intitule="Transmission d'une information (liaison filaire et non filaire)">
+                <Savoir_2.1.8 S_commentaires="" S_intitule="Transmission d'une information (liaison filaire et non filaire)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -774,7 +774,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.8>
-                <Savoir_2.1.9 S_intitule="Restitution d'une information : voix, données, images">
+                <Savoir_2.1.9 S_commentaires="" S_intitule="Restitution d'une information : voix, données, images">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -788,7 +788,7 @@
                 </Savoir_2.1.9>
               </d_sousSav>
             </Savoir_2.1>
-            <Savoir_2.2 S_intitule="Architecture fonctionnelle d'un système communicant">
+            <Savoir_2.2 S_commentaires="" S_intitule="Architecture fonctionnelle d'un système communicant">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -799,7 +799,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.2.1 S_intitule="Modèles en couche des réseaux, protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : Protocole ARP">
+                <Savoir_2.2.1 S_commentaires="" S_intitule="Modèles en couche des réseaux, protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : Protocole ARP">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -811,7 +811,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.1>
-                <Savoir_2.2.2 S_intitule="Architecture client/serveur">
+                <Savoir_2.2.2 S_commentaires="" S_intitule="Architecture client/serveur">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -825,7 +825,7 @@
                 </Savoir_2.2.2>
               </d_sousSav>
             </Savoir_2.2>
-            <Savoir_2.3 S_intitule="Modélisations et simulations">
+            <Savoir_2.3 S_commentaires="" S_intitule="Modélisations et simulations">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -836,7 +836,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.3.1 S_intitule=" Modèle de comportement fréquentiel relatif à la fonction filtrage (bande-passante, fréquence de coupure)">
+                <Savoir_2.3.1 S_commentaires="" S_intitule=" Modèle de comportement fréquentiel relatif à la fonction filtrage (bande-passante, fréquence de coupure)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -848,7 +848,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.1>
-                <Savoir_2.3.2 S_intitule="Diagramme états-transitions pour un système événementiel">
+                <Savoir_2.3.2 S_commentaires="" S_intitule="Diagramme états-transitions pour un système événementiel">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -860,7 +860,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.2>
-                <Savoir_2.3.3 S_intitule="Modèle de comportement : utilisation de librairies logicielles et paramétrage de caractéristiques">
+                <Savoir_2.3.3 S_commentaires="" S_intitule="Modèle de comportement : utilisation de librairies logicielles et paramétrage de caractéristiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -872,7 +872,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.3>
-                <Savoir_2.3.4 S_intitule="Architecture de la chaîne d'information et paramétrage du simulateur">
+                <Savoir_2.3.4 S_commentaires="" S_intitule="Architecture de la chaîne d'information et paramétrage du simulateur">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -884,7 +884,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.4>
-                <Savoir_2.3.5 S_intitule="Simulations et analyses des résultats">
+                <Savoir_2.3.5 S_commentaires="" S_intitule="Simulations et analyses des résultats">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -896,7 +896,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.3.5>
-                <Savoir_2.3.6 S_intitule="Identification des variables simulées et mesurées sur le système pour valider le choix d'une solution">
+                <Savoir_2.3.6 S_commentaires="" S_intitule="Identification des variables simulées et mesurées sur le système pour valider le choix d'une solution">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -912,7 +912,7 @@
             </Savoir_2.3>
           </d_sousSav>
         </Savoir_2>
-        <Savoir_3 S_intitule="Réalisation et qualification d'un prototype">
+        <Savoir_3 S_commentaires="" S_intitule="Réalisation et qualification d'un prototype">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -923,7 +923,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_3.1 S_intitule="Réalisation d'un prototype">
+            <Savoir_3.1 S_commentaires="" S_intitule="Réalisation d'un prototype">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -934,7 +934,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.1.1 S_intitule="Implémentation d'un programme dans un composant programmable">
+                <Savoir_3.1.1 S_commentaires="" S_intitule="Implémentation d'un programme dans un composant programmable">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -946,7 +946,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.1>
-                <Savoir_3.1.2 S_intitule="Interfaçage de composants">
+                <Savoir_3.1.2 S_commentaires="" S_intitule="Interfaçage de composants">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -958,7 +958,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.2>
-                <Savoir_3.1.3 S_intitule="Interconnexion des fonctions distribuées">
+                <Savoir_3.1.3 S_commentaires="" S_intitule="Interconnexion des fonctions distribuées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -970,7 +970,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.3>
-                <Savoir_3.1.4 S_intitule="Programmation de l'interface de communication">
+                <Savoir_3.1.4 S_commentaires="" S_intitule="Programmation de l'interface de communication">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -982,7 +982,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.4>
-                <Savoir_3.1.5 S_intitule="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)">
+                <Savoir_3.1.5 S_commentaires="" S_intitule="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -994,7 +994,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.5>
-                <Savoir_3.1.6 S_intitule="Adaptation d'une chaîne d'acquisition aux caractéristiques des grandeurs à acquérir">
+                <Savoir_3.1.6 S_commentaires="" S_intitule="Adaptation d'une chaîne d'acquisition aux caractéristiques des grandeurs à acquérir">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1006,7 +1006,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.6>
-                <Savoir_3.1.7 S_intitule="Recette du prototype au regard des spécifications attendues du cahier des charges">
+                <Savoir_3.1.7 S_commentaires="" S_intitule="Recette du prototype au regard des spécifications attendues du cahier des charges">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1020,7 +1020,7 @@
                 </Savoir_3.1.7>
               </d_sousSav>
             </Savoir_3.1>
-            <Savoir_3.2 S_intitule="Gestion de la vie d'un système">
+            <Savoir_3.2 S_commentaires="" S_intitule="Gestion de la vie d'un système">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1031,7 +1031,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.2.1 S_intitule="Validation d'un prototype">
+                <Savoir_3.2.1 S_commentaires="" S_intitule="Validation d'un prototype">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1043,7 +1043,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.1>
-                <Savoir_3.2.2 S_intitule="Procédures d'intervention">
+                <Savoir_3.2.2 S_commentaires="" S_intitule="Procédures d'intervention">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1055,7 +1055,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.2>
-                <Savoir_3.2.3 S_intitule="Mise à jour d'un système d'information">
+                <Savoir_3.2.3 S_commentaires="" S_intitule="Mise à jour d'un système d'information">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1067,7 +1067,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.3>
-                <Savoir_3.2.4 S_intitule="Rédaction d'un compte-rendu sur l'activité de maintenance">
+                <Savoir_3.2.4 S_commentaires="" S_intitule="Rédaction d'un compte-rendu sur l'activité de maintenance">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1079,7 +1079,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.4>
-                <Savoir_3.2.5 S_intitule="Performances d'un projet finalisé">
+                <Savoir_3.2.5 S_commentaires="" S_intitule="Performances d'un projet finalisé">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1091,7 +1091,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.5>
-                <Savoir_3.2.6 S_intitule="Etude prospective technique et économique">
+                <Savoir_3.2.6 S_commentaires="" S_intitule="Etude prospective technique et économique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1103,7 +1103,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.6>
-                <Savoir_3.2.7 S_intitule="Proposition d'une solution et organisation du nouveau projet">
+                <Savoir_3.2.7 S_commentaires="" S_intitule="Proposition d'une solution et organisation du nouveau projet">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1174,6 +1174,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />

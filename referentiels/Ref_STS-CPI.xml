@@ -3018,6 +3018,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Étudiant(s)$m" S_01="Étudiant" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />

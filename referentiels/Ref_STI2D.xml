@@ -6205,7 +6205,10 @@
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_SYN S_00="Production finale" S_01="Production finale" S_02="" S_03="" />
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
-        <l_SML S_00="sysML" S_01="Diagrammes sysML" S_02="Expression du besoin--Missions du système--Contexte du système--Cas d'utilisation--Exigences" S_03="" />
+        <l_SML S_00="sysML" S_01="Diagrammes sysML" S_03="">
+          <l_02 S_00="Expression du besoin" S_01="Missions du système" S_02="Contexte du système" S_03="Cas d'utilisation" S_04="Exigences" />
+        </l_SML>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C1>
@@ -6328,6 +6331,9 @@
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
+        <l_SML S_00="sysML" S_01="Diagrammes sysML" S_03="">
+          <l_02 S_00="Expression du besoin" S_01="Missions du système" S_02="Contexte du système" S_03="Cas d'utilisation" S_04="Exigences" />
+        </l_SML>
         <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>

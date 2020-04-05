@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="ITEC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="ITEC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -395,7 +395,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Projet technologique">
+        <Savoir_1 S_commentaires="" S_intitule="Projet technologique">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -406,7 +406,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="La démarche de projet">
+            <Savoir_1.1 S_commentaires="" S_intitule="La démarche de projet">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -417,7 +417,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="Les projets industriels">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Les projets industriels">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -428,7 +428,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.1.1 S_intitule="Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \&quot;joint venture\&quot;)">
+                    <Savoir_1.1.1.1 S_commentaires="" S_intitule="Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \&quot;joint venture\&quot;)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -440,7 +440,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.1>
-                    <Savoir_1.1.1.2 S_intitule="Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)">
+                    <Savoir_1.1.1.2 S_commentaires="" S_intitule="Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -452,7 +452,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.2>
-                    <Savoir_1.1.1.3 S_intitule="Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)">
+                    <Savoir_1.1.1.3 S_commentaires="" S_intitule="Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -466,7 +466,7 @@
                     </Savoir_1.1.1.3>
                   </d_sousSav>
                 </Savoir_1.1.1>
-                <Savoir_1.1.2 S_intitule="Les projets pédagogiques et technologiques">
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Les projets pédagogiques et technologiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -477,7 +477,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.2.1 S_intitule="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)">
+                    <Savoir_1.1.2.1 S_commentaires="" S_intitule="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -489,7 +489,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.1>
-                    <Savoir_1.1.2.2 S_intitule="Animation d'une revue de projet ou management d'une équipe projet">
+                    <Savoir_1.1.2.2 S_commentaires="" S_intitule="Animation d'une revue de projet ou management d'une équipe projet">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -501,7 +501,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.2>
-                    <Savoir_1.1.2.3 S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)">
+                    <Savoir_1.1.2.3 S_commentaires="" S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -517,7 +517,7 @@
                 </Savoir_1.1.2>
               </d_sousSav>
             </Savoir_1.1>
-            <Savoir_1.2 S_intitule="Créativité et innovation technologique">
+            <Savoir_1.2 S_commentaires="" S_intitule="Créativité et innovation technologique">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -528,7 +528,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.2.1 S_intitule="Méthodes de créativité rationnelles et non rationnelles (lois d'évolutions et principes d'innovation, contradictions, relations entre solutions techniques et principes scientifiques/technologiques associées, méthodes de brainstorming)">
+                <Savoir_1.2.1 S_commentaires="" S_intitule="Méthodes de créativité rationnelles et non rationnelles (lois d'évolutions et principes d'innovation, contradictions, relations entre solutions techniques et principes scientifiques/technologiques associées, méthodes de brainstorming)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -540,7 +540,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.1>
-                <Savoir_1.2.2 S_intitule="Contraintes de règlementation, normes, propriété industrielle et brevets">
+                <Savoir_1.2.2 S_commentaires="" S_intitule="Contraintes de règlementation, normes, propriété industrielle et brevets">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -552,7 +552,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.2>
-                <Savoir_1.2.3 S_intitule="Dimension Desing d'un produit, impact d'une approche Design sur les fonctions, la structure et les solutions techniques">
+                <Savoir_1.2.3 S_commentaires="" S_intitule="Dimension Desing d'un produit, impact d'une approche Design sur les fonctions, la structure et les solutions techniques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -564,7 +564,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.2.3>
-                <Savoir_1.2.4 S_intitule="Intégration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie,">
+                <Savoir_1.2.4 S_commentaires="" S_intitule="Intégration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie,">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -578,7 +578,7 @@
                 </Savoir_1.2.4>
               </d_sousSav>
             </Savoir_1.2>
-            <Savoir_1.3 S_intitule="Description et représentation">
+            <Savoir_1.3 S_commentaires="" S_intitule="Description et représentation">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -589,7 +589,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.3.1 S_intitule="Analyse fonctionnelle (selon les normes en vigueur : cahier des charges fonctionnel, indices de flexibilité)">
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Analyse fonctionnelle (selon les normes en vigueur : cahier des charges fonctionnel, indices de flexibilité)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -601,7 +601,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.1>
-                <Savoir_1.3.2 S_intitule="Représentation d'une idée, d'une solution : croquis, schémas de principe à main levée">
+                <Savoir_1.3.2 S_commentaires="" S_intitule="Représentation d'une idée, d'une solution : croquis, schémas de principe à main levée">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -613,7 +613,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.2>
-                <Savoir_1.3.3 S_intitule="Schémas cinématique (minimal ou non) et structurel">
+                <Savoir_1.3.3 S_commentaires="" S_intitule="Schémas cinématique (minimal ou non) et structurel">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -629,7 +629,7 @@
             </Savoir_1.3>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_2 S_intitule="Conception mécanique des systèmes">
+        <Savoir_2 S_commentaires="" S_intitule="Conception mécanique des systèmes">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -640,7 +640,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_2.1 S_intitule="Conception des mécanismes">
+            <Savoir_2.1 S_commentaires="" S_intitule="Conception des mécanismes">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -651,7 +651,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.1.1 S_intitule="Modification d'un mécanisme : définition volumique et numérique (CAO 3D) des modifications d'un mécanisme à partir de contraintes fonctionnelles">
+                <Savoir_2.1.1 S_commentaires="" S_intitule="Modification d'un mécanisme : définition volumique et numérique (CAO 3D) des modifications d'un mécanisme à partir de contraintes fonctionnelles">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -663,7 +663,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.1>
-                <Savoir_2.1.2 S_intitule="Définition volumique et numérique (CAO 3D) des formes et dimensions d'une pièce, prise en compte des contraintes fonctionnelles">
+                <Savoir_2.1.2 S_commentaires="" S_intitule="Définition volumique et numérique (CAO 3D) des formes et dimensions d'une pièce, prise en compte des contraintes fonctionnelles">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -675,7 +675,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.2>
-                <Savoir_2.1.3 S_intitule="Influence du principe de réalisation et du matériau choisis sur les formes et dimensions d'une pièce simple">
+                <Savoir_2.1.3 S_commentaires="" S_intitule="Influence du principe de réalisation et du matériau choisis sur les formes et dimensions d'une pièce simple">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -687,7 +687,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.3>
-                <Savoir_2.1.4 S_intitule="Choix d'une solution : critères de choix associés à une conception ou à l'intégration d'une solution dans un système global - coût, fiabilité, environnement, ergonomie et design - Matrice de comparaison de plusieurs critères">
+                <Savoir_2.1.4 S_commentaires="" S_intitule="Choix d'une solution : critères de choix associés à une conception ou à l'intégration d'une solution dans un système global - coût, fiabilité, environnement, ergonomie et design - Matrice de comparaison de plusieurs critères">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -699,7 +699,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.4>
-                <Savoir_2.1.5 S_intitule="Formalisation et justification d'une solution de conception : illustrations 3D (vues photos réalistes, éclatés, mises en plan, diagramme causse effet, carte mentale, présentation PAO),">
+                <Savoir_2.1.5 S_commentaires="" S_intitule="Formalisation et justification d'une solution de conception : illustrations 3D (vues photos réalistes, éclatés, mises en plan, diagramme causse effet, carte mentale, présentation PAO),">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -713,7 +713,7 @@
                 </Savoir_2.1.5>
               </d_sousSav>
             </Savoir_2.1>
-            <Savoir_2.2 S_intitule="Comportement d'un mécanisme et/ou d'une pièce">
+            <Savoir_2.2 S_commentaires="" S_intitule="Comportement d'un mécanisme et/ou d'une pièce">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -724,7 +724,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.2.1 S_intitule="Simulations mécaniques : modélisation et simulation (modèle simplifié et modèle numérique, validation des hypothèses)">
+                <Savoir_2.2.1 S_commentaires="" S_intitule="Simulations mécaniques : modélisation et simulation (modèle simplifié et modèle numérique, validation des hypothèses)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -736,7 +736,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.1>
-                <Savoir_2.2.2 S_intitule="Résistance des matériaux : hypothèses et modèle poutre, types de sollicitations simples, notion de contraintes et de déformation, loi de Hooke et module d'Young, limite élastique, étude d'une sollicitation simple">
+                <Savoir_2.2.2 S_commentaires="" S_intitule="Résistance des matériaux : hypothèses et modèle poutre, types de sollicitations simples, notion de contraintes et de déformation, loi de Hooke et module d'Young, limite élastique, étude d'une sollicitation simple">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -748,7 +748,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.2>
-                <Savoir_2.2.3 S_intitule="Equilibre des solides : modélisation des liaisons, actions mécaniques, principe fondamental de la statique, résolution d'un problème de statique plane">
+                <Savoir_2.2.3 S_commentaires="" S_intitule="Equilibre des solides : modélisation des liaisons, actions mécaniques, principe fondamental de la statique, résolution d'un problème de statique plane">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -760,7 +760,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.3>
-                <Savoir_2.2.4 S_intitule="Mouvements des mécanismes : modélisation des liaisons, trajectoires, vitesses, accélérations, mouvements plans, résolution graphique d'un problème de cinématique plane">
+                <Savoir_2.2.4 S_commentaires="" S_intitule="Mouvements des mécanismes : modélisation des liaisons, trajectoires, vitesses, accélérations, mouvements plans, résolution graphique d'un problème de cinématique plane">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -772,7 +772,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.4>
-                <Savoir_2.2.5 S_intitule="Impacts environnementaux des solutions constructives : unité fonctionnelle, unités associées">
+                <Savoir_2.2.5 S_commentaires="" S_intitule="Impacts environnementaux des solutions constructives : unité fonctionnelle, unités associées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -784,7 +784,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.5>
-                <Savoir_2.2.6 S_intitule="Interprétation des résultats d'une simulation : courbe, tableau, graphe, unités associées">
+                <Savoir_2.2.6 S_commentaires="" S_intitule="Interprétation des résultats d'une simulation : courbe, tableau, graphe, unités associées">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -796,7 +796,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.6>
-                <Savoir_2.2.7 S_intitule="Scénario de simulation pour comparer et valider une solution, modifier une pièce ou un mécanisme">
+                <Savoir_2.2.7 S_commentaires="" S_intitule="Scénario de simulation pour comparer et valider une solution, modifier une pièce ou un mécanisme">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -812,7 +812,7 @@
             </Savoir_2.2>
           </d_sousSav>
         </Savoir_2>
-        <Savoir_3 S_intitule="Prototypage de pièces">
+        <Savoir_3 S_commentaires="" S_intitule="Prototypage de pièces">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -823,7 +823,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_3.1 S_intitule="Procédés de transformation de la matière">
+            <Savoir_3.1 S_commentaires="" S_intitule="Procédés de transformation de la matière">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -834,7 +834,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.1.1 S_intitule="Principes de transformation de la matière (ajout, enlèvement, transformation et déformation de la matière)\nParamètres liés aux procédés\nLimitations, contraintes liées :\n- aux matériaux\n- aux possibilités des procédés\n- aux coûts\n- à l'environnement">
+                <Savoir_3.1.1 S_commentaires="" S_intitule="Principes de transformation de la matière (ajout, enlèvement, transformation et déformation de la matière)\nParamètres liés aux procédés\nLimitations, contraintes liées :\n- aux matériaux\n- aux possibilités des procédés\n- aux coûts\n- à l'environnement">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -846,7 +846,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.1>
-                <Savoir_3.1.2 S_intitule="Expérimentation de procédés, protocole de mise en œuvre, réalisation de pièces prototypes">
+                <Savoir_3.1.2 S_commentaires="" S_intitule="Expérimentation de procédés, protocole de mise en œuvre, réalisation de pièces prototypes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -858,7 +858,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.2>
-                <Savoir_3.1.3 S_intitule="Prototypage rapide : simulation et préparation des fichiers, post traitement de la pièce pour une exploitation en impression 3D">
+                <Savoir_3.1.3 S_commentaires="" S_intitule="Prototypage rapide : simulation et préparation des fichiers, post traitement de la pièce pour une exploitation en impression 3D">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -870,7 +870,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.3>
-                <Savoir_3.1.4 S_intitule="Coulage de pièces prototypées en résine et/ou en alliage métallique (coulée sous vide),">
+                <Savoir_3.1.4 S_commentaires="" S_intitule="Coulage de pièces prototypées en résine et/ou en alliage métallique (coulée sous vide),">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -884,7 +884,7 @@
                 </Savoir_3.1.4>
               </d_sousSav>
             </Savoir_3.1>
-            <Savoir_3.2 S_intitule="Essais, mesures et validation">
+            <Savoir_3.2 S_commentaires="" S_intitule="Essais, mesures et validation">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -895,7 +895,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.2.1 S_intitule="Conformité dimensionnelle et géométrique des pièces en relation avec les contraintes fonctionnelles de la maquette numérique">
+                <Savoir_3.2.1 S_commentaires="" S_intitule="Conformité dimensionnelle et géométrique des pièces en relation avec les contraintes fonctionnelles de la maquette numérique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -907,7 +907,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.1>
-                <Savoir_3.2.2 S_intitule="Essais mécaniques sur les matériaux (traction, compression, flexion simple, dureté)">
+                <Savoir_3.2.2 S_commentaires="" S_intitule="Essais mécaniques sur les matériaux (traction, compression, flexion simple, dureté)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -919,7 +919,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.2>
-                <Savoir_3.2.3 S_intitule="Intégration d'une ou plusieurs pièces dans un système (graphe de montage, assemblages, réglages, essais)">
+                <Savoir_3.2.3 S_commentaires="" S_intitule="Intégration d'une ou plusieurs pièces dans un système (graphe de montage, assemblages, réglages, essais)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -931,7 +931,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.3>
-                <Savoir_3.2.4 S_intitule="Mesure et validation de performances : essais de caractérisation sur une pièce ou sur tout ou partie d'un système (efforts, déformation, matériau, dimensions, comportements statique, cinématique, énergétique)">
+                <Savoir_3.2.4 S_commentaires="" S_intitule="Mesure et validation de performances : essais de caractérisation sur une pièce ou sur tout ou partie d'un système (efforts, déformation, matériau, dimensions, comportements statique, cinématique, énergétique)">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -943,7 +943,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.2.4>
-                <Savoir_3.2.5 S_intitule="                  ">
+                <Savoir_3.2.5 S_commentaires="" S_intitule="                  ">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1014,6 +1014,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />

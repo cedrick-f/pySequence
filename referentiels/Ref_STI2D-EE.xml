@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Centre(s) d'Intérêt" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -395,7 +395,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_1 S_intitule="Projet technologique">
+        <Savoir_1 S_commentaires="" S_intitule="Projet technologique">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -406,7 +406,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_1.1 S_intitule="La démarche de projet">
+            <Savoir_1.1 S_commentaires="" S_intitule="La démarche de projet">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -417,7 +417,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.1.1 S_intitule="Les projets industriels">
+                <Savoir_1.1.1 S_commentaires="" S_intitule="Les projets industriels">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -428,7 +428,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.1.1 S_intitule="Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \&quot;joint venture\&quot;)">
+                    <Savoir_1.1.1.1 S_commentaires="" S_intitule="Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \&quot;joint venture\&quot;)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -440,7 +440,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.1>
-                    <Savoir_1.1.1.2 S_intitule="Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)">
+                    <Savoir_1.1.1.2 S_commentaires="" S_intitule="Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -452,7 +452,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.1.2>
-                    <Savoir_1.1.1.3 S_intitule="Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)">
+                    <Savoir_1.1.1.3 S_commentaires="" S_intitule="Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -466,7 +466,7 @@
                     </Savoir_1.1.1.3>
                   </d_sousSav>
                 </Savoir_1.1.1>
-                <Savoir_1.1.2 S_intitule="Les projets pédagogiques et technologiques">
+                <Savoir_1.1.2 S_commentaires="" S_intitule="Les projets pédagogiques et technologiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -477,7 +477,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_1.1.2.1 S_intitule="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)">
+                    <Savoir_1.1.2.1 S_commentaires="" S_intitule="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -489,7 +489,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.1>
-                    <Savoir_1.1.2.2 S_intitule="Animation d'une revue de projet ou management d'une équipe projet">
+                    <Savoir_1.1.2.2 S_commentaires="" S_intitule="Animation d'une revue de projet ou management d'une équipe projet">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -501,7 +501,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_1.1.2.2>
-                    <Savoir_1.1.2.3 S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)">
+                    <Savoir_1.1.2.3 S_commentaires="" S_intitule="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -517,7 +517,7 @@
                 </Savoir_1.1.2>
               </d_sousSav>
             </Savoir_1.1>
-            <Savoir_1.2 S_intitule="Paramètres de la compétitivité">
+            <Savoir_1.2 S_commentaires="" S_intitule="Paramètres de la compétitivité">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -528,7 +528,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.2.1 S_intitule="Conformité à une norme. L'ergonomie : sécurité dans les relations homme - système, maintenabilité, fiabilité. Innovation technologique : intégration des fonctions et optimisation du fonctionnement, solutions intégrant des énergies renouvelables. Influence de la durée de vie des constituants">
+                <Savoir_1.2.1 S_commentaires="" S_intitule="Conformité à une norme. L'ergonomie : sécurité dans les relations homme - système, maintenabilité, fiabilité. Innovation technologique : intégration des fonctions et optimisation du fonctionnement, solutions intégrant des énergies renouvelables. Influence de la durée de vie des constituants">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -542,7 +542,7 @@
                 </Savoir_1.2.1>
               </d_sousSav>
             </Savoir_1.2>
-            <Savoir_1.3 S_intitule="Vérification des performances          ">
+            <Savoir_1.3 S_commentaires="" S_intitule="Vérification des performances          ">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -553,7 +553,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.3.1 S_intitule="Contraintes du cahier des charges : performances, qualité, sécurité, temps caractéristiques">
+                <Savoir_1.3.1 S_commentaires="" S_intitule="Contraintes du cahier des charges : performances, qualité, sécurité, temps caractéristiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -565,7 +565,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.1>
-                <Savoir_1.3.2 S_intitule="Recette du prototype au regard des besoins formalisés dans le cahier des charges">
+                <Savoir_1.3.2 S_commentaires="" S_intitule="Recette du prototype au regard des besoins formalisés dans le cahier des charges">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -577,7 +577,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_1.3.2>
-                <Savoir_1.3.3 S_intitule="Intégration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie">
+                <Savoir_1.3.3 S_commentaires="" S_intitule="Intégration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -591,7 +591,7 @@
                 </Savoir_1.3.3>
               </d_sousSav>
             </Savoir_1.3>
-            <Savoir_1.4 S_intitule="Communication technique">
+            <Savoir_1.4 S_commentaires="" S_intitule="Communication technique">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -602,7 +602,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_1.4.1 S_intitule="Compte rendu d'une activité de projet. Présentation d'une intention de conception ou d'une solution. Animation d'une revue de projet">
+                <Savoir_1.4.1 S_commentaires="" S_intitule="Compte rendu d'une activité de projet. Présentation d'une intention de conception ou d'une solution. Animation d'une revue de projet">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -618,7 +618,7 @@
             </Savoir_1.4>
           </d_sousSav>
         </Savoir_1>
-        <Savoir_2 S_intitule="Conception d'un système">
+        <Savoir_2 S_commentaires="" S_intitule="Conception d'un système">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -629,7 +629,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_2.1 S_intitule="Approche fonctionnelle d'une chaîne d'énergie">
+            <Savoir_2.1 S_commentaires="" S_intitule="Approche fonctionnelle d'une chaîne d'énergie">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -640,7 +640,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.1.1 S_intitule="Structure fonctionnelle d'une chaîne d'énergie, graphe de structure d'une chaîne d'énergie">
+                <Savoir_2.1.1 S_commentaires="" S_intitule="Structure fonctionnelle d'une chaîne d'énergie, graphe de structure d'une chaîne d'énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -652,7 +652,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.1>
-                <Savoir_2.1.2 S_intitule="Schéma de transfert d'énergie">
+                <Savoir_2.1.2 S_commentaires="" S_intitule="Schéma de transfert d'énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -664,7 +664,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.1.2>
-                <Savoir_2.1.3 S_intitule="Structures d'alimentation en énergie multi-transformateur">
+                <Savoir_2.1.3 S_commentaires="" S_intitule="Structures d'alimentation en énergie multi-transformateur">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -678,7 +678,7 @@
                 </Savoir_2.1.3>
               </d_sousSav>
             </Savoir_2.1>
-            <Savoir_2.2 S_intitule="Approche fonctionnelle du système de gestion de la chaîne d'énergie">
+            <Savoir_2.2 S_commentaires="" S_intitule="Approche fonctionnelle du système de gestion de la chaîne d'énergie">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -689,7 +689,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.2.1 S_intitule="Gestion de l'information dédiée aux applications énergétiques, caractéristiques des fonctions des systèmes">
+                <Savoir_2.2.1 S_commentaires="" S_intitule="Gestion de l'information dédiée aux applications énergétiques, caractéristiques des fonctions des systèmes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -701,7 +701,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.1>
-                <Savoir_2.2.2 S_intitule="Fonctions de communication homme-système : types et caractéristiques">
+                <Savoir_2.2.2 S_commentaires="" S_intitule="Fonctions de communication homme-système : types et caractéristiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -713,7 +713,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.2.2>
-                <Savoir_2.2.3 S_intitule="Autour d'un point de fonctionnement donné, systèmes asservis ou régulés : - représentation fonctionnelle (schéma blocs, chaîne d'action et de retour, correcteur - grandeur réglée, réglante et pertubatrice">
+                <Savoir_2.2.3 S_commentaires="" S_intitule="Autour d'un point de fonctionnement donné, systèmes asservis ou régulés : - représentation fonctionnelle (schéma blocs, chaîne d'action et de retour, correcteur - grandeur réglée, réglante et pertubatrice">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -727,7 +727,7 @@
                 </Savoir_2.2.3>
               </d_sousSav>
             </Savoir_2.2>
-            <Savoir_2.3 S_intitule="Paramètres influant la conception">
+            <Savoir_2.3 S_commentaires="" S_intitule="Paramètres influant la conception">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -738,7 +738,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.3.1 S_intitule="Efficacité énergétique passive et active d'un système">
+                <Savoir_2.3.1 S_commentaires="" S_intitule="Efficacité énergétique passive et active d'un système">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -752,7 +752,7 @@
                 </Savoir_2.3.1>
               </d_sousSav>
             </Savoir_2.3>
-            <Savoir_2.4 S_intitule="Approche comportementale">
+            <Savoir_2.4 S_commentaires="" S_intitule="Approche comportementale">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -763,7 +763,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.4.1 S_intitule="Comportement énergétique des systèmes">
+                <Savoir_2.4.1 S_commentaires="" S_intitule="Comportement énergétique des systèmes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -774,7 +774,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_2.4.1.1 S_intitule=" Comportement dynamique d'un mécanisme. Théorème de l'énergie cinétique. Inertie ramenée sur l'arbre primaire. Exploitation d'une maquette numérique et d'un résultat de simulation">
+                    <Savoir_2.4.1.1 S_commentaires="" S_intitule=" Comportement dynamique d'un mécanisme. Théorème de l'énergie cinétique. Inertie ramenée sur l'arbre primaire. Exploitation d'une maquette numérique et d'un résultat de simulation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -786,7 +786,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_2.4.1.1>
-                    <Savoir_2.4.1.2 S_intitule=" Comportement temporel des constituants d'une chaîne d'énergie, représentation. Caractéristiques et comportements thermique et acoustique des matériaux et parois d'un bâtiment">
+                    <Savoir_2.4.1.2 S_commentaires="" S_intitule=" Comportement temporel des constituants d'une chaîne d'énergie, représentation. Caractéristiques et comportements thermique et acoustique des matériaux et parois d'un bâtiment">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -798,7 +798,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_2.4.1.2>
-                    <Savoir_2.4.1.3 S_intitule=" Charge d'une chaîne d'énergie : définition, types de charges, caractérisation">
+                    <Savoir_2.4.1.3 S_commentaires="" S_intitule=" Charge d'une chaîne d'énergie : définition, types de charges, caractérisation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -810,7 +810,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_2.4.1.3>
-                    <Savoir_2.4.1.4 S_intitule=" Optimisation des échanges d'énergie entre source et charge, amélioration de l'efficacité énergétique : disponibilité, puissance, reconfiguration, qualité, adaptabilité au profil de charge, inertie, régularité, modes de fonctionnement (marche, arrêt, intermittence)">
+                    <Savoir_2.4.1.4 S_commentaires="" S_intitule=" Optimisation des échanges d'énergie entre source et charge, amélioration de l'efficacité énergétique : disponibilité, puissance, reconfiguration, qualité, adaptabilité au profil de charge, inertie, régularité, modes de fonctionnement (marche, arrêt, intermittence)">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -824,7 +824,7 @@
                     </Savoir_2.4.1.4>
                   </d_sousSav>
                 </Savoir_2.4.1>
-                <Savoir_2.4.2 S_intitule="Gestion de l'énergie en temps réel">
+                <Savoir_2.4.2 S_commentaires="" S_intitule="Gestion de l'énergie en temps réel">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -835,7 +835,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_2.4.2.1 S_intitule=" Contrôle instantané du fonctionnement du système en vue d'un maintien au plus près d'un point de fonctionnement">
+                    <Savoir_2.4.2.1 S_commentaires="" S_intitule=" Contrôle instantané du fonctionnement du système en vue d'un maintien au plus près d'un point de fonctionnement">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -847,7 +847,7 @@
                       </l_nivTaxo>
                       <d_sousSav />
                     </Savoir_2.4.2.1>
-                    <Savoir_2.4.2.2 S_intitule=" Diagramme états - transitions pour un système évènementiel">
+                    <Savoir_2.4.2.2 S_commentaires="" S_intitule=" Diagramme états - transitions pour un système évènementiel">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -861,7 +861,7 @@
                     </Savoir_2.4.2.2>
                   </d_sousSav>
                 </Savoir_2.4.2>
-                <Savoir_2.4.3 S_intitule="Validation comportementale par simulation">
+                <Savoir_2.4.3 S_commentaires="" S_intitule="Validation comportementale par simulation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -872,7 +872,7 @@
                     <l_01 />
                   </l_nivTaxo>
                   <d_sousSav>
-                    <Savoir_2.4.3.1 S_intitule=" Loi de dcommande, paramètres du modèle de comportement, paramètres de l'environnement. Validation du comportement énergétique d'une structure par simulation. Validation du comportement du système de gestion d'une chaîne d'énergie par simulation">
+                    <Savoir_2.4.3.1 S_commentaires="" S_intitule=" Loi de dcommande, paramètres du modèle de comportement, paramètres de l'environnement. Validation du comportement énergétique d'une structure par simulation. Validation du comportement du système de gestion d'une chaîne d'énergie par simulation">
                       <l_elemAssocies>
                         <l_00 />
                         <l_01 />
@@ -888,7 +888,7 @@
                 </Savoir_2.4.3>
               </d_sousSav>
             </Savoir_2.4>
-            <Savoir_2.5 S_intitule="Critères de choix de solutions">
+            <Savoir_2.5 S_commentaires="" S_intitule="Critères de choix de solutions">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -899,7 +899,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_2.5.1 S_intitule=" Constituants matériels et logiciels associés aux fonctions techniques assurées par la chaîne d'énergie et répondant aux performances attendues. Type de système de gestion de l'énergie. Interfaces entre le système de gestion de l'énergie et la chaîne d'énergie. Capteurs. Protections contre les surintensités et contre les surcharges. Conducteurs">
+                <Savoir_2.5.1 S_commentaires="" S_intitule=" Constituants matériels et logiciels associés aux fonctions techniques assurées par la chaîne d'énergie et répondant aux performances attendues. Type de système de gestion de l'énergie. Interfaces entre le système de gestion de l'énergie et la chaîne d'énergie. Capteurs. Protections contre les surintensités et contre les surcharges. Conducteurs">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -911,7 +911,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_2.5.1>
-                <Savoir_2.5.2 S_intitule="  Coût global d'un système : investissement initial, maintenance, entretien, adaptation à l'usage, consommation énergétique">
+                <Savoir_2.5.2 S_commentaires="" S_intitule="  Coût global d'un système : investissement initial, maintenance, entretien, adaptation à l'usage, consommation énergétique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -927,7 +927,7 @@
             </Savoir_2.5>
           </d_sousSav>
         </Savoir_2>
-        <Savoir_3 S_intitule="Transports et distribution d'énergie, études de dossiers technologiques">
+        <Savoir_3 S_commentaires="" S_intitule="Transports et distribution d'énergie, études de dossiers technologiques">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -938,7 +938,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_3.1 S_intitule="Production et transport d'énergie">
+            <Savoir_3.1 S_commentaires="" S_intitule="Production et transport d'énergie">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -949,7 +949,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_3.1.1 S_intitule="Types et caractéristiques des centrales électriques, hydrauliques, thermiques. Types de solutions de production d'énergies renouvelables, caractéristiques">
+                <Savoir_3.1.1 S_commentaires="" S_intitule="Types et caractéristiques des centrales électriques, hydrauliques, thermiques. Types de solutions de production d'énergies renouvelables, caractéristiques">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -961,7 +961,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.1>
-                <Savoir_3.1.2 S_intitule="Structure d'un réseau de transport et de distribution d'énergie électrique, caractéristiques et pertes">
+                <Savoir_3.1.2 S_commentaires="" S_intitule="Structure d'un réseau de transport et de distribution d'énergie électrique, caractéristiques et pertes">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -973,7 +973,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.2>
-                <Savoir_3.1.3 S_intitule="Distribution de l'énergie électrique">
+                <Savoir_3.1.3 S_commentaires="" S_intitule="Distribution de l'énergie électrique">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -985,7 +985,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.3>
-                <Savoir_3.1.4 S_intitule="Structure d'un réseau de production, de transport et de distribution de fluides">
+                <Savoir_3.1.4 S_commentaires="" S_intitule="Structure d'un réseau de production, de transport et de distribution de fluides">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -997,7 +997,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_3.1.4>
-                <Savoir_3.1.5 S_intitule="Gestion du réseau de transport. Comptage et facturation de l'énergie. Impact environnemental">
+                <Savoir_3.1.5 S_commentaires="" S_intitule="Gestion du réseau de transport. Comptage et facturation de l'énergie. Impact environnemental">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1013,7 +1013,7 @@
             </Savoir_3.1>
           </d_sousSav>
         </Savoir_3>
-        <Savoir_4 S_intitule="Réalisation et qualification d'un prototype">
+        <Savoir_4 S_commentaires="" S_intitule="Réalisation et qualification d'un prototype">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1024,7 +1024,7 @@
             <l_01 />
           </l_nivTaxo>
           <d_sousSav>
-            <Savoir_4.1 S_intitule="Réalisation d'un prototype">
+            <Savoir_4.1 S_commentaires="" S_intitule="Réalisation d'un prototype">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1035,7 +1035,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_4.1.1 S_intitule="Décodage de notices techniques et des procédures d'installation">
+                <Savoir_4.1.1 S_commentaires="" S_intitule="Décodage de notices techniques et des procédures d'installation">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1047,7 +1047,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.1.1>
-                <Savoir_4.1.2 S_intitule="Agencement, paramétrage et interconnexion de constituants de la chaîne d'énergie">
+                <Savoir_4.1.2 S_commentaires="" S_intitule="Agencement, paramétrage et interconnexion de constituants de la chaîne d'énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1059,7 +1059,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.1.2>
-                <Savoir_4.1.3 S_intitule="Mise en oeuvre d'un système local de gestion de l'énergie">
+                <Savoir_4.1.3 S_commentaires="" S_intitule="Mise en oeuvre d'un système local de gestion de l'énergie">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1071,7 +1071,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.1.3>
-                <Savoir_4.1.4 S_intitule="Mise en oeuvre d'un système de télégestion et de télésurveillance">
+                <Savoir_4.1.4 S_commentaires="" S_intitule="Mise en oeuvre d'un système de télégestion et de télésurveillance">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1085,7 +1085,7 @@
                 </Savoir_4.1.4>
               </d_sousSav>
             </Savoir_4.1>
-            <Savoir_4.2 S_intitule="Sécurité">
+            <Savoir_4.2 S_commentaires="" S_intitule="Sécurité">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1096,7 +1096,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_4.2.1 S_intitule="Techniques liées à la sécurité : notion de redondance, auto-surveillance. Prévention des risques : prévention intrinsèque, protection, information">
+                <Savoir_4.2.1 S_commentaires="" S_intitule="Techniques liées à la sécurité : notion de redondance, auto-surveillance. Prévention des risques : prévention intrinsèque, protection, information">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1110,7 +1110,7 @@
                 </Savoir_4.2.1>
               </d_sousSav>
             </Savoir_4.2>
-            <Savoir_4.3 S_intitule="Essais et réglages en vue d'assurer le fonctionnement et d'améliorer les performances">
+            <Savoir_4.3 S_commentaires="" S_intitule="Essais et réglages en vue d'assurer le fonctionnement et d'améliorer les performances">
               <l_elemAssocies>
                 <l_00 />
                 <l_01 />
@@ -1121,7 +1121,7 @@
                 <l_01 />
               </l_nivTaxo>
               <d_sousSav>
-                <Savoir_4.3.1 S_intitule="Protocole d'essais, essais et caractérisation des écarts par rapport au comportement attendu. Essais hors énergie, essais statiques en énergie, essais dynamiques. Démarche raisonnée d'identification des causes des écarts et de résolution des problèmes. Paramètres à ajuster pour un fonctionnement spécifié d'un système ou d'un constituant">
+                <Savoir_4.3.1 S_commentaires="" S_intitule="Protocole d'essais, essais et caractérisation des écarts par rapport au comportement attendu. Essais hors énergie, essais statiques en énergie, essais dynamiques. Démarche raisonnée d'identification des causes des écarts et de résolution des problèmes. Paramètres à ajuster pour un fonctionnement spécifié d'un système ou d'un constituant">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1133,7 +1133,7 @@
                   </l_nivTaxo>
                   <d_sousSav />
                 </Savoir_4.3.1>
-                <Savoir_4.3.2 S_intitule="                      ">
+                <Savoir_4.3.2 S_commentaires="" S_intitule="                      ">
                   <l_elemAssocies>
                     <l_00 />
                     <l_01 />
@@ -1204,6 +1204,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />

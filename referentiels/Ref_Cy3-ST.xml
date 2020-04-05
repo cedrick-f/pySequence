@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Oui" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Oui" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
   </l_BO_URL>
@@ -1085,7 +1085,7 @@
       <l_asso_type />
       <d_dicSElemAssocies />
       <d_dicSavoirs>
-        <Savoir_S1 S_intitule="Diversité de la matière : Métaux, minéraux, verres, plastiques, matière organique sous différentes formes…">
+        <Savoir_S1 S_commentaires="" S_intitule="Diversité de la matière : Métaux, minéraux, verres, plastiques, matière organique sous différentes formes…">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1097,7 +1097,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S1>
-        <Savoir_S2 S_intitule="L'état physique d'un échantillon de matière dépend de conditions externes, notamment de sa température">
+        <Savoir_S2 S_commentaires="" S_intitule="L'état physique d'un échantillon de matière dépend de conditions externes, notamment de sa température">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1109,7 +1109,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S2>
-        <Savoir_S3 S_intitule="Quelques propriétés de la matière solide ou liquide">
+        <Savoir_S3 S_commentaires="" S_intitule="Quelques propriétés de la matière solide ou liquide">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1121,7 +1121,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S3>
-        <Savoir_S4 S_intitule="La matière à grande échelle : Terre, planètes, Univers">
+        <Savoir_S4 S_commentaires="" S_intitule="La matière à grande échelle : Terre, planètes, Univers">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1133,7 +1133,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S4>
-        <Savoir_S5 S_intitule="La masse est une grandeur physique qui caractérise un échantillon de matière">
+        <Savoir_S5 S_commentaires="" S_intitule="La masse est une grandeur physique qui caractérise un échantillon de matière">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1145,7 +1145,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S5>
-        <Savoir_S6 S_intitule="Réaliser des mélanges peut provoquer des transformations de la matière">
+        <Savoir_S6 S_commentaires="" S_intitule="Réaliser des mélanges peut provoquer des transformations de la matière">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1157,7 +1157,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S6>
-        <Savoir_S7 S_intitule="La matière qui nous entoure, résultat d'un mélange de différents constituants">
+        <Savoir_S7 S_commentaires="" S_intitule="La matière qui nous entoure, résultat d'un mélange de différents constituants">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1169,7 +1169,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S7>
-        <Savoir_S8 S_intitule="Mouvement d'un objet ">
+        <Savoir_S8 S_commentaires="" S_intitule="Mouvement d'un objet ">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1181,7 +1181,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S8>
-        <Savoir_S9 S_intitule="Exemples de mouvements simples : rectiligne, circulaire">
+        <Savoir_S9 S_commentaires="" S_intitule="Exemples de mouvements simples : rectiligne, circulaire">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1193,7 +1193,7 @@
           </l_nivTaxo>
           <d_sousSav />
         </Savoir_S9>
-        <Savoir_S10 S_intitule="Mouvements dont la valeurs de la vitesse est constante ou variable dans un mouvement rectiligne">
+        <Savoir_S10 S_commentaires="" S_intitule="Mouvements dont la valeurs de la vitesse est constante ou variable dans un mouvement rectiligne">
           <l_elemAssocies>
             <l_00 />
             <l_01 />
@@ -1276,6 +1276,7 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
+    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="C" S_02="A" />
   <l_listProblematiques>
