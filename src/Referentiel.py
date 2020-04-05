@@ -1302,6 +1302,9 @@ class Referentiel(XMLelem):
                 if sh_lb.cell(l,0).value != "":
                     self.labels[str(sh_lb.cell(l,0).value)] = [sh_lb.cell(l,1).value, sh_lb.cell(l,2).value]
 
+        if not 'PRJVAL' in self.labels:
+            self.labels['PRJVAL'] = ["Fiche(s) de validation de projet$f", 
+                                     "Fiche de validation de projet"]
 
             
         #
@@ -1525,7 +1528,7 @@ class Referentiel(XMLelem):
                     except:
                         self.specialite[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
                                               sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4),  #
-                                              [int(i) for i in sh_g.cell(l,5).value.split()]   # Périodes
+                                              [int(i) for i in sh_g.cell(l,5).value.split()]   # Périodes [debut, fin]
                                               ] 
                     self.listeSpecialites.append(code)
                 
@@ -1911,6 +1914,21 @@ class Referentiel(XMLelem):
             n += p[1]
         return n
 
+    
+    #############################################################################
+    def getSpeHorsPeriode(self, periode):
+        """ Renvoie le liste des spécialités qui sont hors de la période
+            :periode: [début, fin], à partir de 0
+            
+        """
+        l = []
+        for spe in self.listeSpecialites:
+            p = self.getPeriodeSpe([spe])
+            if p[0] < periode[0] or p[1] > periode[1]:
+                l.append(spe)
+        return l
+    
+    
     #############################################################################
     def getPeriodeSpe(self, spe = None):
         """ Renvoie la liste des périodes attribuées à la spécialité
@@ -1960,16 +1978,20 @@ class Referentiel(XMLelem):
 
 
     #############################################################################
-    def getCodeProjetDefaut(self):
+    def getCodeProjetDefaut(self, spe = None):
         """ Renvoie l'épreuve de projet (évaluation)
             par défaut (pour les projets d'"entrainement" en cours d'année)
         """
+#         print("getCodeProjetDefaut", spe)
+        P = self.getPeriodeSpe(spe)
+#         print("   ", P)
         pos = []
         prj = []
         for k, p in self.projets.items():
             if len(p.periode) > 0:
                 prj.append(k)
-                pos.append(max(*p.periode, 0))
+                m = max(*p.periode, 0)
+                pos.append(min(m, max(P)))
         
         if len(prj) > 0:
             return prj[pos.index(max(pos))]
@@ -2910,7 +2932,7 @@ class Projet(XMLelem):
         shp = wb.sheet_by_name("Généralités_"+self.code)
         if shp.nrows > 16:
             self.ficheValid = shp.cell(18,0).value
-        for l in range(2, 15):
+        for l in range(2, 16):
             try:
                 aide = shp.cell(l,4).value
             except:
@@ -2920,7 +2942,9 @@ class Projet(XMLelem):
                                                         shp.cell(l,3).value, 
                                                         aide]
                            
-
+        if 'SML' in self.attributs and self.attributs['SML'][0] != "":
+            lab = self.attributs['SML'][2].replace("\n\n", "\n")
+            self.attributs['SML'][2] = lab.split("\n")
 
 
     ##################################################################################################################
@@ -3125,9 +3149,9 @@ class Projet(XMLelem):
         if self.attributs["FIC"][0] == "":
             self.attributs["FIC"][0] = "Fiche de lots de travaux" # Noms des "fiches de lots de travaux" ou "tâches détaillées"
         
-        if 'SML' in self.attributs and self.attributs['SML'][0] != "":
-            lab = self.attributs['SML'][2].replace("\n\n", "\n")
-            self.attributs['SML'][2] = lab.split("\n")
+        
+        
+        
             
 #        lst.extend()
 

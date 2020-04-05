@@ -169,7 +169,10 @@ from xml.dom.minidom import parse, parseString
 import wx.lib.wxcairo
 import cairocffi as cairo
 
-import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
+import draw_cairo2 as draw_cairo
+import draw_cairo_seq2 as draw_cairo_seq
+import draw_cairo_prj2 as draw_cairo_prj
+import draw_cairo_prg2 as draw_cairo_prg
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
@@ -383,13 +386,6 @@ def getIconeRedo(size = (20,20)):
     return scaleImage(images.Icone_redo.GetBitmap())
 #     return wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, size)
 
-def getBitmapFromImageSurface(imagesurface):
-    """ Renvoi une wx.Bitmap en fonction d'une cairo.ImageSurface
-    """
-    # On fait une copie sinon ça s'efface ...
-#     bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
-#     return bmp.GetSubBitmap(wx.Rect(0, 0, bmp.GetWidth(), bmp.GetHeight()))
-    return wx.lib.wxcairo.BitmapFromImageSurface(imagesurface).ConvertToImage().ConvertToBitmap()
 
 #     return wx.Bitmap(wx.lib.wxcairo.BitmapFromImageSurface(imagesurface))
 
@@ -443,6 +439,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Timer pour autosave
         self.timerAutosave = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timerAutosave)
+        
+        
+#         self.Bind(wx.EVT_DISPLAY_CHANGED, self.onDisplayChanged)
+#         self.Bind(wx.EVT_UPDATE_UI, self.onDisplayChanged)
         
         #
         # le fichier de configuration de la fiche
@@ -520,14 +520,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.SetIcon(images.getlogoIcon())
         
         
+        wx.CallAfter(self.connect)
         
         
-        nb = self.GetNotebook()
-#         self.tabmgr = self.GetClientWindow().GetAuiManager()
+#         nb = self.GetNotebook()
+# #         self.tabmgr = self.GetClientWindow().GetAuiManager()
+#         
+#         
+# #         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
+#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnCloseDoc)
+#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
         
-        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
-#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
-        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnCloseDoc)
         
 #         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
 #         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnDocChanged)
@@ -640,7 +643,21 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         else:
 #             return self.GetClientWindow().GetAuiManager().GetManagedWindow()
             
-             
+    def connect(self):
+        nb = self.GetNotebook()
+#         self.tabmgr = self.GetClientWindow().GetAuiManager()
+        
+        
+#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
+        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnCloseDoc)
+        nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
+
+    ###############################################################################################
+    def onDisplayChanged(self, event):
+        print("aaaa")
+        
+        
+        
     ###############################################################################################
     def GetCurrentPage(self):
         nb = self.GetNotebook()
@@ -1121,6 +1138,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def MiseAJourMenu(self):
+#         print("MiseAJourMenu")
         if hasattr(self, 'menuReg'):
             if register.IsRegistered():
                 self.menuReg.SetItemLabel("Désinscrire de la base de registre")
@@ -1129,12 +1147,21 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         fenDoc = self.GetCurrentPage()
         if fenDoc is not None:
-            ref = fenDoc.GetDocument().GetReferentiel()
+            doc = fenDoc.GetDocument()
+            ref = doc.GetReferentiel()
+#             print("   ", doc)
             self.menuDos.SetItemLabel("&Générer %s\tAlt+V" %ref.getLabel("PRJVAL").le_())
         
-        if sys.platform == "win32":
-            self.file_menu.Enable(17, grilles.EXT_EXCEL != None)
-            self.file_menu.Enable(20, grilles.EXT_EXCEL != None)
+            prj = isinstance(doc, pysequence.Projet)
+            self.file_menu.Enable(17, prj and grilles.EXT_EXCEL != None)
+            self.file_menu.Enable(19, prj and grilles.EXT_EXCEL != None)
+            self.file_menu.Enable(20, prj)
+            self.file_menu.Enable(25, prj)
+                
+        
+#         if sys.platform == "win32":
+#             self.file_menu.Enable(17, prj)
+#             self.file_menu.Enable(20, prj)
             
             
     #############################################################################
@@ -1696,7 +1723,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             en fonction du type de document en cours
             Et rafraichissement des séquences de la fenêtre de Progression
         """
-#         print "OnDocChanged", evt
+        print("OnDocChanged", evt)
         
         fenDoc = self.GetCurrentPage()
         
@@ -1752,7 +1779,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     if self.file_menu.FindItemById(i) is not None:
                         self.file_menu.Enable(i, False)
                 
-            fenDoc.Rafraichir()
+            if evt is not None:
+                fenDoc.Rafraichir()
         
         else:
             self.supprimerOutils()
@@ -2332,11 +2360,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         ctx = cairo.Context(PDFsurface)
         ctx.scale(820 / draw_cairo.COEF, 820/ draw_cairo.COEF) 
         if self.typ == 'seq':
-            draw_cairo_seq.Draw(ctx, self.sequence)
+#             draw_cairo_seq.Draw(ctx, self.sequence)
+            draw_cairo_seq.Sequence(self.sequence).draw(ctx)
         elif self.typ == 'prj':
-            draw_cairo_prj.Draw(ctx, self.projet, pourDossierValidation = pourDossierValidation)
+            draw_cairo_prj.Projet(self.projet, pourDossierValidation = pourDossierValidation).draw(ctx)
         elif self.typ == 'prg':
-            draw_cairo_prg.Draw(ctx, self.progression)
+            draw_cairo_prg.Progression(self.progression).draw(ctx)
         
         PDFsurface.finish()
         
@@ -2367,9 +2396,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #         ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
         ctx.scale(1.0, 1.0) 
         if self.typ == 'seq':
-            draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+#             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+            draw_cairo_seq.Sequence(ctx, self.sequence, mouchard = True).draw()
         elif self.typ == 'prj':
-            draw_cairo_prj.Draw(ctx, self.projet)
+            draw_cairo_prj.Projet(ctx, self.projet).draw()
         elif self.typ == 'prg':
             draw_cairo_prg.Draw(ctx, self.progression)
              
@@ -2402,7 +2432,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #         ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
         ctx.scale(1.0, 1.0) 
         if self.typ == 'seq':
-            draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+#             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
+            draw_cairo_seq.Sequence(ctx, self.sequence, mouchard = True).draw()
         elif self.typ == 'prj':
             draw_cairo_prj.Draw(ctx, self.projet)
         elif self.typ == 'prg':
@@ -2784,12 +2815,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         return
 
     #############################################################################
-    def VerifierReferentiel(self, nomFichier):
+    def VerifierReferentiel(self, parent, nomFichier):
 #         print("VerifierReferentiel", self.classe.GetReferentiel(), Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code])
         e = self.classe.GetReferentiel() == Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code]
         if not e:
 #             print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
-            dlg = DiffRefChoix(self, nomFichier)
+            dlg = DiffRefChoix(parent, nomFichier)
             val = dlg.ShowModal()
             dlg.Destroy()
             if val == 1:
@@ -3174,7 +3205,7 @@ class FenetreSequence(FenetreDocument):
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
                 
-                if self.VerifierReferentiel("séquence") == 1:
+                if self.VerifierReferentiel(dlg, "séquence") == 1:
                     reparer = True
                     self.classe.setBranche(classe, reparer = reparer)
                 
@@ -3395,13 +3426,21 @@ class FenetreProjet(FenetreDocument):
         self.pageBO = Panel_BO(self.nb)
         self.nb.AddPage(self.pageBO, "Bulletins Officiels")
         
+        
+     
+        
+        
         self.miseEnPlace()
 #         print "__init__ FenetreProjet"
 #         self.fiche.Redessiner() #!!!
         
         wx.CallAfter(self.Thaw)
+        wx.CallAfter(self.MiseAJourTypeEnseignement)
+        
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
+        
+        
         
         if not ouverture:
             #
@@ -3657,7 +3696,7 @@ class FenetreProjet(FenetreDocument):
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
                 
-                if self.VerifierReferentiel("projet") == 1:
+                if self.VerifierReferentiel(dlg, "projet") == 1:
 #                     print("Remplacer ref")
                     reparer = True
                     self.classe.setBranche(classe, reparer = reparer)
@@ -4190,9 +4229,14 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
+        print("MiseAJourTypeEnseignement", self.projet.GetReferentiel().getLabel("PRJVAL").Sing_())
         self.nb.SetPageText(1, "Tâches %s détaillées" %self.projet.GetReferentiel().getLabel("ELEVES").plur_())
+        self.nb.SetPageText(2, self.projet.GetReferentiel().getLabel("PRJVAL").Sing_())
+        
         self.parent.OnDocChanged()
-    
+
+
+
 #class ThreadRedess(Thread):
 #    def __init__(self, fiche):
 #        Thread.__init__(self)
@@ -4494,7 +4538,7 @@ class FenetreProgression(FenetreDocument):
                 if not reparer and int(self.classe.version.split(".")[0]) < 8:
                     raise OldVersion
                 
-                if self.VerifierReferentiel("progression") == 1:
+                if self.VerifierReferentiel(dlg, "progression") == 1:
                     reparer = True
                     self.classe.setBranche(classe, reparer = reparer)
                 
@@ -4663,22 +4707,22 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 
         self.InitBuffer()
         
-        self.Bind(wx.EVT_SIZE, self.OnResize)
+        
         wx.CallAfter(self.connect)
 
 
     ######################################################################################################
     def connect(self):
         
-        
+        self.Bind(wx.EVT_SIZE, self.OnResize)
         self.Bind(wx.EVT_LEFT_UP, self.OnClick)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
         self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
-
-
+        
+        self.OnResize()
 
 
      
@@ -4839,7 +4883,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 
     #############################################################################            
     def Redessiner(self, event = None, surRect = None):  
-        print("Redessiner :")
+#         print("Redessiner :")
 #         tps1 = time.clock()
         def redess():
             wx.BeginBusyCursor()
@@ -4897,11 +4941,14 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
     
     #############################################################################            
     def Draw(self, ctx):
+        print("Draw", self.fiche)
 #         global threadDraw
 #         tps1 = time.clock()
         
-        self.GetDoc().DefinirCouleurs()
-        self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
+#         self.GetDoc().DefinirCouleurs()
+#         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
+        self.fiche.draw(ctx)
+#         self.GetDoc().fiche.draw(ctx)
 
 
 
@@ -4945,6 +4992,8 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
+
+
 
      
     ######################################################################################################
@@ -5100,8 +5149,10 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 
     #############################################################################            
     def Draw(self, ctx):
-        self.GetDoc().DefinirCouleurs()
-        self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
+        print("Draw", self.fiche)
+        self.fiche.draw(ctx)
+#         self.GetDoc().DefinirCouleurs()
+#         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
 
 
     #############################################################################            
@@ -5232,6 +5283,10 @@ class FicheSequence(BaseFiche):
         self.sequence = sequence
 
 
+        self.fiche = draw_cairo_seq.Sequence(sequence)
+        
+        
+        
     ######################################################################################################
     def GetDoc(self):
         return self.sequence
@@ -5249,6 +5304,10 @@ class FicheProjet(BaseFiche):
     def __init__(self, parent, projet):
         BaseFiche.__init__(self, parent)
         self.projet = projet
+        
+        
+        self.fiche = draw_cairo_prj.Projet(projet)
+        
         
 #        #
 #        # Création du Tip (PopupInfo) pour les compétences
@@ -5385,6 +5444,10 @@ class FicheProgression(BaseFiche):
     def __init__(self, parent, progression):
         BaseFiche.__init__(self, parent)
         self.progression = progression
+        
+        
+        self.fiche = draw_cairo_prg.Progression(progression)
+        
         
 #        #
 #        # Création du Tip (PopupInfo) pour les compétences
@@ -6277,7 +6340,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         # La page "sysML"
         #
-        if prj.attributs['SML'][0] != "":
+        if 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
             doc.UpdateSysML()
             if not 'SML' in self.pages:
                 self.pages['SML'] = PanelPropriete(self.nb, objet = doc)
@@ -7263,8 +7326,6 @@ class PanelPropriete_Classe(PanelPropriete):
         
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(1)
-        
-        
         
         
         #
@@ -14380,13 +14441,6 @@ class ArbreSequence(ArbreDoc):
                 
                 if dataTarget == "Sea":
                     dataTarget = self.sequence
-                    
-                
-                
-                
-                
-                
-                
                 
                 if isinstance(dataSource, pysequence.Seance) and dataTarget != dataSource:
                     if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
@@ -15260,9 +15314,15 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
 #         print("filtre Sav", self.filtre)
         self.Construire(self.root, savFiltre, et = et)
         
-        wx.CallAfter(self.OnSelChanged)
+#         wx.CallAfter(self.OnSelChanged)
+        wx.CallAfter(self.connect)
 #         self.ExpandAll()
         
+        
+        
+    
+    ######################################################################################################
+    def connect(self):
         #
         # Gestion des évenements
         #
@@ -15275,8 +15335,6 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
         self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnCollOrExp)
         
         self.GetMainWindow().Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnGetToolTip)
-        
-        
 
     ######################################################################################################
     def OnEnter(self, event):
@@ -17007,11 +17065,26 @@ class Panel_SelectEnseignement(wx.Panel):
     
     ######################################################################################  
     def EvtRadioBoxSpe(self, event):
-#         print('EvtRadioBoxSpe')
+#         print("EvtRadioBoxSpe")
         if self.classe is not None:
+            index = event.GetSelection()  
+            spe = self.rb_spe.GetString(index)
+            ref = self.classe.doc.GetReferentiel()
+            per = ref.getPeriodeSpe([spe])
+            exc = ref.getSpeHorsPeriode(per)
+#             print("   ", exc, spe)
+            for i in self.rb_spe.GetCheckedItems():
+#                 print(i, self.rb_spe.GetString(i))
+                if self.rb_spe.GetString(i) in exc:
+                    self.rb_spe.Check(i, False)
+            
+            
+            
             self.classe.specialite = list(self.rb_spe.GetCheckedStrings())
             self.classe.doc.MiseAJourTypeEnseignement()
+#             print("  ", self.classe.doc.position)
             self.classe.doc.SetPosition(self.classe.doc.position)
+#             print("  ", self.classe.doc.position)
             self.MiseAJour()
             self.sizer.Layout()
             

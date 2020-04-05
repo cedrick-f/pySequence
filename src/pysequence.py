@@ -68,7 +68,10 @@ import couleur
 
 import images
 # Graphiques vectoriels
-import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
+import draw_cairo_seq2 as draw_cairo_seq
+import draw_cairo_prj2 as draw_cairo_prj
+import draw_cairo_prg2 as draw_cairo_prg
+import draw_cairo2 as draw_cairo
 
 from lien import *
 
@@ -126,7 +129,7 @@ Element = type(ET.Element(None))
 from xml.dom.minidom import parseString
 
 from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
-                            getBitmapFromImageSurface, img2str, getIconePaste, \
+                            img2str, getIconePaste, \
                             PanelPropriete_Progression, \
                             PanelPropriete_CI, PanelPropriete_LienSequence,\
                             PanelPropriete_Classe, PanelPropriete_Sequence, \
@@ -1652,18 +1655,25 @@ class Classe(ElementBase):
     #############################################################################            
     def getBitmapPeriode(self, larg):
 #         print("getBitmapPeriode", self.GetPeriodes())
-        imagesurface = draw_cairo.getBitmapPeriode(larg, self.GetPeriodes(),
-                                                       self.GetReferentiel().periodes, 
-                                                       prop = 7)
-        return getBitmapFromImageSurface(imagesurface)
+        bitmap = draw_cairo.getBitmapPeriode(self.GetPeriodes(),
+                                             self.GetReferentiel().periodes, 
+                                             larg = larg, prop = 7)
+        
+#         imagesurface = draw_cairo.Periodes(pos = self.GetPeriodes(),
+#                                            periodes = self.GetReferentiel().periodes)\
+#                                         .getBitmap(larg, prop = 7)
+                                            
+        
+        return bitmap
     
     
     #############################################################################            
     def getBitmapEffectifs(self, W, H):
 #         return wx.Bitmap(larg, larg)
-        imagesurface = draw_cairo.getBitmapClasse(W, H, self)
+        bitmap = draw_cairo.getBitmapClasse(W, H, self)
+#         imagesurface = draw_cairo.Classe(classe = self).getBitmap(W, H)
 
-        return getBitmapFromImageSurface(imagesurface)
+        return bitmap
     
     
     
@@ -1862,12 +1872,23 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ######################################################################################  
     def GetApercu(self, w = 210, h = -1, entete = False):
-        imagesurface = draw_cairo.get_apercu(self, w, entete = entete)
-        img = getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414)
         if h == -1:
-            return img.ConvertToBitmap()
+            prop = 0.7
         else:
-            return img.Resize((w, h), (0,0)).ConvertToBitmap()
+            prop = w/h
+        if isinstance(self, Sequence):
+            return draw_cairo_seq.Sequence(self, entete = entete).getBitmap(larg = w, prop = prop)
+        elif isinstance(self, Projet):
+            return draw_cairo_prj.Projet(self, entete = entete).getBitmap(larg = w, prop = prop)
+        else:
+            return draw_cairo_prg.Progression(self, entete = entete).getBitmap(larg = w, prop = prop)
+
+#         imagesurface = draw_cairo.get_apercu(self, w, entete = entete)
+#         img = getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414)
+#         if h == -1:
+#             return img.ConvertToBitmap()
+#         else:
+#             return img.Resize((w, h), (0,0)).ConvertToBitmap()
 
 
     ######################################################################################  
@@ -2213,7 +2234,7 @@ class Sequence(BaseDoc, Grammaire):
             self.MiseAJourTypeEnseignement()
             
         # Le module de dessin
-        self.draw = draw_cairo_seq
+#         self.draw = draw_cairo_seq.Sequence
         
 
 
@@ -3208,11 +3229,11 @@ class Sequence(BaseDoc, Grammaire):
         self.arbre.Collapse(self.branchePre)
     
     
-    ######################################################################################  
-    def DefinirCouleurs(self):
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetReferentiel().CentresInterets))
+#     ######################################################################################  
+#     def DefinirCouleurs(self):
+#         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+#                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
+#                                    len(self.GetReferentiel().CentresInterets))
 
 
     #########################################################################
@@ -3429,7 +3450,7 @@ class Sequence(BaseDoc, Grammaire):
         self.SetDefautExpansion()
 #         self.arbre.ExpandAll()
         
-        self.DefinirCouleurs()
+#         self.DefinirCouleurs()
         
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
@@ -3672,17 +3693,19 @@ class Sequence(BaseDoc, Grammaire):
         ctx.scale(larg/w, larg/w) 
     #     ctx.set_source_rgba(1,1,1,1)
     #     ctx.paint()
-        draw_cairo.DrawPeriodes(ctx, (0,0,w,h), 
-                                    self.getRangePeriode(), 
-                                    self.GetReferentiel().periodes)
+        draw_cairo.Periodes(ctx, (0,0,w,h), 
+                            self.getRangePeriode(), 
+                            self.GetReferentiel().periodes).draw()
     
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo.getBitmapPeriode(larg, self.getRangePeriode(),
-                                                       self.GetReferentiel().periodes, 
-                                                       prop = 7)
-        return getBitmapFromImageSurface(imagesurface)
+        bitmap = draw_cairo.getBitmapPeriode(self.getRangePeriode(),
+                                             self.GetReferentiel().periodes, 
+                                             larg = larg, prop = 7)
+#         imagesurface = draw_cairo.Periodes(pos = self.getRangePeriode(),
+#                                            periodes = self.GetReferentiel().periodes).getBitmap(larg, prop = 7)
+        return bitmap
 
 
     #############################################################################
@@ -3715,9 +3738,9 @@ class Sequence(BaseDoc, Grammaire):
         if hasattr(self, 'arbre'):
             self.Rafraichir()
         
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetReferentiel().CentresInterets))
+#         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+#                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
+#                                    len(self.GetReferentiel().CentresInterets))
 
         
 
@@ -3769,8 +3792,9 @@ class Sequence(BaseDoc, Grammaire):
             else:
                 t = Template(constantes.TEMPLATE_EFF)
             
-            
-            image = draw_cairo.getBase64PNG(draw_cairo.getBitmapClasse(400, 200, self.GetClasse()))
+            image = draw_cairo_seq.Sequence(self).getBase64PNG(larg = 400)
+       
+#             image = draw_cairo.getBase64PNG(draw_cairo.getBitmapClasse(400, 200, self.GetClasse()))
 #             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
             if css:
                 if image is not None:
@@ -3859,7 +3883,7 @@ class Projet(BaseDoc, Grammaire):
 #        self.SetPosition(self.position, first = True)
         
         # Le module de dessin
-        self.draw = draw_cairo_prj
+#         self.draw = draw_cairo_prj.Projet()
         
            
         
@@ -3879,21 +3903,27 @@ class Projet(BaseDoc, Grammaire):
 
 
     ######################################################################################  
-    def GetProjetRef(self):
+    def GetProjetRef(self, spe = None):
         """ Renvoie le projet (Referentiel.Projet) de référence
         """
 #         print("GetProjetRef", self.code, list(self.GetReferentiel().projets.keys()))
+        ref = self.GetReferentiel()
+        
         if self.code == None:
-            return self.GetReferentiel().getProjetDefaut()
+            return ref.getProjetDefaut(spe)
         else:
-            if self.code in self.GetReferentiel().projets.keys():
-                return self.GetReferentiel().projets[self.code]
+            if self.code in ref.projets.keys():
+                return ref.projets[self.code]
             else:
                 return None #Referentiel.Projet(self.GetReferentiel()) # None : pose des pb
 
     ######################################################################################  
-    def GetPeriodeDefaut(self):
-        projet = self.GetProjetRef()
+    def GetPeriodeDefaut(self, spe = None):
+        if spe is None:
+            spe = self.classe.specialite
+#         print("GetPeriodeDefaut", spe)
+        projet = self.GetProjetRef(spe)  #type referentiel.Projet
+#         print("   ", projet)
 #         return projet.getPeriodeDefaut()
     
     
@@ -4138,7 +4168,7 @@ class Projet(BaseDoc, Grammaire):
         #
         sysml = ET.SubElement(projet, "sysML")
         prj = self.GetProjetRef()
-        if prj.attributs['SML'][0] != "":
+        if 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
             for i, n in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 l = ET.SubElement(sysml, "Lien_"+str(i))
@@ -5606,17 +5636,18 @@ class Projet(BaseDoc, Grammaire):
 #                if dansRectangle(x, y, (rectPos,))[0]:
 #                    return i
 
-    ######################################################################################  
-    def DefinirCouleurs(self):
-        if hasattr(self.GetReferentiel(), '_listesCompetences_simple'):
-            draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                       len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                       len(self.eleves + self.groupes))
+#     ######################################################################################  
+#     def DefinirCouleurs(self):
+#         if hasattr(self.GetReferentiel(), '_listesCompetences_simple'):
+#             draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+#                                        len(self.GetReferentiel()._listesCompetences_simple["S"]),
+#                                        len(self.eleves + self.groupes))
         
      
     ######################################################################################  
     def Rafraichir(self):
-        self.DefinirCouleurs()
+        pass
+#         self.DefinirCouleurs()
         
     #############################################################################            
     def drawPeriode(self, ctx, larg):
@@ -5625,23 +5656,27 @@ class Projet(BaseDoc, Grammaire):
         ctx.scale(larg/w, larg/w) 
     #     ctx.set_source_rgba(1,1,1,1)
     #     ctx.paint()
-        draw_cairo.DrawPeriodes(ctx, (0,0,w,h), 
-                                    self.getRangePeriode(), 
-                                    self.GetReferentiel().periodes,
-                                    self.GetReferentiel().projets)
+#         draw_cairo.DrawPeriodes(ctx, (0,0,w,h), 
+#                                     self.getRangePeriode(), 
+#                                     self.GetReferentiel().periodes,
+#                                     self.GetReferentiel().projets)
+        draw_cairo.Periodes(ctx, (0,0,w,h), 
+                            self.getRangePeriode(), 
+                            self.GetReferentiel().periodes,
+                            self.GetReferentiel().projets).draw()
         
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo.getBitmapPeriode(larg, self.getRangePeriode(), 
-                                                       self.GetReferentiel().periodes ,
-                                                       self.GetReferentiel().projets, 
-                                                       prop = 7)
-        return getBitmapFromImageSurface(imagesurface)
+        bitmap = draw_cairo.getBitmapPeriode(self.getRangePeriode(), 
+                                             self.GetReferentiel().periodes ,
+                                             self.GetReferentiel().projets, 
+                                             larg = larg, prop = 7)
+        return bitmap
     
     #############################################################################
     def MiseAJour(self):
         self.app.SetTitre()
-        self.DefinirCouleurs()
+#         self.DefinirCouleurs()
         self.SetCompetencesRevuesSoutenance()
     
     
@@ -5659,7 +5694,7 @@ class Projet(BaseDoc, Grammaire):
     def MiseAJourTypeEnseignement(self):#, changeFamille = False):
 #         print("MiseAJourTypeEnseignement projet")
 
-        self.code = self.GetReferentiel().getCodeProjetDefaut()
+        self.code = self.GetReferentiel().getCodeProjetDefaut(self.classe.specialite)
         self.classe.MiseAJourTypeEnseignement()
         
         self.position = self.GetPeriodeDefaut()
@@ -5669,7 +5704,7 @@ class Projet(BaseDoc, Grammaire):
         self.MiseAJourNbrRevues()
         
         if hasattr(self, 'brancheElv'):
-            self.brancheElv.SetText(self.GetReferentiel().getLabel("ELEVES").plur_())
+            self.brancheElv.SetText(self.GetReferentiel().getLabel("ELEVES").Plur_())
             self.arbre.Layout()
             self.arbre.Refresh()
         
@@ -5990,8 +6025,8 @@ class Progression(BaseDoc, Grammaire):
         if not ouverture:
             self.MiseAJourTypeEnseignement()
             
-        # Le module de dessin
-        self.draw = draw_cairo_prg
+#         # Le module de dessin
+#         self.draw = draw_cairo_prg
 
 
 
@@ -6445,11 +6480,11 @@ class Progression(BaseDoc, Grammaire):
 
             
         
-    ######################################################################################  
-    def DefinirCouleurs(self):
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetListeCI()))
+#     ######################################################################################  
+#     def DefinirCouleurs(self):
+#         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+#                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
+#                                    len(self.GetListeCI()))
         
 
     ######################################################################################  
@@ -6463,7 +6498,7 @@ class Progression(BaseDoc, Grammaire):
             
         self.arbre.ExpandAll()
         
-        self.DefinirCouleurs()
+#         self.DefinirCouleurs()
         
         self.VerifPb()
         
@@ -7162,9 +7197,9 @@ class Progression(BaseDoc, Grammaire):
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
 #         self.calendrier.MiseAJourTypeEnseignement()
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetReferentiel().CentresInterets))
+#         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+#                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
+#                                    len(self.GetReferentiel().CentresInterets))
         
 #        self.code = self.GetReferentiel().getCodeProjetDefaut()
 
@@ -7492,16 +7527,16 @@ class Progression(BaseDoc, Grammaire):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo.getBitmapPeriode(larg, self.GetPositions(),
+        bitmap = draw_cairo.getBitmapPeriode(larg, self.GetPositions(),
                                                        self.GetReferentiel().periodes, 
                                                        prop = 7)
-        return getBitmapFromImageSurface(imagesurface)
+        return bitmap
 
 
     #############################################################################            
     def getBitmapCalendrier(self, larg):
-        imagesurface = draw_cairo.getBitmapCalendrier(larg, self.calendrier)
-        return getBitmapFromImageSurface(imagesurface)
+        bitmap = draw_cairo.getBitmapCalendrier(self.calendrier, larg)
+        return bitmap
     
     
     ##################################################################################################    
@@ -7865,8 +7900,12 @@ class ElementProgression():
             else:
                 t = Template(constantes.TEMPLATE_LIENDOC)
             
-            image = draw_cairo.getBase64PNG(draw_cairo.get_apercu(doc, 600,
-                                                                  entete = True))
+            if isinstance(doc, Sequence):
+                image = draw_cairo_seq.Sequence(self, entete = True).getBase64PNG(larg = 600)
+            else:
+                image = draw_cairo_prj.Projet(self, entete = True).getBase64PNG(larg = 600)
+#             image = draw_cairo.getBase64PNG(draw_cairo.get_apercu(doc, 600,
+#                                                                   entete = True))
            
             if css:
                 if image is not None:
@@ -7955,10 +7994,14 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
                                         image = self.arbre.images["Seq"])
 #         self.codeBranche.SetBranche(self.branche)
         if self.sequence is not None:
-            self.sequence.DefinirCouleurs()
-#             print(draw_cairo.BcoulPos)
-#             print(self.sequence.position[0])
-            coul = draw_cairo.BcoulPos[self.sequence.position[0]]
+            BcoulPos = []
+            couleur.generate(BcoulPos, [0xFF82AAE0, 0xFFEF825D], self.GetNbrPeriodes())
+#             draw_cairo_seq.Sequence(self.sequence).de
+#             
+#             self.sequence.DefinirCouleurs()
+# #             print(draw_cairo.BcoulPos)
+# #             print(self.sequence.position[0])
+            coul = BcoulPos[self.sequence.position[0]]
             coul = [int(200*c) for c in coul]
             self.arbre.SetItemTextColour(self.branche, wx.Colour(*coul))
         else:
@@ -8117,8 +8160,13 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
             return
 #         print("ConstruireArbre", self.projet.position)
         self.arbre = arbre
+        
+        BcoulPos = []
+        couleur.generate(BcoulPos, [0xFF82AAE0, 0xFFEF825D], self.GetNbrPeriodes())
             
-        coul = draw_cairo.BcoulPos[self.projet.position[0]]
+            
+            
+        coul = BcoulPos[self.projet.position[0]]
         coul = [int(200*c) for c in coul]
 #         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
@@ -11050,7 +11098,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         html = t.render(titre = ref._nomActivites.Sing_()+" "+ self.code,
                         nom_type = ref.seances[self.typeSeance][1],
-                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]),
+                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.Sequence().BCoulSeance[self.typeSeance]),
                         icon_type = icon_type,
                         lst_dem = lst_dem,
                         lst_ensSpe = lst_ensSpe,
@@ -13527,7 +13575,7 @@ class Personne(ElementBase):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").sing_(), bold = True, size=6)
+        self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").Sing_(), bold = True, size=6)
         
         if hasattr(self, 'referent'):
             bold = self.referent

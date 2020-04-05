@@ -120,14 +120,14 @@ class ProprietesDoc(XMLelem):
             return
         self.proprietes[code] = PropPropriete(nom, val, ptype, cat, grp)
         
-    def chargerParametresDraw(self):
-        self.proprietes["ApparenceFiche"] = self.doc.draw.getParametres()
+#     def chargerParametresDraw(self):
+#         self.proprietes["ApparenceFiche"] = self.doc.draw.getParametres()
     
     ######################################################################################  
     def getBranche(self):
         """ Renvoie la branche XML pour enregistrement
         """
-        self.chargerParametresDraw()
+#         self.chargerParametresDraw()
         
         return XMLelem.getBranche(self)
 
