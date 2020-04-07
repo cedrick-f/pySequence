@@ -58,9 +58,12 @@ from util_path import toSystemEncoding
 import images
 import io
 
-from draw_cairo import getHoraireTxt
-from draw_cairo_prj import ICoulTache, BCoulTache
-from draw_cairo_seq import ICoulSeance#, BCoulSeance
+from draw_cairo2 import getHoraireTxt
+import draw_cairo_seq2 as draw_cairo_seq
+import draw_cairo_prj2 as draw_cairo_prj
+
+# from draw_cairo_prj2 import ICoulTache, BCoulTache
+# from draw_cairo_seq2 import ICoulSeance#, BCoulSeance
 
 # from xml.dom.minidom import parse, parseString
 

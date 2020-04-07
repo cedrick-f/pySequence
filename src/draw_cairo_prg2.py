@@ -38,7 +38,7 @@ import sys
 import cairocffi as cairo
 from draw_cairo2 import *
 
-import wx.lib.wxcairo
+# import wx.lib.wxcairo
 import images
 
 import couleur
@@ -142,6 +142,7 @@ def regrouperLst(ref, competences):
     return competences.get2Niveaux()
 
 
+nom_module = os.path.splitext(os.path.basename(__file__))[0]
 
 ######################################################################################  
 class Progression(Base_Fiche_Doc):
@@ -151,6 +152,9 @@ class Progression(Base_Fiche_Doc):
         self.prg = prg
         self.mouchard = mouchard
         self.surRect = surRect
+        
+        self.nom_fichparam = "param_prg.cfg"
+        
         
         #
         # Données pour le tracé
@@ -606,7 +610,7 @@ class Progression(Base_Fiche_Doc):
         #
         tailleTypeEns = self.taillePro[0]/2
         t = self.prg.classe.GetLabel()
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0.6, 0.6, 0.9)
         
@@ -638,8 +642,8 @@ class Progression(Base_Fiche_Doc):
     #    prg.rect.append(posPos+taillePos)
         
         for i, re in enumerate(rects):
-            self.prg.zones_sens.append(Zone([re], param = "POS"+str(i)))
-        self.prg.zones_sens.append(Zone([r], param = "POS"))
+            self.prg.zones_sens.append(Zone_sens([re], param = "POS"+str(i)))
+        self.prg.zones_sens.append(Zone_sens([r], param = "POS"))
         
     
     
@@ -651,7 +655,7 @@ class Progression(Base_Fiche_Doc):
         #
         if classe.etablissement != "":
             t = classe.etablissement + " (" + classe.ville + ")"
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                               cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, t, (self.posPos[0] , self.posPos[1]+self.taillePos[1], 
                                     self.taillePos[0], self.posPro[1]-self.posPos[1]-self.taillePos[1]), 
@@ -664,27 +668,33 @@ class Progression(Base_Fiche_Doc):
         # Image
         #
         bmp = self.prg.image
-        if bmp != None:
-            ctx.save()
-            tfname = tempfile.mktemp()
-            try:
-                bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-                image = cairo.ImageSurface.create_from_png(tfname)
-            finally:
-                if os.path.exists(tfname):
-                    os.remove(tfname)  
-                    
-            w = image.get_width()*1.1
-            h = image.get_height()*1.1
-            
-            s = min(self.tailleImg[0]/w, self.tailleImg[1]/h)
-            dx = (self.tailleImg[0] - s*image.get_width())/2
-            dy = (self.tailleImg[1] - s*image.get_height())/2
-            ctx.translate(self.posImg[0] + dx, self.posImg[1] + dy)
-            ctx.scale(s, s)
-            ctx.set_source_surface(image, 0, 0)
-            ctx.paint ()
-            ctx.restore()
+        
+        if bmp is not None:
+            Image(self, (*self.posImg, *self.tailleImg), 
+                      bmp, marge = 0.05).draw()
+        
+        # Ancienne méthode
+#         if bmp != None:
+#             ctx.save()
+#             tfname = tempfile.mktemp()
+#             try:
+#                 bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+#                 image = cairo.ImageSurface.create_from_png(tfname)
+#             finally:
+#                 if os.path.exists(tfname):
+#                     os.remove(tfname)  
+#                     
+#             w = image.get_width()*1.1
+#             h = image.get_height()*1.1
+#             
+#             s = min(self.tailleImg[0]/w, self.tailleImg[1]/h)
+#             dx = (self.tailleImg[0] - s*image.get_width())/2
+#             dy = (self.tailleImg[1] - s*image.get_height())/2
+#             ctx.translate(self.posImg[0] + dx, self.posImg[1] + dy)
+#             ctx.scale(s, s)
+#             ctx.set_source_surface(image, 0, 0)
+#             ctx.paint ()
+#             ctx.restore()
     
         
     
@@ -715,8 +725,8 @@ class Progression(Base_Fiche_Doc):
                                  gras = g, lstCoul = c, va = 'c').draw()
     
         for i, p in enumerate(self.prg.equipe):
-            self.prg.zones_sens.append(Zone([r[i]], obj = p))
-        self.prg.zones_sens.append(Zone([rectEqu], param = "EQU"))
+            self.prg.zones_sens.append(Zone_sens([r[i]], obj = p))
+        self.prg.zones_sens.append(Zone_sens([rectEqu], param = "EQU"))
     #        p.rect = [r[i]]
     #        prj.pts_caract.append(getPts(r))
     
@@ -732,14 +742,14 @@ class Progression(Base_Fiche_Doc):
         pt = Curve_rect_titre(self, rectPro, "Calendrier",  
                               self.BcoulPro, self.IcoulPro, self.fontPro).draw()
         self.prg.pt_caract.append((pt, "Cal"))
-        ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, constantes.ellipsizer("", constantes.LONG_MAX_PROBLEMATIQUE), 
                        rectPro, ha = 'g', b = 0.05,
                        fontsizeMinMax = (-1, 0.016 * COEF))
         Calendrier(self, rectPro, self.prg.calendrier).draw()
     #    prg.rect.append(rectPro)
-        self.prg.zones_sens.append(Zone([rectPro], param = "CAL"))
+        self.prg.zones_sens.append(Zone_sens([rectPro], param = "CAL"))
     
     
     
@@ -754,14 +764,14 @@ class Progression(Base_Fiche_Doc):
         pt = Curve_rect_titre(self, rectNom, "Progression pédagogique",  
                               self.BcoulNom, self.IcoulNom, self.fontNom).draw()
         self.prg.pt_caract.append((pt, 'Ann'))
-        ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, "Années scolaires " + self.prg.GetAnnees(), 
                        rectNom, ha = 'c', b = 0.02,
                        fontsizeMinMax = (-1, 0.017 * COEF),
                        wrap = False, couper = False)
         
-        self.prg.zones_sens.append(Zone([rectNom], param = "ANN"))
+        self.prg.zones_sens.append(Zone_sens([rectNom], param = "ANN"))
     #    prg.pt_caract.append(posNom)
     
     
@@ -820,7 +830,7 @@ class Progression(Base_Fiche_Doc):
                 # Dernière ligne
                 ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
         
-                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 ctx.set_source_rgb(0, 0, 0)
                 ctx.set_line_width(e)
@@ -835,7 +845,7 @@ class Progression(Base_Fiche_Doc):
                                  coul = self.ICoulComp[i], b = 0.03).draw()
                 
                 for i, r in enumerate(rects):
-                    self.prg.zones_sens.append(Zone([r], param = "CMP"+l1[i]))
+                    self.prg.zones_sens.append(Zone_sens([r], param = "CMP"+l1[i]))
                     
                 _x += dx
                 _x0 = _x
@@ -903,7 +913,7 @@ class Progression(Base_Fiche_Doc):
                 # Dernière ligne
                 ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
         
-                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 ctx.set_source_rgb(0, 0, 0)
                 ctx.set_line_width(e)
@@ -918,7 +928,7 @@ class Progression(Base_Fiche_Doc):
                                  coul = self.ICoulComp[i], b = 0.03).draw()
                 
                 for i, r in enumerate(rects):
-                    self.prg.zones_sens.append(Zone([r], param = "CMP"+l1[i]))
+                    self.prg.zones_sens.append(Zone_sens([r], param = "CMP"+l1[i]))
                     
                 _x += dx
                 _x0 = _x
@@ -951,7 +961,7 @@ class Progression(Base_Fiche_Doc):
             Curve_rect_titre(ctx, rectTh, ref._nomTh.Plur_(),
                              self.BcoulCI, self.IcoulCI, self.fontCI).draw()
             
-            ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                  cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.0005 * COEF)
@@ -980,7 +990,7 @@ class Progression(Base_Fiche_Doc):
                 # Lignes horizontales
                 #
                 for i, e in enumerate(lstTh):
-                    self.prg.zones_sens.append(Zone([rec[i]], param = "Th"+str(i)))
+                    self.prg.zones_sens.append(Zone_sens([rec[i]], param = "Th"+str(i)))
                     
                     Ic = self.CoulAltern[i][0]
                     
@@ -1033,7 +1043,7 @@ class Progression(Base_Fiche_Doc):
                              self.BcoulCI, self.IcoulCI, self.fontCI).draw()
             self.prg.pt_caract.append((pt, "CI"))
             
-            ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                  cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.0005 * COEF)
@@ -1064,7 +1074,7 @@ class Progression(Base_Fiche_Doc):
                 # Lignes horizontales
                 #
                 for i, e in enumerate(lstCI):
-                    self.prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
+                    self.prg.zones_sens.append(Zone_sens([rec[i]], param = "CI"+str(i)))
                     
                     ctx.set_line_width(0.003 * COEF)
                     ligne(ctx, self.posZCIH[0]+self.tailleZCIH[0] - self.ecartX/2, self.yCI[i] + self.ecartY/2,
@@ -1111,7 +1121,7 @@ class Progression(Base_Fiche_Doc):
         # Durée Totale
         #
         ctx.set_source_rgb(0.5,0.8,0.8)
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
         
         show_text_rect(ctx, getHoraireTxt(self.prg.GetDuree()), 
@@ -1340,7 +1350,7 @@ class Progression(Base_Fiche_Doc):
                  self.wPhases, h)
             c = self.BcoulPos[i]
             self.ctx.set_source_rgb(c[0],c[1],c[2])
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             if self.ctx.font_extents()[2] < h:
                 show_text_rect(self.ctx, str(i+1), 
@@ -1437,7 +1447,7 @@ class Progression(Base_Fiche_Doc):
               
             c = self.BcoulPos[i]
             self.ctx.set_source_rgb(c[0],c[1],c[2])
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             
             show_text_rect(self.ctx, str(i+1), 
@@ -1479,7 +1489,7 @@ class Progression(Base_Fiche_Doc):
         self.ctx.stroke ()
         
         self.ctx.set_source_rgb(0.5, 0.8, 0.8)
-        self.ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+        self.ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
         
         if h > self.wDuree:
@@ -1513,24 +1523,31 @@ class Progression(Base_Fiche_Doc):
         # Icone du type de document
         #
         if h > self.hTacheMini:
-            self.ctx.save()
-        #     if doc.nom_obj == u"Séquence":
-        #         bmp = images.Icone_sequence.GetBitmap()
-        #     else:
-        #         bmp = images.Icone_projet.GetBitmap()
             bmp = doc.getIconeDraw()
-            image = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp) 
-            self.ctx.translate(x+self.ecartX/5, y+self.ecartY/5)
-            self.ctx.scale(self.hTacheMini/120, self.hTacheMini/120)
-            self.ctx.set_source_surface(image, 0, 0)
-            self.ctx.paint ()
-            self.ctx.restore()
+            
+            Image(self, (x, y, self.hTacheMini, self.hTacheMini), 
+                  bmp, marge = 0.05).draw()
+            
+            # Ancienne méthode
+#             self.ctx.save()
+#         #     if doc.nom_obj == u"Séquence":
+#         #         bmp = images.Icone_sequence.GetBitmap()
+#         #     else:
+#         #         bmp = images.Icone_projet.GetBitmap()
+#              
+#              
+#             image = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp) 
+#             self.ctx.translate(x+self.ecartX/5, y+self.ecartY/5)
+#             self.ctx.scale(self.hTacheMini/120, self.hTacheMini/120)
+#             self.ctx.set_source_surface(image, 0, 0)
+#             self.ctx.paint ()
+#             self.ctx.restore()
             
         
         #
         # Affichage de l'intitulé de la Séquence ou du Projet
         #
-        self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+        self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
         self.ctx.set_source_rgb (0,0,0)
         
@@ -1543,11 +1560,12 @@ class Progression(Base_Fiche_Doc):
             else:
                 intit = lienDoc.path
             show_text_rect(self.ctx, intit, rect, 
-                           ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
+                           ha = 'g', b = 0.02,
+                           fontsizeMinMax = (minFont, 0.015 * COEF))
         
         
         lienDoc.rect.append([x, y, self.tailleZTaches[0], h])
-        self.prg.zones_sens.append(Zone([rect], obj = lienDoc))
+        self.prg.zones_sens.append(Zone_sens([rect], obj = lienDoc))
     #     lienDoc.pt_caract = [(rect[:2], "Seq")]
         
         #
@@ -1624,7 +1642,7 @@ class Progression(Base_Fiche_Doc):
                       color0 = color0, color1 = (1,1,1),
                       transparent = False).draw()
             
-            self.prg.zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], obj = seq, param = "CI"+str(num)))
+            self.prg.zones_sens.append(Zone_sens([(_x -r , y - r, 2*r, 2*r)], obj = seq, param = "CI"+str(num)))
     #        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
     #        tache.projet.eleves[i].pts_caract.append((_x,y))
             y += dy
@@ -1713,7 +1731,7 @@ class Progression(Base_Fiche_Doc):
                             rect = None
                             
                     if rect is not None:
-                        self.prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+i))
+                        self.prg.zones_sens.append(Zone_sens([rect], obj = seq, param = "CMP"+i))
                     
         
         
@@ -1797,13 +1815,15 @@ class Progression(Base_Fiche_Doc):
                             rect = None
                             
                     if rect is not None:
-                        self.prg.zones_sens.append(Zone([rect], obj = seq, param = "SAV"+i))
+                        self.prg.zones_sens.append(Zone_sens([rect], obj = seq, param = "SAV"+i))
                     
         
         
         return
         
         
+
+
 
 
 
@@ -1853,27 +1873,12 @@ def gabarit():
     imagesurface.write_to_png('gabarit_prg.png')
     
 
-# #######################################################################################
-# # Gestion des paramètres sauvegardables
-# #####################################################################################
-# def getParametres():
-#     """ Renvoi un dict {nom: valeur} des paramètres à sauvegarder
-#          - couleurs
-#          - ...
-#     """
-#     return {n : CouleurFloat2CSS(v) for n, v in globals().items() if "coul" in n}
-#     
-# nom_module = os.path.splitext(os.path.basename(__file__))[0]
-# nom_fichparam = "param_prg.cfg"
-# 
+
+
 # if __name__ == '__main__':
 #     sauverParametres(getParametres().keys(), 
 #                      nom_module, 
 #                      nom_fichparam)
 #     
 #     
-# ##########################################################################################
-# chargerParametres(getParametres().keys(), 
-#                   nom_module, 
-#                   os.path.join(util_path.PATH, nom_fichparam))
-#     
+    

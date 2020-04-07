@@ -484,7 +484,7 @@ class Projet(Base_Fiche_Doc):
         #
         tailleTypeEns = self.taillePro[0]/2
         t = self.prj.classe.GetLabel()
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0.6, 0.6, 0.9)
         
@@ -515,8 +515,8 @@ class Projet(Base_Fiche_Doc):
                          self.prj.classe.referentiel.projets).draw()
         
         for i, re in enumerate(rects):
-            self.prj.zones_sens.append(Zone([re], param = "POS"+str(i)))
-        self.prj.zones_sens.append(Zone([r], param = "POS"))
+            self.prj.zones_sens.append(Zone_sens([re], param = "POS"+str(i)))
+        self.prj.zones_sens.append(Zone_sens([r], param = "POS"))
     
     
     
@@ -525,7 +525,7 @@ class Projet(Base_Fiche_Doc):
         #
         if self.prj.classe.etablissement != "":
             t = self.prj.classe.etablissement + " (" + self.prj.classe.ville + ")"
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                               cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, t, (self.posPos[0] , self.posPos[1]+self.taillePos[1], self.taillePos[0], self.posPro[1]-self.posPos[1]-self.taillePos[1]), 
                            va = 'c', ha = 'g', b = 0.02, orient = 'h', 
@@ -544,7 +544,7 @@ class Projet(Base_Fiche_Doc):
                   (*self.posImg, *self.tailleImg),
                   bmp).draw()
             
-            self.prj.zones_sens.append(Zone([self.posImg + self.tailleImg], obj = self.prj.support))
+            self.prj.zones_sens.append(Zone_sens([self.posImg + self.tailleImg], obj = self.prj.support))
             self.prj.support.pts_caract.append(self.posImg)
         
     
@@ -578,8 +578,8 @@ class Projet(Base_Fiche_Doc):
     
         
         for i, p in enumerate(self.prj.equipe):
-            self.prj.zones_sens.append(Zone([r[i]], obj = p))
-        self.prj.zones_sens.append(Zone([rectEqu], param = "EQU"))
+            self.prj.zones_sens.append(Zone_sens([r[i]], obj = p))
+        self.prj.zones_sens.append(Zone_sens([rectEqu], param = "EQU"))
         
     
         #
@@ -589,12 +589,12 @@ class Projet(Base_Fiche_Doc):
         pt = Curve_rect_titre(self, rectPro, "Problématique",  
                               self.Bcoul_Pro, self.Icoul_Pro, self.fontPro).draw()
         self.prj.pt_caract.append((pt, "Pb"))
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, constantes.ellipsizer(self.prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
                        rectPro, ha = 'g', b = 0.02,
                        fontsizeMinMax = (-1, 0.016 * COEF))
-        self.prj.zones_sens.append(Zone([rectPro], param = "PB"))
+        self.prj.zones_sens.append(Zone_sens([rectPro], param = "PB"))
         
     #    print "     6 ", time.time() - tps
     
@@ -607,13 +607,13 @@ class Projet(Base_Fiche_Doc):
                                                self.Bcoul_Nom, 
                                                self.Icoul_Nom, 
                                                self.fontNom).draw())
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, self.prj.GetNom(), 
                        rectNom, ha = 'c', b = 0.02,
                        fontsizeMinMax = (-1, 0.016 * COEF))
         
-        self.prj.zones_sens.append(Zone([rectNom], obj = self.prj))
+        self.prj.zones_sens.append(Zone_sens([rectNom], obj = self.prj))
         self.prj.pts_caract.append(self.posNom)
     
         
@@ -627,13 +627,13 @@ class Projet(Base_Fiche_Doc):
         pt = Curve_rect_titre(self, rectSup, self.prj.support.GetCode(),  
                               self.Bcoul_Sup, self.Icoul_Sup, self.fontSup).draw()
         self.prj.support.pt_caract.append((pt, "Sup"))
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, self.prj.support.GetNom(), 
                        rectSup, ha = 'c', b = 0.02,
                        fontsizeMinMax = (-1, 0.016 * COEF))
 #         print("rectSup >>", rectSup)
-        self.prj.zones_sens.append(Zone([rectSup], obj = self.prj.support))
+        self.prj.zones_sens.append(Zone_sens([rectSup], obj = self.prj.support))
     #     prj.support.pts_caract.append(posSup)
     
     
@@ -664,7 +664,7 @@ class Projet(Base_Fiche_Doc):
                 
                 ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
                 
-                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 ctx.set_source_rgb(0, 0, 0)
                 ctx.set_line_width(0.001 * COEF)
@@ -683,7 +683,7 @@ class Projet(Base_Fiche_Doc):
         #   
     #    tps = time.time()
         if not self.entete:
-            ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                  cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.001 * COEF)
@@ -750,7 +750,7 @@ class Projet(Base_Fiche_Doc):
                 # Lignes horizontales
                 #
                 for i, e in enumerate(self.prj.eleves + self.prj.groupes):
-                    self.prj.zones_sens.append(Zone([rec[i]], obj = e))
+                    self.prj.zones_sens.append(Zone_sens([rec[i]], obj = e))
                     ctx.set_line_width(0.003 * COEF)
                     
                     ligne(ctx, self.posZElevesH[0]+self.tailleZElevesH[0], self.yEleves[i],
@@ -857,7 +857,7 @@ class Projet(Base_Fiche_Doc):
                     yh[0] = min(yh[0])
                     yh[1] = max(yh[1])
                     ctx.set_source_rgb(*self.BCoulTache[phase][:3])
-                    ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                    ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                                         cairo.FONT_WEIGHT_NORMAL)
                     if self.wPhases > yh[1]-yh[0]:
                         orient = "h"
@@ -1022,7 +1022,7 @@ class Projet(Base_Fiche_Doc):
             self.ctx.stroke ()
             
             self.ctx.set_source_rgb(0.5,0.8,0.8)
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
             
             if h > self.wDuree:
@@ -1052,7 +1052,7 @@ class Projet(Base_Fiche_Doc):
             self.ctx.stroke ()
             
             self.ctx.set_source_rgb(0.5,0.8,0.8)
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
             show_text_rect(self.ctx, getHoraireTxt(tache.GetDelai(), constantes.CHAR_FLECHE), 
                            (x, y, w, h), 
@@ -1095,7 +1095,7 @@ class Projet(Base_Fiche_Doc):
         # Affichage du code de la tâche
         #
         if hasattr(tache, 'code'):
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgb (0,0,0)
             
@@ -1114,7 +1114,7 @@ class Projet(Base_Fiche_Doc):
         # Affichage de l'intitulé de la tâche
         #
         if tache.intituleDansDeroul and tache.intitule != "" and not tache.phase in ["R1", "R2", "R3", "S"]:
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgb (0,0,0)
             
@@ -1129,7 +1129,7 @@ class Projet(Base_Fiche_Doc):
                                ha = 'g', 
                                fontsizeMinMax = (minFont, 0.015 * COEF))
             
-        tache.GetDocument().zones_sens.append(Zone([(x, y, self.tailleZTaches[0], h)], obj = tache))
+        tache.GetDocument().zones_sens.append(Zone_sens([(x, y, self.tailleZTaches[0], h)], obj = tache))
     #    tache.rect.append([x, y, tailleZTaches[0], h])
             
             
@@ -1265,7 +1265,7 @@ class Projet(Base_Fiche_Doc):
                   transparent = False).draw()
     
             eleves_groupes = tache.projet.eleves + tache.projet.groupes
-            tache.GetDocument().zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], 
+            tache.GetDocument().zones_sens.append(Zone_sens([(_x -r , y - r, 2*r, 2*r)], 
                                                        obj = [eleves_groupes[i], tache]))
             
     #        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
@@ -1305,7 +1305,7 @@ class Projet(Base_Fiche_Doc):
             
             rect = (x, y-h/2, self.wColComp, h)
             
-            objet.GetDocument().zones_sens.append(Zone([rect], obj = objet, param = s))
+            objet.GetDocument().zones_sens.append(Zone_sens([rect], obj = objet, param = s))
             
     #        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
     #            objet.GetDocument().rectComp[s].append(rect)

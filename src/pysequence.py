@@ -1760,7 +1760,8 @@ class BaseDoc(ElementBase, ElementAvecLien):
         # Chemin du fichier
         self.path = ""
         
-        self.proprietes = proprietes.ProprietesDoc(self)
+        self.proprietes = proprietes.ProprietesDoc(self, ["Généralités",
+                                                          "Affichage"])
         
         #
         # Création du Tip (PopupInfo)
@@ -2443,6 +2444,8 @@ class Sequence(BaseDoc, Grammaire):
                 systeme.append(sy.getBranche())
         
 #         print("1 :", time.clock() - tps)
+        
+        
         
         return sequence
 
@@ -7901,9 +7904,9 @@ class ElementProgression():
                 t = Template(constantes.TEMPLATE_LIENDOC)
             
             if isinstance(doc, Sequence):
-                image = draw_cairo_seq.Sequence(self, entete = True).getBase64PNG(larg = 600)
+                image = draw_cairo_seq.Sequence(doc, entete = True).getBase64PNG(larg = 600)
             else:
-                image = draw_cairo_prj.Projet(self, entete = True).getBase64PNG(larg = 600)
+                image = draw_cairo_prj.Projet(doc, entete = True).getBase64PNG(larg = 600)
 #             image = draw_cairo.getBase64PNG(draw_cairo.get_apercu(doc, 600,
 #                                                                   entete = True))
            
@@ -11098,7 +11101,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         html = t.render(titre = ref._nomActivites.Sing_()+" "+ self.code,
                         nom_type = ref.seances[self.typeSeance][1],
-                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.Sequence().BCoulSeance[self.typeSeance]),
+                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.Sequence(self.GetDocument()).BCoulSeance[self.typeSeance]),
                         icon_type = icon_type,
                         lst_dem = lst_dem,
                         lst_ensSpe = lst_ensSpe,

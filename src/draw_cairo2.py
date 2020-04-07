@@ -47,7 +47,7 @@ import tempfile
 import wx.lib.wxcairo
 import cairocffi as cairo
 
-import time
+# import time
 try:
     import constantes
 except:
@@ -61,7 +61,8 @@ from widgets import getHoraireTxt
 
 import couleur
 import configparser
-                                     
+import util_path
+
                                      
 #
 # Coefficient de multiplication global
@@ -79,7 +80,7 @@ FSIZE_BASE = 10
 
 minFont = 0.006 * COEF
 maxFont = 0.1 * COEF
-font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
+# font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
 
     
 def getPts(lst_rect):
@@ -727,7 +728,9 @@ class Base_Fiche_Doc():
 
         self.LargeurTotale = 0.72414 * COEF# Pour faire du A4
 
-        
+        self.font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
+    
+    
     ########################################################################################            
     def initOptions(self, ctx):#
         # Options générales
@@ -744,7 +747,7 @@ class Base_Fiche_Doc():
         #
         # Informations
         #
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC, #"Sans"
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC, #"Sans"
                          cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size (0.007 * COEF)
         ctx.set_source_rgb(0.6, 0.6, 0.6)
@@ -752,20 +755,20 @@ class Base_Fiche_Doc():
         ctx.show_text ("Fiche créée avec le logiciel pySequence (https://github.com/cedrick-f/pySequence)")
 
 
-    #######################################################################################
-    # Gestion des paramètres sauvegardables
-    #####################################################################################
-    def getParametres(self):
-        """ Renvoi un dict {nom: valeur} des paramètres à sauvegarder
-             - couleurs
-             - ...
-        """
-        d = {}
-        for n, v in globals().items():
-    #         print(n)
-            if "coul_" in n:
-                d[n] = CouleurFloat2CSS(v)
-        return d
+#     #######################################################################################
+#     # Gestion des paramètres sauvegardables
+#     #####################################################################################
+#     def getParametres(self):
+#         """ Renvoi un dict {nom: valeur} des paramètres à sauvegarder
+#              - couleurs
+#              - ...
+#         """
+#         d = {}
+#         for n, v in globals().items():
+#     #         print(n)
+#             if "coul_" in n:
+#                 d[n] = couleur.CouleurFloat2CSS(v)
+#         return d
     
     
     ##########################################################################################
@@ -801,6 +804,24 @@ class Base_Fiche_Doc():
         return getBase64PNG(self.getImageSurface(*args, **kargs))
     
 
+#     #######################################################################################
+#     # Gestion des paramètres sauvegardables
+#     #####################################################################################
+#     def getParametres(self):
+#         """ Renvoi un dict {nom: valeur} des paramètres à sauvegarder
+#              - couleurs
+#              - ...
+#         """
+#         return {n : couleur.CouleurFloat2CSS(v) for n, v in globals().items() if "coul" in n}
+# 
+#     ##########################################################################################
+#     def chargerParametres(self):
+#         chargerParametres(self.getParametres().keys(), 
+#                           self.nom_module, 
+#                           os.path.join(util_path.PATH, self.nom_fichparam))
+
+
+
 ######################################################################################  
 #
 # Élement de base d'un dessin
@@ -811,6 +832,11 @@ class Elem_Dessin():
         self.parent = parent
         self.rect = rect
         
+        if self.parent is None:
+            self.font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
+        else:
+            self.font_family = self.parent.font_family
+    
     
     ########################################################################################            
     def draw(self, ctx = None, **kargs):
@@ -1113,7 +1139,7 @@ class Periodes(Elem_Dessin):
         ctx.fill ()
         ctx.set_source(src)
         
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         
         # Ecart entre les cases
@@ -1293,7 +1319,9 @@ class Classe(Elem_Dessin):
                  classe = None):
         Elem_Dessin.__init__(self, parent, rect)  
         self.classe = classe
-        
+
+            
+            
     ######################################################################################  
     def _draw(self, ctx = None, complet = True):
         """ Dessine la répartition des élèves dans la classe
@@ -1312,7 +1340,7 @@ class Classe(Elem_Dessin):
         
         rap = wt/ht
         
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         
         ##########################################################################
@@ -1579,7 +1607,7 @@ class Curve_rect_titre(Elem_Dessin):
         ctx.set_line_width(self.epaiss)
         x0, y0, rect_width, rect_height = self.rect
         
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size(self.taille_font)
         fheight = ctx.font_extents()[2]
@@ -1750,7 +1778,7 @@ class Image(Elem_Dessin):
     def __init__(self, parent, rect, bmp, marge = 0):
         Elem_Dessin.__init__(self, parent, rect)
         self.bmp = bmp
-        self.marge = marge
+        self.marge = marge # Coefficient 0-1
         
         
     def _draw(self, ctx = None):
@@ -1764,15 +1792,20 @@ class Image(Elem_Dessin):
         w = w - 2*self.marge*w
         h = h - 2*self.marge*h
         
-        tfname = tempfile.mktemp()
-        try:
-            self.bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-            image = cairo.ImageSurface.create_from_png(tfname)
-        except:
-            return
-        finally:
-            if os.path.exists(tfname):
-                os.remove(tfname)  
+        # Ancienne méthode
+#         tfname = tempfile.mktemp()
+#         try:
+#             self.bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+#             image = cairo.ImageSurface.create_from_png(tfname)
+#         except:
+#             return
+#         finally:
+#             if os.path.exists(tfname):
+#                 os.remove(tfname)  
+
+        image = wx.lib.wxcairo.ImageSurfaceFromBitmap(self.bmp)
+        
+        
         W = image.get_width()
         H = image.get_height()
         s = min(w/W, h/H)
@@ -2408,7 +2441,7 @@ class Liste_code_texte2(Elem_Dessin):
         # Codes
         #
         wc = []
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         for i, t in enumerate(self.lstCodes):
             if t.strip() != "":
@@ -2447,10 +2480,10 @@ class Liste_code_texte2(Elem_Dessin):
         for i, t in enumerate(self.lstCodes):
             if self.lstTexte[i].strip() != "":
                 if i == self.gras:
-                    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                    ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
                 else:
-                    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                    ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
                 if self.lstCoul != None:
                     ctx.set_source_rgb (*self.lstCoul[i])
@@ -2520,7 +2553,7 @@ class Liste_code_texte(Elem_Dessin):
         # Calcul de la largeur maxi des codes
         #
         ctx.set_font_size(maxFontSize)
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         
         wt = max([ctx.text_extents(t)[2] for t in self.lstCodes if t.strip() != ""])
@@ -2539,10 +2572,10 @@ class Liste_code_texte(Elem_Dessin):
         for i, t in enumerate(self.lstCodes):
             if self.lstTexte[i].strip() != "":
                 if i == self.gras:
-                    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                    ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
                 else:
-                    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                    ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
                 if self.lstCoul != None:
                     ctx.set_source_rgb (*self.lstCoul[i][:3])
@@ -2581,7 +2614,7 @@ class Liste_code_texte(Elem_Dessin):
         #
         # Codes
         #
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         for i, t in enumerate(self.lstCodes):
             if t.strip() != "":
@@ -3279,12 +3312,12 @@ def wordwrap(ctx, text, width, breakLongWords=True, cacher = True):
 
 ##########################################################################################
 #
-#  Une zone active sur le dessin
+#  Une zone sensible sur le dessin
 #
 ##########################################################################################
-class Zone():
+class Zone_sens():
     def __init__(self, rect, pt_caract = None, obj = None, param = None):
-        self.rect = rect                # Le(s) rectangle(s) sensible(s) (liste)
+        self.rect = rect                # Liste des des rectangles sensibles
         if pt_caract == None:
             pt_caract = self.rect[:2]
         self.pt_caract = pt_caract      # Un point caractéristique (pour identification svg)
@@ -3304,6 +3337,33 @@ class Zone():
         return False
     
     
+    
+##########################################################################################
+#
+#  Une zone du dessin
+#
+##########################################################################################
+class Zone():
+    def __init__(self, rect, pt_caract = None, obj = None, param = None):
+        self.rect = rect                # Liste des des rectangles sensibles
+        if pt_caract == None:
+            pt_caract = self.rect[:2]
+        self.pt_caract = pt_caract      # Un point caractéristique (pour identification svg)
+        self.obj = obj                  # L'objet concerné
+        self.param = param              # Paramètre(s) supplémentaire(s)
+        
+    def __repr__(self): 
+        return "%s (%s)" %(self.obj, self.param)
+    
+    def dansRectangle(self, X, Y):
+        """ Renvoie True si le point X, Y est dans la zone
+        """
+        for r in self.rect:
+            x, y, w, h = r
+            if X > x and Y > y and X < x + w and Y < y + h:
+                return True
+        return False
+  
     
 #def testRapport(ctx):
 #    f = open("testRapport.txt", 'w')

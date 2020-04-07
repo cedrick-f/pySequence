@@ -1723,7 +1723,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             en fonction du type de document en cours
             Et rafraichissement des séquences de la fenêtre de Progression
         """
-        print("OnDocChanged", evt)
+#         print("OnDocChanged", evt)
         
         fenDoc = self.GetCurrentPage()
         
@@ -5149,7 +5149,7 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 
     #############################################################################            
     def Draw(self, ctx):
-        print("Draw", self.fiche)
+#         print("Draw", self.fiche)
         self.fiche.draw(ctx)
 #         self.GetDoc().DefinirCouleurs()
 #         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)

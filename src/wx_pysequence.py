@@ -342,6 +342,8 @@ class MySplashScreen(adv.SplashScreen):
         self.frame = objects_wx.FenetrePrincipale(None, fichier, 
                                                   options)
         self.frame.Show()
+#         self.frame.Bind(wx.DPIChangedEvent, lambda x:print("aaa"))
+        
         self.parent.frame = self.frame
         
 #        self.SetTopWindow(self.frame)

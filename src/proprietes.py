@@ -50,7 +50,7 @@ from widgets import XMLelem
 
 ####################################################################################################
 #
-# Classes d�finissant les propri�t�s d'un document
+# Classes définissant les propriétés d'un document
 #
 ####################################################################################################
 class PropPropriete(XMLelem):
@@ -63,7 +63,7 @@ class PropPropriete(XMLelem):
                 int (list)
                 int (couleur)
                 string
-            :ptype: type de valur
+            :ptype: type de valeur
                 list (choix)
                 "coul" : couleur
                 None : type donné par le type de valeur
@@ -103,7 +103,7 @@ class PropGroupe(XMLelem):
 
 ###################################################################################
 class ProprietesDoc(XMLelem):
-    def __init__(self, doc, lstcat = []):
+    def __init__(self, doc = None, lstcat = []):
         self._codeXML = "ProprietesDoc"
         self.categories = [PropCategorie(n) for n in lstcat]    # Catégories de propriété
         self.proprietes = {}    # les Propriété
@@ -116,9 +116,15 @@ class ProprietesDoc(XMLelem):
         self.proprietes[code].value = val
     
     def create(self, code, nom, val, ptype = None, cat = None, grp = None):
-        if code in self.proprietes.keys():
+        if code in self.proprietes:
             return
         self.proprietes[code] = PropPropriete(nom, val, ptype, cat, grp)
+        
+    def update(self, lst_prop):
+        for code, prop in lst_prop.items():
+            self.proprietes[code] = prop
+            
+        
         
 #     def chargerParametresDraw(self):
 #         self.proprietes["ApparenceFiche"] = self.doc.draw.getParametres()
@@ -221,14 +227,18 @@ class FrameProprietes(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.App(False)
+#     import wx.lib.wxcairo
+#     import cairocffi as cairo
+#     from pysequence import Sequence
     
-    p = ProprietesDoc(["Généralités",
+    app = wx.App(False)
+#     doc = Sequence(app)
+    p = ProprietesDoc(None, ["Généralités",
                        "Affichage"])
     p.categories[0].setGrp(["grp1", "grp2"])
     p.categories[0].setBmp(images.Icone_sequence.GetBitmap())
     
-    p.categories[1].setGrp(["grp2", "grp3"])
+    p.categories[1].setGrp(["grp3", "grp4"])
     p.categories[1].setBmp(images.Icone_projet.GetBitmap())
     
     #        code,      nom,     val, ptype = None, cat = None, grp = None)

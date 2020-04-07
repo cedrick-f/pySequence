@@ -39,6 +39,9 @@ Pour obtenir un GUI au bon DPI pour écran haute résolution
 """
 
 
+# Voir aussi : https://pypi.org/project/screeninfo/
+
+
 import ctypes, sys
 
 # Sources :

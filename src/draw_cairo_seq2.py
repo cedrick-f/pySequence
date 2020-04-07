@@ -56,7 +56,7 @@ import os
 import tempfile
 import wx
 
-
+from proprietes import *
 
 
 
@@ -101,6 +101,16 @@ class Sequence(Base_Fiche_Doc):
         
         # Ecart pour les couches
         self.ecartC = self.ecartX/8
+        
+        ######################################################################################
+        self.curseur = None
+        
+    
+        # paramètres pour la fonction qui calcule la hauteur des tâches 
+        # en fonction de leur durée
+        self.a = self.b = None
+        
+        
         
         # CI
         self.tailleCI = (0.17 * COEF, 0.085 * COEF)
@@ -241,15 +251,51 @@ class Sequence(Base_Fiche_Doc):
                            "ST" : [0.01 * COEF, 0.005 * COEF]}
 
 
-        ######################################################################################
-        self.curseur = None
+        self.associerParametres()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    #####################################################################################
+    def getParametres(self):
+        """ Renvoi une dict de {code : proprietes.PropPropriete}
+            des paramètres à sauvegarder
+             - couleurs
+             - ...
+        """
+        l = {}
+        for c in ["Bcoul_Pre", "Icoul_Pre", "Bcoul_Pre", "Icoul_Pre", 
+                  "Bcoul_Obj", "Icoul_Obj", "Bcoul_Cib", "Icoul_Cib", 
+                  "Bcoul_Intitule", "Icoul_Intitule", 
+                  "BCoulSeance", "ICoulSeance", "BStylSeance"]:
+            l[c] = PropPropriete(c, getattr(self, c), "coul", 
+                                   cat = "Couleurs", grp = "Affichage")
+        return l
+    
+    
+    ##########################################################################################
+    def associerParametres(self):
+        """ Renvoi une lite de proprietes.PropPropriete des paramètres à sauvegarder
+             - couleurs
+             - ...
+        """
+        if self.seq is not None:
+            self.seq.proprietes.update(self.getParametres())
         
     
-        # paramètres pour la fonction qui calcule la hauteur des tâches 
-        # en fonction de leur durée
-        self.a = self.b = None
     
-    
+#     ##########################################################################################
+#     def chargerParametres(self):
+#         for param in self.getParametres():
+#             for p in self.sequence.proprietes:
+#                 if p[code] == param setattr()
+        
+        
     ######################################################################################  
     def calcH(self, t):
         return self.a*t+self.b
@@ -438,7 +484,7 @@ class Sequence(Base_Fiche_Doc):
         if not self.entete:
             rect = (self.posZOrganis[0]-self.bordureZOrganis, self.posZOrganis[1], 
                     self.tailleZOrganis[0]+self.bordureZOrganis*2, self.tailleZOrganis[1]+self.bordureZOrganis)
-        #    seq.zones_sens.append(Zone([rect], param = "INT"))
+        #    seq.zones_sens.append(Zone_sens([rect], param = "INT"))
             if len(self.seq.intitule) == 0:
                 t = "Séquence sans nom"
             else:
@@ -462,7 +508,7 @@ class Sequence(Base_Fiche_Doc):
         #
         tailleTypeEns = self.tailleObj[0]/2
         t = self.seq.classe.GetLabel()
-        self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_BOLD)
         self.ctx.set_source_rgb (0.6, 0.6, 0.9)
         
@@ -496,8 +542,8 @@ class Sequence(Base_Fiche_Doc):
                          self.seq.classe.referentiel.periodes).draw()
         
         for i, re in enumerate(rects):
-            self.seq.zones_sens.append(Zone([re], param = "POS"+str(i)))
-        self.seq.zones_sens.append(Zone([r], param = "POS"))
+            self.seq.zones_sens.append(Zone_sens([re], param = "POS"+str(i)))
+        self.seq.zones_sens.append(Zone_sens([r], param = "POS"))
     
     
     
@@ -506,7 +552,7 @@ class Sequence(Base_Fiche_Doc):
         #
         if self.seq.classe.etablissement != "":
             t = self.seq.classe.etablissement + " (" + self.seq.classe.ville + ")"
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                               cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(self.ctx, t, (self.posPos[0] , self.posPos[1]+self.taillePos[1], 
                                          self.taillePos[0], self.posObj[1]-self.posPos[1]-self.taillePos[1]), 
@@ -527,7 +573,7 @@ class Sequence(Base_Fiche_Doc):
     
         # Affichage des CI sur la cible
         if self.seq.classe.referentiel.CI_cible:
-            self.seq.zones_sens.append(Zone([self.posCib+self.tailleCib], obj = self.seq.CI))
+            self.seq.zones_sens.append(Zone_sens([self.posCib+self.tailleCib], obj = self.seq.CI))
             self.seq.CI.rect = [self.posCib+self.tailleCib]
     
             rayons = {"F" : self.tailleCib[0] * 0.28, 
@@ -595,7 +641,7 @@ class Sequence(Base_Fiche_Doc):
         #
         if not self.entete:
             self.ctx.set_source_rgb(0.5,0.8,0.8)
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                                cairo.FONT_WEIGHT_BOLD)
             
             
@@ -619,7 +665,7 @@ class Sequence(Base_Fiche_Doc):
         if not self.entete:
             if self.tailleComm[1] > 0:
                 self.ctx.set_source_rgb(0.1,0.1,0.1)
-                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                                   cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_font_size(self.fontIntComm)
                 _x, _y = self.posComm
@@ -647,7 +693,7 @@ class Sequence(Base_Fiche_Doc):
                 r.extend(v)
             for v in r:
                 self.seq.pt_caract.append((v[:2], "Eff"))
-            self.seq.zones_sens.append(Zone(r, obj = self.seq.classe))
+            self.seq.zones_sens.append(Zone_sens(r, obj = self.seq.classe))
     #         seq.pt_caract.append((r[0][:2], "Eff"))
             
             # Lignes verticales
@@ -819,7 +865,7 @@ class Sequence(Base_Fiche_Doc):
             self.seq.prerequis["C"].pts_caract = getPts(r)
     #         print("prerequis C", getPts(r))
             for i, c in enumerate(sorted(self.seq.prerequis["C"].competences)): 
-                self.seq.zones_sens.append(Zone([r[i]], obj = self.seq.prerequis["C"]))
+                self.seq.zones_sens.append(Zone_sens([r[i]], obj = self.seq.prerequis["C"]))
     #             seq.prerequis["C"].pt_caract = (r[i][:2], i)
     
             
@@ -832,19 +878,19 @@ class Sequence(Base_Fiche_Doc):
             self.seq.prerequis["S"].pts_caract = getPts(r)
     #         print("prerequis S", getPts(r))
             for i, c in enumerate(sorted(self.seq.prerequis["S"].savoirs)): 
-                self.seq.zones_sens.append(Zone([r[i]], obj = self.seq.prerequis["S"]))
+                self.seq.zones_sens.append(Zone_sens([r[i]], obj = self.seq.prerequis["S"]))
     #             seq.prerequis["S"].pt_caract = (r[i][:2], i)
             
     #         print("lstTexteSe", lstTexteSe, rectSe)
             lstRect = Liste_code_texte(self, rectSe, ["Seq."]*len(lstTexteSe), lstTexteSe, 
                                        0.05*rect_width, 0.1, va = 'c').draw()
             for i, c in enumerate(self.seq.prerequisSeance):
-                self.seq.zones_sens.append(Zone([lstRect[i]], obj = c))
+                self.seq.zones_sens.append(Zone_sens([lstRect[i]], obj = c))
                 
         else:
             show_text_rect(self.ctx, "Aucun", (x0, y0, rect_width, hl), 
                            fontsizeMinMax = (-1, 0.015 * COEF))
-            self.seq.zones_sens.append(Zone([(x0, y0, rect_width, hl)], obj = self.seq.prerequis["S"]))
+            self.seq.zones_sens.append(Zone_sens([(x0, y0, rect_width, hl)], obj = self.seq.prerequis["S"]))
     
     
     
@@ -1004,8 +1050,8 @@ class Sequence(Base_Fiche_Doc):
                                  coulFond = self.Icoul_Obj).draw()
             self.seq.obj["S"].pts_caract = getPts(r)
         
-            self.seq.zones_sens.append(Zone([rectC], obj = self.seq.obj["C"]))
-            self.seq.zones_sens.append(Zone([rectS], obj = self.seq.obj["S"]))
+            self.seq.zones_sens.append(Zone_sens([rectC], obj = self.seq.obj["C"]))
+            self.seq.zones_sens.append(Zone_sens([rectS], obj = self.seq.obj["S"]))
     #    seq.obj["C"].rect = 
             self.seq.obj["S"].rect = [rectS]
             self.seq.obj["C"].rect = [rectC]
@@ -1042,7 +1088,7 @@ class Sequence(Base_Fiche_Doc):
                 nomsSystemes.append(s.nom)
             
             if nomsSystemes != []:
-                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
                 self.ctx.set_line_width(0.001 * COEF)
@@ -1055,7 +1101,7 @@ class Sequence(Base_Fiche_Doc):
                 _y = self.posZSysteme[1]
                 for s in systemes:
         #            s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
-                    self.seq.zones_sens.append(Zone([(_x, _y, wc, self.posZSeances[1] - self.posZSysteme[1])],
+                    self.seq.zones_sens.append(Zone_sens([(_x, _y, wc, self.posZSeances[1] - self.posZSysteme[1])],
                                                obj = s))
                     self.ctx.set_source_rgb(0, 0, 0)
                     self.ctx.move_to(_x, _y + self.posZSeances[1] - self.posZSysteme[1])
@@ -1078,7 +1124,7 @@ class Sequence(Base_Fiche_Doc):
         #
         if not self.entete:
             if len(self.seq.GetReferentiel().listeDemarches) > 0:
-                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
                 show_text_rect(self.ctx, ref._nomDemarches.Sing_(),
@@ -1117,7 +1163,7 @@ class Sequence(Base_Fiche_Doc):
         #
         if not self.entete:
             if self.intituleSeances[0] != []:
-                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
                 self.ctx.set_line_width(0.001 * COEF)
@@ -1192,7 +1238,7 @@ class Sequence(Base_Fiche_Doc):
         CI.pt_caract = [(Curve_rect_titre(self, rect, t, 
                                           self.Bcoul_CI, self.Icoul_CI, self.fontCI).draw(), 
                         'CI')]
-        seq.zones_sens.append(Zone([rect], obj = CI))
+        seq.zones_sens.append(Zone_sens([rect], obj = CI))
     #     CI.rect.append(rect)
         
         
@@ -1237,7 +1283,7 @@ class Sequence(Base_Fiche_Doc):
                                      0.05*rect_width, 0.1, va = 'c').draw()
                 CI.pts_caract = getPts(r)
             
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+            ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                                cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, "\n".join(lstPb), 
                            (x0, y0+0.0001 * COEF + hCI, rect_width, hPb)
@@ -1260,7 +1306,7 @@ class Sequence(Base_Fiche_Doc):
             Fleche_verticale(self, self.posZDeroul[0]+e/4, self.cursY, 
                              h, e, (0.9,0.8,0.8,0.5)).draw()
             self.ctx.set_source_rgb(0.5,0.8,0.8)
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
             he = min(e/2, h/3)
             
@@ -1446,7 +1492,7 @@ class Sequence(Base_Fiche_Doc):
         
         if len(self.seq.domaine) > 0:
             rect = x-r-dx, y-r, 2*(r+dx), Y-y+2*r
-            self.seq.zones_sens.append(Zone([rect], param = "DOM"))
+            self.seq.zones_sens.append(Zone_sens([rect], param = "DOM"))
         
 
 
@@ -1558,7 +1604,7 @@ class Cadre(Elem_Dessin):
             # Le code (en haut à gauche)
             #
             if hasattr(self.seance, 'code'):
-                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_BOLD)
                 c = self.seance.couleur
                 self.ctx.set_source_rgba (*c[:3], alpha)
@@ -1575,7 +1621,7 @@ class Cadre(Elem_Dessin):
             # L'intitulé (si intituleDansDeroul)
             #
             if self.seance.intituleDansDeroul and self.seance.intitule != "" and self.h-hc > 0:  #not self.filigrane and 
-                self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                            cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgba (0,0,0, alpha)
     #            print (x, y + hc, self.w, self.h-hc)
@@ -1611,7 +1657,7 @@ class Cadre(Elem_Dessin):
         self.xd = x+self.w
         self.y = y
         
-        self.seance.GetDocument().zones_sens.append(Zone([(x, y, self.w, self.h)], obj = self.seance))
+        self.seance.GetDocument().zones_sens.append(Zone_sens([(x, y, self.w, self.h)], obj = self.seance))
 #         self.seance.rect.append([x, y, self.w, self.h])
         
         return x + self.w, y + self.h
@@ -1785,7 +1831,7 @@ class Bloc(Elem_Dessin):
     #    if seance.typeSeance in ACTIVITES:
     #        DrawLigne(ctx, x, y, seance.couleur)
         
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
     
         for s, n in list(ns.items()):
@@ -1799,7 +1845,7 @@ class Bloc(Elem_Dessin):
                 show_text_rect(ctx, str(n), rect,
                                wrap = False, couper = False)
                 
-                seance.GetDocument().zones_sens.append(Zone([rect],
+                seance.GetDocument().zones_sens.append(Zone_sens([rect],
                                                                  obj = seance))
                     
         return
@@ -1824,7 +1870,7 @@ class Bloc(Elem_Dessin):
     #                 show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r),
     #                                wrap = False, couper = False)
     #                 
-    #                 seance.GetDocument().zones_sens.append(Zone([(x-r, y-r, 2*r, 2*r)],
+    #                 seance.GetDocument().zones_sens.append(Zone_sens([(x-r, y-r, 2*r, 2*r)],
     #                                                                  obj = seance))
     # #                seance.rect.append((x-r, y-r, 2*r, 2*r))
     #     else:
@@ -1839,7 +1885,7 @@ class Bloc(Elem_Dessin):
     #                     ctx.set_source_rgba (0,0,0,1)
     #                 ctx.stroke ()
     #                 
-    #                 seance.GetDocument().zones_sens.append(Zone([(x-wColSysteme/2, y-r, wColSysteme, 2*r)],
+    #                 seance.GetDocument().zones_sens.append(Zone_sens([(x-wColSysteme/2, y-r, wColSysteme, 2*r)],
     #                                                                  obj = seance))
     #                 
     # #                seance.rect.append((x-wColSysteme/2, y-r, wColSysteme, 2*r))
@@ -1873,7 +1919,7 @@ class Bloc(Elem_Dessin):
     # #    r = 0.008 * COEF
     #     boule(ctx, _x, y, r)
         
-                seance.GetDocument().zones_sens.append(Zone([rect], obj = seance))
+                seance.GetDocument().zones_sens.append(Zone_sens([rect], obj = seance))
     
                 seance.rect.append(rect)
 

@@ -315,11 +315,14 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
             if code in projet.sysML:
                 nf = file2imgfile(os.path.abspath(projet.sysML[code].GetAbsPath(projet.GetPath())))
                 if nf is not None:
-                    sourceHtml = sourceHtml.replace("[[ML"+str(i+1)+"]]", 
-                                                    image(nf[0]))
+                    img = image(nf[0])
+#                     sourceHtml = sourceHtml.replace("[[ML"+str(i+1)+"]]", img
+#                                                     )
                     if nf[1]:
                         asupp.append(nf[0])
-                
+                else:
+                    img = ""
+                sourceHtml = sourceHtml.replace("[[ML"+str(i+1)+"]]", img)
         
     # Le dossier "media"
     sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(util_path.PATH, r"..", DOSSIER_REF))
