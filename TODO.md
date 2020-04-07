@@ -6,13 +6,14 @@
 - [ ] Problème de nom, de position et de duplication du menu "Fenêtre" quand on ferme un document.
 - [ ] Mode plein écran, sur écran n°2 : les popup apparaissent sur l'écran n°1 !
 - [ ] Retours à la lignes qui apparaissent sans prévenir dans les champs des propriétés des Projets
+- [ ] Mise à jour automatique des images de la fiche
  
  
 # Fonctionnalités à apporter ou à améliorer
-- [x] Sortir les BO au format PDF de la distribution, et permettre leur téléchargement pui intégration aux données de l'application (Appdata)
+- [x] ~~Sortir les BO au format PDF de la distribution, et permettre leur téléchargement pui intégration aux données de l'application (Appdata)~~
 - [ ] Ajouter Logos de classe/établissement/enseignement
 - [ ] Implémenter les popup HTML dans les Projets et Progressions
-- [x] Progression : prévoir le choix de l'affichage du récapitulatif des Savoirs (pour l'instant, uniquement Compétences)
+- [x] ~~Progression : prévoir le choix de l'affichage du récapitulatif des Savoirs (pour l'instant, uniquement Compétences)~~
 - [ ] Ajout colonne "Commentaires" dans feuilles Sav_x (et popup sur arbre de sélection) - initialisé dans Ref_Spe_NSI
 - [ ] Projet : ~~Ajout des Fonctions de service~~ (les faire apparaitre sur la fiche)
 - [x] ~~Autosave~~
