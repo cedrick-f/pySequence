@@ -111,7 +111,7 @@ from pathvalidate import sanitize_filepath
 from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
-                    Grammaire, et2ou, \
+                    Grammaire, et2ou, img2str, safeParse, b64,\
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     getAncreFenetre, tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
                     
@@ -129,7 +129,7 @@ Element = type(ET.Element(None))
 from xml.dom.minidom import parseString
 
 from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
-                            img2str, getIconePaste, \
+                            getIconePaste, \
                             PanelPropriete_Progression, \
                             PanelPropriete_CI, PanelPropriete_LienSequence,\
                             PanelPropriete_Classe, PanelPropriete_Sequence, \
@@ -145,36 +145,6 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
 
 
 
-def b64(img):
-    return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
-        
-        
-
-def safeParse(nomFichier, toplevelwnd, silencieux = False):
-    if not os.path.isfile(nomFichier):
-        return
-    
-    fichier = open(nomFichier,'r', encoding='utf-8')
-    parser = ET.XMLParser(encoding="utf-8")
-#     print(nomFichier)
-#     root = ET.parse(fichier, parser = parser).getroot()
-#     fichier.close()
-#     return root
-    
-    
-    try:
-        root = ET.parse(fichier, parser = parser).getroot()
-        fichier.close()
-        return root
-     
-    except:# ET.ParseError:
-        if not silencieux:
-            messageErreur(toplevelwnd, "Fichier corrompu", 
-                              "Le fichier suivant est corrompu !!\n\n"\
-                              "%s\n\n" \
-                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
-        fichier.close()
-#         
     
 
 #######################################################################################  
@@ -1760,9 +1730,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
         # Chemin du fichier
         self.path = ""
         
-        self.proprietes = proprietes.ProprietesDoc(self, ["Généralités",
-                                                          "Affichage"])
+        self.proprietes = proprietes.ProprietesDoc(self)
         
+#         print("   proprietes1", self.proprietes.proprietes)
         #
         # Création du Tip (PopupInfo)
         #
@@ -2191,9 +2161,22 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.tip.SetWholeText("titre", "Équipe pédagogique impliquée dans " + typeDoc)
         self.tip.Supprime('img')
     
+        
     
+    #############################################################################
+    def sauveProprietes(self, nomFichier):
+        self.GetApp().fiche.fiche.associerParametres()
+        self.proprietes.sauv(nomFichier)
 
-    
+
+    #############################################################################
+    def ouvreProprietes(self, nomFichier):
+        
+        self.proprietes.ouvr(nomFichier)
+        self.GetApp().fiche.fiche.chargerParametres()
+        
+        
+        
 ####################################################################################################          
 class Sequence(BaseDoc, Grammaire):
     """Document de type Séquence pédagogique
@@ -3483,6 +3466,10 @@ class Sequence(BaseDoc, Grammaire):
                                              ["Exporter la fiche (PDF ou SVG)", self.app.exporterFiche,
                                               None,
                                               True],
+                                             ["Sauvegarder les propriétés", self.app.sauveProprietes, 
+                                              None, True],
+                                             ["Charger des propriétés", self.app.ouvreProprietes, 
+                                              None, True],
                                             ])
                 
                 
@@ -3762,6 +3749,8 @@ class Sequence(BaseDoc, Grammaire):
     def enregistrer(self, nomFichier, dialog = True):
 #         print "enregistrer", nomFichier, self.GetPath()
                 # La séquence
+        print("   proprietesX", self.proprietes.proprietes)
+        self.GetApp().fiche.fiche.associerParametres()
         sequence = self.getBranche()
         classe = self.classe.getBranche()
         proprietes = self.proprietes.getBranche()
@@ -5395,6 +5384,9 @@ class Projet(BaseDoc, Grammaire):
                                              ["Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, 
                                               None,
                                               True],
+                                             ["Sauvegarder les propriétés", self.sauvPropriete, 
+                                              None,
+                                              True],
                                             ])
             
 #        [u"Séquence pédagogique",
@@ -5427,7 +5419,7 @@ class Projet(BaseDoc, Grammaire):
         elif isinstance(self.arbre.GetItemPyData(itemArbre), FonctionService):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)         
             
-        elif self.arbre.GetItemText(itemArbre) == ref.getLabel("ELEVES").plur_(): # Eleve
+        elif self.arbre.GetItemText(itemArbre) == ref.getLabel("ELEVES").Plur_(): # Eleve
             self.app.AfficherMenuContextuel([["Ajouter "+ ref.getLabel("ELEVES").un_(), self.AjouterEleve, 
                                               scaleImage(images.Icone_ajout_eleve.GetBitmap()),
                                               True],
@@ -5972,11 +5964,13 @@ class Projet(BaseDoc, Grammaire):
         # Le projet
         projet = self.getBranche()
         classe = self.classe.getBranche()
+        proprietes = self.proprietes.getBranche()
         
         # La racine
         root = ET.Element("Projet_Classe")
         root.append(projet)
         root.append(classe)
+        root.append(proprietes)
         constantes.indent(root)
         
         return enregistrer_root(root, nomFichier, dialog = dialog)
@@ -5984,6 +5978,7 @@ class Projet(BaseDoc, Grammaire):
 
 
 
+        
 
 
 ####################################################################################################

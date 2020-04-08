@@ -40,6 +40,11 @@ Génération de documents PDF.
 
 from  constantes import ellipsizer, getAnneeScolaireStr, \
                         LONG_MAX_PROBLEMATIQUE, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
+from Referentiel import DOSSIER_REF
+
+import constantes
+
+
 import util_path
 import os.path
 from itertools import zip_longest
@@ -48,6 +53,18 @@ import sys
 from xhtml2pdf import pisa
 
 from file2bmp import *
+
+import wx
+
+import tempfile
+import shutil
+# from PyPDF2 import PdfFileMerger
+import fitz
+
+if sys.platform == "win32":  
+    import grilles
+    
+    
 
 #from textwrap import wrap
 #import csv
@@ -210,7 +227,7 @@ def case_a_cocher(labels, etats, size = 16):
     for c in colonnes:
         typo = c.split("\n")
         hc = []
-        for i, t in enumerate(typo):
+        for t in typo:
             hc.append(checkbox(e in etats) + t)
             e += 1
         html += encap("<br>".join(hc), "td")
@@ -310,7 +327,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     # Les diagrammes sysML
     prj = projet.GetProjetRef()
     if prj.attributs['SML'][0] != "":
-        for i, n in enumerate(prj.attributs['SML'][2]):
+        for i, _ in enumerate(prj.attributs['SML'][2]):
             code = "SML"+str(i)
             if code in projet.sysML:
                 nf = file2imgfile(os.path.abspath(projet.sysML[code].GetAbsPath(projet.GetPath())))
@@ -535,16 +552,14 @@ def genererFicheValidation(nomFichier, projet):
     
     try:
         doc.build(story)
-    except doctemplate.LayoutError as err:
+    except doctemplate.LayoutError:
         Err.append("Paragraphe trop grand")
 
     return Err
     
 #genererFicheValidation(u"Intitulé du projet")
     
-from Referentiel import DOSSIER_REF
 
-import constantes
 
 def genererDossierValidation(nomFichier, projet, fenDoc):
     Err = []
@@ -613,8 +628,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 
 
 
-if sys.platform == "win32":  
-    import grilles
+
 
 
 
@@ -713,7 +727,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
 
 
 
-import wx
+
 
 
 # Détermination du lecteur de PDF à utiliser
@@ -771,10 +785,7 @@ if not NOT_USE_ADOBE:
 #    print "MAC !!"
 
 #    from wx.lib.pdfviewer import pdfViewer
-import tempfile
-import shutil
-# from PyPDF2 import PdfFileMerger
-import fitz
+
 
 
 def getPDFViewer():

@@ -358,7 +358,7 @@ class Projet(Base_Fiche_Doc):
     def getCoulComp(self, partie, alpha = 1.0):
         if partie in self.ICoulComp:
             return (*self.ICoulComp[partie][:3], alpha)  
-        return (self.ICoulComp[''][:3], alpha)
+        return (*self.ICoulComp[''][:3], alpha)
 
     
     ######################################################################################  
@@ -734,7 +734,8 @@ class Projet(Base_Fiche_Doc):
                     for j, part in enumerate(parties.keys()):
                         
                         BarreH(self, self.posZElevesH[0], y+(j+1)*hb, 
-                               self.tailleZElevesH[0], ev[part][0], ev[part][1], hb, 
+                               self.tailleZElevesH[0], 
+                               ev[part][0], ev[part][1], hb, 
                                (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
                                self.getCoulComp(part)).draw()
                     

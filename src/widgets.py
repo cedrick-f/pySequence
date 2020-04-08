@@ -51,9 +51,36 @@ from pathvalidate import sanitize_filepath
 
 
 
+#############################################################################################################
+#
+# Pour convertir les images en texte
+# 
+#############################################################################################################
+import base64, io
+try:
+    b64encode = base64.b64encode
+except AttributeError:
+    b64encode = base64.encodestring
+    
+# import tempfile
 
+def img2str(img):
+    """
+    """
+    # Ca ne marche pas : pas en PNG, str trop longue !
+    #return b64encode(img.GetData())
     
+    # Version BytesIO : plus rapide que la version fichier (-20%)
+    s = io.BytesIO()
+    img.SaveFile(s, wx.BITMAP_TYPE_PNG)
+    s.seek(0)
+    return b64encode(s.read())
     
+
+def b64(img):
+    return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
+        
+        
     
     
 ######################################################################################  
@@ -2143,10 +2170,12 @@ class CustomComboBox(combo.BitmapComboBox):
 import xml.etree.ElementTree as ET
 from util_path import SYSTEM_ENCODING
 ##################################################################################################    
-def enregistrer_root(root, nomFichier, dialog = True):
+def enregistrer_root(root, nomFichier, dialog = True, xml_declaration = False):
 #     fichier = open(nomFichier, 'w')
     try:
-        ET.ElementTree(root).write(nomFichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
+        ET.ElementTree(root).write(nomFichier, 
+                                   xml_declaration=xml_declaration, 
+                                   encoding = SYSTEM_ENCODING)
         return True
     
     except IOError:
@@ -2164,6 +2193,38 @@ def enregistrer_root(root, nomFichier, dialog = True):
     return False
 #     fichier.close()
     
+
+
+
+
+def safeParse(nomFichier, toplevelwnd, silencieux = False):
+    if not os.path.isfile(nomFichier):
+        return
+    
+    fichier = open(nomFichier,'r', encoding='utf-8')
+    parser = ET.XMLParser(encoding="utf-8")
+#     print(nomFichier)
+#     root = ET.parse(fichier, parser = parser).getroot()
+#     fichier.close()
+#     return root
+    
+    
+    try:
+        root = ET.parse(fichier, parser = parser).getroot()
+        fichier.close()
+        return root
+     
+    except:# ET.ParseError:
+        if not silencieux:
+            messageErreur(toplevelwnd, "Fichier corrompu", 
+                              "Le fichier suivant est corrompu !!\n\n"\
+                              "%s\n\n" \
+                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+        fichier.close()
+#         
+
+
+
 #############################################################################################################
 def messageErreur(parent, titre, message, icon = wx.ICON_WARNING):
     dlg = wx.MessageDialog(parent, message, titre,
@@ -2561,11 +2622,11 @@ class XMLelem():
         
         
     ######################################################################################
-    def setBranche(self, branche):
+    def setBranche(self, branche, module = ""):
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
-#        print "setBranche", self._codeXML, self
+        print("setBranche", self._codeXML, self)
     
         nomerr = []
         
@@ -2621,19 +2682,23 @@ class XMLelem():
                 sbranche = branche.find(nom)
                 d = {}
                 if sbranche != None:
-                    for k, sb in list(sbranche.items()):
+                    for k, sb in sbranche.items():
 #                        print k, sb
 #                        _k = k[2:]
                         _k = k.split("_")[1]
                         if isinstance(_k, str) and "--" in _k:
                             _k = _k.replace("--", "\n")
                         d[_k] = lect(sbranche, k)
+                    
                     for sb in list(sbranche):
                         k = sb.tag
 #                        _k = k[2:]
                         _k = k.split("_")#[1]
                         if len(_k) == 3:#k =="":#_k[0] == "_":
-                            _k = int(_k[2])
+                            try:
+                                _k = int(_k[2])
+                            except:
+                                _k = "_".join(_k[1:])
                         else:
                             _k = _k[1]
                         if isinstance(_k, str) and "--" in _k:
@@ -2643,8 +2708,11 @@ class XMLelem():
             
             else:
                 sbranche = branche.find(nom)
-                classe = get_class(nom.split("_")[0])
-                obj, err = classe.setBranche(sbranche)
+#                 print(nom)
+                classe = get_class(nom.split("_")[0], module = module)
+#                 print(classe)
+                obj, err = classe().setBranche(sbranche)
+                print(">>>", obj)
                 nomerr.extend(err)
                 return obj
 
@@ -2669,7 +2737,7 @@ class XMLelem():
                     _attr = "d_"+attr
                 else:
                     _attr = None
-
+                print("attr:",_attr)
                 if _attr != None:
                     v = lect(branche, _attr.replace("\n", "--"))
                     setattr(self, attr, v)
@@ -2748,11 +2816,16 @@ class XMLelem():
         return True
 
 
-def get_class( kls ):
+def get_class( kls ,module = "" ):
     parts = kls.split('.')
-    module = ".".join(parts[:-1])
+    if module == "":
+        module = ".".join(parts[:-1])
+        parts = parts[1:]
+    
+#     print("  ", parts)
+    
     m = __import__( module )
-    for comp in parts[1:]:
+    for comp in parts:
         m = getattr(m, comp)            
     return m
 

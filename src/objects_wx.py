@@ -180,7 +180,7 @@ import draw_cairo_prg2 as draw_cairo_prg
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, Grammaire, \
-                    et2ou, FullScreenWin, \
+                    et2ou, FullScreenWin, safeParse,\
                     TextCtrl_Help, CloseFenHelp, DelayedResult, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
@@ -2227,6 +2227,49 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             dlg.Destroy()
     
     
+    #############################################################################
+    def ouvreProprietes(self, event = None):
+        mesFormats =  "xml (.xml)|*.xml"
+
+        dlg = wx.FileDialog(
+                            self, message="Ouvrir un fichier de propriétés",
+#                                defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
+                            )
+
+        if dlg.ShowModal() == wx.ID_OK:
+            nomFichier = dlg.GetPath()#.decode(FILE_ENCODING)
+
+        else:
+            nomFichier = r''
+        
+        dlg.Destroy()
+        if nomFichier != r'':
+            self.GetDocument().ouvreProprietes(nomFichier)
+#         print("fin")
+    
+    
+    #############################################################################
+    def sauveProprietes(self, event = None):
+        mesFormats = "xml (.xml)|*.xml"
+        dlg = wx.FileDialog(self, 
+                            message = "Enregistrement des propriétés de", 
+                            defaultDir=toSystemEncoding(self.DossierSauvegarde) , # encodage?
+                            defaultFile="", wildcard=mesFormats, 
+                            style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT|wx.FD_CHANGE_DIR
+                            )
+        dlg.SetFilterIndex(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()#.decode(FILE_ENCODING)
+            dlg.Destroy()
+            self.GetDocument().sauveProprietes(path)
+            return path
+        else:
+            dlg.Destroy()
+        
+    
     ###############################################################################################
     def enregistrer(self, nomFichier):
         """Enregistrement
@@ -2397,11 +2440,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         ctx.scale(1.0, 1.0) 
         if self.typ == 'seq':
 #             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
-            draw_cairo_seq.Sequence(ctx, self.sequence, mouchard = True).draw()
+            draw_cairo_seq.Sequence(self.sequence, mouchard = True).draw(ctx)
         elif self.typ == 'prj':
-            draw_cairo_prj.Projet(ctx, self.projet).draw()
+            draw_cairo_prj.Projet(self.projet).draw().draw(ctx)
         elif self.typ == 'prg':
-            draw_cairo_prg.Draw(ctx, self.progression)
+            draw_cairo_prg.Progression(self.progression).draw(ctx)
              
         SVGsurface.finish()
    
@@ -2423,7 +2466,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
             pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
         """
-
+        print('exporterFicheHTML')
         # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
         tf = tempfile.mkstemp()[1]+".svg"
         SVGsurface = cairo.SVGSurface(tf, 707, 1000)
@@ -2433,11 +2476,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         ctx.scale(1.0, 1.0) 
         if self.typ == 'seq':
 #             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
-            draw_cairo_seq.Sequence(ctx, self.sequence, mouchard = True).draw()
+            draw_cairo_seq.Sequence(self.sequence, mouchard = True).draw(ctx)
         elif self.typ == 'prj':
-            draw_cairo_prj.Draw(ctx, self.projet)
+            draw_cairo_prj.Projet(self.projet).draw(ctx)
         elif self.typ == 'prg':
-            draw_cairo_prg.Draw(ctx, self.progression)
+            draw_cairo_prg.Progression(self.progression).draw(ctx)
              
         SVGsurface.finish()
    
@@ -2555,7 +2598,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             path = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             
-            dir, ext = os.path.splitext(path)
+#             dir, ext = os.path.splitext(path)
             if os.path.exists(dir):
                 dlg = wx.MessageDialog(self, "Le dossier suivant existe déja :\n\n%s\n\n"\
                                              "Si vous continuez, il sera effacé !\n\n"\
@@ -3171,7 +3214,7 @@ class FenetreSequence(FenetreDocument):
                                    wx.GetTopLevelParent(self))
         dlg.Show()
 
-        root = pysequence.safeParse(nomFichier, wx.GetTopLevelParent(self))
+        root = safeParse(nomFichier, wx.GetTopLevelParent(self))
         if root is None:
             dlg.Close()
             return None#, "", 0, False, True
@@ -3227,9 +3270,20 @@ class FenetreSequence(FenetreDocument):
                 self.sequence.MiseAJourTypeEnseignement()
             
             # Les propriétés
+#             print("   proprietes4", self.sequence.proprietes.proprietes)
             prop = root.find("ProprietesDoc")
             if prop is not None:
                 self.sequence.proprietes.setBranche(prop)
+                
+            
+                
+#             print("   proprietes5", self.sequence.proprietes.categories)    
+            # Chargement des paramètres depuis les propriétes de la séquence
+            self.sequence.GetApp().fiche.fiche.chargerParametres()
+#             print("   proprietes6", self.sequence.proprietes.categories)
+            
+            
+            
             
             return root, message, count, Ok, Annuler
 
@@ -3661,7 +3715,7 @@ class FenetreProjet(FenetreDocument):
         dlg.Show()
 
 #         self.fiche.Hide()
-        root = pysequence.safeParse(nomFichier, dlg)
+        root = safeParse(nomFichier, dlg)
         if root is None:
             dlg.Close()
             return None#, "", 0, False, True
@@ -4505,7 +4559,7 @@ class FenetreProgression(FenetreDocument):
 #         print(wx.GetTopLevelParent(self))
 #         self.fiche.Hide()
         
-        root = pysequence.safeParse(nomFichier, dlg)
+        root = safeParse(nomFichier, dlg)
         if root is None:
             dlg.Close()
             return None#, "", 0, False, True
@@ -4691,7 +4745,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4955,7 +5009,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 # from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow, DelayedResult):
+class BaseFiche2(wx.ScrolledWindow, DelayedResult):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5284,7 +5338,7 @@ class FicheSequence(BaseFiche):
 
 
         self.fiche = draw_cairo_seq.Sequence(sequence)
-        
+#         print("   proprietes3", self.sequence.proprietes.proprietes)
         
         
     ######################################################################################################
@@ -7985,7 +8039,7 @@ class ListeCI(wx.Panel):
         self.SetCode(num, cod)
         
         self.list.SetStringItem(num, 0, tit)
-        for i, c in enumerate(self.lstCb):
+        for i, _ in enumerate(self.lstCb):
             self.list.SetStringItem(num, i+1, "", it_kind=1)
             
         self.list.Select(num)
@@ -13467,7 +13521,7 @@ class PanelPropriete_Groupe(PanelPropriete):
                 break
 #        print "   ", lst
         if len(lst) > 0:
-            lst = sorted(list(set([v for e, v in lst])))
+            lst = sorted(list(set([v for _, v in lst])))
 #        print "Villes", lst
 
         self.cbv.Set(lst)
@@ -16136,7 +16190,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
         GetChild = GetFirstChild
         cookie = 1
-        for i in range(nc):
+        for _ in range(nc):
             child, cookie = GetChild(parent, cookie)
             GetChild = self.GetNextChild
             yield child
@@ -18482,7 +18536,7 @@ class ChoixCompetenceEleve(wx.Panel):
         self.parent = parent
         
         cb = []
-        for e in projet.eleves:
+        for _ in projet.eleves:
             cb.append(wx.CheckBox(self, -1, ""))
             sizer.Add(cb[-1], 1, flag = wx.EXPAND)
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb[-1])
@@ -20493,30 +20547,7 @@ class DirSelectorCombo(combo.ComboCtrl):
 
 
         
-#############################################################################################################
-#
-# Pour convertir les images en texte
-# 
-#############################################################################################################
-import base64
-try:
-    b64encode = base64.b64encode
-except AttributeError:
-    b64encode = base64.encodestring
-    
-import tempfile
 
-def img2str(img):
-    """
-    """
-    # Ca ne marche pas : pas en PNG, str trop longue !
-    #return b64encode(img.GetData())
-    
-    # Version BytesIO : plus rapide que la version fichier (-20%)
-    s = io.BytesIO()
-    img.SaveFile(s, wx.BITMAP_TYPE_PNG)
-    s.seek(0)
-    return b64encode(s.read())
     
     
 #     # Version fichier sur le disque : long !! (mais ça marche

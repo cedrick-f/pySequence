@@ -27,11 +27,10 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-# from draw_cairo import *
 import cairocffi as cairo
 from draw_cairo2 import *
 
-from math import sqrt, pi, cos, sin
+from math import pi, cos, sin
 from couleur import CouleurFloat2CSS, CouleurInt2Float
 
 #import textwrap
@@ -60,7 +59,7 @@ from proprietes import *
 
 
 
-
+_torad = pi/180
 
 
 
@@ -113,87 +112,87 @@ class Sequence(Base_Fiche_Doc):
         
         
         # CI
-        self.tailleCI = (0.17 * COEF, 0.085 * COEF)
+        self.p_siz_CI = (0.17 * COEF, 0.085 * COEF)
         #posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
-        self.posCI = (self.margeX, self.margeY)
-        self.Icoul_CI = (0.9, 0.8, 0.8, 0.85)
-        self.Bcoul_CI = (0.3, 0.2, 0.25, 1)
-        self.fontCI = 0.014 * COEF
+        self.pos_CI = (self.margeX, self.margeY)
+        self.p_Icol_CI = (0.9, 0.8, 0.8, 0.85)
+        self.p_Bcol_CI = (0.3, 0.2, 0.25, 1)
+        self.p_font_CI = 0.014 * COEF
         
         # Rectangle des prerequis
-        self.taillePre = (0.28 * COEF, 0.18 * COEF - self.tailleCI[1] - self.ecartY)
-        self.posPre = (self.margeX, self.posCI[1] + self.tailleCI[1] + self.ecartY)
-        self.Icoul_Pre = (0.8, 0.8, 0.9, 0.85)
-        self.Bcoul_Pre = (0.2, 0.25, 0.3, 1)
-        self.fontPre = 0.014 * COEF
+        self.siz_Pre = (0.28 * COEF, 0.18 * COEF - self.p_siz_CI[1] - self.ecartY)
+        self.pos_Pre = (self.margeX, self.pos_CI[1] + self.p_siz_CI[1] + self.ecartY)
+        self.p_Icol_Pre = (0.8, 0.8, 0.9, 0.85)
+        self.p_Bcol_Pre = (0.2, 0.25, 0.3, 1)
+        self.p_font_Pre = 0.014 * COEF
         
         # Position dans l'année
-        self.posPos = [None, self.margeY - self.ecartY/2]
-        self.taillePos = [None, 0.04 * COEF]
+        self.pos_Pos = [None, self.margeY - self.ecartY/2]
+        self.siz_Pos = [None, 0.04 * COEF]
         
         # Rectangle des objectifs
-        self.posObj = (self.posPre[0] + self.taillePre[0] + self.ecartX/2, self.margeY + self.taillePos[1] + self.ecartY/2)
-        self.tailleObj = [self.LargeurTotale - self.margeX - self.posObj[0], self.posPre[1] + self.taillePre[1] - self.posObj[1]]
-        self.Icoul_Obj = (0.8, 0.9, 0.8, 0.85)
-        self.Bcoul_Obj = (0.25, 0.3, 0.2, 1)
-        self.fontObj = 0.014 * COEF
+        self.pos_Obj = (self.pos_Pre[0] + self.siz_Pre[0] + self.ecartX/2, self.margeY + self.siz_Pos[1] + self.ecartY/2)
+        self.siz_Obj = [self.LargeurTotale - self.margeX - self.pos_Obj[0], self.pos_Pre[1] + self.siz_Pre[1] - self.pos_Obj[1]]
+        self.p_Icol_Obj = (0.8, 0.9, 0.8, 0.85)
+        self.p_Bcol_Obj = (0.25, 0.3, 0.2, 1)
+        self.p_font_Obj = 0.014 * COEF
         
         # Cible
-        self.posCib = [self.posCI[0] + self.tailleCI[0] + self.ecartX/4, self.margeY - self.ecartY/2]
-        self.tailleCib = [self.posObj[0] - self.posCI[0] - self.tailleCI[0] - self.ecartX/2, None]
-        self.tailleCib[1] = self.tailleCib[0] 
-        self.Icoul_Cib = (0.8, 0.8, 1, 0.85)
-        self.Bcoul_Cib = (0.1, 0.1, 0.25, 1)
-        self.centreCib = (self.posCib[0] + self.tailleCib[0] / 2 + 0.0006 * COEF, 
-                     self.posCib[1] + self.tailleCib[1] / 2 - 0.0015 * COEF)
+        self.pos_Cib = [self.pos_CI[0] + self.p_siz_CI[0] + self.ecartX/4, self.margeY - self.ecartY/2]
+        self.siz_Cib = [self.pos_Obj[0] - self.pos_CI[0] - self.p_siz_CI[0] - self.ecartX/2, None]
+        self.siz_Cib[1] = self.siz_Cib[0] 
+        self.p_Icol_Cib = (0.8, 0.8, 1, 0.85)
+        self.p_Bcol_Cib = (0.1, 0.1, 0.25, 1)
+        self.ctr_Cib = (self.pos_Cib[0] + self.siz_Cib[0] / 2 + 0.0006 * COEF, 
+                     self.pos_Cib[1] + self.siz_Cib[1] / 2 - 0.0015 * COEF)
         
         # Zone de commentaire
-        self.fontIntComm = 0.01* COEF
-        self.posComm = [self.margeX, None]
-        self.tailleComm = [self.LargeurTotale-2*self.margeX, None]
+        self.p_font_Com = 0.01* COEF
+        self.pos_Com = [self.margeX, None]
+        self.siz_Com = [self.LargeurTotale-2*self.margeX, None]
         self.intComm = []
         
         # Zone d'organisation de la séquence (intérieur du grand cadre vert - bordure)
-        self.bordureZOrganis = 0.01 * COEF
-        self.posZOrganis = (self.margeX+self.bordureZOrganis, 0.24 * COEF)
-        self.tailleZOrganis = [self.LargeurTotale-2*(self.margeX+self.bordureZOrganis), None]
+        self.p_mrg_Org = 0.01 * COEF
+        self.pos_Org = (self.margeX+self.p_mrg_Org, 0.24 * COEF)
+        self.siz_Org = [self.LargeurTotale-2*(self.margeX+self.p_mrg_Org), None]
         
         
         # # Rectangle de l'intitulé
         # tailleIntitule = [0.4 * COEF, 0.04 * COEF]
         # posIntitule = [(LargeurTotale-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
-        self.Icoul_Intitule = (0.98, 0.99, 0.98, 0.8)
-        self.Bcoul_Intitule = (0.2, 0.8, 0.2, 1)
-        self.FontIntitule = 0.02 * COEF
+        self.p_Icol_Int = (0.98, 0.99, 0.98, 0.8)
+        self.p_Bcol_Int = (0.2, 0.8, 0.2, 1)
+        self.p_font_Int = 0.02 * COEF
         
         # Zone de déroulement de la séquence
-        self.posZDeroul = (self.margeX+self.ecartX/2, self.posZOrganis[1]+0.06 * COEF)
-        self.tailleZDeroul = [None, None]
+        self.pos_Der = (self.margeX+self.ecartX/2, self.pos_Org[1]+0.06 * COEF)
+        self.siz_Der = [None, None]
         
         # Zone du tableau des Systèmes
-        self.posZSysteme = [None, self.posZOrganis[1]+0.01 * COEF]
-        self.tailleZSysteme = [None, None]
-        self.wColSysteme = 0.025 * COEF
+        self.pos_Sys = [None, self.pos_Org[1]+0.01 * COEF]
+        self.siz_Sys = [None, None]
+        self.p_wCol_Sys = 0.025 * COEF
         self.xSystemes = {}
         
         # Zone du tableau des démarches
-        self.posZDemarche = [None, self.posZSysteme[1]]
-        self.tailleZDemarche = [0.02 * COEF, None]
+        self.pos_Dem = [None, self.pos_Sys[1]]
+        self.siz_Dem = [0.02 * COEF, None]
         # xDemarche = {"I" : None,
         #              "R" : None,
         #              "P" : None}
         
         # Zone des intitulés des séances
-        self.fontIntSeances = 0.01 * COEF
-        self.posZIntSeances = [0.06 * COEF, None]
-        self.tailleZIntSeances = [self.LargeurTotale-0.12 * COEF, None]
-        self.hIntSeance = 0.02 * COEF
+        self.p_font_ISea = 0.01 * COEF
+        self.pos_ISea = [0.06 * COEF, None]
+        self.siz_ISea = [self.LargeurTotale-0.12 * COEF, None]
+#         self.p_h_ISea = 0.02 * COEF
         self.intituleSeances = []
         
         # Zone des séances
-        self.largeFlecheDuree = 0.02 * COEF
-        self.posZSeances = (self.posZDeroul[0] + self.largeFlecheDuree, self.posZOrganis[1]+0.08 * COEF)
-        self.tailleZSeances = [None, None]
+        self.p_w_Dur = 0.02 * COEF
+        self.pos_Sea = (self.pos_Der[0] + self.p_w_Dur, self.pos_Org[1]+0.08 * COEF)
+        self.siz_Sea = [None, None]
         # wEff =  {"C" : None,
         #          "G" : None,
         #          "D" : None,
@@ -202,8 +201,8 @@ class Sequence(Base_Fiche_Doc):
         #          "I" : None
         #          }
         #hHoraire = None
-        self.ecartSeanceY = None
-        self.BCoulSeance = {"ED" : (0.3,0.5,0.5), 
+        self.ey_Sea = None
+        self.p_Bcol_Sea_ = {"ED" : (0.3,0.5,0.5), 
                            "AP" : (0.5,0.3,0.5), 
                            "P"  : (0.5,0.5,0.3), 
                            "EPI" : (0.5,0.5,0.3), 
@@ -218,7 +217,7 @@ class Sequence(Base_Fiche_Doc):
                            "DM": (0.51,0.29,0.24),
                            "ST" : (0.12,0.29,0.53)}
         
-        self.ICoulSeance = {"ED" : (0.6, 0.8, 0.8), 
+        self.p_Icol_Sea_ = {"ED" : (0.6, 0.8, 0.8), 
                            "AP" : (0.8, 0.6, 0.8), 
                            "P"  : (0.8, 0.8, 0.6), 
                            "EPI"  : (0.8, 0.8, 0.6), 
@@ -234,7 +233,7 @@ class Sequence(Base_Fiche_Doc):
                            "DM": (0.86,0.49,0.41),
                            "ST" : (0.21,0.49,0.54)}
         
-        self.BStylSeance = {"ED" : [], 
+        self.Bstyl_Sea = {"ED" : [], 
                            "AP" : [], 
                            "P"  : [], 
                            "EPI"  : [], 
@@ -251,51 +250,49 @@ class Sequence(Base_Fiche_Doc):
                            "ST" : [0.01 * COEF, 0.005 * COEF]}
 
 
-        self.associerParametres()
-        
-        
-        
-        
-        
-        
-        
-        
+
         
     #####################################################################################
-    def getParametres(self):
-        """ Renvoi une dict de {code : proprietes.PropPropriete}
-            des paramètres à sauvegarder
-             - couleurs
-             - ...
-        """
-        l = {}
-        for c in ["Bcoul_Pre", "Icoul_Pre", "Bcoul_Pre", "Icoul_Pre", 
-                  "Bcoul_Obj", "Icoul_Obj", "Bcoul_Cib", "Icoul_Cib", 
-                  "Bcoul_Intitule", "Icoul_Intitule", 
-                  "BCoulSeance", "ICoulSeance", "BStylSeance"]:
-            l[c] = PropPropriete(c, getattr(self, c), "coul", 
-                                   cat = "Couleurs", grp = "Affichage")
-        return l
-    
-    
-    ##########################################################################################
-    def associerParametres(self):
-        """ Renvoi une lite de proprietes.PropPropriete des paramètres à sauvegarder
-             - couleurs
-             - ...
-        """
-        if self.seq is not None:
-            self.seq.proprietes.update(self.getParametres())
-        
-    
-    
-#     ##########################################################################################
-#     def chargerParametres(self):
-#         for param in self.getParametres():
-#             for p in self.sequence.proprietes:
-#                 if p[code] == param setattr()
+    def getDocument(self):
+        return self.seq
         
         
+    ######################################################################################  
+    def getGroupes(self):
+        doc = self.getDocument()
+        if doc is None:
+            return {}
+        ref = doc.GetReferentiel()
+        
+        return {"CI" : ref._nomCI.Plur_(),
+                "Pre" : "Prérequis",
+                "Obj" : "Objectifs",
+                "Cib" : "Cible MEI",
+                "ISea" : f"Intitulés des {ref._nomSeances.plur_()}",
+                "Sys" : ref._nomSystemes.Plur_(),
+                "Sea" : ref._nomSeances.Plur_(),
+                "Com" : "Commentaires",
+                "Int" : "Intitulé de la séquence",
+                "Dur" : "Durée de la séquence",
+                "Org" : "Zone d'organisation de la séquence",
+                }
+    
+    
+    ######################################################################################  
+    def getSSGroupes(self):
+        doc = self.getDocument()
+        if doc is None:
+            return {}
+        
+        ref = doc.GetReferentiel()
+        
+        sg = {}
+        for c, s in ref.seances.items():
+            sg[c] = s[0]
+        
+        return sg
+    
+    
     ######################################################################################  
     def calcH(self, t):
         return self.a*t+self.b
@@ -308,20 +305,20 @@ class Sequence(Base_Fiche_Doc):
             en fonction du nombre d'éléments (séances, systèmes)
         """
 #         global a, b , ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
-        ref = self.seq.GetReferentiel()
+#         ref = self.seq.GetReferentiel()
         
         #hHoraire
         # Zone de commentaire
         if self.seq.commentaires == "":
-            self.tailleComm[1] = 0
+            self.siz_Com[1] = 0
         else:
-            self.tailleComm[1], self.intComm = calc_h_texte(ctx, "Commentaires : " + self.seq.commentaires, 
-                                                            self.tailleComm[0], self.fontIntComm)
+            self.siz_Com[1], self.intComm = calc_h_texte(ctx, "Commentaires : " + self.seq.commentaires, 
+                                                            self.siz_Com[0], self.p_font_Com)
     
-        self.posComm[1] = 1 * COEF - self.tailleComm[1] - self.margeY
+        self.pos_Com[1] = 1 * COEF - self.siz_Com[1] - self.margeY
         
         # Zone d'organisation de la séquence (grand cadre)
-        self.tailleZOrganis[1] = self.posComm[1]-self.posZOrganis[1]-self.bordureZOrganis
+        self.siz_Org[1] = self.pos_Com[1]-self.pos_Org[1]-self.p_mrg_Org
     
     #     # Rectangle de l'intitulé
     #     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
@@ -330,50 +327,50 @@ class Sequence(Base_Fiche_Doc):
     #    print "Zone des intitulés des séances"
         #                  titres    contenus    hauteurs de ligne
         self.intituleSeances = [[],      [],         []]
-        self.tailleZIntSeances[1] = 0
+        self.siz_ISea[1] = 0
         
         self.intituleSeances[0], lstInt = self.seq.GetIntituleSeances()
         for intS in lstInt:
-            h, t = calc_h_texte(ctx, intS, self.tailleZIntSeances[0], self.fontIntSeances)
+            h, t = calc_h_texte(ctx, intS, self.siz_ISea[0], self.p_font_ISea)
             self.intituleSeances[2].append(h)
             self.intituleSeances[1].append(t)
     #        intituleSeances.append([intS[0],h,t])
-            self.tailleZIntSeances[1] += h
+            self.siz_ISea[1] += h
         
     
     #    tailleZIntSeances[1] = len(seq.GetIntituleSeances()[0])* hIntSeance
-        self.posZIntSeances[1] = self.posZOrganis[1] + self.tailleZOrganis[1] - self.tailleZIntSeances[1]
+        self.pos_ISea[1] = self.pos_Org[1] + self.siz_Org[1] - self.siz_ISea[1]
         
         # Zone du tableau des Systèmes
         systemes = self.seq.GetSystemesUtilises(niveau = 0)
-        self.tailleZSysteme[0] = self.wColSysteme * len(systemes)
-        self.tailleZSysteme[1] = self.tailleZOrganis[1] - self.ecartY - self.tailleZIntSeances[1]
-        self.posZSysteme[0] = self.posZOrganis[0] + self.tailleZOrganis[0] - self.tailleZSysteme[0]
+        self.siz_Sys[0] = self.p_wCol_Sys * len(systemes)
+        self.siz_Sys[1] = self.siz_Org[1] - self.ecartY - self.siz_ISea[1]
+        self.pos_Sys[0] = self.pos_Org[0] + self.siz_Org[0] - self.siz_Sys[0]
         for i, s in enumerate(systemes):
-            self.xSystemes[s.nom] = self.posZSysteme[0] + (i+0.5) * self.wColSysteme
+            self.xSystemes[s.nom] = self.pos_Sys[0] + (i+0.5) * self.p_wCol_Sys
         
         
         # Zone du tableau des démarches
         if len(self.seq.classe.GetReferentiel().listeDemarches) > 0:
-            self.tailleZDemarche[0] = 0.02 * COEF
-            self.posZDemarche[0] = self.posZSysteme[0] - self.tailleZDemarche[0] - self.ecartX/2
-            self.tailleZDemarche[1] = self.tailleZSysteme[1]
+            self.siz_Dem[0] = 0.02 * COEF
+            self.pos_Dem[0] = self.pos_Sys[0] - self.siz_Dem[0] - self.ecartX/2
+            self.siz_Dem[1] = self.siz_Sys[1]
     #         xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
     #         xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
     #         xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
         else:
-            self.tailleZDemarche[0] = 0
-            self.tailleZDemarche[1] = self.tailleZSysteme[1]
-            self.posZDemarche[0] = self.posZSysteme[0] - self.tailleZDemarche[0] - self.ecartX/2
+            self.siz_Dem[0] = 0
+            self.siz_Dem[1] = self.siz_Sys[1]
+            self.pos_Dem[0] = self.pos_Sys[0] - self.siz_Dem[0] - self.ecartX/2
                      
         # Zone de déroulement de la séquence
-        self.tailleZDeroul[0] = self.posZDemarche[0] - self.posZDeroul[0] - self.ecartX/2
-        self.tailleZDeroul[1] = self.tailleZOrganis[1] - self.posZDeroul[1] + self.posZOrganis[1] - self.ecartY/2
+        self.siz_Der[0] = self.pos_Dem[0] - self.pos_Der[0] - self.ecartX/2
+        self.siz_Der[1] = self.siz_Org[1] - self.pos_Der[1] + self.pos_Org[1] - self.ecartY/2
         
         
         # Zone des séances
-        self.tailleZSeances[0] = self.tailleZDeroul[0] - self.ecartX# - largeFlecheDuree - ecartX - bordureZOrganis#0.05 # écart pour les durées
-        self.tailleZSeances[1] = self.tailleZSysteme[1] - self.posZSeances[1] + self.posZDeroul[1] - 0.05 * COEF
+        self.siz_Sea[0] = self.siz_Der[0] - self.ecartX# - largeFlecheDuree - ecartX - bordureZOrganis#0.05 # écart pour les durées
+        self.siz_Sea[1] = self.siz_Sys[1] - self.pos_Sea[1] + self.pos_Der[1] - 0.05 * COEF
     #     wEff = {"C" : tailleZSeances[0],
     #              "G" : tailleZSeances[0]*6/7,
     #              "D" : tailleZSeances[0]*3/7,
@@ -401,7 +398,7 @@ class Sequence(Base_Fiche_Doc):
     #             wEff[k] = tailleZSeances[0] * seq.classe.GetEffectifNorm(k) * seq.classe.nbrGroupes[ref.effectifs[k][4]]
                 
     #    print "durées :"
-        self.ecartSeanceY = 0.006 * COEF    # écart mini entre deux séances
+        self.ey_Sea = 0.006 * COEF    # écart mini entre deux séances
         hmin = 0.016   * COEF           # hauteur minimum d'une séance
         tmin = self.seq.GetDureeGraphMini() # durée minimale de séance
         n = len(self.seq.seances)
@@ -410,23 +407,23 @@ class Sequence(Base_Fiche_Doc):
         
         if d == 0:
             self.a = 0
-            self.b = (self.tailleZSeances[1] - self.ecartSeanceY*(n-1)) / n
+            self.b = (self.siz_Sea[1] - self.ey_Sea*(n-1)) / n
         else:
-            self.a = (self.tailleZSeances[1] - self.ecartSeanceY*(n-1) - n*hmin) / d
+            self.a = (self.siz_Sea[1] - self.ey_Sea*(n-1) - n*hmin) / d
             if self.a < 0:
                 self.a = 0
-                self.b = (self.tailleZSeances[1] - self.ecartSeanceY*(n-1)) / n
+                self.b = (self.siz_Sea[1] - self.ey_Sea*(n-1)) / n
             else:
                 self.b = hmin - self.a * tmin
                 if self.b < 0:
-                    self.a = (self.tailleZSeances[1] - (n-1)*self.ecartSeanceY) / self.seq.GetDureeGraph()
+                    self.a = (self.siz_Sea[1] - (n-1)*self.ey_Sea) / self.seq.GetDureeGraph()
                     self.b = 0
     
     
     ######################################################################################  
     def InitCurseur(self):
     #    curseur = [posZSeances[0], posZSeances[1]]
-        self.cursY = self.posZSeances[1]
+        self.cursY = self.pos_Sea[1]
 
 
     ######################################################################################  
@@ -473,7 +470,7 @@ class Sequence(Base_Fiche_Doc):
         rayon = 0.30 * COEF
         alpha0 = 55
         alpha1 = 155
-        y = self.posObj[1]+self.tailleObj[1] - rayon*sin(alpha0*pi/180)
+        y = self.pos_Obj[1]+self.siz_Obj[1] - rayon*sin(alpha0*_torad)
         Fleche_ronde(self, self.LargeurTotale/2, y, rayon, alpha0, alpha1, 
                      0.035 * COEF, 0.06 * COEF, (0.8, 0.9, 0.8, 1)).draw()
         
@@ -482,31 +479,31 @@ class Sequence(Base_Fiche_Doc):
         # Cadre et Intitulé de la séquence
         #
         if not self.entete:
-            rect = (self.posZOrganis[0]-self.bordureZOrganis, self.posZOrganis[1], 
-                    self.tailleZOrganis[0]+self.bordureZOrganis*2, self.tailleZOrganis[1]+self.bordureZOrganis)
+            rect = (self.pos_Org[0]-self.p_mrg_Org, self.pos_Org[1], 
+                    self.siz_Org[0]+self.p_mrg_Org*2, self.siz_Org[1]+self.p_mrg_Org)
         #    seq.zones_sens.append(Zone_sens([rect], param = "INT"))
             if len(self.seq.intitule) == 0:
                 t = "Séquence sans nom"
             else:
                 t = self.seq.intitule
             self.seq.pt_caract.append((Curve_rect_titre(self, rect, t,  
-                                                        self.Bcoul_Intitule, 
-                                                        self.Icoul_Intitule, 
-                                                        self.FontIntitule).draw(),
+                                                        self.p_Bcol_Int, 
+                                                        self.p_Icol_Int, 
+                                                        self.p_font_Int).draw(),
                                       "Seq"))
     
-        #
+        #####################################################################################
         # Domaines
         #
-        self.DrawDomaines((self.posZSeances[0] + self.posZOrganis[0]-self.bordureZOrganis)/2,
-                           self.posZOrganis[1] + self.ecartY/2)
+        self.DrawDomaines((self.pos_Sea[0] + self.pos_Org[0]-self.p_mrg_Org)/2,
+                           self.pos_Org[1] + self.ecartY/2)
     
     
     
-        #
+        #####################################################################################
         # Type d'enseignement
         #
-        tailleTypeEns = self.tailleObj[0]/2
+        tailleTypeEns = self.siz_Obj[0]/2
         t = self.seq.classe.GetLabel()
         self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_BOLD)
@@ -515,8 +512,8 @@ class Sequence(Base_Fiche_Doc):
         
         t2 = self.seq.classe.GetLabelComplet()
         coef = max(min(-0.003*len(t2)+0.9, 0.8), 0.45)
-        h = self.taillePos[1] * coef #0.8
-        show_text_rect(self.ctx, t, (self.posObj[0] , self.posPos[1], tailleTypeEns, h), 
+        h = self.siz_Pos[1] * coef #0.8
+        show_text_rect(self.ctx, t, (self.pos_Obj[0] , self.pos_Pos[1], tailleTypeEns, h), 
                        va = 'c', ha = 'g', b = 0, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                        coulBord = (0, 0, 0))
@@ -524,19 +521,19 @@ class Sequence(Base_Fiche_Doc):
         
     #     print("len=", len(t2))
         self.ctx.set_source_rgb (0.3, 0.3, 0.8)
-        show_text_rect(self.ctx, t2, (self.posObj[0] , self.posPos[1] + h, tailleTypeEns, self.taillePos[1] - h), 
+        show_text_rect(self.ctx, t2, (self.pos_Obj[0] , self.pos_Pos[1] + h, tailleTypeEns, self.siz_Pos[1] - h), 
                        va = 'c', ha = 'g', b = 0, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False)
         
     
     
-        #
+        #####################################################################################
         # Position dans l'année
         #
-        self.posPos[0] = self.posPre[0] + self.taillePre[0] + self.ecartX + tailleTypeEns
-        self.taillePos[0] =  self.LargeurTotale - self.posPos[0] - self.margeX
+        self.pos_Pos[0] = self.pos_Pre[0] + self.siz_Pre[0] + self.ecartX + tailleTypeEns
+        self.siz_Pos[0] =  self.LargeurTotale - self.pos_Pos[0] - self.margeX
         self.ctx.set_line_width (0.0015 * COEF)
-        r = (*self.posPos, *self.taillePos)
+        r = (*self.pos_Pos, *self.siz_Pos)
         
         rects = Periodes(self, r, self.seq.getRangePeriode(), 
                          self.seq.classe.referentiel.periodes).draw()
@@ -547,45 +544,45 @@ class Sequence(Base_Fiche_Doc):
     
     
     
-        #
+        #####################################################################################
         # Etablissement
         #
         if self.seq.classe.etablissement != "":
             t = self.seq.classe.etablissement + " (" + self.seq.classe.ville + ")"
             self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                               cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(self.ctx, t, (self.posPos[0] , self.posPos[1]+self.taillePos[1], 
-                                         self.taillePos[0], self.posObj[1]-self.posPos[1]-self.taillePos[1]), 
+            show_text_rect(self.ctx, t, (self.pos_Pos[0] , self.pos_Pos[1]+self.siz_Pos[1], 
+                                         self.siz_Pos[0], self.pos_Obj[1]-self.pos_Pos[1]-self.siz_Pos[1]), 
                            va = 'c', ha = 'g', b = 0.015, orient = 'h', 
                            fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                            coulBord = (0, 0, 0))
         
         
-        #
+        #####################################################################################
         # Cible ou Logo
         #
         
         # Affichage du Logo
     #     print(seq.classe.referentiel.getLogo())
         Image(self, 
-              (*self.posCib, *self.tailleCib),
+              (*self.pos_Cib, *self.siz_Cib),
               self.seq.classe.referentiel.getLogo()).draw()
     
         # Affichage des CI sur la cible
         if self.seq.classe.referentiel.CI_cible:
-            self.seq.zones_sens.append(Zone_sens([self.posCib+self.tailleCib], obj = self.seq.CI))
-            self.seq.CI.rect = [self.posCib+self.tailleCib]
+            self.seq.zones_sens.append(Zone_sens([self.pos_Cib+self.siz_Cib], obj = self.seq.CI))
+            self.seq.CI.rect = [self.pos_Cib+self.siz_Cib]
     
-            rayons = {"F" : self.tailleCib[0] * 0.28, 
-                      "S" : self.tailleCib[0] * 0.19, 
-                      "C" : self.tailleCib[0] * 0.1,
-                      "_" : self.tailleCib[0] * 0.45}
+            rayons = {"F" : self.siz_Cib[0] * 0.28, 
+                      "S" : self.siz_Cib[0] * 0.19, 
+                      "C" : self.siz_Cib[0] * 0.1,
+                      "_" : self.siz_Cib[0] * 0.45}
             angles = {"M" : 0,
                       "E" : 120,
                       "I" : -120,
                       "_" : -98}
     
-            for i, ci in enumerate(self.seq.CI.GetCodesCIs()):
+            for i, _ in enumerate(self.seq.CI.GetCodesCIs()):
                 mei, fsc = self.seq.CI.GetPosCible(i).split("_")
                 mei = mei.replace(" ", "")
                 fsc = fsc.replace(" ", "")
@@ -615,8 +612,8 @@ class Sequence(Base_Fiche_Doc):
                     else:
                         ang = angles[mei[0]]
                             
-                    pos = (self.centreCib[0] + ray * sin(ang*pi/180) ,
-                           self.centreCib[1] - ray * cos(ang*pi/180))
+                    pos = (self.ctr_Cib[0] + ray * sin(ang*_torad) ,
+                           self.ctr_Cib[1] - ray * cos(ang*_torad))
         #             boule(ctx, pos[0], pos[1], 0.005 * COEF, 
         #                   color0 = (0.95, 1, 0.9, 1), color1 = (0.1, 0.3, 0.05, 1))
                     r = 0.01 * COEF
@@ -628,15 +625,15 @@ class Sequence(Base_Fiche_Doc):
                     ang = [angles[j] for j in mei]
                     for a in ang:
                         for r in ray:
-                            pos = (self.centreCib[0] + r * sin(a*pi/180) ,
-                                   self.centreCib[1] - r * cos(a*pi/180))
+                            pos = (self.ctr_Cib[0] + r * sin(a*_torad) ,
+                                   self.ctr_Cib[1] - r * cos(a*_torad))
                 #             boule(ctx, pos[0], pos[1], 0.005 * COEF, 
                 #                   color0 = (0.95, 1, 0.9, 1), color1 = (0.1, 0.3, 0.05, 1))
                             r_ = 0.01 * COEF
                             Image(self, (pos[0]-r_/2, pos[1]-r_/2, r_, r_),
                                   constantes.images.impact.GetBitmap()).draw()
     
-        #
+        #####################################################################################
         # Durée de la séquence
         #
         if not self.entete:
@@ -645,9 +642,9 @@ class Sequence(Base_Fiche_Doc):
                                                cairo.FONT_WEIGHT_BOLD)
             
             
-            re = (self.posZOrganis[0]-self.bordureZOrganis,
-                  self.posZDemarche[1] + self.tailleZDemarche[1],
-                  self.posZSeances[0] - self.posZOrganis[0] + self.bordureZOrganis,
+            re = (self.pos_Org[0]-self.p_mrg_Org,
+                  self.pos_Dem[1] + self.siz_Dem[1],
+                  self.pos_Sea[0] - self.pos_Org[0] + self.p_mrg_Org,
                   0.015 * COEF)
             
             show_text_rect(self.ctx, getHoraireTxt(self.seq.GetDuree()),
@@ -659,17 +656,17 @@ class Sequence(Base_Fiche_Doc):
     
     
     
-        #
+        #####################################################################################
         # Commentaires
         #
         if not self.entete:
-            if self.tailleComm[1] > 0:
+            if self.siz_Com[1] > 0:
                 self.ctx.set_source_rgb(0.1,0.1,0.1)
                 self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_ITALIC,
                                                   cairo.FONT_WEIGHT_NORMAL)
-                self.ctx.set_font_size(self.fontIntComm)
-                _x, _y = self.posComm
-                fascent, fdescent, fheight, fxadvance, fyadvance = self.ctx.font_extents()
+                self.ctx.set_font_size(self.p_font_Com)
+                _x, _y = self.pos_Com
+                fascent, fdescent, fheight, *_ = self.ctx.font_extents()
                 #
                 # On dessine toutes les lignes de texte
                 #
@@ -680,12 +677,15 @@ class Sequence(Base_Fiche_Doc):
     
     
         ref = self.seq.GetReferentiel()
-        # 
+        
+        
+        
+        ##################################################################################### 
         # Effectifs
         #
         if not self.entete:
-            self.rEff, rects = Classe(self, (self.posZSeances[0], self.posZDemarche[1],
-                                      self.tailleZSeances[0], self.posZSeances[1]-self.posZDemarche[1]-0.01 * COEF),
+            self.rEff, rects = Classe(self, (self.pos_Sea[0], self.pos_Dem[1],
+                                      self.siz_Sea[0], self.pos_Sea[1]-self.pos_Dem[1]-0.01 * COEF),
                                       self.seq.classe).draw(complet = False)
     #         print("rEff", rEff)
             r = []
@@ -697,9 +697,9 @@ class Sequence(Base_Fiche_Doc):
     #         seq.pt_caract.append((r[0][:2], "Eff"))
             
             # Lignes verticales
-            x = self.posZSeances[0]
-            h = (self.posZSeances[1]-self.posZDemarche[1]-0.01 * COEF) / 5
-            y = self.posZDemarche[1] + 4 * h
+#             x = self.pos_Sea[0]
+            h = (self.pos_Sea[1]-self.pos_Dem[1]-0.01 * COEF) / 5
+            y = self.pos_Dem[1] + 4 * h
             for e in "CGDSTUEP":
                 if e in self.rEff:
                     r0 = self.rEff[e][0] # le premier rectangle
@@ -712,17 +712,17 @@ class Sequence(Base_Fiche_Doc):
             return 1.0*sum([len(t) for t in lstTxt])
     
     
-        #
+        #####################################################################################
         #  Prerequis
         #
         
         # Rectangle arrondi
-        x0, y0 = self.posPre
-        rect_width, rect_height  = self.taillePre
+        x0, y0 = self.pos_Pre
+        rect_width, rect_height  = self.siz_Pre
         Curve_rect_titre(self,  
                          (x0, y0, rect_width, rect_height),
                          "Prérequis", 
-                         self.Bcoul_Pre, self.Icoul_Pre, self.fontPre).draw()
+                         self.p_Bcol_Pre, self.p_Icol_Pre, self.p_font_Pre).draw()
         
         #
         # Codes prerequis
@@ -732,10 +732,10 @@ class Sequence(Base_Fiche_Doc):
         lstCoulC = []
         
         
-        if ref.tr_com != []:
-            ref_tc = REFERENTIELS[ref.tr_com[0]]
-        else:
-            ref_tc = None
+#         if ref.tr_com != []:
+#             ref_tc = REFERENTIELS[ref.tr_com[0]]
+#         else:
+#             ref_tc = None
             
         lstComp = []
         lstTyp = []
@@ -778,10 +778,10 @@ class Sequence(Base_Fiche_Doc):
         lstCoulS = []
         
         ref = self.seq.GetReferentiel()
-        if ref.tr_com != []:
-            ref_tc = REFERENTIELS[ref.tr_com[0]]
-        else:
-            ref_tc = None
+#         if ref.tr_com != []:
+#             ref_tc = REFERENTIELS[ref.tr_com[0]]
+#         else:
+#             ref_tc = None
             
         lstSav = []
         lstTyp = []
@@ -846,7 +846,7 @@ class Sequence(Base_Fiche_Doc):
             rectSe = reduire_rect(x0+wC+wS, y0, wSe, hl, f, 0.02)
             
             # lignes de séparation
-            self.ctx.set_source_rgba (*self.Bcoul_Pre)
+            self.ctx.set_source_rgba (*self.p_Bcol_Pre)
             if wC >0:
                 self.ctx.move_to(x0+wC, y0)
                 self.ctx.line_to(x0+wC, y0+hl)
@@ -860,7 +860,7 @@ class Sequence(Base_Fiche_Doc):
             r = Liste_code_texte2(self, rectC, lstCodesC, lstTexteC, 
                                  0.05*rect_width, 0.1,
                                  lstCoul = lstCoulC, va = 'c',
-                                 coulFond = self.Icoul_Pre).draw()
+                                 coulFond = self.p_Icol_Pre).draw()
             self.ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
             self.seq.prerequis["C"].pts_caract = getPts(r)
     #         print("prerequis C", getPts(r))
@@ -873,7 +873,7 @@ class Sequence(Base_Fiche_Doc):
                                   lstCodesS, lstTexteS, 
                                  0.05*rect_width, 0.1,
                                  lstCoul = lstCoulS, va = 'c',
-                                 coulFond = self.Icoul_Pre).draw()
+                                 coulFond = self.p_Icol_Pre).draw()
             self.ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
             self.seq.prerequis["S"].pts_caract = getPts(r)
     #         print("prerequis S", getPts(r))
@@ -900,12 +900,12 @@ class Sequence(Base_Fiche_Doc):
         ##################################################################################
         #  Objectifs
         #
-        x0, y0 = self.posObj
+        x0, y0 = self.pos_Obj
     #    tailleObj[0] =  taillePos[0]
-        rect_width, rect_height  = self.tailleObj
+        rect_width, rect_height  = self.siz_Obj
         Curve_rect_titre(self, (x0, y0, rect_width, rect_height),
                          ref.labels["OBJEC"][2].Plur_(),#"Objectifs", 
-                         self.Bcoul_Obj, self.Icoul_Obj, self.fontObj).draw()
+                         self.p_Bcol_Obj, self.p_Icol_Obj, self.p_font_Obj).draw()
                               
         
         
@@ -1026,7 +1026,7 @@ class Sequence(Base_Fiche_Doc):
             rectC = reduire_rect(x0, y0, wC, h, f, 0.02)
             rectS = reduire_rect(x0+wC, y0, wS, h, f, 0.02)
             
-            self.ctx.set_source_rgba (*self.Bcoul_Obj)
+            self.ctx.set_source_rgba (*self.p_Bcol_Obj)
             self.ctx.move_to(x0+wC, y0)
             self.ctx.line_to(x0+wC, y0+h)
             self.ctx.stroke()
@@ -1036,7 +1036,7 @@ class Sequence(Base_Fiche_Doc):
                                  lstCodesC, lstTexteC, 
                                  0.03*rect_width, 0.1, 
                                  lstCoul = lstCoulC, va = 'c',
-                                 coulFond = self.Icoul_Obj).draw()
+                                 coulFond = self.p_Icol_Obj).draw()
             self.seq.obj["C"].pts_caract = getPts(r)
             
             self.ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
@@ -1047,7 +1047,7 @@ class Sequence(Base_Fiche_Doc):
                                  lstCodesS, lstTexteS, 
                                  0.03*rect_width, 0.1, 
                                  lstCoul = lstCoulS, va = 'c',
-                                 coulFond = self.Icoul_Obj).draw()
+                                 coulFond = self.p_Icol_Obj).draw()
             self.seq.obj["S"].pts_caract = getPts(r)
         
             self.seq.zones_sens.append(Zone_sens([rectC], obj = self.seq.obj["C"]))
@@ -1092,30 +1092,30 @@ class Sequence(Base_Fiche_Doc):
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
                 self.ctx.set_line_width(0.001 * COEF)
-                TableauV(self, nomsSystemes, self.posZSysteme[0], self.posZSysteme[1], 
-                        self.tailleZSysteme[0], self.posZSeances[1] - self.posZSysteme[1], 
+                TableauV(self, nomsSystemes, self.pos_Sys[0], self.pos_Sys[1], 
+                        self.siz_Sys[0], self.pos_Sea[1] - self.pos_Sys[1], 
                         0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8)).draw()
                 
-                wc = self.tailleZSysteme[0]/len(nomsSystemes)
-                _x = self.posZSysteme[0]
-                _y = self.posZSysteme[1]
+                wc = self.siz_Sys[0]/len(nomsSystemes)
+                _x = self.pos_Sys[0]
+                _y = self.pos_Sys[1]
                 for s in systemes:
         #            s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
-                    self.seq.zones_sens.append(Zone_sens([(_x, _y, wc, self.posZSeances[1] - self.posZSysteme[1])],
+                    self.seq.zones_sens.append(Zone_sens([(_x, _y, wc, self.pos_Sea[1] - self.pos_Sys[1])],
                                                obj = s))
                     self.ctx.set_source_rgb(0, 0, 0)
-                    self.ctx.move_to(_x, _y + self.posZSeances[1] - self.posZSysteme[1])
-                    self.ctx.line_to(_x, _y + self.tailleZDemarche[1])
+                    self.ctx.move_to(_x, _y + self.pos_Sea[1] - self.pos_Sys[1])
+                    self.ctx.line_to(_x, _y + self.siz_Dem[1])
                     self.ctx.stroke()
                     
                     self.ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
-                    self.ctx.rectangle(_x, _y+ self.posZSeances[1] - self.posZSysteme[1], 
-                                  wc, self.tailleZDemarche[1]-self.posZSeances[1] + self.posZSysteme[1])
+                    self.ctx.rectangle(_x, _y+ self.pos_Sea[1] - self.pos_Sys[1], 
+                                  wc, self.siz_Dem[1]-self.pos_Sea[1] + self.pos_Sys[1])
                     self.ctx.fill()
                     _x += wc
                 self.ctx.set_source_rgb(0, 0, 0)
-                self.ctx.move_to(_x, _y + self.posZSeances[1] - self.posZSysteme[1])
-                self.ctx.line_to(_x, _y + self.tailleZDemarche[1])   
+                self.ctx.move_to(_x, _y + self.pos_Sea[1] - self.pos_Sys[1])
+                self.ctx.line_to(_x, _y + self.siz_Dem[1])   
                 self.ctx.stroke()
     
     
@@ -1128,10 +1128,10 @@ class Sequence(Base_Fiche_Doc):
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
                 show_text_rect(self.ctx, ref._nomDemarches.Sing_(),
-                               (self.posZDemarche[0], self.posZDemarche[1],
-                                self.tailleZDemarche[0], self.posZSeances[1] - self.posZSysteme[1]), \
+                               (self.pos_Dem[0], self.pos_Dem[1],
+                                self.siz_Dem[0], self.pos_Sea[1] - self.pos_Sys[1]), \
                        va = 'h', ha = 'g', le = 0.8, pe = 1.0, \
-                       b = 0.3, orient = 'v', \
+                       b = 0.03, orient = 'v', \
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False, 
                        coulBord = None, tracer = True, ext = "...")
                 
@@ -1167,9 +1167,9 @@ class Sequence(Base_Fiche_Doc):
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
                 self.ctx.set_line_width(0.001 * COEF)
-                TableauH_var(self, self.intituleSeances[0], self.posZIntSeances[0], self.posZIntSeances[1], 
-                        0.05* COEF, self.tailleZIntSeances[0]-0.05 * COEF, self.intituleSeances[2], self.fontIntSeances, 
-                        nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = self.ICoulSeance, 
+                TableauH_var(self, self.intituleSeances[0], self.pos_ISea[0], self.pos_ISea[1], 
+                        0.05* COEF, self.siz_ISea[0]-0.05 * COEF, self.intituleSeances[2], self.p_font_ISea, 
+                        nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = self.p_Icol_Sea_, 
                         contenu = [self.intituleSeances[1]]).draw()
             
         #
@@ -1207,7 +1207,7 @@ class Sequence(Base_Fiche_Doc):
         ctx.set_source_rgba (*coul)
         ctx.set_line_width (0.0005 * COEF)
         ctx.set_dash(dashes, 0)
-        ctx.move_to(x, self.posZDemarche[1] + self.tailleZDemarche[1])
+        ctx.move_to(x, self.pos_Dem[1] + self.siz_Dem[1])
         ctx.line_to(x, y)
         ctx.stroke()
         ctx.set_dash([], 0)
@@ -1224,8 +1224,8 @@ class Sequence(Base_Fiche_Doc):
     ######################################################################################  
     def Draw_CI(self, ctx, CI, seq):
         # Rectangle arrondi
-        x0, y0 = self.posCI
-        rect_width, rect_height  = self.tailleCI
+        x0, y0 = self.pos_CI
+        rect_width, rect_height  = self.p_siz_CI
         
         ref = CI.GetReferentiel()
         
@@ -1236,7 +1236,7 @@ class Sequence(Base_Fiche_Doc):
         
         rect = (x0, y0, rect_width, rect_height)
         CI.pt_caract = [(Curve_rect_titre(self, rect, t, 
-                                          self.Bcoul_CI, self.Icoul_CI, self.fontCI).draw(), 
+                                          self.p_Bcol_CI, self.p_Icol_CI, self.p_font_CI).draw(), 
                         'CI')]
         seq.zones_sens.append(Zone_sens([rect], obj = CI))
     #     CI.rect.append(rect)
@@ -1302,8 +1302,8 @@ class Sequence(Base_Fiche_Doc):
         h = self.calcH(seance.GetDureeGraph())
         if seance.GetDureeGraph() > 0:
             
-            e = self.largeFlecheDuree
-            Fleche_verticale(self, self.posZDeroul[0]+e/4, self.cursY, 
+            e = self.p_w_Dur
+            Fleche_verticale(self, self.pos_Der[0]+e/4, self.cursY, 
                              h, e, (0.9,0.8,0.8,0.5)).draw()
             self.ctx.set_source_rgb(0.5,0.8,0.8)
             self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
@@ -1315,7 +1315,7 @@ class Sequence(Base_Fiche_Doc):
             else:
                 o = 'v'
             show_text_rect(self.ctx, getHoraireTxt(seance.GetDuree()), 
-                           (self.posZDeroul[0]-e/4, self.cursY, e, h-he), 
+                           (self.pos_Der[0]-e/4, self.cursY, e, h-he), 
                            orient = o, b = 0.02)
     
         
@@ -1384,7 +1384,7 @@ class Sequence(Base_Fiche_Doc):
                     if True:#seance.IsEffectifOk() <= 3:
                         l = seance.GetListSousSeancesRot(True)
     #                    print "  l =", l
-                        for t in range(len(l)-1): # Colonnes
+                        for _ in range(len(l)-1): # Colonnes
                             l = permut(l)
     #                        print "   ", l
                             for i, ss in enumerate(l[:seance.nbrRotations.v[0]]):   # Lignes
@@ -1458,7 +1458,7 @@ class Sequence(Base_Fiche_Doc):
     #        print "..", yf, 
     #        y = yf
     #    print 
-        self.cursY += self.ecartSeanceY
+        self.cursY += self.ey_Sea
 
 
     #####################################################################################  
@@ -1576,7 +1576,7 @@ class Cadre(Elem_Dessin):
         #
         epaisseurTrait = 0.0015 * COEF
         self.ctx.set_line_width(epaisseurTrait)
-        self.ctx.set_dash(self.parent.BStylSeance[self.seance.typeSeance], 0)
+        self.ctx.set_dash(self.parent.Bstyl_Sea[self.seance.typeSeance], 0)
         
         # Rectangle(s) des couches à afficher derrière
 #         for c in range(self.ncouches):
@@ -1592,8 +1592,8 @@ class Cadre(Elem_Dessin):
         
         # Rectangle(s) du dessus
         Rectangle_plein(self, (x, y, self.w, self.h), 
-                            self.parent.BCoulSeance[self.seance.typeSeance], 
-                            self.parent.ICoulSeance[self.seance.typeSeance], alpha).draw()
+                            self.parent.p_Bcol_Sea_[self.seance.typeSeance], 
+                            self.parent.p_Icol_Sea_[self.seance.typeSeance], alpha).draw()
 
         self.ctx.set_dash([], 0)
         
@@ -1610,7 +1610,7 @@ class Cadre(Elem_Dessin):
                 self.ctx.set_source_rgba (*c[:3], alpha)
 
                 hc = self.parent.H_code()
-                f, r, l = show_text_rect(self.ctx, self.seance.code, 
+                _, r, _ = show_text_rect(self.ctx, self.seance.code, 
                                          (x, y, self.w, hc), 
                                          ha = 'g', 
                                          wrap = False, fontsizeMinMax = (minFont, -1), b = 0.02)
@@ -1756,7 +1756,7 @@ class Bloc(Elem_Dessin):
                         #
                         # L'icone "démarche"
                         #
-                        r = min(self.parent.tailleZDemarche[0], cadre.h/(cadre.nf+1))
+                        r = min(self.parent.siz_Dem[0], cadre.h/(cadre.nf+1))
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
                             self.DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy, r)
                         
@@ -1764,7 +1764,7 @@ class Bloc(Elem_Dessin):
                         #
                         # Le rond "nombre de systèmes nécessaires"
                         #
-                        r = min(self.parent.wColSysteme, cadre.h/(cadre.nf+1))
+                        r = min(self.parent.p_wCol_Sys, cadre.h/(cadre.nf+1))
                         if not estRotation: # Cas des rotations traité plus bas ...
                             self.DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
                                                    cadre.seance.GetNbrSystemes(niveau = 0), r)
@@ -1791,7 +1791,7 @@ class Bloc(Elem_Dessin):
                         cadre.DrawCroisement(estRotation)
                 if cadreOk:
 #                    print "!!!"
-                    r = min(self.parent.wColSysteme, cadreOk.h/(cadreOk.nf+1)/3)
+                    r = min(self.parent.p_wCol_Sys, cadreOk.h/(cadreOk.nf+1)/3)
                     self.DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy,
                                            NS, r)
             
@@ -1810,7 +1810,7 @@ class Bloc(Elem_Dessin):
         ctx.set_source_rgba (c[0], c[1], c[2], 0.5)
         ctx.set_line_width (0.0006 * COEF)
         ctx.set_dash(dashes, 0)
-        ctx.move_to(self.parent.posZOrganis[0]+self.parent.tailleZOrganis[0], y)
+        ctx.move_to(self.parent.pos_Org[0]+self.parent.siz_Org[0], y)
         ctx.line_to(x, y)
         ctx.stroke()
         ctx.set_dash([], 0)
@@ -1911,8 +1911,8 @@ class Bloc(Elem_Dessin):
                 for i, d in enumerate(ld):
                     bmp = constantes.imagesDemarches[d].GetBitmap()
                     dx = w*(i-(n-1)/2)/2
-                    rect =    (self.parent.posZDemarche[0] + dx, y - w/2 + dx, w, w)
-                    Image(self, (self.parent.posZDemarche[0] + dx, y - w/2 + dx, w, w), 
+                    rect =    (self.parent.pos_Dem[0] + dx, y - w/2 + dx, w, w)
+                    Image(self, (self.parent.pos_Dem[0] + dx, y - w/2 + dx, w, w), 
                           bmp, marge = 0.1).draw()
     #     _x = xDemarche[seance.demarche]
     # #        if self.typeSeance in ["AP", "ED", "P"]:

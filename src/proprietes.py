@@ -45,7 +45,25 @@ import  wx.lib.scrolledpanel as scrolled
 import wx.lib.agw.labelbook as LB
 from wx.lib.agw.fmresources import *
 import images
-from widgets import XMLelem
+from widgets import img2str, enregistrer_root, safeParse
+import xml.etree.ElementTree as ET
+from wx.lib.embeddedimage import PyEmbeddedImage
+
+from couleur import CouleurFloat2CSS, CouleurCSS2Float
+import constantes
+
+
+
+####################################################################################################
+#
+# Constantes
+#
+####################################################################################################
+CATEGORIES = ["Généralités",
+              "Affichage"]
+
+TYPES = {}
+
 
 
 ####################################################################################################
@@ -53,8 +71,9 @@ from widgets import XMLelem
 # Classes définissant les propriétés d'un document
 #
 ####################################################################################################
-class PropPropriete(XMLelem):
-    def __init__(self, nom, value, ptype = None, cat = None, grp = None):
+class Propriete():
+    def __init__(self, code, nom = "", value = "", ptype = None, 
+                 cat = "", grp = "", sgrp = ""):
         """ Définition d'une propriété de document
             
             :value: valeur : peut prendre différents types
@@ -70,61 +89,202 @@ class PropPropriete(XMLelem):
                 
         """
         self._codeXML = "Propriete"
+        self.code = code
         self.nom = nom
         self.value = value
-        self.ptype = ptype
-        self.cat = cat
-        self.grp = grp
+        self.ptype = ptype      # Code de type de donnée (définis comme constante)
+        self.cat = cat          # Numéro de catégorie (définies comme constante)
+        self.grp = grp          # Code de groupe (dépend du type de document)
+        self.sgrp = sgrp        # Code de sous-groupe (dépend du type de document)
+        
+    
+    def __repr__(self):
+        return self.nom + " = " + str(self.value)
+
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML pour enregistrement
+        """
+#         self.chargerParametresDraw()
+        # Création de la racine
+        propriete = ET.Element(self.code)
+        
+        propriete.set("Nom", self.nom)
+        propriete.set("Cat", self.cat)
+        propriete.set("Grp", self.grp)
+        propriete.set("sGrp", self.sgrp)
+        propriete.set("Type", self.ptype)
+        
+        if self.ptype in ["Bcol", "Icol"]:
+            propriete.set("Val", CouleurFloat2CSS(self.value))
+            
+        elif self.ptype in ["font", "mrg"]:
+            propriete.set("Val", str(self.value))
+        
+        return propriete
+            
+    ######################################################################################  
+    def setBranche(self, branche):
+        """
+        """
+        self.code  = branche.tag
+        self.nom  = branche.get("Nom", "")
+        self.cat  = branche.get("Cat", "")
+        self.grp  = branche.get("Grp", "")
+        self.sgrp  = branche.get("sGrp", "")
+        self.ptype  = branche.get("Type", "")
+        
+        if self.ptype in ["Bcol", "Icol"]:
+            self.value = CouleurCSS2Float(branche.get("Val", "#000000"))
+        
+        elif self.ptype in ["font", "mrg"]:
+            self.value = float(branche.get("Val",""))
+
+
+
+# ###################################################################################
+# class Categorie():
+#     def __init__(self, nom, lstgrp = []):
+#         self._codeXML = "Categorie"
+#         self.nom = nom
+#         self.image = wx.Bitmap(100, 100)
+#         self.setGrp(lstgrp)
+#         
+#         
+#     def setGrp(self, lstgrp = []):
+#         self.groupes = [Groupe(n) for n in lstgrp]        # Codes des Groupes de propriété
+#         
+#     def setBmp(self, bmp):
+#         self.image = bmp
+#         
+#         
+#     ######################################################################################  
+#     def getBranche(self):
+#         """ Renvoie la branche XML pour enregistrement
+#         """
+# #         self.chargerParametresDraw()
+#         # Création de la racine
+#         categorie = ET.Element(self._codeXML)
+#         
+#         categorie.set("Nom", self.nom)
+#         
+#         groupes = ET.SubElement(categorie, "Groupes")
+#         for g in self.groupes:
+#             groupes.append(g.getBranche())
+#         
+#         categorie.set("Image", str(img2str(self.image.ConvertToImage()), 'utf-8'))
+#             
+#         return categorie
+# 
+# 
+#     ######################################################################################  
+#     def setBranche(self, branche):
+#         
+#         self.nom  = branche.get("Nom", "")
+#         
+#         data = branche.get("Image", "")
+#         self.image = wx.Bitmap(100, 100)
+#         if data != "":
+#             try:
+#                 self.image = PyEmbeddedImage(data).GetBitmap()
+#             except:
+#                 Ok = False
+#         
+#         groupes = branche.find("Groupes")
+#         self.groupes = []
+#         if groupes != None:
+#             for e in list(groupes):
+#                 g = Groupe(self)
+#                 Ok = g.setBranche(e)
+#                 self.groupes.append(g)
+#                 
+#                 
         
 
 
 ###################################################################################
-class PropCategorie(XMLelem):
-    def __init__(self, nom, lstgrp = []):
-        self._codeXML = "Categorie"
-        self.nom = nom
-        self.image = wx.Bitmap(100, 100)
-        self.setGrp(lstgrp)
-        
-        
-    def setGrp(self, lstgrp = []):
-        self.groupes = [PropGroupe(n) for n in lstgrp]        # Codes des Groupes de propriété
-        
-    def setBmp(self, bmp):
-        self.image = bmp
-
-
-###################################################################################
-class PropGroupe(XMLelem):
-    def __init__(self, nom):
+class Groupe():
+    def __init__(self, code, nom = ""):
         self._codeXML = "Groupe"
+        self.code = code
         self.nom = nom
-
+        
+        
+    ######################################################################################  
+    def getBranche(self, suff = ""):
+        """ Renvoie la branche XML pour enregistrement
+        """
+        groupe = ET.Element(self.code)
+        groupe.set("Nom", self.nom)
+        
+        return groupe
+    
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+        self.nom  = branche.get("Nom", "")
+        self.code = branche.tag
+        
 
 ###################################################################################
-class ProprietesDoc(XMLelem):
-    def __init__(self, doc = None, lstcat = []):
+class ProprietesDoc():
+    def __init__(self, doc = None):
+
         self._codeXML = "ProprietesDoc"
-        self.categories = [PropCategorie(n) for n in lstcat]    # Catégories de propriété
+#         self.categories = [Categorie(n) for n in lstcat]    # Catégories de propriété
+        self.groupes = {}
+        self.sgroupes = {}
         self.proprietes = {}    # les Propriété
         self.doc = doc
+
     
+    ######################################################################################  
     def get(self, code):
         return self.proprietes[code].value
-        
+    
+    
+    ######################################################################################  
     def set(self, code, val):
         self.proprietes[code].value = val
     
+    
+    ######################################################################################  
     def create(self, code, nom, val, ptype = None, cat = None, grp = None):
         if code in self.proprietes:
             return
-        self.proprietes[code] = PropPropriete(nom, val, ptype, cat, grp)
-        
-    def update(self, lst_prop):
-        for code, prop in lst_prop.items():
+        self.proprietes[code] = Propriete(nom, val, ptype, cat, grp)
+    
+    
+    
+    ######################################################################################  
+    def update(self, dic_prop, dic_grp, dic_sgrp):
+        for code, prop in dic_prop.items():
             self.proprietes[code] = prop
             
-        
+        for code, nom in dic_grp.items():
+            self.groupes[code] = Groupe(code, nom)
+    
+        for code, nom in dic_sgrp.items():
+            self.sgroupes[code] = Groupe(code, nom)
+            
+            
+            
+    ######################################################################################  
+    def sauv(self, nomFichier):
+        b = self.getBranche()
+        constantes.indent(b)
+        enregistrer_root(b, nomFichier, xml_declaration = True)
+
+
+
+    ######################################################################################  
+    def ouvr(self, nomFichier):
+        root = safeParse(nomFichier, wx.GetTopLevelParent())
+        if root is None:
+            return
+        docprop = root.find(self._codeXML)
+        self.setBranche(docprop)
         
 #     def chargerParametresDraw(self):
 #         self.proprietes["ApparenceFiche"] = self.doc.draw.getParametres()
@@ -134,11 +294,75 @@ class ProprietesDoc(XMLelem):
         """ Renvoie la branche XML pour enregistrement
         """
 #         self.chargerParametresDraw()
+        # Création de la racine
+        docprop = ET.Element(self._codeXML)
         
-        return XMLelem.getBranche(self)
+#         categories = ET.SubElement(docprop, "Categories")
+#         for cat in self.categories:
+#             print("cat", cat)
+#             categories.append(cat.getBranche())
+            
+        branchegrp = ET.Element("Groupes")
+        docprop.append(branchegrp)
+        for c, p in self.groupes.items():
+#             ET.SubElement(brancheprop, c)
+            branchegrp.append(p.getBranche())
+            
+        branchegrp = ET.Element("sGroupes")
+        docprop.append(branchegrp)
+        for c, p in self.sgroupes.items():
+#             ET.SubElement(brancheprop, c)
+            branchegrp.append(p.getBranche())
+            
+        brancheprop = ET.Element("Proprietes")
+        docprop.append(brancheprop)
+        for c, p in self.proprietes.items():
+#             ET.SubElement(brancheprop, c)
+            brancheprop.append(p.getBranche())
+            
+        return docprop
 
 
-    
+    ######################################################################################  
+    def setBranche(self, branche):
+        
+        self.categories = []
+        
+#         categories = branche.find("Categories")
+#         self.categories = []
+#         if categories != None:
+#             for e in list(categories):
+#                 cat = Categorie(self)
+#                 Ok = cat.setBranche(e)
+#                 self.categories.append(cat)
+                
+        
+        branchegrp = branche.find("Groupes")
+        self.groupes = {}
+        if branchegrp is not None:
+            for e in list(branchegrp):
+                p = Groupe(e.tag)
+                Ok = p.setBranche(e)
+                self.groupes[e.tag] = p
+                
+        branchegrp = branche.find("sGroupes")
+        self.sgroupes = {}
+        if branchegrp is not None:
+            for e in list(branchegrp):
+                p = Groupe(e.tag)
+                Ok = p.setBranche(e)
+                self.sgroupes[e.tag] = p
+        
+        brancheprop = branche.find("Proprietes")
+        self.proprietes = {}
+        if brancheprop is not None:
+            for e in list(brancheprop):
+                p = Propriete(e.tag)
+                Ok = p.setBranche(e)
+                self.proprietes[e.tag] = p
+                
+                
+        
 ####################################################################################################
 #
 # Classes définissant les fenêtres graphiques

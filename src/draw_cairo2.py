@@ -62,7 +62,7 @@ from widgets import getHoraireTxt
 import couleur
 import configparser
 import util_path
-
+from proprietes import *
                                      
 #
 # Coefficient de multiplication global
@@ -548,7 +548,7 @@ def show_text_rect_fix(ctx, texte, rect, fontSize, \
     fascent, fdescent, fheight = ctx.font_extents()[:3]
     
     # Période entre 2 lignes
-    hl = fheight * le
+#     hl = fheight * le
     
     if DEBUG: print(w, h)
     lt, W, H = ajuster_texte_fixe(ctx, texte, w, h, 
@@ -636,9 +636,9 @@ def show_lignes(ctx, lignes, w, h,
     for l, t in enumerate(lignes):
 #        print "  ",t
         if cacher:
-            xbearing, ybearing, width, height, xadvance, yadvance = text_extents(ctx, t)
+            xbearing, _, width, *_ = text_extents(ctx, t)
         else:
-            xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+            xbearing, _, width, *_ = ctx.text_extents(t)
         # Position du rectangle encadrant la ligne
         if ha == 'c' or ha == 'j':
             xt = (w-width)/2
@@ -804,6 +804,77 @@ class Base_Fiche_Doc():
         return getBase64PNG(self.getImageSurface(*args, **kargs))
     
 
+    ##########################################################################################
+    def chargerParametres(self):
+#         print("chargerParametres", self.__dict__)
+        if self.getDocument() is not None:
+            
+            for code, prop in self.getDocument().proprietes.proprietes.items():
+#                 print("   ", prop)
+                if code in self.__dict__ and hasattr(prop, 'value'):
+#                     print("      ", code, prop.value)
+                    setattr(self, code, prop.value)
+                
+                elif "." in code:
+                    code, k = code.split(".", 1)
+                    if code in self.__dict__ and hasattr(prop, 'value'):
+#                         print("      ++", code, k, prop.value)
+                        d = getattr(self, code)
+                        d[k] = prop.value
+
+
+
+    #####################################################################################
+    def getParametres(self):
+        """ Renvoi une dict de {code : proprietes.Propriete}
+            des paramètres à sauvegarder
+             - couleurs
+             - ...
+        """
+        l = {}
+        
+#         noms_grp = {"CI" : "Centres d'intêret",
+#                     "Obj" : "Objectifs",
+#                     }
+        
+        for n, v in self.__dict__.items():
+            if len(n) > 2 and n[:2] =="p_":   # attribut à mettre en "paramètres réglables"
+                typ, grp = n[2:].split("_", 1)
+                if grp[-1] == "_":
+                    grp = grp[:-1]
+                    for sgrp, sv in v.items():
+                        l[n[2:]+sgrp] = Propriete(n[2:]+sgrp, 
+                                                  n[2:]+sgrp, sv, typ, 
+                                                  cat = "1", 
+                                                  grp = grp, sgrp = sgrp)
+                
+                else:
+                    l[n[2:]] = Propriete(n[2:], n[2:], v, typ, 
+                                 cat = "1", grp = grp)
+                
+        return l
+
+
+
+
+    ##########################################################################################
+    def associerParametres(self):
+        """ Renvoi une lite de proprietes.PropPropriete des paramètres à sauvegarder
+             - couleurs
+             - ...
+        """
+        print("associerParametres")
+#         print("   proprietes2", self.seq.proprietes.proprietes)
+
+        if self.getDocument() is not None:
+            self.getDocument().proprietes.update(self.getParametres(),
+                                                 self.getGroupes(),
+                                                 self.getSSGroupes())
+
+        
+        
+        
+        
 #     #######################################################################################
 #     # Gestion des paramètres sauvegardables
 #     #####################################################################################
@@ -916,7 +987,7 @@ class Calendrier(Elem_Dessin):
         ev = 0.005 * wt
         
         # Période entre deux années
-        dx_a = (wt-wj)/self.calendrier.GetNbrAnnees() + ea
+#         dx_a = (wt-wj)/self.calendrier.GetNbrAnnees() + ea
         
         # liste des années
         lannees = self.calendrier.GetListeAnnees()
@@ -1611,7 +1682,7 @@ class Curve_rect_titre(Elem_Dessin):
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size(self.taille_font)
         fheight = ctx.font_extents()[2]
-        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(self.titre)
+        _, ybearing, width, height,*_ = ctx.text_extents(self.titre)
           
         c = Curve_rect_coin(self.parent, (x0, y0, rect_width, rect_height), self.rayon, 
                    ouverture = min(width + fheight, rect_width-2*self.rayon)).draw(ctx)
@@ -1825,7 +1896,7 @@ class Image(Elem_Dessin):
 class TableauV(Elem_Dessin):
     def __init__(self, parent, titres, x, y, w, ht, hl, 
                  nlignes = 0, va = 'c', ha = 'c', 
-                 orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):
+                 orient = 'h', coul = (0.9,0.9,0.9), b = 0.06):
         Elem_Dessin.__init__(self, parent)
         self.titres = titres
         self.x = x
@@ -1929,7 +2000,7 @@ class TableauH(Elem_Dessin):
             ctx.set_source_rgba (*col[0])
             ctx.fill_preserve ()
             ctx.set_source_rgba (*_coul)
-            f, r, l = show_text_rect(ctx, titre, (self.x, _y, self.wt, hc), 
+            f, _, l = show_text_rect(ctx, titre, (self.x, _y, self.wt, hc), 
                                               va = self.va, ha = self.ha, 
                                               b = 0.02, orient = self.orient, 
                                               tracer = not self.tailleFixe)
@@ -2057,7 +2128,7 @@ class TableauH_var(Elem_Dessin):
     #            h = (fascent+fdescent)*len(ll)
                 for i, t in enumerate(l):
             #        print "  ",t
-                    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+                    xbearing, _, width, *_ = ctx.text_extents(t)
                     xt, yt = _x+xbearing+(self.wc-width)/2, _y + (fascent+fdescent)*i - fdescent + fheight
             #        print "  ",xt, yt
                     if self.ha == 'c':
@@ -2461,7 +2532,7 @@ class Liste_code_texte2(Elem_Dessin):
     #                else:
     #                    ctx.set_source_rgb (0, 0, 0)
 
-                f, r , lt = show_text_rect(ctx, t,
+                _, r , _ = show_text_rect(ctx, t,
                                         (x, y + sum(ht[:i]) + i*hc, w, hc), #y+i*hl, 
                                         b = 0, ha = 'g', va = va, 
                                         fontsizeMinMax = (-1, maxFontSize), wrap = False)
@@ -2828,7 +2899,7 @@ def ajuster_texte(ctx, texte, w, h,
             # On découpe le texte
             i += 1
             
-            t2 = []
+#             t2 = []
             for l in lignes:
                 lt.extend(wordwrap(ctx, l, width, breakLongWords = couper))
                 
@@ -3276,7 +3347,7 @@ def wordwrap(ctx, text, width, breakLongWords=True, cacher = True):
     
     if DEBUG: print("     +", line)
     idx = 1
-    start = 0
+#     start = 0
     startIdx = 0
     spcIdx = -1
 #         if DEBUG: print("  line", type(line), line)
