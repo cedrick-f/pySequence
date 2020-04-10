@@ -834,13 +834,13 @@ class RapportRTF2(richtext.RichTextPanel):
     ######################################################################################################
     def AddPhase(self, tache, typ):
         if tache.phase != '':
-            r,v,b,a = ICoulTache[tache.phase]
+            r,v,b,a = self.fiche.ICoulTache[tache.phase]
         else:
             r,v,b, a = 1,1,1,1
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
         if tache.phase != '':
-            r,v,b = BCoulTache[tache.phase]
+            r,v,b = self.fiche.BCoulTache[tache.phase]
         else:
             r,v,b, a = 0,0,0,1
         fgCoul = wx.Colour(r*255,v*255,b*255)
@@ -861,13 +861,13 @@ class RapportRTF2(richtext.RichTextPanel):
     ######################################################################################################
     def AddTache(self, tache, revue = False):
         if tache.phase != '':
-            r,v,b, a = ICoulTache[tache.phase]
+            r,v,b, a = self.fiche.ICoulTache[tache.phase]
         else:
             r,v,b, a = 1,1,1,1
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
         if tache.phase != '':
-            r,v,b = BCoulTache[tache.phase]
+            r,v,b = self.fiche.BCoulTache[tache.phase]
         else:
             r,v,b, a = 0,0,0,1
         fgCoul = wx.Colour(r*255,v*255,b*255)
@@ -1052,7 +1052,7 @@ class RapportRTF2(richtext.RichTextPanel):
         if seance.typeSeance == '':
             return
         
-        r,v,b = ICoulSeance[seance.typeSeance]
+        r,v,b = self.fiche.ICoulSeance[seance.typeSeance]
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
 #        self.Newline()
@@ -1509,8 +1509,13 @@ class RapportRTF(rt.RichTextCtrl):
          
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
-
-
+        
+        
+#         p = draw_cairo_prj.Projet()
+#         ICoulTache = p.ICoulTache
+#         ICoulTache = p.ICoulTache
+        
+        
     ######################################################################################################
     def OnKey(self, event = None):
         wx.GetApp().GetTopWindow().OnKey(event)
@@ -1535,6 +1540,9 @@ class RapportRTF(rt.RichTextCtrl):
         #
         phase = ''
         if typ == 'prj':
+            self.eleve = eleve
+            self.projet = doc
+            self.fiche = self.projet.GetApp().fiche.fiche
 #             for e in doc.eleves:
             self.AddTitreProjet(eleve, doc.GetProjetRef().attributs["FIC"][0])
             for t in doc.OrdonnerListeTaches(eleve.GetTaches(revues = True)):
@@ -1543,16 +1551,17 @@ class RapportRTF(rt.RichTextCtrl):
                     self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
                 self.AddTache(t, eleve, revue = t.phase in ["R1", "R2", "R3", "Rev"])
             
-            self.eleve = eleve
-            self.projet = doc
+            
 
         else:
+            self.doc = doc
+            self.fiche = self.doc.GetApp().fiche.fiche
             self.AddTitreSeance(doc)
     
             for s in doc.seances:
                 self.AddSeance(s)
                 
-            self.doc = doc
+            
             
         self.AddPieds(fichierCourant)
         
@@ -1621,13 +1630,13 @@ class RapportRTF(rt.RichTextCtrl):
     ######################################################################################################
     def AddPhase(self, tache, typ):
         if tache.phase != '':
-            r,v,b,a = ICoulTache[tache.phase]
+            r,v,b,a = self.projet.GetApp().fiche.fiche.ICoulTache[tache.phase]
         else:
             r,v,b, a = 1,1,1,1
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
         if tache.phase != '':
-            r,v,b = BCoulTache[tache.phase]
+            r,v,b = self.fiche.BCoulTache[tache.phase]
         else:
             r,v,b, a = 0,0,0,1
         fgCoul = wx.Colour(r*255,v*255,b*255)
@@ -1648,13 +1657,13 @@ class RapportRTF(rt.RichTextCtrl):
     ######################################################################################################
     def AddTache(self, tache, eleve, revue = False):
         if tache.phase != '':
-            r,v,b, a = ICoulTache[tache.phase]
+            r,v,b, a = self.fiche.ICoulTache[tache.phase]
         else:
             r,v,b, a = 1,1,1,1
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
         if tache.phase != '':
-            r,v,b = BCoulTache[tache.phase]
+            r,v,b = self.fiche.BCoulTache[tache.phase]
         else:
             r,v,b, a = 0,0,0,1
         fgCoul = wx.Colour(r*255,v*255,b*255)
@@ -1765,7 +1774,7 @@ class RapportRTF(rt.RichTextCtrl):
         if seance.typeSeance == '':
             return
         
-        r,v,b = ICoulSeance[seance.typeSeance]
+        r,v,b = self.fiche.p_Icol_Sea_[seance.typeSeance]
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
 #        self.Newline()

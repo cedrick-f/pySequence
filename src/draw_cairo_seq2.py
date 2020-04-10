@@ -58,35 +58,7 @@ import wx
 from proprietes import *
 
 
-
 _torad = pi/180
-
-
-
-
-
-#    print "   ", a, b
-    
-#    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seances)-1))
-#    print "hHoraire", hHoraire
-#    print "d =", d
-#    print "a, b =", a, b
-#    print tailleZSeances[1]
-#    print seq.GetDureeGraph()
-#    print n
-#    print tmin
-#    print "a,b = ", a,b
-#    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seances)-1))
-#    ecartSeanceY = hHoraire/4
-#    if ecartSeanceY > 0.02:
-#        ecartSeanceY = 0.02
-#        hHoraire = (tailleZSeances[1] - (len(seq.seances)-1)*ecartSeanceY) / seq.GetDureeGraph()
-
-
-
-
-
-
 
 
 ######################################################################################  
@@ -120,31 +92,34 @@ class Sequence(Base_Fiche_Doc):
         self.p_font_CI = 0.014 * COEF
         
         # Rectangle des prerequis
-        self.siz_Pre = (0.28 * COEF, 0.18 * COEF - self.p_siz_CI[1] - self.ecartY)
-        self.pos_Pre = (self.margeX, self.pos_CI[1] + self.p_siz_CI[1] + self.ecartY)
+        self.p_w_Pre = 0.28 * COEF
+        self.p_h_Tet =  0.18 * COEF
+        self.h_Pre = None
+#         self.siz_Pre = (0.28 * COEF, 0.18 * COEF - self.p_siz_CI[1] - self.ecartY)
+        self.pos_Pre = (None, None)
         self.p_Icol_Pre = (0.8, 0.8, 0.9, 0.85)
         self.p_Bcol_Pre = (0.2, 0.25, 0.3, 1)
         self.p_font_Pre = 0.014 * COEF
         
         # Position dans l'année
         self.pos_Pos = [None, self.margeY - self.ecartY/2]
-        self.siz_Pos = [None, 0.04 * COEF]
+        self.p_h_Pos = 0.04 * COEF
+        self.w_Pos = None
+
         
         # Rectangle des objectifs
-        self.pos_Obj = (self.pos_Pre[0] + self.siz_Pre[0] + self.ecartX/2, self.margeY + self.siz_Pos[1] + self.ecartY/2)
-        self.siz_Obj = [self.LargeurTotale - self.margeX - self.pos_Obj[0], self.pos_Pre[1] + self.siz_Pre[1] - self.pos_Obj[1]]
+        self.pos_Obj = (None, None)
+        self.siz_Obj = [None, None]
         self.p_Icol_Obj = (0.8, 0.9, 0.8, 0.85)
         self.p_Bcol_Obj = (0.25, 0.3, 0.2, 1)
         self.p_font_Obj = 0.014 * COEF
         
         # Cible
-        self.pos_Cib = [self.pos_CI[0] + self.p_siz_CI[0] + self.ecartX/4, self.margeY - self.ecartY/2]
-        self.siz_Cib = [self.pos_Obj[0] - self.pos_CI[0] - self.p_siz_CI[0] - self.ecartX/2, None]
-        self.siz_Cib[1] = self.siz_Cib[0] 
+        self.pos_Cib = [None, None]
+        self.siz_Cib = [None, None]
         self.p_Icol_Cib = (0.8, 0.8, 1, 0.85)
         self.p_Bcol_Cib = (0.1, 0.1, 0.25, 1)
-        self.ctr_Cib = (self.pos_Cib[0] + self.siz_Cib[0] / 2 + 0.0006 * COEF, 
-                     self.pos_Cib[1] + self.siz_Cib[1] / 2 - 0.0015 * COEF)
+        self.ctr_Cib = (None, None)
         
         # Zone de commentaire
         self.p_font_Com = 0.01* COEF
@@ -154,8 +129,10 @@ class Sequence(Base_Fiche_Doc):
         
         # Zone d'organisation de la séquence (intérieur du grand cadre vert - bordure)
         self.p_mrg_Org = 0.01 * COEF
-        self.pos_Org = (self.margeX+self.p_mrg_Org, 0.24 * COEF)
-        self.siz_Org = [self.LargeurTotale-2*(self.margeX+self.p_mrg_Org), None]
+        self.x_Org = None
+        self.p_y_Org = 0.24 * COEF
+#         self.pos_Org = (self.margeX+self.p_mrg_Org, 0.24 * COEF)
+        self.siz_Org = [None, None]
         
         
         # # Rectangle de l'intitulé
@@ -165,33 +142,40 @@ class Sequence(Base_Fiche_Doc):
         self.p_Bcol_Int = (0.2, 0.8, 0.2, 1)
         self.p_font_Int = 0.02 * COEF
         
+        # Zone de découpage de la classe
+        self.p_h_Cls = 0.06 * COEF
+        
         # Zone de déroulement de la séquence
-        self.pos_Der = (self.margeX+self.ecartX/2, self.pos_Org[1]+0.06 * COEF)
+        self.pos_Der = (None, None)
         self.siz_Der = [None, None]
         
+        
         # Zone du tableau des Systèmes
-        self.pos_Sys = [None, self.pos_Org[1]+0.01 * COEF]
+        self.pos_Sys = [None, None]
         self.siz_Sys = [None, None]
         self.p_wCol_Sys = 0.025 * COEF
         self.xSystemes = {}
         
         # Zone du tableau des démarches
-        self.pos_Dem = [None, self.pos_Sys[1]]
-        self.siz_Dem = [0.02 * COEF, None]
+        self.pos_Dem = [None, None]
+        self.p_w_Dem = 0.02 * COEF
+        self.h_Dem = None
+#         self.siz_Dem = [0.02 * COEF, None]
         # xDemarche = {"I" : None,
         #              "R" : None,
         #              "P" : None}
         
         # Zone des intitulés des séances
         self.p_font_ISea = 0.01 * COEF
-        self.pos_ISea = [0.06 * COEF, None]
-        self.siz_ISea = [self.LargeurTotale-0.12 * COEF, None]
+        self.p_mrg_ISea = 0.06 * COEF
+        self.pos_ISea = [None, None]
+        self.siz_ISea = [None, None]
 #         self.p_h_ISea = 0.02 * COEF
         self.intituleSeances = []
         
         # Zone des séances
         self.p_w_Dur = 0.02 * COEF
-        self.pos_Sea = (self.pos_Der[0] + self.p_w_Dur, self.pos_Org[1]+0.08 * COEF)
+        self.pos_Sea = (None, None)
         self.siz_Sea = [None, None]
         # wEff =  {"C" : None,
         #          "G" : None,
@@ -297,6 +281,39 @@ class Sequence(Base_Fiche_Doc):
     def calcH(self, t):
         return self.a*t+self.b
     
+    
+    ######################################################################################  
+    def repartir(self, lst, mini):
+        """ Réparti n valeurs proportionnellement 
+            en assurant une valeur mini
+            mais en gardant les zé&ros
+        """
+        lst_base = []
+        for v in lst:
+            if v > 0:
+                lst_base.append(True)
+            else:
+                lst_base.append(False)
+        
+        # On enlève les 0
+        lst_calc = [v for v in lst if v > 0]
+        n = len(lst_calc)
+        s = sum(lst_calc)
+        assert s>0 and 1 > n*mini
+        a = (1-n*mini)/s
+        lst_calc = [a*v+mini for v in lst_calc]
+        
+        # on les remet
+        L = []
+        i = 0
+        for ok in lst_base:
+            if ok:
+                L.append(lst_calc[i])
+                i += 1
+            else:
+                L.append(0)
+        
+        return L
 
 
     ######################################################################################  
@@ -306,6 +323,34 @@ class Sequence(Base_Fiche_Doc):
         """
 #         global a, b , ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
 #         ref = self.seq.GetReferentiel()
+        
+        
+        
+        self.h_Pre = self.p_h_Tet - self.p_siz_CI[1] - self.ecartY
+        self.pos_Pre = (self.margeX, self.pos_CI[1] + self.p_siz_CI[1] + self.ecartY)
+        self.pos_Obj = (self.pos_Pre[0] + self.p_w_Pre + self.ecartX/2, self.margeY + self.p_h_Pos + self.ecartY/2)
+        self.siz_Obj = [self.LargeurTotale - self.margeX - self.pos_Obj[0], self.pos_Pre[1] + self.h_Pre - self.pos_Obj[1]]
+        
+        self.pos_Cib = [self.pos_CI[0] + self.p_siz_CI[0] + self.ecartX/4, self.margeY - self.ecartY/2]
+        self.siz_Cib = [self.pos_Obj[0] - self.pos_CI[0] - self.p_siz_CI[0] - self.ecartX/2, None]
+        self.siz_Cib[1] = self.siz_Cib[0]
+        self.ctr_Cib = (self.pos_Cib[0] + self.siz_Cib[0] / 2 + 0.0006 * COEF, 
+                     self.pos_Cib[1] + self.siz_Cib[1] / 2 - 0.0015 * COEF)
+        
+        self.x_Org = self.margeX+self.p_mrg_Org
+        self.siz_Org = [self.LargeurTotale-2*(self.margeX+self.p_mrg_Org), None]
+        
+        self.pos_Der = (self.margeX+self.ecartX/2, self.p_y_Org+self.p_h_Cls)
+        
+        self.pos_Sys = [None, self.p_y_Org + self.p_mrg_Org]
+        
+        self.pos_Dem = [None, self.pos_Sys[1]]
+        
+        self.pos_ISea = [self.p_mrg_ISea, None]
+        self.siz_ISea = [self.LargeurTotale-self.p_mrg_ISea*2, None]
+        
+        self.pos_Sea = (self.pos_Der[0] + self.p_w_Dur, self.p_y_Org+0.08 * COEF)
+        
         
         #hHoraire
         # Zone de commentaire
@@ -318,7 +363,7 @@ class Sequence(Base_Fiche_Doc):
         self.pos_Com[1] = 1 * COEF - self.siz_Com[1] - self.margeY
         
         # Zone d'organisation de la séquence (grand cadre)
-        self.siz_Org[1] = self.pos_Com[1]-self.pos_Org[1]-self.p_mrg_Org
+        self.siz_Org[1] = self.pos_Com[1]-self.p_y_Org-self.p_mrg_Org
     
     #     # Rectangle de l'intitulé
     #     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
@@ -339,33 +384,33 @@ class Sequence(Base_Fiche_Doc):
         
     
     #    tailleZIntSeances[1] = len(seq.GetIntituleSeances()[0])* hIntSeance
-        self.pos_ISea[1] = self.pos_Org[1] + self.siz_Org[1] - self.siz_ISea[1]
+        self.pos_ISea[1] = self.p_y_Org + self.siz_Org[1] - self.siz_ISea[1]
         
         # Zone du tableau des Systèmes
         systemes = self.seq.GetSystemesUtilises(niveau = 0)
         self.siz_Sys[0] = self.p_wCol_Sys * len(systemes)
         self.siz_Sys[1] = self.siz_Org[1] - self.ecartY - self.siz_ISea[1]
-        self.pos_Sys[0] = self.pos_Org[0] + self.siz_Org[0] - self.siz_Sys[0]
+        self.pos_Sys[0] = self.x_Org + self.siz_Org[0] - self.siz_Sys[0]
         for i, s in enumerate(systemes):
             self.xSystemes[s.nom] = self.pos_Sys[0] + (i+0.5) * self.p_wCol_Sys
         
         
         # Zone du tableau des démarches
         if len(self.seq.classe.GetReferentiel().listeDemarches) > 0:
-            self.siz_Dem[0] = 0.02 * COEF
-            self.pos_Dem[0] = self.pos_Sys[0] - self.siz_Dem[0] - self.ecartX/2
-            self.siz_Dem[1] = self.siz_Sys[1]
+            self.p_w_Dem = 0.02 * COEF
+            self.pos_Dem[0] = self.pos_Sys[0] - self.p_w_Dem - self.ecartX/2
+            self.h_Dem = self.siz_Sys[1]
     #         xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
     #         xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
     #         xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
         else:
-            self.siz_Dem[0] = 0
-            self.siz_Dem[1] = self.siz_Sys[1]
-            self.pos_Dem[0] = self.pos_Sys[0] - self.siz_Dem[0] - self.ecartX/2
+            self.p_w_Dem = 0
+            self.h_Dem = self.siz_Sys[1]
+            self.pos_Dem[0] = self.pos_Sys[0] - self.p_w_Dem - self.ecartX/2
                      
         # Zone de déroulement de la séquence
         self.siz_Der[0] = self.pos_Dem[0] - self.pos_Der[0] - self.ecartX/2
-        self.siz_Der[1] = self.siz_Org[1] - self.pos_Der[1] + self.pos_Org[1] - self.ecartY/2
+        self.siz_Der[1] = self.siz_Org[1] - self.pos_Der[1] + self.p_y_Org - self.ecartY/2
         
         
         # Zone des séances
@@ -423,6 +468,7 @@ class Sequence(Base_Fiche_Doc):
     ######################################################################################  
     def InitCurseur(self):
     #    curseur = [posZSeances[0], posZSeances[1]]
+#         print("InitCurseur", self.pos_Sea)
         self.cursY = self.pos_Sea[1]
 
 
@@ -437,7 +483,7 @@ class Sequence(Base_Fiche_Doc):
 
         self.ctx = ctx
     #    print "Draw séquence"
-        self.InitCurseur()
+        
         
 
         #
@@ -446,7 +492,7 @@ class Sequence(Base_Fiche_Doc):
         self.initOptions(ctx)
         
         self.DefinirZones(ctx)
-        
+        self.InitCurseur()
 #         self.definirCouleurs()
 
         
@@ -479,7 +525,7 @@ class Sequence(Base_Fiche_Doc):
         # Cadre et Intitulé de la séquence
         #
         if not self.entete:
-            rect = (self.pos_Org[0]-self.p_mrg_Org, self.pos_Org[1], 
+            rect = (self.x_Org-self.p_mrg_Org, self.p_y_Org, 
                     self.siz_Org[0]+self.p_mrg_Org*2, self.siz_Org[1]+self.p_mrg_Org)
         #    seq.zones_sens.append(Zone_sens([rect], param = "INT"))
             if len(self.seq.intitule) == 0:
@@ -495,8 +541,8 @@ class Sequence(Base_Fiche_Doc):
         #####################################################################################
         # Domaines
         #
-        self.DrawDomaines((self.pos_Sea[0] + self.pos_Org[0]-self.p_mrg_Org)/2,
-                           self.pos_Org[1] + self.ecartY/2)
+        self.DrawDomaines((self.pos_Sea[0] + self.x_Org-self.p_mrg_Org)/2,
+                           self.p_y_Org + self.ecartY/2)
     
     
     
@@ -512,7 +558,7 @@ class Sequence(Base_Fiche_Doc):
         
         t2 = self.seq.classe.GetLabelComplet()
         coef = max(min(-0.003*len(t2)+0.9, 0.8), 0.45)
-        h = self.siz_Pos[1] * coef #0.8
+        h = self.p_h_Pos * coef #0.8
         show_text_rect(self.ctx, t, (self.pos_Obj[0] , self.pos_Pos[1], tailleTypeEns, h), 
                        va = 'c', ha = 'g', b = 0, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
@@ -521,7 +567,7 @@ class Sequence(Base_Fiche_Doc):
         
     #     print("len=", len(t2))
         self.ctx.set_source_rgb (0.3, 0.3, 0.8)
-        show_text_rect(self.ctx, t2, (self.pos_Obj[0] , self.pos_Pos[1] + h, tailleTypeEns, self.siz_Pos[1] - h), 
+        show_text_rect(self.ctx, t2, (self.pos_Obj[0] , self.pos_Pos[1] + h, tailleTypeEns, self.p_h_Pos - h), 
                        va = 'c', ha = 'g', b = 0, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False)
         
@@ -530,10 +576,10 @@ class Sequence(Base_Fiche_Doc):
         #####################################################################################
         # Position dans l'année
         #
-        self.pos_Pos[0] = self.pos_Pre[0] + self.siz_Pre[0] + self.ecartX + tailleTypeEns
-        self.siz_Pos[0] =  self.LargeurTotale - self.pos_Pos[0] - self.margeX
+        self.pos_Pos[0] = self.pos_Pre[0] + self.p_w_Pre + self.ecartX + tailleTypeEns
+        self.w_Pos =  self.LargeurTotale - self.pos_Pos[0] - self.margeX
         self.ctx.set_line_width (0.0015 * COEF)
-        r = (*self.pos_Pos, *self.siz_Pos)
+        r = (*self.pos_Pos, self.w_Pos, self.p_h_Pos)
         
         rects = Periodes(self, r, self.seq.getRangePeriode(), 
                          self.seq.classe.referentiel.periodes).draw()
@@ -551,8 +597,8 @@ class Sequence(Base_Fiche_Doc):
             t = self.seq.classe.etablissement + " (" + self.seq.classe.ville + ")"
             self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                               cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(self.ctx, t, (self.pos_Pos[0] , self.pos_Pos[1]+self.siz_Pos[1], 
-                                         self.siz_Pos[0], self.pos_Obj[1]-self.pos_Pos[1]-self.siz_Pos[1]), 
+            show_text_rect(self.ctx, t, (self.pos_Pos[0] , self.pos_Pos[1]+self.p_h_Pos, 
+                                         self.p_h_Pos, self.pos_Obj[1]-self.pos_Pos[1]-self.p_h_Pos), 
                            va = 'c', ha = 'g', b = 0.015, orient = 'h', 
                            fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                            coulBord = (0, 0, 0))
@@ -642,9 +688,9 @@ class Sequence(Base_Fiche_Doc):
                                                cairo.FONT_WEIGHT_BOLD)
             
             
-            re = (self.pos_Org[0]-self.p_mrg_Org,
-                  self.pos_Dem[1] + self.siz_Dem[1],
-                  self.pos_Sea[0] - self.pos_Org[0] + self.p_mrg_Org,
+            re = (self.x_Org-self.p_mrg_Org,
+                  self.pos_Dem[1] + self.h_Dem,
+                  self.pos_Sea[0] - self.x_Org + self.p_mrg_Org,
                   0.015 * COEF)
             
             show_text_rect(self.ctx, getHoraireTxt(self.seq.GetDuree()),
@@ -709,7 +755,7 @@ class Sequence(Base_Fiche_Doc):
     
     
         def taille(lstTxt):
-            return 1.0*sum([len(t) for t in lstTxt])
+            return sum([len(t) for t in lstTxt])
     
     
         #####################################################################################
@@ -718,7 +764,7 @@ class Sequence(Base_Fiche_Doc):
         
         # Rectangle arrondi
         x0, y0 = self.pos_Pre
-        rect_width, rect_height  = self.siz_Pre
+        rect_width, rect_height  = self.p_w_Pre, self.h_Pre 
         Curve_rect_titre(self,  
                          (x0, y0, rect_width, rect_height),
                          "Prérequis", 
@@ -825,17 +871,22 @@ class Sequence(Base_Fiche_Doc):
         hl = rect_height+0.0001 * COEF
         
         ltot = taille(lstTexteC) + taille(lstTexteS) + taille(lstTexteSe)
-        if ltot > 0:
-    #         hC = hl*len(lstTexteC)/(ltot)
-    #         hS = hl*len(lstTexteS)/(ltot)
-    #         hSe = hl*len(lstTexteSe)/(ltot)
-    #         wC = rect_width
-    #         wS = rect_width
-    #         wSe = rect_width
+        if ltot > 0:  # il y a qq chose à afficher
             
-            wC  = rect_width * taille(lstTexteC)/(ltot)
-            wS  = rect_width * taille(lstTexteS)/(ltot)
-            wSe = rect_width * taille(lstTexteSe)/(ltot)
+            wC, wS, wSe = self.repartir([taille(lstTexteC), taille(lstTexteS), taille(lstTexteSe)], 0.1)
+#             wC  = taille(lstTexteC)/(ltot)
+#             wS  = taille(lstTexteS)/(ltot)
+#             wSe = taille(lstTexteSe)/(ltot)
+            
+            
+#             print("sw:", wC+wS+wSe)
+
+            # Mise à l'échelle
+            wC  *= rect_width
+            wS  *= rect_width
+            wSe *= rect_width
+            
+#             print("W:", wC, wS, wSe)
             
             # Création des deux zones
             maxFontSize = 0.011 * COEF
@@ -847,12 +898,12 @@ class Sequence(Base_Fiche_Doc):
             
             # lignes de séparation
             self.ctx.set_source_rgba (*self.p_Bcol_Pre)
-            if wC >0:
+            if wS > 0:
                 self.ctx.move_to(x0+wC, y0)
                 self.ctx.line_to(x0+wC, y0+hl)
                 self.ctx.stroke()
             
-            if wS >0 and len(lstTexteSe) > 0:
+            if wSe > 0:
                 self.ctx.move_to(x0+wC+wS, y0)
                 self.ctx.line_to(x0+wC+wS, y0+hl)
                 self.ctx.stroke()
@@ -1105,17 +1156,17 @@ class Sequence(Base_Fiche_Doc):
                                                obj = s))
                     self.ctx.set_source_rgb(0, 0, 0)
                     self.ctx.move_to(_x, _y + self.pos_Sea[1] - self.pos_Sys[1])
-                    self.ctx.line_to(_x, _y + self.siz_Dem[1])
+                    self.ctx.line_to(_x, _y + self.h_Dem)
                     self.ctx.stroke()
                     
                     self.ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
                     self.ctx.rectangle(_x, _y+ self.pos_Sea[1] - self.pos_Sys[1], 
-                                  wc, self.siz_Dem[1]-self.pos_Sea[1] + self.pos_Sys[1])
+                                  wc, self.h_Dem-self.pos_Sea[1] + self.pos_Sys[1])
                     self.ctx.fill()
                     _x += wc
                 self.ctx.set_source_rgb(0, 0, 0)
                 self.ctx.move_to(_x, _y + self.pos_Sea[1] - self.pos_Sys[1])
-                self.ctx.line_to(_x, _y + self.siz_Dem[1])   
+                self.ctx.line_to(_x, _y + self.h_Dem)   
                 self.ctx.stroke()
     
     
@@ -1129,7 +1180,7 @@ class Sequence(Base_Fiche_Doc):
                 self.ctx.set_source_rgb(0, 0, 0)
                 show_text_rect(self.ctx, ref._nomDemarches.Sing_(),
                                (self.pos_Dem[0], self.pos_Dem[1],
-                                self.siz_Dem[0], self.pos_Sea[1] - self.pos_Sys[1]), \
+                                self.p_w_Dem, self.pos_Sea[1] - self.pos_Sys[1]), \
                        va = 'h', ha = 'g', le = 0.8, pe = 1.0, \
                        b = 0.03, orient = 'v', \
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False, 
@@ -1207,7 +1258,7 @@ class Sequence(Base_Fiche_Doc):
         ctx.set_source_rgba (*coul)
         ctx.set_line_width (0.0005 * COEF)
         ctx.set_dash(dashes, 0)
-        ctx.move_to(x, self.pos_Dem[1] + self.siz_Dem[1])
+        ctx.move_to(x, self.pos_Dem[1] + self.h_Dem)
         ctx.line_to(x, y)
         ctx.stroke()
         ctx.set_dash([], 0)
@@ -1756,7 +1807,7 @@ class Bloc(Elem_Dessin):
                         #
                         # L'icone "démarche"
                         #
-                        r = min(self.parent.siz_Dem[0], cadre.h/(cadre.nf+1))
+                        r = min(self.parent.p_w_Dem, cadre.h/(cadre.nf+1))
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
                             self.DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy, r)
                         
@@ -1810,7 +1861,7 @@ class Bloc(Elem_Dessin):
         ctx.set_source_rgba (c[0], c[1], c[2], 0.5)
         ctx.set_line_width (0.0006 * COEF)
         ctx.set_dash(dashes, 0)
-        ctx.move_to(self.parent.pos_Org[0]+self.parent.siz_Org[0], y)
+        ctx.move_to(self.parent.x_Org+self.parent.siz_Org[0], y)
         ctx.line_to(x, y)
         ctx.stroke()
         ctx.set_dash([], 0)

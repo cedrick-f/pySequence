@@ -2248,6 +2248,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         dlg.Destroy()
         if nomFichier != r'':
             self.GetDocument().ouvreProprietes(nomFichier)
+            self.sendEvent(modif = "Modification des paramètres", 
+                           draw = True, verif = True)
 #         print("fin")
     
     
@@ -4745,7 +4747,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -4995,7 +4997,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
     
     #############################################################################            
     def Draw(self, ctx):
-        print("Draw", self.fiche)
+#         print("Draw", self.fiche)
 #         global threadDraw
 #         tps1 = time.clock()
         
@@ -5009,7 +5011,7 @@ class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut 
         
 ####################################################################################
 # from wx.lib.delayedresult import startWorker
-class BaseFiche2(wx.ScrolledWindow, DelayedResult):
+class BaseFiche(wx.ScrolledWindow, DelayedResult):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)

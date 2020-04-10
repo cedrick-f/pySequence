@@ -3466,10 +3466,12 @@ class Sequence(BaseDoc, Grammaire):
                                              ["Exporter la fiche (PDF ou SVG)", self.app.exporterFiche,
                                               None,
                                               True],
-                                             ["Sauvegarder les propriétés", self.app.sauveProprietes, 
-                                              None, True],
+                                             ["Exporter les propriétés", self.app.sauveProprietes, 
+                                              scaleImage(images.Icone_export_param.GetBitmap()), 
+                                              True],
                                              ["Charger des propriétés", self.app.ouvreProprietes, 
-                                              None, True],
+                                              scaleImage(images.Icone_import_param.GetBitmap()), 
+                                              True],
                                             ])
                 
                 
@@ -5384,9 +5386,9 @@ class Projet(BaseDoc, Grammaire):
                                              ["Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, 
                                               None,
                                               True],
-                                             ["Sauvegarder les propriétés", self.sauvPropriete, 
-                                              None,
-                                              True],
+#                                              ["Sauvegarder les propriétés", self.sauvePropriete, 
+#                                               None,
+#                                               True],
                                             ])
             
 #        [u"Séquence pédagogique",
@@ -11096,7 +11098,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         html = t.render(titre = ref._nomActivites.Sing_()+" "+ self.code,
                         nom_type = ref.seances[self.typeSeance][1],
-                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.Sequence(self.GetDocument()).BCoulSeance[self.typeSeance]),
+                        coul_type = couleur.GetCouleurHTML(draw_cairo_seq.Sequence(self.GetDocument()).p_Bcol_Sea_[self.typeSeance]),
                         icon_type = icon_type,
                         lst_dem = lst_dem,
                         lst_ensSpe = lst_ensSpe,

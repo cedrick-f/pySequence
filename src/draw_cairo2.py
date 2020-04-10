@@ -324,6 +324,7 @@ def show_text_rect(ctx, texte, rect, \
     #
     # Calcul ...
     #
+    
     lt, W, H = ajuster_texte(ctx, texte, w, h,
                              fdescent, fheight,
                              le, pe, 
@@ -810,17 +811,23 @@ class Base_Fiche_Doc():
         if self.getDocument() is not None:
             
             for code, prop in self.getDocument().proprietes.proprietes.items():
+                code = "p_"+code
 #                 print("   ", prop)
-                if code in self.__dict__ and hasattr(prop, 'value'):
+                if len(code.split(".")) == 2:
+                    code, sgrp = code.split(".")
+                    d = getattr(self, code+"_")
+                    d[sgrp] = prop.value
+                    
+                elif code in self.__dict__ and hasattr(prop, 'value'):
 #                     print("      ", code, prop.value)
                     setattr(self, code, prop.value)
                 
-                elif "." in code:
-                    code, k = code.split(".", 1)
-                    if code in self.__dict__ and hasattr(prop, 'value'):
+#                 elif "." in code:
+#                     code, k = code.split(".", 1)
+#                     if code in self.__dict__ and hasattr(prop, 'value'):
 #                         print("      ++", code, k, prop.value)
-                        d = getattr(self, code)
-                        d[k] = prop.value
+#                         d = getattr(self, code)
+#                         d[k] = prop.value
 
 
 
@@ -842,9 +849,10 @@ class Base_Fiche_Doc():
                 typ, grp = n[2:].split("_", 1)
                 if grp[-1] == "_":
                     grp = grp[:-1]
+                    cod = n[2:-1]+"."
                     for sgrp, sv in v.items():
-                        l[n[2:]+sgrp] = Propriete(n[2:]+sgrp, 
-                                                  n[2:]+sgrp, sv, typ, 
+                        l[cod+sgrp] = Propriete(cod+sgrp, 
+                                                  cod+sgrp, sv, typ, 
                                                   cat = "1", 
                                                   grp = grp, sgrp = sgrp)
                 
@@ -863,7 +871,7 @@ class Base_Fiche_Doc():
              - couleurs
              - ...
         """
-        print("associerParametres")
+#         print("associerParametres")
 #         print("   proprietes2", self.seq.proprietes.proprietes)
 
         if self.getDocument() is not None:
@@ -2143,7 +2151,7 @@ class TableauH_var(Elem_Dessin):
             _y = self.y
             
         ctx.stroke ()
-        self.rect = self.x, self.y, _x-self.x, self.h
+        self.rect = self.x, self.y, _x-self.x, sum(self.hl)
 
 
 
@@ -2543,7 +2551,8 @@ class Liste_code_texte2(Elem_Dessin):
                 
         if acote:
             self.dx = max(wc) + minfheight
-                
+        if self.dx > w:
+            self.dx = 0
         #
         # Textes
         #
@@ -2567,7 +2576,7 @@ class Liste_code_texte2(Elem_Dessin):
                     re = (x + self.dx, y + (i+1)*hc + sum(ht[:i]), 
                           w - self.dx, ht[i])
                     va = 'h'  
-                
+#                 print(w, self.dx)
                 show_text_rect(ctx, self.lstTexte[i], 
                                re, 
                                b = 0, ha = 'g', va = va, 
@@ -2871,6 +2880,7 @@ def ajuster_texte(ctx, texte, w, h,
         # 3ème méthode
         n0 = len(texte.split("\n"))
 #         width0 = width0-(n0-1)*pas*2
+#         print(hl, n0, w_min, ratioRect)
         delta = (hl*(n0-1))**2 + 4*hl*w_min/ratioRect
         width = 0.5*(hl*(n0-1) + sqrt(delta))*ratioRect
         
