@@ -688,6 +688,7 @@ class Referentiel(XMLelem):
         self.AnneeDebut = ""            # Position de l'enseignement dans la scolarité (PERIODE+Année)
         
         self.periodes = []              # découpage de l'enseignement en années/périodes
+                                        #  --> liste de [nom, nbr de positions]
         self.FichierLogo = ""           # Fichier désignant l'image du Logo de l'enseignement
         
         
@@ -1193,7 +1194,7 @@ class Referentiel(XMLelem):
         ###########################################################
         def aplatir2(dic, niv=1):
             ddic = {}
-            for k0, v0 in list(dic.items()):
+            for v0 in dic.values():
                 ddic.update(v0[1])
             return ddic
         
@@ -1930,24 +1931,37 @@ class Referentiel(XMLelem):
     
     
     #############################################################################
-    def getPeriodeSpe(self, spe = None):
-        """ Renvoie la liste des périodes attribuées à la spécialité
-              format : [début, fin], à partir de 0
-              :spe: liste de code de spécialités
+    def getPeriodeSpe(self, spe = []):
+        """ Renvoie la liste des périodes
+            attribuées aux spécialités <spe> (list)
+            
+            :spe: liste de code de spécialités
+            
+            :return: [début, fin], à partir de 0
         """
 #         print("getPeriodeSpe", spe)
-        if spe is not None and len(self.listeSpecialites) > 0 and len(spe) > 0:
+        if len(self.listeSpecialites) > 0 and len(spe) > 0:
             lp = []
             for s in spe:
                 lp.extend([self.specialite[s][4][0]-1, self.specialite[s][4][-1]-1])
             return sorted(list(set(lp)))
         return [0, self.getNbrPeriodes()-1]
 
+
     #############################################################################
     def getPeriodeEval(self, codePrj):
+        """ Renvoie la période [debut, fin]
+            du Referentiel.Projet donc le code est <codePrj>
+        """
         return self.projets[codePrj].getPeriodeEval()
 
 
+    #############################################################################
+    def estPeriodeEval(self, position):
+        pp = self.periode_prj
+        return position+1 in range(pp[0], pp[1]+1)
+    
+    
     #############################################################################
     def getPeriodesListe(self):
         l = []
@@ -1969,6 +1983,11 @@ class Referentiel(XMLelem):
     def getProjetEval(self, position):
         """ Renvoie l'épreuve de projet (évaluation)
             situé à la position <position>
+            
+            :position: int parmi les positions des periodes (typiquement 1 à 10)
+            
+            :return: code de projet parmi self.projets.keys()
+                     None si aucun Projet ne correspond
         """
 #        print "getProjetEval", position
         for k, p in self.projets.items():
@@ -1978,9 +1997,13 @@ class Referentiel(XMLelem):
 
 
     #############################################################################
-    def getCodeProjetDefaut(self, spe = None):
-        """ Renvoie l'épreuve de projet (évaluation)
-            par défaut (pour les projets d'"entrainement" en cours d'année)
+    def getCodeProjetDefaut(self, spe = []):
+        """ Renvoie le code de l'épreuve de projet (évaluation) par défaut
+            (correspondant aux spécialités <spe>)
+            
+            :spe: liste de code de spécialités
+            
+            :return: code de projet parmi self.projets.keys()
         """
 #         print("getCodeProjetDefaut", spe)
         P = self.getPeriodeSpe(spe)
@@ -1999,19 +2022,18 @@ class Referentiel(XMLelem):
 
 
     #############################################################################
-    def getProjetDefaut(self):
-        """ Renvoie l'épreuve de projet (évaluation)
-            par défaut (pour les projets d'"entrainement" en cours d'année)
+    def getProjetDefaut(self, spe = None):
+        """ Renvoie le code de l'épreuve de projet (évaluation) par défaut
+            (correspondant aux spécialités <spe>)
+            
+            :spe: liste de code de spécialités
+            
+            :return: Referentiel.Projet
         """
-        code = self.getCodeProjetDefaut()
+        code = self.getCodeProjetDefaut(spe)
         if code is not None:
             return self.projets[code]
 
-
-    #############################################################################
-    def estPeriodeEval(self, position):
-        pp = self.periode_prj
-        return position+1 in range(pp[0], pp[1]+1)
 
 
     #########################################################################
@@ -2180,51 +2202,6 @@ class Referentiel(XMLelem):
     def GetNomGeneriqueComp(self, code = "S"):
         dic = self.getDicToutesCompetences()
         return dic[code].nomGenerique
-    
-#     #########################################################################
-#     def getSavoirs(self, code):
-#         """ Renvoie sous la forme [(code, Referentiel.Savoirs), ]
-#             tous les savoirs concernés par cet enseignement
-#         """
-#         if code in self.listSavoirs.keys():
-#             return self.listSavoirs[code]
-#         elif self.tr_com != []:
-#             r = REFERENTIELS[self.tr_com[0]]
-#             if code in 
-#             
-#         
-#         if self.tr_com != []:
-#             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
-#             
-#             dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
-#             dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
-#             
-#         return savoirs
-            
-#    #########################################################################
-#    def getCompetence(self, comp):
-##        print "getCompetence", comp
-##        print "   ", self.dicCompetences
-#        if comp in self.dicCompetences.keys():
-##            print "   1>>"
-#            return self.dicCompetences[comp]
-#        else:
-#            for k0, v0 in self.dicCompetences.items():
-##                print "  ", k0, type(v0[1])
-#                if type(v0[1]) == dict:
-#                    if comp in v0[1].keys():
-##                        print "   2>>"
-#                        return v0[1][comp]
-#                    else:
-#                        for k1, v1 in v0[1].items():
-#                            if type(v1[1]) == dict and comp in v1[1].keys():
-##                                print "   3>>"
-#                                return v1[1][comp]
-
-    
-
-    
-            
        
     
     #########################################################################

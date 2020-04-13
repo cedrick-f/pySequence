@@ -2038,7 +2038,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def ShowTip(self, x, y):
         if self.curTip is None: return
         
-        X, Y, W, H = getDisplayPosSize()
+        X, Y, W, H = getDisplayPosSize()[0]
         w, h = self.curTip.GetSize()
         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
         self.curTip.Show()
@@ -3826,7 +3826,7 @@ class Projet(BaseDoc, Grammaire):
         BaseDoc.__init__(self, app, classe, intitule)
         
         
-        # code désignant le type de projet
+        # code désignant le type de projet (parmi les codes de projet du référentiel)
 #        print "init Projet"
 #        print "   ", self.GetReferentiel()   
         self.code = self.GetReferentiel().getCodeProjetDefaut()
@@ -3897,13 +3897,15 @@ class Projet(BaseDoc, Grammaire):
 
 
     ######################################################################################  
-    def GetProjetRef(self, spe = None):
+    def GetProjetRef(self):
         """ Renvoie le projet (Referentiel.Projet) de référence
+            
         """
 #         print("GetProjetRef", self.code, list(self.GetReferentiel().projets.keys()))
         ref = self.GetReferentiel()
+        spe = self.classe.specialite
         
-        if self.code == None:
+        if self.code == None: # on n'a pas encore donné de code à ce projet
             return ref.getProjetDefaut(spe)
         else:
             if self.code in ref.projets.keys():
@@ -3911,12 +3913,13 @@ class Projet(BaseDoc, Grammaire):
             else:
                 return None #Referentiel.Projet(self.GetReferentiel()) # None : pose des pb
 
+
     ######################################################################################  
-    def GetPeriodeDefaut(self, spe = None):
-        if spe is None:
-            spe = self.classe.specialite
+    def GetPeriodeDefaut(self):
+#         if spe is None:
+#             spe = self.classe.specialite
 #         print("GetPeriodeDefaut", spe)
-        projet = self.GetProjetRef(spe)  #type referentiel.Projet
+        projet = self.GetProjetRef()  #type referentiel.Projet
 #         print("   ", projet)
 #         return projet.getPeriodeDefaut()
     
@@ -3925,7 +3928,8 @@ class Projet(BaseDoc, Grammaire):
             return projet.getPeriodeDefaut()
         else:
             return [0,0]
-        
+    
+    
     ######################################################################################  
     def GetDuree(self):
         ld = [e.GetDuree() for e in self.eleves + self.groupes]
@@ -4223,13 +4227,15 @@ class Projet(BaseDoc, Grammaire):
         
 #         print("___0", self.code)   
         prj = self.GetProjetRef()
-        if prj is not None:
+        if prj is not None: # Il existe un projet d'évaluation pour ce référentiel
             if self.version == "": # Enregistré avec une version de pySequence > 5.7
                 if self.position[0] == 5:
                     print("Correction position")
                     self.position = prj.getPeriodeEval()
     #        print "position", self.position
-            self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
+            
+#             # Code du Referentiel.Projet correspondant au début de la période définie par self.position
+#             self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
             
 #             self.nbrRevues = int(branche.get("NbrRevues"))
             #self.MiseAJourNbrRevues()
@@ -4362,7 +4368,7 @@ class Projet(BaseDoc, Grammaire):
         tachesRevue = self.getTachesRevue()
         
         self.taches = []
-        adapterVersion = True
+#         adapterVersion = True
         
         for e in list(brancheTac):
             phase = e.get("Phase")
@@ -4379,7 +4385,7 @@ class Projet(BaseDoc, Grammaire):
                         err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, phase))
                 
                     self.taches.append(tachesRevue[num])
-                adapterVersion = False
+#                 adapterVersion = False
             else:
                 tache = Tache(self, branche = e)
 #                 if int(tache.code) < 0 : # ça s'est mal passé lors du setbranche ...
@@ -4388,33 +4394,45 @@ class Projet(BaseDoc, Grammaire):
                     
 #                tache.setBranche(e)
                 self.taches.append(tache)
+#         print("taches1", self.taches)
 #        self.CorrigerIndicateursEleve()
 #         print("taches:",self.taches)
-        # On corrige si le nombre de revues n'est pas compatible avec les limites fixées par le référentiel#
-        # Il faut le faire après avoir chargé les tâches
-        if prj is not None:
-            if not (min(prj.posRevues.keys()) <= self.getNbrRevues() <= max(prj.posRevues.keys())) :
-    #             print("> initRevues")
-                self.initRevues()
-                self.MiseAJourNbrRevues()
-                
-        # Correction de corruption
-        if self.calcNbrRevues() != self.getNbrRevues():
-            self.MiseAJourNbrRevues()
-        
-        if len([k for k in self.taches if k.phase == 'S']) > 1:
-            for i, k in enumerate(self.taches):
-                 if k.phase == 'S':
-                     del self.taches[i]
-                     break
+
+
+        self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
+#         self.SetPosition(self.position)
+
+#         print("prj", prj)
+#         # On corrige si le nombre de revues n'est pas compatible avec les limites fixées par le référentiel#
+#         # Il faut le faire après avoir chargé les tâches
+#         if prj is not None: # Il existe un projet d'évaluation pour ce référentiel
+#             if not (min(prj.posRevues.keys()) <= self.getNbrRevues() <= max(prj.posRevues.keys())) :
+#     #             print("> initRevues")
+#                 self.initRevues()
+#                 self.MiseAJourNbrRevues()
+#         print("taches2", self.taches, self.calcNbrRevues(), self.getNbrRevues())        
+#         # Correction de corruption
+#         if prj is not None and self.calcNbrRevues() != self.getNbrRevues():
+#             self.MiseAJourNbrRevues()
+#         print("taches3", self.taches)
+#         
+#         if len([k for k in self.taches if k.phase == 'S']) > 1:
+#             for i, k in enumerate(self.taches):
+#                 if k.phase == 'S':
+#                     del self.taches[i]
+#                     break
             
-        
+#         print("taches3", self.taches)
+
+
+
+
+
         #
         # sysML
         #
         branchesysml = branche.find("sysML")
-        prj = self.GetProjetRef()
-        if 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
+        if branchesysml is not None and 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
             for i, n in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 br = branchesysml.find("Lien_"+str(i))
@@ -4458,10 +4476,16 @@ class Projet(BaseDoc, Grammaire):
     
     ######################################################################################  
     def SetPosition(self, pos, first = False):
+        """ Change la position [début, fin] du Projet
+            et gère les éventuelles revues (ajout/suppression)
+        """
 #        print "SetPosition", pos
 #        print "  position actuelle :", self.position
 #        posEpreuve = self.GetProjetRef().getPeriodeEval()
+
+        # Code du Referentiel.Projet correcpondant au début de la periode de la position du Projet
         kproj = self.GetReferentiel().getProjetEval(pos[0]+1)
+        
 #        print "  >", kproj
 #        print "  posEpreuve", posEpreuve
     
@@ -4501,47 +4525,11 @@ class Projet(BaseDoc, Grammaire):
                 self.arbre.Ordonner(self.brancheTac)
 #                 print("**3", self.taches)
                 self.GetApp().sendEvent(modif = "Changement de Projet")
-    
-
-                
-            
             
         # Sinon on se contente de redessiner
         else:
             self.GetApp().sendEvent()
         
-        
-        
-#        # On passe à la position "épreuve"
-#        if pos == posEpreuve and self.position != posEpreuve:
-#            for tr in self.creerTachesRevue():
-#                self.taches.append(tr)
-#                tr.ConstruireArbre(self.arbre, self.brancheTac)
-#                tr.SetCode()
-#                if hasattr(tr, 'panelPropriete'):
-#                    tr.panelPropriete.MiseAJour()
-#            self.OrdonnerTaches()
-#            self.arbre.Ordonner(self.brancheTac)
-#            if hasattr(self, 'panelPropriete'):
-#                self.panelPropriete.sendEvent()
-#
-#                
-#        # On passe de la position "épreuve" à une autre
-#        elif pos !=posEpreuve and self.position == posEpreuve:
-#            lst = []
-#            for t in self.taches:
-#                if t.phase in TOUTES_REVUES_EVAL_SOUT:
-#                    lst.append(t.branche)
-#            for a in reversed(lst):
-#                self.SupprimerTache(item = a, verrouiller = False)
-#        
-#        
-#        # Sinon on se contente de redessiner
-#        else:
-#            if hasattr(self, 'panelPropriete'):
-#                self.panelPropriete.sendEvent()
-            
-            
         self.position = pos
         
 #        self.GetPanelPropriete().MiseAJour()
@@ -5695,10 +5683,12 @@ class Projet(BaseDoc, Grammaire):
         self.classe.MiseAJourTypeEnseignement()
         
         self.position = self.GetPeriodeDefaut()
-#        print "position", self.position
+#         print("taches", self.taches)
         
         self.initRevues()
         self.MiseAJourNbrRevues()
+#         print("taches", self.taches)
+        
         
         if hasattr(self, 'brancheElv'):
             self.brancheElv.SetText(self.GetReferentiel().getLabel("ELEVES").Plur_())

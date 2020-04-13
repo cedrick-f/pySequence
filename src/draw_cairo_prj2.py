@@ -59,10 +59,6 @@ import wx
 
 import couleur
 
-
-
-    
-
     
 ######################################################################################  
 def getPts(lst_rect):
@@ -194,9 +190,18 @@ class Projet(Base_Fiche_Doc):
         self.wColCompBase = 0.018 * COEF
         self.wColComp = self.wColCompBase
         self.xComp = {}
-        self.ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
-                     'S' : (0.598, 0.7, 1, 0.2),
-                     ''  : (0.598, 0.7, 0.7, 0.2)}    # couleur "Soutenance"
+        
+        
+        
+        self.ICoulComp = {}
+        ref = self.prj.GetReferentiel()
+        
+                
+                
+                
+#         self.ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
+#                           'S' : (0.598, 0.7, 1, 0.2),    # couleur "Soutenance"
+#                           ''  : (0.598, 0.7, 0.7, 0.2)}    
         #ICoulComp['S'] = (0.598, 0.7, 1, 0.2)      
         #ICoulComp['C'] = (1, 0.6, 0.7, 0.2)      
         #BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
@@ -244,6 +249,12 @@ class Projet(Base_Fiche_Doc):
         
         self.ecartYElevesTaches = 0.05 * COEF
 
+        self.p_coul_a1 = (0.85, 0.85, 0.95, 0.3)
+        self.p_coul_a2 = (0.7,  0.7,  0.8,  0.2)
+        
+        self.p_coul_cmpC = (1, 0.6, 0.7, 0.2)      # couleur "Conduite"
+        self.p_coul_cmpS = (0.598, 0.7, 1, 0.2)    # couleur "Soutenance"
+        
     
     ######################################################################################  
     def DefinirZones(self, ctx):
@@ -356,6 +367,7 @@ class Projet(Base_Fiche_Doc):
     
     ######################################################################################  
     def getCoulComp(self, partie, alpha = 1.0):
+        print("getCoulComp", partie)
         if partie in self.ICoulComp:
             return (*self.ICoulComp[partie][:3], alpha)  
         return (*self.ICoulComp[''][:3], alpha)
@@ -367,11 +379,19 @@ class Projet(Base_Fiche_Doc):
         n3 = len(self.prj.eleves + self.prj.groupes)
 #         couleur.generate(self.ICoulComp, [0xFFFF6666, 0xFFFFFF66, 0xFF75FF66, 0xFF66FFF9, 0xFFFF66F4], n2)
     
-    
+        pr = self.prj.GetProjetRef()
+#         for pr in ref.projets:
+        for i, pa in enumerate(pr.listeParties):
+            if i%2 == 0:
+                self.ICoulComp[pa] = self.p_coul_cmpC
+            else:
+                self.ICoulComp[pa] = self.p_coul_cmpS
+            
+            
         del self.CoulAltern[:]
         for n in range(n3//2+1):
-            self.CoulAltern += [((0.85, 0.85, 0.95, 0.3),    (0, 0, 0, 1)),
-                           ((0.7,  0.7,  0.8,  0.2),    (0, 0, 0, 1))]
+            self.CoulAltern += [(self.p_coul_a1,    (0, 0, 0, 1)),
+                                (self.p_coul_a2,    (0, 0, 0, 1))]
 
         
     ######################################################################################  
@@ -454,21 +474,25 @@ class Projet(Base_Fiche_Doc):
             dans un contexte cairo <ctx>
         """
         #        print "Draw séquence"
-
+        print("ICoulComp", self.ICoulComp)
         self.ctx = ctx
         
         #
         # Options générales
         #
         self.initOptions(ctx)
-        
         self.DefinirZones(ctx)
-        
         self.definirCouleurs()
+        
+        #
+        # Objects annexes
+        #
+        prjeval = self.prj.GetProjetRef()
         
         
         
     #     gabarit()
+    
         #
         #    pour stocker des zones caractéristiques (à cliquer, ...)
         #
@@ -478,6 +502,8 @@ class Projet(Base_Fiche_Doc):
         self.prj.pt_caract = []  # Contenu attendu : ((x,y), code)
         # Points caractéristiques des rectangles (sans code)
         self.prj.pts_caract = [] 
+        
+        
         
         #
         # Type d'enseignement
@@ -642,7 +668,7 @@ class Projet(Base_Fiche_Doc):
         #  Tableau des compétenecs
         #
         if not self.entete:
-            competences = regrouperLst(self.prj.GetProjetRef(), self.prj.GetCompetencesUtil())
+            competences = regrouperLst(prjeval, self.prj.GetCompetencesUtil())
     #         print "competences", competences
     #         prj.pt_caract_comp = []
             
@@ -717,10 +743,10 @@ class Projet(Base_Fiche_Doc):
                 #
                 # Barres d'évaluabilité
                 #
-                if self.prj.GetProjetRef() is None:
+                if prjeval is None:
                     parties = {}
                 else:
-                    parties = self.prj.GetProjetRef().parties
+                    parties = prjeval.parties
                 for i, e in enumerate(self.prj.eleves + self.prj.groupes):
                     ev = e.GetEvaluabilite(compil = True)[1]
                     y = self.posZElevesH[1] + i*self.hEleves
@@ -865,11 +891,11 @@ class Projet(Base_Fiche_Doc):
                     else:
                         orient = "v"
                     
-                    if self.prj.GetProjetRef() is None:
+                    if prjeval is None:
                         n = ""
                     else:
                         try:
-                            n = self.prj.GetProjetRef().phases[phase][1]
+                            n = prjeval.phases[phase][1]
                         except KeyError:
                             n = ""
                     show_text_rect(ctx, n, 
@@ -889,9 +915,9 @@ class Projet(Base_Fiche_Doc):
         #
         # Durées élève entre revues (uniquement en période "terminale")
         #
-        if not self.entete and self.prj.GetProjetRef() is not None:
+        if not self.entete and prjeval is not None:
         #    tps = time.time()
-            posEpreuve = self.prj.GetProjetRef().getPeriodeEval()
+            posEpreuve = prjeval.getPeriodeEval()
             if posEpreuve is not None and self.prj.position == posEpreuve:
                 y0 = self.posZTaches[1]
                 y4 = y1+len(self.prj.eleves + self.prj.groupes) * self.hRevue + 2*self.ecartTacheY
@@ -947,10 +973,10 @@ class Projet(Base_Fiche_Doc):
                 x = self.xEleves[i]-self.wEleves*3/4
                 y = self.posZTaches[1] + self.tailleZTaches[1] + (i % 2)*(self.ecartY/2)+self.ecartY/2
                 d = e.GetDuree()
-                if self.prj.GetProjetRef() is None:
+                if prjeval is None:
                     taux = 100
                 else:
-                    dureeRef = self.prj.GetProjetRef().duree
+                    dureeRef = prjeval.duree
                     taux = abs((d-dureeRef)/dureeRef)*100
         #        print "   duree", d, "/", dureeRef
         #        print "   taux", taux

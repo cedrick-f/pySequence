@@ -180,7 +180,7 @@ import draw_cairo_prg2 as draw_cairo_prg
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     isstring, EditableListCtrl, Grammaire, \
-                    et2ou, FullScreenWin, safeParse,\
+                    et2ou, FullScreenWin, safeParse, dansRectangle, \
                     TextCtrl_Help, CloseFenHelp, DelayedResult, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
                     tronquerDC, EllipticStaticText, scaleImage, scaleIcone, \
@@ -395,7 +395,7 @@ def getDisplayPosSize():
     """
     displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
     sizes = [display.ClientArea for display in displays]
-    return sizes[0]
+    return sizes
 
 
 
@@ -489,11 +489,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         ##############################################################################################
         # Taille et position de la fenétre
         ##############################################################################################
-        x, y, w, h = getDisplayPosSize()
+        rs = getDisplayPosSize()
+        x, y, w, h = rs[0]
         #print wx.GetDisplaySize()
         
         pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
         
+        visible = dansRectangle(*pos, rs)
+            
 #         self.WMIN_STRUC*SSCALE = self.options.optFenetre["Larg_pnl_Arbre"]
 #         self.HMIN_PROP*SSCALE = self.options.optFenetre["Haut_pnt_Prop"]
         
@@ -502,7 +505,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         print len(pos), len(siz)
 #         print x, y, w, h
         
-        if len(pos) == 2 \
+        if len(pos) == 2 and visible \
             and len(siz) == 2 \
             and pos[0] < w \
             and pos[1] < h:
@@ -3684,7 +3687,9 @@ class FenetreProjet(FenetreDocument):
                 message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + "\n"
                 if DEBUG:
                     raise
-        
+#             print("tachesi", self.projet.taches)
+            
+            
         self.projet.Verrouiller()
         self.projet.VerifierVersionGrilles()
 
@@ -3780,6 +3785,7 @@ class FenetreProjet(FenetreDocument):
                     print("Pas bon référentiel")
                     self.classe.setBranche(classe, reparer = True)
                 
+#                 print("taches1", self.projet.taches)
                 
                 # Correction du bug des CO7.ee3 et 4 manquante pour les Projets enregistrés avant v7.1.12
                 if version.sup("7.1.12", self.classe.GetVersion().split('.')):
@@ -3790,7 +3796,7 @@ class FenetreProjet(FenetreDocument):
 #                         print self.projet.GetProjetRef()._dicoCompetences['S']['O7'].sousComp.items()
 #                 print("setBranche ...")
                 err = self.projet.setBranche(projet)
-                
+#                 print("taches2", self.projet.taches)
                 if len(err) > 0 :
                     Ok = False
                     message += get_err_message(err)
@@ -4285,7 +4291,7 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        print("MiseAJourTypeEnseignement", self.projet.GetReferentiel().getLabel("PRJVAL").Sing_())
+#         print("MiseAJourTypeEnseignement", self.projet.GetReferentiel().getLabel("PRJVAL").Sing_())
         self.nb.SetPageText(1, "Tâches %s détaillées" %self.projet.GetReferentiel().getLabel("ELEVES").plur_())
         self.nb.SetPageText(2, self.projet.GetReferentiel().getLabel("PRJVAL").Sing_())
         
@@ -6421,8 +6427,10 @@ class PanelPropriete_Projet(PanelPropriete):
                 
             else:
 #                print "MiseAJour :", ref.attributs['SML'][1]
-                self.intctrl.MiseAJour("", prj.attributs['SML'][1])
-                self.enonctrl.MiseAJour("", prj.attributs['SML'][3])
+                if hasattr(self, 'intctrl'):
+                    self.intctrl.MiseAJour("", prj.attributs['SML'][1])
+                if hasattr(self, 'enonctrl'):
+                    self.enonctrl.MiseAJour("", prj.attributs['SML'][3])
         else:
             if 'SML' in self.pages:
                 self.nb.DeletePage(self.GetPageNum(self.pages['SML']))
