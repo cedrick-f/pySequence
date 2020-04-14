@@ -59,21 +59,21 @@ _Feuilles de calcul :_ `Généralité_x`
 Cette feuille comporte les caractéristiques de différents champs de saisie de propriété de chaque projet.
 
 ##### Attributs du projet
-Codes | Type de saisie | Lieu de saisie | Sur la fiche
------------- | ----- | --- | -
-`TIT` | Zone de texte | Onglet Propriétés générales | x
-`PB` | Zone de texte | Onglet Propriétés générales | x
-`ORI` | Zone de texte | Onglet spécifique | 
-`CCF` | Zone de texte | Onglet spécifique | 
-`OBJ` | Zone de texte | Onglet spécifique | 
-`TYP` | Cases à cocher | Onglet spécifique | 
-`DEC` | 2 zones de texte+nombre | Onglet spécifique | 
-`PAR` | Zone de texte | Onglet commun avec `PRX` et `SRC` | 
-`PRX` | Zone de texte | Onglet commun avec `PAR` et `SRC` | 
-`SRC` | Zone de texte | Onglet commun avec `PRX` et `PAR` | 
-`SYN` | Zone de texte | Onglet spécifique | 
-`FIC` | ??? | ??? | 
-`SML` | Selection de fichiers 'image' | Onglet spécifique | 
+Codes | Type de saisie | Lieu de saisie | Sur la fiche | Code sur fiche HTML
+------------ | ----- | --- | - | --
+`TIT` | Zone de texte | Onglet Propriétés générales | x | `TIT`
+`PB` | Zone de texte | Onglet Propriétés générales | x | `PB`
+`ORI` | Zone de texte | Onglet spécifique |  | `ORI`
+`CCF` | Zone de texte | Onglet spécifique |  | `CCF`
+`OBJ` | Zone de texte | Onglet spécifique |  | `OBJ`
+`TYP` | Cases à cocher | Onglet spécifique |  | `TYP`
+`DEC` | 2 zones de texte+nombre | Onglet spécifique |  | 
+`PAR` | Zone de texte | Onglet commun avec `PRX` et `SRC` |  | `PAR`
+`PRX` | Zone de texte | Onglet commun avec `PAR` et `SRC` |  | `PRX`
+`SRC` | Zone de texte | Onglet commun avec `PRX` et `PAR` |  | `SRC`
+`SYN` | Zone de texte | Onglet spécifique |  | `SYN`
+`FIC` | ??? | ??? |  | 
+`SML` | Selection de fichiers 'image' | Onglet spécifique |  | `ML_`
 
 
 #### Grilles d'évaluation
@@ -105,7 +105,7 @@ Certaines informations peuvent être automatiquement insérées dans les feuille
  * Préfixe : texte à rajouter devant l'information
 
 
-#### Les fiches de validation de projet en HTML
+#### Les fiches de validation/définition de projet en HTML
 Les fiches de validation de projet doivent être des fichiers au format HTML. 
 **_pySéquence 8_** les convertis en PDF lors de l'affichage ou l'export de ces fiches.
 Les chemins (relatifs à `referentiels/`) de ces fichiers doivent être placés dans les cellules `Généralités_xxx!A19`.
