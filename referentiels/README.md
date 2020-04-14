@@ -53,18 +53,49 @@ Pour que les projets soient correctement pris en compte, il faut qu'il y ait cor
 ou bien
 `Généralités!B26` = `Comp_S!L2`
 
-#### Cellules à renseigner
- * "Tit" : intitulé du Projet
- * "Des" : description complète du sujet (intitulé + problématique)
- * "Nom" : nom de l'élève/étudiant
- * "Pre" : prénom de l'élève/étudiant
- * "N-P" : nom et prénom de l'élève/étudiant
- * "Etab": nom de l'établissement
- * "Sess": session
- * "Prof" : liste des membres du jury
- * "EtabPrf" : liste des établissements des membres du jury
+#### Généralités
+_Feuilles de calcul :_ `Généralité_x`
 
-## Les fiches de validation de projet en HTML
+Cette feuille comporte les caractéristiques de différents champs de saisie de propriété de chaque projet.
+
+##### Attributs du projet
+ * Code : 
+   * TIT : intitulé du projet
+   * PB : problématique/énoncé du besoin/ ...
+   *
+   
+
+
+#### Grilles d'évaluation
+_Feuilles de calcul :_ `Grille_x_y`
+
+
+##### Fichier "grille"
+ * Nom du fichier : lien vers le fichier .xls (à partir du dossier `tables`)
+ * Type :
+   * `I` pour _individuel_ (un classeur par élève/étudiant)
+   * `C` pour _collectif_ (une feuille de calcul par élève/étudiant)
+
+##### Cellules à renseigner
+Certaines informations peuvent être automatiquement insérées dans les feuilles de calcul par **_pySéquence 8_**.
+
+ * Code :
+   * "Tit" : intitulé du Projet
+   * "Des" : description complète du sujet (intitulé + problématique)
+   * "Nom" : nom de l'élève/étudiant
+   * "Pre" : prénom de l'élève/étudiant
+   * "N-P" : nom et prénom de l'élève/étudiant
+   * "Etab": nom de l'établissement
+   * "Sess": session
+   * "Prof" : liste des membres du jury
+   * "EtabPrf" : liste des établissements des membres du jury
+ * Feuille : nom de la feuille de calcul où insérer l'information
+ * Ligne/Colonne : cellule où insérer l'information (à partir de 1)
+ * Période : quand l'information est une liste, périodicité en nombre de lignes
+ * Préfixe : texte à rajouter devant l'information
+
+
+#### Les fiches de validation de projet en HTML
 Les fiches de validation de projet doivent être des fichiers au format HTML. 
 **_pySéquence 8_** les convertis en PDF lors de l'affichage ou l'export de ces fiches.
 Les chemins (relatifs à `referentiels/`) de ces fichiers doivent être placés dans les cellules `Généralités_xxx!A19`.
@@ -88,7 +119,7 @@ Tâches | `TCH`
 
 [Syntaxe spécifique au convertisseur HTML/PDF](https://xhtml2pdf.readthedocs.io/en/latest/format_html.html#)
 
-### Classes intégrées
+##### Classes intégrées
 Il est possible de redéfinir les styles pour les classes suivantes
  * `typologie` (tables) : cases à cocher du champ typologie (`TYP`)
  * ...
