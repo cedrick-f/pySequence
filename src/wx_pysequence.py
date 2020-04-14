@@ -115,7 +115,7 @@ class SingleInstApp(wx.App):
         if self.instance.IsAnotherRunning():
             # Another instance so just send a message to
             # the instance that is already running.
-            options, fichier = GetArgs()
+            _, fichier = GetArgs()
             
             if os.path.isfile(fichier):
                 cmd = "OpenWindow.%s.%s" % (self.name, fichier)

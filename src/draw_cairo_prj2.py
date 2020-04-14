@@ -111,6 +111,7 @@ class Projet(Base_Fiche_Doc):
         self.surRect = surRect
         self.pourDossierValidation = pourDossierValidation
         
+        
         self.CoulAltern = []
         self.ICoulComp = []
         
@@ -194,17 +195,6 @@ class Projet(Base_Fiche_Doc):
         
         
         self.ICoulComp = {}
-        ref = self.prj.GetReferentiel()
-        
-                
-                
-                
-#         self.ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
-#                           'S' : (0.598, 0.7, 1, 0.2),    # couleur "Soutenance"
-#                           ''  : (0.598, 0.7, 0.7, 0.2)}    
-        #ICoulComp['S'] = (0.598, 0.7, 1, 0.2)      
-        #ICoulComp['C'] = (1, 0.6, 0.7, 0.2)      
-        #BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
         self.BCoulCompS = (0.7, 0.7, 0.7, 0.2)      # couleur "Soutenance"
         
         
@@ -257,7 +247,7 @@ class Projet(Base_Fiche_Doc):
         
     
     ######################################################################################  
-    def DefinirZones(self, ctx):
+    def DefinirZones(self):
         """ Calcule les positions et dimensions des différentes zones de tracé
             en fonction du nombre d'éléments (élèves, tâches, compétences)
         """
@@ -367,29 +357,27 @@ class Projet(Base_Fiche_Doc):
     
     ######################################################################################  
     def getCoulComp(self, partie, alpha = 1.0):
-        print("getCoulComp", partie)
+#         print("getCoulComp", partie)
         if partie in self.ICoulComp:
             return (*self.ICoulComp[partie][:3], alpha)  
         return (*self.ICoulComp[''][:3], alpha)
 
     
     ######################################################################################  
-    def definirCouleurs(self):
-        n2 = len(self.prj.GetReferentiel()._listesCompetences_simple["S"])
-        n3 = len(self.prj.eleves + self.prj.groupes)
-#         couleur.generate(self.ICoulComp, [0xFFFF6666, 0xFFFFFF66, 0xFF75FF66, 0xFF66FFF9, 0xFFFF66F4], n2)
-    
+    def definirCouleurs(self):        
+        # Les couleurs des parties (Conduite - Soutenance)
         pr = self.prj.GetProjetRef()
-#         for pr in ref.projets:
         for i, pa in enumerate(pr.listeParties):
             if i%2 == 0:
                 self.ICoulComp[pa] = self.p_coul_cmpC
             else:
                 self.ICoulComp[pa] = self.p_coul_cmpS
             
-            
+        
+        # Des couleurs alternées (pour les lignes de croisement)
+        n3 = len(self.prj.eleves + self.prj.groupes)
         del self.CoulAltern[:]
-        for n in range(n3//2+1):
+        for _ in range(n3//2+1):
             self.CoulAltern += [(self.p_coul_a1,    (0, 0, 0, 1)),
                                 (self.p_coul_a2,    (0, 0, 0, 1))]
 
@@ -406,7 +394,7 @@ class Projet(Base_Fiche_Doc):
             typ = {}
             for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
     #             print "   ", disc, tousIndicateurs
-                for k0, competence in tousIndicateurs.items():
+                for competence in tousIndicateurs.values():
     #                 print "      ",k0,  competence
                     for k1, sousComp in competence.sousComp.items():
     #                     print "         ", k1, sousComp
@@ -438,7 +426,7 @@ class Projet(Base_Fiche_Doc):
             typ = {}
             for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
     #             print "-----", disc
-                for k0, competence in tousIndicateurs.items():
+                for competence in tousIndicateurs.values():
     #                 print "     ", k0, competence
                     for k1, sousComp in competence.sousComp.items():
     #                     print "        ", k1, sousComp
@@ -474,21 +462,20 @@ class Projet(Base_Fiche_Doc):
             dans un contexte cairo <ctx>
         """
         #        print "Draw séquence"
-        print("ICoulComp", self.ICoulComp)
+        
         self.ctx = ctx
         
         #
         # Options générales
         #
         self.initOptions(ctx)
-        self.DefinirZones(ctx)
+        self.DefinirZones()
         self.definirCouleurs()
-        
+#         print("ICoulComp", self.ICoulComp)
         #
         # Objects annexes
         #
         prjeval = self.prj.GetProjetRef()
-        
         
         
     #     gabarit()
@@ -679,7 +666,7 @@ class Projet(Base_Fiche_Doc):
                 _x = self.posZComp[0]
                 _y0, _y1 = self.posZElevesH[1], self.posZDeroul[1] + self.tailleZDeroul[1]
                 
-                for s in competences:
+                for _ in competences:
         #            s.rect=((_x, _y, wc, posZTaches[1] - posZComp[1]),)
                     ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
                     ctx.set_source_rgba(0.5, 0.5, 0.5, 0.2)
@@ -1237,7 +1224,19 @@ class Projet(Base_Fiche_Doc):
     #    print "   ", revue.GetDicIndicateursEleve(eleve)
         self.drawBoutonCompetence(revue, 
                                   self.regrouperDic(revue, revue.GetDicIndicateursEleve(eleve)), y, h)
-        
+    
+    
+    
+    ######################################################################################  
+    def drawCroisementsElevesCompetences(self, eleve, y):
+        #
+        # Boutons
+        #
+        self.drawBoutonCompetence(eleve, 
+                                  self.regrouperDic(eleve, eleve.GetDicIndicateurs()), y)
+    
+    
+    
     #####################################################################################  
     def drawCroisementsElevesTaches(self, tache, y):
         """ Dessine les "boules"
@@ -1300,13 +1299,7 @@ class Projet(Base_Fiche_Doc):
             y += dy
             
     
-    ######################################################################################  
-    def drawCroisementsElevesCompetences(self, eleve, y):
-        #
-        # Boutons
-        #
-        self.drawBoutonCompetence(eleve, 
-                                  self.regrouperDic(eleve, eleve.GetDicIndicateurs()), y)
+    
         
     
         
@@ -1315,7 +1308,7 @@ class Projet(Base_Fiche_Doc):
         """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
              ... avec un petit décalage vertical pour que ce soit lisible en version N&B
         """
-    #     print("DrawBoutonCompetence", objet, dicIndic)
+#         print("DrawBoutonCompetence", objet, dicIndic)
         if h == None: # Toujours sauf pour les revues
             r = self.wColComp/3
             h = 2*r
@@ -1324,7 +1317,8 @@ class Projet(Base_Fiche_Doc):
         dh = h/10
         self.ctx.set_line_width (0.0004 * COEF)
         dicIndic, dictype = dicIndic
-     
+        prjeval = objet.GetProjetRef()
+        
         for s in dicIndic.keys():
             
     #         if s in dicIndic.keys():
@@ -1345,33 +1339,78 @@ class Projet(Base_Fiche_Doc):
     #            dangle = 2*pi/len(indic)
             dx = self.wColComp/len(indic)
             for a, i in enumerate(indic):
-                if i: # Rose ou bleu
-    #                 print "   ", s, a
-                    part = list(dictype[s][a].keys())[0]
-                    if part == 'S':
-    #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
-                        d = -1
-                    else:
-                        d = 1
-                    self.ctx.set_source_rgba (*self.getCoulComp(part))
-                else: # Rien => Transparent
-                    d = 0
-                    self.ctx.set_source_rgba (1, 1, 1, 0)
+                deja = 0
+                for part in dictype[s][a]:
+                    if part in prjeval.parties:
+                        if i: # Rose ou bleu
+                        
+                            if part[0] == "S":  # Soutenance
+                                d = -1
+                            else:               # Conduite
+                                d = 1
+                        
+                            self.ctx.set_source_rgba (*self.getCoulComp(part))
                 
-    #                 print "d", d, (x+a*dx, y-h/2+d*dh, dx, h-dh)
+                        else:
+                            d = 0
+                            self.ctx.set_source_rgba (1, 1, 1, 0)
                 
-                if d != 0:
-                    self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-                    self.ctx.fill_preserve ()
-                else:
-                    self.ctx.move_to(x+a*dx, y-h/2+dh)
-                    self.ctx.rel_line_to(0, h-4*dh)
-                    self.ctx.move_to(x+a*dx+dx, y-h/2+dh)
-                    self.ctx.rel_line_to(0, h-4*dh)
+                        if d != 0:      # Un rectangle coloré
+                            if deja != 0:   # On a jéja mis un rectangle ici (position deja)
+                                if deja == 1:
+                                    self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h/2+dh/2)
+                                else:
+                                    self.ctx.rectangle(x+a*dx, y-h/2, dx, h/2-dh)
+                                
+                            else:
+                                self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
+                                deja = d
+                                
+                            self.ctx.fill_preserve ()
+                            
+                        else:           # Juste deux trait verticaux
+                            self.ctx.move_to(x+a*dx, y-h/2+dh)
+                            self.ctx.rel_line_to(0, h-4*dh)
+                            self.ctx.move_to(x+a*dx+dx, y-h/2+dh)
+                            self.ctx.rel_line_to(0, h-4*dh)
+                
+                        self.ctx.set_source_rgba (0, 0 , 0, 1)
+                        self.ctx.stroke()
+                
+                
+                
+                
+                
+#                 if i: # Rose ou bleu
+#     #                 print "   ", s, a
+#                     part = list(dictype[s][a].keys())[0]
+#                     if part == 'S':
+#     #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
+#                         d = -1
+#                     else:
+#                         d = 1
+#                     self.ctx.set_source_rgba (*self.getCoulComp(part))
+#                 else: # Rien => Transparent
+#                     d = 0
+#                     self.ctx.set_source_rgba (1, 1, 1, 0)
+#                 
+#     #                 print "d", d, (x+a*dx, y-h/2+d*dh, dx, h-dh)
+#                 
+#                 
+#                 
+#                 if d != 0:      # Un rectangle coloré
+#                     self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
+#                     self.ctx.fill_preserve ()
+#                     
+#                 else:           # Juste deux trait verticaux
+#                     self.ctx.move_to(x+a*dx, y-h/2+dh)
+#                     self.ctx.rel_line_to(0, h-4*dh)
+#                     self.ctx.move_to(x+a*dx+dx, y-h/2+dh)
+#                     self.ctx.rel_line_to(0, h-4*dh)
     
                 
-                self.ctx.set_source_rgba (0, 0 , 0, 1)
-                self.ctx.stroke()
+#                 self.ctx.set_source_rgba (0, 0 , 0, 1)
+#                 self.ctx.stroke()
     
     
 
@@ -1384,7 +1423,7 @@ class Projet(Base_Fiche_Doc):
 def gabarit():
     
     print("Génération du gabarit ...", end=' ') 
-    import draw_cairo_prj
+    import draw_cairo_prj2
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     
@@ -1395,7 +1434,7 @@ def gabarit():
 #     print dir(draw_cairo_prj)
     pos = {}
     taille = {}
-    for attr in dir(draw_cairo_prj):
+    for attr in dir(draw_cairo_prj2):
         if attr[:3] == 'pos':
             pos[attr[3:]] = attr
         if attr[:6] == 'taille':
@@ -1407,8 +1446,8 @@ def gabarit():
     
     for k, p in list(pos.items()):
         if k in list(taille.keys()):
-            x, y = getattr(draw_cairo_prj, p)
-            w, h = getattr(draw_cairo_prj, taille[k])
+            x, y = getattr(draw_cairo_prj2, p)
+            w, h = getattr(draw_cairo_prj2, taille[k])
             
             try:
                 ctx.rectangle(x, y, w, h)
@@ -1416,6 +1455,7 @@ def gabarit():
                 show_text_rect(ctx, k, (x, y, w, h), fontsizeMinMax = (-1, 30.0/e),
                                wrap = False, couper = False)
             except:
+                pass
                 print("   ", k, " : ", x, y, w, h)
     
     

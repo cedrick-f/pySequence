@@ -2892,7 +2892,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         l = []
         for tit, url in ref.BO_URL:
             if os.path.splitext(url)[1] == ".pdf":
-                f, h = urllib.request.urlretrieve(url, os.path.join(path, tit+".pdf"))
+                f, _ = urllib.request.urlretrieve(url, os.path.join(path, tit+".pdf"))
                 l.append(os.path.basename(f))
 
         s = "\n"+CHAR_POINT
@@ -4254,7 +4254,7 @@ class FenetreProjet(FenetreDocument):
             
             try:
                 os.startfile(nomFichier)
-            except (IOError, RuntimeError) as e:
+            except (IOError, RuntimeError):
                 messageErreur(self, "Erreur !",
                                   "Impossible d'enregistrer le fichier suivant :\n\n%s\n\nVérifier :\n" \
                                   " - qu'aucun fichier portant le méme nom n'est déja ouvert\n" \
@@ -4753,7 +4753,7 @@ class FenetreProgression(FenetreDocument):
 #   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
+class BaseFiche(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -5017,7 +5017,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         
 ####################################################################################
 # from wx.lib.delayedresult import startWorker
-class BaseFiche(wx.ScrolledWindow, DelayedResult):
+class BaseFiche2(wx.ScrolledWindow, DelayedResult):
     def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
@@ -7602,7 +7602,7 @@ class PanelPropriete_Classe(PanelPropriete):
                 break
 #        print "   ", lst
         if len(lst) > 0:
-            lst = sorted(list(set([v for e, v in lst])))
+            lst = sorted(list(set([v for _, v in lst])))
 #        print "Villes", lst
 
         self.cbv.Set(lst)
@@ -9192,8 +9192,8 @@ class Panel_EDT(wx.Panel):
             nj = wx.StaticText(self, -1, j)
             self.sizer.Add(nj, (0,i), flag = wx.EXPAND)
         
-        for seance in self.EDT:
-            pass
+#         for seance in self.EDT:
+#             pass
         
     
     
@@ -15779,7 +15779,7 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
         
         GetChild = GetFirstChild
         cookie = 1
-        for i in range(nc):
+        for _ in range(nc):
             child, cookie = GetChild(parent, cookie)
             GetChild = self.GetNextChild
             yield child
@@ -18376,7 +18376,7 @@ class TreeCtrlComboPopup(wx.ComboPopup):
 
     def OnMotion(self, evt):
         # have the selection follow the mouse, like in a real combobox
-        item, flags = self.tree.HitTest(evt.GetPosition())
+        item, _ = self.tree.HitTest(evt.GetPosition())
         if item:# and flags & wx.TREE_HITTEST_ONITEMLABEL:
 #             self.tree.SelectItem(item)
             self.curitem = item
@@ -19859,7 +19859,7 @@ class PopupInfo(wx.PopupWindow):
     ##########################################################################################
     def OnClick(self, evt):
         b = evt.GetEventObject()
-        n = b.GetName()
+#         n = b.GetName()
 #         print "OnCheck", cb.GetValue(), cb.GetName()
         self.elem.lien.Afficher(self.elem.GetDocument().GetPath())
 

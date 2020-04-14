@@ -1618,7 +1618,7 @@ class Classe(ElementBase):
 #             print("   ", ep)
             return list(range(ep[0], ep[1]+1))
         else:
-            return list(range(sum([p for a, p in self.GetReferentiel().periodes])))
+            return list(range(sum([p for _, p in self.GetReferentiel().periodes])))
         
         
         
@@ -1825,7 +1825,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ######################################################################################  
     def GetNbrPeriodes(self):
-        return sum([p for a, p in self.GetReferentiel().periodes])
+        return sum([p for _, p in self.GetReferentiel().periodes])
     
     
     #############################################################################            
@@ -1889,7 +1889,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def SelectItem(self, branche, depuisFiche = False):
         self.centrer = not depuisFiche
         self.arbre.EnsureVisible(branche)
-        for i in self.arbre._itemWithWindow:
+        for _ in self.arbre._itemWithWindow:
             self.arbre.HideWindows()
         self.arbre.SelectItem(branche) 
 
@@ -2038,7 +2038,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def ShowTip(self, x, y):
         if self.curTip is None: return
         
-        X, Y, W, H = getDisplayPosSize()[0]
+        _, _, W, H = getDisplayPosSize()[0]
         w, h = self.curTip.GetSize()
         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
         self.curTip.Show()
@@ -2462,7 +2462,7 @@ class Sequence(BaseDoc, Grammaire):
         if brancheEqu != None:
             for e in list(brancheEqu):
                 prof = Prof(self)
-                Ok = prof.setBranche(e)
+#                 Ok = prof.setBranche(e)
                 self.equipe.append(prof)
             
         brancheCI = branche.find("CentresInteret")
@@ -2658,7 +2658,7 @@ class Sequence(BaseDoc, Grammaire):
         sv = set(sv)
          
 #         print("1 :", time.clock() - tps)
-        tps = time.clock()
+#         tps = time.clock()
         
         
         # Tri par type
@@ -2672,7 +2672,7 @@ class Sequence(BaseDoc, Grammaire):
         dsv = tri(sv)
         
 #         print("2 :", time.clock() - tps)
-        tps = time.clock()
+#         tps = time.clock()
 #         print("Séances :")
 #         print("  ", dcv, dsv)
                 
@@ -3239,7 +3239,7 @@ class Sequence(BaseDoc, Grammaire):
 #         
 #         print("GetObjAffiches", self.obj["C"].competences)
         for cmp in self.obj["C"].competences: # liste de codes depuis pysequence.Competences
-            typ, cod = cmp[0], cmp[1:]
+            typ = cmp[0]
             comp = ref.getToutesCompetencesDict()[typ]
             # Chemin de la compétence, jusqu'à la racine.
             path = ref.getPathCompetence(cmp)
@@ -3751,7 +3751,7 @@ class Sequence(BaseDoc, Grammaire):
     def enregistrer(self, nomFichier, dialog = True):
 #         print "enregistrer", nomFichier, self.GetPath()
                 # La séquence
-        print("   proprietesX", self.proprietes.proprietes)
+#         print("   proprietesX", self.proprietes.proprietes)
         self.GetApp().fiche.fiche.associerParametres()
         sequence = self.getBranche()
         classe = self.classe.getBranche()
@@ -4167,7 +4167,7 @@ class Projet(BaseDoc, Grammaire):
         sysml = ET.SubElement(projet, "sysML")
         prj = self.GetProjetRef()
         if 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
-            for i, n in enumerate(prj.attributs['SML'][2]):
+            for i, _ in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 l = ET.SubElement(sysml, "Lien_"+str(i))
                 if code in self.sysML:
@@ -4433,7 +4433,7 @@ class Projet(BaseDoc, Grammaire):
         #
         branchesysml = branche.find("sysML")
         if branchesysml is not None and 'SML' in prj.attributs and prj.attributs['SML'][0] != "":
-            for i, n in enumerate(prj.attributs['SML'][2]):
+            for i, _ in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 br = branchesysml.find("Lien_"+str(i))
                 if br is not None:
@@ -5669,7 +5669,7 @@ class Projet(BaseDoc, Grammaire):
     def UpdateSysML(self):
         prj = self.GetProjetRef()
         if prj.attributs['SML'][0] != "":
-            for i, n in enumerate(prj.attributs['SML'][2]):
+            for i, _ in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 if not code in self.sysML:
                     self.sysML[code] = Lien()
@@ -5868,7 +5868,7 @@ class Projet(BaseDoc, Grammaire):
         tR1 = None
         tR2 = None
         
-        indicateurs = [{} for e in range(len(self.eleves)+1)]   # 0 : tous les élèves
+        indicateurs = [{} for _ in range(len(self.eleves)+1)]   # 0 : tous les élèves
 
         for t in self.taches:   # toutes les tâches, dans l'ordre
             
@@ -6283,7 +6283,7 @@ class Progression(BaseDoc, Grammaire):
         
         
         # Détection d'anomalie : croisement
-        gr = [[0 for cc in range(nc)] for ll in range(l)]
+        gr = [[0 for _ in range(nc)] for _ in range(l)]
         for r in rect:
             for lg in range(r[1], r[1]+r[3]):
                 for cl in range(r[0], r[0]+r[2]):
@@ -6352,29 +6352,7 @@ class Progression(BaseDoc, Grammaire):
         """
         return sum([sp.GetDoc().GetDuree() for sp in self.sequences_projets if sp.GetDoc() is not None])
 
-#     ######################################################################################  
-#     def GetCompetencesAbordees(self):
-#         """ Renvoie un bilan des compétences abordées dans les Séquence et les Projets de la Progression
-#             sous la forme {CodeGroupe : [Liste de True/False], ...}
-#             sur la base de ref._listesCompetences_simple["S"]
-#         """
-# #         print "GetCompetencesAbordees"
-#         ref = self.GetReferentiel()
-#         competences = ref._listesCompetences_simple["S"]
-#         dicComp = {}
-#         
-# #         print [sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]
-#         for i, g1 in enumerate(competences):
-#             k1, h1, l1 = g1
-#             l = []
-#             
-#             for k2, h2 in l1:
-#                 
-#                 l.append(any(["S" + k2 in sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]))
-#             dicComp[k1] = l
-#             
-# #         print dicComp
-#         return dicComp
+
 
     ######################################################################################  
     def GetCompetencesAbordees(self):
@@ -7297,7 +7275,7 @@ class Progression(BaseDoc, Grammaire):
         #
         l = []
         if True:
-            for root, dirs, files in os.walk(self.GetPath()):
+            for root, _, files in os.walk(self.GetPath()):
                 l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.seq'])
         else:
             l.extend(glob.glob(os.path.join(self.GetPath(), "*.seq")))
@@ -7362,7 +7340,7 @@ class Progression(BaseDoc, Grammaire):
         #
         l = []
         if True:
-            for root, dirs, files in os.walk(self.GetPath()):
+            for root, _, files in os.walk(self.GetPath()):
                 l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.prj'])
         else:
             l.extend(glob.glob(os.path.join(self.GetPath(), "*.prj")))
@@ -7407,32 +7385,6 @@ class Progression(BaseDoc, Grammaire):
         
         return fichiers_projets
 
-
-
-#    ######################################################################################  
-#    def GetFicheHTML(self, param = None):
-#        if param is None:
-#            return constantes.BASE_FICHE_HTML
-#        else:
-#            if param == "CAL":
-#                return constantes.BASE_FICHE_HTML_CALENDRIER
-#                
-#            elif param == "ANN":
-#                pass
-#                
-#            elif param[:3] == "POS":
-#                return constantes.BASE_FICHE_HTML_PERIODES
-#                
-#            elif param[:3] == "EQU":
-#                pass
-#            
-#            elif param[:2] == "CI":
-#                return constantes.BASE_FICHE_HTML_CI
-#                
-#            else:
-#                pass
-#            
-#        return constantes.BASE_FICHE_HTML
 
     ######################################################################################  
     def SetTip(self, param = None, obj = None):
@@ -7874,7 +7826,7 @@ class ElementProgression():
             :i:  code pour différentier ...
         """
 #         print("GetBulleHTML liendoc", self, i)
-        ref = self.GetReferentiel()
+#         ref = self.GetReferentiel()
         
         
 
@@ -8515,7 +8467,7 @@ class CentreInteret(ElementBase):
 
     ######################################################################################  
     def GetPosCible(self, num):
-        cod = self.GetCodesCIs()
+#         cod = self.GetCodesCIs()
 #         print("GetPosCible", num, cod)
         ref = self.GetReferentiel()
         if ref.CI_cible:
@@ -8641,291 +8593,6 @@ class CentreInteret(ElementBase):
         
 
 
-####################################################################################
-# #
-# #   Classe définissant les propriétés des Objectifs de la Séquence
-# #
-# ####################################################################################
-# class Objectifs(ElementBase):
-#     def __init__(self, parent, numComp = None, prerequis = False):
-#         self.parent = parent
-#         ElementBase.__init__(self)
-#         
-#         self.objectifs = {"Comp"}       # Liste des Objectifs (Compétences ou Savoirs) de la Séquence
-#         
-#         
-# 
-#     ######################################################################################  
-#     def __repr__(self):
-#         return u"Compétences : "+" ".join(self.competences)
-#         
-#     ######################################################################################  
-#     def GetApp(self):
-#         return self.parent.GetApp()
-#     
-#     ######################################################################################  
-#     def GetPanelPropriete(self, parent, code, comp):
-#         """ Renvoie le PanelPropriete approprié
-#             <comp> est du type Referentiel.Competences
-#         """
-#         ref = self.GetReferentiel()
-#         if self.prerequis:
-#             contexte = "P"
-#         else:
-#             contexte = "O"
-#         dep = ref.getDependant(comp, contexte)
-#         
-#         return PanelPropriete_Competences(parent, self, code, comp, dep = dep)
-#     
-#     ######################################################################################  
-#     def getBranche(self):
-#         """ Renvoie la branche XML de la compétence pour enregistrement
-#         """
-#         root = ET.Element("Competences")
-#         for i, s in enumerate(self.competences):
-#             root.set("C"+str(i), s)
-#         return root
-#     
-#     
-#     ######################################################################################  
-#     def setBranche(self, branche):
-#         self.competences = []
-#         for i in range(len(branche.keys())):
-#             
-#             codeindic = branche.get("C"+str(i), "")
-#             
-#             # Avant la version 7, il n'y a pas de préfixe "type" devant le code competence
-#             if self.GetClasse().GetVersionNum() < 7:
-# #                 print "setBranche", codeindic
-#                 ref = self.GetReferentiel()
-#                 ref_tc = None
-#                 lstComp = [] # liste des "type" Referentiel.Competences compatibles avec "codeindic"
-#                 if ref.tr_com != []: # B = tronc commun --> référentiel
-#                     ref_tc = REFERENTIELS[ref.tr_com[0]]
-#                 
-#                     comp = ref_tc.dicoCompetences["S"]
-#                     c = comp.getCompetence(codeindic)
-#                     if c is not None:
-#                         lstComp.append("B")
-#                     
-#                 for typ in ref.dicoCompetences.keys():
-#                     comp = ref.dicoCompetences[typ]
-#                     c = comp.getCompetence(codeindic)
-#                     if c is not None:
-#                         lstComp.append(typ)
-#                 
-#                 if ref_tc is not None:
-#                     for typ in [k for k in ref_tc.dicoCompetences.keys() if k != "S"]:
-#                         comp = ref.dicoCompetences[typ]
-#                         c = comp.getCompetence(codeindic)
-#                         if c is not None:
-#                             lstComp.append(typ)    
-#                 
-# #                 print "lstComp", lstComp
-#                 if lstComp != []:
-#                     codeindic = lstComp[0]+codeindic
-#                 else:
-#                     codeindic = "S"+codeindic
-#                     
-#             self.competences.append(codeindic)
-#         
-# #        self.GetPanelPropriete().MiseAJour()
-#     
-#     
-#     
-#     ######################################################################################  
-#     def ToogleCode(self, code):
-#         self.Etendre()
-#         if code in self.competences:
-#             self.competences.remove(code)
-#         else:
-#             self.competences.append(code)
-#         self.Condenser()
-#             
-#     ######################################################################################       
-#     def Etendre(self):
-#         """ Etend la liste des compétences :
-#             A1
-#                 >>>
-#                     A1
-#                     A1.1
-#                     A1.2
-#                     A1.3
-#         """
-# #         print "Etendre"
-# #         print "   ", self.competences
-#         ref = self.GetReferentiel()
-#         
-#         def ajouter(k, l, comp):
-#             if len(comp.sousComp) > 0:
-#                 for k2, c2 in comp.sousComp.items():
-#                     ajouter("S"+k2, l, c2)
-#             else:
-#                 l.append(k)
-#             
-#         lstCompS = [c for c in self.competences if c[0] == "S"]
-#         l = []
-#         for k in lstCompS:
-#             ajouter(k, l, ref.getCompetence(k))
-#             
-#         self.competences = l
-# #         print "   ", self.competences
-# 
-# 
-# 
-#     ######################################################################################       
-#     def Condenser(self):
-#         """ Condense la liste des compétences :
-#             A1.1
-#             A1.2
-#             A1.3
-#                 >>>
-#                     A1
-#         """
-# #         print "Condenser"
-# #         print "   ", self.competences
-#         ref = self.GetReferentiel()
-#         s = set(self.competences)
-#         
-#         def condense(d, k, comp):
-#             if len(comp.sousComp) > 0:
-# #                 print " +++ ", comp.sousComp.keys()
-#                 lk = [d+kk for kk in comp.sousComp.keys()]
-#                 if set(lk).issubset(s):
-#                     for sk in lk:
-#                         s.remove(sk)
-#                     s.add(d+k)
-#                     
-#                 for k1, v1 in comp.sousComp.items():
-#                     condense(d, k1, v1)
-#                 
-#         for d, competences in ref.dicoCompetences.items():
-#             dicCompetences = competences.dicCompetences
-#             for k, v in dicCompetences.items():
-#                 condense(d, k, v)
-#             
-#         self.competences = list(s)
-# #         print "   ", self.competences
-#         
-#         
-#         
-#     ######################################################################################  
-#     def GetCode(self, num):
-#         return self.competences[num]
-#     
-#     ######################################################################################  
-#     def GetTypCode(self, num):
-#         return self.competences[num][0], self.competences[num][1:]
-#     
-
-#     
-#     ######################################################################################  
-#     def GetCodeDiscipline(self, code = "S"):
-#         dic = self.GetReferentiel().getDicToutesCompetences()
-#         return dic[code].codeDiscipline
-#         
-#     ######################################################################################  
-#     def GetDiscipline(self, code):
-#         dic = self.GetReferentiel().getDicToutesCompetences()
-#         return dic[code].abrDiscipline
-#             
-#     ######################################################################################  
-#     def GetDisciplineNum(self, num):
-#         ref = self.GetReferentiel()
-#         dicComp = ref.getToutesCompetences()
-#         for code, comp in dicComp:
-#             if code == self.GetCode(num)[0]:
-#                 return comp.abrDiscipline
-#     
-# #         return self.GetReferentiel().dicoCompetences[self.competences[num][0]].abrDiscipline
-#     
-#     ######################################################################################  
-#     def GetIntit(self, num):
-#         return self.GetReferentiel().getCompetence(self.GetCode(num)).intitule  
-# #         return self.GetReferentiel().getCompetence(self.competences[num]).intitule
-# 
-#     ######################################################################################  
-#     def ConstruireArbre(self, arbre, branche, prerequis = False):
-#         ref = self.GetReferentiel()
-#         self.branche = branche
-#         lst = ref.getToutesCompetences()
-#         if prerequis:
-#             aff = any([d.pre for k, d in lst])
-#         else:
-#             aff = any([d.obj for k, d in lst])
-#         
-#         if aff:
-#             self.arbre = arbre
-#             self.codeBranche = {}
-#             self.branches = {}
-#             for k, d in lst:
-#                 if (prerequis and d.pre) or (not prerequis and d.obj):
-#                     self.codeBranche[k] = CodeBranche(self.arbre, u"")
-#                     self.branches[k] = arbre.AppendItem(branche, self.GetNomGenerique(k), 
-#                                                         wnd = self.codeBranche[k], 
-#                                                         data = (self, k, d),
-#                                                         image = self.arbre.images["Com"])
-#                     self.codeBranche[k].SetBranche(self.branches[k])
-#                     self.arbre.SetItemTextColour(self.branches[k], 
-#                                                  couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetCodeDiscipline(k)]))
-#                     self.arbre.SetItemBold(self.branches[k])
-# 
-#         else:
-#             if hasattr(self, 'arbre'):
-#                 del self.arbre
-#     
-#         
-#         #
-#         # Les "Fonctions" (à faire !)
-#         #
-#         if (len(ref.dicFonctions) > 0):
-#             self.codeBranche["Fct"] = CodeBranche(self.arbre, u"")
-#             self.branches["Fct"] = arbre.AppendItem(branche, ref.nomFonctions, 
-#                                                    wnd = self.codeBranche[k], 
-#                                                    data = (self, "Fct", ref.dicFonctions),
-#                                                    image = self.arbre.images["Fct"])
-#             self.codeBranche[k].SetBranche(self.branches["Fct"])
-#             self.arbre.SetItemTextColour(self.branches["Fct"], couleur.GetCouleurWx(COUL_COMPETENCES))
-# 
-# 
-#     
-#     
-#     #############################################################################
-#     def MiseAJourTypeEnseignement(self):
-#         if hasattr(self, 'arbre'):
-#             del self.branches
-#             self.ConstruireArbre(self.arbre, self.branche, self.prerequis)
-# #         if hasattr(self, 'arbre'):
-# #             for k, b in self.branche.items():
-# #                 self.arbre.SetItemText(b, self.GetNomGenerique(k))
-# #        if hasattr(self, 'panelPropriete'):
-# #            self.GetPanelPropriete().Destroy()
-# #            self.panelPropriete = PanelPropriete_Competences(self.panelParent, self)
-# #            self.panelPropriete.construire()
-#     
-#     
-#     ######################################################################################  
-#     def GetFicheHTML(self, param = None):
-#         return constantes.BASE_FICHE_HTML_COMP
-# 
-#     
-#     ######################################################################################  
-#     def SetTip(self):
-# #         print "SetTip Comp"
-#         self.tip.SetHTML(self.GetFicheHTML())
-#         nc = self.GetNomGenerique()
-#         self.tip.SetWholeText("titre", nc)
-# #         print self.competences
-# #         print sorted(self.competences)
-#         for c in sorted(self.competences):
-#             self.tip.AjouterElemListeDL("list", 
-#                                  self.GetDiscipline(c[0]) +" " + c[1:], 
-#                                  self.GetReferentiel().getCompetence(c).intitule  )
-# #             self.tip.AjouterElemListeDL("list", 
-# #                                  self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[1], 
-# #                                  self.GetIntit(i))
-#       
-#         self.tip.SetPage()
 
 
 
@@ -9399,7 +9066,7 @@ class Competences(ElementBase):
             t = Template(constantes.TEMPLATE_CMP_SAV)
         
         dic = {}
-        for i, c in enumerate(sorted(self.competences)):
+        for c in sorted(self.competences):
             titre = self.GetNomGenerique(c[0])
             if not (titre in dic):
                 dic[titre] = []
@@ -9726,7 +9393,7 @@ class Savoirs(ElementBase):
     def GetBulleSVG(self, i):
 #         print("GetBulleSVG", self, i)
 
-        c = sorted(self.savoirs)[i]
+#         c = sorted(self.savoirs)[i]
         t = self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1] + " :\n" + self.GetIntit(i)
         if self.GetDescription() != None:
             t += "\n\n" + self.GetDescription()
@@ -9737,7 +9404,7 @@ class Savoirs(ElementBase):
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False):
 #         print("GetBulleHTML", self, i)
-        ref = self.GetReferentiel()
+#         ref = self.GetReferentiel()
         if css:
             t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
         else:
@@ -10363,7 +10030,7 @@ class Seance(ElementAvecLien, ElementBase):
     def GetListSousSeancesRot(self, tout = False):
         l = []
         for ss in self.seances:
-            for n in range(ss.nombre.v[0]):
+            for _ in range(ss.nombre.v[0]):
                 l.append(ss)
 #            if not tout :
 #                i += ss.nombre.v[0]
@@ -10635,7 +10302,7 @@ class Seance(ElementAvecLien, ElementBase):
 
         self.code += num
         
-        ref = self.GetReferentiel()
+#         ref = self.GetReferentiel()
         if self.aEnsSpe(): # La Seance est concernée par les Enseignements Spécifiques
             if len(self.ensSpecif) > 0:
                 self.code += " - " + " ".join(self.ensSpecif)
@@ -10821,7 +10488,7 @@ class Seance(ElementAvecLien, ElementBase):
 #             if self.GetReferentiel().multiDemarches:
 #                 self.demarche = ""
 #             else:
-                  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
+# Zéro, un ou plusieurs codes de démarche (séparés par espaces)
 #         print("MiseAJourTypeEnseignement", self.demarche)
 #         self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
         
@@ -11061,7 +10728,7 @@ class Seance(ElementAvecLien, ElementBase):
 #         print("   self.compVisees", self.compVisees)
         lstCompVisees = []
         comp = self.GetDocument().obj["C"]
-        for i, c in enumerate(sorted(comp.competences)):
+        for c in sorted(comp.competences):
 #             print("   ", c)
             if c in self.compVisees:
 #                 lstCompVisees.append((c[1:], 
@@ -11081,7 +10748,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         lstSavVises = []
         sav = self.GetDocument().obj["S"]
-        for i, c in enumerate(sorted(sav.savoirs)):
+        for c in sorted(sav.savoirs):
             if c in self.savVises:
                 lstSavVises.append((c[1:], ref.getSavoir(c).intitule))
         
@@ -11159,69 +10826,7 @@ class Seance(ElementAvecLien, ElementBase):
     
     
     
-    
-    
-        
-#         self.tip.SetHTML(self.GetFicheHTML())
-#         ref = self.GetReferentiel()
-# #         titre = "Séance "+ self.code
-#         titre = ref._nomActivites.sing_()+" "+ self.code
-#         self.tip.SetWholeText("titre", titre)
-#         
-#         # Type de séance
-#         if self.typeSeance != "":
-#             self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
-#             self.tip.SetWholeText("txt", ref.seances[self.typeSeance][1], 
-#                                   bold = True, size = 3,
-#                                   fcoul = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]))
-#         
-#         else:
-#             self.tip.Supprime('icon')
-#         
-#         
-#         
-#         # Démarche
-#         ld = self.demarche.split()
-#         if self.typeSeance in ref.activites.keys() and len(ref.listeDemarches) > 0 \
-#             and len(ld) > 0:
-# #             if self.demarche in constantes.imagesDemarches.keys():
-#             for i, d in enumerate(ld):
-#                 bmp = constantes.imagesDemarches[d].GetBitmap()
-#             
-#             
-#                 self.tip.AjouterImg("icon2", constantes.imagesDemarches[self.demarche].GetBitmap(), width = 64)
-#                 self.tip.SetWholeText("dem", ref.demarches[self.demarche][1], italic = True, size = 3)
-#         else:
-#             self.tip.Supprime('icon2')
-#         
-#         # Intitulé
-#         self.tip.SetWholeText("int", self.intitule, size = 5)
-#         
-#         
-#         # Image
-#         if self.image is not None:
-#             self.tip.AjouterImg("img", self.image, width = 200)
-#         else:
-#             self.tip.Supprime('img')
-#         
-#         # Durée
-#         self.tip.SetWholeText("dur", getHoraireTxt(self.GetDuree()), size = 3)
-#         
-#         # Effectif
-#         self.tip.SetWholeText("eff", strEffectifComplet(self.GetDocument().classe, self.effectif), size = 3)
-#         
-#         # Description
-#         if hasattr(self, 'description'):
-#             self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
-#         else:
-#             self.tip.Supprime('ldes')
-#         
-#         self.tip.AjouterLien('lien', self.lien, self)
-#         
-#         self.tip.SetPage()
-#         
-#         
-
+ 
 
 ####################################################################################
 #
@@ -11735,7 +11340,7 @@ class Tache(ElementAvecLien, ElementBase):
         """
         """
         err = []
-        ref = self.GetProjetRef()
+#         ref = self.GetProjetRef()
         prjref = self.GetProjetRef()
         self.ordre = eval(branche.tag[5:])
         self.intitule  = branche.get("Intitule", "")
@@ -13095,7 +12700,7 @@ class Support(ElementAvecLien, ElementBase):
 #         for i,m in enumerate(self.modeles):
 #             m.id = i
         
-        for i, m in enumerate(self.modeles):
+        for m in self.modeles:
             m.SetCode()
 
         self.arbre.Ordonner(self.branche)
@@ -13755,7 +13360,7 @@ class Eleve(Personne):
             dirpath = os.path.dirname(doc.GetApp().fichierCourant)
         
         prefixes = {}
-        for part, g in prj.parties.items():
+        for part in prj.parties:
             fo = prj.grilles[part][0]
             if not fo in prefixes.keys():
                 prefixes[fo] = [part]
@@ -13853,7 +13458,7 @@ class Eleve(Personne):
             print("  >>> Fichiers :", nomFichiers)
         
         
-        prj = self.GetDocument().GetProjetRef()
+#         prj = self.GetDocument().GetProjetRef()
         app = self.GetDocument().GetApp()
         if win is None:
             win = app
@@ -13950,7 +13555,7 @@ class Eleve(Personne):
             else:
                 t += "de la grille"
             t += "\n\n"
-            t += "\n".join([f for n,f in nomFichiers.values()])
+            t += "\n".join([f for _,f in nomFichiers.values()])
             t += "\n\nterminée avec "
             if len(log) == 0:
                 t += "succès !"
@@ -13964,143 +13569,7 @@ class Eleve(Personne):
         return log
      
     
-#     ######################################################################################  
-#     def GenererGrille(self, event = None, dirpath = None, nomFichiers = None, messageFin = True, win = None):
-#         u""" Génération des grilles d'évaluation de l'élève
-#         
-#             :param nomFichiers: noms des fichiers des grilles (voir méthode .GetNomGrilles())
-#             :type nomFichiers: dict
-#             
-#             :param dirpath: chemin du dossier où doivent se trouver les grilles
-#             :type dirpath: string
-#             
-#             :param messageFin: True pour afficher un message à la fin de la génération
-#             :type messageFin: bool
-#             
-#             :param win: Fenêtre parente des éventuels wx.Dialog à afficher pendant la génération
-#             :type win: wx.Window
-#             
-#             :return: Un log des erreurs rencontrées
-#             :rtype: list
-#         
-#         """
-# #         print "GenererGrille élève", self
-# #         print "  ", nomFichiers
-#         
-#         if nomFichiers == None:
-#             nomFichiers = self.GetNomGrilles(dirpath)
-#             if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
-#                 return []
-# #             print "  >>> Fichiers :", nomFichiers
-#         
-#         
-#         prj = self.GetDocument().GetProjetRef()
-#         app = self.GetDocument().GetApp()
-#         if win is None:
-#             win = app
-#         
-#         
-#         wx.BeginBusyCursor()
-#         #
-#         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
-#         #
-#         tableaux = {}
-#         for part, f in nomFichiers.items():
-#             if os.path.isfile(f):  # Fichier grille élève déja existant
-# #                 print "   exist :", f
-#                 tableaux[part] = grilles.getTableau(win, f)
-#                 
-#             else:  # fichier original vierge de la grille
-# #                 print "   new :",
-#                 fo = grilles.getFullNameGrille(prj.grilles[part][0])
-#                 if os.path.isfile(fo):
-#                     # Copie du fichier original
-# #                     print "copy", fo, f
-#                     try:
-#                         shutil.copy(fo, f)
-#                     except IOError :
-#                         messageErreur(win, u"Erreur !",
-#                                       u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-#                                       u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                                       u" - que le dossier choisi n'est pas protégé en écriture" %f)
-#                     else:
-#                         tableaux[part] = grilles.getTableau(win, f)
-#                 
-#                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
-#                     prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
-# #                     tableaux[part] = None
-#                     messageErreur(win, u"Fichier non trouvé !",
-#                                   u"Le fichier original de la grille,\n    " + prjdef.grilles[part][0] + u"\n" \
-#                                   u"n'a pas été trouvé ! \n")
-#                         
-#     
-#                     
-# 
-#         if tableaux == {}:
-#             wx.EndBusyCursor()
-#             return []
-#         
-#         #
-#         # Remplissage des grilles
-#         #
-#         log = []
-#         if "beta" in version.__version__:
-#             log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
-#         else:
-#             try:
-#                 log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
-#             except:
-#                 messageErreur(win, u"Erreur !",
-#                               u"Impossible de modifier les grilles !") 
-# 
-# 
-#         #
-#         # Enregistrement final des grilles
-#         #
-#         for part, t in tableaux.items():
-#             try:
-#                 t.save()
-#             except:
-#                 messageErreur(win, u"Erreur !",
-#                               u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-#                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                               u" - que le dossier choisi n'est pas protégé en écriture" %f)
-#             try:
-#                 t.close()
-#             except:
-#                 pass
-#             self.grille[part] = Lien(typ = 'f')
-#             self.grille[part].path = toFileEncoding(nomFichiers[part])
-#         
-# #         self.GetDocument().GetApp().MarquerFichierCourantModifie()
-#         # Mise à our du panel de Propriétés courant
-#         panelProp = app.GetPanelProp()
-#         if hasattr(panelProp, 'MiseAJour'):
-#             panelProp.MiseAJour(sendEvt = False, marquerModifier = True)
-#         
-#         #
-#         # Message de fin
-#         #
-#         if messageFin:
-#             t = u"Génération "
-#             if len(tableaux)>1:
-#                 t += u"des grilles"
-#             else:
-#                 t += u"de la grille"
-#             t += u"\n\n"
-#             t += u"\n".join(nomFichiers.values())
-#             t += u"\n\nterminée avec "
-#             if len(log) == 0:
-#                 t += u"succès !"
-#             else:
-#                 t += u"des erreurs :\n"
-#                 t += u"\n".join(log)
-#             messageInfo(win, u"Génération terminée", t)
-#             
-#         wx.EndBusyCursor()
-# #         self.GetPanelPropriete().MiseAJour()
-#         return log
-#     
+
     
     ######################################################################################  
     def GrillesGenerees(self):
@@ -14544,7 +14013,7 @@ class Eleve(Personne):
             #
             # Evaluabilité
             #
-            ev, ev_tot, seuil = self.GetEvaluabilite()
+            ev, ev_tot, _ = self.GetEvaluabilite()
             prj = self.GetProjetRef()
             keys = {}
             for disc, dic in prj._dicoIndicateurs.items():
@@ -14739,461 +14208,7 @@ class Groupe(Eleve):
         return PanelPropriete_Groupe(parent, self)
     
     
-#     ######################################################################################  
-#     def GetDureeJusqua(self, tache, depuis = None):
-#         d = 0
-#         p = 0
-#         if depuis != None:
-#             for i, t in enumerate(self.GetDocument().taches):
-#                 if t == depuis:
-#                     break
-#                 p = i
-#         
-#         for t in self.GetDocument().taches[p:]:
-#             if t == tache:
-#                 break
-#             if not t.phase in TOUTES_REVUES_SOUT:
-#                 if self.id in t.eleves:
-#                     d += t.GetDuree()
-#         return d
-    
-#     ######################################################################################  
-#     def OuvrirGrille(self, k):
-#         print "OuvrirGrille", k
-#         self.grille[k].Afficher(self.GetDocument().GetPath())
-# #         try:
-# #             self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])
-# #         except:
-# #             messageErreur(None, u"Ouverture impossible",
-# #                           u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
-#             
-#             
-#     ######################################################################################  
-#     def OuvrirGrilles(self, event):
-#         for k in self.grille.keys():
-#             self.OuvrirGrille(k)
-# #        if self.GetTypeEnseignement(simple = True) == "STI2D":
-# #            self.OuvrirGrille(1)
-        
-        
-#     ######################################################################################  
-#     def getNomFichierDefaut(self, prefixe):
-#         return getNomFichier(prefixe, self.GetNomPrenom()+"_"+self.GetDocument().intitule[:20])
 
-        
-#     ######################################################################################  
-#     def GetNomGrilles(self, path = None):
-#         """ Renvoie les noms des fichiers grilles à générer
-#         """
-# #        print "GetNomGrilles"
-#         prj = self.GetDocument().GetProjetRef()
-# #        print prj
-# #        print prj.grilles
-#         #
-#         # Création des noms des fichiers grilles
-#         #
-#         # Par défaut = chemin du fichier .prj
-#         if path == None:
-#             path = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
-#             
-#         nomFichiers = {} 
-#         for part, g in prj.parties.items():
-#             prefixe = "Grille_"+g
-#             gr = prj.grilles[part]
-# #            print gr
-#             if grilles.EXT_EXCEL != None:
-# #                extention = os.path.splitext(ref.grilles_prj[k][0])[1]
-#                 extention = grilles.EXT_EXCEL
-#                 
-#                 if gr[1] == 'C': # fichier "Collectif"
-#                     nomFichiers[part] = os.path.join(path, self.GetDocument().getNomFichierDefaut(prefixe)) + extention
-#                 else:
-#                     nomFichiers[part] = os.path.join(path, self.getNomFichierDefaut(prefixe)) + extention
-# #        print "   >", nomFichiers
-#         return nomFichiers
-
-
-#     ######################################################################################  
-#     def GenererGrille(self, event = None, path = None, nomFichiers = None, messageFin = True):
-# #        print "GenererGrille élève", self
-# #        print "  ", nomFichiers
-#         if nomFichiers == None:
-#             nomFichiers = self.GetNomGrilles(path)
-#             if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}):
-#                 return []
-#             
-# #        print "  Fichiers :", nomFichiers
-#         
-#         prj = self.GetDocument().GetProjetRef()
-#         
-#         #
-#         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
-#         #
-#         tableaux = {}
-#         for k, f in nomFichiers.items():
-#             if os.path.isfile(f):
-#                 tableaux[k] = grilles.getTableau(self.GetDocument().GetApp(), f)
-#             else:
-#                 if os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
-#                     tableaux[k] = grilles.getTableau(self.GetDocument().GetApp(),
-#                                                      prj.grilles[k][0])
-#                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
-#                     prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
-#                     tableaux[k] = None
-#                     messageErreur(self.GetDocument().GetApp(), u"Fichier non trouvé !",
-#                                   u"Le fichier original de la grille,\n    " + prjdef.grilles[k][0] + u"\n" \
-#                                   u"n'a pas été trouvé ! \n")
-#                         
-#             
-#             if tableaux[k] != None: # and tableaux[k].filename !=f:
-# #                print "      créé :", f
-#                 try:
-#                     tableaux[k].save(f, ConflictResolution = 2)
-#                 except:
-#                     messageErreur(self.GetDocument().GetApp(), u"Erreur !",
-#                                   u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-#                                   u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                                   u" - que le dossier choisi n'est pas protégé en écriture"%f)
-# 
-#         if tableaux == None:
-#             return []
-#         
-#         #
-#         # Remplissage des grilles
-#         #
-#         log = []
-#         if "beta" in version.__version__:
-#             log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
-#         else:
-#             try:
-#                 log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
-#             except:
-#                 messageErreur(self.GetDocument().GetApp(), u"Erreur !",
-#                               u"Impossible de modifier les grilles !") 
-# 
-# 
-#         #
-#         # Enregistrement final des grilles
-#         #
-#         for k, t in tableaux.items():
-#             try:
-#                 t.save()
-#             except:
-#                 messageErreur(self.GetDocument().GetApp(), u"Erreur !",
-#                               u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-#                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                               u" - que le dossier choisi n'est pas protégé en écriture" %f)
-#             try:
-#                 t.close()
-#             except:
-#                 pass
-#             self.grille[k] = Lien(typ = 'f')
-#             self.grille[k].path = toFileEncoding(nomFichiers[k])
-#         
-#         
-#         #
-#         # Message de fin
-#         #
-#         if messageFin:
-#             t = u"Génération "
-#             if len(tableaux)>1:
-#                 t += u"des grilles"
-#             else:
-#                 t += u"de la grille"
-#             t += u"\n\n"
-#             t += u"\n".join(nomFichiers.values())
-#             t += u"terminée avec "
-#             if len(log) == 0:
-#                 t += u"succès !"
-#             else:
-#                 t += u"des erreurs :\n"
-#                 t += u"\n".join(log)
-#             messageInfo(self.GetDocument().GetApp(), u"Génération terminée", t)
-#             
-#         
-# #         self.GetPanelPropriete().MiseAJour()
-#         return log
-#         
-#         
-#     ######################################################################################  
-#     def GetEvaluabilite(self, complet = False, compil = False):
-#         """ Renvoie l'évaluabilité de l'élève
-#             % conduite
-#             % soutenance
-#             ev, ev_tot, seuil
-#             
-#             compil = renvoie des dictionnaire plus simples
-#         """ 
-# #         print "GetEvaluabilite", self
-#         prj = self.GetProjetRef()
-# #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
-#         dicIndicateurs = self.GetDicIndicateurs()
-# #         print "   dicIndicateurs", dicIndicateurs
-# #         print "   _dicoGrpIndicateur", prj._dicoGrpIndicateur
-# #        tousIndicateurs = prj._dicIndicateurs
-# #        lstGrpIndicateur = {'R' : prj._dicGrpIndicateur['R'],
-# #                            'S' : self.GetProjetRef()._dicGrpIndicateur['S']}
-# #        print lstGrpIndicateur
-#         
-# #        r, s = 0, 0
-# #        ler, les = {}, {}
-#         
-# #        rs = [0, 0]
-# #        lers = [{}, {}]
-# #         print prj._dicoGrpIndicateur
-# #         print "   _dicoIndicateurs", prj._dicoIndicateurs
-#         rs = {}
-#         lers = {}
-#         for disc, dic in prj._dicoGrpIndicateur.items():
-#             rs[disc] = {}
-#             lers[disc] = {}
-#             for ph in dic.keys():
-#                 lers[disc][ph] = {}
-#                 rs[disc][ph] = 0
-# #         print "   xx init :", rs, lers
-#         
-#         
-#         def getPoids(competence, code, poidsGrp):
-# #             print "  getPoids", code
-#             if competence.sousComp != {}:
-#                 for k, c in competence.sousComp.items():
-#                     getPoids(c, k, poidsGrp)
-#             
-# #             if competence.poids != {}:
-#             for disc, dic in prj._dicoGrpIndicateur.items():
-#                 for ph in dic.keys():
-# #                     print "      ", ph
-#                     if grp in dic[ph]:
-# #                         print "_", dic[ph]
-#                         for i, indic in enumerate(competence.indicateurs):
-#                             
-#                             if disc+code in dicIndicateurs.keys():
-#                                 if dicIndicateurs[disc+code][i]:
-# #                                     print "  comp", code, i, indic.poids, ph
-#                                     poids = indic.poids
-#                                     if ph in poids.keys():
-#                                         if not ph in poidsGrp.keys():
-#                                             print u"ERREUR poids", code, u"Faire \"Ouvrir et réparer\""
-#                                         else:
-#                                             p = 1.0*poids[ph]/100
-#                                         
-#                                             rs[disc][ph] += p * poidsGrp[ph]/100
-#                                             if grp in lers[disc][ph].keys():
-#                                                 lers[disc][ph][grp] += p
-#                                             else:
-#                                                 lers[disc][ph][grp] = p
-#                             else:
-#                                 if not grp in lers[disc][ph].keys():
-#                                     lers[disc][ph][grp] = 0
-#                             
-#             return
-#             
-#             
-#         
-# #         def getPoids(listIndic, comp, poidsGrp):
-# #             """ 
-# #             """
-# # #            print "getPoids", listIndic, comp, poidsGrp
-# #             if type(listIndic)
-# # 
-# #             for disc, dic in prj._dicoGrpIndicateur.items():
-# #                 for ph in dic.keys():
-# #                     if grp in dic[ph]:
-# #                         for i, indic in enumerate(listIndic):
-# #                             if disc+comp in dicIndicateurs.keys():
-# #                                 if dicIndicateurs[disc+comp][i]:
-# #     #                                print "  comp", grp, comp, i, indic.poids, ph
-# #                                     poids = indic.poids
-# #                                     if ph in poids.keys():
-# #                                         p = 1.0*poids[ph]/100
-# #                                         rs[disc][ph] += p * poidsGrp[ph]/100
-# #                                         if grp in lers[disc][ph].keys():
-# #                                             lers[disc][ph][grp] += p
-# #                                         else:
-# #                                             lers[disc][ph][grp] = p
-# #                             else:
-# #                                 if not grp in lers[disc][ph].keys():
-# #                                     lers[disc][ph][grp] = 0
-# #                             
-# #             return
-#         
-#         for typi, dico in prj._dicoIndicateurs.items():
-#             for grp, grpComp in dico.items():
-# #                 print "  >>> poids :", grpComp.poids
-#                 getPoids(grpComp, grp, grpComp.poids)
-#                 
-#                 
-#                 
-#                 
-#                 
-# #                 titre = grpComp.intitule
-# #                 dicComp = grpComp.sousComp
-# #                 poidsGrp = grpComp.poids
-# #                 
-# #                 if type(dicComp) == list:                       # 1 niveau
-# #                     getPoids(dicComp, grp, poidsGrp)
-# #                 else:
-# #                     for comp, lstIndic in dicComp.items():
-# #     #                    print "      ", comp
-# #                         if type(lstIndic[1]) == list:           # 2 niveaux
-# #                             getPoids(lstIndic[1], comp, poidsGrp)    
-# #                         else:                                   # 3 niveaux
-# #                             for scomp, lstIndic2 in lstIndic.items():
-# #                                 getPoids(lstIndic2[1], scomp, poidsGrp)
-#                                 
-#                                                                
-# #        r, s = rs
-# #        ler, les = lers
-# #         print "   eval :", rs, lers
-#          
-#         # On corrige s'il n'y a qu'une seule grille (cas SSI jusqu'à 2014)
-# #        if len(self.GetReferentiel().grilles_prj) == 1: 
-# ##        if self.GetTypeEnseignement() == "SSI":
-# #            r, s = r*2, s*2
-# #            for l in ler.keys():
-# #                ler[l] = ler[l]*2
-# #            for l in les.keys():
-# #                les[l] = les[l]*2
-#             
-# #        if "O8s" in les.keys():
-# #            les["O8"] = les["O8s"]
-# #            del les["O8s"]
-#             
-# #        print r, s, ler, les
-#         
-#         #
-#         # Seuils d'évaluabilité
-#         #
-#         # liste des classeurs avec des grilles comprenant des colonne "non"
-# #        classeurs = [i[0] for i in self.GetReferentiel().cellulesInfo_prj["NON"] if i[0] != '']
-#         seuil = {}
-#         for disc, dic in prj._dicoGrpIndicateur.items():
-#             seuil[disc] = {}
-#             for t in dic.keys():
-#     #            if t in classeurs:
-#     #            print "aColNon", self.GetReferentiel().aColNon
-#                 if t in self.GetReferentiel().aColNon.keys() and self.GetReferentiel().aColNon[t]:
-#                     seuil[disc][t] = 0.5  # s'il y a une colonne "non", le seuil d'évaluabilité est de 50% par groupe de compétence
-#                 else:
-#                     seuil[disc][t] = 1.0     # s'il n'y a pas de colonne "non", le seuil d'évaluabilité est de 100% par groupe de compétence
-# #        print "seuil", seuil
-#         ev = {}
-#         ev_tot = {}
-# #        for txt, le, ph in zip([r, s], [ler, les], prj._dicGrpIndicateur.keys()):
-# 
-#         for disc, dic in prj._dicoGrpIndicateur.items():
-#             ev[disc] = {}
-#             ev_tot[disc] = {}
-#             for part in dic.keys():
-#                 txt = rs[disc][part]
-#                 txt = round(txt, 6)
-#                 ev[disc][part] = {}
-#                 ev_tot[disc][part] = [txt, True]
-#                 for grp, tx in lers[disc][part].items():
-#                     tx = round(tx, 6)
-#                     ev[disc][part][grp] = [tx, tx >= seuil[disc][part]]
-#                     ev_tot[disc][part][1] = ev_tot[disc][part][1] and ev[disc][part][grp][1]
-#         
-# #        print "   ", ev, ev_tot, seuil
-#         if compil:
-#             ev = ev["S"]
-#             ev_tot = ev_tot["S"]
-#             seuil = seuil["S"]
-#         return ev, ev_tot, seuil
-#         
-#         
-# #        if complet:
-# #            return r, s, ler, les
-# #        else:
-# #            return r, s
-#     
-
-#     ######################################################################################  
-#     def GetCompetences(self):
-#         lst = []
-#         for t in self.GetDocument().taches:
-#             if self.id in t.eleves:
-#                 lst.extend(t.competences)
-#         lst = list(set(lst))
-#         return lst
-    
-    
-#     ######################################################################################  
-#     def GetDicIndicateurs(self, limite = None):
-#         """ Renvoie un dictionnaire des indicateurs que l'élève doit mobiliser
-#              (pour tracé)
-#                   clef = code compétence
-#                 valeur = liste [True False ...] des indicateurs à mobiliser
-#         """
-#         indicateurs = {}
-# #         print " GetDicIndicateurs", self.id
-#         for t in self.GetDocument().taches: # Toutes les tâches du projet
-#             if not t.phase in TOUTES_REVUES_SOUT:
-#                 if self.id in t.eleves:     # L'élève est concerné par cette tâche
-#                     if t.estPredeterminee():
-#                         indicTache = t.GetDicIndicateursEleve(self) # Les indicateurs des compétences à mobiliser pour cette tâche
-#                     else:
-#                         indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
-#                     for c, i in indicTache.items():
-#                         if c in indicateurs.keys():
-#                             indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
-#                         else:
-#                             indicateurs[c] = i
-# #         print "  ", indicateurs
-#         return indicateurs
-#         
-#         
-        
-        
-#     ######################################################################################  
-#     def GetDicIndicateursRevue(self, revue):
-#         """ Renvoie un dictionnaire des indicateurs que l'élève doit mobiliser AVANT une revue
-#              (pour tracé)
-#                   clef = code compétence
-#                 valeur = liste [True False ...] des indicateurs à mobiliser
-#         """
-#         indicateurs = {}
-# #        print " GetDicIndicateurs", self.id
-#         for t in self.GetDocument().taches: # Toutes les tâches du projet
-#             if t.code == revue:
-#                 break
-#             if self.id in t.eleves:     # L'élève est concerné par cette tâche
-#                 indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
-#                 for c, i in indicTache.items():
-#                     if c in indicateurs.keys():
-#                         indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
-#                     else:
-#                         indicateurs[c] = i
-#                 
-#         return indicateurs
-    
-    
-    
-    
-#     ######################################################################################  
-#     def GetTaches(self, revues = False):
-#         lst = []
-#         for t in self.GetDocument().taches:
-#             if revues and t.phase in TOUTES_REVUES_EVAL:
-#                 lst.append(t)
-#             elif self.id in t.eleves:
-#                 if revues and t.phase == "Rev":
-#                     lst.append(t)
-#                 elif t.phase != "Rev":
-#                     lst.append(t)
-#             
-#                     
-# #        lst = list(set(lst))
-#             
-#         return lst
-        
-#     ######################################################################################  
-#     def GrillesGenerees(self):
-#         b = True
-#         for g in self.grille.values():
-#             b = b and len(g.path) > 0
-#         return b
-#     
     
     
     
