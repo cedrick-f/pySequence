@@ -495,7 +495,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
         
-        visible = dansRectangle(*pos, rs)
             
 #         self.WMIN_STRUC*SSCALE = self.options.optFenetre["Larg_pnl_Arbre"]
 #         self.HMIN_PROP*SSCALE = self.options.optFenetre["Haut_pnt_Prop"]
@@ -505,7 +504,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         print len(pos), len(siz)
 #         print x, y, w, h
         
-        if len(pos) == 2 and visible \
+        if len(pos) == 2 and dansRectangle(*pos, rs) \
             and len(siz) == 2 \
             and pos[0] < w \
             and pos[1] < h:
