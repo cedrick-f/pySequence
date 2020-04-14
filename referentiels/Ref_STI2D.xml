@@ -129,7 +129,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" I_S1="20" />
+          <d_poids I_C2="10" I_S1="20" />
           <d_sousComp>
             <Competence_CO2.1 S_intitule="Décoder le cahier des charges d’un produit, participer, si besoin, à sa modification">
               <l_domaines />
@@ -139,14 +139,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les critères du cahier des charges sont explicités et les principaux points de vigilance relatifs au projet sont identifiés au regard du besoin.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="25.0" F_C2="25.0" F_S1="33.333333" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_S1="0" />
+                  <d_poids F_C2="25.0" F_S1="33.333333" />
+                  <d_revue I_C2="0" I_S1="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les modifications apportés au cahier des charges sont pertinentes vis-à-vis du demandeur.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="25.0" F_C2="25.0" F_S1="33.333333" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_S1="0" />
+                  <d_poids F_C2="25.0" F_S1="33.333333" />
+                  <d_revue I_C2="0" I_S1="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -162,14 +162,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les principaux paramètres de compétitivité du produit (innovation, contraintes environnementales, sociétales et économiques…) sont identifiés.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="25.0" F_C2="25.0" F_S1="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_S1="0" />
+                  <d_poids F_C2="25.0" F_S1="16.666667" />
+                  <d_revue I_C2="0" I_S1="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="25.0" F_C2="25.0" F_S1="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_S1="0" />
+                  <d_poids F_C2="25.0" F_S1="16.666667" />
+                  <d_revue I_C2="0" I_S1="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
