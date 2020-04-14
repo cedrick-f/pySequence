@@ -1700,7 +1700,7 @@ class Referentiel(XMLelem):
                     "nomSpe",
                     "nomCI",
                     "nomPb",
-                    "nomFS",
+#                     "nomFS",
 #                     "nomFonctions",
                     "nomTaches",
                     "nomDemarches",
@@ -2683,6 +2683,7 @@ class Projet(XMLelem):
 
     #########################################################################
     def getNbrRevuesDefaut(self):
+#         print("getNbrRevuesDefaut")
         return min(self.posRevues.keys())
     
     #########################################################################

@@ -731,9 +731,10 @@ class Projet(Base_Fiche_Doc):
                 # Barres d'évaluabilité
                 #
                 if prjeval is None:
-                    parties = {}
+                    parties = []
                 else:
-                    parties = prjeval.parties
+                    parties = prjeval.listeParties
+                
                 for i, e in enumerate(self.prj.eleves + self.prj.groupes):
                     ev = e.GetEvaluabilite(compil = True)[1]
                     y = self.posZElevesH[1] + i*self.hEleves
@@ -744,7 +745,7 @@ class Projet(Base_Fiche_Doc):
                     
         
                     
-                    for j, part in enumerate(parties.keys()):
+                    for j, part in enumerate(parties):
                         
                         BarreH(self, self.posZElevesH[0], y+(j+1)*hb, 
                                self.tailleZElevesH[0], 
@@ -1339,14 +1340,17 @@ class Projet(Base_Fiche_Doc):
     #            dangle = 2*pi/len(indic)
             dx = self.wColComp/len(indic)
             for a, i in enumerate(indic):
-                deja = 0
-                for part in dictype[s][a]:
-                    if part in prjeval.parties:
+                deja = False
+                for part in prjeval.listeParties:
+                    if part in dictype[s][a]:
+                
+#                 for part in dictype[s][a]:
+#                     if part in prjeval.parties:
                         if i: # Rose ou bleu
                         
-                            if part[0] == "S":  # Soutenance
+                            if part == prjeval.listeParties[0]:  # Conduite
                                 d = -1
-                            else:               # Conduite
+                            else:               # Soutenance
                                 d = 1
                         
                             self.ctx.set_source_rgba (*self.getCoulComp(part))
@@ -1357,18 +1361,18 @@ class Projet(Base_Fiche_Doc):
                 
                         if d != 0:      # Un rectangle coloré
                             if deja != 0:   # On a jéja mis un rectangle ici (position deja)
-                                if deja == 1:
-                                    self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h/2+dh/2)
-                                else:
-                                    self.ctx.rectangle(x+a*dx, y-h/2, dx, h/2-dh)
+                                if deja:
+                                    self.ctx.rectangle(x+a*dx, y, dx, h/2)
+#                                 else:
+#                                     self.ctx.rectangle(x+a*dx, y-h/2, dx, h/2-dh)
                                 
                             else:
                                 self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-                                deja = d
+                                deja = True
                                 
                             self.ctx.fill_preserve ()
                             
-                        else:           # Juste deux trait verticaux
+                        else:           # Juste deux traits verticaux
                             self.ctx.move_to(x+a*dx, y-h/2+dh)
                             self.ctx.rel_line_to(0, h-4*dh)
                             self.ctx.move_to(x+a*dx+dx, y-h/2+dh)

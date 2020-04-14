@@ -718,9 +718,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     tool.SetLongHelp("Ajout d'un modèle numérique du support")
                     
                 elif tool.GetId() == 56:
-                    tool.SetLabel("Ajouter %s" %ref._nomFS.sing_())
-                    tool.SetShortHelp("Ajout %s au Projet" %ref._nomFS.de_())
-                    tool.SetLongHelp("Ajout %s au Projet" %ref._nomFS.de_())
+                    tool.SetLabel("Ajouter %s" %ref.getLabel("EXIG").sing_())
+                    tool.SetShortHelp("Ajout %s au Projet" %ref.getLabel("EXIG").de_())
+                    tool.SetLongHelp("Ajout %s au Projet" %ref.getLabel("EXIG").de_())
                 
                 
                 # Séquences ##################################################################
@@ -11513,7 +11513,7 @@ class PanelPropriete_FS(PanelPropriete):
         # Principale ou contrainte
         #
         ref = FS.GetReferentiel()
-        self.rdtype = wx.RadioBox(self, -1, label="Type de %s" %ref._nomFS.sing_(), 
+        self.rdtype = wx.RadioBox(self, -1, label="Type %s" %ref.getLabel("EXIG").de_(), 
                                   choices=["Fonction Principale", "Fonction Contrainte"],
                                   style = wx.RA_SPECIFY_COLS)
         
@@ -11545,7 +11545,7 @@ class PanelPropriete_FS(PanelPropriete):
             event.Skip()
             self.FS.SetIntitule(txt)
             
-            modif = "Modification de l'intitulé %s" %ref._nomFS.du_()
+            modif = "Modification de l'intitulé %s" %ref.getLabel("EXIG").du_()
             
             if self.onUndoRedo():
                 self.sendEvent(modif = modif, draw = True, verif = False)
@@ -13070,7 +13070,7 @@ class PanelPropriete_Personne(PanelPropriete):
     #                titres = [u"Revues :", u"Soutenance :"]
             
             self.SelectGrille = {}
-            for k in list(self.personne.grille.keys()):
+            for k in self.personne.grille:
                 self.SelectGrille[k] = PanelSelectionGrille(self, self.personne, k)
                 self.bsizer.Add(self.SelectGrille[k], flag = wx.EXPAND)
             
@@ -13288,6 +13288,7 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
+        print("MiseAJourTypeEnseignement panel", self.personne)
         if hasattr(self.personne, 'grille'):
 #            print "MiseAJourTypeEnseignement eleve", self.personne
             if hasattr(self, 'SelectGrille'):
@@ -20409,12 +20410,19 @@ class CodeBranche(wx.Panel):
         wx.Panel.__init__(self, arbre, -1)
         sz = wx.BoxSizer(wx.HORIZONTAL)
         self.code = wx.StaticText(self, -1, code)
-        
         sz.Add(self.code)
-        self.SetSizerAndFit(sz)
-        self.comp = {}
-        self.code.Bind(wx.EVT_LEFT_DOWN, self.OnClick)
         
+        self.info = wx.BoxSizer(wx.HORIZONTAL)
+        sz.Add(self.info)
+        
+        
+        self.SetSizerAndFit(sz)
+        
+        self.reset()
+        
+        self.code.Bind(wx.EVT_LEFT_DOWN, self.OnClick)
+    
+    
     def OnClick(self, event):
 #        print "OnClick"
         if hasattr(self, 'branche'):
@@ -20427,33 +20435,46 @@ class CodeBranche(wx.Panel):
 #        evt.SetItem(self.branche)
 #        self.Parent.GetEventHandler().ProcessEvent(evt)
         
+    def reset(self):
+        self.info.Clear(delete_windows=True)
+        self.comp = {}
+#         self.img = wx.StaticBitmap(self, -1, wx.NullBitmap)
+    
+    
     def SetBranche(self, branche): 
         self.branche = branche
-        
+    
+    
     def SetItalic(self, italic = True):
         font = self.code.GetFont().Italic()
         self.code.SetFont(font)
-         
+    
+    
     def Add(self, clef, text = ""):
         self.comp[clef] = wx.StaticText(self, -1, "")
-        self.GetSizer().Add(self.comp[clef])
-        
+        self.info.Add(self.comp[clef])
+    
+    
     def AddImg(self):
         self.img = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        self.GetSizer().Add(self.img)
+        self.info.Add(self.img)
+
 
     def SetLabel(self, text):
         self.code.SetLabel(text)
         self.LayoutFit()
+    
     
     def SetImg(self, bmp):
         bmp = scaleImage(bmp, IMG_SIZE_TREE[0]*SSCALE, IMG_SIZE_TREE[1]*SSCALE)
         self.img.SetBitmap(bmp)
         self.LayoutFit()
         
+        
     def DelImg(self):
         self.img.SetBitmap(wx.NullBitmap)
         self.LayoutFit()
+        
         
     def SetBackgroundColour(self, color):
         self.code.SetBackgroundColour(color)

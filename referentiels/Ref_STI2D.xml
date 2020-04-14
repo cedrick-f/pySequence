@@ -17,7 +17,7 @@
       <l_03 I_00="0" I_01="0" I_02="0" />
     </l_P>
   </d_activites>
-  <d_compImposees B_C1="False" B_C2="False" B_S1="False" B_S2="False" />
+  <d_compImposees B_C="False" B_C2="False" B_E3C="False" B_S2="False" />
   <d_demarcheSeance>
     <l_ED S_00="P" />
     <l_AP S_00="I" S_01="R" S_02="P" />
@@ -47,7 +47,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" />
+          <d_poids I_C="10" I_C2="10" />
           <d_sousComp>
             <Competence_CO1.1 S_intitule="Justifier les choix des structures matérielles et/ou logicielles d’un produit, Identifier les flux mis en œuvre dans une approche de développement durable">
               <l_domaines />
@@ -57,14 +57,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La structure matérielle et/ou informationnelle est correctement justifiée.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="16.666667" F_C2="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="16.666667" F_C2="16.666667" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le flux et la forme de l'énergie et/o de l'information sont décrits de façon qualitative.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="16.666667" F_C2="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="16.666667" F_C2="16.666667" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -80,9 +80,9 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La solution choisie est justifiée du point de vue des notions de confort, d'efficacité et de sécurité dans les relations Homme - produit, Homme - système.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="16.666667" F_C2="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="16.666667" F_C2="16.666667" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -98,19 +98,19 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les solutions constructives sont identifiées.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="16.666667" F_C2="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="16.666667" F_C2="16.666667" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="16.666667" F_C2="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="16.666667" F_C2="16.666667" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="L'influence de la solution constructive sur l'efficacité globale (vis-à-vis du cahier des charges) est déterminée.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="16.666667" F_C2="16.666667" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="16.666667" F_C2="16.666667" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_02>
               </l_indicateurs>
               <l_infos />
@@ -129,7 +129,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C2="10" I_S1="20" />
+          <d_poids I_C2="10" I_E3C="20" />
           <d_sousComp>
             <Competence_CO2.1 S_intitule="Décoder le cahier des charges d’un produit, participer, si besoin, à sa modification">
               <l_domaines />
@@ -139,14 +139,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les critères du cahier des charges sont explicités et les principaux points de vigilance relatifs au projet sont identifiés au regard du besoin.">
-                  <d_ligne I_C2="0" I_S1="0" />
-                  <d_poids F_C2="25.0" F_S1="33.333333" />
-                  <d_revue I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_E3C="0" />
+                  <d_poids F_C2="25.0" F_E3C="33.333333" />
+                  <d_revue I_C2="0" I_E3C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les modifications apportés au cahier des charges sont pertinentes vis-à-vis du demandeur.">
-                  <d_ligne I_C2="0" I_S1="0" />
-                  <d_poids F_C2="25.0" F_S1="33.333333" />
-                  <d_revue I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_E3C="0" />
+                  <d_poids F_C2="25.0" F_E3C="33.333333" />
+                  <d_revue I_C2="0" I_E3C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -162,14 +162,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les principaux paramètres de compétitivité du produit (innovation, contraintes environnementales, sociétales et économiques…) sont identifiés.">
-                  <d_ligne I_C2="0" I_S1="0" />
-                  <d_poids F_C2="25.0" F_S1="16.666667" />
-                  <d_revue I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_E3C="0" />
+                  <d_poids F_C2="25.0" F_E3C="16.666667" />
+                  <d_revue I_C2="0" I_E3C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué.">
-                  <d_ligne I_C2="0" I_S1="0" />
-                  <d_poids F_C2="25.0" F_S1="16.666667" />
-                  <d_revue I_C2="0" I_S1="0" />
+                  <d_ligne I_C2="0" I_E3C="0" />
+                  <d_poids F_C2="25.0" F_E3C="16.666667" />
+                  <d_revue I_C2="0" I_E3C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -188,7 +188,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" />
+          <d_poids I_C="10" I_C2="10" />
           <d_sousComp>
             <Competence_CO3.1 S_intitule="Identifier et caractériser les fonctions et les constituants d’un produit ainsi que ses entrées/sorties">
               <l_domaines />
@@ -198,14 +198,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les constituants et leurs fonctions sont identifiés.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="12.5" F_C2="25.0" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="12.5" F_C2="25.0" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les caractéristiques d'entrées sorties des constituants sont correctement précisées">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="12.5" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -221,14 +221,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="L'agencement structurel et informationnel est correctement identifié.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="12.5" F_C2="25.0" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="12.5" F_C2="25.0" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="L'agencement structurel et informationnel est correctement caractérisé.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="12.5" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -244,14 +244,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les cycles de fonctionnement sont correctement identifiées.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="12.5" F_C2="25.0" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="12.5" F_C2="25.0" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les cycles de fonctionnement sont correctement caractérisées.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="12.5" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -267,14 +267,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La solution technique pour chaque fonction est identifiée.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="12.5" F_C2="25.0" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="12.5" F_C2="25.0" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les solutions techniques retenues sont caractérisées.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="12.5" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -293,7 +293,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" I_S1="15" />
+          <d_poids I_C="10" I_C2="10" I_E3C="15" />
           <d_sousComp>
             <Competence_CO4.1 S_intitule="Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés">
               <l_domaines />
@@ -303,19 +303,19 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La présentation est synthétique et s'appuie sur des outils pertinents.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="14.285714" F_C2="33.333333" F_S1="33.333333" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="14.285714" F_C2="33.333333" F_E3C="33.333333" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les outils de représentation sont correctement décodés">
-                  <d_ligne I_C1="0" I_S1="0" />
-                  <d_poids F_C1="14.285714" F_S1="33.333333" />
-                  <d_revue I_C1="0" I_S1="0" />
+                  <d_ligne I_C="0" I_E3C="0" />
+                  <d_poids F_C="14.285714" F_E3C="33.333333" />
+                  <d_revue I_C="0" I_E3C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="La description est compréhensible">
-                  <d_ligne I_C1="0" I_S1="0" />
-                  <d_poids F_C1="14.285714" F_S1="33.333333" />
-                  <d_revue I_C1="0" I_S1="0" />
+                  <d_ligne I_C="0" I_E3C="0" />
+                  <d_poids F_C="14.285714" F_E3C="33.333333" />
+                  <d_revue I_C="0" I_E3C="0" />
                 </Indicateur_02>
               </l_indicateurs>
               <l_infos />
@@ -331,14 +331,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La description du principe ou de la solution est synthétique et correcte.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="14.285714" F_C2="33.333333" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="14.285714" F_C2="33.333333" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le bon outil est utilisé pour décrire le fonctionnement ou l'exploitation du produit.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="14.285714" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="14.285714" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -354,14 +354,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le choix de la démarche retenue est argumentée.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="14.285714" F_C2="33.333333" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="14.285714" F_C2="33.333333" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les résultats sont présentés et commentés de manière simple.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="14.285714" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="14.285714" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -380,7 +380,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" I_S1="40" />
+          <d_poids I_C="10" I_C2="10" I_E3C="40" />
           <d_sousComp>
             <Competence_CO5.1 S_intitule="S’impliquer dans un groupe de projet">
               <l_domaines />
@@ -390,24 +390,24 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La problématique est correctement explicitée.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les missions de chaque membre du groupe sont identifiées et peuvent être expliquer.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.564103" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.564103" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Les interractions entre les différents acteurs du projet sont identifiées.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.564103" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.564103" />
+                  <d_revue I_C="0" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="Les outils de travail collaboratif sont correctement utilisés.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.564103" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.564103" />
+                  <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
               <l_infos />
@@ -423,9 +423,9 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les problèmes techniques proposés sont en lien avec le besoin exprimé.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" F_S1="25.0" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" F_E3C="25.0" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -441,9 +441,9 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les constituants sont correctement identifier à partir du cahier des chages.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -459,9 +459,9 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les différentes phases du projet sont identifiées et présentées avec un outil adapté.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" F_S1="25.0" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" F_E3C="25.0" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -477,14 +477,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La démarche de créativité mise en œuvre pour rechercher des solutions est présentée.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" F_S1="25.0" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" F_E3C="25.0" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le choix de la solution (logiciels, matériaux, constituants) retenue est argumenté au regard des performances attendues.">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" F_S1="25.0" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" F_E3C="25.0" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -500,9 +500,9 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Une démarche développement durable est apporté à l'étude de Design.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
               </l_indicateurs>
               <l_infos />
@@ -518,14 +518,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La structure matérielle et/ou la constitution d’un produit est correctement définie.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.564103" F_C2="6.25" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.564103" F_C2="6.25" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les impacts technico-économiques et environnemental du produit sont explicités.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.564103" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.564103" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -551,24 +551,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, …)">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les contraintes de normes, propriété industrielle, brevets sont identifiées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les solutions constructives proposées sont pertinentes des points de vue DD &amp; économique">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="Les choix sont explicités dans une démarche d'analyse globale de réponse au cahier des charges">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -584,24 +584,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le phasage des opérations de réalisation est réaliste, le chemin critique est identifié">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les procédés de mise en œuvre sont choisis et justifiés">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="La logistique de réalisation répond aux contraintes techniques et de site du chantier">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -617,24 +617,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="La structure est correctemment définie">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les modifications respectent les contraintes du cahier des charges ou son évolution">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Le choix des constituants est pertinent">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -650,24 +650,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le système de gestion de l'énergie est correctement défini">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Le système de gestion de l'énergie est correctement programmé">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Le système de gestion de l'énergie est paramètré pour répondre au cahier des charges">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="La définition, la programmation et le paramètrage du système de gestion améliore les performances du système">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -683,19 +683,19 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="La démarche de création est rationnelle">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les contraintes fonctionnelles sont traduites de manière complète">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les formes et dimensions sont compatibles avec le principe de réalisation, le matériau choisi et les contraintes subies">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                   </l_indicateurs>
                   <l_infos />
@@ -711,14 +711,14 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les modifications respectent les contraintes fonctionnelles">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="La procédure de modification est rationnelle">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
                   <l_infos />
@@ -734,19 +734,19 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="La définition du système est exprimée correctement">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Une liste non exhaustive de solutions pertinentes est établie ">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Le choix de la solution est argumenté">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                   </l_indicateurs>
                   <l_infos />
@@ -762,19 +762,19 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="L'algorithme de fonctionnement est établi">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.564103" F_C2="6.25" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.564103" F_C2="6.25" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les paramètres de l'algorithme sont définis">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="L'algorithme est correctement programmé">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.564103" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.564103" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                   </l_indicateurs>
                   <l_infos />
@@ -796,7 +796,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" />
+          <d_poids I_C="10" I_C2="10" />
           <d_sousComp>
             <Competence_CO6.1 S_intitule="Expliquer des éléments d’une modélisation multiphysique proposée relative au comportement de tout ou partie d’un produit">
               <l_domaines />
@@ -806,14 +806,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le modèle multiphysique est expliqué de manière global.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.941176" F_C2="9.090909" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.941176" F_C2="9.090909" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les différents éléments du modèle multiphysique sont explicités.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.941176" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.941176" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -829,14 +829,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les variables et les paramètres internes/externes sont identifiés.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.941176" F_C2="9.090909" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.941176" F_C2="9.090909" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les variables et les paramètres internes/externes sont correctement paramètrés.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.941176" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.941176" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -852,24 +852,24 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="L'interprétation des résultats est cohérente.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.941176" F_C2="9.090909" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.941176" F_C2="9.090909" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="L'analyse des écarts est méthodique.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.941176" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.941176" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Les résultats de la simulation et les mesures sont corrélés.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.941176" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.941176" />
+                  <d_revue I_C="0" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="La conclusion sur la validité du modèle est correctement formulé.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.941176" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.941176" />
+                  <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
               <l_infos />
@@ -885,14 +885,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="L'association fonction, modèle de comportement est correctement établi.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="2.941176" F_C2="9.090909" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="2.941176" F_C2="9.090909" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="L'observation ou la mesure de la fonction est correctement réalisée.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="2.941176" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="2.941176" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -918,24 +918,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les variables et les paramètres internes et externes des modèles sont identifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les scénarios de simulation sont identifiés">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="L'interprétation des résultats de la simulation est pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -951,14 +951,14 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les procédés de mise en œuvre sont choisis et justifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="La logistique de réalisation répond aux contraintes techniques et de site du chantier">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
                   <l_infos />
@@ -974,24 +974,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les variables et les paramètres internes et externes du modèle sont identifiés (partie puissance)">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées (partie puissance)">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les scénarios de simulation sont identifiés (partie puissance)">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="L'interprétation des résultats de la simulation est pertinente (partie puissance)">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -1007,24 +1007,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les variables et les paramètres internes et externes du modèle sont identifiés (partie commande)">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées (partie commande)">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les scénarios de simulation sont identifiés (partie commande)">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="L'interprétation des résultats de la simulation est pertinente (partie commande)">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -1040,24 +1040,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les variables et les paramètres internes et externes des modèles sont identifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les scénarios de simulation sont identifiés">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="L'interprétation des résultats de la simulation est pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -1073,9 +1073,9 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les procédés de mise en œuvre sont choisis et justifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -1091,29 +1091,29 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les variables et les paramètres internes et externes du système simulé sont identifiées">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="2.941176" F_C2="9.090909" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="2.941176" F_C2="9.090909" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les conditions de simulation sont argumentées pour valider le choix d'une solution">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="L'interprétation des résultats de la simulation est pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                     <Indicateur_04 S_intitule="Les paramètres du système simulé sont affinés pour réduire les écarts avec le système réel">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="2.941176" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="2.941176" />
+                      <d_revue I_C="0" />
                     </Indicateur_04>
                   </l_indicateurs>
                   <l_infos />
@@ -1135,7 +1135,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C1="10" I_C2="10" I_S1="25" />
+          <d_poids I_C="10" I_C2="10" I_E3C="25" />
           <d_sousComp>
             <Competence_CO7.1 S_intitule="Réaliser et valider un prototype ou une maquette obtenus en réponse à tout ou partie du cahier des charges initial">
               <l_domaines />
@@ -1145,14 +1145,14 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les moyens mobilisés pour la réalisation du prototype sont adaptés">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="3.571429" F_C2="10.0" F_S1="50.0" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="3.571429" F_C2="10.0" F_E3C="50.0" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le prototype réalisé permet de valider les performances attendues">
-                  <d_ligne I_C1="0" I_C2="0" I_S1="0" />
-                  <d_poids F_C1="3.571429" F_C2="10.0" F_S1="50.0" />
-                  <d_revue I_C1="0" I_C2="0" I_S1="0" />
+                  <d_ligne I_C="0" I_C2="0" I_E3C="0" />
+                  <d_poids F_C="3.571429" F_C2="10.0" F_E3C="50.0" />
+                  <d_revue I_C="0" I_C2="0" I_E3C="0" />
                 </Indicateur_01>
               </l_indicateurs>
               <l_infos />
@@ -1168,24 +1168,24 @@
               </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les conditions de l'essai sont identifiées et justifiées.">
-                  <d_ligne I_C1="0" I_C2="0" />
-                  <d_poids F_C1="3.571429" F_C2="10.0" />
-                  <d_revue I_C1="0" I_C2="0" />
+                  <d_ligne I_C="0" I_C2="0" />
+                  <d_poids F_C="3.571429" F_C2="10.0" />
+                  <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le protocole est adapté à l'objectif.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="3.571429" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="3.571429" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="Les incertitudes sont estimées.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="3.571429" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="3.571429" />
+                  <d_revue I_C="0" />
                 </Indicateur_02>
                 <Indicateur_03 S_intitule="L'expérimentation est correctement mise en œuvre.">
-                  <d_ligne I_C1="0" />
-                  <d_poids F_C1="3.571429" />
-                  <d_revue I_C1="0" />
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="3.571429" />
+                  <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
               <l_infos />
@@ -1211,29 +1211,29 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Le protocole d'essai est justifié et adapté à l'objectif">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les observations et mesures sont méthodiquement menés et les incertitudes de mesures estimées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="L'interprétation des résultats est cohérente et pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                     <Indicateur_04 S_intitule="La solution est validée au vu du cahier des charges">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_04>
                   </l_indicateurs>
                   <l_infos />
@@ -1249,19 +1249,19 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés (partie puissance)">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Le protocole d'essai est justifié et adapté à l'objectif">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="Les caractéristiques principales et leurs conséquences constructives sont identifiées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                   </l_indicateurs>
                   <l_infos />
@@ -1277,24 +1277,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le protocole d'essai est justifié et adapté à l'objectif (partie commande)">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les observations et mesures sont méthodiquement menés et les incertitudes de mesures estimées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="La solution est validée au vu du cahier des charges">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -1310,9 +1310,9 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -1328,24 +1328,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le protocole d'essai est justifié et adapté à l'objectif">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les observations et mesures sont méthodiquement menés et les incertitudes de mesures estimées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="La solution est validée au vu du cahier des charges">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -1361,9 +1361,9 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                   </l_indicateurs>
                   <l_infos />
@@ -1379,24 +1379,24 @@
                   </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le protocole d'essai est justifié et adapté à l'objectif">
-                      <d_ligne I_C1="0" I_C2="0" />
-                      <d_poids F_C1="3.571429" F_C2="10.0" />
-                      <d_revue I_C1="0" I_C2="0" />
+                      <d_ligne I_C="0" I_C2="0" />
+                      <d_poids F_C="3.571429" F_C2="10.0" />
+                      <d_revue I_C="0" I_C2="0" />
                     </Indicateur_00>
                     <Indicateur_01 S_intitule="Les observations et mesures sont méthodiquement menés et les incertitudes de mesures estimées">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_01>
                     <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_02>
                     <Indicateur_03 S_intitule="La solution est validée au vu du cahier des charges">
-                      <d_ligne I_C1="0" />
-                      <d_poids F_C1="3.571429" />
-                      <d_revue I_C1="0" />
+                      <d_ligne I_C="0" />
+                      <d_poids F_C="3.571429" />
+                      <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
                   <l_infos />
@@ -6549,6 +6549,7 @@
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
     <l_PROBL S_00="Enjeu(x) sociétal$m" S_01="Enjeux sociétaux" />
     <l_PRJVAL S_00="Fiche(s) de définition de projet$f" S_01="Fiche de définition de projet" />
+    <l_EXIG S_00="Exigence(s)$f" S_01="Exigences" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="P" />
   <l_listProblematiques />
@@ -6579,7 +6580,7 @@
     </l_4.0>
   </d_nivTaxo>
   <d_options />
-  <d_parties S_C1="Conduite" S_C2="Conduite" S_S1="Soutenance" S_S2="Soutenance" />
+  <d_parties S_C="Conduite" S_C2="Conduite" S_E3C="Soutenance" S_S2="Soutenance" />
   <l_periodes>
     <l_00 I_01="5" S_00="1_ère" />
     <l_01 I_01="5" S_00="T_ale" />
@@ -6593,12 +6594,12 @@
         <l_ORI S_00="Thème sociétal" S_01="Partenariat, thématique, concours…" S_02="" S_03="Il faut expliciter l’origine du besoin exprimé (un tiers par exemple) ou identifié (un élève par exemple) qui a conduit à mettre en place ce projet. L’origine de la proposition peut être précédée par l'énoncé de l'insatisfaction." />
         <l_CCF S_00="Problème technique à résoudre" S_01="" S_02="" S_03="" />
         <l_OBJ S_00="La finalité du produit" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
-        <l_TYP S_00="Production finale" S_01="Production finale" S_02="" S_03="" />
+        <l_TYP S_00="" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="Cette partie est complétée si le projet confié au groupe ne représente qu’une partie détaillée dans l’énoncé général du besoin." />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
         <l_PRX S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="Production finale" S_01="Production finale attendue" S_02="" S_03="" />
         <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_SML S_00="sysML" S_01="Diagrammes sysML" S_03="">
           <l_02 S_00="Expression du besoin" S_01="Missions du système" S_02="Contexte du système" S_03="Cas d'utilisation" S_04="Exigences" />
@@ -6606,7 +6607,7 @@
         <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
-        <d_C1>
+        <d_C>
           <l_Prof>
             <l_00 S_00="Revue 1" S_02="">
               <l_01 I_00="7" I_01="8" I_02="1" />
@@ -6662,8 +6663,8 @@
               <l_01 I_00="4" I_01="2" I_02="0" />
             </l_02>
           </l_Etab>
-        </d_C1>
-        <d_S1>
+        </d_C>
+        <d_E3C>
           <l_Tit>
             <l_00 S_00="Présentation" S_02="">
               <l_01 I_00="4" I_01="5" I_02="0" />
@@ -6684,23 +6685,25 @@
               <l_01 I_00="4" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
-        </d_S1>
+        </d_E3C>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C1 S_00="STS-EE _ Revues.xlsx" S_01="I" />
-        <l_S1 S_00="STS-EE _ Présentation.xlsx" S_01="I" />
+        <l_C S_00="STS-EE _ Revues.xlsx" S_01="I" />
+        <l_E3C S_00="STS-EE _ Présentation.xlsx" S_01="I" />
       </d_grilles>
-      <l_listPhases S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listTaches />
-      <l_listeParties S_00="C1" S_01="S1" />
-      <d_parties S_C1="Conduite" S_S1="Soutenance" />
+      <l_listeParties S_00="C" S_01="E3C" />
+      <d_parties S_C="Conduite" S_E3C="Soutenance" />
       <l_periode I_00="5" />
       <d_phases>
-        <l_Ana S_00="Organisation" S_01="Organisation du projet" S_02="O" S_03="" />
-        <l_Rea S_00="Conception" S_01="Conception du projet" S_02="C" S_03="" />
-        <l_Val S_00="Mise en œuvre" S_01="Mise en oeuvre du projet" S_02="M" S_03="" />
-        <l_XXX S_00="Présentation" S_01="Présentation du projet" S_02="P" S_03="" />
+        <l_Ana S_00="Analyse" S_01="Analyse" S_02="A" S_03="" />
+        <l_Con S_00="Recherche" S_01="Recherche" S_02="R" S_03="" />
+        <l_DCo S_00="Conception" S_01="Conception" S_02="C" S_03="" />
+        <l_Rea S_00="Maquettage" S_01="Maquettage" S_02="M" S_03="" />
+        <l_Val S_00="Test" S_01="Test" S_02="T" S_03="" />
+        <l_XXX S_00="Restitution" S_01="Présentation du projet" S_02="S" S_03="" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
@@ -6708,7 +6711,8 @@
         <l_S S_00="Présentation" S_01="Présentation du projet" S_02="S" S_03="" />
       </d_phases>
       <d_posRevues>
-        <l__03 S_00="Ana" S_01="Rea" S_02="Val" />
+        <l__02 S_00="Con" S_01="Rea" />
+        <l__03 S_00="Con" S_01="Rea" S_02="Val" />
       </d_posRevues>
       <d_taches />
     </Projet_P1>

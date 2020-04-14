@@ -4736,7 +4736,7 @@ class Projet(BaseDoc, Grammaire):
     
     #############################################################################
     def initRevues(self):
-#         print("initRevues",self.code)
+#         print("initRevues", self.code)
         ref = self.GetReferentiel()
 #         self.getNbrRevues() = ref.getNbrRevuesDefaut(self.code)
 #         self.positionRevues = list(ref.getPosRevuesDefaut(self.code, self.getNbrRevues()))
@@ -5231,7 +5231,7 @@ class Projet(BaseDoc, Grammaire):
         
         fs.ConstruireArbre(self.arbre, self.brancheFS)
         self.arbre.Expand(self.brancheFS)
-        self.GetApp().sendEvent(modif = "Ajout "+ref._nomFS.de_())
+        self.GetApp().sendEvent(modif = "Ajout "+ref.getLabel("EXIG").de_())
         self.OrdonnerFS()
         self.arbre.SelectItem(fs.branche)
 
@@ -5243,7 +5243,7 @@ class Projet(BaseDoc, Grammaire):
         self.fct_serv.remove(fs)
         self.arbre.Delete(item)
         
-        self.GetApp().sendEvent(modif = "Suppression "+ref._nomFS.de_())
+        self.GetApp().sendEvent(modif = "Suppression "+ref.getLabel("EXIG").de_())
         self.OrdonnerFS()
 #         self.arbre.SelectItem(fs.branche)
         
@@ -5323,7 +5323,7 @@ class Projet(BaseDoc, Grammaire):
         #
         # Les fonctions de service
         #
-        self.brancheFS = arbre.AppendItem(self.branche, self.GetReferentiel()._nomFS.Plur_(), 
+        self.brancheFS = arbre.AppendItem(self.branche, self.GetReferentiel().getLabel("EXIG").Plur_(), 
                                            data = "FS",
                                            image = self.arbre.images["FS"])
         for e in self.fct_serv:
@@ -5442,8 +5442,8 @@ class Projet(BaseDoc, Grammaire):
                                               scaleImage(images.Icone_ajout_prof.GetBitmap()),
                                               True]])
                                              
-        elif self.arbre.GetItemText(itemArbre) == ref._nomFS.Plur_():
-            self.app.AfficherMenuContextuel([["Ajouter %s" %ref._nomFS.un_(), self.AjouterFS, 
+        elif self.arbre.GetItemText(itemArbre) == ref.getLabel("EXIG").Plur_():
+            self.app.AfficherMenuContextuel([["Ajouter %s" %ref.getLabel("EXIG").un_(), self.AjouterFS, 
                                               scaleImage(images.Icone_ajout_FS.GetBitmap()),
                                               True]])
             
@@ -5685,6 +5685,9 @@ class Projet(BaseDoc, Grammaire):
         self.position = self.GetPeriodeDefaut()
 #         print("taches", self.taches)
         
+        for e in self.eleves:
+            e.MiseAJourTypeEnseignement()
+        
         self.initRevues()
         self.MiseAJourNbrRevues()
 #         print("taches", self.taches)
@@ -5695,8 +5698,7 @@ class Projet(BaseDoc, Grammaire):
             self.arbre.Layout()
             self.arbre.Refresh()
         
-        for e in self.eleves:
-            e.MiseAJourTypeEnseignement()
+        
         
         self.MiseAJour()
 
@@ -10991,7 +10993,7 @@ class FonctionService(ElementAvecLien, ElementBase):
                                                      functools.partial(self.GetDocument().SupprimerFS, item = itemArbre), 
                                                      scaleImage(images.Icone_suppr_FS.GetBitmap()),
                                                      True],
-                                                    ["Ajouter %s" %self.GetReferentiel()._nomFS.un_(), 
+                                                    ["Ajouter %s" %self.GetReferentiel().getLabel("EXIG").un_(), 
                                                      self.GetDocument().AjouterFS, 
                                                      scaleImage(images.Icone_ajout_FS.GetBitmap()),
                                                      True],
@@ -13211,8 +13213,7 @@ class Eleve(Personne):
         self.code = "Elv"
         
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
-        for k in doc.GetProjetRef().parties.keys():
-            self.grille[k] = Lien(typ = 'f')
+        
         
         Personne.__init__(self, doc, ident, nom = nom, prenom = prenom, width = 550*SSCALE)
         Grammaire.__init__(self, self.GetReferentiel().labels["ELEVES"][0])
@@ -13222,6 +13223,13 @@ class Eleve(Personne):
  
         self.modeles = []
         
+    
+    ######################################################################################  
+    def initGrilles(self):
+        self.grille = {}
+        for k in self.doc.GetProjetRef().listeParties:
+            self.grille[k] = Lien(typ = 'f')
+            
             
     ######################################################################################  
     def GetDuree(self, phase = None, total = False):
@@ -13843,12 +13851,15 @@ class Eleve(Personne):
 
     ######################################################################################  
     def MiseAJourTypeEnseignement(self):
-#        print "MiseAJourTypeEnseignement", self
-        self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
-#        print self.GetReferentiel().nomParties_prj
-        for k in self.GetProjetRef().parties.keys():
-            self.grille[k] = Lien(typ = 'f')
-#        self.GetPanelPropriete().MiseAJourTypeEnseignement()
+#         print("MiseAJourTypeEnseignement", self)
+        self.initGrilles()
+        self.initCodeBranche()
+# #        print "MiseAJourTypeEnseignement", self
+#         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
+# #        print self.GetReferentiel().nomParties_prj
+#         for k in self.GetProjetRef().parties.keys():
+#             self.grille[k] = Lien(typ = 'f')
+# #        self.GetPanelPropriete().MiseAJourTypeEnseignement()
     
     
     ######################################################################################  
@@ -13857,13 +13868,15 @@ class Eleve(Personne):
             et d'évaluabilité
             et icône de modèle éventuellement
         """
-#        print "MiseAJourCodeBranche", self
+#         print("MiseAJourCodeBranche", self)
 
+        prjeval = self.GetProjetRef()
+        
         #
         # Durée
         #
         duree = self.GetDuree()
-        dureeRef = self.GetProjetRef().duree
+        dureeRef = prjeval.duree
 #        print "   duree", duree, "/", dureeRef
         lab = " ("+str(int(duree))+"h) "
         self.codeBranche.SetLabel(lab)
@@ -13891,12 +13904,12 @@ class Eleve(Personne):
 #        er, es , ler, les = self.GetEvaluabilite(complet = True)
         ev, ev_tot, seuil = self.GetEvaluabilite()
         
-        for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
-            for part in dic.keys():
+        for disc, dic in prjeval._dicoGrpIndicateur.items():
+            for part in dic:
                 self.codeBranche.comp[disc+part].SetLabel(rallonge(pourCent2(ev_tot[disc][part][0])))
         
         keys = {}
-        for disc, dic in self.GetProjetRef()._dicoIndicateurs_simple.items():
+        for disc, dic in prjeval._dicoIndicateurs_simple.items():
             keys[disc] = sorted(dic.keys())
             if "O8s" in keys[disc]:
                 keys[disc].remove("O8s")
@@ -13910,8 +13923,8 @@ class Eleve(Personne):
         t52 = "les compétences "
         
 #        for ph, nomph, st in zip(['R', 'S'], [u"conduite", u"soutenance"], [self.evaluR, self.evaluS]):
-        for disc in self.GetProjetRef()._dicoGrpIndicateur.keys():
-            for ph, nomph in self.GetProjetRef().parties.items():
+        for disc in prjeval._dicoGrpIndicateur.keys():
+            for ph, nomph in prjeval.parties.items():
                 st = self.codeBranche.comp[disc+ph]
                 t = "Évaluabilité de la "+nomph+" du projet "
                 tt = ""
@@ -14083,11 +14096,12 @@ class Eleve(Personne):
             self.tip.SetPage()
             
 
-            
     ######################################################################################  
-    def ConstruireArbre(self, arbre, branche):
-        self.arbre = arbre
-        self.codeBranche = CodeBranche(self.arbre)
+    def initCodeBranche(self):
+#         print("initCodeBranche", self.GetProjetRef())
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.reset()
+             
         for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
             for part in dic.keys():
                 self.codeBranche.Add(disc+part)
@@ -14097,7 +14111,15 @@ class Eleve(Personne):
             self.codeBranche.SetImg(constantes.imagesProjet['Mod'].GetBitmap())
         else:
             self.codeBranche.DelImg()
+                
+                
             
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = CodeBranche(self.arbre)
+        self.initCodeBranche()
+        
 #        if self.image == None or self.image == wx.NullBitmap:
         image = self.arbre.images[self.code]
 #        else:
