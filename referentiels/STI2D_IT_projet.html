@@ -14,15 +14,16 @@ text-align: left;
 }
 th {
 border: thin solid #6495ed;
-width: 50%;
 padding: 5px;
 background-color: #D0E3FA;
 }
 td {
 border: thin solid #6495ed;
-width: 50%;
 padding: 5px;
 background-color: #ffffff;
+}
+.full{
+  width: 100% !important;
 }
 
 
@@ -37,126 +38,129 @@ background-color: #ffffff;
     </div>
 
     <h3>Fiche de défintion de projet IT</h3>
-    <table>
-      <tr>
-        <th>Intitulé du projet</th>
+    <table class="full">
+      <tr class="full">
+        <th class="full">Intitulé du projet</th>
       </tr>
-      <tr>
-        <td>[[TIT]]</td>
-      </tr>
-    </table>
-    <br>
-
-    <table>
-      <tr>
-        <th>Lycée concerné</th>
-        <th>Enseignant responsable du suivi de projet</th>
-      </tr>
-      <tr>
-        <td>[[ETA]]</td>
-        <td>[[EQU]]</td>
+      <tr class="full">
+        <td class="full">[[TIT]]</td>
       </tr>
     </table>
     <br>
 
-    <table>
-      <tr>
+    <table class="full">
+      <tr class="full">
+        <th class="full">Lycée concerné</th>
+        <th class="full">Enseignant responsable du suivi de projet</th>
+      </tr>
+      <tr class="full">
+        <td class="full">[[ETA]]</td>
+        <td class="full">[[EQU]]</td>
+      </tr>
+    </table>
+    <br>
+
+    <table class="full">
+      <tr class="full">
         <th>Thème sociétal</th>
       </tr>
-      <tr>
-        <td>[[ORI]]</td>
+      <tr class="full">
+        <td class="full">[[ORI]]</td>
       </tr>
     </table>
     <br>
 
-    <table>
-      <tr>
-        <th>Le besoin initial</th>
+    <table class="full">
+      <tr class="full">
+        <th class="full">Le besoin initial</th>
       </tr>
-      <tr>
-        <td>[[PRE]]</td>
+      <tr class="full">
+        <td class="full">[[PRE]]</td>
+      </tr>
+    </table>
+    <br>
+
+
+    <table class="full">
+      <tr class="full">
+        <th class="full">La finalité du produit</th>
+        <th class="full">Le problème technique à résoudre</th>
+      </tr>
+      <tr class="full">
+        <td class="full">[[OBJ]]</td>
+        <td class="full">[[CCF]]</td>
+      </tr>
+    </table>
+    <br>
+
+    <table class="full">
+      <tr class="full">
+        <th class="full">Production finale</th>
+      </tr>
+      <tr class="full">
+        <td class="full">[[SYN]]</td>
       </tr>
     </table>
     <br>
 
 
-    <table>
-      <tr>
-        <th>La finalité du produit</th>
-        <th>Le problème technique à résoudre</th>
-      </tr>
-      <tr>
-        <td>[[OBJ]]</td>
-        <td>[[CCF]]</td>
-      </tr>
-    </table>
-    <br>
-
-    <div style="font-weight: bold;" align="left">
+    <div style="font-weight: bold;" align="left" class="full">
       Effectif du groupe : [[EFG]]
     </div>
     <br>
+    <pdf:nextpage />
 
-    <table style="width: 100%;">
-      <tr>
-        <th>1- Le diagramme de contenu (l'expression du besoin)</th>
+
+
+    <table class="full">
+      <tr class="full">
+        <th class="full">1- Le diagramme de contenu (l'expression du besoin)</th>
       </tr>
-      <tr>
-        <td>[[ML1]]</td>
+      <tr class="full">
+        <td class="full">[[ML1]]</td>
       </tr>
     </table>
     <br>
 
-    <table>
-      <tr>
-        <th>2- Le diagramme d'exigences (mission du système)</th>
+    <table class="full">
+      <tr class="full">
+        <th class="full">2- Le diagramme d'exigences (mission du système)</th>
       </tr>
-      <tr>
-        <td>[[ML2]]</td>
+      <tr class="full">
+        <td class="full">[[ML2]]</td>
+      </tr>
+    </table>
+    <pdf:nextpage />
+
+    <table class="full">
+      <tr class="full">
+        <th class="full">3- Le diagramme de contexte (contexte du système)</th>
+      </tr>
+      <tr class="full">
+        <td class="full">[[ML3]]</td>
       </tr>
     </table>
     <br>
 
-    <table>
-      <tr>
-        <th>3- Le diagramme de contexte (contexte du système)</th>
+    <table class="full">
+      <tr class="full">
+        <th class="full">4- Le diagramme de cas d'utilisation (utilisation du système)</th>
       </tr>
-      <tr>
-        <td>[[ML3]]</td>
-      </tr>
-    </table>
-    <br>
-
-    <table>
-      <tr>
-        <th>4- Le diagramme de cas d'utilisation (utilisation du système) </th>
-      </tr>
-      <tr>
-        <td>[[ML4]]</td>
+      <tr class="full">
+        <td class="full">[[ML4]]</td>
       </tr>
     </table>
-    <br>
+    <pdf:nextpage />
 
-    <table>
-      <tr>
-        <th>5- Le diagramme d'exigences (besoins des parties prenantes)</th>
+    <table class="full">
+      <tr class="full">
+        <th class="full">5- Le diagramme d'exigences (besoins des parties prenantes)</th>
       </tr>
-      <tr>
-        <td>[[ML5]]</td>
+      <tr class="full">
+        <td class="full">[[ML5]]</td>
       </tr>
     </table>
-    <br>
-
-    <table>
-      <tr>
-        <th>La répartition des tâches des élèves</th>
-      </tr>
-      <tr>
-        <td>[[RTE]]</td>
-      </tr>
-
-    </table>
-    <br>
+    <pdf:nextpage />
 
   </body>
 </html>

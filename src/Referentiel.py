@@ -722,10 +722,7 @@ class Referentiel(XMLelem):
         self.specialite = {}
         self.listeSpecialites = []
         
-        #
-        # Fonctions de Service
-        #
-        self.nomFS = "Fonction(s) de service$f"
+
         
         
         #
@@ -1073,9 +1070,11 @@ class Referentiel(XMLelem):
         
         
         for k, v in list(REFERENTIELS[self.Code].labels.items()):  # à partir de 7.0-beta12
-            if not k in list(self.labels.keys()):
+            if not k in self.labels.keys():
                 self.labels[k] = v
         
+        
+    
         
         # à partir de 7.1
 #         print self.nomDom
@@ -1303,11 +1302,18 @@ class Referentiel(XMLelem):
                 if sh_lb.cell(l,0).value != "":
                     self.labels[str(sh_lb.cell(l,0).value)] = [sh_lb.cell(l,1).value, sh_lb.cell(l,2).value]
 
+        # Correction de version
+        # à partir de 8.5
         if not 'PRJVAL' in self.labels:
             self.labels['PRJVAL'] = ["Fiche(s) de validation de projet$f", 
                                      "Fiche de validation de projet"]
 
-            
+        if not 'EXIG' in self.labels:
+            self.labels['EXIG'] = ["Fonction(s) de service$f",
+                                   "Fonctions de service"]
+        
+        
+        
         #
         # CI  #################################################################################
         #

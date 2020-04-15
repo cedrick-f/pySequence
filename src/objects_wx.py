@@ -492,9 +492,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         rs = getDisplayPosSize()
         x, y, w, h = rs[0]
         #print wx.GetDisplaySize()
-        print("DisplayPosSize", rs)
+#         print("DisplayPosSize", rs)
         pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
-        print("Position", pos, siz)
+#         print("Position", pos, siz)
             
 #         self.WMIN_STRUC*SSCALE = self.options.optFenetre["Larg_pnl_Arbre"]
 #         self.HMIN_PROP*SSCALE = self.options.optFenetre["Haut_pnt_Prop"]
@@ -511,7 +511,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.SetPosition(pos)
             self.SetSize(siz)
         else:
-            print("Centrage")
+#             print("Centrage")
             self.SetPosition((w/2, y))
             self.SetSize((w/2,h))
         
@@ -11515,7 +11515,7 @@ class PanelPropriete_FS(PanelPropriete):
         #
         ref = FS.GetReferentiel()
         self.rdtype = wx.RadioBox(self, -1, label="Type %s" %ref.getLabel("EXIG").de_(), 
-                                  choices=["Fonction Principale", "Fonction Contrainte"],
+                                  choices=["Principale", "Contrainte"],
                                   style = wx.RA_SPECIFY_COLS)
         
         
