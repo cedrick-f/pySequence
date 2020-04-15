@@ -492,9 +492,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         rs = getDisplayPosSize()
         x, y, w, h = rs[0]
         #print wx.GetDisplaySize()
-        
+        print("DisplayPosSize", rs)
         pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
-        
+        print("Position", pos, siz)
             
 #         self.WMIN_STRUC*SSCALE = self.options.optFenetre["Larg_pnl_Arbre"]
 #         self.HMIN_PROP*SSCALE = self.options.optFenetre["Haut_pnt_Prop"]
@@ -504,13 +504,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         print len(pos), len(siz)
 #         print x, y, w, h
         
-        if len(pos) == 2 and dansRectangle(*pos, rs) \
+        if len(pos) == 2 and dansRectangle(*pos, rs)[0] \
             and len(siz) == 2 \
             and pos[0] < w \
             and pos[1] < h:
             self.SetPosition(pos)
             self.SetSize(siz)
         else:
+            print("Centrage")
             self.SetPosition((w/2, y))
             self.SetSize((w/2,h))
         
