@@ -5076,34 +5076,7 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         self.Refresh()
 
     
-    ######################################################################################################
-    def OnMove(self, evt):
-        if not hasattr(self, 'ctx'):
-            evt.Skip()
-            return
-        self.GetDoc().HideTip()
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        try:
-            xx, yy = self.ctx.device_to_user(_x, _y)
-        except:
-            return
-        
-        #
-        # Cas général
-        #
-        zone = self.GetDoc().HitTest(xx, yy)
-#         print zone
-        if zone is not None:
-            x, y = self.ClientToScreen((x, y))
-            self.GetDoc().Move(zone, x, y)
-        else:
-            self.GetDoc().HideTip()
-
-            
-        evt.Skip()
-
-
+    
     #############################################################################            
     def CentrerSur(self, obj):
         if hasattr(obj, 'rect'):
@@ -5142,24 +5115,61 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 #         print("Surbrillance", obj)
         self.MiseAJourSur(obj)
         self.Redessiner()
-            
     
-    #############################################################################            
-    def OnClick(self, evt):
+    
+    ######################################################################################################
+    def getCoordZone(self, evt):
         if not hasattr(self, 'ctx'):
             evt.Skip()
             return
         self.GetDoc().HideTip()
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
+        x, y = self.ClientToScreen((x, y))
+        try:
+            xx, yy = self.ctx.device_to_user(_x, _y)
+        except:
+            return
+        zone = self.GetDoc().HitTest(xx, yy)
+        return x, y, zone 
+    
+    
+    ######################################################################################################
+    def OnMove(self, evt):
+        c = self.getCoordZone(evt)
+        if c is None: return
+        x, y, zone = c
         
         #
         # Cas général
         #
-        zone = self.GetDoc().HitTest(xx, yy)
         if zone is not None:
-            x, y = self.ClientToScreen((x, y))
+            self.GetDoc().Move(zone, x, y)
+            if zone.obj is not None \
+              or (zone.param is not None and ((len(zone.param) > 3 and zone.param[:3] == "POS") \
+                                            or zone.param == "PB" or zone.param == "EQU")): 
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+            else:
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+        else:
+            self.GetDoc().HideTip()
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+
+            
+        evt.Skip()
+
+    
+    #############################################################################            
+    def OnClick(self, evt):
+        c = self.getCoordZone(evt)
+        if c is None: return
+        x, y, zone = c
+        
+        #
+        # Cas général
+        #
+        if zone is not None:
+            
             self.GetDoc().Click(zone, x, y)
             obj = zone.obj
         else:
