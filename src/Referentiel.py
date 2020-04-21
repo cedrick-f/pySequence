@@ -135,7 +135,7 @@ class XMLelem():
                     sauv(sub, sv, format(i, "02d"))
             elif type(val) == dict:
                 sub = ET.SubElement(branche, "d_"+nom)
-                for k, sv in list(val.items()):
+                for k, sv in val.items():
                     if type(k) != str and type(k) != str:
                         k = "_"+format(k, "02d")
                     sauv(sub, sv, k)
@@ -192,7 +192,7 @@ class XMLelem():
                 dic = {}
                 
                 # éléments "simples" : dans les items
-                for k, sb in list(sbranche.items()):
+                for k, sb in sbranche.items():
 #                     _k = k[2:]
                     _k = k.split("_")[-1]
                     if isinstance(_k, str) and "--" in _k:
@@ -222,7 +222,7 @@ class XMLelem():
                 sbranche = branche.find(nom)
                 d = {}
                 if sbranche != None:
-                    for k, sb in list(sbranche.items()):
+                    for k, sb in sbranche.items():
 #                        print k, sb
 #                        _k = k[2:]
                         _k = k.split("_")[1]
@@ -404,7 +404,7 @@ class XMLelem():
                 
             if competence.sousComp != {} :
                 lstindic = []
-                for v1 in list(competence.sousComp.values()):
+                for v1 in competence.sousComp.values():
                     for ii in v1.indicateurs:
                         lstindic.append(ii)
             else:
@@ -413,9 +413,9 @@ class XMLelem():
             if debug: print("   ", lstindic)
             
             for indic in lstindic:
-                for part, poids in list(indic.poids.items()):
+                for part, poids in indic.poids.items():
                     if reset: poids = 1
-                    if part in list(tot.keys()):
+                    if part in tot:
                         tot[part] = tot[part] + poids
             if debug: print("  tot", tot)
             
@@ -425,15 +425,15 @@ class XMLelem():
             if debug: print("  coef", coef)
             
             for indic in lstindic:
-                for part, poids in list(indic.poids.items()):
+                for part, poids in indic.poids.items():
                     if reset: poids = 1
-                    if part in list(coef.keys()) and coef[part] != 0:
+                    if part in coef.keys() and coef[part] != 0:
 #                         indic.poids[part] = round(indic.poids[part] / coef[part], 6)
                         indic.poids[part] = round(poids / coef[part], 6)
 
     ###########################################################
     def normaliserPoids(self, dic, debug = False):
-        for competence in dic.value():
+        for competence in dic.values():
             self.normaliserPoidsComp(competence, debug = debug)
 #             if competence.poids != {}:
 #     #                    print self.parties.keys()
@@ -518,7 +518,7 @@ class XMLelem():
                     if debug: print(l, l.getType(), l.poids, l.estProjet(), prj)
 #                    print v0
                     if l.estProjet(): # Conduite ou Soutenance
-                        if prj == None or len([p for p in list(l.poids.keys()) if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
+                        if prj == None or len([p for p in l.poids if p in prj.parties]) > 0:#or l.getType() in prj.parties.keys():
 #                        if l.getType() == v0[2].keys():
                             lst.append(l)
                 
@@ -578,7 +578,7 @@ class XMLelem():
         """ Renvoie un dictionnaire de listes d'Indicateurs
         """
         sdic = {}
-        for k0, competence in list(dic.items()):
+        for k0, competence in dic.items():
             if competence.sousComp != {}:
                 sdic.update(self.getDernierNiveauArbre2(competence.sousComp))
             else:
@@ -590,9 +590,9 @@ class XMLelem():
     def getDeuxiemeNiveauArbre(self, dic):
         sdic = {}
 #            if len(dic) > 0 and type(dic.values()[0][1]) == dict:
-        for k0, competence in list(dic.items()):
+        for k0, competence in dic.items():
             if competence.sousComp != {}:
-                for k1, sousComp in list(competence.sousComp.items()):
+                for k1, sousComp in competence.sousComp.items():
                     if sousComp.sousComp != {} : # pas fini = 3ème niveau
                         self._niveau = 3
                         sdic[k1] = sousComp.copie()
@@ -867,7 +867,7 @@ class Referentiel(XMLelem):
                 sbranche = branche.find(nom)
                 if sbranche == None: return []
                 dic = {}
-                for k, sb in list(sbranche.items()):
+                for k, sb in sbranche.items():
                     _k = k[2:]
                     if isinstance(_k, str) and "--" in _k:
                         _k = _k.replace("--", "\n")
@@ -888,7 +888,7 @@ class Referentiel(XMLelem):
                 sbranche = branche.find(nom)
                 d = {}
                 if sbranche != None:
-                    for k, sb in list(sbranche.items()):
+                    for k, sb in sbranche.items():
                         _k = k[2:]
                         if isinstance(_k, str) and "--" in _k:
                             _k = _k.replace("--", "\n")
@@ -960,7 +960,7 @@ class Referentiel(XMLelem):
             
         ###########################################################
         def corrigeArbreProjet(dic, debug = False):
-            for k0, v0 in list(dic.items()):
+            for k0, v0 in dic.items():
                 if debug: print(k0)
                 if len(v0) > 1 and type(v0[1]) == dict:
                     if debug: print("   ", v0[0])
@@ -1049,7 +1049,7 @@ class Referentiel(XMLelem):
 #        if type(self.BO_dossier) != list:
 #            self.BO_dossier = [self.BO_dossier]
         
-        for p in list(self.projets.values()):
+        for p in self.projets.values():
 #            print p.listeParties, p.parties
             if len(p.listeParties) != len(p.parties):
                 p.listeParties = list(p.parties.keys())
@@ -1069,7 +1069,7 @@ class Referentiel(XMLelem):
             print("Correction AnneeDebut:", self.AnneeDebut)
         
         
-        for k, v in list(REFERENTIELS[self.Code].labels.items()):  # à partir de 7.0-beta12
+        for k, v in REFERENTIELS[self.Code].labels.items():  # à partir de 7.0-beta12
             if not k in self.labels.keys():
                 self.labels[k] = v
         
@@ -1085,7 +1085,7 @@ class Referentiel(XMLelem):
         
         def corriger(dic):
             sdic = {}
-            for k0, v0 in list(dic.items()):
+            for k0, v0 in dic.items():
                 sdic[k0] = Competence(v0[0])
                 if len(v0) > 1 and type(v0[1]) == dict:
                     
@@ -1698,7 +1698,7 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
         """
 #         print("postTraiter")
-        for p in list(self.projets.values()):
+        for p in self.projets.values():
             p.postTraiter(self)
                     
         for nom in ["nomDom",
@@ -1819,11 +1819,11 @@ class Referentiel(XMLelem):
             dic = self.getPremierEtDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
             liste = []
 #            print "    dic", dic
-            for k1, competence in list(dic.items()):
+            for k1, competence in dic.items():
 #                print "      h1", h1
                 liste.append([k1, competence.intitule, []])
                 if competence.sousComp != {}:
-                    for k2, sousComp in list(competence.sousComp.items()): 
+                    for k2, sousComp in competence.sousComp.items(): 
                         liste[-1][2].append([k2, sousComp.intitule])
                     liste[-1][2].sort()
                     
@@ -1838,10 +1838,10 @@ class Referentiel(XMLelem):
         
         if len(self.options) != 0:
             self.parties = {}
-            for ro in list(self.options.keys()):
-                for proj in list(REFERENTIELS[ro].projets.values()):
-                    for part, n in list(proj.parties.items()):
-                        if not part in list(self.parties.keys()):
+            for ro in self.options:
+                for proj in REFERENTIELS[ro].projets.values():
+                    for part, n in proj.parties.items():
+                        if not part in self.parties:
                             self.parties[part] = n
                 
             if debug: print("    ", self.parties)
@@ -1880,7 +1880,7 @@ class Referentiel(XMLelem):
             for ro in self.options:
                 REFERENTIELS[ro].completer(forcer = True)
             
-        for p in list(self.projets.values()):
+        for p in self.projets.values():
             p.completer(self) 
 
 
@@ -1908,7 +1908,7 @@ class Referentiel(XMLelem):
             return  "\t"+constantes.CHAR_POINT + sep.join([i[0] for i in indicateurs])
         else:
             t = ""
-            for k, v in list(indicateurs.items()):
+            for k, v in indicateurs.items():
                 t += k + " : " + v[0]
 
 
@@ -2112,7 +2112,7 @@ class Referentiel(XMLelem):
             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
             r = REFERENTIELS[self.tr_com[0]]
             dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
-            dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in list(r.dicoSavoirs.keys()) if c != "S"])
+            dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs if c != "S"])
             
         return dicSavoirs
     
@@ -2142,7 +2142,7 @@ class Referentiel(XMLelem):
             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
             r = REFERENTIELS[self.tr_com[0]]
             lstComp.insert(1, ("B", r.dicoCompetences["S"]))
-            lstComp.extend([(c, r.dicoCompetences[c]) for c in list(r.dicoCompetences.keys()) if c != "S"])
+            lstComp.extend([(c, r.dicoCompetences[c]) for c in r.dicoCompetences if c != "S"])
             
         return lstComp
     
@@ -2160,7 +2160,7 @@ class Referentiel(XMLelem):
             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
             r = REFERENTIELS[self.tr_com[0]]
             dicSavoirs.update({"B": r.dicoSavoirs["S"]})
-            dicSavoirs.update({c : r.dicoSavoirs[c] for c in list(r.dicoSavoirs.keys()) if c != "S"})
+            dicSavoirs.update({c : r.dicoSavoirs[c] for c in r.dicoSavoirs if c != "S"})
              
         return dicSavoirs
     
@@ -2197,7 +2197,7 @@ class Referentiel(XMLelem):
             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
             r = REFERENTIELS[self.tr_com[0]]
             dicComp.update({"B": r.dicoCompetences["S"]})
-            dicComp.update({c : r.dicoCompetences[c] for c in list(r.dicoCompetences.keys()) if c != "S"})
+            dicComp.update({c : r.dicoCompetences[c] for c in r.dicoCompetences if c != "S"})
             
         if self.fonctions is not None:
             dicComp.update({"F" : self.fonctions})
@@ -2237,7 +2237,7 @@ class Referentiel(XMLelem):
 #         if isinstance(elem, Competences):
         
         # Compétences
-        for code, comp in list(self.dicoCompetences.items()):
+        for code, comp in self.dicoCompetences.items():
             print("  :::", code, comp.asso_type)
             if comp != elem and elem in comp.asso_type:
                 c = comp.asso_type.index(elem)
@@ -2247,7 +2247,7 @@ class Referentiel(XMLelem):
                     dep.Append([c, code, comp])
                     
         # Spécialités
-        for spe in list(self.specialite.items()):
+        for spe in self.specialite.items():
             print("  :::", spe)
             if comp != elem and elem in comp.asso_type:
                 c = comp.asso_type.index(elem)
@@ -2674,7 +2674,7 @@ class Projet(XMLelem):
             
         # A partir de la version 6.2 => nouvel attribut "Aide
 #        print "Corriger", self.attributs
-        for k, l in list(self.attributs.items()):
+        for k, l in self.attributs.items():
             if len(l) == 3:
 #                print "Corriger", k, l
                 l.append(REFERENTIELS[codeRef].projets[self.code].attributs[k][3])
@@ -2682,7 +2682,7 @@ class Projet(XMLelem):
                     l[1] = REFERENTIELS[codeRef].projets[self.code].attributs[k][1]
 #                print "  >>", l
         
-        if not "FIC" in list(self.attributs.keys()):
+        if not "FIC" in self.attributs:
             self.attributs["FIC"] = ["", "", "", ""]
         
         
@@ -3038,7 +3038,7 @@ class Projet(XMLelem):
             if debug: print(code, end=' ')
             if debug: 
                 print("    ", comp.dicCompetences)   
-                for typi, dico in list(comp.dicCompetences.items()):
+                for typi, dico in comp.dicCompetences.items():
                     print("  typi", typi, " poids :", dico.poids)
             self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = False)
             
@@ -3247,7 +3247,7 @@ class Projet(XMLelem):
             if ref.tr_com != []:
                 t = ref.tr_com[0]
     #            print "   ++", t, REFERENTIELS.keys()
-                if t in list(REFERENTIELS.keys()):
+                if t in REFERENTIELS:
     #                print "         ",REFERENTIELS[t]._dicCompetences
     #                print "       ++", self._dicCompetences
                     self._dicoCompetences[code].update(REFERENTIELS[t]._dicoCompetences["S"])
@@ -3299,7 +3299,7 @@ class Indicateur(XMLelem):
         """ Renvoie la liste de toutes les parties de projet concernées par l'indicateur
         
         """
-        return [t for t, p in list(self.poids.items()) if p !=0]
+        return [t for t, p in self.poids.items() if p !=0]
     
     def getType(self):
         """ E : écrit
@@ -3309,7 +3309,7 @@ class Indicateur(XMLelem):
             
             E, C ou S doit être exclusif !!
         """
-        types = [t for t, p in list(self.poids.items()) if p !=0 and t in ['E', 'C', 'S']]
+        types = [t for t, p in self.poids.items() if p !=0 and t in ['E', 'C', 'S']]
         if len(types) > 0:
             return types[0]
         
@@ -3638,10 +3638,10 @@ class Competences(XMLelem):
         grp = []
         def getComp(dic):
 #             print "   ", dic
-            if comp in list(dic.keys()):
+            if comp in dic:
                 return dic[comp]
             else:
-                for k, competence in list(dic.items()):
+                for k, competence in dic.items():
                     c = getComp(competence.sousComp)
                     if c is not None:
                         grp.insert(0, (k,competence))
@@ -4404,7 +4404,7 @@ def getEnseignementLabel(label):
     """ Renvoie le code et la famille d'enseignement
         à partir de son label
     """
-    for r in list(REFERENTIELS.values()):
+    for r in REFERENTIELS.values():
         if r.Enseignement[0] == label:
             return r.Code, r.Famille
 
@@ -4559,7 +4559,7 @@ def chargerReferentiels():
             d.append(r.tr_com[0])
     
     for k, r in REFERENTIELS.items():
-        if "_"+r.Famille in list(ARBRE_REF.keys()):
+        if "_"+r.Famille in ARBRE_REF:
             ARBRE_REF["_"+r.Famille].append(k)
         else:
             ARBRE_REF["_"+r.Famille] = [k]
