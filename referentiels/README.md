@@ -116,7 +116,8 @@ Les renseignements qu'elle contiennent proviennent des données saisies dans **_
 
 Informations | Codes
 ------------ | -----
-Généralités à propos du projet | codes des feuilles `Généralités_xxx` (`TIT`, `PB`, `ORI`, `CCF`, `OBJ`, `TYP`, `DEC`, `PAR`, `PRX`, `SRC`, `SYN`, `FIC`)
+Généralités à propos du projet | codes des feuilles `Généralités_xxx` (`TIT`, `PB`, `ORI`, `CCF`, `OBJ`, `TYP`, `PAR`, `PRX`, `SRC`, `SYN`, )
+Images (diagrammes sysML, ...) | `ML_` (`_` = chiffre de 1 à ...)
 Académie | `ACA`
 Établissement | `ETA`
 Session | `SES`
@@ -125,6 +126,9 @@ Présentation | `PRE`
 Liste des élèves ou étudiants | `ELE`
 Nombre d'élèves ou d'étudiants | `NBE`
 Tâches | `TCH`
+
+
+Pour insérer un **saut de page** : `<pdf:nextpage />`
 
 
 [Syntaxe spécifique au convertisseur HTML/PDF](https://xhtml2pdf.readthedocs.io/en/latest/format_html.html#)
