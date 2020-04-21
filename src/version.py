@@ -48,7 +48,7 @@ import wx
 
 __appname__= "pySéquence 8"
 __author__ = "Cédrick FAURY"
-__version__ = "8.4-beta.9"
+__version__ = "8.4-beta.10"
 __urlapi__ = "https://api.github.com/repos/cedrick-f/pySequence"
 __url__ = "https://github.com/cedrick-f/pySequence"
 __mail__ = "cedrick.faury#ac-clermont.fr"
@@ -169,7 +169,7 @@ def GetNewVersion(win):
         if type(dic) == list:
             dic = dic[0]
         
-        id = dic['id']
+#         id = dic['id']
         ver = dic['tag_name'].lstrip('v')
         return ver, id
 
@@ -178,8 +178,8 @@ def GetNewVersion(win):
 
     
     #########################################################################################
-    latest, id1 = getVerNumId(url1)
-    last_ver, id2 = getVerNumId(url2)
+    latest, _ = getVerNumId(url1)
+    last_ver, _ = getVerNumId(url2)
     
     if latest is None or last_ver is None:
         return

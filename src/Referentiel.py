@@ -39,7 +39,7 @@ Gestion des référentiels d'enseignement.
 
 """
 
-import xlrd
+# import xlrd
 from xlrd import open_workbook
 
 import constantes
@@ -433,7 +433,7 @@ class XMLelem():
 
     ###########################################################
     def normaliserPoids(self, dic, debug = False):
-        for k0, competence in list(dic.items()):
+        for competence in dic.value():
             self.normaliserPoidsComp(competence, debug = debug)
 #             if competence.poids != {}:
 #     #                    print self.parties.keys()
@@ -1814,7 +1814,7 @@ class Referentiel(XMLelem):
         self._listesCompetences_simple = {}  # format : [[code compétence, intitulé compétence, [ sous compétences ]]]
         
 #        print "ref", self
-        for code, comp in itemComp:
+        for code, _ in itemComp:
 #            print "   comp", code
             dic = self.getPremierEtDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
             liste = []
@@ -1857,7 +1857,7 @@ class Referentiel(XMLelem):
                 ref_tc = REFERENTIELS[self.tr_com[0]]
                 itemComp.insert(1, ("B", ref_tc.dicoCompetences["S"]))
             
-            for code, comp in itemComp:
+            for code, _ in itemComp:
                 
                 self._dicoCompetences[code] = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
                 if debug:
@@ -2213,7 +2213,7 @@ class Referentiel(XMLelem):
     #########################################################################
     def calculerLargeurCompetences(self, tailleReference):
         t = 1
-        for k, v in list(self._dicIndicateurs_prj_simple.items()):
+        for v in self._dicIndicateurs_prj_simple.values():
             t = float(max(t, len(v)))
         r = t/5 # 5 = nombre max d'indicateurs à loger dans tailleReference
         return r*tailleReference
@@ -2563,7 +2563,7 @@ class Referentiel(XMLelem):
             (qui peuvent convenir à des Rotations ou Parallèles)
         """
         l = []
-        for e in self._lstEffectifs:
+        for _ in self._lstEffectifs:
             if self.effectifs[5] == "N":
                 l.append(self.effectifs[4])
         return list(set(l))
@@ -2793,10 +2793,10 @@ class Projet(XMLelem):
         
         def getComp(dic):
 #             print "   ", dic
-            if comp in list(dic.keys()):
+            if comp in dic:
                 return dic[comp]
             else:
-                for k, competence in list(dic.items()):
+                for competence in dic.values():
                     c = getComp(competence.sousComp)
                     if c is not None: 
 #                         print "   ", k, "!!!!!"
@@ -2825,6 +2825,7 @@ class Projet(XMLelem):
     ##################################################################################################################
     def phaseDansPartie(self, phase, partie):
         if phase == '': return True
+        if not phase in self.phases : return False
         lstParties = self.phases[phase][3]
         if len(lstParties) == 0:
             return True
@@ -3015,8 +3016,8 @@ class Projet(XMLelem):
                 
                 Fonction récursive
             """
-            for k0, d in dic.items():
-                for k, l in d.items():
+            for d in dic.values():
+                for l in d.values():
                     if len(l) != 0:
                         return False
             return True
@@ -3084,7 +3085,7 @@ class Projet(XMLelem):
             if debug:
                 print(self._dicoIndicateurs[code])
                 for typi, dico in self._dicoIndicateurs.items():
-                    for grp, grpComp in dico.items():
+                    for grpComp in dico.values():
                         print("  poids :", grpComp.poids)
                         
             self.normaliserPoids(self._dicoIndicateurs[code], debug = False)
@@ -3176,7 +3177,7 @@ class Projet(XMLelem):
         ###########################################################
         def aplatir(dic, niv=1):
             ddic = {}
-            for k0, v0 in dic.items():
+            for v0 in dic.values():
                 for k1, v1 in v0[1].items():
                     if type(v1) == list:
                         ddic[k1] = [v1[0]]
@@ -3465,7 +3466,7 @@ class Competences(XMLelem):
                 intitule = str(sh.cell(l,col+1).value)
                 competence = Competence(intitule)
                 dic[code] = competence
-                for c, typ in enumerate(self.asso_type):
+                for c in range(len(self.asso_type)):
                     competence.elemAssocies[c] = sh.cell(l,c+5).value.split()
                     
                 if debug: print("-> ",l, code, intitule)
@@ -3553,7 +3554,7 @@ class Competences(XMLelem):
         
         if debug: 
             print(self.dicCompetences)
-            for typi, dico in list(self.dicCompetences.items()):
+            for dico in self.dicCompetences.values():
                 print(" _poids :", dico.poids)
 
     
@@ -3683,7 +3684,7 @@ class Competences(XMLelem):
         lst0 = []
         for k0, v0 in self.dicCompetences.items():
             lst1 = []
-            for k1, v1 in v0.sousComp.items():
+            for k1 in v0.sousComp:
                 lst1.append(k1)
 #             lst1.sort()
             lst1 = constantes.trier(lst1)
@@ -3695,8 +3696,8 @@ class Competences(XMLelem):
             
     #########################################################################
     def getProfondeur(self):
-        for k0, v0 in list(self.dicCompetences.items()):
-            for k1, v1 in list(v0.sousComp.items()):
+        for v0 in self.dicCompetences.values():
+            for v1 in v0.sousComp.values():
                 if len(v1.sousComp) > 0:
                     return 3
                 else:
@@ -3919,7 +3920,7 @@ class Savoirs(XMLelem):
                     dic_f0[k] = [dic[k], s]
 
                 else: # branche vide
-                    if len(dic[k].sousSav) ==0 and (filtre is None or k in filtre):
+                    if len(dic[k].sousSav) == 0 and (filtre is None or k in filtre):
                         dic_f0[k] = [dic[k], None]
             
             else:  # extrémité de branche
@@ -3946,7 +3947,7 @@ class Savoirs(XMLelem):
         lst0 = []
         for k0, v0 in self.dicSavoirs.items():
             lst1 = []
-            for k1, v1 in v0.sousSav.items():
+            for k1 in v0.sousSav:
                 lst1.append(k1)
 #             lst1.sort()
             lst1 = constantes.trier(lst1)
@@ -4017,7 +4018,7 @@ class Savoirs(XMLelem):
                     lst = []
                     for l in lig:
                         lst.append(Savoir(sh.cell(l,col).value))
-                        for c, typ in enumerate(self.asso_type):
+                        for c in range(len(self.asso_type)):
                             lst[-1].elemAssocies[c] = sh.cell(l,c+4).value.split()
                         for c in [7, 8]:
                             lst[-1].nivTaxo[c-7] = sh.cell(l,c).value.split()
@@ -4029,7 +4030,7 @@ class Savoirs(XMLelem):
                         if debug: print("  "*niveau+str(sh.cell(l,col).value))
                         code_sav = str(sh.cell(l,col).value)
                         d[code_sav] = Savoir(sh.cell(l,col+1).value)
-                        for c, typ in enumerate(self.asso_type):
+                        for c in range(len(self.asso_type)):
                             d[code_sav].elemAssocies[c] = sh.cell(l,c+4).value.split()
                         for c in [7, 8]:
                             d[code_sav].nivTaxo[c-7] = sh.cell(l,c).value.split()
@@ -4058,7 +4059,7 @@ class Savoirs(XMLelem):
                         
                         dic[code_sav] = Savoir(sh.cell(p,col+1).value)
                         dic[code_sav].sousSav = sdic
-                        for c, typ in enumerate(self.asso_type):
+                        for c in range(len(self.asso_type)):
                             dic[code_sav].elemAssocies[c] = sh.cell(p,c+4).value.split()
                         for c in [7, 8]:
                             dic[code_sav].nivTaxo[c-7] = sh.cell(p,c).value.split()
@@ -4171,7 +4172,7 @@ class Fonctions(XMLelem):
             """
             dic = {}
             
-            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
+#             ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
             
             # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
             lstLig = [l  for l in rng if sh.cell(l,col).value != ""]
@@ -4329,9 +4330,9 @@ class Fonctions(XMLelem):
         ...]
         """
         lst0 = []
-        for k0, v0 in list(self.dicFonctions.items()):
+        for k0, v0 in self.dicFonctions.items():
             lst1 = []
-            for k1, v1 in list(v0.sousComp.items()):
+            for k1 in v0.sousComp:
                 lst1.append(k1)
 #             lst1.sort()
             lst1 = constantes.trier(lst1)
@@ -4343,8 +4344,8 @@ class Fonctions(XMLelem):
             
     #########################################################################
     def getProfondeur(self):
-        for k0, v0 in list(self.dicFonctions.items()):
-            for k1, v1 in list(v0.sousComp.items()):
+        for v0 in self.dicFonctions.values():
+            for v1 in v0.sousComp.values():
                 if len(v1.sousComp) > 0:
                     return 3
                 else:

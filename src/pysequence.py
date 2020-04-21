@@ -2462,7 +2462,7 @@ class Sequence(BaseDoc, Grammaire):
         if brancheEqu != None:
             for e in list(brancheEqu):
                 prof = Prof(self)
-#                 Ok = prof.setBranche(e)
+                prof.setBranche(e)
                 self.equipe.append(prof)
             
         brancheCI = branche.find("CentresInteret")
@@ -4081,7 +4081,7 @@ class Projet(BaseDoc, Grammaire):
             t += "Évaluabilité :\n"
             ev_tot = e.GetEvaluabilite()[1]
 #             print ev_tot
-            for disc, dic in prj._dicoGrpIndicateur.items():
+            for disc in prj._dicoGrpIndicateur:
                 for ph, nomph in prj.parties.items():
 #                     print "  ", ph
                     t += nomph + pourCent2(ev_tot[disc][ph][0], True)+"\n"
@@ -11341,9 +11341,11 @@ class Tache(ElementAvecLien, ElementBase):
     def setBranche(self, branche):
         """
         """
+#         print("setBranche tâche", self)
         err = []
 #         ref = self.GetProjetRef()
         prjref = self.GetProjetRef()
+#         print("   prjref", prjref)
         self.ordre = eval(branche.tag[5:])
         self.intitule  = branche.get("Intitule", "")
         
@@ -12908,7 +12910,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
         brancheLog = branche.find("Logiciels")
         self.logiciels = []
         if brancheLog is not None:
-            for i, m in enumerate(brancheLog.keys()):
+            for i in range(len(brancheLog)):
                 self.logiciels.append(brancheLog.get("Log"+str(i)))
 #         print self.id, self.logiciels
         
@@ -13674,7 +13676,7 @@ class Eleve(Personne):
                             
             return
         
-        for typi, dico in prj._dicoIndicateurs.items():
+        for dico in prj._dicoIndicateurs.values():
             for grp, grpComp in dico.items():
 #                 print "  >>> poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)

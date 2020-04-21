@@ -43,6 +43,7 @@ import re
 import wx
 import wx.adv as adv
 import md_util
+import util_path
 import time, os, sys
 import  wx.lib.scrolledpanel as scrolled
 from wx.lib.wordwrap import wordwrap
@@ -702,8 +703,8 @@ class Expression():
         # On cr�e un dictionnaire de variables : {'nom' : valeur}
         #    (nécessaire pour "eval")
 
-        dict = {}
-        for n, v in list(self.vari.items()):
+#         dict = {}
+        for n, v in self.vari.items():
             print(" ", n, v)
             dict[n] = v.v[0]
         
@@ -753,7 +754,7 @@ class Expression():
                 # Séparation des principaux termes de l'expression
                 elif expr[i] == '+' or expr[i] == '-':
                     continuer = False
-                    a, b, c = expr.partition(expr[i])
+                    a, _, c = expr.partition(expr[i])
                     return '{'+a+'}'+expr[i]+getMath(c)
                 
                 
@@ -793,13 +794,13 @@ class Expression():
                 # Séparation des produits
                 elif expr[i] == '*':
                     continuer = False
-                    a, b, c = expr.partition(expr[i])
+                    a, _, c = expr.partition(expr[i])
                     return a+expr[i]+getMath(c)
                 
                 # Séparation des quotients
                 elif expr[i] == '/':
                     continuer = False
-                    a, b, c = expr.partition(expr[i])
+                    a, _, c = expr.partition(expr[i])
                     j = 0
                     p = 0
                     continuer3 = True
@@ -1494,7 +1495,7 @@ class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
 
 
     def OnSize(self, evt):
-        w, h = self.GetSize()
+        w, _ = self.GetSize()
         self.bouton.SetPosition((w-22, 2))
         
 
@@ -1634,14 +1635,14 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
 #        evt.Skip()
 
     def OnButtonLeave(self, evt):
-        w, h = self.GetSize()
+        w, _ = self.GetSize()
         if evt.x > w-3 or evt.y < 2:
             self.bouton.Hide()
         evt.Skip()
 
 
     def OnSize(self, evt):
-        w, h = self.GetSize()
+        w, _ = self.GetSize()
 #        print self.md
 #        print w, h , self.GetSize()[0]-self.GetClientSize()[0]
         if self.GetSize()[0]-self.GetClientSize()[0] > 10 :
@@ -2219,7 +2220,7 @@ def safeParse(nomFichier, toplevelwnd, silencieux = False):
             messageErreur(toplevelwnd, "Fichier corrompu", 
                               "Le fichier suivant est corrompu !!\n\n"\
                               "%s\n\n" \
-                              "Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
+                              "Il est probablement tronqué suite à un echec d'enregistrement." %util_path.toSystemEncoding(nomFichier))
         fichier.close()
 #         
 
@@ -2434,7 +2435,7 @@ class EllipticStaticText(wx.StaticText):
         """
 
         # first check if the text fits with no problems
-        x, y = dc.GetTextExtent(text)
+        x, _ = dc.GetTextExtent(text)
 
         if x <= max_size:
             return text
@@ -2446,7 +2447,7 @@ class EllipticStaticText(wx.StaticText):
             s = text[0:i]
             s += "..."
 
-            x, y = dc.GetTextExtent(s)
+            x, _ = dc.GetTextExtent(s)
             last_good_length = i
 
             if x < max_size:

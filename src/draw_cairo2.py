@@ -1180,7 +1180,7 @@ class Periodes(Elem_Dessin):
     ######################################################################################  
     def definirCouleurs(self):
         
-        n = sum([p for a, p in self.periodes])
+        n = sum([p for _, p in self.periodes])
         couleur.generate(self.IcoulPos, [0xFFC3D0E2, 0xFFF2C5B5], n)
         couleur.generate(self.BcoulPos, [0xFF82AAE0, 0xFFEF825D], n)
         
@@ -1955,7 +1955,7 @@ class TableauV(Elem_Dessin):
         _x = self.x
         _y = self.y+self.ht
         
-        for l in range(self.nlignes):
+        for _ in range(self.nlignes):
             ctx.rectangle(_x, _y, wc, self.hl)
             _x += wc
             _y += self.hl

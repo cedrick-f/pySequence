@@ -16945,7 +16945,7 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
         while child != None and child.IsOk():
             dc.SetFont(self.GetItemFont(child))
 #            print "  txt =",self.GetItemText(child)
-            W, H, lH = dc.GetMultiLineTextExtent(self.GetItemText(child))
+            W, H, _ = dc.GetMultiLineTextExtent(self.GetItemText(child))
 #            print "  W,H, lH =",W,H, lH, self.GetIndent()
             width = W + self.GetIndent()*level + 10*SSCALE
             maxwidth = max(maxwidth, width)
@@ -18222,7 +18222,7 @@ class TreeCtrlComboPopup2(wx.PopupTransientWindow):
         evt.Skip()
 
     def OnClick(self, evt):
-        item, flags = self.tree.HitTest(evt.GetPosition())
+        item, _ = self.tree.HitTest(evt.GetPosition())
 #        print self.tree.GetItemParent(item)
         if item and self.tree.GetItemParent(item) != self.tree.GetRootItem():
             self.fct(self.tree.GetItemText(self.tree.GetSelection()).replace("\n", ""))
@@ -19859,7 +19859,7 @@ class PopupInfo(wx.PopupWindow):
     
     ##########################################################################################
     def OnClick(self, evt):
-        b = evt.GetEventObject()
+#         b = evt.GetEventObject()
 #         n = b.GetName()
 #         print "OnCheck", cb.GetValue(), cb.GetName()
         self.elem.lien.Afficher(self.elem.GetDocument().GetPath())
