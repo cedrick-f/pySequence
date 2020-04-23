@@ -50,7 +50,8 @@ from wx.lib.wordwrap import wordwrap
 import images
 from pathvalidate import sanitize_filepath
 
-
+import version
+DEBUG = version.DEBUG
 
 #############################################################################################################
 #
@@ -2222,7 +2223,7 @@ def safeParse(nomFichier, toplevelwnd, silencieux = False):
                               "%s\n\n" \
                               "Il est probablement tronqué suite à un echec d'enregistrement." %util_path.toSystemEncoding(nomFichier))
         fichier.close()
-#         
+        if DEBUG: raise
 
 
 

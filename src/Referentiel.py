@@ -1068,10 +1068,10 @@ class Referentiel(XMLelem):
                 self.AnneeDebut = "Sec1"
             print("Correction AnneeDebut:", self.AnneeDebut)
         
-        
-        for k, v in REFERENTIELS[self.Code].labels.items():  # à partir de 7.0-beta12
-            if not k in self.labels.keys():
-                self.labels[k] = v
+        if self.Code in REFERENTIELS:
+            for k, v in REFERENTIELS[self.Code].labels.items():  # à partir de 7.0-beta12
+                if not k in self.labels.keys():
+                    self.labels[k] = v
         
         
     
@@ -1111,7 +1111,17 @@ class Referentiel(XMLelem):
             if 'B_obj' in nomerr:
                 comp.obj = True
         
-    
+        # Correction de version
+        # à partir de 8.5
+        if not 'PRJVAL' in self.labels:
+            self.labels['PRJVAL'] = ["Fiche(s) de validation de projet$f", 
+                                     "Fiche de validation de projet"]
+        
+        if not 'EXIG' in self.labels:
+            self.labels['EXIG'] = ["Fonction(s) de service$f",
+                                   "Fonctions de service"]
+            
+            
         
         
         return
@@ -1302,15 +1312,15 @@ class Referentiel(XMLelem):
                 if sh_lb.cell(l,0).value != "":
                     self.labels[str(sh_lb.cell(l,0).value)] = [sh_lb.cell(l,1).value, sh_lb.cell(l,2).value]
 
-        # Correction de version
-        # à partir de 8.5
-        if not 'PRJVAL' in self.labels:
-            self.labels['PRJVAL'] = ["Fiche(s) de validation de projet$f", 
-                                     "Fiche de validation de projet"]
-
-        if not 'EXIG' in self.labels:
-            self.labels['EXIG'] = ["Fonction(s) de service$f",
-                                   "Fonctions de service"]
+#         # Correction de version
+#         # à partir de 8.5
+#         if not 'PRJVAL' in self.labels:
+#             self.labels['PRJVAL'] = ["Fiche(s) de validation de projet$f", 
+#                                      "Fiche de validation de projet"]
+#         
+#         if not 'EXIG' in self.labels:
+#             self.labels['EXIG'] = ["Fonction(s) de service$f",
+#                                    "Fonctions de service"]
         
         
         
@@ -2826,6 +2836,7 @@ class Projet(XMLelem):
     def phaseDansPartie(self, phase, partie):
         if phase == '': return True
         if not phase in self.phases : return False
+        if len(self.phases[phase]) < 4 : return False
         lstParties = self.phases[phase][3]
         if len(lstParties) == 0:
             return True

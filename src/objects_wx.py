@@ -2378,10 +2378,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def SetTitre(self, modif = None):
 #        print "SetTitre", modif
-        try:
+        if self.classe.typeEnseignement in REFERENTIELS:
             t = REFERENTIELS[self.classe.typeEnseignement].Enseignement[0]
-        except:
-            t = "???"
+        else:
+            t = self.classe.GetReferentiel().Enseignement[0]
 
         if self.fichierCourant == '':
             t += " - "+constantes.TITRE_DEFAUT[self.typ]
@@ -2447,7 +2447,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #             draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
             draw_cairo_seq.Sequence(self.sequence, mouchard = True).draw(ctx)
         elif self.typ == 'prj':
-            draw_cairo_prj.Projet(self.projet).draw().draw(ctx)
+            draw_cairo_prj.Projet(self.projet).draw(ctx)
         elif self.typ == 'prg':
             draw_cairo_prg.Progression(self.progression).draw(ctx)
              
@@ -2603,7 +2603,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             path = dlg.GetPath()#.decode(FILE_ENCODING)
             dlg.Destroy()
             
-#             dir, ext = os.path.splitext(path)
+            dir, _ = os.path.splitext(path)
             if os.path.exists(dir):
                 dlg = wx.MessageDialog(self, "Le dossier suivant existe déja :\n\n%s\n\n"\
                                              "Si vous continuez, il sera effacé !\n\n"\
@@ -2655,7 +2655,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
             if self.typ == 'prj':
                 dirGrilles = os.path.join(dir, "Grilles")
-                os.mkdir(dirGrilles)
+                try:
+                    os.mkdir(dirGrilles)
+                except FileExistsError:
+                    pass
                 for e in self.projet.eleves:
                     for g in list(e.grille.values()):
                         ng = g.GetAbsPath(dir)
@@ -2865,17 +2868,18 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def VerifierReferentiel(self, parent, nomFichier):
 #         print("VerifierReferentiel", self.classe.GetReferentiel(), Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code])
-        e = self.classe.GetReferentiel() == Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code]
-        if not e:
-#             print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
-            dlg = DiffRefChoix(parent, nomFichier)
-            val = dlg.ShowModal()
-            dlg.Destroy()
-            if val == 1:
-                return 1
-            elif val == 2:
-                return 2
-
+        if self.classe.GetReferentiel().Code in REFERENTIELS:
+            e = self.classe.GetReferentiel() == Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code]
+            if not e:
+    #             print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
+                dlg = DiffRefChoix(parent, nomFichier)
+                val = dlg.ShowModal()
+                dlg.Destroy()
+                if val == 1:
+                    return 1
+                elif val == 2:
+                    return 2
+                
 #             raise DiffReferentiel
                
                
@@ -3027,7 +3031,11 @@ class FenetreSequence(FenetreDocument):
             self.pageDetails.Remplir(self.fichierCourant, self.sequence, self.typ)
         
         elif new == 2: # On vient de cliquer sur la page "Bulletins Officiels"
-            self.pageBO.Construire(REFERENTIELS[self.sequence.classe.typeEnseignement])
+            if self.sequence.classe.typeEnseignement in REFERENTIELS:
+                self.pageBO.Construire(REFERENTIELS[self.sequence.classe.typeEnseignement])
+            else:
+                self.pageBO.Construire(self.sequence.GetReferentiel())
+            
             
         elif new == 0: # On vient de cliquer sur la fiche
             self.fiche.Redessiner()
@@ -3559,7 +3567,10 @@ class FenetreProjet(FenetreDocument):
             self.pageValid.MiseAJour(self.projet, self)
             
         elif new == 3: # On vient de cliquer sur la page "Bulletins Officiels"
-            self.pageBO.Construire(REFERENTIELS[self.projet.classe.typeEnseignement])
+            if self.projet.classe.typeEnseignement in REFERENTIELS:
+                self.pageBO.Construire(REFERENTIELS[self.projet.classe.typeEnseignement])
+            else:
+                self.pageBO.Construire(self.projet.GetReferentiel())
 
         elif new == 0: # On vient de cliquer sur la fiche
             self.fiche.Redessiner()
@@ -4423,7 +4434,12 @@ class FenetreProgression(FenetreDocument):
       
             
         if new == 2: # On vient de cliquer sur la page "Bulletins Officiels"
-            self.pageBO.Construire(REFERENTIELS[self.progression.classe.typeEnseignement])
+            if self.progression.classe.typeEnseignement in REFERENTIELS:
+                self.pageBO.Construire(REFERENTIELS[self.progression.classe.typeEnseignement])
+            else:
+                self.pageBO.Construire(self.progression.GetReferentiel())
+            
+            
 
         elif new == 0: # On vient de cliquer sur la fiche
             self.fiche.Redessiner()
@@ -5145,15 +5161,14 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         #
         if zone is not None:
             self.GetDoc().Move(zone, x, y)
-            if zone.obj is not None \
-              or (zone.param is not None and ((len(zone.param) > 3 and zone.param[:3] == "POS") \
-                                            or zone.param == "PB" or zone.param == "EQU")): 
+            if zone.estClicable(): 
                 self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
             else:
                 self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         else:
             self.GetDoc().HideTip()
             self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+
 
             
         evt.Skip()
@@ -7814,7 +7829,11 @@ class PanelPropriete_Classe(PanelPropriete):
             b.Destroy()
             
         self.bo = []
-        for tit, url in REFERENTIELS[self.classe.typeEnseignement].BO_URL:
+        if self.classe.typeEnseignement in REFERENTIELS:
+            tit_url = REFERENTIELS[self.classe.typeEnseignement].BO_URL
+        else:
+            tit_url = self.classe.GetReferentiel().BO_URL
+        for tit, url in tit_url:
             self.bo.append(hl.HyperLinkCtrl(self.pageGen, wx.ID_ANY, tit, URL = url))
             self.sbBO.Add(self.bo[-1], flag = wx.EXPAND)
             self.bo[-1].Show(tit != "")
@@ -13068,6 +13087,8 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def ConstruireSelectGrille(self):
+#         print("ConstruireSelectGrille", self)
+#         print("   ", self.personne.grille)
 #        titres = self.personne.GetReferentiel().nomParties_prj
         if len(self.personne.grille) > 0:
 #            lstGrilles = self.personne.grille
@@ -13080,10 +13101,13 @@ class PanelPropriete_Personne(PanelPropriete):
     #                lstGrilles = self.personne.grille
     #                titres = [u"Revues :", u"Soutenance :"]
             
+            prjeval = self.personne.GetProjetRef()
+#             print("   ", prjeval, prjeval.parties)
             self.SelectGrille = {}
             for k in self.personne.grille:
-                self.SelectGrille[k] = PanelSelectionGrille(self, self.personne, k)
-                self.bsizer.Add(self.SelectGrille[k], flag = wx.EXPAND)
+                if k in prjeval.parties:
+                    self.SelectGrille[k] = PanelSelectionGrille(self, self.personne, k)
+                    self.bsizer.Add(self.SelectGrille[k], flag = wx.EXPAND)
             
             self.boxGrille.Show(True)
             
@@ -16614,7 +16638,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Refresh()
 
 
-   ###################################################################################
+    ###################################################################################
     def OnItemCheck(self, event, item = None):
 #        print "OnItemCheck"
         if event != None:
@@ -20165,28 +20189,6 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
             defaut = None
             
         img = file2bmp(self.lien.path, defaut)
-        
-        
-#         try:
-#             img = wx.Image(self.lien.path).ConvertToBitmap()
-#         except:
-#             try:
-#                 print("ouverture", self.lien.path)
-#                 doc = fitz.open(self.lien.path)
-#                 page = doc.loadPage(0)
-#                 pix = page.getPixmap()
-#                 if pix.alpha:
-#                     img = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
-#                 else:
-#                     img = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
-#                 
-#             except:
-# #                 if DEBUG:
-# #                     raise
-#                 if os.path.isfile(self.lien.path):
-#                     img = images.Icone_noimg.GetBitmap()
-#                 else:
-#                     img = None
         
         if img != None:
             self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))

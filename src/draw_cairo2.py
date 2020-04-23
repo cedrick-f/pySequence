@@ -3417,34 +3417,67 @@ class Zone_sens():
                 return True
         return False
     
-    
-    
-##########################################################################################
-#
-#  Une zone du dessin
-#
-##########################################################################################
-class Zone():
-    def __init__(self, rect, pt_caract = None, obj = None, param = None):
-        self.rect = rect                # Liste des des rectangles sensibles
-        if pt_caract == None:
-            pt_caract = self.rect[:2]
-        self.pt_caract = pt_caract      # Un point caractéristique (pour identification svg)
-        self.obj = obj                  # L'objet concerné
-        self.param = param              # Paramètre(s) supplémentaire(s)
-        
-    def __repr__(self): 
-        return "%s (%s)" %(self.obj, self.param)
-    
-    def dansRectangle(self, X, Y):
-        """ Renvoie True si le point X, Y est dans la zone
-        """
-        for r in self.rect:
-            x, y, w, h = r
-            if X > x and Y > y and X < x + w and Y < y + h:
+    ######################################################################################  
+    def estClicable(self):
+        if self.obj is not None:
+            return True
+                        
+        elif self.param is not None:
+            if len(self.param) > 3 and self.param[:3] == "POS" :
                 return True
+            
+            elif self.param == "PB":
+                return True
+            
+            elif self.param == "EQU":
+                return True
+            
         return False
-  
+    
+# ##########################################################################################
+# #
+# #  Une zone du dessin
+# #
+# ##########################################################################################
+# class Zone():
+#     def __init__(self, rect, pt_caract = None, obj = None, param = None):
+#         self.rect = rect                # Liste des des rectangles sensibles
+#         if pt_caract == None:
+#             pt_caract = self.rect[:2]
+#         self.pt_caract = pt_caract      # Un point caractéristique (pour identification svg)
+#         self.obj = obj                  # L'objet concerné
+#         self.param = param              # Paramètre(s) supplémentaire(s)
+#         
+#     def __repr__(self): 
+#         return "%s (%s)" %(self.obj, self.param)
+#     
+#     def dansRectangle(self, X, Y):
+#         """ Renvoie True si le point X, Y est dans la zone
+#         """
+#         for r in self.rect:
+#             x, y, w, h = r
+#             if X > x and Y > y and X < x + w and Y < y + h:
+#                 return True
+#         return False
+#   
+#     ######################################################################################  
+#     def estClicable(self):
+#         if self.obj is not None:
+#             return True
+#                         
+#         elif self.param is not None:
+#             if len(self.param) > 3 and self.param[:3] == "POS" :
+#                 return True
+#             
+#             elif self.param == "PB":
+#                 return True
+#             
+#             elif self.param == "EQU":
+#                 return True
+#             
+#         return False
+#     
+    
     
 #def testRapport(ctx):
 #    f = open("testRapport.txt", 'w')

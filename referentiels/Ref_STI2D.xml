@@ -61,7 +61,7 @@
                   <d_poids F_C="16.666667" F_C2="16.666667" />
                   <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
-                <Indicateur_01 S_intitule="Le flux et la forme de l'énergie et/o de l'information sont décrits de façon qualitative.">
+                <Indicateur_01 S_intitule="Le flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative.">
                   <d_ligne I_C="0" I_C2="0" />
                   <d_poids F_C="16.666667" F_C2="16.666667" />
                   <d_revue I_C="0" I_C2="0" />
@@ -394,7 +394,7 @@
                   <d_poids F_C="2.564103" F_C2="2.564103" />
                   <d_revue I_C="0" I_C2="0" />
                 </Indicateur_00>
-                <Indicateur_01 S_intitule="Les missions de chaque membre du groupe sont identifiées et peuvent être expliquer.">
+                <Indicateur_01 S_intitule="Les missions de chaque membre du groupe sont identifiées et peuvent être expliquées.">
                   <d_ligne I_C="0" I_C2="0" />
                   <d_poids F_C="2.564103" F_C2="2.564103" />
                   <d_revue I_C="0" I_C2="0" />

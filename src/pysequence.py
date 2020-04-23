@@ -1439,6 +1439,9 @@ class Classe(ElementBase):
 #         print "systèmes Classe :", self.systemes
 #        self.GetPanelPropriete().MiseAJour()
         
+        
+        
+        
         return err
         
         
@@ -3904,11 +3907,11 @@ class Projet(BaseDoc, Grammaire):
 #         print("GetProjetRef", self.code, list(self.GetReferentiel().projets.keys()))
         ref = self.GetReferentiel()
         spe = self.classe.specialite
-        
+#         print("  ", spe)
         if self.code == None: # on n'a pas encore donné de code à ce projet
             return ref.getProjetDefaut(spe)
         else:
-            if self.code in ref.projets.keys():
+            if self.code in ref.projets:
                 return ref.projets[self.code]
             else:
                 return None #Referentiel.Projet(self.GetReferentiel()) # None : pose des pb
@@ -4202,7 +4205,7 @@ class Projet(BaseDoc, Grammaire):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche projet", 
+#         print("setBranche projet")
 #        print self.GetReferentiel()
         
         err = []
@@ -4224,9 +4227,10 @@ class Projet(BaseDoc, Grammaire):
         if len(sp) == 1:
             sp = [sp[0], sp[0]]
         self.position = [int(sp[0]), int(sp[1])]
-        
+        self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
 #         print("___0", self.code)   
         prj = self.GetProjetRef()
+#         print("  ", prj)
         if prj is not None: # Il existe un projet d'évaluation pour ce référentiel
             if self.version == "": # Enregistré avec une version de pySequence > 5.7
                 if self.position[0] == 5:
@@ -4399,7 +4403,7 @@ class Projet(BaseDoc, Grammaire):
 #         print("taches:",self.taches)
 
 
-        self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
+#         self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
 #         self.SetPosition(self.position)
 
 #         print("prj", prj)
@@ -13066,7 +13070,7 @@ class Personne(ElementBase):
     
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche personne"
+#         print("setBranche personne")
         Ok = True
         self.id  = eval(branche.get("Id", "0"))
         self.nom  = branche.get("Nom", "")
@@ -13081,8 +13085,9 @@ class Personne(ElementBase):
             self.discipline = branche.get("Discipline", 'Tec')
             
         if hasattr(self, 'grille'):     # élève
+#             print("   ", self.GetProjetRef())
 #            print self.grille
-            for k in self.GetProjetRef().parties.keys():
+            for k in self.GetProjetRef().parties:
                 self.grille[k] = Lien(typ = "f")
                 self.grille[k].path = toFileEncoding(branche.get("Grille"+k, r""))
 #             print "grilles", self.grille
