@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Oui" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Oui" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s) de Séquence" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
   </l_BO_URL>
@@ -1276,7 +1276,6 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Élève(s)$m" S_01="Élèves" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
-    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" S_01="C" S_02="A" />
   <l_listProblematiques>

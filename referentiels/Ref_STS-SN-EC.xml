@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="Logo_STS_SN_EC.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomFS="Fonction(s) de service$f" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="Logo_STS_SN_EC.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarches" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Système(s) et Matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="https://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/bts/bts-systemes-numeriques-sn/3321-bts-systemes-numeriques-referentiel-et-arrete-du-19-fevrier-2018.pdf" />
   </l_BO_URL>
@@ -6950,7 +6950,6 @@
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
     <l_ELEVES S_00="Étudiant(s)$m" S_01="Étudiant" />
     <l_OBJEC S_00="Objectif(s) de formation$m" S_01="Objectifs de formation" />
-    <l_PRJVAL S_00="Fiche(s) de validation de projet$f" S_01="Fiche de validation de projet" />
   </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />

@@ -4444,7 +4444,7 @@ def ouvrir(nomFichier):
     ref = Referentiel()
     ref.initParam()
     err = ref.setBranche(root)[1]
-    ref.corrigerVersion(err)
+#     ref.corrigerVersion(err)
     ref.postTraiter()
     ref.completer()
     fichier.close()
@@ -4518,7 +4518,7 @@ def chargerReferentiels():
 #                print "<<", f
 #                for p in ref.projets.values():
 #                    print p.grilles
-                
+                print("?",ref, r, ref == r)
                 if ref == r:
                     dicOk[k] = True
                 
@@ -4557,30 +4557,74 @@ def chargerReferentiels():
         return num(k1, r1) - num(k2, r2)
     
     
+#     #  Types d'enseignement qui n'ont pas de tronc commun (parents)
+#     for k, r in REFERENTIELS.items():
+#         if r.tr_com == []:
+#             ARBRE_REF[k] = []
+#     print(ARBRE_REF)
+#     #  Types d'enseignement qui ont un tronc commun (enfants)
+#     d = []
+#     for k, r in REFERENTIELS.items():
+#         if r.tr_com != []:
+#             ARBRE_REF[r.tr_com[0]].append(k)
+#             d.append(r.tr_com[0])
+#     
+#     print(ARBRE_REF)
+#     for k, r in REFERENTIELS.items():
+#         if "_"+r.Famille in ARBRE_REF: 
+#             ARBRE_REF["_"+r.Famille].append(k)
+#         else:
+#             ARBRE_REF["_"+r.Famille] = [k]
+#     
+#     print(ARBRE_REF)
+#     for k, r in list(ARBRE_REF.items()):
+#         if k[0] == "_":
+#             if len(r) == 1:
+#                 del ARBRE_REF[k]
+#     
+#     print(ARBRE_REF)
+#     
+#     
+#     for k, r in list(ARBRE_REF.items()):
+#         if k[0] == "_":
+#             for kk in list(ARBRE_REF.keys()):
+#                 if kk in r:
+#                     if ARBRE_REF[kk] == []:
+#                         del ARBRE_REF[kk]
+#                     else:
+#                         del ARBRE_REF[k]
+#                         break
+#         r.sort()
+# #         r = sorted(r.items(), cmp = comp_per)
+# #         r.reverse()
+#     print(ARBRE_REF)
+    
+    
     #  Types d'enseignement qui n'ont pas de tronc commun (parents)
     for k, r in REFERENTIELS.items():
         if r.tr_com == []:
             ARBRE_REF[k] = []
-    
+    print(ARBRE_REF)
     #  Types d'enseignement qui ont un tronc commun (enfants)
     d = []
     for k, r in REFERENTIELS.items():
         if r.tr_com != []:
             ARBRE_REF[r.tr_com[0]].append(k)
             d.append(r.tr_com[0])
-    
+    print(ARBRE_REF)
     for k, r in REFERENTIELS.items():
-        if "_"+r.Famille in ARBRE_REF:
+        if "_"+r.Famille in list(ARBRE_REF.keys()):
             ARBRE_REF["_"+r.Famille].append(k)
         else:
             ARBRE_REF["_"+r.Famille] = [k]
-    
+    print(ARBRE_REF)
     for k, r in list(ARBRE_REF.items()):
         if k[0] == "_":
             if len(r) == 1:
                 del ARBRE_REF[k]
-                
+    print(ARBRE_REF)
     for k, r in list(ARBRE_REF.items()):
+        print("  ", k)
         if k[0] == "_":
             for kk in list(ARBRE_REF.keys()):
                 if kk in r:
@@ -4592,11 +4636,8 @@ def chargerReferentiels():
         r.sort()
 #         r = sorted(r.items(), cmp = comp_per)
 #         r.reverse()
-    
-    
-    
-    
-    
+    print(ARBRE_REF)
+#     ARBRE_REF['STI'] = []
     #ARBRE_REF = sorted(list(ARBRE_REF.items()), cmp = comp_per)
     # py3 :
     from functools import cmp_to_key
