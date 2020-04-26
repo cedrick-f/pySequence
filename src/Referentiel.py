@@ -385,11 +385,11 @@ class XMLelem():
                 if isinstance(val1, (str, int, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-#                         print(u"Différence", "")
-#                         print("  ", attr)
-#                         print("  xml:", val1)
-#                         print("  xls:", val2)
-#                         break
+                        print(u"Différence", "")
+                        print("  ", attr)
+                        print("  xml:", val1)
+                        print("  xls:", val2)
+                        break
                         return False
         return True
 
@@ -1256,7 +1256,7 @@ class Referentiel(XMLelem):
         self.Enseignement[2] = sh_g.cell(6,2).value # Famille : abréviation
         self.Enseignement[3] = sh_g.cell(6,3).value # Famille : Nom complet
         debug = False#self.Code == "STS_SN_EC"
-
+#         print("code1", self.Code)
         if sh_g.ncols > 3:
             lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != ""]
             for l in lig:
@@ -4489,11 +4489,13 @@ def chargerReferentiels():
 #             print(fich_ref)
             
             ref = Referentiel(os.path.join(DOSSIER_REF, fich_ref))
+#             print(ref.Code ,  fich_ref)
             ref.postTraiter()
             REFERENTIELS[ref.Code] = ref
 #            print ref.Code
 
     for k, r in REFERENTIELS.items():
+#         print("code2", r.Code)
 #        print r
         r.completer()
 #         print "############################"+ k
@@ -4518,7 +4520,7 @@ def chargerReferentiels():
 #                print "<<", f
 #                for p in ref.projets.values():
 #                    print p.grilles
-                print("?",ref, r, ref == r)
+#                 print("?",ref, r, ref == r)
                 if ref == r:
                     dicOk[k] = True
                 
@@ -4526,6 +4528,7 @@ def chargerReferentiels():
                 #REFERENTIELS[k] = ref
                 
             else:
+#                 print("code3", r.Code)
                 enregistrer(r.Code, f)
                 dicOk[k] = None
                 
@@ -4604,27 +4607,27 @@ def chargerReferentiels():
     for k, r in REFERENTIELS.items():
         if r.tr_com == []:
             ARBRE_REF[k] = []
-    print(ARBRE_REF)
+#     print(ARBRE_REF)
     #  Types d'enseignement qui ont un tronc commun (enfants)
     d = []
     for k, r in REFERENTIELS.items():
         if r.tr_com != []:
             ARBRE_REF[r.tr_com[0]].append(k)
             d.append(r.tr_com[0])
-    print(ARBRE_REF)
+#     print(ARBRE_REF)
     for k, r in REFERENTIELS.items():
         if "_"+r.Famille in list(ARBRE_REF.keys()):
             ARBRE_REF["_"+r.Famille].append(k)
         else:
             ARBRE_REF["_"+r.Famille] = [k]
-    print(ARBRE_REF)
+#     print(ARBRE_REF)
     for k, r in list(ARBRE_REF.items()):
         if k[0] == "_":
             if len(r) == 1:
                 del ARBRE_REF[k]
-    print(ARBRE_REF)
+#     print(ARBRE_REF)
     for k, r in list(ARBRE_REF.items()):
-        print("  ", k)
+#         print("  ", k)
         if k[0] == "_":
             for kk in list(ARBRE_REF.keys()):
                 if kk in r:
@@ -4636,7 +4639,7 @@ def chargerReferentiels():
         r.sort()
 #         r = sorted(r.items(), cmp = comp_per)
 #         r.reverse()
-    print(ARBRE_REF)
+#     print(ARBRE_REF)
 #     ARBRE_REF['STI'] = []
     #ARBRE_REF = sorted(list(ARBRE_REF.items()), cmp = comp_per)
     # py3 :

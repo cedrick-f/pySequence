@@ -396,7 +396,7 @@ class Sequence(Base_Fiche_Doc):
         
         
         # Zone du tableau des démarches
-        if len(self.seq.classe.GetReferentiel().listeDemarches) > 0:
+        if len(self.seq.classe.GetReferentiel().listeDemarches) > 0 and self.seq.HasDemarches():
             self.p_w_Dem = 0.02 * COEF
             self.pos_Dem[0] = self.pos_Sys[0] - self.p_w_Dem - self.ecartX/2
             self.h_Dem = self.siz_Sys[1]
@@ -874,11 +874,7 @@ class Sequence(Base_Fiche_Doc):
         if ltot > 0:  # il y a qq chose à afficher
             
             wC, wS, wSe = self.repartir([taille(lstTexteC), taille(lstTexteS), taille(lstTexteSe)], 0.1)
-#             wC  = taille(lstTexteC)/(ltot)
-#             wS  = taille(lstTexteS)/(ltot)
-#             wSe = taille(lstTexteSe)/(ltot)
-            
-            
+
 #             print("sw:", wC+wS+wSe)
 
             # Mise à l'échelle
@@ -957,8 +953,7 @@ class Sequence(Base_Fiche_Doc):
         Curve_rect_titre(self, (x0, y0, rect_width, rect_height),
                          ref.labels["OBJEC"][2].Plur_(),#"Objectifs", 
                          self.p_Bcol_Obj, self.p_Icol_Obj, self.p_font_Obj).draw()
-                              
-        
+
         
         
         #
@@ -1173,8 +1168,8 @@ class Sequence(Base_Fiche_Doc):
         #
         #  Tableau des démarches
         #
-        if not self.entete:
-            if len(self.seq.GetReferentiel().listeDemarches) > 0:
+        if not self.entete and self.seq.HasDemarches():
+            if len(ref.listeDemarches) > 0:
                 self.ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
                 self.ctx.set_source_rgb(0, 0, 0)
@@ -1187,25 +1182,6 @@ class Sequence(Base_Fiche_Doc):
                        coulBord = None, tracer = True, ext = "...")
                 
                 
-    #             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-    #                                   cairo.FONT_WEIGHT_NORMAL)
-    #             ctx.set_source_rgb(0, 0, 0)
-    #             ctx.set_line_width(0.001 * COEF)
-    #             l=[]
-    #             for d in seq.GetReferentiel().listeDemarches : 
-    #                 l.append(seq.GetReferentiel().demarches[d][0])
-    #             tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
-    #                     tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
-    #                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
-    #             ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    #             ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-    #             ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    #             ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
-    #             ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    #             ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
-    #             ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    #             ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-    #             ctx.stroke()
     
     
     

@@ -179,13 +179,17 @@ class STCSpellCheck(object):
                       2: wx.stc.STC_INDIC2_MASK
                       }
         if indicator is not None:
+#             print(indicator)
             if indicator not in indicators:
                 indicator = 0
             # The current view may have fewer than 3 indicators
-            bitmax = 7 - self.stc.GetStyleBits()
+#             print(self.stc.GetStyleBits())
+            bitmax = 10 - self.stc.GetStyleBits()
+#             print(bitmax)
             if indicator > bitmax:
                 indicator = bitmax
             self._spelling_indicator = indicator
+            
         self._spelling_indicator_mask = indicators[self._spelling_indicator]
         
         if color is not None:
@@ -321,7 +325,7 @@ class STCSpellCheck(object):
     
     def clearAll(self):
         """Clear the stc of all spelling indicators."""
-        self.stc.StartStyling(0, self._spelling_indicator_mask)
+        self.stc.StartStyling(0)#, self._spelling_indicator_mask)
         self.stc.SetStyling(self.stc.GetLength(), 0)
     
     def checkRange(self, start, end):
@@ -346,7 +350,7 @@ class STCSpellCheck(object):
             if self._spelling_debug:
                 print(("No need to check range: start=%d end=%d count=%d" % (start, end, count)))
             return
-        self.stc.StartStyling(start, mask)
+        self.stc.StartStyling(start)#, mask)
         self.stc.SetStyling(count, 0)
         
         text = self.stc.GetTextRange(start, end) # note: returns unicode
@@ -378,7 +382,7 @@ class STCSpellCheck(object):
                         if self._spell_check_region(last_pos):
                             if self._spelling_debug:
                                 print(("styling text[%d:%d] = (%d,%d) to %d" % (start_index, end_index, last_pos, last_pos + raw_count, mask)))
-                            self.stc.StartStyling(last_pos, mask)
+                            self.stc.StartStyling(last_pos)#, mask)
                             self.stc.SetStyling(raw_count, mask)
                         elif self._spelling_debug:
                             print(("not in valid spell check region.  styling position corresponding to text[%d:%d] = (%d,%d)" % (start_index, end_index, last_pos, last_pos + raw_count)))
@@ -676,7 +680,7 @@ class STCSpellCheck(object):
                 if self._spelling_debug:
                     print(("cursor in middle of word, removing styling %d-%d" % (word_start, word_end)))
                 mask = self._spelling_indicator_mask
-                self.stc.StartStyling(word_start, mask)
+                self.stc.StartStyling(word_start)#, mask)
                 self.stc.SetStyling(word_end - word_start, 0)
                 
                 if word_start != word_end:

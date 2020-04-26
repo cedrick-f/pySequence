@@ -44,7 +44,8 @@ from widgets import messageErreur, scaleImage
 import images
 from drag_file import *
 from util_path import *
-from dpi_aware import *
+# from dpi_aware import *
+SSCALE = 1.0
 
 if sys.platform == 'darwin':
     def openFolder(path):

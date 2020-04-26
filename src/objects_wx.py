@@ -40,6 +40,7 @@ Les principaux éléments du GUI de **pySéquence**.
 """
 
 
+SSCALE = 1.0
 
 ####################################################################################
 #
@@ -390,8 +391,8 @@ def getIconeRedo(size = (20,20)):
 #     return wx.Bitmap(wx.lib.wxcairo.BitmapFromImageSurface(imagesurface))
 
 
-def getDisplayPosSize():
-    """ Renvoie la position et la taille de l'écran : x, y, w, h
+def getDisplaysPosSize():
+    """ Renvoie la position et la taille des écrans : x, y, w, h
     """
     displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
     sizes = [display.ClientArea for display in displays]
@@ -399,8 +400,17 @@ def getDisplayPosSize():
 
 
 
+def getDisplaysPPI():
+    """ Renvoie la résolution des écrans : ppi
+    """
+    displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
+    ppi = [display.GetPPI() for display in displays]
+    return ppi
     
-    
+def getDisplayPPI(win):
+    display = wx.Display.GetFromWindow(win)
+    return wx.Display(display).GetPPI()
+
 
 ####################################################################################
 #
@@ -427,7 +437,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                        version.GetAppnameVersion(), 
                                        style=wx.DEFAULT_FRAME_STYLE)
         
-     
+        
         DEBUG = DEBUG or "d" in options
         
         
@@ -441,7 +451,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timerAutosave)
         
         
-#         self.Bind(wx.EVT_DISPLAY_CHANGED, self.onDisplayChanged)
+        
+        
 #         self.Bind(wx.EVT_UPDATE_UI, self.onDisplayChanged)
         
         #
@@ -489,7 +500,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         ##############################################################################################
         # Taille et position de la fenétre
         ##############################################################################################
-        rs = getDisplayPosSize()
+#         set_screen_scale()
+        rs = getDisplaysPosSize()
         x, y, w, h = rs[0]
         #print wx.GetDisplaySize()
 #         print("DisplayPosSize", rs)
@@ -499,6 +511,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #         self.WMIN_STRUC*SSCALE = self.options.optFenetre["Larg_pnl_Arbre"]
 #         self.HMIN_PROP*SSCALE = self.options.optFenetre["Haut_pnt_Prop"]
         
+#         print(getDisplayPPI(self))
         
 #         print pos, siz
 #         print len(pos), len(siz)
@@ -520,24 +533,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # On centre la fenétre dans l'écran ...
         #self.CentreOnScreen(wx.BOTH)
         
-        self.SetIcon(images.getlogoIcon())
         
+        self.Bind(wx.EVT_MOVE, self.onMoveWindow)
+        
+        
+        self.SetIcon(images.getlogoIcon())
         
         wx.CallAfter(self.connect)
         
-        
-#         nb = self.GetNotebook()
-# #         self.tabmgr = self.GetClientWindow().GetAuiManager()
-#         
-#         
-# #         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnDocClosed)
-#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnCloseDoc)
-#         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
-        
-        
-#         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
-#         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnDocChanged)
-        
+                
         # Pour drag&drop direct de fichiers
         file_drop_target = MyFileDropTarget(self)
         self.SetDropTarget(file_drop_target)
@@ -656,8 +660,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         nb.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
 
     ###############################################################################################
-    def onDisplayChanged(self, event):
-        print("aaaa")
+    def onMoveWindow(self, event):
+        global SSCALE
+        print("onMoveWindow")
+        print("   display:",wx.Display.GetFromWindow(self))
+        print("   PPI:", getDisplayPPI(self))
+#         SSCALE = getDisplayPPI(self)[0]/96
         
         
         
@@ -5263,11 +5271,16 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
         self.w, self.h = self.GetVirtualSize()
 
-        if self.w >0 and self.h>0:
-            self.buffer = self.buffer.ConvertToImage().Scale(self.w, self.h,
+        if self.w > 0 and self.h > 0:
+            try:
+                self.buffer = self.buffer.ConvertToImage().Scale(self.w, self.h,
                                            quality = wx.IMAGE_QUALITY_NORMAL).ConvertToBitmap()
+            except:
+                self.buffer = wx.Bitmap(self.w, self.h)
+
         else:
-            self.buffer = wx.Bitmap(self.w, self.h)
+#             print("wh", self.w, self.h)
+            self.buffer = wx.Bitmap()
         self.Refresh()
         self.Update()
         # After drawing empty bitmap start update
@@ -5682,7 +5695,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         
-        self.Bind(wx.EVT_SIZE, self.OnResize)
+#         self.Bind(wx.EVT_SIZE, self.OnResize)
         
 
 
@@ -5733,17 +5746,17 @@ class PanelPropriete(scrolled.ScrolledPanel):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         bt = wx.Button(parent, -1, "Changer")
         bt.SetToolTip("Sélectionner un fichier image pour %s" %prefixe+titre)
-        hsizer.Add(bt, 1, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        hsizer.Add(bt, 1, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnClickImage, bt)
         self.btImg = bt
         
         bt = wx.BitmapButton(parent, -1, scaleImage(images.Icone_supprimer.GetBitmap(), 20*SSCALE, 20*SSCALE))
         bt.SetToolTip("Supprimer %s" %prefixe+titre)
-        hsizer.Add(bt, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        hsizer.Add(bt, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnSupprImage, bt)
         self.btSupImg = bt
         
-        bsizer.Add(hsizer, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
+        bsizer.Add(hsizer, flag = wx.EXPAND)
         return bsizer
         
         
@@ -5947,8 +5960,8 @@ class PanelPropriete_Sequence(PanelPropriete):
                                      )
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         self.Bind(wx.EVT_SLIDER, self.onChanged)
-        sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
-        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.bmp, flag = wx.EXPAND)
+        sb.Add(self.position, flag = wx.EXPAND)
         
         self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
         
@@ -6188,7 +6201,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,0), flag = wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
@@ -6207,7 +6220,7 @@ class PanelPropriete_Projet(PanelPropriete):
                                               
         sb.Add(self.commctrl, 1, flag = wx.EXPAND)
         pageGen.sizer.Add(sb, (0,1), (2,1),
-                          flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+                          flag = wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.commctrl)
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.commctrl)
@@ -6240,7 +6253,7 @@ class PanelPropriete_Projet(PanelPropriete):
         sb.Add(self.bmp, flag = wx.EXPAND|wx.TOP, border = 3)
         sb.Add(self.position, 1, flag = wx.EXPAND|wx.TOP, border = 3)
         
-        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        pageGen.sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.LEFT, border = 2)
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         self.Bind(wx.EVT_SLIDER, self.onChanged)
 #        self.position.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
@@ -6271,12 +6284,13 @@ class PanelPropriete_Projet(PanelPropriete):
     
     #############################################################################            
     def onChanged(self, event):
-#        print "onChanged", event.GetSelection(), event.GetEventObject()
+#         print("onChanged")#, event.GetSelection(), event.GetEventObject())
         self.projet.SetPosition(self.position.GetRange())
-        self.MiseAJourPosition()
+#         self.MiseAJourPosition()
+#         self.SetBitmapPosition()
         self.MiseAJourTypeEnseignement()
         self.MiseAJour()
-        
+        event.Skip()
         self.sendEvent(modif = "Changement de position du Projet",
                        draw = True, verif = True)
         
@@ -6393,7 +6407,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
             
     #############################################################################            
-    def MiseAJourTypeEnseignement(self, sendEvt = False):
+    def MiseAJourTypeEnseignement(self, sendEvt = False, miseAJourPosition = True):
         
         prj = self.projet.GetProjetRef()
 #        print "MiseAJourTypeEnseignement projet", ref.code
@@ -6418,7 +6432,8 @@ class PanelPropriete_Projet(PanelPropriete):
         self.commctrl.SetTitre(prj.attributs['PB'][0])
         
 #         self.MiseAJourPosition()
-        wx.CallLater(0, self.MiseAJourPosition) # py3 : pour éviter les MemoryError !!
+        if miseAJourPosition:
+            wx.CallLater(0, self.MiseAJourPosition) # py3 : pour éviter les MemoryError !!
         if hasattr(self, 'panelOrga'):
             self.panelOrga.MiseAJourListe()
         
@@ -6666,7 +6681,7 @@ class PanelPropriete_Projet(PanelPropriete):
 #         print("code", self.projet.code)
         if not hasattr(self, 'panelOrga') and self.projet.code in ref.projets:
             self.panelOrga = PanelOrganisation(self.pageGen, self, self.projet)
-            self.pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+            self.pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.EXPAND|wx.LEFT, border = 2)
         else:
             # Pas d'évaluation = pas de revues
             if hasattr(self, 'panelOrga'):
@@ -6700,14 +6715,15 @@ class PositionCtrl(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.position = position
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-#         print("projets", projets)
-        projets = [[x-1 for x in p.periode] for p in projets.values()]
         
+        projets = [[x-1 for x in p.periode] for p in projets.values()]
+        print("projets", projets)
         mini, maxi = periodes[0], periodes[-1]#0, sum(p[1] for p in periodes)-1
         if totmax == None:
             totmax = maxi+1
             
-        self.sel = RangeSlider(self, position, mini, maxi, projets, h = 18*SSCALE)
+        self.sel = RangeSlider(self, -1, *position, mini, maxi, zones = projets, 
+                               size = (-1, 18*SSCALE))
         
 #         w1, w2, w3 = 100*mini/totmax, 100*(maxi-mini+1)/totmax, 100*(totmax-maxi-1)/totmax
         self.sizer.AddStretchSpacer(100*mini/totmax)
@@ -6715,20 +6731,22 @@ class PositionCtrl(wx.Panel):
         self.sizer.AddStretchSpacer(100*(totmax-maxi-1)/totmax)
         
         self.SetSizer(self.sizer)
-        self.Bind(wx.EVT_SLIDER, self.OnSlide)
-        
-        
-        
-    def OnSlide(self, event):
-        wx.PostEvent(self.Parent, event)
-        
+#         self.sel.Bind(wx.EVT_SLIDER, self.OnSlide)
+#         
+#         
+#         
+#     def OnSlide(self, event):
+# #         print("OnSlide")
+#         wx.PostEvent(self.Parent, event)
+#         event.Skip()
+#         
 
     def SetValue(self, pos):
-        self.sel.SetValue(pos)
+        self.sel.SetValues(*pos)
         
     
     def GetRange(self):
-        return self.sel.GetRange()
+        return self.sel.GetValues()
         
         
     def MiseAJour(self, position = None):
@@ -6748,7 +6766,7 @@ class CreneauCtrl(wx.Panel):
         for creneau in range(self.GetDocument().nbrCreneaux):
             cb = wx.CheckBox(self, 110+creneau, "")
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
-            self.sizer.Add(cb, 1, flag = wx.ALIGN_RIGHT|wx.EXPAND)
+            self.sizer.Add(cb, 1, flag = wx.EXPAND)
             self.cb.append(cb)
             
         self.SetSizer(self.sizer)
@@ -6864,7 +6882,7 @@ class PanelPropriete_Progression(PanelPropriete):
         textctrl.SetToolTip("")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        pageGen.sizer.Add(sb, (0,0), (1,2),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,0), (1,2),  flag = wx.ALL|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
@@ -6887,7 +6905,7 @@ class PanelPropriete_Progression(PanelPropriete):
                                       sliderAGauche = True, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
-        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL |wx.EXPAND|wx.ALL, border = 2)
         
         
         #
@@ -6903,7 +6921,7 @@ class PanelPropriete_Progression(PanelPropriete):
                                       sliderAGauche = True, scale = SSCALE)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlCreneaux)
         sb.Add(self.ctrlCreneaux)
-        pageGen.sizer.Add(sb, (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(sb, (1,1), flag = wx.ALIGN_CENTER_VERTICAL |wx.EXPAND|wx.ALL, border = 2)
         
         
         #
@@ -6919,7 +6937,7 @@ class PanelPropriete_Progression(PanelPropriete):
                                  choices = [c, s])
         
         self.Bind(wx.EVT_RADIOBOX, self.EvtMode)
-        pageGen.sizer.Add(self.mdbox, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(self.mdbox, (0,2), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         
@@ -6936,7 +6954,7 @@ class PanelPropriete_Progression(PanelPropriete):
         # Image
         #
         isizer = self.CreateImageSelect(pageGen)
-        pageGen.sizer.Add(isizer, (0,3), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        pageGen.sizer.Add(isizer, (0,3), (3,1), flag =  wx.EXPAND|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
 
 
@@ -7249,6 +7267,7 @@ class PanelPropriete_Classe(PanelPropriete):
         bg_color = self.Parent.GetBackgroundColour()
         
         nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+        self.nb = nb
         
         #
         # La page "Généralités"
@@ -7277,16 +7296,14 @@ class PanelPropriete_Classe(PanelPropriete):
         nb.AddPage(pageSys, ref._nomSystemes.Plur_())
 
         
-        self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
-        self.nb = nb
-        self.sizer.AddGrowableCol(1)
+        
 
 
         #
         # La barre d'outils
         #
         self.tb = tb = wx.ToolBar(self, style = wx.TB_VERTICAL|wx.TB_FLAT|wx.TB_NODIVIDER)
-        self.sizer.Add(tb, (0,0), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
+        self.sizer.Add(tb, (0,0), flag = wx.ALL, border = 1)
         t = "Sauvegarder ces paramètres de classe dans un fichier :\n" \
             " - type d'enseignement\n" \
             " - effectifs\n" \
@@ -7316,7 +7333,11 @@ class PanelPropriete_Classe(PanelPropriete):
 
         tb.Realize()
 
-
+        self.sizer.Add(nb, (0,1), flag = wx.ALL|wx.EXPAND, border = 1)
+        self.sizer.AddGrowableCol(1)
+        self.sizer.AddGrowableRow(0)
+        
+        
         #
         # Type d'enseignement
         #
@@ -7335,9 +7356,10 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         titre = myStaticBox(pageGen, -1, "Établissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        
         sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(pageGen, -1, "Académie :")
-        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL)
         
         lstAcad = sorted([a[0] for a in list(constantes.ETABLISSEMENTS.values())])
         self.cba = wx.ComboBox(pageGen, -1, "sélectionner une académie ...", (-1,-1), 
@@ -7350,12 +7372,13 @@ class PanelPropriete_Classe(PanelPropriete):
 
         pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
 #         pageGen.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
-        sh.Add(self.cba, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
-        sb.Add(sh, flag = wx.EXPAND)
+        sh.Add(self.cba, flag = wx.EXPAND|wx.LEFT, border = 5)
+        sb.Add(sh, flag = wx.EXPAND|wx.BOTTOM, border = 5)
         
+        ##############################################
         sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(pageGen, -1, "Ville :")
-        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL)
      
         self.cbv = SlimSelector(pageGen, -1, "sélectionner une ville ...", (-1,-1), 
                          (-1, -1), [],
@@ -7367,11 +7390,11 @@ class PanelPropriete_Classe(PanelPropriete):
 
         pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboVille, self.cbv)
         pageGen.Bind(wx.EVT_TEXT, self.EvtComboVille, self.cbv)
-        sh.Add(self.cbv, 1,flag = wx.ALIGN_CENTER_VERTICAL|wx.LEFT, border = 5)
-        sb.Add(sh, flag = wx.EXPAND)
+        sh.Add(self.cbv, 1,flag = wx.ALIGN_CENTER_VERTICAL|LEFT, border = 5)
+        sb.Add(sh, flag = wx.EXPAND|wx.BOTTOM, border = 5)
         
         t = wx.StaticText(pageGen, -1, "Établissement :")
-        sb.Add(t, flag = wx.EXPAND)
+        sb.Add(t, flag = wx.EXPAND|wx.BOTTOM, border = 5)
         
         self.cbe = wx.ComboBox(pageGen, -1, "sélectionner un établissement ...", (-1,-1), 
                          (-1, -1), ["autre ..."],
@@ -7382,8 +7405,8 @@ class PanelPropriete_Classe(PanelPropriete):
                          )
 
         pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cbe)
-        sb.Add(self.cbe, flag = wx.EXPAND)
-
+        sb.Add(self.cbe, flag = wx.EXPAND|wx.BOTTOM, border = 2)
+        
 #        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 ##        textctrl.SetMinSize((-1, 150))
@@ -7395,7 +7418,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
 #        sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
 
-        pageGen.sizer.Add(sb, (0,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,1), flag = wx.ALL|wx.EXPAND, border = 2)
         
         #
         # Accés au BO
@@ -7403,7 +7426,7 @@ class PanelPropriete_Classe(PanelPropriete):
         titre = myStaticBox(pageGen, -1, "Documents Officiels en ligne")
         self.bo = []
         sbBO = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        pageGen.sizer.Add(sbBO, (0,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sbBO, (0,2), flag = wx.ALL|wx.EXPAND, border = 2)
         self.sbBO = sbBO
 #        self.SetLienBO()
         
@@ -7413,8 +7436,9 @@ class PanelPropriete_Classe(PanelPropriete):
         pageGen.Bind(wx.EVT_BUTTON, self.EvtBnt_BO, btn_bo)
         self.sbBO.Add(btn_bo, flag = wx.EXPAND)
         
+#         pageGen.sizer.Add(10, 1, (0,3))
         pageGen.sizer.AddGrowableRow(0)
-        pageGen.sizer.AddGrowableCol(1)
+#         pageGen.sizer.AddGrowableCol(3)
         
         
         #
@@ -7422,7 +7446,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         self.ec = PanelEffectifsClasse(pageDec, classe)
         
-        pageDec.sizer.Add(self.ec, (0,0), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
+        pageDec.sizer.Add(self.ec, (0,0), flag = wx.ALL|wx.EXPAND, border = 2)
 
         pageDec.sizer.AddGrowableRow(0)
         pageDec.sizer.AddGrowableCol(0)
@@ -7478,8 +7502,8 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################              
     def OnResize(self, evt = None):
-        self.Layout()
-        self.nb.SetMinSize((-1,self.GetClientSize()[1]))
+#         self.Layout()
+#         self.nb.SetMinSize((-1,self.GetClientSize()[1]))
         
         if evt:
             evt.Skip()
@@ -8396,7 +8420,7 @@ class PanelEffectifsClasse(wx.Panel):
         border.Add(self.boxClasse, flag = wx.EXPAND|wx.ALL, border = 3)
         border.Add(self.pnlImg, 1, flag = wx.EXPAND|wx.ALL, border = 3)
         
-        self.SetSizer(border)
+        self.SetSizerAndFit(border)
         self.Layout()
         
         self.Bind(wx.EVT_SIZE, self.Onsize)
@@ -8406,7 +8430,7 @@ class PanelEffectifsClasse(wx.Panel):
     def Onsize(self, event = None):
         if self.IsShownOnScreen():
             wp, hp = self.pnlImg.GetSize()
-    #         print("Onsize", wp, hp)
+            print("Onsize", wp, hp)
             if wp > 0 and hp > 0:
                 self.bmp.SetBitmap(self.classe.getBitmapEffectifs(wp, hp))
             
@@ -8872,8 +8896,8 @@ class PanelPropriete_CI(PanelPropriete):
             t.SetToolTip(ci)
 #             hs.Add(r, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, border = 1)
 #             hs.Add(t, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 4 )
-            hs.Add( r, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, border = 1 )
-            hs.Add( t, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT, border = 4 )#|wx.EXPAND
+            hs.Add( r, flag = wx.ALIGN_CENTRE_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, border = 1 )
+            hs.Add( t, flag = wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border = 4 )#|wx.EXPAND
             
             if ref.CI_cible:
                 p = wx.TextCtrl(panelCI, -1, "1")
@@ -8881,7 +8905,7 @@ class PanelPropriete_CI(PanelPropriete):
                 p.Show(False)
                 p.SetMinSize((30*SSCALE, -1))
 #                 hs.Add( p, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)
-                hs.Add( p, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)
+                hs.Add( p, flag = wx.ALIGN_CENTRE_VERTICAL|wx.LEFT|wx.RIGHT, border = 2)
                 self.group_ctrls.append((r, t, p))
             else:
                 self.group_ctrls.append((r, t))
@@ -9539,7 +9563,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         titre = myStaticBox(self, -1, "Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, bmp)
-        sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.bmp, flag = wx.EXPAND)
         
         if self.sequence is not None:
             position = self.sequence.position
@@ -9549,7 +9573,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
                                      ref.getPeriodeSpe(classe.specialite),
                                      totmax = ref.getNbrPeriodes())
         self.Bind(wx.EVT_SLIDER, self.onChanged)
-        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.position, flag = wx.EXPAND)
         
         
         #
@@ -10320,7 +10344,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
         
         self.MiseAJour()
         
-        self.Layout()
+        self.sizer.Layout()
+        
     
     
     ######################################################################################  
@@ -10448,11 +10473,11 @@ class PanelPropriete_Seance(PanelPropriete):
         # Organisation sur 3 colonnes
         #
         c0 = wx.BoxSizer(wx.VERTICAL)
-        pageGen.sizer.Add(c0, (0,0), (1,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(c0, (0,0), (1,1), flag = wx.ALL|wx.EXPAND, border = 2)
         c1 = wx.BoxSizer(wx.VERTICAL)
-        pageGen.sizer.Add(c1, (0,1), (1,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(c1, (0,1), (1,1), flag = wx.ALL|wx.EXPAND, border = 2)
         c2 = wx.BoxSizer(wx.VERTICAL)
-        pageGen.sizer.Add(c2, (0,2), (1,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(c2, (0,2), (1,1), flag = wx.ALL|wx.EXPAND, border = 2)
         
         
         #
@@ -10472,15 +10497,15 @@ class PanelPropriete_Seance(PanelPropriete):
         self.textctrl.Bind(wx.EVT_LEAVE_WINDOW, self.EvtTextIntitule)
         self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
 #         pageGen.sizer.Add(bsizer, (0,0), (3,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
-        c0.Add(bsizer, 1, flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)    
+        c0.Add(bsizer, 1, flag = wx.ALL|wx.EXPAND, border = 2)    
         
         
         # 2 élémenents en horizontal :
         sto = wx.BoxSizer(wx.HORIZONTAL)
-        c0.Add(sto, flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2) 
+        c0.Add(sto, flag = wx.ALL|wx.EXPAND, border = 2) 
         
         c00 = wx.BoxSizer(wx.VERTICAL)
-        sto.Add(c00, flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        sto.Add(c00, flag = wx.ALL|wx.EXPAND, border = 2)
         
         #
         # Type de séance
@@ -10506,7 +10531,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
         
         
-        tsizer.Add(titre, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
+        tsizer.Add(titre, flag = wx.ALIGN_LEFT|wx.LEFT, border = 2)
         tsizer.Add(cbType, flag = wx.EXPAND|wx.LEFT, border = 2)
 #         pageGen.sizer.Add(tsizer, (3,0), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         c00.Add(tsizer, flag = wx.EXPAND|wx.ALL, border = 2)
@@ -10808,7 +10833,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #             self.pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.cbEff)
             self.titreEff = titre
             
-            self.bsizer2.Add(self.titreEff, flag = wx.ALIGN_BOTTOM|wx.LEFT|wx.BOTTOM, border = 2)
+            self.bsizer2.Add(self.titreEff, flag = wx.LEFT|wx.BOTTOM, border = 2)
             self.bsizer2.Add(cbEff, flag = wx.EXPAND|wx.LEFT, border = 8)
             
     
@@ -10899,7 +10924,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 tit += " " + ref._nomActivites.du_()
                 titre = wx.StaticText(self.pageGen, -1, tit + " :")
                 self.titreDem = titre
-                self.demSizer.Add(titre, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
+                self.demSizer.Add(titre, flag = wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
                 
                 if ref.multiDemarches:
                     cbDem = []
@@ -11651,7 +11676,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
             if tache.phase in TOUTES_REVUES_SOUT:
                 txtPhas = wx.StaticText(pageGen, -1, prj.phases[tache.phase][1])
-                c00.Add(txtPhas, flag = wx.EXPAND)
+                c00.Add(txtPhas, flag = wx.ALIGN_CENTER_VERTICAL)
     #             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
                 
             elif tache.estPredeterminee():
@@ -12524,11 +12549,11 @@ class PanelPropriete_Systeme(PanelPropriete):
                                          )
 
             self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.cbListSys)
-            hs.Add(self.cbListSys, flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT|wx.EXPAND, border = 3)
+            hs.Add(self.cbListSys, flag = wx.TOP|wx.BOTTOM|wx.LEFT|wx.EXPAND, border = 3)
             
                
-        vs.Add(hs,1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
-        vs.Add(textctrl, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        vs.Add(hs,1, flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        vs.Add(textctrl, flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         
         #
         # Type de système
@@ -12552,7 +12577,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxSys, cbType)
         
         
-        self.tsizer.Add(self.titreTyp, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
+        self.tsizer.Add(self.titreTyp, flag = wx.ALIGN_LEFT|wx.LEFT, border = 2)
         self.tsizer.Add(cbType, flag = wx.EXPAND|wx.LEFT, border = 2)
         vs.Add(self.tsizer, flag = wx.EXPAND|wx.ALL, border = 2)
 #         self.sizer.Add(tsizer, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -12577,7 +12602,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         # Image
         #
         isizer = self.CreateImageSelect(self, titre = "image %s" %et2ou(ref._nomSystemes.du_()))
-        self.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        self.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
         #
@@ -12601,7 +12626,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         lsizer = self.CreateLienSelect(self)
         vs.Add(lsizer, flag = wx.EXPAND|wx.ALL, border = 2)
-        self.sizer.Add(vs, (0,3), (1, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
+        self.sizer.Add(vs, (0,3), (1, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 0)
         
         self.MiseAJour()
         self.Verrouiller()
@@ -12953,8 +12978,8 @@ class PanelPropriete_Personne(PanelPropriete):
         self.textctrln = textctrl
         
         nsizer = wx.BoxSizer(wx.HORIZONTAL)
-        nsizer.Add(titre, flag = wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
-        nsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        nsizer.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        nsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
         #
@@ -12965,13 +12990,13 @@ class PanelPropriete_Personne(PanelPropriete):
         self.textctrlp = textctrl
         
         psizer = wx.BoxSizer(wx.HORIZONTAL)
-        psizer.Add(titre, flag = wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
-        psizer.Add(textctrl, 1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        psizer.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        psizer.Add(textctrl, 1, flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
         bsizer.Add(nsizer, flag = wx.EXPAND)
         bsizer.Add(psizer, flag = wx.EXPAND)
-        self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+        self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
         
         
         #
@@ -12985,7 +13010,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
             self.cbInt = cb
             bsizer.Add(cb, flag = wx.EXPAND|wx.ALL, border = 3)
-            self.sizer.Add(bsizer, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+            self.sizer.Add(bsizer, (0,1), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
         
         
         #
@@ -13030,13 +13055,13 @@ class PanelPropriete_Personne(PanelPropriete):
             pnl.SetSizer(s)
             pnl.SetupScrolling()
             lb = wx.CheckListBox(pnl, -1)
-            s.Add(lb, 0)
+            s.Add(lb, 1, flag = wx.EXPAND)
 #             self.Bind(wx.EVT_LISTBOX, self.EvtListBox, lb)
             self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, lb)
 #             lb.SetSelection(0)
             self.lb = lb
-            bsizer.Add(pnl, 1, flag = wx.EXPAND|wx.ALL, border = 3)
-            self.sizer.Add(bsizer, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+            bsizer.Add(pnl,1, flag = wx.EXPAND|wx.ALL, border = 3)
+            self.sizer.Add(bsizer, (0,1), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
             
             pnl.FitInside()
         
@@ -13045,7 +13070,7 @@ class PanelPropriete_Personne(PanelPropriete):
         # Portrait
         #
         isizer = self.CreateImageSelect(self, titre = "portrait", prefixe = "le ", defaut = constantes.AVATAR_DEFAUT)
-        self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
 #         
@@ -13696,8 +13721,8 @@ class PanelSelectionGrille(wx.Panel):
 #         self.btnlien = wx.Button(self, -1, u"Ouvrir")
 #         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
 #         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-        sizer.Add(titre, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-        sizer.Add(self.SelectGrille,1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+        sizer.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+        sizer.Add(self.SelectGrille,1, flag = wx.EXPAND|wx.ALL, border = 3)
 #         sizer.Add(self.btnlien, flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
         
         self.Layout()
@@ -15434,7 +15459,10 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
         self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnCollOrExp)
         
         self.GetMainWindow().Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnGetToolTip)
-
+        
+        self.OnSize2()
+        
+        
     ######################################################################################################
     def OnEnter(self, event):
 #        print "OnEnter PanelPropriete"
@@ -15472,7 +15500,7 @@ class ArbreSavoirs(HTL.HyperTreeList):#, listmix.ListRowHighlighter):
     
     ####################################################################################
     def OnSize2(self, evt = None):
-#        print "OnSize2"
+#         print("OnSize2")
         ww = 0
         for c in range(1, self.GetColumnCount()):
             ww += self.GetColumnWidth(c)
@@ -19230,13 +19258,13 @@ class myProgressDialog(wx.Dialog):
         
         
         self.gauge = wx.Gauge(panel, -1, maximum)
-        sizer.Add(self.gauge, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(self.gauge, 0, wx.GROW|wx.ALL|wx.EXPAND, 5)
 #         print dir(self.gauge)
         if maximum < 0:
             self.gauge.Pulse()
             
         line = wx.StaticLine(panel, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
-        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(line, 0, wx.GROW|wx.ALL|wx.EXPAND, 5)
 
         self.btn = wx.Button(panel, -1, "Annuler")
         self.btn.SetHelpText(msgAnnul)
@@ -20149,7 +20177,7 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
         
         self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.image.SetToolTip("Cliquer pour ouvrir le lien externe")
-        self.sizer.Add(self.image, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)#, flag = wx.EXPAND)
+        self.sizer.Add(self.image, flag = wx.EXPAND)#, flag = wx.EXPAND)
         self.SetImage()
         
         self.FitInside()

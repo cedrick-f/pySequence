@@ -137,7 +137,7 @@ from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
                             PanelPropriete_Savoirs, PanelPropriete_Seance, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
                             PanelPropriete_Support, PanelPropriete_LienProjet,\
-                            PanelPropriete_Personne, getDisplayPosSize, URLDialog, \
+                            PanelPropriete_Personne, getDisplaysPosSize, URLDialog, \
                             PanelPropriete_Groupe, PanelPropriete_Modele, \
                             PanelPropriete_FS, SSCALE
 
@@ -2041,7 +2041,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def ShowTip(self, x, y):
         if self.curTip is None: return
         
-        _, _, W, H = getDisplayPosSize()[0]
+        _, _, W, H = getDisplaysPosSize()[0]
         w, h = self.curTip.GetSize()
         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
         self.curTip.Show()
@@ -2257,7 +2257,10 @@ class Sequence(BaseDoc, Grammaire):
         for sy in self.systemes:
             sy.SetPathSeq(pathseq) 
 
-
+    ######################################################################################  
+    def HasDemarches(self):
+        return any([s.HasDemarches() for s in self.seances])
+    
     ######################################################################################  
     def GetDuree(self):
         duree = 0
@@ -9502,13 +9505,13 @@ class Seance(ElementAvecLien, ElementBase):
         self.intituleDansDeroul = True
         self.effectif = 'C'
   
-        if self.GetReferentiel().multiDemarches:
+        if ref.multiDemarches:
             self.demarche = ""
         else:
             self.demarche = 'I'  # Zéro, un ou plusieurs codes de démarche (séparés par espaces)
         
         self.systemes = []  # liste d'objets Variable() dont l'attribut data est un Systeme
-        self.ensSpecif = self.GetReferentiel().listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
+        self.ensSpecif = ref.listeEnsSpecif[:] # liste des enseignements spécifiques concernés par la Seance
         
         self.compVisees = [] # Liste de codes de compétences (code famille + code) visées par la séances
         self.savVises = []  # Liste de codes de savoirs (code famille + code) visés par la séances
@@ -9580,6 +9583,14 @@ class Seance(ElementAvecLien, ElementBase):
             return self.parent
     
     ######################################################################################  
+    def HasDemarches(self):
+        if self.EstSeance_RS():
+            d = any([s.HasDemarches() for s in self.seances])
+        else:
+            d = False
+        return self.demarche != "" or d
+        
+    ######################################################################################  
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
     
@@ -9589,7 +9600,7 @@ class Seance(ElementAvecLien, ElementBase):
             and len(self.typeSeance) == 1 \
             and self.typeSeance in "RS"
             
-            
+    
     ######################################################################################  
     def GetTypeActivite(self):
         """ Renvoie le type de la première activité parmis les sous séances
@@ -10851,7 +10862,7 @@ class FonctionService(ElementAvecLien, ElementBase):
         ElementBase.__init__(self, 500*SSCALE)
         
         ref = self.GetReferentiel()
-        Grammaire.__init__(self, ref.nomFS)
+        Grammaire.__init__(self, ref.getLabel("EXIG").nom_code)
         
         self.intitule  = intitule
         

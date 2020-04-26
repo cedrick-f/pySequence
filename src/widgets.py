@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 ##This file is part of pySequence
 
 #############################################################################
@@ -1001,7 +1002,7 @@ class VariableCtrl(wx.Panel):
             
         # Mise en place
         sizer = wx.BoxSizer( wx.HORIZONTAL)
-        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 3)
+        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, 3)
         if sliderAGauche:
             sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT, 4)
             sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.RIGHT, 4)
@@ -1653,15 +1654,496 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         self.bouton.SetPosition((w-d, 2))
         evt.Skip()
 
+###############################################################################################
+# source : https://wiki.wxpython.org/DoubleBufferedDrawing
+###############################################################################################
+class BufferedWindow(wx.Window):
+    '''
+     A Buffered window class.
 
+     To use it, subclass it and define a Draw() method that takes a DC
+     to draw to. In that method, put the code needed to draw the picture
+     you want. The window will automatically be double buffered, and the
+     screen will be automatically updated when a Paint event is received
+     (USE_BUFFERED_DC = True).
+
+     When the drawing needs to change, your app needs to call the
+     UpdateDrawing() method. Since the drawing is stored in a bitmap, you
+     can also save the drawing to file by calling the SaveToFile() method.
+    '''
+    def __init__(self, *args, **kwargs):
+        # Make sure the NO_FULL_REPAINT_ON_RESIZE style flag is set.
+        # And define a new kwargs entry for wx.python
+        kwargs['style'] = kwargs.setdefault('style', wx.NO_FULL_REPAINT_ON_RESIZE) | wx.NO_FULL_REPAINT_ON_RESIZE
+        super().__init__( *args, **kwargs)
+
+        # Setup event handlers for drawing 
+        self.Bind(wx.EVT_PAINT,self.OnPaint)       
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+
+        # OnSize called to make sure the buffer is initialized.
+        # This might result in OnSize getting called twice on some
+        # platforms at initialization, but little harm done.
+        self.OnSize(None)
+        self.paint_count = 0
+
+    def Draw(self, dc):
+        '''
+         just here as a place holder.
+         This method must be over-ridden when subclassed
+        '''
+        pass
+
+    def OnPaint(self, event):
+        '''
+          All that is needed here is to move the buffer to the screen
+        '''
+        dc = wx.BufferedPaintDC(self, self._Buffer)
+
+
+    def OnSize(self,event):
+        '''
+         The Buffer init is done here, to make sure the buffer is always
+         the same size as the Window
+        '''
+        Size  = self.ClientSize
+
+        # Make new offscreen bitmap: this bitmap will always have the
+        # current drawing in it, so it can be used to save the image to
+        # a file, or whatever.
+        self._Buffer = wx.Bitmap(*Size)
+        self.UpdateDrawing()
+
+    def SaveToFile(self, FileName, FileType=wx.BITMAP_TYPE_PNG):
+        '''
+         This will save the contents of the buffer
+         to the specified file. See the wx.Windows docs for 
+         wx.Bitmap::SaveFile for the details
+        '''
+        self._Buffer.SaveFile(FileName, FileType)
+
+    def UpdateDrawing(self):
+        '''
+         This would get called if the drawing is changed, for whatever reason.
+
+         The idea here is that the drawing is based on some data generated
+         elsewhere in the system. If that data changes, the drawing needs to
+         be updated.
+
+         This code re-draws the buffer, then calls Update, which forces a paint event.
+        '''
+        dc = wx.MemoryDC()
+        dc.SelectObject(self._Buffer)
+        self.Draw(dc)
+        del dc      # need to get rid of the MemoryDC before Update() is called.
+        self.Refresh()
+        self.Update()
+        
+        
 
 #########################################################################################################
 #########################################################################################################
 #
 #  Un slider à deux positions
-#
+# source : https://gist.github.com/gabrieldp/e19611abead7f6617872d33866c568a3
 #########################################################################################################
 #########################################################################################################  
+
+def fraction_to_value(fraction, min_value, max_value):
+    return int((max_value - min_value) * fraction + min_value+0.5)
+
+
+def value_to_fraction(value, min_value, max_value):
+    return float(value - min_value) / (max_value - min_value)
+
+
+class SliderThumb:
+    def __init__(self, parent, value, decal = 0):
+        self.parent = parent
+        self.decal = decal
+        self.dragged = False
+        self.mouse_over = False
+        self.thumb_poly = ((0, 0), (0, 13), (5, 18), (10, 13), (10, 0))
+        self.thumb_shadow_poly = ((0, 14), (4, 18), (6, 18), (10, 14))
+        min_coords = [float('Inf'), float('Inf')]
+        max_coords = [-float('Inf'), -float('Inf')]
+        for pt in list(self.thumb_poly) + list(self.thumb_shadow_poly):
+            for i_coord, coord in enumerate(pt):
+                if coord > max_coords[i_coord]:
+                    max_coords[i_coord] = coord
+                if coord < min_coords[i_coord]:
+                    min_coords[i_coord] = coord
+        self.size = (max_coords[0] - min_coords[0],
+                     max_coords[1] - min_coords[1])
+
+        self.value = value
+        self.normal_color = wx.Colour((0, 120, 215))
+        self.normal_shadow_color = wx.Colour((120, 180, 228))
+        self.dragged_color = wx.Colour((204, 204, 204))
+        self.dragged_shadow_color = wx.Colour((222, 222, 222))
+        self.mouse_over_color = wx.Colour((23, 23, 23))
+        self.mouse_over_shadow_color = wx.Colour((132, 132, 132))
+
+    def GetPosition(self):
+        min_x = self.GetMin()
+        max_x = self.GetMax()
+        parent_size = self.parent.GetSize()
+        min_value = self.parent.GetMin()
+        max_value = self.parent.GetMax()
+        fraction = value_to_fraction(self.value, min_value, max_value)
+        pos = (fraction_to_value(fraction, min_x, max_x), parent_size[1] / 2 + 1)
+        return pos
+
+    def SetPosition(self, pos):
+        pos_x = pos[0]
+        # Limit movement by the position of the other thumb
+        who_other, other_thumb = self.GetOtherThumb()
+        other_pos = other_thumb.GetPosition()
+        if who_other == 'low':
+            pos_x = max(other_pos[0] + other_thumb.size[0]/2 + self.size[0]/2, pos_x)
+        else:
+            pos_x = min(other_pos[0] - other_thumb.size[0]/2 - self.size[0]/2, pos_x)
+        # Limit movement by slider boundaries
+        min_x = self.GetMin()
+        max_x = self.GetMax()
+        pos_x = min(max(pos_x, min_x), max_x)
+
+        fraction = value_to_fraction(pos_x, min_x, max_x)
+        last_value = self.value
+        self.value = fraction_to_value(fraction, self.parent.GetMin(), self.parent.GetMax())
+        # Post event notifying that position changed
+        if self.value == last_value:
+            self.PostEvent()
+            return True
+        return False
+
+    def GetValue(self):
+        return self.value
+
+    def SetValue(self, value):
+        self.value = int(value)
+        # Post event notifying that value changed
+#         self.PostEvent()
+
+    def PostEvent(self):
+        event = wx.PyCommandEvent(wx.EVT_SLIDER.typeId, self.parent.GetId())
+        event.SetEventObject(self.parent)
+        wx.PostEvent(self.parent.GetEventHandler(), event)
+
+    def GetMin(self):
+        min_x = self.parent.border_width + self.size[0] / 2 + self.decal
+        return min_x
+
+    def GetMax(self):
+        parent_size = self.parent.GetSize()
+        max_x = parent_size[0] - self.parent.border_width - self.size[0] / 2 + self.decal
+        return max_x
+
+    def IsMouseOver(self, mouse_pos):
+        in_hitbox = True
+        my_pos = self.GetPosition()
+        for i_coord, mouse_coord in enumerate(mouse_pos):
+            boundary_low = my_pos[i_coord] - self.size[i_coord] / 2
+            boundary_high = my_pos[i_coord] + self.size[i_coord] / 2
+            in_hitbox = in_hitbox and (boundary_low <= mouse_coord <= boundary_high)
+        return in_hitbox
+
+    def GetOtherThumb(self):
+        if self.parent.thumbs['low'] != self:
+            return 'low', self.parent.thumbs['low']
+        else:
+            return 'high', self.parent.thumbs['high']
+
+    def OnPaint(self, dc):
+        if self.dragged or not self.parent.IsEnabled():
+            thumb_color = self.dragged_color
+            thumb_shadow_color = self.dragged_shadow_color
+        elif self.mouse_over:
+            thumb_color = self.mouse_over_color
+            thumb_shadow_color = self.mouse_over_shadow_color
+        else:
+            thumb_color = self.normal_color
+            thumb_shadow_color = self.normal_shadow_color
+        my_pos = self.GetPosition()
+
+        # Draw thumb shadow (or anti-aliasing effect)
+        dc.SetBrush(wx.Brush(thumb_shadow_color, style=wx.BRUSHSTYLE_SOLID))
+        dc.SetPen(wx.Pen(thumb_shadow_color, width=1, style=wx.PENSTYLE_SOLID))
+        dc.DrawPolygon(points=self.thumb_shadow_poly,
+                       xoffset=my_pos[0] - self.size[0]/2,
+                       yoffset=my_pos[1] - self.size[1]/2)
+        # Draw thumb itself
+        dc.SetBrush(wx.Brush(thumb_color, style=wx.BRUSHSTYLE_SOLID))
+        dc.SetPen(wx.Pen(thumb_color, width=1, style=wx.PENSTYLE_SOLID))
+        dc.DrawPolygon(points=self.thumb_poly,
+                       xoffset=my_pos[0] - self.size[0] / 2,
+                       yoffset=my_pos[1] - self.size[1] / 2)
+
+
+
+
+
+
+
+
+
+
+class RangeSlider(BufferedWindow):
+    def __init__(self, parent, ID=wx.ID_ANY, lowValue=None, highValue=None, minValue=0, maxValue=100, zones = [],
+                 pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.SL_HORIZONTAL| wx.NO_FULL_REPAINT_ON_RESIZE, validator=wx.DefaultValidator,
+                 name='rangeSlider'):
+        
+        self.zones = zones
+        
+        if minValue > maxValue:
+            minValue, maxValue = maxValue, minValue
+        self.min_value = minValue
+        self.max_value = maxValue
+        if lowValue is None:
+            lowValue = self.min_value
+        if highValue is None:
+            highValue = self.max_value
+        if lowValue > highValue:
+            lowValue, highValue = highValue, lowValue
+        lowValue = max(lowValue, self.min_value)
+        highValue = min(highValue, self.max_value)
+
+        self.border_width = 8
+
+        self.thumbs = {
+            'low': SliderThumb(parent=self, value=lowValue, decal = -5),
+            'high': SliderThumb(parent=self, value=highValue, decal = 5)
+        }
+        self.thumb_width = self.thumbs['low'].size[0]
+
+        # Aesthetic definitions
+        self.slider_background_color = wx.Colour((231, 234, 234))
+        self.slider_outline_color = wx.Colour((214, 214, 214))
+        self.selected_range_color = wx.Colour((0, 120, 215))
+        self.selected_range_outline_color = wx.Colour((0, 120, 215))
+        
+        
+        super().__init__(parent, ID, pos=pos, size=size, style=style)
+        self.SetMinSize(size=(max(50, size[0]), max(26, size[1])))
+        
+        # Bind events
+        self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
+        self.Bind(wx.EVT_LEFT_UP, self.OnMouseUp)
+        self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnMouseLost)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnMouseEnter)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnMouseLeave)
+#         self.Bind(wx.EVT_PAINT, self.OnPaint)
+#         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+#         self.Bind(wx.EVT_SIZE, self.OnResize)
+
+    def Enable(self, enable=True):
+        super().Enable(enable)
+        self.Refresh()
+
+    def Disable(self):
+        super().Disable()
+        self.Refresh()
+
+    def SetValueFromMousePosition(self, click_pos):
+        for thumb in self.thumbs.values():
+            if thumb.dragged:
+                changed = thumb.SetPosition(click_pos)
+                if changed:
+                    self.SetZone(thumb)
+                return changed
+            
+        return False
+
+    def OnMouseDown(self, evt):
+        if not self.IsEnabled():
+            return
+        click_pos = evt.GetPosition()
+        for thumb in self.thumbs.values():
+            if thumb.IsMouseOver(click_pos):
+                thumb.dragged = True
+                thumb.mouse_over = False
+                break
+        refresh_needed = self.SetValueFromMousePosition(click_pos)
+        self.CaptureMouse()
+        if refresh_needed:
+            self.Refresh()
+
+    def OnMouseUp(self, evt):
+        if not self.IsEnabled():
+            return
+        refresh_needed = self.SetValueFromMousePosition(evt.GetPosition())
+        for thumb in self.thumbs.values():
+            thumb.dragged = False
+        if self.HasCapture():
+            self.ReleaseMouse()
+        if refresh_needed:
+            self.Refresh()
+
+    def OnMouseLost(self, evt):
+        print("OnMouseLost")
+        for thumb in self.thumbs.values():
+            thumb.dragged = False
+            thumb.mouse_over = False
+        self.Refresh()
+
+    def OnMouseMotion(self, evt):
+        if not self.IsEnabled():
+            return
+        refresh_needed = False
+        mouse_pos = evt.GetPosition()
+        if evt.Dragging() and evt.LeftIsDown():
+            refresh_needed = self.SetValueFromMousePosition(mouse_pos)
+        else:
+            for thumb in self.thumbs.values():
+                old_mouse_over = thumb.mouse_over
+                thumb.mouse_over = thumb.IsMouseOver(mouse_pos)
+                if old_mouse_over != thumb.mouse_over:
+                    refresh_needed = True
+        if refresh_needed:
+            
+            self.Refresh()
+
+    def OnMouseEnter(self, evt):
+#         print("OnMouseEnter")
+        if not self.IsEnabled():
+            return
+        mouse_pos = evt.GetPosition()
+        for thumb in self.thumbs.values():
+            if thumb.IsMouseOver(mouse_pos):
+                thumb.mouse_over = True
+                self.Refresh()
+                break
+
+    def OnMouseLeave(self, evt):
+#         print("OnMouseLeave")
+        if not self.IsEnabled():
+            return
+        for thumb in self.thumbs.values():
+            thumb.mouse_over = False
+        self.Refresh()
+
+#     def OnResize(self, evt):
+#         print("OnResize")
+#         Size  = self.ClientSize
+#         self._buffer = wx.Bitmap(*Size)
+#         self.UpdateDrawing()
+
+#     def OnPaint(self, evt):
+#         dc = wx.BufferedPaintDC(self, self._buffer)
+# #         evt.Skip()
+    
+    def Draw(self, dc):
+        w, h = self.GetClientSize()
+        
+        background_brush = wx.Brush(self.GetBackgroundColour(), wx.SOLID)
+        dc.SetBackground(background_brush)
+        dc.Clear()
+        
+        # Draw slider
+        track_height = 12
+        dc.SetPen(wx.Pen(self.slider_outline_color, width=1, style=wx.PENSTYLE_SOLID))
+        dc.SetBrush(wx.Brush(self.slider_background_color, style=wx.BRUSHSTYLE_SOLID))
+        dc.DrawRectangle(self.border_width, h/2 - track_height/2, w - 2 * self.border_width, track_height)
+        # Draw selected range
+        if self.IsEnabled():
+            dc.SetPen(wx.Pen(self.selected_range_outline_color, width=1, style=wx.PENSTYLE_SOLID))
+            dc.SetBrush(wx.Brush(self.selected_range_color, style=wx.BRUSHSTYLE_SOLID))
+        else:
+            dc.SetPen(wx.Pen(self.slider_outline_color, width=1, style=wx.PENSTYLE_SOLID))
+            dc.SetBrush(wx.Brush(self.slider_outline_color, style=wx.BRUSHSTYLE_SOLID))
+        low_pos = self.thumbs['low'].GetPosition()[0]
+        high_pos = self.thumbs['high'].GetPosition()[0]
+        dc.DrawRectangle(low_pos, h / 2 - track_height / 4, high_pos - low_pos, track_height / 2)
+        # Draw thumbs
+        for thumb in self.thumbs.values():
+            thumb.OnPaint(dc)
+        
+#         del dc
+#         self.Refresh(eraseBackground=False)
+#         self.Update()
+
+#     def OnEraseBackground(self, evt):
+#         # This should reduce flickering
+#         pass
+
+    def GetZone(self, slider):
+#         print("zones", self.zones)
+        for z in self.zones:
+            if slider.value >= z[0] and slider.value <= z[-1]:
+                return z
+        return
+    
+    def SetZone(self, slider):
+        if slider == self.thumbs['low']:
+            zoneMin = self.GetZone(slider)
+            zoneMax = self.GetZone(self.thumbs['high'])
+
+            if zoneMin is not None and zoneMin == zoneMax:
+                self.thumbs['low'].SetValue(zoneMin[0])
+                self.thumbs['high'].SetValue(zoneMin[-1])
+            elif zoneMin is not None and zoneMax is None:
+                self.thumbs['low'].SetValue(zoneMin[0])
+                self.thumbs['high'].SetValue(zoneMin[-1])
+            elif zoneMin is  None and zoneMax is not None:
+                self.thumbs['high'].SetValue(self.thumbs['low'].value)
+        
+        else:
+            zoneMax = self.GetZone(slider)
+            zoneMin = self.GetZone(self.thumbs['low'])
+
+            if zoneMax is not None and zoneMin == zoneMax:
+                self.thumbs['low'].SetValue(zoneMax[0])
+                self.thumbs['high'].SetValue(zoneMax[-1])
+            elif zoneMax is not None and zoneMin is None:
+                self.thumbs['low'].SetValue(zoneMax[0])
+                self.thumbs['high'].SetValue(zoneMax[-1])
+            elif zoneMax is  None and zoneMin is not None:
+                self.thumbs['low'].SetValue(self.thumbs['high'].value)
+    
+    def GetValues(self):
+        return self.thumbs['low'].value, self.thumbs['high'].value
+
+    def SetValues(self, lowValue, highValue):
+        if lowValue > highValue:
+            lowValue, highValue = highValue, lowValue
+        lowValue = max(lowValue, self.min_value)
+        highValue = min(highValue, self.max_value)
+        self.thumbs['low'].SetValue(lowValue)
+        self.thumbs['high'].SetValue(highValue)
+        self.Refresh()
+
+    def GetMax(self):
+        return self.max_value
+
+    def GetMin(self):
+        return self.min_value
+
+    def SetMax(self, maxValue):
+        if maxValue < self.min_value:
+            maxValue = self.min_value
+        _, old_high = self.GetValues()
+        if old_high > maxValue:
+            self.thumbs['high'].SetValue(maxValue)
+        self.max_value = maxValue
+        self.Refresh()
+
+    def SetMin(self, minValue):
+        if minValue > self.max_value:
+            minValue = self.max_value
+        old_low, _ = self.GetValues()
+        if old_low < minValue:
+            self.thumbs['low'].SetValue(minValue)
+        self.min_value = minValue
+        self.Refresh()
+
+
+
+
+
+
+
+
 
 class RangeSlider2(wx.Slider):
     def __init__(self, left_gap, right_gap, *args, **kwargs):
@@ -1745,7 +2227,7 @@ class RangeSlider2(wx.Slider):
 
 
 
-class RangeSlider(wx.Panel):
+class RangeSlider3(wx.Panel):
     def __init__ (self, parent, pos, minPos, maxPos, zones = [], h = 18):
         super(RangeSlider, self).__init__(parent, wx.ID_ANY)
 
@@ -1757,10 +2239,10 @@ class RangeSlider(wx.Panel):
         
         self.sldMax = wx.Slider(self, value=pos[1], minValue=minPos, maxValue=maxPos,
                                 size = (-1, h), 
-                                style=wx.SL_HORIZONTAL | wx.SL_TOP )
+                                style=wx.SL_HORIZONTAL | wx.SL_TOP|wx.SL_SELRANGE)
         self.sldMin = wx.Slider(self, value=pos[0], minValue=minPos, maxValue=maxPos,
                                 size = (-1, h),
-                                style =wx.SL_HORIZONTAL )
+                                style =wx.SL_HORIZONTAL | wx.SL_BOTTOM|wx.SL_SELRANGE)
         self.sldMax.SetMaxSize((-1, h))
         self.sldMin.SetMaxSize((-1, h))
         self.sldMax.Bind(wx.EVT_SCROLL, self.OnSliderScrollMax)

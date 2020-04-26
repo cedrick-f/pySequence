@@ -43,6 +43,7 @@ Pour obtenir un GUI au bon DPI pour écran haute résolution
 
 
 import ctypes, sys
+import wx
 
 # Sources :
 # https://stackoverflow.com/questions/12471772/what-is-better-way-of-getting-windows-version-in-python
@@ -58,15 +59,24 @@ def get_winver():
         sp = int(r.group(0)) if r else 0
     return (wv.major, wv.minor, sp)
 
-    
-SSCALE = 1.0
+
+# def set_screen_scale(pos = None):
+#     print("set_screen_scale")
+#     for index in range(wx.Display.GetCount()):
+#         display = wx.Display(index)
+#         geo = display.GetGeometry()
+#         print("  ", geo)
+
+
+
+# SSCALE = 1.0
 def set_screen_scale():
-    global SSCALE
+#     global SSCALE
     if not 'win' in sys.platform:
         return
     
-    user32 = ctypes.windll.user32
-    screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+    return
+#     screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
     
     WIN_8 = (6, 2, 0)
     WIN_7 = (6, 1, 0)
@@ -85,19 +95,20 @@ def set_screen_scale():
     
     if get_winver() >= WIN_8:
         # Set DPI Awareness  (Windows 10 and 8)
-        errorCode = ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)
         # the argument is the awareness level, which can be 0, 1 or 2:
         # for 1-to-1 pixel control I seem to need it to be non-zero (I'm using level 2)
     elif get_winver() >= WIN_VISTA:
+        user32 = ctypes.windll.user32
         # Set DPI Awareness  (Windows 7 and Vista)
-        success = user32.SetProcessDPIAware()
+        user32.SetProcessDPIAware()
         # behaviour on later OSes is undefined, although when I run it on my Windows 10 machine, it seems to work with effects identical to SetProcessDpiAwareness(1)
 
 
-    screensize2 = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+#     screensize2 = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 #     print "screensize2", screensize2
     
     # Facteur d'échelle : 
     # tout ce qui est sensé être en PIXEL doit être multiplié par ce facteur
-    SSCALE = 1.0*screensize2[0]/screensize[0]
-    print(("Facteur d'echelle :", SSCALE))
+#     SSCALE = 1.0*screensize2[0]/screensize[0]
+#     print(("Facteur d'echelle :", SSCALE))

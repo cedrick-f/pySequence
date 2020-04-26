@@ -82,6 +82,17 @@ minFont = 0.006 * COEF
 maxFont = 0.1 * COEF
 # font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
 
+
+
+# def my_except_hook(exctype, value, traceback):
+#     if exctype == cairo.CairoError:
+#         print("cairocffi.CairoError")
+#     else:
+#         sys.__excepthook__(exctype, value, traceback)
+# sys.excepthook = my_except_hook
+
+
+
     
 def getPts(lst_rect):
     """Renvoie la liste des points Haut-Gauche des rectangles contenus dans <lst_rect>
@@ -732,6 +743,18 @@ class Base_Fiche_Doc():
         self.font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
     
     
+    
+    ######################################################################################  
+    def getGroupes(self):
+        return {}
+    
+    
+    ######################################################################################  
+    def getSSGroupes(self):
+        return {}
+    
+    
+    
     ########################################################################################            
     def initOptions(self, ctx):#
         # Options générales
@@ -1351,7 +1374,13 @@ class Periodes(Elem_Dessin):
     #     ctx.set_source_rgba(1,1,1,1)
     #     ctx.paint()
         self.rect = (0,0,w,h)
-        self.draw(ctx)
+        try:
+            self.draw(ctx)
+        except:
+            try:
+                self.draw(ctx)
+            except:
+                print("cairocffi.CairoError")
 #         try:
 #             self.draw((0,0,w,h))
 #         except: # 2ème tentative

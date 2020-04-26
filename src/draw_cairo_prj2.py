@@ -246,6 +246,11 @@ class Projet(Base_Fiche_Doc):
         self.p_coul_cmpS = (0.598, 0.7, 1, 0.2)    # couleur "Soutenance"
         
     
+    #####################################################################################
+    def getDocument(self):
+        return self.prj
+    
+    
     ######################################################################################  
     def DefinirZones(self):
         """ Calcule les positions et dimensions des différentes zones de tracé

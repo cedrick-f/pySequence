@@ -75,7 +75,7 @@ import version
 
 # Facteur d'échelle à appliquer à toutes les dimensions des widgets
 from dpi_aware import *
-set_screen_scale()
+# set_screen_scale()
 
 
 
@@ -92,6 +92,26 @@ class SingleInstApp(wx.App):
         Source d'inspiration :
         Cody Precord : "wxPythyon 2.8 Application Development Cookbook - 2010"
     """
+    
+#     try:
+#         from ctypes import OleDLL
+#         # Turn on high-DPI awareness to make sure rendering is sharp on big
+#         # monitors with font scaling enabled.
+#         OleDLL('shcore').SetProcessDpiAwareness(1)
+# 
+#     except AttributeError:
+#         # We're on a non-Windows box.
+#         pass
+# 
+#     except OSError:
+#         # exc.winerror is often E_ACCESSDENIED (-2147024891/0x80070005).
+#         # This occurs after the first run, when the parameter is reset in the
+#         # executable's manifest and then subsequent calls raise this exception
+#         # See last paragraph of Remarks at
+#         # [https://msdn.microsoft.com/en-us/library/dn302122(v=vs.85).aspx](https://msdn.microsoft.com/en-us/library/dn302122(v=vs.85).aspx)
+#         pass
+    
+    
     
     PORT = 27115
 
