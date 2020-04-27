@@ -962,7 +962,9 @@ class ElementBase(Grammaire):
     
     ######################################################################################     
     def GetClasse(self):
-        if hasattr(self, 'projet') and self.projet is not None:
+        if hasattr(self, 'doc') and self.doc is not None:
+            cl = self.doc.classe
+        elif hasattr(self, 'projet') and self.projet is not None:
             cl = self.projet.classe
         elif hasattr(self, 'sequence') and self.sequence is not None:
             cl = self.sequence.classe
@@ -992,6 +994,7 @@ class ElementBase(Grammaire):
 
     ######################################################################################  
     def GetReferentiel(self):
+        return self.GetClasse().referentiel
         try:
             return self.GetClasse().referentiel
         except:
@@ -1275,11 +1278,15 @@ class Classe(ElementBase):
                 if code is not None and code != self.typeEnseignement:
                     self.typeEnseignement = code
                 
+            if self.typeEnseignement == 'STI': # Correction version 8.4-beta11
+                self.typeEnseignement = 'STI2D'
             if self.typeEnseignement in REFERENTIELS:
 #                 print("   TypeEnseignement :", self.typeEnseignement)
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
                 self.referentiel.postTraiter()
                 self.referentiel.completer(forcer = True)
+            
+                
             else:
                 err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
             
@@ -5117,7 +5124,7 @@ class Projet(BaseDoc, Grammaire):
 
     ######################################################################################  
     def AjouterGroupe(self, event = None):
-#         print("AjouterGroupe", self.GetProjetRef().maxGroupes)
+        print("AjouterGroupe", self.GetReferentiel().Code)
         if len(self.groupes) < self.GetProjetRef().maxGroupes:
             e = Groupe(self, self.GetNewIdGroupe())
             self.groupes.append(e)
@@ -5823,18 +5830,20 @@ class Projet(BaseDoc, Grammaire):
         """
         pb = []
         prj = self.GetProjetRef()
+        prjdef = REFERENTIELS[self.GetTypeEnseignement()].getProjetDefaut()
+#         print("VerifierVersionGrilles", prj, prjdef)
         if prj is None:
             return
         
-        for k in prj.parties.keys():
-            if not os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
-                prjdef = REFERENTIELS[self.GetTypeEnseignement()].getProjetDefaut()
-                if os.path.isfile(grilles.getFullNameGrille(prjdef.grilles[k][0])):
-                    prj.grilles[k] = prjdef.grilles[k]
-                    prj.cellulesInfo[k] = prjdef.cellulesInfo[k]
-                else:
-#                     print(k, grilles.getFullNameGrille(prjdef.grilles[k][0]))
-                    pb.append(k)
+        for k in prj.parties:
+            if k in prj.grilles and k in prjdef.grilles:
+                if not os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
+                    if os.path.isfile(grilles.getFullNameGrille(prjdef.grilles[k][0])):
+                        prj.grilles[k] = prjdef.grilles[k]
+                        prj.cellulesInfo[k] = prjdef.cellulesInfo[k]
+                    else:
+    #                     print(k, grilles.getFullNameGrille(prjdef.grilles[k][0]))
+                        pb.append(k)
         
         if len(pb) > 0:
             messageErreur(self.GetApp(), "Fichier non trouvé !",
@@ -10862,8 +10871,8 @@ class FonctionService(ElementAvecLien, ElementBase):
         ElementBase.__init__(self, 500*SSCALE)
         
         ref = self.GetReferentiel()
-        Grammaire.__init__(self, ref.getLabel("EXIG").nom_code)
-        
+        Grammaire.__init__(self, ref.labels["ELEVES"][0])
+      
         self.intitule  = intitule
         
         # Les élèves concernés (liste d'élèves)
@@ -13387,11 +13396,12 @@ class Eleve(Personne):
         
         prefixes = {}
         for part in prj.parties:
-            fo = prj.grilles[part][0]
-            if not fo in prefixes.keys():
-                prefixes[fo] = [part]
-            else:
-                prefixes[fo].append(part)
+            if part in prj.grilles:
+                fo = prj.grilles[part][0]
+                if not fo in prefixes.keys():
+                    prefixes[fo] = [part]
+                else:
+                    prefixes[fo].append(part)
             
         nomFichiers = {} 
         for fo, parts in prefixes.items():
@@ -13474,14 +13484,14 @@ class Eleve(Personne):
             :rtype: list
         
         """
-        print("GenererGrille élève", self, messageFin)
+#         print("GenererGrille élève", self, messageFin)
 #         print("  ", nomFichiers)
         
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(dirpath)
             if nomFichiers is None or not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}, dirpath):
                 return []
-            print("  >>> Fichiers :", nomFichiers)
+#             print("  >>> Fichiers :", nomFichiers)
         
         
 #         prj = self.GetDocument().GetProjetRef()
@@ -14172,7 +14182,7 @@ class Groupe(Eleve):
         self.eleves = []
         
         self.image = None
-        
+        print("g:", self.GetReferentiel().Code)
         self.typeEnseignement = self.GetReferentiel().Code
         self.specialite = []
 

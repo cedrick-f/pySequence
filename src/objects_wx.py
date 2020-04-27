@@ -662,9 +662,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     ###############################################################################################
     def onMoveWindow(self, event):
         global SSCALE
-        print("onMoveWindow")
-        print("   display:",wx.Display.GetFromWindow(self))
-        print("   PPI:", getDisplayPPI(self))
+        pass
+#         print("onMoveWindow")
+#         print("   display:",wx.Display.GetFromWindow(self))
+#         print("   PPI:", getDisplayPPI(self))
 #         SSCALE = getDisplayPPI(self)[0]/96
         
         
@@ -851,15 +852,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         redo_bmp = scaleImage(images.Icone_redo.GetBitmap(), *tsize)
         full_bmp = scaleImage(images.Icone_fullscreen.GetBitmap(), *tsize)
         
-        
-#         
-#         new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
-#         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
-#         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
-#         saveall_bmp =  images.Icone_saveall.GetBitmap()
-#         saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
-#         undo_bmp = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, tsize)
-#         redo_bmp = wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
         
         self.tb.SetToolBitmapSize(tsize)
         
@@ -2876,18 +2868,20 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def VerifierReferentiel(self, parent, nomFichier):
 #         print("VerifierReferentiel", self.classe.GetReferentiel(), Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code])
-        if self.classe.GetReferentiel().Code in REFERENTIELS:
-            e = self.classe.GetReferentiel() == Referentiel.REFERENTIELS[self.classe.GetReferentiel().Code]
-            if not e:
-    #             print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
-                dlg = DiffRefChoix(parent, nomFichier)
-                val = dlg.ShowModal()
-                dlg.Destroy()
-                if val == 1:
-                    return 1
-                elif val == 2:
-                    return 2
-                
+        ref = self.classe.GetReferentiel()
+        e = False
+        if ref.Code in REFERENTIELS:
+            e = ref == REFERENTIELS[ref.Code]
+        if not e:
+#             print("   Différence !!!! (", self.classe.version ,"-", version.__version__, ")")
+            dlg = DiffRefChoix(parent, nomFichier)
+            val = dlg.ShowModal()
+            dlg.Destroy()
+            if val == 1:
+                return 1
+            elif val == 2:
+                return 2
+         
 #             raise DiffReferentiel
                
                
@@ -5698,7 +5692,10 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #         self.Bind(wx.EVT_SIZE, self.OnResize)
         
 
-
+        self.clip = wx.Clipboard()
+        self.x = wx.BitmapDataObject()
+        
+        
 
     ######################################################################################              
     def OnResize(self, evt):
@@ -5739,6 +5736,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.boxImg = myStaticBox(parent, -1, titre.capitalize())
         bsizer = wx.StaticBoxSizer(self.boxImg, wx.VERTICAL)
         image = wx.StaticBitmap(parent, -1, defaut)
+        image.Bind(wx.EVT_RIGHT_UP, self.OnRClickImage)
         self.image = image
         self.SetImage()
         bsizer.Add(image, 1)#, flag = wx.EXPAND)
@@ -5772,7 +5770,27 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.objet.image = None
         self.SetImage(True)
         
-        
+    #############################################################################            
+    def OnRClickImage(self, event):
+        print("OnRClickImage")
+        self.clip.Open()
+        ok = self.clip.GetData(self.x)
+        self.clip.Close()
+        if ok:
+            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", 
+                                                          self.collerImage, 
+                                                          None,
+                                                          True
+                                                          ]
+                                                        ])
+     
+ 
+ 
+    #############################################################################            
+    def collerImage(self, sendEvt = False):
+        self.support.image = self.x.GetBitmap()
+#        self.SetImage(True)
+
     #############################################################################            
     def OnClickImage(self, event):
         mesFormats = "Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
@@ -6717,7 +6735,7 @@ class PositionCtrl(wx.Panel):
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
         
         projets = [[x-1 for x in p.periode] for p in projets.values()]
-        print("projets", projets)
+#         print("projets", projets)
         mini, maxi = periodes[0], periodes[-1]#0, sum(p[1] for p in periodes)-1
         if totmax == None:
             totmax = maxi+1
@@ -11765,7 +11783,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Elèves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, "%s impliqués" %self.tache.GetReferentiel().getLabel("ELEVES").Plur_())
+            self.box = myStaticBox(pageGen, -1, "%s impliqués" %ref.getLabel("ELEVES").Plur_())
 #            self.box.SetMinSize((150,-1))
 #             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             ebsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -11787,7 +11805,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Description de la tâche
         #
         dbox = myStaticBox(pageGen, -1, "Description détaillée de la tâche")
-        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+        dbsizer = wx.StaticBoxSizer(dbox, wx.HORIZONTAL)
 #        bd = wx.Button(pageGen, -1, u"Editer")
         tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
         tc.SetToolTip("Donner une description détaillée de la tâche :\n" \
@@ -11796,28 +11814,18 @@ class PanelPropriete_Tache(PanelPropriete):
                             " - les résultats attendus\n" \
                             " - les différentes étapes\n" \
                             " - la répartition du travail entre %s\n"\
-                            " - ..." %self.tache.GetReferentiel().getLabel("ELEVES").les_())
+                            " - ..." %ref.getLabel("ELEVES").les_())
         tc.SetTitre("Description détaillée de la tâche")
      
+        dbsizer.Add(tc, flag = wx.EXPAND)
 
-#        tc.SetMaxSize((-1, 150))
-#        tc.SetMinSize((150, 60))
-        dbsizer.Add(tc,1, flag = wx.EXPAND)
-#        dbsizer.Add(bd, flag = wx.EXPAND)
-#        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-#         if tache.phase in TOUTES_REVUES_EVAL_SOUT:
-#             pageGen.sizer.Add(dbsizer, (1,0), (2, 2), flag = wx.EXPAND)
-#             pageGen.sizer.AddGrowableCol(0)
-#         else:
-#             pageGen.sizer.Add(dbsizer, (0,4), (3, 1), flag = wx.EXPAND)
-#             pageGen.sizer.AddGrowableCol(4)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
-        c3 = wx.BoxSizer(wx.VERTICAL)
-        c3.Add(dbsizer, 1, flag = wx.EXPAND)
-        pageGen.sizer.Add(c3, (0,3), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 2)
+#         c3 = wx.BoxSizer(wx.VERTICAL)
+#         c3.Add(dbsizer, 1, flag = wx.EXPAND)
+        pageGen.sizer.Add(dbsizer, (0,3), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 2)
         
 #         pageGen.sizer.AddGrowableRow(1)
         
@@ -13427,7 +13435,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         te.MiseAJour()
 #         te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
 
-        self.sizer.Add(sb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        self.sizer.Add(sb, (0,0), (2,1), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#
         self.cb_type = te
         
         
@@ -13441,10 +13449,10 @@ class PanelPropriete_Groupe(PanelPropriete):
         textctrl = wx.TextCtrl(self, 1)
         self.textctrln = textctrl
     
-        bsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
-        self.sizer.Add(bsizer, (0,1), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        self.sizer.Add(bsizer, (0,1), (1,1), flag =  wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
         
         
         
@@ -13455,7 +13463,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(self, -1, "Académie :")
-        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+        sh.Add(t, flag = wx.EXPAND)
         
         lstAcad = sorted([a[0] for a in list(constantes.ETABLISSEMENTS.values())])
         self.cba = wx.ComboBox(self, -1, "sélectionner une académie ...", (-1,-1), 
@@ -13468,12 +13476,12 @@ class PanelPropriete_Groupe(PanelPropriete):
 
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
 #         self.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
-        sh.Add(self.cba, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
+        sh.Add(self.cba, flag = wx.EXPAND|wx.LEFT, border = 5)
         sb.Add(sh, flag = wx.EXPAND)
         
         sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(self, -1, "Ville :")
-        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+        sh.Add(t, flag = wx.EXPAND)
      
         self.cbv = SlimSelector(self, -1, "sélectionner une ville ...", (-1,-1), 
                          (-1, -1), [],
@@ -13502,7 +13510,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cbe)
         sb.Add(self.cbe, flag = wx.EXPAND)
         
-        self.sizer.Add(sb, (1,1), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        self.sizer.Add(sb, (1,1), (1,1), flag =  wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
         
@@ -13510,7 +13518,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         # Portrait
         #
         isizer = self.CreateImageSelect(self, titre = "portrait", prefixe = "le ", defaut = constantes.AVATAR_DEFAUT)
-        self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
                     
                     
                     
@@ -13536,7 +13544,7 @@ class PanelPropriete_Groupe(PanelPropriete):
         sb.Add(self.list_ctrl, flag = wx.EXPAND)
         
         
-        self.sizer.Add(sb, (0,3), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+        self.sizer.Add(sb, (0,3), (2,1), flag =  wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
         
         self.MiseAJour()
         
@@ -13788,16 +13796,6 @@ class PanelPropriete_Support(PanelPropriete):
         lsizer = self.CreateLienSelect(self)
         self.sizer.Add(lsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         
-#         box = myStaticBox(self, -1, u"Lien externe")
-#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#         self.selec = URLSelectorCombo(self, self.support.lien, self.support.GetPath())
-#         bsizer.Add(self.selec, flag = wx.EXPAND)
-#         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
-#         self.btnlien.Hide()
-#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-#         bsizer.Add(self.btnlien)
-#         self.sizer.Add(bsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
-        
         
         #
         # Image
@@ -13823,7 +13821,7 @@ class PanelPropriete_Support(PanelPropriete):
         # Description du support
         #
         dbox = myStaticBox(self, -1, "Description du support")
-        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+        dbsizer = wx.StaticBoxSizer(dbox, wx.HORIZONTAL)
 #        bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.support, toolBar = True)
         tc.SetTitre("Description du support")
@@ -13833,10 +13831,11 @@ class PanelPropriete_Support(PanelPropriete):
                             " - liens Internet\n" \
                             " - ..."
                             )
-        tc.SetMaxSize((-1, 150))
+#         tc.SetMaxSize((-1, 150))
 #        dbsizer.Add(bd, flag = wx.EXPAND)
-        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+        dbsizer.Add(tc, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+
         self.sizer.Add(dbsizer, (0,2), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
@@ -13849,9 +13848,6 @@ class PanelPropriete_Support(PanelPropriete):
         self.sizer.Layout()
         
         
-        
-        self.clip = wx.Clipboard()
-        self.x = wx.BitmapDataObject()
         
         
     ######################################################################################  
@@ -13873,74 +13869,6 @@ class PanelPropriete_Support(PanelPropriete):
     #############################################################################            
     def GetDocument(self):
         return self.support.parent
-    
-    
-    #############################################################################            
-    def OnRClickImage(self, event):
-        self.clip.Open()
-        ok = self.clip.GetData(self.x)
-        self.clip.Close()
-        if ok:
-            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", 
-                                                          self.collerImage, 
-                                                          None,
-                                                          True
-                                                          ]
-                                                        ])
-            
-            
-#     #############################################################################            
-#     def OnClick(self, event):
-#         self.support.AfficherLien(self.GetDocument().GetPath())
-        
-#         else:
-#             mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-#                            u"Tous les fichiers|*.*'"
-#             
-#             dlg = wx.FileDialog(
-#                                 self, message=u"Ouvrir une image",
-#     #                            defaultDir = self.DossierSauvegarde, 
-#                                 defaultFile = "",
-#                                 wildcard = mesFormats,
-#                                 style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-#                                 )
-#                 
-#             # Show the dialog and retrieve the user response. If it is the OK response, 
-#             # process the data.
-#             if dlg.ShowModal() == wx.ID_OK:
-#                 # This returns a Python list of files that were selected.
-#                 paths = dlg.GetPaths()
-#                 nomFichier = paths[0]
-#                 self.support.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
-#                 self.SetImage(True)
-#             
-#             dlg.Destroy()
-# 
-# 
-#     #############################################################################            
-#     def SetImage(self, sendEvt = False):
-#         if self.support.image != None:
-#             
-# #             img = rognerImage(self.support.image)
-#             
-# #             w, h = self.support.image.GetSize()
-# #             wf, hf = 200.0, 100.0
-# #             r = max(w/wf, h/hf)
-# #             _w, _h = w/r, h/r
-# # #            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-#             self.image.SetBitmap(rognerImage(self.support.image, 200,200))
-# #        self.support.SetImage()
-#         self.Layout()
-#         
-#         if sendEvt:
-#             self.sendEvent(modif = u"Modification de l'illustration du Support",
-#                            obj = self)
-
-
-    #############################################################################            
-    def collerImage(self, sendEvt = False):
-        self.support.image = self.x.GetBitmap()
-#        self.SetImage(True)
     
 
     #############################################################################            
@@ -14066,7 +13994,7 @@ class PanelPropriete_Modele(PanelPropriete):
         # Description du modèle
         #
         dbox = myStaticBox(self, -1, "Description du modèle")
-        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+        dbsizer = wx.StaticBoxSizer(dbox, wx.HORIZONTAL)
 #        bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.modele, toolBar = True)
         tc.SetTitre("Description du modèle")
@@ -14076,9 +14004,9 @@ class PanelPropriete_Modele(PanelPropriete):
                             " - paramètres principaux\n" \
                             " - ..."
                             )
-        tc.SetMaxSize((-1, 150*SSCALE))
+#         tc.SetMaxSize((-1, 150*SSCALE))
 #        dbsizer.Add(bd, flag = wx.EXPAND)
-        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+        dbsizer.Add(tc, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         self.sizer.Add(dbsizer, (0,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
@@ -14092,9 +14020,7 @@ class PanelPropriete_Modele(PanelPropriete):
         self.sizer.Layout()
         
         
-        
-        self.clip = wx.Clipboard()
-        self.x = wx.BitmapDataObject()
+
         
         
     ######################################################################################  
@@ -14116,25 +14042,6 @@ class PanelPropriete_Modele(PanelPropriete):
     #############################################################################            
     def GetDocument(self):
         return self.modele.GetDocument()
-    
-    
-    #############################################################################            
-    def OnRClickImage(self, event):
-        self.clip.Open()
-        ok = self.clip.GetData(self.x)
-        self.clip.Close()
-        if ok:
-            self.GetFenetreDoc().AfficherMenuContextuel([["Coller l'image", 
-                                                          self.collerImage, 
-                                                          None,
-                                                          True
-                                                          ]
-                                                        ])
-            
-
-    #############################################################################            
-    def collerImage(self, sendEvt = False):
-        self.modele.image = self.x.GetBitmap()
     
 
     #############################################################################            
@@ -17173,6 +17080,7 @@ class Panel_SelectEnseignement(wx.Panel):
         if self.classe is not None:
             return self.classe.referentiel
         if self.groupe is not None:
+            return self.groupe.GetReferentiel()
             return REFERENTIELS[self.groupe.typeEnseignement]
     
     
@@ -20060,17 +19968,17 @@ class DiffRefChoix(wx.Dialog):
                                      
                            )
         
-        sizer.Add(st, 0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 10)
+        sizer.Add(st, 0,  wx.ALL|wx.EXPAND, 10)#wx.ALIGN_CENTRE|
         
         button = wx.Button(self, -1, "Remplacer le référentiel")
         button.SetToolTip("Remplacer le référentiel intégré au document\npar celui fourni avec pySéquence")
         self.Bind(wx.EVT_BUTTON, self.OnRepl, button)
-        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 15)
+        sizer.Add(button,0, wx.ALL|wx.EXPAND, 15)
         
         button = wx.Button(self, -1, "Conserver le référentiel")
         button.SetToolTip("Conserver le référentiel intégré au document")
         self.Bind(wx.EVT_BUTTON, self.OnCons, button)
-        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 15)
+        sizer.Add(button,0, wx.ALL|wx.EXPAND, 15)
         
         self.SetSizer(sizer)
         sizer.Fit(self)

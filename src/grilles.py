@@ -667,19 +667,6 @@ class PyExcel:
     def __init__(self,filename=None):
         # Ouverture d'EXcel
         self.xlApp = getXlApp()
-#         try:
-#             self.xlApp = win32com.client.GetActiveObject('Excel.Application')  # voir aussi avec DispatchEx ? ou bien win32com.client.gencache.EnsureDispatch("Excel.Application")
-#         except:
-#             try:
-#                 self.xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
-#             except:
-#                 try:
-#                     self.xlApp = win32com.client.gencache.EnsureDispatch('Excel.Application')
-#                 except:
-#                     try:
-#                         self.xlApp = win32com.client.DispatchEx('Excel.Application')
-#                     except:
-#                         raise Exception("Impossible d'ouvrir Excel")
         
         # Déclenche une erreur si Excel est occupé :
         print("Excel :", self.xlApp)

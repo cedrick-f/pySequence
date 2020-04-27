@@ -2038,7 +2038,7 @@ class Referentiel(XMLelem):
 
 
     #############################################################################
-    def getProjetDefaut(self, spe = None):
+    def getProjetDefaut(self, spe = []):
         """ Renvoie le code de l'épreuve de projet (évaluation) par défaut
             (correspondant aux spécialités <spe>)
             
