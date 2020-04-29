@@ -4914,35 +4914,12 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         # After drawing empty bitmap start update
 #         wx.CallAfter(self.SizeUpdate)
         self.SizeUpdate()
-        
-
-#     #############################################################################            
-#     def OnResize(self, evt):
-#         print "OnResize"
-#         w = self.GetClientSize()[0]
-#         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
-# 
-#         self.InitBuffer()
-#         if w > 0 and self.IsShown():
-#             self.Redessiner()
-
-#     #############################################################################            
-#     def InitBuffer(self):
-#         w,h = self.GetVirtualSize()
-#         self.buffer = wx.Bitmap(w,h)
 
 
     #-------------------------------------------------------------------------
     def OnEraseBackground(self, event):
         pass # Or None
 
-#     #-------------------------------------------------------------------------
-#     def OnTimer(self, event):
-#         # Start another thread which will update the bitmap
-#         # But only if another is not still running!
-#         if self.t is None:
-#             self.timer.Stop()
-#             self.t = startWorker(self.ComputationDone, self.Compute)
 
     #-------------------------------------------------------------------------
     def SizeUpdate(self):
@@ -4978,23 +4955,6 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         return self.buffer
 
 
-
-#     #-------------------------------------------------------------------------
-#     def ComputationDone(self, r):
-#         # source : https://stackoverflow.com/questions/5732952/draw-on-image-buffer-memorydc-in-separate-thread
-#         # When done, take bitmap and place it to the drawing buffer
-#         # Invalidate panel, so it is redrawn
-#         # But not if the later thread is waiting!
-# #         temp = r.get()
-# #         try:
-#         if not self.timer.IsRunning():
-# #             print("ComputationDone")
-# #             self.buffer = temp
-#             self.Refresh()
-#             self.Update()
-# #         except:
-# #             print("Erreur Computation")
-#         self.t = None
         
 # BaseFiche = BaseFiche2 # Décommenter pour mod debug
 
@@ -6048,6 +6008,8 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def construire(self):
 #        ref = self.projet.GetReferentiel()
+        
+        # Conteneur pour les différentes pages du NoteBook (hormis pageGen)
         self.pages = {}
 
 
@@ -6135,12 +6097,6 @@ class PanelPropriete_Projet(PanelPropriete):
         #   Dans MiseAJour()
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(1)
-
-
-
-        
-        
-        
         
         
 
@@ -6196,22 +6152,22 @@ class PanelPropriete_Projet(PanelPropriete):
             maj = True
             #obj = 'intit'
             
-        elif 'ORI' in list(self.pages.keys()) and event.GetEventObject() == self.pages['ORI'][1]:
+        elif 'ORI' in self.pages and event.GetEventObject() == self.pages['ORI'][1]:
             self.projet.origine = self.pages['ORI'][1].GetText()
             maj = False
 #             obj = 'ORI'
             
-        elif 'CCF' in list(self.pages.keys()) and event.GetEventObject() == self.pages['CCF'][1]:
+        elif 'CCF' in self.pages and event.GetEventObject() == self.pages['CCF'][1]:
             self.projet.contraintes = self.pages['CCF'][1].GetText()
             maj = False
 #             obj = 'CCF'
             
-        elif 'OBJ' in list(self.pages.keys()) and event.GetEventObject() == self.pages['OBJ'][1]:
+        elif 'OBJ' in self.pages and event.GetEventObject() == self.pages['OBJ'][1]:
             self.projet.production = self.pages['OBJ'][1].GetText()
             maj = False
 #             obj = 'OBJ'
             
-        elif 'SYN' in list(self.pages.keys()) and event.GetEventObject() == self.pages['SYN'][1]:
+        elif 'SYN' in self.pages and event.GetEventObject() == self.pages['SYN'][1]:
             self.projet.synoptique = self.pages['SYN'][1].GetText()
             maj = False
 #             obj = 'SYN'
@@ -6277,7 +6233,10 @@ class PanelPropriete_Projet(PanelPropriete):
             
     #############################################################################            
     def MiseAJourTypeEnseignement(self, sendEvt = False, miseAJourPosition = True):
-        
+        """ Modifications structurelles
+            après un changement d'enseignement
+            ou de type de projet
+        """
         prj = self.projet.GetProjetRef()
 #        print "MiseAJourTypeEnseignement projet", ref.code
         doc = self.GetDocument()
@@ -6321,15 +6280,15 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.nb.AddPage(self.pages['SML'], prj.attributs['SML'][0])
                 
              
-                
+                self.psysml = []
                 for i, n in enumerate(prj.attributs['SML'][2]):
                     code = "SML"+str(i)
                     
                     sb = myStaticBox(self.pages['SML'], -1, n)
                     sbs = wx.StaticBoxSizer(sb, wx.VERTICAL)
-                    ps = Panel_Select_sysML(self.pages['SML'], doc, code)
-                    sbs.Add(ps, flag = wx.EXPAND)
-                    self.pages['SML'].sizer.Add(sbs, (0,i), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+                    self.psysml.append(Panel_Select_sysML(self.pages['SML'], doc, code))
+                    sbs.Add(self.psysml[-1], flag = wx.EXPAND)
+                    self.pages['SML'].sizer.Add(sbs, (0,i), flag = wx.EXPAND|wx.LEFT|wx.TOP|wx.BOTTOM, border = 2)
                 
                     
                 self.pages['SML'].sizer.AddGrowableRow(0)
@@ -6367,6 +6326,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.nb.SetPageText(self.GetPageNum(self.pages[k][0]), prj.attributs[k][0])
                 self.pages[k][1].SetToolTip(prj.attributs[k][1])
                 self.pages[k][1].SetTitre(prj.attributs[k][0])
+            
             else:
                 if k in self.pages:
                     self.nb.DeletePage(self.GetPageNum(self.pages[k][0]))
@@ -6564,6 +6524,11 @@ class PanelPropriete_Projet(PanelPropriete):
         if hasattr(self, 'panelOrga'):
             self.panelOrga.MiseAJourListe()
         
+        if 'SML' in self.pages:
+            for s in self.psysml:
+                s.MiseAJour()
+                
+                
         self.pageGen.Layout()
         self.Layout()
         
@@ -13220,21 +13185,24 @@ class PanelPropriete_Personne(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
 #         print "MiseAJour panelPropriete Personne", self.personne
 #         print self.personne.grille
+        doc = self.personne.GetDocument()
         self.textctrln.ChangeValue(self.personne.nom)
         self.textctrlp.ChangeValue(self.personne.prenom)
         if hasattr(self, 'cbPhas'):
             self.cbPhas.SetStringSelection(constantes.NOM_DISCIPLINES[self.personne.discipline])
+        
         if hasattr(self, 'cbInt'):
             self.cbInt.SetValue(self.personne.referent)
-            self.personne.GetDocument().SetReferent(self.personne, self.cbInt.IsChecked())
+            doc.SetReferent(self.personne, self.cbInt.IsChecked())
+        
         if hasattr(self, 'SelectGrille'):
-            for k, select in list(self.SelectGrille.items()):
+            for k, select in self.SelectGrille.items():
                 select.SetPath(toSystemEncoding(self.personne.grille[k].path))
 #            self.OnPathModified()
 
         if hasattr(self, 'lb'):
-            self.lb.Set(self.personne.GetDocument().support.GetIntitModeles())
-            for i, m in enumerate(self.personne.GetDocument().support.modeles):
+            self.lb.Set(doc.support.GetIntitModeles())
+            for i, m in enumerate(doc.support.modeles):
                 if m.id in self.personne.modeles:
                     self.lb.Check(i)
             self.lb.Refresh()
@@ -13606,7 +13574,7 @@ class PanelSelectionGrille(wx.Panel):
     ######################################################################################  
     def OnPathModified(self, evt):#lien = "", marquerModifier = True):
 #         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
-        self.selec.MiseAJour()
+        self.SelectGrille.MiseAJour()
         self.Parent.OnPathModified(evt.lien)#, marquerModifier)
                 
                 
@@ -19925,7 +19893,7 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     def __init__(self, parent, doc, code):
         self.doc = doc
         
-        self.lien = doc.sysML[code]
+        self.lien = doc.sysML[code] # Type lien.Lien
         
         wx.Panel.__init__(self, parent, -1)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -19935,9 +19903,8 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
         self.sizer.Add(self.selec, flag = wx.ALIGN_TOP|wx.EXPAND)
         
         self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        self.image.SetToolTip("Cliquer pour ouvrir le lien externe")
+        
         self.sizer.Add(self.image, flag = wx.EXPAND)#, flag = wx.EXPAND)
-        self.SetImage()
         
         self.FitInside()
         self.SetSizer(self.sizer)
@@ -19962,27 +19929,30 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     
     #########################################################################################################
     def MiseAJour(self, titre = "image", prefixe = "l'"):
-        self.boxImg.SetLabel(titre.capitalize())
-        self.btImg.SetToolTip("Sélectionner un fichier image pour %s" %prefixe+titre)
-        self.btSupImg.SetToolTip("Supprimer %s" %prefixe+titre)
+#         print("MiseAJour Panel_Select_sysML")
+#         self.boxImg.SetLabel(titre.capitalize())
+#         self.btImg.SetToolTip("Sélectionner un fichier image pour %s" %prefixe+titre)
+#         self.btSupImg.SetToolTip("Supprimer %s" %prefixe+titre)
+        self.selec.SetPath()
+        self.SetImage()
     
     
     #############################################################################            
     def SetImage(self, sendEvt = False):
 #         print("SetImage", self.lien)
-        if os.path.isfile(self.lien.path):
-            defaut = images.Icone_noimg.GetBitmap()
+        defaut = images.Icone_noimg.GetBitmap()
+        self.image.SetToolTip("")
+        self.image.Unbind(wx.EVT_LEFT_DOWN)
+        if not self.lien.ok:
+            img = defaut
         else:
-            defaut = None
+            img = file2bmp(self.lien.path, defaut)
             
-        img = file2bmp(self.lien.path, defaut)
+            if img != defaut:
+                self.image.Bind(wx.EVT_LEFT_DOWN, self.OnClicImage)
+                self.image.SetToolTip("Cliquer pour ouvrir le fichier")
         
-        if img != None:
-            self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
-            self.image.Bind(wx.EVT_LEFT_DOWN, self.OnClicImage)
-        else:
-            self.image.SetBitmap(wx.NullBitmap)
-            
+        self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
         
         self.Parent.Layout()
         self.Layout()

@@ -919,7 +919,7 @@ class Base_Fiche_Doc():
                 
                 
         if self.surRect is not None:
-            print("Surbrillance", self.surRect)
+#             print("Surbrillance", self.surRect)
             if type(self.surRect) == list:
                 for r in self.surRect:
         #             print("   ", r)

@@ -40,10 +40,12 @@ import os, sys, subprocess
 import wx
 import re
 from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
-from widgets import messageErreur, scaleImage
+from widgets import messageErreur, scaleImage, Grammaire
 import images
 from drag_file import *
 from util_path import *
+
+
 # from dpi_aware import *
 SSCALE = 1.0
 
@@ -400,34 +402,34 @@ class PathEvent(wx.PyCommandEvent):
         return self.lien
     
     
-
-
-
 ####################################################################################
 #
 #   Widget pour sélectionner un lien
 #
 ####################################################################################
-class URLSelectorCombo(wx.Panel):
-    def __init__(self, parent, lien, pathref, dossier = True, ext = ""):
+class URLSelectorBase(wx.Panel):
+    def __init__(self, parent, lien, pathref, 
+                 dossier = True, btn_ouvrir = False, 
+                 ext = ""):
         """
             lien : type Lien
             pathref : chemin du dossier de référence (pour chemins relatifs)
+            
             dossier : bool pour spécifier que le lien est un dossier
-            ext : 
+            ext : Extension de fichier par défaut
         """
-#         print "init URLSelectorCombo", pathref
+#         print "init URLSelectorBase", pathref
         
         wx.Panel.__init__(self, parent, -1)
         self.SetMaxSize((-1,22*SSCALE))
         
-        self.ext = ext
-        self.dossier = dossier
+        self.ext = ext # Extension de fichier par défaut
         self.lien = lien
+#         self.texte = None
         
         sizer = wx.BoxSizer(wx.VERTICAL)
         
-        lsizer = self.CreateSelector()
+        lsizer = self.CreateSelector(dossier, btn_ouvrir)
         
         sizer.Add(lsizer, 1, flag = wx.EXPAND)
         self.SetSizerAndFit(sizer)
@@ -435,24 +437,20 @@ class URLSelectorCombo(wx.Panel):
         self.SetPathSeq(pathref)
 
     
-    #########################################################################################################
-    def sendEvent(self):
-#         print("sendEvent", modif, draw, verif)
-        evt = PathEvent(myEVT_PATH_MODIFIED, self.GetId())
-        evt.SetPath(self.lien)
-        self.GetEventHandler().ProcessEvent(evt)
-        
-        
     ###############################################################################################
-    def SetToolTipTexte(self):
-        if self.lien.ok and self.lien.path != "":
-            self.texte.SetToolTip(self.lien.path)
+    def getTexte(self):
+        if self.lien.type == 'd':
+            t = "dossier(s)$m"
+        elif self.lien.type == 'f':
+            t = "fichier(s)$m"
+        elif self.lien.type == 'u':
+            t = "URL(s)$f"
         else:
-            self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
-    
-    
+            t = ""
+        return Grammaire(t)
+
     ###############################################################################################
-    def CreateSelector(self):
+    def CreateSelector(self, dossier = True, btn_ouvrir = False):
         # Passage momentan� en Anglais (bug de wxpython)
 #         locale2EN()
 #         loc = wx.GetApp().locale.GetSystemLanguage()
@@ -464,7 +462,7 @@ class URLSelectorCombo(wx.Panel):
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
         
         
-        if self.dossier:
+        if dossier:
 #             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
             bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
             bt1.SetToolTip("Sélectionner un dossier")
@@ -479,15 +477,21 @@ class URLSelectorCombo(wx.Panel):
         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
         self.bt2 = bt2
         
-        sizer.Add(bt2)
-        sizer.Add(self.texte,1,flag = wx.EXPAND)
         
-#         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
-        self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
-        self.btnlien.SetToolTip("Ouvrir le lien externe")
-        self.btnlien.Show(self.lien.path != "")
-        self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
-        sizer.Add(self.btnlien)
+        self.cb = wx.CheckBox(self, label='/', pos=(20, 20))
+        self.cb.SetToolTip("Cocher pour utiliser un chemin absolu")
+        self.cb.Bind(wx.EVT_CHECKBOX, self.OnCbAbs, self.cb)
+        
+        sizer.Add(bt2)
+        sizer.Add(self.cb, flag = wx.EXPAND)
+        sizer.Add(self.texte, 1, flag = wx.EXPAND)
+
+        if btn_ouvrir:
+            self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
+            
+            self.btnlien.Show(self.lien.path != "")
+            self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+            sizer.Add(self.btnlien)
          
         
         # Pour drag&drop direct de fichiers !! (exp�rimental)
@@ -500,11 +504,34 @@ class URLSelectorCombo(wx.Panel):
         return sizer
     
     
+    #########################################################################################################
+    def sendEvent(self):
+#         print("sendEvent", modif, draw, verif)
+        evt = PathEvent(myEVT_PATH_MODIFIED, self.GetId())
+        evt.SetPath(self.lien)
+        self.GetEventHandler().ProcessEvent(evt)
+        
+        
+    ###############################################################################################
+    def SetToolTipTexte(self):
+        t = self.getTexte()
+        if self.lien.path == "":
+            self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
+        elif self.lien.ok:
+            self.texte.SetToolTip(self.lien.path)
+            if hasattr(self, 'btnlien'):
+                self.btnlien.SetToolTip("Ouvrir le %s" %t.le_())
+        else:
+            self.texte.SetToolTip("Chemin non valide :\n"+self.lien.path)
+        
+        
+        
+        
     #############################################################################            
     def OnClickLien(self, event):
         self.lien.Afficher(self.pathref)
-
-
+    
+    
     ###############################################################################################
     # Overridden from ComboCtrl, called when the combo button is clicked
     def OnClick(self, event):
@@ -539,201 +566,9 @@ class URLSelectorCombo(wx.Panel):
         self.MiseAJour()
         
         self.SetFocus()
-
-
-    ###############################################################################################
-    def Enable(self, etat):
-        self.texte.Enable(etat)
-        self.bt2.Enable(etat)
-        if hasattr(self, "bt1"):
-            self.bt1.Enable(etat)
-        
-        
-    ###############################################################################################
-    def MiseAJour(self):
-#         self.btnlien.Show(self.lien.path != "")
-        self.marquerValid()
-        self.SetToolTipTexte()
-
-
-    ###############################################################################################
-    def dropFiles(self, file_list):
-        for path in file_list:
-            self.SetPath(path, 'f', marquerModifier = True)
-            return
-            
-    ##########################################################################################
-    def EvtText(self, event):
-#         self.lien.EvalLien(event.GetString(), self.pathref)
-#         if not self.lien.ok:
-#             self.lien.EvalTypeLien(self.pathref)
-        self.SetPath(event.GetString(), marquerModifier = True)
-
-
-    ##########################################################################################
-    def GetPath(self):
-        return self.lien
     
     
-    ##########################################################################################
-    def SetPath(self, lien = None, typ = None, marquerModifier = False):
-        """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
-            
-        """
-#         print("SetPath", lien)
-#         print "   ", lien, typ
-        if lien is not None:
-            self.lien.path = lien
-            self.lien.EvalLien(lien, self.pathref)
-        
-        try:
-            self.texte.ChangeValue(self.lien.path)
-        except: # Ca ne devrait pas arriver ... et pourtant �a arrive !
-            self.lien.path = self.lien.path.decode(FILE_ENCODING)
-#             self.lien.path = self.lien.path.encode(SYSTEM_ENCODING)
-            self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
-        
-        
-        self.MiseAJour()
-        
-        if marquerModifier:
-            self.sendEvent()
-        
-        
-#         if hasattr(self.Parent, 'GetPanelRacine'):
-#             self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
-        
-        
-    ##########################################################################################
-    def SetPathSeq(self, pathref):
-        self.pathref = pathref
-        self.lien.EvalTypeLien(self.pathref)
-        self.SetToolTipTexte()
     
-    
-    ##########################################################################################
-    def marquerValid(self):
-        if self.lien.ok:
-            self.texte.SetBackgroundColour(
-                 wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-            self.btnlien.SetToolTip("Ouvrir le lien externe")
-            
-        else:
-            self.texte.SetBackgroundColour("pink")
-            self.texte.SetFocus()
-            self.btnlien.SetToolTip("Le lien est invalide")
-        
-        self.btnlien.Enable(self.lien.ok)
-        self.Refresh()
-        
-        
-####################################################################################
-#
-#   Widget pour sélectionner un lien
-#
-####################################################################################
-class URLSelector(wx.Panel):
-    def __init__(self, parent, lien, pathref, dossier = True, ext = ""):
-        """
-            lien : type Lien
-            pathref : chemin du dossier de référence (pour chemins relatifs)
-            dossier : bool pour spécifier que le lien est un dossier
-            ext : 
-        """
-#         print "init URLSelectorCombo", pathref
-        
-        wx.Panel.__init__(self, parent, -1)
-        self.SetMaxSize((-1,22*SSCALE))
-        
-        self.ext = ext
-        self.dossier = dossier
-        self.lien = lien
-        
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        
-        lsizer = self.CreateSelector()
-        
-        sizer.Add(lsizer, 1, flag = wx.EXPAND)
-        self.SetSizerAndFit(sizer)
-        
-        self.SetPathSeq(pathref)
-
-    
-    #########################################################################################################
-    def sendEvent(self):
-#         print("sendEvent", modif, draw, verif)
-        evt = PathEvent(myEVT_PATH_MODIFIED, self.GetId())
-        evt.SetPath(self.lien)
-        self.GetEventHandler().ProcessEvent(evt)
-        
-        
-    ###############################################################################################
-    def SetToolTipTexte(self):
-        if self.lien.ok and self.lien.path != "":
-            self.texte.SetToolTip(self.lien.path)
-        else:
-            self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
-    
-    
-    ###############################################################################################
-    def CreateSelector(self):
-        # Passage momentan� en Anglais (bug de wxpython)
-#         locale2EN()
-#         loc = wx.GetApp().locale.GetSystemLanguage()
-#         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
-        
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        bsize = (16*SSCALE, 16*SSCALE)
-        
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
-        
-        
-        if self.dossier:
-#             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
-            bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
-            bt1.SetToolTip("Sélectionner un dossier")
-            self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
-            self.bt1 = bt1
-            sizer.Add(bt1)
-#         bt2 =wx.BitmapButton(self, 101, images.wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
-        
-        bt2 =wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), *bsize))
-        bt2.SetToolTip("Sélectionner un fichier")
-        self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
-        self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
-        self.bt2 = bt2
-        
-        sizer.Add(bt2)
-        sizer.Add(self.texte,1,flag = wx.EXPAND)
-        
-        
-        self.cb = wx.CheckBox(self, label='abs', pos=(20, 20))
-        self.cb.SetToolTip("Cocher pour utiliser un chemin de fichier absolu")
-        self.cb.Bind(wx.EVT_CHECKBOX, self.OnCbAbs, self.cb)
-        sizer.Add(self.cb,flag = wx.EXPAND)
-
-# #         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
-#         self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
-#         self.btnlien.SetToolTip("Ouvrir le lien externe")
-#         self.btnlien.Show(self.lien.path != "")
-#         self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
-#         sizer.Add(self.btnlien)
-         
-        
-        # Pour drag&drop direct de fichiers !! (exp�rimental)
-        file_drop_target = MyFileDropTarget(self)
-        self.SetDropTarget(file_drop_target)
-        
-#         locale2def()
-#         wx.GetApp().locale = wx.Locale(loc)
-        
-        return sizer
-    
-    
-    #############################################################################            
-    def OnClickLien(self, event):
-        self.lien.Afficher(self.pathref)
-
     ###############################################################################################
     def OnCbAbs(self, event):
         box = event.GetEventObject()
@@ -741,66 +576,10 @@ class URLSelector(wx.Panel):
         self.lien.EvalLien(self.lien.path, self.pathref)
         self.SetPath(marquerModifier = True)
         event.Skip()
-
-
-    ###############################################################################################
-    # Overridden from ComboCtrl, called when the combo button is clicked
-    def OnClick(self, event):
-        
-        if event.GetId() == 100:
-            dlg = wx.DirDialog(self, "Sélectionner un dossier",
-                          style=wx.DD_DEFAULT_STYLE,
-                          defaultPath = toSystemEncoding(self.pathref)
-                           #| wx.DD_DIR_MUST_EXIST
-                           #| wx.DD_CHANGE_DIR
-                           )
-            if dlg.ShowModal() == wx.ID_OK:
-                self.SetPath(dlg.GetPath(), 'd', marquerModifier = True)
-    
-            dlg.Destroy()
-            
-        else:
-            dlg = wx.FileDialog(self, "Sélectionner un fichier",
-                                wildcard = self.ext,
-                                defaultDir = toSystemEncoding(self.pathref),
-    #                           defaultPath = globdef.DOSSIER_EXEMPLES,
-                               style = wx.DD_DEFAULT_STYLE
-                               #| wx.DD_DIR_MUST_EXIST
-                               #| wx.DD_CHANGE_DIR
-                               )
-    
-            if dlg.ShowModal() == wx.ID_OK:
-                self.SetPath(dlg.GetPath(), 'f', marquerModifier = True)
-    
-            dlg.Destroy()
-        
-        self.MiseAJour()
-        
-        self.SetFocus()
-
-
-    ###############################################################################################
-    def Enable(self, etat):
-        self.texte.Enable(etat)
-        self.bt2.Enable(etat)
-        if hasattr(self, "bt1"):
-            self.bt1.Enable(etat)
         
         
-    ###############################################################################################
-    def MiseAJour(self):
-#         self.btnlien.Show(self.lien.path != "")
-        self.marquerValid()
-        self.SetToolTipTexte()
-        self.cb.SetValue(self.lien.abs)
-
-
-    ###############################################################################################
-    def dropFiles(self, file_list):
-        for path in file_list:
-            self.SetPath(path, 'f', marquerModifier = True)
-            return
-            
+        
+        
     ##########################################################################################
     def EvtText(self, event):
 #         self.lien.EvalLien(event.GetString(), self.pathref)
@@ -809,17 +588,37 @@ class URLSelector(wx.Panel):
         self.SetPath(event.GetString(), marquerModifier = True)
 
 
-    ##########################################################################################
-    def GetPath(self):
-        return self.lien
+    ###############################################################################################
+    def dropFiles(self, file_list):
+        for path in file_list:
+            self.SetPath(path, 'f', marquerModifier = True)
+            return
+            
     
+    
+    
+    ###############################################################################################
+    def Enable(self, etat):
+        self.texte.Enable(etat)
+        self.bt2.Enable(etat)
+        if hasattr(self, "bt1"):
+            self.bt1.Enable(etat)
+        
+        
+    ##########################################################################################
+    def SetPathSeq(self, pathref):
+        self.pathref = pathref
+        self.lien.EvalTypeLien(self.pathref)
+        self.cb.SetValue(self.lien.abs)
+        self.SetToolTipTexte()
+        
     
     ##########################################################################################
     def SetPath(self, lien = None, typ = None, marquerModifier = False):
         """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
             
         """
-        print("SetPath", lien)
+#         print("SetPath", self.lien)
 #         print "   ", lien, typ
         if lien is not None:
             self.lien.path = lien
@@ -832,6 +631,7 @@ class URLSelector(wx.Panel):
 #             self.lien.path = self.lien.path.encode(SYSTEM_ENCODING)
             self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
         
+#         print("  ", self.lien.ok)
         
         self.MiseAJour()
         
@@ -839,16 +639,16 @@ class URLSelector(wx.Panel):
             self.sendEvent()
         
         
-#         if hasattr(self.Parent, 'GetPanelRacine'):
-#             self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
-        
-        
     ##########################################################################################
-    def SetPathSeq(self, pathref):
-        self.pathref = pathref
-        self.lien.EvalTypeLien(self.pathref)
+    def GetPath(self):
+        return self.lien
+    
+    
+    ###############################################################################################
+    def MiseAJour(self):
+#         self.btnlien.Show(self.lien.path != "")
+        self.marquerValid()
         self.cb.SetValue(self.lien.abs)
-        self.SetToolTipTexte()
     
     
     ##########################################################################################
@@ -856,15 +656,184 @@ class URLSelector(wx.Panel):
         if self.lien.ok:
             self.texte.SetBackgroundColour(
                  wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-            #self.btnlien.SetToolTip("Ouvrir le lien externe")
             
         else:
             self.texte.SetBackgroundColour("pink")
             self.texte.SetFocus()
-            #self.btnlien.SetToolTip("Le lien est invalide")
         
-        #self.btnlien.Enable(self.lien.ok)
+        if hasattr(self, 'btnlien'):
+            self.btnlien.Enable(self.lien.ok)
+            
+        self.SetToolTipTexte()
         self.Refresh()
+
+
+
+
+
+####################################################################################
+#
+#   Widget pour sélectionner un lien
+#
+####################################################################################
+class URLSelectorCombo(URLSelectorBase):
+    def __init__(self, parent, lien, pathref, dossier = True, ext = ""):
+        """
+            lien : type Lien
+            pathref : chemin du dossier de référence (pour chemins relatifs)
+            dossier : bool pour spécifier que le lien est un dossier
+            ext : 
+        """
+#         print "init URLSelectorCombo", pathref
+        
+        URLSelectorBase.__init__(self, parent, lien, pathref, 
+                                 dossier, btn_ouvrir = True, 
+                                 ext = ext)
+        
+
+        
+        
+        
+        
+    
+#     ###############################################################################################
+#     def CreateSelector(self):
+#         # Passage momentan� en Anglais (bug de wxpython)
+# #         locale2EN()
+# #         loc = wx.GetApp().locale.GetSystemLanguage()
+# #         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+#         
+#         sizer = wx.BoxSizer(wx.HORIZONTAL)
+#         bsize = (16*SSCALE, 16*SSCALE)
+#         
+#         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
+#         
+#         
+#         if self.dossier:
+# #             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
+#             bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
+#             bt1.SetToolTip("Sélectionner un dossier")
+#             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
+#             self.bt1 = bt1
+#             sizer.Add(bt1)
+# #         bt2 =wx.BitmapButton(self, 101, images.wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
+#         
+#         bt2 =wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), *bsize))
+#         bt2.SetToolTip("Sélectionner un fichier")
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+#         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
+#         self.bt2 = bt2
+#         
+#         sizer.Add(bt2)
+#         sizer.Add(self.texte,1,flag = wx.EXPAND)
+#         
+# #         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
+#         self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
+#         self.btnlien.SetToolTip("Ouvrir le lien externe")
+#         self.btnlien.Show(self.lien.path != "")
+#         self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+#         sizer.Add(self.btnlien)
+#          
+#         
+#         # Pour drag&drop direct de fichiers !! (exp�rimental)
+#         file_drop_target = MyFileDropTarget(self)
+#         self.SetDropTarget(file_drop_target)
+#         
+# #         locale2def()
+# #         wx.GetApp().locale = wx.Locale(loc)
+#         
+#         return sizer
+
+    
+    
+        
+        
+####################################################################################
+#
+#   Widget pour sélectionner un lien
+#
+####################################################################################
+class URLSelector(URLSelectorBase):
+    def __init__(self, parent, lien, pathref, dossier = True, ext = ""):
+        """
+            lien : type Lien
+            pathref : chemin du dossier de référence (pour chemins relatifs)
+            dossier : bool pour spécifier que le lien est un dossier
+            ext : 
+        """
+#         print "init URLSelectorCombo", pathref
+        
+        URLSelectorBase.__init__(self, parent, lien, pathref, 
+                                 dossier = False , btn_ouvrir = False, 
+                                 ext = ext)
+
+    
+    
+    
+#     ###############################################################################################
+#     def CreateSelector(self):
+#         # Passage momentan� en Anglais (bug de wxpython)
+# #         locale2EN()
+# #         loc = wx.GetApp().locale.GetSystemLanguage()
+# #         wx.GetApp().locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+#         
+#         sizer = wx.BoxSizer(wx.HORIZONTAL)
+#         bsize = (16*SSCALE, 16*SSCALE)
+#         
+#         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
+#         
+#         
+#         if self.dossier:
+# #             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, bsize))
+#             bt1 =wx.BitmapButton(self, 100, scaleImage(images.Icone_folder.GetBitmap(), *bsize))
+#             bt1.SetToolTip("Sélectionner un dossier")
+#             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
+#             self.bt1 = bt1
+#             sizer.Add(bt1)
+# #         bt2 =wx.BitmapButton(self, 101, images.wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, bsize))
+#         
+#         bt2 =wx.BitmapButton(self, 101, scaleImage(images.Icone_fichier.GetBitmap(), *bsize))
+#         bt2.SetToolTip("Sélectionner un fichier")
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+#         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
+#         self.bt2 = bt2
+#         
+#         sizer.Add(bt2)
+#         sizer.Add(self.texte,1,flag = wx.EXPAND)
+#         
+#         
+#         self.cb = wx.CheckBox(self, label='abs', pos=(20, 20))
+#         self.cb.SetToolTip("Cocher pour utiliser un chemin de fichier absolu")
+#         self.cb.Bind(wx.EVT_CHECKBOX, self.OnCbAbs, self.cb)
+#         sizer.Add(self.cb,flag = wx.EXPAND)
+# 
+# # #         self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, bsize))
+# #         self.btnlien = wx.BitmapButton(self, -1, scaleImage(images.Icone_open.GetBitmap(), *bsize))
+# #         self.btnlien.SetToolTip("Ouvrir le lien externe")
+# #         self.btnlien.Show(self.lien.path != "")
+# #         self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+# #         sizer.Add(self.btnlien)
+#          
+#         
+#         # Pour drag&drop direct de fichiers !! (exp�rimental)
+#         file_drop_target = MyFileDropTarget(self)
+#         self.SetDropTarget(file_drop_target)
+#         
+# #         locale2def()
+# #         wx.GetApp().locale = wx.Locale(loc)
+#         
+#         return sizer
+#     
+#     
+#     
+
+
+        
+
+
+    
+    
+
         
 
 ##########################################################################################################
