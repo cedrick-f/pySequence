@@ -1456,7 +1456,7 @@ class Sequence(Base_Fiche_Doc):
             self.cursY += self.ecartC
             
         x, self.cursY , w, h = bloc.draw(x = x0, y = self.cursY)
-        self.seance.GetDocument().zones_sens.append(Zone_sens([(bloc.x, bloc.y, w, h)], obj = self.seance))
+        seance.GetDocument().zones_sens.append(Zone_sens([(bloc.x, bloc.y, w, h)], obj = seance))
 #         seance.rect.append((bloc.x, bloc.y, w, h))
         
         bloc.DrawCroisement(seance.typeSeance == "R") 
