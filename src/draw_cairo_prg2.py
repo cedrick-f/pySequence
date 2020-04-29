@@ -35,7 +35,8 @@ import sys
 
 #import rsvg
 # import cairo
-import cairocffi as cairo
+import cairo
+# import cairocffi as cairo
 from draw_cairo2 import *
 
 # import wx.lib.wxcairo
@@ -558,11 +559,11 @@ class Progression(Base_Fiche_Doc):
 
         
     ######################################################################################  
-    def draw(self, ctx):
+    def draw(self, ctx, surRect = None):
         """ Dessine une fiche de progression <prg>
             dans un contexte cairo <ctx>
         """
-        
+        self.surRect = surRect
         self.ctx = ctx
         
     #        print "Draw progression"
@@ -1145,16 +1146,7 @@ class Progression(Base_Fiche_Doc):
         
     
                 
-        if self.surRect is not None:
-    #         print("Surbrillance")
-            if type(self.surRect) == list:
-                for r in self.surRect:
-        #             print("   ", r)
-                    self.surbrillance(r)
-            elif hasattr(self.surRect, 'rect'):
-                for r in self.surRect.rect:
-        #             print("   ", r)
-                    self.surbrillance(r)
+        self.surBrillance(ctx)
         
 
     ######################################################################################  
@@ -1471,7 +1463,7 @@ class Progression(Base_Fiche_Doc):
         doc = lienDoc.GetDoc()
         if doc is None:
             return
-        lienDoc.rect = []
+#         lienDoc.rect = []
         
         e = 0.0015 * COEF   # épaisseur du cadre
         x, y, w, h = rect
@@ -1566,7 +1558,8 @@ class Progression(Base_Fiche_Doc):
                            fontsizeMinMax = (minFont, 0.015 * COEF))
         
         
-        lienDoc.rect.append([x, y, self.tailleZTaches[0], h])
+#         lienDoc.rect.append([x, y, self.tailleZTaches[0], h])
+        
         self.prg.zones_sens.append(Zone_sens([rect], obj = lienDoc))
     #     lienDoc.pt_caract = [(rect[:2], "Seq")]
         

@@ -26,8 +26,8 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
-import cairocffi as cairo
+import cairo
+# import cairocffi as cairo
 from draw_cairo2 import *
 
 from math import pi, cos, sin
@@ -473,14 +473,14 @@ class Sequence(Base_Fiche_Doc):
 
 
     ######################################################################################  
-    def draw(self, ctx):
+    def draw(self, ctx, surRect = None):
         """ Dessine une fiche de séquence de la séquence <seq>
             dans un contexte cairo <ctx>
             
             surRect : élément en surbrilance (rectangle ou objet)
             
         """
-
+        self.surRect = surRect
         self.ctx = ctx
     #    print "Draw séquence"
         
@@ -617,7 +617,7 @@ class Sequence(Base_Fiche_Doc):
         # Affichage des CI sur la cible
         if self.seq.classe.referentiel.CI_cible:
             self.seq.zones_sens.append(Zone_sens([self.pos_Cib+self.siz_Cib], obj = self.seq.CI))
-            self.seq.CI.rect = [self.pos_Cib+self.siz_Cib]
+#             self.seq.CI.rect = [self.pos_Cib+self.siz_Cib]
     
             rayons = {"F" : self.siz_Cib[0] * 0.28, 
                       "S" : self.siz_Cib[0] * 0.19, 
@@ -1099,8 +1099,8 @@ class Sequence(Base_Fiche_Doc):
             self.seq.zones_sens.append(Zone_sens([rectC], obj = self.seq.obj["C"]))
             self.seq.zones_sens.append(Zone_sens([rectS], obj = self.seq.obj["S"]))
     #    seq.obj["C"].rect = 
-            self.seq.obj["S"].rect = [rectS]
-            self.seq.obj["C"].rect = [rectC]
+#             self.seq.obj["S"].rect = [rectS]
+#             self.seq.obj["C"].rect = [rectC]
         
     
     
@@ -1205,21 +1205,9 @@ class Sequence(Base_Fiche_Doc):
         if not self.entete:
             self.info(self.ctx)
         
-        if self.surRect is not None:
-    #         print("Surbrillance")
-            if type(self.surRect) == list:
-                for r in self.surRect:
-        #             print("   ", r)
-                    self.surbrillance(r)
-            elif hasattr(self.surRect, 'rect'):
-                for r in self.surRect.rect:
-        #             print("   ", r)
-                    self.surbrillance(r)
+        self.surBrillance(ctx)
                     
                 
-
-    
-
 
     ######################################################################################  
     def DrawLigneEff(self, ctx, x, y, coul):
@@ -1360,7 +1348,7 @@ class Sequence(Base_Fiche_Doc):
             :rotation: True si la Séance fait partie d'une Rotation
             
             """
-            seance.rect = []
+#             seance.rect = []
             
             ###########################################################################################
             # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
@@ -1468,7 +1456,8 @@ class Sequence(Base_Fiche_Doc):
             self.cursY += self.ecartC
             
         x, self.cursY , w, h = bloc.draw(x = x0, y = self.cursY)
-        seance.rect.append((bloc.x, bloc.y, w, h))
+        self.seance.GetDocument().zones_sens.append(Zone_sens([(bloc.x, bloc.y, w, h)], obj = self.seance))
+#         seance.rect.append((bloc.x, bloc.y, w, h))
         
         bloc.DrawCroisement(seance.typeSeance == "R") 
     #    for lbloc in blocs:
@@ -1560,7 +1549,7 @@ class Cadre(Elem_Dessin):
         self.y = None   # Position en Y du cadre
         self.dy = None  # Position en Y relative de la ligne
         self.nf = 0     # Nombre de "frères" (pour calcul rayon boule
-        self.seance.rect = []
+#         self.seance.rect = []
         self.signEgal = signEgal
         
         
@@ -1754,7 +1743,8 @@ class Bloc(Elem_Dessin):
         w = xf - self.x
         h = yf - self.y
         
-        self.seance.rect.append((self.x, self.y, w, h))
+        self.seance.GetDocument().zones_sens.append(Zone_sens([(self.x, self.y, w, h)], obj = self.seance))
+#         self.seance.rect.append((self.x, self.y, w, h))
             
         return x, y, w, h
     
@@ -1948,7 +1938,7 @@ class Bloc(Elem_Dessin):
         
                 seance.GetDocument().zones_sens.append(Zone_sens([rect], obj = seance))
     
-                seance.rect.append(rect)
+#                 seance.rect.append(rect)
 
 
 

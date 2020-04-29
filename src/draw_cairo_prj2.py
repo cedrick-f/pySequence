@@ -34,7 +34,8 @@
 
 # import cairo
 # from draw_cairo import *
-import cairocffi as cairo
+import cairo
+# import cairocffi as cairo
 from draw_cairo2 import *
 
 from math import log
@@ -462,12 +463,12 @@ class Projet(Base_Fiche_Doc):
     
         
     ######################################################################################  
-    def draw(self, ctx):
+    def draw(self, ctx, surRect = None):
         """ Dessine une fiche de projet du projet <prj>
             dans un contexte cairo <ctx>
         """
-        #        print "Draw séquence"
-        
+        #        print "Draw projet"
+        self.surRect = surRect
         self.ctx = ctx
         
         #
@@ -990,31 +991,8 @@ class Projet(Base_Fiche_Doc):
             self.info(ctx)
         
         
-        if self.surRect is not None:
-    #         print("Surbrillance")
-            if type(self.surRect) == list:
-                for r in self.surRect:
-        #             print("   ", r)
-                    self.surbrillance(r)
-            elif hasattr(self.surRect, 'rect'):
-                for r in self.surRect.rect:
-        #             print("   ", r)
-                    self.surbrillance(r)
+        self.surBrillance(ctx)
         
-# 
-#     ######################################################################################  
-#     def drawLigneEff(x, y):
-#         dashes = [ 0.010 * COEF,   # ink
-#                    0.002 * COEF,   # skip
-#                    0.005 * COEF,   # ink
-#                    0.002 * COEF,   # skip
-#                    ]
-#         
-#         ctx.set_line_width (0.001 * COEF)
-#         ctx.set_dash(dashes, 0)
-#         ligne(ctx, x, posZElevesV[1] + tailleZElevesV[1],
-#               x, y, (0.6, 0.8, 0.6))
-#         ctx.set_dash([], 0)
 
     
 

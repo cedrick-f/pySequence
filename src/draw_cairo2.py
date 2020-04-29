@@ -45,7 +45,8 @@ import os, io, sys
 import tempfile
 # import cairo
 import wx.lib.wxcairo
-import cairocffi as cairo
+import cairo
+# import cairocffi as cairo
 
 # import time
 try:
@@ -740,8 +741,9 @@ class Base_Fiche_Doc():
 
         self.LargeurTotale = 0.72414 * COEF# Pour faire du A4
 
-        self.font_family = "sans-serif"##"Purisa"#"DejaVu Sans Mono"#"arial"#
+        self.font_family = "arial"#"sans-serif"##"Purisa"#"DejaVu Sans Mono"#"Georgia"#
     
+        self.surRect = None
     
     
     ######################################################################################  
@@ -904,8 +906,33 @@ class Base_Fiche_Doc():
 
         
         
+    ##########################################################################################
+    def surBrillance(self, ctx):
         
+        def surbrillance(rect = None):
+            if rect is not None:
+                ctx.rectangle(*rect)
+                ctx.set_source_rgba (1,1,0.3, 0.3)
+                ctx.fill_preserve ()
+                ctx.set_source_rgba (1,1,0.3, 1)
+                ctx.stroke ()
+                
+                
+        if self.surRect is not None:
+            print("Surbrillance", self.surRect)
+            if type(self.surRect) == list:
+                for r in self.surRect:
+        #             print("   ", r)
+                    surbrillance(r)
+            elif hasattr(self.surRect, 'rect'):
+                for r in self.surRect.rect:
+        #             print("   ", r)
+                    surbrillance(r)
         
+    
+            
+            
+            
 #     #######################################################################################
 #     # Gestion des paramètres sauvegardables
 #     #####################################################################################
@@ -949,15 +976,6 @@ class Elem_Dessin():
         
         return self._draw(ctx = self.ctx, **kargs)
         
-    
-    ########################################################################################            
-    def surbrillance(self, rect = None):
-        if rect is not None:
-            self.ctx.rectangle(*rect)
-            self.ctx.set_source_rgba (1,1,0.3, 0.3)
-            self.ctx.fill_preserve ()
-            self.ctx.set_source_rgba (1,1,0.3, 1)
-            self.ctx.stroke ()
     
     
     ########################################################################################            

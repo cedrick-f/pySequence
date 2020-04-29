@@ -1724,6 +1724,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
         
         self.centrer = True
         self.surbrillance = None # Objet à afficher en surbrillance
+        self.zones_sens = [] 
+        
+        
         
         # Année Scolaire
         self.annee = constantes.getAnneeScolaire()

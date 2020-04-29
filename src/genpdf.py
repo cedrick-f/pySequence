@@ -635,7 +635,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 
 
 def genererGrillePDF(nomFichier, grilles_feuilles):
-#    print "genererGrillePDF" 
+    print("genererGrillePDF")
 #    print grilles_feuilles
     
     wx.BeginBusyCursor()
@@ -651,11 +651,12 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     g = []
     for i, grille_feuille in enumerate(grilles_feuilles):
         grille, feuille = grille_feuille
+        print("  ", grille, feuille)
         try:
             grille = grilles.PyExcel(grille)
         except Exception as err:
             wx.EndBusyCursor()
-            messageErreur(self, "Erreur !", err.args[0])
+            messageErreur(wx.GetTopLevelParent(), "Erreur !", "{0}".format(err))
             return False
             
         g.append(grille)

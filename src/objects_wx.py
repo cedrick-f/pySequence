@@ -168,7 +168,8 @@ from xml.dom.minidom import parse, parseString
 # Graphiques vectoriels
 
 import wx.lib.wxcairo
-import cairocffi as cairo
+import cairo
+# import cairocffi as cairo
 
 import draw_cairo2 as draw_cairo
 import draw_cairo_seq2 as draw_cairo_seq
@@ -2415,7 +2416,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         elif self.typ == 'prg':
             draw_cairo_prg.Progression(self.progression).draw(ctx)
         
+        ctx.stroke()
+#         ctx.show_page()
         PDFsurface.finish()
+#         PDFsurface.flush()
         
         try:
             shutil.copy(tf[1], nomFichier)
@@ -4773,51 +4777,10 @@ class FenetreProgression(FenetreDocument):
 ####################################################################################
 class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut servir pour debuggage)
     def __init__(self, parent):
-#        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
-        
-        self.EnableScrolling(False, True)
-        self.SetScrollbars(20, 20, 50, 50);
-        
-        self.enCours = False
-        self.saved = False
-        self.surRect = None
-        
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-
+         
         self.InitBuffer()
         
-        
-        wx.CallAfter(self.connect)
-
-
-    ######################################################################################################
-    def connect(self):
-        
-        self.Bind(wx.EVT_SIZE, self.OnResize)
-        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
-        self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
-        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
-        self.Bind(wx.EVT_MOTION, self.OnMove)
-        
-        self.OnResize()
-
-
-     
-    ######################################################################################################
-    def OnLeave(self, evt = None):
-        x, y = evt.GetPosition()
-        x, y = self.ClientToScreen((x, y))
-        self.GetDoc().HideTip((x, y))
-
-
-    ######################################################################################################
-    def OnEnter(self, event):
-        self.SetFocus()
-        event.Skip()
-         
         
     #############################################################################            
     def OnResize(self, evt = None):
@@ -4831,32 +4794,6 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 
 
     #############################################################################            
-    def OnScroll(self, evt):
-        self.Refresh()
-
-    
-    ######################################################################################################
-    def OnMove(self, evt):
-        self.GetDoc().HideTip()
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
-        
-        #
-        # Cas général
-        #
-        zone = self.GetDoc().HitTest(xx, yy)
-#         print zone
-        if zone is not None:
-            x, y = self.ClientToScreen((x, y))
-            self.GetDoc().Move(zone, x, y)
-        else:
-            self.GetDoc().HideTip()
-
-            
-        evt.Skip()
-
-    #############################################################################            
     def OnPaint(self, evt):
 #         print("OnPaint")
 #        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
@@ -4864,105 +4801,17 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         self.PrepareDC(dc)
         dc.DrawBitmap(self.buffer, 0,0) 
 
-        
-    #############################################################################            
-    def CentrerSur(self, obj):
-        if hasattr(obj, 'rect'):
-#             print("CentrerSur", obj, obj.rect)
-#             self.Redessiner()
-            if len(obj.rect) > 0:
-                y = (obj.rect[0][1])*self.GetVirtualSize()[1]
-                self.Scroll(0, y/20/draw_cairo.COEF)
-#                 self.Refresh()
-            
-    
-#     #############################################################################            
-#     def Surbrillance(self, obj):
-# #         if self.saved:
-# #             self.ctx.restore()
-# #             self.saved = False
-#         
-#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
-# #             self.ctx.save()
-# #             self.saved = True
-#             self.Redessiner(surRect = obj.rect)
-#                 
-# #             self.GetDoc().surbrillance = None
-            
-    #############################################################################            
-    def MiseAJourSur(self, obj):
-        """ Met l'objet <obj> en surbrillance
-        """
-        self.surRect = obj
-#         self.surRect = None
-#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
-#             self.surRect = obj.rect
-    
-    #############################################################################            
-    def Surbrillance(self, obj):
-        """ Met l'objet <obj> en surbrillance
-            et redessine
-        """
-#         print("Surbrillance", obj)
-        self.MiseAJourSur(obj)
-        self.Redessiner()
-        
-    #############################################################################            
-    def OnClick(self, evt):
-        self.GetDoc().HideTip()
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
-        
-        #
-        # Cas général
-        #
-        zone = self.GetDoc().HitTest(xx, yy)
-        if zone is not None:
-            x, y = self.ClientToScreen((x, y))
-            self.GetDoc().Click(zone, x, y)
-        else:
-            self.GetDoc().HideTip()
-            
-        
-        
-#        if branche != None:
-#            self.GetDoc().SelectItem(branche, depuisFiche = True)
-#            
-#            
-#        if not self.GetDoc().classe.verrouillee:
-#            #
-#            # Autres actions
-#            #
-#            position = self.GetDoc().HitTestPosition(xx, yy)
-#            if position != None:
-#                self.GetDoc().SetPosition(position)
-            
-        
-        evt.Skip()
-    
-    #############################################################################            
-    def OnDClick(self, evt):
-        item = self.OnClick(evt)
-        if item != None:
-            self.GetDoc().AfficherLien(item)
-            
-            
-    #############################################################################            
-    def OnRClick(self, evt):
-        item = self.OnClick(evt)
-        if item != None:
-            self.GetDoc().AfficherMenuContextuel(item)
-            
             
     #############################################################################            
     def InitBuffer(self):
         w,h = self.GetVirtualSize()
+        if w == 0: w = 1
+        if h == 0: h = 1
         self.buffer = wx.Bitmap(w,h)
 
 
     #############################################################################            
-    def Redessiner(self, event = None, surRect = None):  
+    def Redessiner(self, event = None):  
 #         print("Redessiner :")
 #         tps1 = time.clock()
         def redess():
@@ -4981,7 +4830,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
             ctx = wx.lib.wxcairo.ContextFromDC(dc)
             
             self.normalize(ctx)
-            self.Draw(ctx)#, surRect = surRect)
+            self.Draw(ctx)
 #             if r is not None:
 #                 draw_cairo.surbrillance(ctx, *r)
 
@@ -5002,35 +4851,6 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
 
 
 
-    
-    #############################################################################            
-    def normalize(self, cr):
-        h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
-#         print(h)
-        if h <= 0:
-            h = 1.0
-        cr.scale(h, h) 
-        
-#         h = float(self.GetVirtualSize()[1])
-#         if h <= 0:
-#             h = float(100)
-# #        print h
-#         cr.scale(h / draw_cairo.COEF, h / draw_cairo.COEF) 
-        
-        
-    
-    #############################################################################            
-    def Draw(self, ctx):
-#         print("Draw", self.fiche)
-#         global threadDraw
-#         tps1 = time.clock()
-        
-#         self.GetDoc().DefinirCouleurs()
-#         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
-        self.fiche.draw(ctx)
-#         self.GetDoc().fiche.draw(ctx)
-
-
 
         
 ####################################################################################
@@ -5041,180 +4861,12 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
         DelayedResult.__init__(self, self.Compute)
         
-#         self.Freeze()
-        self.EnableScrolling(False, True)
-        self.SetScrollbars(20, 20, 50, 50);
-        
 #         self.t = None
         self.w, self.h = self.GetVirtualSize()
         self.buffer = wx.Bitmap(self.w, self.h)
-        self.surRect = None
-        
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        
-        self.Bind(wx.EVT_SIZE, self.OnResize)
-#         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
-
-#         self.timer = wx.Timer(self)
-#         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
 
         self.SizeUpdate()
 #         self.Thaw()
-        
-        wx.CallAfter(self.connect)
-
-
-    ######################################################################################################
-    def connect(self):
-        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
-        self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
-        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
-        self.Bind(wx.EVT_MOTION, self.OnMove)
-
-
-
-     
-    ######################################################################################################
-    def OnLeave(self, evt = None):
-        x, y = evt.GetPosition()
-        x, y = self.ClientToScreen((x, y))
-        self.GetDoc().HideTip((x, y))
-
-
-    ######################################################################################################
-    def OnEnter(self, event):
-        self.SetFocus()
-        event.Skip()
-        
-
-    #############################################################################            
-    def OnScroll(self, evt):
-        self.Refresh()
-
-    
-    
-    #############################################################################            
-    def CentrerSur(self, obj):
-        if hasattr(obj, 'rect'):
-#             print("CentrerSur", obj, obj.rect)
-#             self.Redessiner()
-            if len(obj.rect) > 0:
-                y0 = min([r[1] for r in obj.rect])
-                y1 = max([r[1]+r[3] for r in obj.rect])
-                
-                y0 = y0*self.GetVirtualSize()[1]/draw_cairo.COEF/20
-                y1 = y1*self.GetVirtualSize()[1]/draw_cairo.COEF/20
-                Y = self.GetViewStart()[1]
-                H = self.GetClientSize()[1]/20
-#                 print(y0, y1, Y, H)
-                if y0 < Y:
-                    self.Scroll(0, y0)
-                if  y1 > Y+H:
-                    self.Scroll(0, y1-H+1)
-#                 self.Refresh()
-            
-    
-    #############################################################################            
-    def MiseAJourSur(self, obj):
-        """ Met l'objet <obj> en surbrillance
-        """
-        self.surRect = obj
-#         self.surRect = None
-#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
-#             self.surRect = obj.rect
-    
-    #############################################################################            
-    def Surbrillance(self, obj):
-        """ Met l'objet <obj> en surbrillance
-            et redessine
-        """
-#         print("Surbrillance", obj)
-        self.MiseAJourSur(obj)
-        self.Redessiner()
-    
-    
-    ######################################################################################################
-    def getCoordZone(self, evt):
-        if not hasattr(self, 'ctx'):
-            evt.Skip()
-            return
-        self.GetDoc().HideTip()
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        x, y = self.ClientToScreen((x, y))
-        try:
-            xx, yy = self.ctx.device_to_user(_x, _y)
-        except:
-            return
-        zone = self.GetDoc().HitTest(xx, yy)
-        return x, y, zone 
-    
-    
-    ######################################################################################################
-    def OnMove(self, evt):
-        c = self.getCoordZone(evt)
-        if c is None: return
-        x, y, zone = c
-        
-        #
-        # Cas général
-        #
-        if zone is not None:
-            self.GetDoc().Move(zone, x, y)
-            if zone.estClicable(): 
-                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
-            else:
-                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
-        else:
-            self.GetDoc().HideTip()
-            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
-
-
-            
-        evt.Skip()
-
-    
-    #############################################################################            
-    def OnClick(self, evt):
-        c = self.getCoordZone(evt)
-        if c is None: return
-        x, y, zone = c
-        
-        #
-        # Cas général
-        #
-        if zone is not None:
-            
-            self.GetDoc().Click(zone, x, y)
-            obj = zone.obj
-        else:
-            self.GetDoc().HideTip()
-            obj = None
-        evt.Skip()
-        return obj
-    
-    
-    #############################################################################            
-    def OnDClick(self, evt):
-        item = self.OnClick(evt)
-        if item != None and hasattr(item, "branche"):
-            self.GetDoc().AfficherLien(item.branche)
-            
-            
-    #############################################################################            
-    def OnRClick(self, evt):
-        item = self.OnClick(evt)
-#         print("OnRClick", item)
-        if item != None and hasattr(item, "branche"):
-            self.GetDoc().AfficherMenuContextuel(item.branche)
-            
-            
-#     #############################################################################            
-#     def InitBuffer(self):
-#         w,h = self.GetVirtualSize()
-#         self.buffer = wx.Bitmap(w,h)
 
 
     #############################################################################            
@@ -5224,24 +4876,6 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
         self.OnResize()    
 #         tps2 = time.clock() 
 #         print tps2 - tps1
-
-
-
-    
-    #############################################################################            
-    def normalize(self, cr):
-        h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
-        if h <= 0:
-            h = 1.0
-        cr.scale(h, h) 
-        
-
-    #############################################################################            
-    def Draw(self, ctx):
-#         print("Draw", self.fiche)
-        self.fiche.draw(ctx)
-#         self.GetDoc().DefinirCouleurs()
-#         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
 
 
     #############################################################################            
@@ -5362,18 +4996,235 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 # #             print("Erreur Computation")
 #         self.t = None
         
+# BaseFiche = BaseFiche2 # Décommenter pour mod debug
+
+class FicheDoc(BaseFiche):
+    def __init__(self, parent, threaded = False):
+        BaseFiche.__init__(self, parent)
+        
+
+        self.EnableScrolling(False, True)
+        self.SetScrollbars(20, 20, 50, 50);
+        
+        self.surRect = None
+        
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_SIZE, self.OnResize)
+        
+        wx.CallAfter(self.connect)
+
+
+    ######################################################################################################
+    def connect(self):
+        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.Bind(wx.EVT_MOTION, self.OnMove)
         
         
         
+    ######################################################################################################
+    def OnLeave(self, evt = None):
+        x, y = evt.GetPosition()
+        x, y = self.ClientToScreen((x, y))
+        self.GetDoc().HideTip((x, y))
         
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
+    
+    #############################################################################            
+    def OnScroll(self, evt):
+        self.Refresh()
+        
+    
+    ######################################################################################################
+    def OnMove(self, evt):
+        c = self.getCoordZone(evt)
+        if c is None: return
+        x, y, zone = c
+        
+        #
+        # Cas général
+        #
+        if zone is not None:
+            self.GetDoc().Move(zone, x, y)
+            if zone.estClicable(): 
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+            else:
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+        else:
+            self.GetDoc().HideTip()
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+
+
+            
+        evt.Skip()
+
+
+
+    #############################################################################            
+    def MiseAJourSur(self, obj):
+        """ Met l'objet <obj> en surbrillance
+        """
+        self.surRect = obj
+#         self.surRect = None
+#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+#             self.surRect = obj.rect
+    
+    #############################################################################            
+    def getRects(self, obj):
+        """ Renvoie la liste des rectangles encadrant l'objet <obj>
+        """
+        r = []
+        for z in self.GetDoc().zones_sens:
+            if z.obj == obj:
+                r.extend(z.rect)
+        return r
+    
+    
+    #############################################################################            
+    def Surbrillance(self, obj):
+        """ Met l'objet <obj> en surbrillance
+            et redessine
+        """
+#         print("Surbrillance", obj)
+        self.surRect = self.getRects(obj)
+#         print("   ", self.surRect)
+        self.Redessiner()
+        
+    
+    #############################################################################            
+    def CentrerSur(self, obj):
+        rect = self.getRects(obj)
+        if len(rect) > 0:
+            y0 = min([r[1] for r in rect])
+            y1 = max([r[1]+r[3] for r in rect])
+            
+            y0 = y0*self.GetVirtualSize()[1]/draw_cairo.COEF/20
+            y1 = y1*self.GetVirtualSize()[1]/draw_cairo.COEF/20
+            Y = self.GetViewStart()[1]
+            H = self.GetClientSize()[1]/20
+#                 print(y0, y1, Y, H)
+            if y0 < Y:
+                self.Scroll(0, y0)
+            if  y1 > Y+H:
+                self.Scroll(0, y1-H+1)
+        
+        
+#         if hasattr(obj, 'rect'):
+# #             print("CentrerSur", obj, obj.rect)
+# #             self.Redessiner()
+#             if len(obj.rect) > 0:
+#                 y0 = min([r[1] for r in obj.rect])
+#                 y1 = max([r[1]+r[3] for r in obj.rect])
+#                 
+#                 y0 = y0*self.GetVirtualSize()[1]/draw_cairo.COEF/20
+#                 y1 = y1*self.GetVirtualSize()[1]/draw_cairo.COEF/20
+#                 Y = self.GetViewStart()[1]
+#                 H = self.GetClientSize()[1]/20
+# #                 print(y0, y1, Y, H)
+#                 if y0 < Y:
+#                     self.Scroll(0, y0)
+#                 if  y1 > Y+H:
+#                     self.Scroll(0, y1-H+1)
+    
+
+
+    ######################################################################################################
+    def getCoordZone(self, evt):
+        """ Renvoie les coordonnées 
+            et la zone (draw_cairo2.Zone_sens)
+            associées à l'événement de type mouseevent
+        """
+        if not hasattr(self, 'ctx'):
+            evt.Skip()
+            return
+        self.GetDoc().HideTip()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        x, y = self.ClientToScreen((x, y))
+        try:
+            xx, yy = self.ctx.device_to_user(_x, _y)
+        except:
+            return
+        zone = self.GetDoc().HitTest(xx, yy)
+        return x, y, zone 
+    
+
+    #############################################################################            
+    def OnClick(self, evt):
+        """ Actions réalisées quand on a cliqué sur la fiche
+            Renvoie l'objet cliqué (sinon None)
+        """
+        
+        c = self.getCoordZone(evt)
+        if c is None: return
+        x, y, zone = c
+        
+        #
+        # Cas général
+        #
+        if zone is not None:
+            
+            self.GetDoc().Click(zone, x, y)
+            obj = zone.obj
+        else:
+            self.GetDoc().HideTip()
+            obj = None
+        evt.Skip()
+        return obj
+    
+    
+    #############################################################################            
+    def OnDClick(self, evt):
+        item = self.OnClick(evt)
+        if item != None and hasattr(item, "branche"):
+            self.GetDoc().AfficherLien(item.branche)
+            
+            
+    #############################################################################            
+    def OnRClick(self, evt):
+        item = self.OnClick(evt)
+#         print("OnRClick", item)
+        if item != None and hasattr(item, "branche"):
+            self.GetDoc().AfficherMenuContextuel(item.branche)
+            
+            
+            
+            
+    #############################################################################            
+    def normalize(self, cr):
+        h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
+        if h <= 0:
+            h = 1.0
+        cr.scale(h, h) 
+        
+        
+    #############################################################################            
+    def Draw(self, ctx):
+#         print("Draw", self.fiche)
+        self.fiche.draw(ctx, surRect = self.surRect)
+#         self.GetDoc().DefinirCouleurs()
+#         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
+
+
+
+
+            
+    
 ####################################################################################
 #
 #   Classe définissant la fenétre de la fiche de séquence
 #
 ####################################################################################
-class FicheSequence(BaseFiche):
+class FicheSequence(FicheDoc):
     def __init__(self, parent, sequence):
-        BaseFiche.__init__(self, parent)
+        FicheDoc.__init__(self, parent)
         self.sequence = sequence
 
 
@@ -5394,9 +5245,9 @@ class FicheSequence(BaseFiche):
 #   Classe définissant la fenétre de la fiche de séquence
 #
 ####################################################################################
-class FicheProjet(BaseFiche):
+class FicheProjet(FicheDoc):
     def __init__(self, parent, projet):
-        BaseFiche.__init__(self, parent)
+        FicheDoc.__init__(self, parent)
         self.projet = projet
         
         
@@ -5534,9 +5385,9 @@ class FicheProjet(BaseFiche):
 #   Classe définissant la fenétre de la fiche de séquence
 #
 ####################################################################################
-class FicheProgression(BaseFiche):
+class FicheProgression(FicheDoc):
     def __init__(self, parent, progression):
-        BaseFiche.__init__(self, parent)
+        FicheDoc.__init__(self, parent)
         self.progression = progression
         
         
@@ -19908,21 +19759,21 @@ class DialogChoixDoc(wx.Dialog):
         if int(wx.version()[0]) > 2:
             button.SetBitmap(images.Icone_sequence.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnSeq, button)
-        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(button,0, wx.ALL|wx.EXPAND, 5)
         
         button = wx.Button(self, -1, "Nouveau Projet")
         button.SetToolTip("Créer un nouveau projet")
         if int(wx.version()[0]) > 2:
             button.SetBitmap(images.Icone_projet.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnPrj, button)
-        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(button,0,  wx.ALL|wx.EXPAND, 5)
     
         button = wx.Button(self, -1, "Nouvelle Progression")
         button.SetToolTip("Créer une nouvelle progression pédagogique")
         if int(wx.version()[0]) > 2:
             button.SetBitmap(images.Icone_progression.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnPrg, button)
-        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
+        sizer.Add(button,0,  wx.ALL|wx.EXPAND, 5)
         
         self.SetSizer(sizer)
         sizer.Fit(self)
