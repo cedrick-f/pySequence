@@ -103,7 +103,7 @@ import constantes
 
 import proprietes
 
-from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
+from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING
 from pathvalidate import sanitize_filepath
 
 # Widgets partagés
@@ -5743,7 +5743,8 @@ class Projet(BaseDoc, Grammaire):
         
         if len(existe) > 0:
 #             print("   ", existe)
-            nf = [testRel(path, dirpath) for path in existe]
+#             nf = [testRel(path, dirpath) for path in existe]
+            nf = [Lien(path).GetRelPath(dirpath) for path in existe]
             if len(existe) == 1:
                 m = "La grille d'évaluation existe déja !\n\n" \
                     "\t%s\n\n" \
@@ -5781,7 +5782,8 @@ class Projet(BaseDoc, Grammaire):
         
         if len(existe) > 0:
             
-            nf = [testRel(path, dirpath) for path in existe]
+#             nf = [testRel(path, dirpath) for path in existe]
+            nf = [Lien(path).GetRelPath(dirpath) for path in existe]
             if len(existe) == 1:
                 m = "Le fichier de description détaillée des tâches existe déja !\n\n" \
                     "\t%s\n\n" \
@@ -6752,7 +6754,8 @@ class Progression(BaseDoc, Grammaire):
                         fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
                         if len(fichiers_sequences) > 0:
                             fichiers, sequences = list(zip(*fichiers_sequences))
-                            fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+#                             fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+                            fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
                             dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                        "celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
                                                         "Fichiers Séquences disponibles",
@@ -6810,8 +6813,8 @@ class Progression(BaseDoc, Grammaire):
                     if res == wx.ID_YES:
                         fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
                         fichiers, projets = list(zip(*fichiers_projets))
-                        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-                        
+#                         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+                        fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
                         dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                    "celui qui doit remplacer %s." %toSystemEncoding(lienPrj.path), 
                                                     "Fichiers Projet disponibles",
@@ -6929,8 +6932,8 @@ class Progression(BaseDoc, Grammaire):
             return
         
         fichiers, sequences = list(zip(*fichiers_sequences))
-        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-        
+#         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+        fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
         dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
                                     "Fichiers Séquences disponibles",
                                     [toSystemEncoding(f) for f in fichiers], 
@@ -6961,8 +6964,8 @@ class Progression(BaseDoc, Grammaire):
             return
         
         fichiers, projets = list(zip(*fichiers_projets))
-        fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-        
+#         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
+        fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
         dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
                                     "Fichiers Projets disponibles",
                                     [toSystemEncoding(f) for f in fichiers], 
@@ -7246,7 +7249,8 @@ class Progression(BaseDoc, Grammaire):
         for fichier, sequence in listeFichiersSequences:
 #             print 
 #             print fichier
-            path = testRel(fichier, self.GetPath())
+#             path = testRel(fichier, self.GetPath())
+            path = Lien(fichier).GetRelPath(self.GetPath())
 #             print path
 #             path = os.path.join(path, os.path.split(fichier)[1])
 #             print path
@@ -7268,7 +7272,8 @@ class Progression(BaseDoc, Grammaire):
         for fichier, projet in listeFichiersProjets:
 #             print 
 #             print fichier
-            path = testRel(fichier, self.GetPath())
+#             path = testRel(fichier, self.GetPath())
+            path = Lien(fichier).GetRelPath(self.GetPath())
 #             print path
 #             path = os.path.join(path, os.path.split(fichier)[1])
 #             print path
@@ -7673,7 +7678,7 @@ class Progression(BaseDoc, Grammaire):
 #########################################################################################################
 class ElementProgression():
     def __init__(self, path = r""):
-        self.path = path
+        self.path = path # str, car forcément fichier et chemin relatif
         
         doc = self.GetDocument()
         if hasattr(doc, 'nbrCreneaux'):
@@ -13113,6 +13118,8 @@ class Personne(ElementBase):
             for k in self.GetProjetRef().parties:
                 self.grille[k] = Lien(typ = "f")
                 self.grille[k].path = toFileEncoding(branche.get("Grille"+k, r""))
+                if self.grille[k].path ==".":
+                    self.grille[k].path = ""
 #             print "grilles", self.grille
 #            self.grille[0].path = branche.get("Grille0", u"")
 #            self.grille[1].path = branche.get("Grille1", u"")
@@ -13577,6 +13584,7 @@ class Eleve(Personne):
             for part in parts:
                 self.grille[part] = Lien(typ = 'f')
                 self.grille[part].path = toFileEncoding(f)
+                self.grille[part].EvalTypeLien()
         
 #         self.GetDocument().GetApp().MarquerFichierCourantModifie()
         # Mise à our du panel de Propriétés courant

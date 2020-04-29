@@ -80,7 +80,7 @@ import version
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
-                        testRel, nomCourt
+                      nomCourt
 
 import richtext
 
@@ -4147,7 +4147,7 @@ class FenetreProjet(FenetreDocument):
                         dlgb.Destroy()
                         return ["Opération annulée"]
                 else:
-                    for g in list(e.grille.values()):
+                    for g in e.grille.values():
                         if not os.path.exists(g.path): # Le fichier grille pour cet élève n'a pas été trouvé
                             nomFichiers[e.id] = e.GetNomGrilles(dirpath)
                             if nomFichiers[e.id] is None:
@@ -4177,45 +4177,52 @@ class FenetreProjet(FenetreDocument):
 #                dlgb.top()
 #                 dlgb.Refresh()
                     
-                if e.id in list(nomFichiers.keys()):
+                if e.id in nomFichiers:
                     e.GenererGrille(nomFichiers = nomFichiers[e.id], 
                                     messageFin = False, win = dlgb)
 
-                for k, g in list(e.grille.items()):
+                for k, g in e.grille.items():
+#                     print(">>>", g, g.ok)
 #                    grille = os.path.join(toFileEncoding(pathprj), toFileEncoding(g.path))
-                    grille = os.path.join(pathprj, g.path)
-                    if k in list(self.projet.GetReferentiel().aColNon.keys()):
-#                    if k == classNON:
-                        collectif = self.projet.GetProjetRef().grilles[k][1] == 'C'
-                        feuilNON = self.projet.GetProjetRef().cellulesInfo[k]["NON"][0][0]
-                        if feuilNON != '' and collectif: # fichier "Collectif"
-                            feuille = feuilNON+str(e.id+1)
+#                     grille = os.path.join(pathprj, g.path)
+                    if g.ok:
+                        grille = g.GetAbsPath(pathprj)
+                        if k in self.projet.GetReferentiel().aColNon:
+    #                    if k == classNON:
+                            collectif = self.projet.GetProjetRef().grilles[k][1] == 'C'
+                            feuilNON = self.projet.GetProjetRef().cellulesInfo[k]["NON"][0][0]
+                            if feuilNON != '' and collectif: # fichier "Collectif"
+                                feuille = feuilNON+str(e.id+1)
+                            else:
+                                feuille = None
                         else:
                             feuille = None
-                    else:
-                        feuille = None
-                
-                    lst_grilles.append((grille, feuille))
+                    
+                        lst_grilles.append((grille, feuille))
                 
                 count += 1
 #                 dlgb.Refresh()
             
-            message += "Compilation des grilles ...\n\n"
-            dlgb.update(count, message)
-#            dlgb.top()
-#             count += 1
-#             dlgb.Refresh()
+            if len(lst_grilles) > 0:
+                message += "Compilation des grilles ...\n\n"
+                dlgb.update(count, message)
+    #            dlgb.top()
+    #             count += 1
+    #             dlgb.Refresh()
+                    
+                ok = genpdf.genererGrillePDF(nomFichier, lst_grilles)
                 
-            genpdf.genererGrillePDF(nomFichier, lst_grilles)
-            
-            message += "Les grilles ont été créées avec succés dans le fichier :\n\n"+nomFichier
-            dlgb.update(count, message)
-#            dlgb.top()
-            try:
-                os.startfile(nomFichier)
-            except:
-                pass
-            
+                if ok:
+                    message += "Les grilles ont été créées avec succés dans le fichier :\n\n"+nomFichier
+                    dlgb.update(count, message)
+        #            dlgb.top()
+                    try:
+                        os.startfile(nomFichier)
+                    except:
+                        pass
+            else:
+                message += "Aucune grille n'a pu être générée !\n\n"
+                dlgb.update(count, message)
 #             dlgb.Destroy()
                 
                 
@@ -4235,8 +4242,10 @@ class FenetreProjet(FenetreDocument):
 #            return nomFichier+".pdf"
 #         print("genererFicheValidation")
         mesFormats = "PDF (.pdf)|*.pdf"
-        nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], ".pdf")
         ref = self.projet.GetReferentiel()
+        t = ref.getLabel("PRJVAL").Sing_()
+        nomFichier = getNomFichier(t, self.projet.intitule[:20], ".pdf")
+        
         dlg = wx.FileDialog(self, "Enregistrer %s" %ref.getLabel("PRJVAL").le_(),
                             defaultFile = nomFichier,
                             wildcard = mesFormats,
@@ -9496,8 +9505,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
                             )
 
         if dlg.ShowModal() == wx.ID_OK:
-            self.lien.path = testRel(dlg.GetPath(), 
-                                     self.GetDocument().GetPath())
+            self.lien.setPath(dlg.GetPath())
             self.lien.ChargerSequence()
             self.lien.GetApp().arbre.ReSelectItem(self.lien.branche)
 #             
@@ -9806,8 +9814,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
                             )
 
         if dlg.ShowModal() == wx.ID_OK:
-            self.lien.path = testRel(dlg.GetPath(), 
-                                     self.GetDocument().GetPath())
+            self.lien.setPath(dlg.GetPath())
             self.MiseAJour(sendEvt = True)
         dlg.Destroy()
         

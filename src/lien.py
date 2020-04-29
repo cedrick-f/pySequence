@@ -39,7 +39,7 @@ module lien
 import os, sys, subprocess
 import wx
 import re
-from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING, testRel
+from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING
 from widgets import messageErreur, scaleImage, Grammaire
 import images
 from drag_file import *
@@ -100,13 +100,17 @@ class Lien():
     
     ######################################################################################  
     def __neq__(self, l):
-        if self.typ != l.typ:
+        if self.type != l.type:
             return True
         elif self.path != l.path:
             return True
         return False
     
-    
+    ######################################################################################  
+    def __eq__(self, lien):
+        return self.path == lien.path
+            
+            
     ######################################################################################  
     def DialogCreer(self, pathref):
         dlg = URLDialog(None, self, pathref)
@@ -117,8 +121,9 @@ class Lien():
     ######################################################################################  
     def Afficher(self, pathref, fenSeq = None):
         """ Lance l'affichage du contenu du lien
-            <pathref> = chemin de l'application pour d�terminer le chemin absolu
+            <pathref> = chemin de l'application pour déterminer le chemin absolu
         """
+        t = self.getTexte()
 #         print "Afficher", self.type, self.path
         path = self.GetAbsPath(pathref)
 #         print "   ", path
@@ -133,8 +138,8 @@ class Lien():
                     messageErreur(None, "Ouverture impossible",
                                   "Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(path))
             else:
-                messageErreur(None, "Chemin non trouv�",
-                                  "Le fichiern'a pas �t� trouv�\n\n%s" %toSystemEncoding(path))        
+                messageErreur(None, "Chemin non trouvé",
+                                  "Le fichiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))        
             
                 
         elif self.type == 'd':
@@ -147,8 +152,8 @@ class Lien():
 #                     messageErreur(None, u"Ouverture impossible",
 #                                   u"Impossible d'acc�der au dossier\n\n%s\n" %toSystemEncoding(path))
             else:
-                messageErreur(None, "Chemin non trouv�",
-                                  "Le dossiern'a pas �t� trouv�\n\n%s" %toSystemEncoding(path))
+                messageErreur(None, "Chemin non trouvé",
+                                  "Le dossiern'a pas été trouvé\n\n%s" %toSystemEncoding(path))
 
 
         elif self.type == 'u':
@@ -166,33 +171,33 @@ class Lien():
                 child = fenSeq.commandeNouveau()
                 child.ouvrir(path)
 
-  
     ######################################################################################  
-    def EvalTypeLien(self, pathref):
+    def isOk(self):
+        self.EvalTypeLien()
+        return self.ok
+    
+    
+    ######################################################################################  
+    def EvalTypeLien(self, pathref = ""):
         """ Evaluation du de self.lien.path
             par rapport à pathref
             et attribue un type
         """
 #         print("EvalTypeLien\n  ", self.path, "\n  ", pathref)
-#         print("   ", os.path.commonpath([pathref, self.path]))
-                           
-                           
+
         abspath = self.GetAbsPath(pathref)
         
-#         print("   ", abspath, self.abs)
-            
         if os.path.exists(abspath):
-            relpath = testRel(abspath, pathref)
             if os.path.isfile(abspath):
                 self.type = 'f'
 
             elif os.path.isdir(abspath):
                 self.type = 'd'
                     
-            if not self.abs:    
-                self.path = relpath
-            else:
-                self.path = abspath
+#             if not self.abs:    
+#                 self.path = relpath
+#             else:
+#                 self.path = abspath
                 
             self.ok = True
                 
@@ -203,7 +208,38 @@ class Lien():
         else:
             self.type = ''
             self.ok = False
-        
+            
+            
+        return           
+                           
+#         abspath = self.GetAbsPath(pathref)
+#         
+# #         print("   ", abspath, self.abs)
+#             
+#         if os.path.exists(abspath):
+#             relpath = testRel(abspath, pathref)
+#             print("relpath", relpath)
+#             if os.path.isfile(abspath):
+#                 self.type = 'f'
+# 
+#             elif os.path.isdir(abspath):
+#                 self.type = 'd'
+#                     
+#             if not self.abs:    
+#                 self.path = relpath
+#             else:
+#                 self.path = abspath
+#                 
+#             self.ok = True
+#                 
+#         elif re.match(regex, self.path):
+#             self.type = 'u'
+#             self.ok = True
+#         
+#         else:
+#             self.type = ''
+#             self.ok = False
+#         
         
         
     ######################################################################################  
@@ -234,8 +270,8 @@ class Lien():
         if path == None:
             path = self.path
             
-        if path == ".":
-            return pathdoc
+#         if path == ".":
+#             return pathdoc
         
         cwd = os.getcwd()
         if pathdoc != "":
@@ -293,21 +329,40 @@ class Lien():
         return path
     
     
+    ###############################################################################################
+    def getTexte(self):
+        if self.type == 'd':
+            t = "dossier(s)$m"
+        elif self.type == 'f':
+            t = "fichier(s)$m"
+        elif self.type == 'u':
+            t = "URL(s)$f"
+        else:
+            t = ""
+        return Grammaire(t)
+    
+    
     ######################################################################################  
     def getBranche(self, branche):
-        branche.set("Lien", toSystemEncoding(os.path.normpath(self.path)))
+#         branche.set("Lien", toSystemEncoding(os.path.normpath(self.path)))
+        branche.set("Lien", toSystemEncoding(self.path))
         branche.set("TypeLien", self.type)
         branche.set("Abs", str(self.abs))
         
         
     ######################################################################################  
     def setBranche(self, branche, pathdoc):
-        self.path = toFileEncoding(branche.get("Lien", r""))
-        self.path = os.path.normpath(self.path)
+        self.path = toFileEncoding(branche.get("Lien", ""))
+        if self.path == ".":
+            self.path = ""
+#         print("setBranche Lien", self.path)
+#         self.path = os.path.normpath(self.path)
+
         self.type = branche.get("TypeLien", "")
         self.abs = eval(branche.get("Abs", "False"))
-        if self.type == "" and self.path != r"":
+        if self.type == "" and self.path != "":
             self.EvalTypeLien(pathdoc)
+#         print("               ", self.path)
         return True
 
 
@@ -418,7 +473,7 @@ class URLSelectorBase(wx.Panel):
             dossier : bool pour spécifier que le lien est un dossier
             ext : Extension de fichier par défaut
         """
-#         print "init URLSelectorBase", pathref
+#         print("init URLSelectorBase", lien.path)
         
         wx.Panel.__init__(self, parent, -1)
         self.SetMaxSize((-1,22*SSCALE))
@@ -437,17 +492,7 @@ class URLSelectorBase(wx.Panel):
         self.SetPathSeq(pathref)
 
     
-    ###############################################################################################
-    def getTexte(self):
-        if self.lien.type == 'd':
-            t = "dossier(s)$m"
-        elif self.lien.type == 'f':
-            t = "fichier(s)$m"
-        elif self.lien.type == 'u':
-            t = "URL(s)$f"
-        else:
-            t = ""
-        return Grammaire(t)
+    
 
     ###############################################################################################
     def CreateSelector(self, dossier = True, btn_ouvrir = False):
@@ -458,7 +503,7 @@ class URLSelectorBase(wx.Panel):
         
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         bsize = (16*SSCALE, 16*SSCALE)
-        
+#         print("    ", self.lien.path)
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, bsize[1]))
         
         
@@ -514,7 +559,7 @@ class URLSelectorBase(wx.Panel):
         
     ###############################################################################################
     def SetToolTipTexte(self):
-        t = self.getTexte()
+        t = self.lien.getTexte()
         if self.lien.path == "":
             self.texte.SetToolTip("Saisir un nom de fichier/dossier ou un URL\nou faire glisser un fichier")
         elif self.lien.ok:
@@ -623,7 +668,7 @@ class URLSelectorBase(wx.Panel):
         if lien is not None:
             self.lien.path = lien
             self.lien.EvalLien(lien, self.pathref)
-        
+#         print("    ", self.lien.path)
         try:
             self.texte.ChangeValue(self.lien.path)
         except: # Ca ne devrait pas arriver ... et pourtant �a arrive !

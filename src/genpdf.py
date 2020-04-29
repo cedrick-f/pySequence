@@ -635,7 +635,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 
 
 def genererGrillePDF(nomFichier, grilles_feuilles):
-    print("genererGrillePDF")
+#     print("genererGrillePDF")
 #    print grilles_feuilles
     
     wx.BeginBusyCursor()
@@ -651,13 +651,15 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     g = []
     for i, grille_feuille in enumerate(grilles_feuilles):
         grille, feuille = grille_feuille
-        print("  ", grille, feuille)
+#         print("  ", grille, feuille)
         try:
             grille = grilles.PyExcel(grille)
-        except Exception as err:
-            wx.EndBusyCursor()
-            messageErreur(wx.GetTopLevelParent(), "Erreur !", "{0}".format(err))
-            return False
+        except Exception as err: #pywintypes.com_error
+#             wx.EndBusyCursor()
+#             messageErreur(wx.GetTopLevelParent(wx.GetActiveWindow()), "Erreur !", "{0}".format(err))
+            messageErreur(wx.GetTopLevelWindows()[-1], "Erreur !", "{0}".format(err))
+            continue
+#             return False
             
         g.append(grille)
         if feuille is None:
@@ -702,12 +704,18 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     if not Ok:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
-        messageErreur(self, "Erreur !",
+        messageErreur(wx.GetTopLevelWindows()[-1], "Erreur !",
                             "Impossible de générer le fichier PDF des grilles")
         return False
     
-    doc.save(nomFichier)
-    doc.close()
+    try:
+        doc.save(nomFichier)
+    except:
+        Ok = False
+        messageErreur(wx.GetTopLevelWindows()[-1], "Erreur !",
+                            "Impossible de générer le fichier PDF des grilles")
+    finally:
+        doc.close()
 #     output = open(nomFichier, "wb")
 #     merger.write(output)
     
@@ -717,7 +725,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
         print("Grilles temporaires non supprimées :", dosstemp)
         
     wx.EndBusyCursor()
-    return True
+    return Ok
     # read PDF files (.pdf) with wxPython
     # using wx.lib.pdfwin.PDFWindow class ActiveX control
     # from wxPython's new wx.activex module, this allows one

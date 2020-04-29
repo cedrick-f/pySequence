@@ -180,16 +180,16 @@ def samefile(path1, path2):
            os.path.normcase(os.path.normpath(os.path.abspath(path2)))
 
 
-######################################################################################  
-def testRel(path, start):
-    """ Renvoie le chemin <path> relatif à <start> 
-    """
-    try:
-        return os.path.relpath(path, start)
-    except:
-#         print "echec relpath"
-        return path
-    
+# ######################################################################################  
+# def testRel(path, start):
+#     """ Renvoie le chemin <path> relatif à <start> 
+#     """
+#     try:
+#         return os.path.relpath(path, start)
+#     except:
+# #         print "echec relpath"
+#         return path
+#     
     
 #######################################################################################  
 #
