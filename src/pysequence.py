@@ -7697,9 +7697,18 @@ class ElementProgression():
     ######################################################################################  
     def __lt__(self, doc):
         """ utilisé pour la fonction .sort() dans Progression.Ordonner()
+            None est plus petit que tout
         """
+        
         doc0 = self.GetDoc()
+        if doc0 is None:
+            return True
+        
         doc1 = doc.GetDoc()
+        if doc1 is None:
+            return False
+        
+        
         #print(doc0, "<", doc1, "?")
         if doc0.position[0] == doc1.position[0]:
             dp0 = doc0.position[1]-doc0.position[0]

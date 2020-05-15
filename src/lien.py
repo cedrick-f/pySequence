@@ -396,10 +396,10 @@ class URLDialog(wx.Dialog):
         box.Add(url, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
         self.url = url
         
-        sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(box, 0, wx.GROW|wx.ALL, 5)
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
-        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5)
+        sizer.Add(line, 0, wx.GROW|wx.RIGHT|wx.TOP, 5)
 
         btnsizer = wx.StdDialogButtonSizer()
         
@@ -417,7 +417,7 @@ class URLDialog(wx.Dialog):
         btnsizer.AddButton(btn)
         btnsizer.Realize()
 
-        sizer.Add(btnsizer, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        sizer.Add(btnsizer, 0,wx.ALL, 5)
 
         self.SetSizer(sizer)
         sizer.Fit(self)

@@ -1170,15 +1170,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
     #############################################################################
     def MiseAJourToolBar(self):
-        fenDoc = self.GetCurrentPage()
-        if fenDoc is not None and fenDoc.typ == 'prg': #and hasattr(fenDoc, 'progression') 
-            coderef = fenDoc.progression.GetReferentiel().Code
-    #         print "   ", coderef
-            btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
-            if btnPrj is not None:
-    #             print "   ", REFERENTIELS[coderef].projets
-                btnPrj.Enable(len(REFERENTIELS[coderef].projets) > 0)
-                self.tb.Realize()
+        return
+#         fenDoc = self.GetCurrentPage()
+#         if fenDoc is not None and fenDoc.typ == 'prg': #and hasattr(fenDoc, 'progression') 
+#             coderef = fenDoc.progression.GetReferentiel().Code
+#     #         print "   ", coderef
+#             btnPrj = self.GetBoutonToolBar(fenDoc.typ, 73)
+#             if btnPrj is not None:
+#     #             print "   ", REFERENTIELS[coderef].projets
+#                 btnPrj.Enable(len(REFERENTIELS[coderef].projets) > 0)
+#                 self.tb.Realize()
             
     #############################################################################
     def DefinirOptions(self, options):
