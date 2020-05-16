@@ -13301,6 +13301,34 @@ class Eleve(Personne):
 #        print "   >>>", d
         return d
 
+    
+    ######################################################################################  
+    def getValiditeDuree(self, duree = None):
+        """ Renvoie la valdité de la durée totale que doit passer l'élève sur le Projet
+            0 = Ok
+            1 = Bof
+            2 = pas assez
+            3 = trop
+        """
+        prjeval = self.GetProjetRef()
+        if duree is None:
+            duree = self.GetDuree()
+        dureeRef = prjeval.duree
+        
+        tol1 = constantes.DELTA_DUREE
+        tol2 = constantes.DELTA_DUREE2
+        taux = abs((duree-dureeRef)/dureeRef)*100
+        
+        if taux < tol1:
+            return 0
+        elif taux < tol2:
+            return 1 
+        else:
+            if duree < dureeRef:
+                return 2
+            else:
+                return 3
+
     ######################################################################################  
     def GetAvatar(self):
         if self.image is None:
@@ -13925,29 +13953,28 @@ class Eleve(Personne):
 #         print("MiseAJourCodeBranche", self)
 
         prjeval = self.GetProjetRef()
-#         print("   ", prjeval)
+        
         #
         # Durée
         #
         duree = self.GetDuree()
-        dureeRef = prjeval.duree
+        v = self.getValiditeDuree(duree)
+
 #        print "   duree", duree, "/", dureeRef
         lab = " ("+str(int(duree))+"h) "
         self.codeBranche.SetLabel(lab)
-        tol1 = constantes.DELTA_DUREE
-        tol2 = constantes.DELTA_DUREE2
-        taux = abs((duree-dureeRef)/dureeRef)*100
+
 #        print "   taux", taux, "(", tol1, tol2, ")"
         t = "Durée de travail "
-        if taux < tol1:
+        if v == 0:
             self.codeBranche.SetBackgroundColour(COUL_OK)
             self.codeBranche.SetToolTip(t + "conforme")
-        elif taux < tol2:
+        elif v == 1:
             self.codeBranche.SetBackgroundColour(COUL_BOF)
             self.codeBranche.SetToolTip(t + "acceptable")
         else:
             self.codeBranche.SetBackgroundColour(COUL_NON)
-            if duree < dureeRef:
+            if v == 2:
                 self.codeBranche.SetToolTip(t + "insuffisante")
             else:
                 self.codeBranche.SetToolTip(t + "trop importante")
@@ -14067,10 +14094,11 @@ class Eleve(Personne):
             # Durée
             #
             duree = self.GetDuree()
+            v = self.getValiditeDuree(duree)
             lab = draw_cairo.getHoraireTxt(duree)
-            if abs(duree-70) < constantes.DELTA_DUREE:
+            if v == 0:
                 coul = coulOK
-            elif abs(duree-70) < constantes.DELTA_DUREE2:
+            elif v == 1:
                 coul = couleur.GetCouleurHTML(COUL_BOF)
             else:
                 coul = coulNON
@@ -14090,12 +14118,12 @@ class Eleve(Personne):
             lab = {}
             for disc, dic in prj._dicoGrpIndicateur.items():
                 lab[disc] = {}
-                for part in dic.keys():
+                for part in dic:
                     lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
         #            totalOk = True
                     for k in keys[disc]:
                         if k in prj._dicoGrpIndicateur[disc][part]:
-                            if k in ev[disc][part].keys():
+                            if k in ev[disc][part]:
                                 
         #                        totalOk = totalOk and (ler[k] >= 0.5)
                                 lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
@@ -14107,7 +14135,7 @@ class Eleve(Personne):
                     lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
  
             for disc, dic in prj._dicoGrpIndicateur.items():
-                for part in dic.keys():
+                for part in dic:
     #                print "   ", part
                     for i, lo in enumerate(lab[disc][part]):
     #                    print "      ", i, lo
@@ -14129,7 +14157,7 @@ class Eleve(Personne):
                         self.tip.AjouterCol("le"+part, l, coul,
                                        couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
-            for disc in prj._dicoIndicateurs.keys():
+            for disc in prj._dicoIndicateurs:
                 for t in keys[disc]:
                     self.tip.AjouterCol("le", t, size = 2) 
             
