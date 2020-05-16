@@ -4360,6 +4360,7 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_seuilEval F_S1="0.0" />
       <d_taches />
     </Projet_PRJ1>
     <Projet_PRJ2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ2" S_ficheValid="" S_intitule="Projet">
@@ -4442,6 +4443,7 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_seuilEval F_C="0.0" />
       <d_taches />
     </Projet_PRJ2>
     <Projet_PRJ3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ3" S_ficheValid="" S_intitule="Projet de fin d'année">
@@ -4524,6 +4526,7 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_seuilEval F_S2="0.0" />
       <d_taches />
     </Projet_PRJ3>
   </d_projets>

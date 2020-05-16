@@ -6812,6 +6812,7 @@
         <l__02 S_00="Con" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Con" S_02="Rea" />
       </d_posRevues>
+      <d_seuilEval F_S1="0.0" />
       <d_taches />
     </Projet_CCF1>
     <Projet_CCF2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
@@ -6885,6 +6886,7 @@
         <l__02 S_00="Sup" S_01="Ana" />
         <l__03 S_00="Sup" S_01="Ana" S_02="Con" />
       </d_posRevues>
+      <d_seuilEval F_S2="0.0" />
       <d_taches />
     </Projet_CCF2>
     <Projet_PRJ B_tachesOnce="True" I_duree="50" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_projet_E6.html" S_intitule="Projet de fin d'année">
@@ -7057,6 +7059,7 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_seuilEval F_R2="0.0" F_R3="0.0" F_S="0.0" />
       <d_taches>
         <l_T1.4 S_00="Ana" S_01="Vérifier la pérennité des informations et les mettre à jour">
           <l_02 S_00="C2.1" />

@@ -20195,7 +20195,6 @@ class CodeBranche(wx.Panel):
         self.info = wx.BoxSizer(wx.HORIZONTAL)
         sz.Add(self.info)
         
-        
         self.SetSizerAndFit(sz)
         
         self.reset()
@@ -20207,13 +20206,7 @@ class CodeBranche(wx.Panel):
 #        print "OnClick"
         if hasattr(self, 'branche'):
             self.Parent.SelectItem(self.branche)
-#        self.Parent.OnSelChanged(item = self.branche)
-#        return
-#        evt = wx.Event(-1, CT.EVT_TREE_SEL_CHANGED)
-#        evt = wx.PyCommandEvent(CT.EVT_TREE_SEL_CHANGED.typeId, self.GetId())
-#        print dir(evt)
-#        evt.SetItem(self.branche)
-#        self.Parent.GetEventHandler().ProcessEvent(evt)
+
         
     def reset(self):
         self.info.Clear(delete_windows=True)
@@ -20259,15 +20252,20 @@ class CodeBranche(wx.Panel):
     def SetBackgroundColour(self, color):
         self.code.SetBackgroundColour(color)
         
+        
     def SetForegroundColour(self, color):
         self.code.SetForegroundColour(color)
+    
     
     def SetToolTip(self, text):
         self.code.SetToolTip(text)
         
+        
     def LayoutFit(self):
         self.Layout()
         self.Fit()
+        
+        
         
 ##########################################################################################################
 #

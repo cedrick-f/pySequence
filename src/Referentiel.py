@@ -1453,6 +1453,7 @@ class Referentiel(XMLelem):
                             if t == p.intitule or t == p.code: 
                                 p.listeParties.append(part)
                                 p.parties[part] = sh_co.cell(2,cp).value
+                                p.seuilEval[part] = 0.01*int0(sh_co.cell(2,cp+1).value)
                         self.compImposees[part] = False # Valeur par défaut
                 
                 if debug: print("colParties", self._colParties)
@@ -1460,6 +1461,7 @@ class Referentiel(XMLelem):
                     self.parties[part] = sh_co.cell(2,col).value
                     
                 for p in self.projets.values():
+                    
         #            print "  importer", self, p
                     p.importer(wb)
         
@@ -2610,6 +2612,7 @@ class Projet(XMLelem):
         self.periode = periode  # une liste [début, fin] ou [debut-fin] ou [] en unité "période" de Référentiel
         self.parties = {}       # Le dictionnaire des parties (code, nom)
         self.listeParties = []  # La liste ordonnée des parties
+        self.seuilEval = {}     # Seuils d'évaluabilté des différentes parties (0 à 1)
         
         #
         # grilles d'évaluation de projet
@@ -2695,7 +2698,10 @@ class Projet(XMLelem):
         if not "FIC" in self.attributs:
             self.attributs["FIC"] = ["", "", "", ""]
         
-        
+        for p in self.listeParties:
+            if not p in self.seuilEval:
+                self.seuilEval[p] = 1.0
+
 
     #########################################################################
     def getNbrRevuesDefaut(self):
@@ -2846,7 +2852,9 @@ class Projet(XMLelem):
     ##################################################################################################################
     def importer(self, wb):
 #         print("importer", self.parties.keys())
-        for part in self.parties.keys():
+
+        
+        for part in self.parties:
             #
             # Grilles d'évaluation projet
             #
@@ -2867,10 +2875,11 @@ class Projet(XMLelem):
                           int0(sh_g.cell(l,3).value), # Colonne
                           int0(sh_g.cell(l,4).value)], #Période
                           sh_g.cell(l,5).value]  # Préfixe
-                    if k in self.cellulesInfo[part].keys():
+                    if k in self.cellulesInfo[part]:
                         self.cellulesInfo[part][k].append(i)
                     else:
                         self.cellulesInfo[part][k] = [i]
+                        
             
         #
         # Phases du projet
@@ -3266,19 +3275,21 @@ class Projet(XMLelem):
                     self._dicoIndicateurs_simple[code].update(REFERENTIELS[t]._dicoIndicateurs_simple["S"])
             
     
-            self._dicoGrpIndicateur[code] = {}
+            d = {}
             for p in self.parties.keys():
-                self._dicoGrpIndicateur[code][p] = []
+                d[p] = []
     
             for comp, competence in self._dicoIndicateurs[code].items():
                 for indic in getListeIndic(competence):
-                    for part in indic.poids.keys():
-                        if part in self._dicoGrpIndicateur[code].keys():
-                            self._dicoGrpIndicateur[code][part].append(comp)
+                    for part in indic.poids:
+                        if part in d:
+                            d[part].append(comp)
     
             for p in self.parties.keys():
-                self._dicoGrpIndicateur[code][p] = list(set(self._dicoGrpIndicateur[code][p]))
+                d[p] = list(set(d[p]))
 
+            if all(len(d[part]) > 0 for part in d):
+                self._dicoGrpIndicateur[code] = d
 #        if self._parent.Code == "EE-SI":
 #            print "     ", self._dicoCompetences
 #            print

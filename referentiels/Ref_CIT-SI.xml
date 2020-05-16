@@ -527,6 +527,7 @@
         <l__02 S_00="Ana" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
       </d_posRevues>
+      <d_seuilEval F_C="0.0" F_S="0.0" />
       <d_taches />
     </Projet_D1>
     <Projet_D2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="D2" S_ficheValid="" S_intitule="Défi">
@@ -635,6 +636,7 @@
         <l__02 S_00="Ana" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
       </d_posRevues>
+      <d_seuilEval F_C="0.0" F_S="0.0" />
       <d_taches />
     </Projet_D2>
     <Projet_D3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="D3" S_ficheValid="" S_intitule="Défi de fin d'année">
@@ -743,6 +745,7 @@
         <l__02 S_00="Ana" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
       </d_posRevues>
+      <d_seuilEval F_C="0.0" F_S="0.0" />
       <d_taches />
     </Projet_D3>
   </d_projets>

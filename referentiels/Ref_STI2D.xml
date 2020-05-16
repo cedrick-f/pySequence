@@ -6657,6 +6657,7 @@
         <l__02 S_00="Con" S_01="Rea" />
         <l__03 S_00="Con" S_01="Rea" S_02="Val" />
       </d_posRevues>
+      <d_seuilEval F_C="0.0" F_E3C="1.0" />
       <d_taches />
     </Projet_P1>
     <Projet_P2 B_tachesOnce="False" I_duree="72" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="P2" S_ficheValid="STI2D_IT_projet.html" S_intitule="Projet Terminale">
@@ -6783,6 +6784,7 @@
       <d_posRevues>
         <l__03 S_00="Ana" S_01="Rea" S_02="Val" />
       </d_posRevues>
+      <d_seuilEval F_C2="0.0" F_S2="1.0" />
       <d_taches />
     </Projet_P2>
   </d_projets>

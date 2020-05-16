@@ -1152,6 +1152,7 @@
         <l__02 S_00="Con" S_01="Val" />
         <l__03 S_00="Ana" S_01="Con" S_02="Val" />
       </d_posRevues>
+      <d_seuilEval F_C="0.5" F_S="1.0" />
       <d_taches />
     </Projet_PRJ>
   </d_projets>

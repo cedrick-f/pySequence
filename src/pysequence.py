@@ -13668,10 +13668,13 @@ class Eleve(Personne):
             % soutenance
             ev, ev_tot, seuil
             
-            compil = renvoie des dictionnaire plus simples
+            compil = renvoie des dictionnaires plus simples
         """ 
 #         print("GetEvaluabilite", self)
+        
         prj = self.GetProjetRef()
+        ref = self.GetReferentiel()
+#         print(prj._dicoGrpIndicateur)
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
 #         print("   ", dicIndicateurs)
@@ -13681,53 +13684,57 @@ class Eleve(Personne):
         for disc, dic in prj._dicoGrpIndicateur.items():
             rs[disc] = {}
             lers[disc] = {}
-            for ph in dic.keys():
+            for ph in dic:
                 lers[disc][ph] = {}
                 rs[disc][ph] = 0
 #         print("   xx init :", rs, lers)
         
         
+        
+        
+        
         def getPoids(competence, code, poidsGrp):
-#             print "  getPoids", code
+#             print("  getPoids", code)
             if competence.sousComp != {}:
                 for k, c in competence.sousComp.items():
                     getPoids(c, k, poidsGrp)
-            
+             
 #             if competence.poids != {}:
             for disc, dic in prj._dicoGrpIndicateur.items():
-                for ph in dic.keys():
-#                     print "      ", ph
+                for ph in dic:
+#                     print("      ", ph)
                     if grp in dic[ph]:
 #                         print "_", dic[ph]
                         for i, indic in enumerate(competence.indicateurs):
-                            
-                            if disc+code in dicIndicateurs.keys():
+                             
+                            if disc+code in dicIndicateurs:
                                 if dicIndicateurs[disc+code][i]:
 #                                     print "  comp", code, i, indic.poids, ph
                                     poids = indic.poids
-                                    if ph in poids.keys():
-                                        if not ph in poidsGrp.keys():
+                                    if ph in poids:
+                                        if not ph in poidsGrp:
                                             print("ERREUR poids", code, "Faire \"Ouvrir et réparer\"")
                                         else:
                                             p = 1.0*poids[ph]/100
-                                        
+                                         
                                             rs[disc][ph] += p * poidsGrp[ph]/100
-                                            if grp in lers[disc][ph].keys():
+                                            if grp in lers[disc][ph]:
                                                 lers[disc][ph][grp] += p
                                             else:
                                                 lers[disc][ph][grp] = p
                             else:
-                                if not grp in lers[disc][ph].keys():
+                                if not grp in lers[disc][ph]:
                                     lers[disc][ph][grp] = 0
-                            
+                             
             return
+#         
         
         for dico in prj._dicoIndicateurs.values():
             for grp, grpComp in dico.items():
 #                 print "  >>> poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)
                 
-        
+#         print("   lers:", lers)
         #
         # Seuils d'évaluabilité
         #
@@ -13736,13 +13743,16 @@ class Eleve(Personne):
         seuil = {}
         for disc, dic in prj._dicoGrpIndicateur.items():
             seuil[disc] = {}
-            for t in dic.keys():
+            for t in dic:
     #            if t in classeurs:
     #            print "aColNon", self.GetReferentiel().aColNon
-                if t in self.GetReferentiel().aColNon.keys() and self.GetReferentiel().aColNon[t]:
-                    seuil[disc][t] = 0.5  # s'il y a une colonne "non", le seuil d'évaluabilité est de 50% par groupe de compétence
-                else:
-                    seuil[disc][t] = 1.0     # s'il n'y a pas de colonne "non", le seuil d'évaluabilité est de 100% par groupe de compétence
+                if t in ref.aColNon and ref.aColNon[t]:  # s'il y a une colonne "non", 
+                    seuil[disc][t] = 0.5   # le seuil d'évaluabilité est de 50% par groupe de compétence
+                                         
+                else:  # s'il n'y a pas de colonne "non"
+                    seuil[disc][t] = prj.seuilEval[t]
+#                     seuil[disc][t] = 1.0     # le seuil d'évaluabilité est de 100% par groupe de compétence
+                                             
 #        print "seuil", seuil
         ev = {}
         ev_tot = {}
@@ -13751,7 +13761,7 @@ class Eleve(Personne):
         for disc, dic in prj._dicoGrpIndicateur.items():
             ev[disc] = {}
             ev_tot[disc] = {}
-            for part in dic.keys():
+            for part in dic:
                 txt = rs[disc][part]
                 txt = round(txt, 6)
                 ev[disc][part] = {}
@@ -13763,21 +13773,17 @@ class Eleve(Personne):
         
 #         print("   ", ev, ev_tot, seuil)
         
-        
+#         print(">>>", ev, ev_tot, seuil)
         
         if compil:
             ev = ev["S"]
             ev_tot = ev_tot["S"]
             seuil = seuil["S"]
             
-            
+        
         return ev, ev_tot, seuil
         
-        
-#        if complet:
-#            return r, s, ler, les
-#        else:
-#            return r, s
+    
     
 
     ######################################################################################  
@@ -13919,7 +13925,7 @@ class Eleve(Personne):
 #         print("MiseAJourCodeBranche", self)
 
         prjeval = self.GetProjetRef()
-        
+#         print("   ", prjeval)
         #
         # Durée
         #
@@ -14151,7 +14157,8 @@ class Eleve(Personne):
             self.codeBranche.reset()
              
         for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
-            for part in dic.keys():
+#             print("  ", disc, dic)
+            for part in dic:
                 self.codeBranche.Add(disc+part)
         
         self.codeBranche.AddImg()
