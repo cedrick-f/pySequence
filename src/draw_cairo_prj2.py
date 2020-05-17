@@ -605,7 +605,7 @@ class Projet(Base_Fiche_Doc):
         #  Problématique
         #
         rectPro = self.posPro + self.taillePro
-        pt = Curve_rect_titre(self, rectPro, "Problématique",  
+        pt = Curve_rect_titre(self, rectPro, prjeval.attributs['PB'][0],  
                               self.Bcoul_Pro, self.Icoul_Pro, self.fontPro).draw()
         self.prj.pt_caract.append((pt, "Pb"))
         ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,

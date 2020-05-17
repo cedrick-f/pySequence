@@ -926,9 +926,11 @@ def encap_HTML(s):
     return "<HTML>"+s+"</HTML>"
 
 
-BASE_FICHE_HTML_ELEVE = """
-    <p id = "tit" style="text-align: center;"><font size="12"><b></b></font></p>
-    
+BASE_FICHE_HTML_TITRE = """
+<p style="text-align: left;"><span id = "tit" style="font-size: 8pt; font-style: italic;"> </span></p>
+"""
+
+BASE_FICHE_HTML_ELEVE = BASE_FICHE_HTML_TITRE + """
     <table border="0" width = "100%">
         <tbody>
             <tr>
@@ -963,8 +965,7 @@ BASE_FICHE_HTML_ELEVE = """
     
 """
 
-BASE_FICHE_HTML_GROUPE = """
-    <p style="text-align: center;"><font size="12"><b>Groupe</b></font></p>
+BASE_FICHE_HTML_GROUPE = BASE_FICHE_HTML_TITRE + """
     <p id="nom">Nom-Prénom</p>
     <img id="av" src="" alt=" ">
     <table border="0">
@@ -983,7 +984,7 @@ BASE_FICHE_HTML_CLASSE = """
 """
 
 BASE_FICHE_HTML_SEANCE = """
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
+<font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
     <table border="0" width="500">
         <tbody>
         <tr valign="top">
@@ -1175,7 +1176,7 @@ TEMPLATE_CI_CSS = ""
 
 
 BASE_FICHE_HTML_CI = """
-    <font size=11><font color="red"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font></font>
+    <font size=8><font color="red"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font></font>
     <dl id = "ci">
         <dt> </dt> <dd> </dd>
     </dl>
@@ -1200,14 +1201,14 @@ TEMPLATE_CMP_SAV = ""
 # """
 
 BASE_FICHE_HTML_COMP = """
-    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
+    <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
     <dl id = "list">
         <dt> </dt> <dd> </dd>
     </dl> 
 """
 
 BASE_FICHE_HTML_COMP_PRJ = """
-    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
+    <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
     <h2 style="font-size:11px" id="grp"> </h2>
     <h4 style="font-size:10px" id="int"> </h4>
     <ul id = "comp">
@@ -1218,7 +1219,7 @@ BASE_FICHE_HTML_COMP_PRJ = """
 """
 
 BASE_FICHE_HTML_DOM = """
-    <font size="12" color="GRAY"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
+    <font size="8" color="GRAY"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
     <h4 style="font-size:11px" id="int"> </h4>
     <ul id = "dom">
     <li> </li>
@@ -1237,14 +1238,14 @@ TEMPLATE_SAV_CSS = ""
 
 
 BASE_FICHE_HTML_SAV = """
-    <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
+    <font size="8" color="blue"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
     <dl id = "list">
         <dt> </dt> <dd> </dd>
     </dl> 
 """
 
 BASE_FICHE_HTML_SYSTEME = """
-    <p style="color:blue;text-align: center;font-size: 16">Système</p>
+    <p style="color:blue;text-align: left;font-size: 8">Système</p>
     <p id="nom">_</p>
     <p id="nbr">_</p>
     <img id="img">
@@ -1252,15 +1253,18 @@ BASE_FICHE_HTML_SYSTEME = """
 """
 
 
-BASE_FICHE_HTML_SUPPORT = """
-    <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
-    <p id="nom"> </p>
+BASE_FICHE_HTML_SUPPORT = BASE_FICHE_HTML_TITRE + """
+    <table border="0" width="100%">
+        <tr valign="top">
+            <td id="nom" align="left"> </td>
+        </tr>
+    </table>
     
     <table border="0" width="100%">
         <tbody>
         <tr  valign="top">
             <td align="left" valign="top" width="300"><div id="des"> </div></td>
-            <td alig="right" valign="top"><img id="img" src=" " alt=" "></td>
+            <td alig="right" valign="top"><img id="img" src=" " alt=" " width="300"></td>
         </tr>
         
         </tbody>
@@ -1292,7 +1296,7 @@ BASE_FICHE_HTML_MODELE = """
 
 
 BASE_FICHE_HTML_PROB = """
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
 
 <p id="txt"> </p>
 <p id="int"> </p>
@@ -1347,18 +1351,18 @@ BASE_FICHE_HTML_PROJET = """
 
 
 BASE_FICHE_HTML_TACHE = """
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
-    <table border="0">
+    <table border="0" width="100%">
         <tbody>
-        
         <tr>
+            <td valign="top"><span id="titre" style="font-size: 30pt; font-style: italic; font-weight: bold;"> </span></td>
             <td width = "20" valign="top"><img id="icon" src="" alt=" "></td>
-            <td valign="top"><p id="txt"> </p></td>
-            <td width = "64" valign="top"><img id="icon2" src="" alt=" "></td>
+            <td id="txt" valign="top"> </td>
+            
         </tr>
 
         <tr align="left" valign="top">
             <td colspan=2><p id="int"> </p></td>
+            <td width = "64" valign="top"><img id="icon2" src="" alt=" "></td>
         </tr>
         
         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
@@ -1385,10 +1389,7 @@ BASE_FICHE_HTML_PRJ = """
     <img id="ap" src=" " alt=" "> 
 """
 
-BASE_FICHE_HTML_PROF = """
-    <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
- 
- 
+BASE_FICHE_HTML_PROF = BASE_FICHE_HTML_TITRE + """ 
     <table border="0" width="100%">
         <tbody>
         <tr align="right" valign="top">
@@ -1406,16 +1407,24 @@ TEMPLATE_PROF_CSS = ""
 TEMPLATE_PROF = ""
 
 BASE_FICHE_HTML_PERIODES = """
-    <font size=11><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
-    <p id="txt"> </p>
-    <img id="img" src=" " alt=" "> 
+    <font size=11><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
+    <table border="0" width="100%">
+    <tbody>
+        <tr align="left" valign="top">
+            <td id="txt"> </td>
+        </tr>
+        <tr align="left" valign="top">
+            <td><img id="img" src=" " alt=" "></td>
+        </tr>
+    </tbody>
+    </table>
 """
 
 
 BASE_FICHE_HTML = """
     <font size="11"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <p id="txt"> </p>
-    <img id="img" src="" alt="i"> 
+    <p><img id="img" src="" alt="i"> </p>
 """
 
 

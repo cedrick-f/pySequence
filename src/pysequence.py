@@ -63,7 +63,7 @@ from version import DEBUG
 import textwrap
 import base64
 
-from couleur import Str2Couleur, Couleur2Str
+from couleur import Str2Couleur, Couleur2Str, CouleurFloat2CSS
 import couleur
 
 import images
@@ -1749,7 +1749,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, width = 1000*SSCALE)
+        self.tip = PopupInfo(self.GetApp().parent, width = 600*SSCALE)
         self.zoneMove = None
         self.curTip = None
         
@@ -2158,9 +2158,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ##################################################################################################    
     def Tip_POS(self, p = None):
-        if p == None:
+        if p == None or type(p) == str:
             self.tip.SetWholeText("titre", "Découpage de la formation en périodes")
-            self.tip.SetWholeText("txt", "Périodes occupées pendant la Progression")
+            self.tip.SetWholeText("txt", "Périodes occupées pendant "+p)
             self.tip.AjouterImg("img", self.getBitmapPeriode(300))
         else:
             ref = self.GetReferentiel()
@@ -2629,7 +2629,7 @@ class Sequence(BaseDoc, Grammaire):
         else:               # Un autre élément de la Séquence
             self.tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "POS":
-                self.Tip_POS()
+                self.Tip_POS("la Séquence")
                 
             elif param[:3] == "POS":
                 self.Tip_POS(int(param[3])) 
@@ -4632,7 +4632,7 @@ class Projet(BaseDoc, Grammaire):
                 self.tip.SetWholeText("txt", self.problematique)
             
             elif param == "POS":
-                self.Tip_POS()
+                self.Tip_POS("le Projet")
                 
             elif param[:3] == "POS":
                 self.Tip_POS(int(param[3])) 
@@ -7433,7 +7433,7 @@ class Progression(BaseDoc, Grammaire):
                 self.tip.Supprime('img')
                 
             elif param == "POS":
-                self.Tip_POS() 
+                self.Tip_POS("la Progression") 
                 
             elif param[:3] == "POS":
                 self.Tip_POS(int(param[3])) 
@@ -11648,6 +11648,11 @@ class Tache(ElementAvecLien, ElementBase):
     def GetCode(self, num):
         return self.code
     
+    
+    ######################################################################################  
+    def GetCoul(self):
+        return CouleurFloat2CSS(self.GetApp().fiche.fiche.BCoulTache[self.phase])
+    
     ######################################################################################  
     def GetIntit(self, num = None):
         if self.GetProjetRef() is not None and self.estPredeterminee() > 0:
@@ -12075,11 +12080,11 @@ class Tache(ElementAvecLien, ElementBase):
                 t = ""
             texte = t
 
-        self.tip.SetWholeText("titre", titre)
+        self.tip.SetWholeText("titre", titre, fcoul=self.GetCoul())
         
         # Phase
         if self.phase != "":
-            self.tip.AjouterImg("icon", constantes.imagesTaches[self.phase].GetBitmap())
+            self.tip.AjouterImg("icon", scaleImage(constantes.imagesTaches[self.phase].GetBitmap(),50,50))
             
         else:
             self.tip.Supprime('icon')
@@ -12796,6 +12801,8 @@ class Support(ElementAvecLien, ElementBase):
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
         
+        self.tip.SetWholeText("tit", self.Sing_())
+        
         self.tip.SetWholeText("nom", self.nom, size=5)
         self.tip.AjouterHTML("des", XMLtoHTML(self.description))      
         if self.image is not None:
@@ -12803,6 +12810,9 @@ class Support(ElementAvecLien, ElementBase):
         else:
             self.tip.Supprime('img')
             
+        
+        if len(self.modeles) == 0:
+            self.tip.Supprime("mod")
         for m in self.modeles:
             m.SetTip()
             self.tip.InsererSoup("mod", m.tip.soup)
@@ -13218,7 +13228,9 @@ class Personne(ElementBase):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").Sing_(), bold = True, size=6)
+        tit = self.Sing_()
+#         self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").Sing_(), bold = True, size=4)
+        self.tip.SetWholeText("tit", tit)#, bold = False, size=4)
         
         if hasattr(self, 'referent'):
             bold = self.referent
@@ -14161,7 +14173,11 @@ class Eleve(Personne):
                 for t in keys[disc]:
                     self.tip.AjouterCol("le", t, size = 2) 
             
-            for m in self.GetModeles():
+            
+            lst_modeles = self.GetModeles()
+            if len(lst_modeles) == 0:
+                self.tip.Supprime("mod")
+            for m in lst_modeles:
                 m.SetTip()
                 self.tip.InsererSoup("mod", m.tip.soup)
                 
@@ -14399,24 +14415,23 @@ class Groupe(Eleve):
         # Durée
         #
         duree = self.GetDuree()
-        dureeRef = self.GetProjetRef().duree
+        v = self.getValiditeDuree(duree)
+
 #        print "   duree", duree, "/", dureeRef
         lab = " ("+str(int(duree))+"h) "
         self.codeBranche.SetLabel(lab)
-        tol1 = constantes.DELTA_DUREE
-        tol2 = constantes.DELTA_DUREE2
-        taux = abs((duree-dureeRef)/dureeRef)*100
+
 #        print "   taux", taux, "(", tol1, tol2, ")"
         t = "Durée de travail "
-        if taux < tol1:
+        if v == 0:
             self.codeBranche.SetBackgroundColour(COUL_OK)
             self.codeBranche.SetToolTip(t + "conforme")
-        elif taux < tol2:
+        elif v == 1:
             self.codeBranche.SetBackgroundColour(COUL_BOF)
             self.codeBranche.SetToolTip(t + "acceptable")
         else:
             self.codeBranche.SetBackgroundColour(COUL_NON)
-            if duree < dureeRef:
+            if v == 2:
                 self.codeBranche.SetToolTip(t + "insuffisante")
             else:
                 self.codeBranche.SetToolTip(t + "trop importante")
@@ -14487,10 +14502,11 @@ class Groupe(Eleve):
             # Durée
             #
             duree = self.GetDuree()
+            v = self.getValiditeDuree(duree)
             lab = draw_cairo.getHoraireTxt(duree)
-            if abs(duree-70) < constantes.DELTA_DUREE:
+            if v == 0:
                 coul = coulOK
-            elif abs(duree-70) < constantes.DELTA_DUREE2:
+            elif v == 1:
                 coul = couleur.GetCouleurHTML(COUL_BOF)
             else:
                 coul = coulNON
