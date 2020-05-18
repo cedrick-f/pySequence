@@ -1105,7 +1105,7 @@ class Projet(Base_Fiche_Doc):
                 hc = h
             show_text_rect(self.ctx, t, (x, y, self.tailleZTaches[0], hc), ha = 'g', 
                            wrap = False, 
-                           fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.02)
+                           fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.005)
         
         
         #

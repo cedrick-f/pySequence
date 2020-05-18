@@ -14094,7 +14094,7 @@ class Eleve(Personne):
 
     ######################################################################################  
     def SetTip2(self):
-#        print "SetTip2", self
+        print("SetTip2", self)
         # Tip
         if hasattr(self, 'tip'):
             
@@ -14124,11 +14124,15 @@ class Eleve(Personne):
             prj = self.GetProjetRef()
             keys = {}
             for disc, dic in prj._dicoIndicateurs.items():
+                print("   ", dic)
                 keys[disc] = sorted(dic.keys())
 #            if "O8s" in keys:
 #                keys.remove("O8s")
+            print(">>>keys", keys)
+            
             lab = {}
             for disc, dic in prj._dicoGrpIndicateur.items():
+                print("   ", disc, dic)
                 lab[disc] = {}
                 for part in dic:
                     lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
@@ -14146,6 +14150,7 @@ class Eleve(Personne):
                             lab[disc][part].append(["", True])
                     lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
  
+            print(">>>lab", lab)
             for disc, dic in prj._dicoGrpIndicateur.items():
                 for part in dic:
     #                print "   ", part
@@ -14170,10 +14175,13 @@ class Eleve(Personne):
                                        couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
             for disc in prj._dicoIndicateurs:
-                for t in keys[disc]:
-                    self.tip.AjouterCol("le", t, size = 2) 
+                if disc in lab:
+                    for t in keys[disc]:
+                        self.tip.AjouterCol("le", t, size = 2) 
             
-            
+            #
+            # Modèles
+            #
             lst_modeles = self.GetModeles()
             if len(lst_modeles) == 0:
                 self.tip.Supprime("mod")
