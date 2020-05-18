@@ -19901,7 +19901,7 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
     def __init__(self, parent, doc, code):
         self.doc = doc
         
-        self.lien = doc.sysML[code] # Type lien.Lien
+        self.lien = doc.sysML[code] # Type lien.LienImege
         
         wx.Panel.__init__(self, parent, -1)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -19950,19 +19950,16 @@ class Panel_Select_sysML(wx.Panel, FullScreenWin):
 #         print("SetImage", self.lien)
         defaut = images.Icone_noimg.GetBitmap()
 #         print(defaut)
-        self.image.SetToolTip("")
-        self.image.Unbind(wx.EVT_LEFT_DOWN)
-        if not self.lien.ok:
-            img = defaut
-        else:
-            img = file2bmp(self.lien.path, defaut)
-            if img is None:
-                img = defaut
-            if img != defaut:
-                self.image.Bind(wx.EVT_LEFT_DOWN, self.OnClicImage)
-                self.image.SetToolTip("Cliquer pour ouvrir le fichier")
+        bmp = self.lien.getBitmap(defaut)
             
-        self.image.SetBitmap(rognerImage(img, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
+        if self.lien.ok:
+            self.image.Bind(wx.EVT_LEFT_DOWN, self.OnClicImage)
+            self.image.SetToolTip("Cliquer pour ouvrir le fichier")
+        else:
+            self.image.SetToolTip("")
+            self.image.Unbind(wx.EVT_LEFT_DOWN)
+        
+        self.image.SetBitmap(rognerImage(bmp, 200*SSCALE, HMIN_PROP*SSCALE-80*SSCALE))
         
         self.Parent.Layout()
         self.Layout()

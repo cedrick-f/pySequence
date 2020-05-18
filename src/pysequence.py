@@ -111,7 +111,7 @@ from pathvalidate import sanitize_filepath
 from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
-                    Grammaire, et2ou, img2str, safeParse, b64,\
+                    Grammaire, et2ou, img2str, str2img, safeParse, b64,\
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     getAncreFenetre, tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
                     
@@ -671,7 +671,7 @@ class ElementBase(Grammaire):
     ######################################################################################  
     def getBrancheImage(self, root, nom = "Image"):
         if self.image != None:
-            root.set(nom, str(img2str(self.image.ConvertToImage()), 'utf-8'))
+            root.set(nom, img2str(self.image.ConvertToImage()))
     
     
     ######################################################################################  
@@ -679,34 +679,35 @@ class ElementBase(Grammaire):
         if self.icone != None:
 #             str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')
             
-            root.set(nom, str(img2str(self.icone.ConvertToImage()), 'utf-8'))
+            root.set(nom, img2str(self.icone.ConvertToImage()))
             
                     
     ######################################################################################  
     def setBrancheImage(self, branche, nom = "Image"):
         Ok = True
         data = branche.get(nom, "")
-        self.image = None
-        if data != "":
-            try:
-                locale2EN()
-                self.image = PyEmbeddedImage(data).GetBitmap()
-                locale2def()
-            except:
-                Ok = False
-                self.image = None
+        self.image = str2img(data)
+#         if data != "":
+#             try:
+#                 locale2EN()
+#                 self.image = PyEmbeddedImage(data).GetBitmap()
+#                 locale2def()
+#             except:
+#                 Ok = False
+#                 self.image = None
         return Ok
                 
     
     ######################################################################################  
     def setBrancheIcone(self, branche, nom = "Icone"):
         data = branche.get(nom, "")
-        if data != "":
-            try:
-                self.icone = PyEmbeddedImage(data).GetBitmap()
-            except:
-                self.icone = None
-    
+        self.icone = str2img(data)
+#         if data != "":
+#             try:
+#                 self.icone = PyEmbeddedImage(data).GetBitmap()
+#             except:
+#                 self.icone = None
+#     
     
     ######################################################################################  
     def getIcone(self):
@@ -3868,7 +3869,7 @@ class Projet(BaseDoc, Grammaire):
         
         self.taches = self.creerTachesRevue()
 
-        self.sysML = {}
+        self.sysML = {} # type LienImage
         
         #
         # Spécifiquement pour la fiche de validation
@@ -4189,7 +4190,9 @@ class Projet(BaseDoc, Grammaire):
                 if code in self.sysML:
                     self.sysML[code].getBranche(l)
                 else:
-                    Lien().getBranche(l)
+                    LienImage().getBranche(l)
+                    
+        
         #
         # pour la fiche de validation
         #
@@ -4455,7 +4458,7 @@ class Projet(BaseDoc, Grammaire):
                 br = branchesysml.find("Lien_"+str(i))
                 if br is not None:
                     if not code in self.sysML:
-                        self.sysML[code] = Lien()
+                        self.sysML[code] = LienImage()
                     self.sysML[code].setBranche(br, self.path)
         
 #         print("sysML", self.sysML)
@@ -5689,7 +5692,7 @@ class Projet(BaseDoc, Grammaire):
             for i, _ in enumerate(prj.attributs['SML'][2]):
                 code = "SML"+str(i)
                 if not code in self.sysML:
-                    self.sysML[code] = Lien()
+                    self.sysML[code] = LienImage()
     
     
     #############################################################################
@@ -14094,7 +14097,7 @@ class Eleve(Personne):
 
     ######################################################################################  
     def SetTip2(self):
-        print("SetTip2", self)
+#         print("SetTip2", self)
         # Tip
         if hasattr(self, 'tip'):
             
@@ -14124,15 +14127,15 @@ class Eleve(Personne):
             prj = self.GetProjetRef()
             keys = {}
             for disc, dic in prj._dicoIndicateurs.items():
-                print("   ", dic)
+#                 print("   ", dic)
                 keys[disc] = sorted(dic.keys())
 #            if "O8s" in keys:
 #                keys.remove("O8s")
-            print(">>>keys", keys)
+#             print(">>>keys", keys)
             
             lab = {}
             for disc, dic in prj._dicoGrpIndicateur.items():
-                print("   ", disc, dic)
+#                 print("   ", disc, dic)
                 lab[disc] = {}
                 for part in dic:
                     lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
@@ -14150,7 +14153,7 @@ class Eleve(Personne):
                             lab[disc][part].append(["", True])
                     lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
  
-            print(">>>lab", lab)
+#             print(">>>lab", lab)
             for disc, dic in prj._dicoGrpIndicateur.items():
                 for part in dic:
     #                print "   ", part

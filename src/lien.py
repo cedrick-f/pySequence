@@ -40,10 +40,11 @@ import os, sys, subprocess
 import wx
 import re
 from util_path import toFileEncoding, toSystemEncoding, SYSTEM_ENCODING
-from widgets import messageErreur, scaleImage, Grammaire
+from widgets import messageErreur, scaleImage, Grammaire, img2str, str2img
 import images
 from drag_file import *
 from util_path import *
+from file2bmp import *
 
 
 # from dpi_aware import *
@@ -211,35 +212,7 @@ class Lien():
             
             
         return           
-                           
-#         abspath = self.GetAbsPath(pathref)
-#         
-# #         print("   ", abspath, self.abs)
-#             
-#         if os.path.exists(abspath):
-#             relpath = testRel(abspath, pathref)
-#             print("relpath", relpath)
-#             if os.path.isfile(abspath):
-#                 self.type = 'f'
-# 
-#             elif os.path.isdir(abspath):
-#                 self.type = 'd'
-#                     
-#             if not self.abs:    
-#                 self.path = relpath
-#             else:
-#                 self.path = abspath
-#                 
-#             self.ok = True
-#                 
-#         elif re.match(regex, self.path):
-#             self.type = 'u'
-#             self.ok = True
-#         
-#         else:
-#             self.type = ''
-#             self.ok = False
-#         
+        
         
         
     ######################################################################################  
@@ -260,7 +233,8 @@ class Lien():
         
         self.EvalTypeLien(pathref)
 
-              
+    
+    
     ######################################################################################  
     def GetAbsPath(self, pathdoc, path = None):
         """ Renvoie le chemin absolu du lien
@@ -366,6 +340,74 @@ class Lien():
         return True
 
 
+
+
+####################################################################################
+#
+#   Objet lien vers une image
+#
+####################################################################################
+
+class LienImage(Lien):
+    def __init__(self, path = ""):
+        Lien.__init__(self, path, "f")
+        self.image = None
+
+
+    ######################################################################################  
+    def getBranche(self, branche):
+        Lien.getBranche(self, branche)
+        bmp = file2bmp(self.path)
+        if bmp is not None and bmp is not wx.NullBitmap:
+            branche.text = img2str(bmp.ConvertToImage())
+        elif self.image is not None and self.image is not wx.NullBitmap:
+            branche.text = img2str(self.image.ConvertToImage())
+    
+    
+    ######################################################################################  
+    def setBranche(self, branche, pathdoc):
+        Lien.setBranche(self, branche, pathdoc)
+        self.setBitmap(str2img(branche.text))
+
+    
+    ######################################################################################  
+    def setBitmap(self, bmp = None):
+        if bmp is not None and isinstance(bmp, wx.Bitmap):
+            self.image = bmp
+            
+        elif self.ok:
+            bmp = file2bmp(self.lien.path)
+            if bmp is not None and bmp is not wx.NullBitmap:
+                self.image = bmp
+
+
+    ######################################################################################  
+    def getBitmap(self, defaut = None):
+        """ Renvoie l'image au format wx.Bitmap
+            et met à jour l'image si le lien est Ok
+            
+            priorité à l'image désignée par le lien
+        """
+#         print("getBitmap")
+#         print("   ", self.type, self.ok)
+        self.setBitmap()
+#         print("   ", self.type, self.ok)
+        
+        if self.image is not None and self.image is not wx.NullBitmap:
+#             print("   --", self.image.IsOk())
+            return self.image
+        
+        elif isinstance(defaut, wx.Bitmap):
+            return defaut
+        
+        else:
+            return wx.NullBitmap
+        
+    
+    ######################################################################################  
+    def setPath(self, path):
+        self.path = path
+        self.setBitmap()
 
 
 ##########################################################################################################
@@ -666,7 +708,7 @@ class URLSelectorBase(wx.Panel):
 #         print("SetPath", self.lien)
 #         print "   ", lien, typ
         if lien is not None:
-            self.lien.path = lien
+            self.lien.setPath(lien)
             self.lien.EvalLien(lien, self.pathref)
 #         print("    ", self.lien.path)
         try:

@@ -100,6 +100,8 @@ def file2bmp(nf, defaut = wx.NullBitmap):
         return pdf2bmp(nf, defaut)
     elif ext in file_types['html']:
         return pdf2bmp(nf, defaut)
+    else:
+        return defaut
 
 
 

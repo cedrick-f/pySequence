@@ -60,6 +60,7 @@ DEBUG = version.DEBUG
 # 
 #############################################################################################################
 import base64, io
+from wx.lib.embeddedimage import PyEmbeddedImage
 try:
     b64encode = base64.b64encode
 except AttributeError:
@@ -77,8 +78,18 @@ def img2str(img):
     s = io.BytesIO()
     img.SaveFile(s, wx.BITMAP_TYPE_PNG)
     s.seek(0)
-    return b64encode(s.read())
-    
+#     str(img2str(self.icone.ConvertToImage()), 'utf-8')
+    return str(b64encode(s.read()), 'utf-8')
+
+
+def str2img(data):
+    if data is not None and data != "":
+        try:
+            return PyEmbeddedImage(data).GetBitmap()
+        except:
+            pass
+
+            
 
 def b64(img):
     return str(b"data:image/png;base64,"+base64.b64encode(img), 'utf-8')

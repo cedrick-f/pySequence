@@ -947,7 +947,7 @@ BASE_FICHE_HTML_ELEVE = BASE_FICHE_HTML_TITRE + """
             </tr>
             
             <tr  id = "le" align="right" valign="middle">
-            <td><span style="text-decoration: underline;">Evaluabilité</span></td>
+            <td><span style="text-decoration: underline;">Évaluabilité</span></td>
             <td></td>
             </tr>
             {{tab_eval}}
