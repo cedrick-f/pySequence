@@ -16245,7 +16245,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                        print " * ",v[2]
                         
                         for i, part in enumerate(prj.parties.keys()):
-                            if part in competence.poids.keys():
+                            if part in competence.poids:
                                 self.SetItemText(b, pourCent2(0.01*competence.poids[part]), i+1)
                         
 #                        for i, p in enumerate(v[2][1:]):
@@ -16265,7 +16265,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     tous = True
                     
                     if not tache.estPredeterminee() \
-                       or (tache.intitule in prj.taches.keys() and k in prj.taches[tache.intitule][2]):
+                       or (tache.intitule in prj.taches and k in prj.taches[tache.intitule][2]):
                         
                         cc = [cd+ " " + it for cd, it in zip(k.split("\n"), competence.intitule.split("\n"))]
                         comp = self.AppendItem(br, "\n ".join(cc),
@@ -16278,7 +16278,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                         if len(v) == 3: # 
                             if debug: print("   prem'S", competence.poids)
                             for j, part in enumerate(prj.parties.keys()):
-                                if part in competence.poids.keys():
+                                if part in competence.poids:
     #                        for i, p in enumerate(v[2][1:]):
     #                            if p != 0:
                                     self.SetItemText(comp, pourCent2(0.01*competence.poids[part]), j+1)
@@ -16304,7 +16304,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 b = self.AppendItem(comp, indic.intitule, 
                                                     data = codeIndic)
                                 for j, part in enumerate(prj.parties.keys()):
-                                    if part in competence.poids.keys():
+                                    if part in competence.poids:
     #                            for j, p in enumerate(indic.poids[1:]):
     #                                if p != 0:
                                         if j == 0:  coul = 'C'
@@ -16325,13 +16325,13 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 else:
                                     tous = False
                                 
-                                if indic.getRevue() == tache.phase:
+                                if indic.getRevue(prj) == tache.phase:
                                     self.CheckItem2(b)
                                     
                                 if debug: print("   indic", indic)
                                 
                                 for j, part in enumerate(prj.parties.keys()):
-                                    if part in indic.poids.keys():
+                                    if part in indic.poids:
     #                            for j, p in enumerate(indic.poids[1:]):
     #                                if p != 0:
                                         self.SetItemText(b, pourCent2(0.01*indic.poids[part]), j+1)

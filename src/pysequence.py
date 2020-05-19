@@ -5880,15 +5880,18 @@ class Projet(BaseDoc, Grammaire):
     
     #############################################################################
     def SetCompetencesRevuesSoutenance(self, miseAJourPanel = True):
-        """ Attribue à la soutenance et à la revue n°2 (ou n°3 si 3 revues)
+        """ Attribue à la soutenance et à la dernière revue
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
         """
-#        print "SetCompetencesRevuesSoutenance", len(self.eleves)
+#         print("SetCompetencesRevuesSoutenance", len(self.eleves))
 #        tousIndicateurs = self.GetReferentiel()._dicIndicateurs_prj
 #        print tousIndicateurs
 #        REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
-        if self.GetProjetRef() is None or self.GetProjetRef()._pasdIndic:
+        prjeval = self.GetProjetRef()
+#         print("   listeParties:", prjeval.listeParties)
+        
+        if prjeval is None or prjeval._pasdIndic:
             return
         
         tR1 = None
@@ -5911,13 +5914,17 @@ class Projet(BaseDoc, Grammaire):
                         for i, ok in enumerate(l):
                             if ok:
                                 codeIndic = c+"_"+str(i+1)
+                                indic = prjeval.getIndicateur(codeIndic)
+                                typesIndic = indic.getType(prjeval, exclu = False)
+#                                 typesIndic = prjeval.getTypeIndicateur(codeIndic, exclu = False)
+#                                 print("   ", codeIndic, "typesIndic:", typesIndic)
                                 
                                 # Phase de Conduite
-                                if self.GetProjetRef().getTypeIndicateur(codeIndic) == 'C': # tousIndicateurs[c][i][1]: # Indicateur "revue"
+                                if 'C' in typesIndic: # tousIndicateurs[c][i][1]: # Indicateur "revue"
                                     if t.phase in TOUTES_REVUES:
                                         
                                         if (True in self.GetReferentiel().compImposees.values()): #self.GetReferentiel().compImposees['C']:
-                                            if self.GetProjetRef().getIndicateur(codeIndic).getRevue() == t.phase:
+                                            if indic.getRevue() == t.phase:
 #                                                print "  compImposees", t.phase, ":", codeIndic
                                                 t.indicateursEleve[neleve].append(codeIndic)
 #                                                print "  >>", t.indicateursEleve
@@ -5936,7 +5943,7 @@ class Projet(BaseDoc, Grammaire):
                                                     t.indicateursEleve[neleve].append(codeIndic)
                                         
                                 # Phase de Soutenance    
-                                else:
+                                if 'S' in typesIndic:
                                     if t.phase == _S:
                                         t.indicateursEleve[neleve].append(codeIndic)
 
@@ -5975,6 +5982,9 @@ class Projet(BaseDoc, Grammaire):
                 
             if not t.estPredeterminee():
                 t.ActualiserDicIndicateurs()
+
+
+
 
 
     #############################################################################
@@ -11985,7 +11995,21 @@ class Tache(ElementAvecLien, ElementBase):
             if len(self.projet.taches) > i+1:   # On est sur une tâche
                 return self.projet.taches[i+1].phase
 
-
+    
+    ######################################################################################  
+    def phaseCompatible(self, indice_partie):
+        if self.phase == 'S' and indice_partie == 1:
+            return True
+        
+        if self.phase in TOUTES_REVUES_EVAL and indice_partie == 0:
+            return True
+        
+        if not self.phase in TOUTES_REVUES_EVAL_SOUT:
+            return True
+        
+        return False
+    
+    
     ######################################################################################  
     def GetTachePrecedente(self):
         """ Renvoie la tâche (pas revue) juste précédente

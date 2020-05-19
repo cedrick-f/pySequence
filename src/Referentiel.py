@@ -515,9 +515,9 @@ class XMLelem():
             elif competence.indicateurs != []:
                 lst = []
                 for l in competence.indicateurs:
-                    if debug: print(l, l.getType(), l.poids, l.estProjet(), prj)
+                    if debug: print(l, l.getType(), l.poids, l.estProjet(prj), prj)
 #                    print v0
-                    if l.estProjet(): # Conduite ou Soutenance
+                    if prj is not None and l.estProjet(prj): # Conduite ou Soutenance
                         if prj == None or len([p for p in l.poids if p in prj.parties]) > 0:#or l.getType() in prj.parties.keys():
 #                        if l.getType() == v0[2].keys():
                             lst.append(l)
@@ -2768,14 +2768,19 @@ class Projet(XMLelem):
                 return comp.indicateurs
             
     #########################################################################
-    def getTypeIndicateur(self, codeIndic):
+    def getTypeIndicateur(self, codeIndic, exclu = True):
 #        print "getTypeIndicateur", codeIndic, type(codeIndic)
-        if type(codeIndic) in [str, str]:
+        if type(codeIndic) == str:
             indic = self.getIndicateur(codeIndic)
         else:
             indic = codeIndic
+        
         if indic != None:
-            return indic.getType()
+            return indic.getType(self, exclu = exclu)
+    
+    
+
+        
         
 #     ####################################################################################
 #     def GetDicFiltre(self, filtre = None, dic = None):
@@ -3313,8 +3318,8 @@ class Indicateur(XMLelem):
         self.intitule = intitule
         self.revue = revue          # Revue à laquelle cet indicateur doit être évalué (si imposé par le référentiel) - 0 = pas imposé
 
-    def estProjet(self):
-        return self.getType() != 'E'
+    def estProjet(self, prj):
+        return self.getType(prj) != 'E'
 #        return self.poids[1] != 0 or self.poids[2] != 0
     
     def getTypes(self):
@@ -3323,17 +3328,36 @@ class Indicateur(XMLelem):
         """
         return [t for t, p in self.poids.items() if p !=0]
     
-    def getType(self):
+    
+    def getType(self, prj, exclu = True):
         """ E : écrit
             C : conduite
             S : soutenance
             Sinon : None
             
-            E, C ou S doit être exclusif !!
+            exclu == True : E, C ou S doit être exclusif !!
         """
-        types = [t for t, p in self.poids.items() if p !=0 and t in ['E', 'C', 'S']]
+        t = ""
+        p = prj.listeParties
+        for part in self.getTypes():
+            if len(p) > 0 and part == p[0]:  # Conduite
+                t += 'C'
+            elif len(p) > 1 and part == p[1]:  # Soutenance
+                t += 'S'
+                
+            if exclu:
+                return t
+            
+        return t
+    
+    
+#         types = [t for t, p in self.poids.items() if p !=0 and t in ['E', 'C', 'S']]
+        types = [t for t, p in self.poids.items() if p !=0 and t in prj.listeParties]
         if len(types) > 0:
-            return types[0]
+            if exclu:
+                return types[0]
+            else:
+                return types
         
 #        for t, p in self.poids.items():
 #            if p !=0:
@@ -3347,7 +3371,7 @@ class Indicateur(XMLelem):
 #            return "S"
 
     
-    def getRevue(self):
+    def getRevue(self, prj):
 #        print self.getTypes(), self.revue
         return 'R'+str(self.revue[self.getTypes()[0]])
 
@@ -3420,6 +3444,9 @@ class Competence(XMLelem):
             dic[code] = lst
             sc.getElemAssocies(dic, indice = indice)
         return dic
+
+
+
 
 #################################################################################################################################
 #

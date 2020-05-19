@@ -1204,8 +1204,8 @@ class Projet(Base_Fiche_Doc):
     
     ######################################################################################  
     def drawCroisementsCompetencesRevue(self, revue, eleve, y, h):
-    #    print "DrawCroisementsCompetencesRevue", eleve, revue.phase
-    #    print "   ", revue.GetDicIndicateursEleve(eleve)
+#         print("DrawCroisementsCompetencesRevue", eleve, revue.phase)
+#         print("   ", revue.GetDicIndicateursEleve(eleve))
         self.drawBoutonCompetence(revue, 
                                   self.regrouperDic(revue, revue.GetDicIndicateursEleve(eleve)), y, h)
     
@@ -1292,7 +1292,7 @@ class Projet(Base_Fiche_Doc):
         """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
              ... avec un petit décalage vertical pour que ce soit lisible en version N&B
         """
-#         print("DrawBoutonCompetence", objet, dicIndic)
+# #         print("DrawBoutonCompetence", objet, dicIndic)
         if h == None: # Toujours sauf pour les revues
             r = self.wColComp/3
             h = 2*r
@@ -1303,7 +1303,7 @@ class Projet(Base_Fiche_Doc):
         dicIndic, dictype = dicIndic
         prjeval = objet.GetProjetRef()
         
-        for s in dicIndic.keys():
+        for s in dicIndic:
             
     #         if s in dicIndic.keys():
             x = self.xComp[s]-self.wColComp/2
@@ -1319,18 +1319,24 @@ class Projet(Base_Fiche_Doc):
             
             objet.pts_caract.append((x,y))
             
-            indic = dicIndic[s]
+            indics = dicIndic[s]
     #            dangle = 2*pi/len(indic)
-            dx = self.wColComp/len(indic)
-            for a, i in enumerate(indic):
+            dx = self.wColComp/len(indics)
+            for a, indic in enumerate(indics):
                 deja = False
-                for part in prjeval.listeParties:
-                    if part in dictype[s][a]:
+                for i, part in enumerate(prjeval.listeParties):
+                    if part in dictype[s][a] \
+                      and (hasattr(objet, 'phaseCompatible') and objet.phaseCompatible(i)):
                 
 #                 for part in dictype[s][a]:
 #                     if part in prjeval.parties:
-                        if i: # Rose ou bleu
-                        
+                        if indic: # Rose ou bleu
+#                             typeIndic = indic.getType(prjeval, exclu = False)
+#                             
+#                             if 'C' in typeIndic:
+#                                 d = -1
+#                             elif 'S'
+                            
                             if part == prjeval.listeParties[0]:  # Conduite
                                 d = -1
                             else:               # Soutenance
@@ -1363,41 +1369,6 @@ class Projet(Base_Fiche_Doc):
                 
                         self.ctx.set_source_rgba (0, 0 , 0, 1)
                         self.ctx.stroke()
-                
-                
-                
-                
-                
-#                 if i: # Rose ou bleu
-#     #                 print "   ", s, a
-#                     part = list(dictype[s][a].keys())[0]
-#                     if part == 'S':
-#     #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
-#                         d = -1
-#                     else:
-#                         d = 1
-#                     self.ctx.set_source_rgba (*self.getCoulComp(part))
-#                 else: # Rien => Transparent
-#                     d = 0
-#                     self.ctx.set_source_rgba (1, 1, 1, 0)
-#                 
-#     #                 print "d", d, (x+a*dx, y-h/2+d*dh, dx, h-dh)
-#                 
-#                 
-#                 
-#                 if d != 0:      # Un rectangle coloré
-#                     self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-#                     self.ctx.fill_preserve ()
-#                     
-#                 else:           # Juste deux trait verticaux
-#                     self.ctx.move_to(x+a*dx, y-h/2+dh)
-#                     self.ctx.rel_line_to(0, h-4*dh)
-#                     self.ctx.move_to(x+a*dx+dx, y-h/2+dh)
-#                     self.ctx.rel_line_to(0, h-4*dh)
-    
-                
-#                 self.ctx.set_source_rgba (0, 0 , 0, 1)
-#                 self.ctx.stroke()
     
     
 
