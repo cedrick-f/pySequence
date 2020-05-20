@@ -1823,7 +1823,7 @@ class SliderThumb:
         last_value = self.value
         self.value = fraction_to_value(fraction, self.parent.GetMin(), self.parent.GetMax())
         # Post event notifying that position changed
-        if self.value == last_value:
+        if self.value != last_value:
             self.PostEvent()
             return True
         return False
@@ -1837,6 +1837,7 @@ class SliderThumb:
 #         self.PostEvent()
 
     def PostEvent(self):
+#         print("PostEvent")
         event = wx.PyCommandEvent(wx.EVT_SLIDER.typeId, self.parent.GetId())
         event.SetEventObject(self.parent)
         wx.PostEvent(self.parent.GetEventHandler(), event)
@@ -1866,6 +1867,7 @@ class SliderThumb:
             return 'high', self.parent.thumbs['high']
 
     def OnPaint(self, dc):
+#         print("OnPaint")
         if self.dragged or not self.parent.IsEnabled():
             thumb_color = self.dragged_color
             thumb_shadow_color = self.dragged_shadow_color
@@ -1901,7 +1903,8 @@ class SliderThumb:
 
 class RangeSlider(BufferedWindow):
     def __init__(self, parent, ID=wx.ID_ANY, lowValue=None, highValue=None, minValue=0, maxValue=100, zones = [],
-                 pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.SL_HORIZONTAL| wx.NO_FULL_REPAINT_ON_RESIZE, validator=wx.DefaultValidator,
+                 pos=wx.DefaultPosition, size=wx.DefaultSize, 
+                 style=wx.SL_HORIZONTAL| wx.NO_FULL_REPAINT_ON_RESIZE, validator=wx.DefaultValidator,
                  name='rangeSlider'):
         
         self.zones = zones
@@ -1967,32 +1970,39 @@ class RangeSlider(BufferedWindow):
         return False
 
     def OnMouseDown(self, evt):
+        
         if not self.IsEnabled():
             return
+#         print("OnMouseDown")
         click_pos = evt.GetPosition()
         for thumb in self.thumbs.values():
             if thumb.IsMouseOver(click_pos):
                 thumb.dragged = True
                 thumb.mouse_over = False
                 break
-        refresh_needed = self.SetValueFromMousePosition(click_pos)
+#         refresh_needed = self.SetValueFromMousePosition(click_pos)
         self.CaptureMouse()
-        if refresh_needed:
-            self.Refresh()
+#         if refresh_needed:
+        self.Refresh()
+        self.UpdateDrawing()
+
 
     def OnMouseUp(self, evt):
+        
         if not self.IsEnabled():
             return
-        refresh_needed = self.SetValueFromMousePosition(evt.GetPosition())
+#         print("OnMouseUp")
+#         refresh_needed = self.SetValueFromMousePosition(evt.GetPosition())
         for thumb in self.thumbs.values():
             thumb.dragged = False
         if self.HasCapture():
             self.ReleaseMouse()
-        if refresh_needed:
-            self.Refresh()
+#         if refresh_needed:
+        self.Refresh()
+        self.UpdateDrawing()
 
     def OnMouseLost(self, evt):
-        print("OnMouseLost")
+#         print("OnMouseLost")
         for thumb in self.thumbs.values():
             thumb.dragged = False
             thumb.mouse_over = False
@@ -2011,8 +2021,8 @@ class RangeSlider(BufferedWindow):
                 thumb.mouse_over = thumb.IsMouseOver(mouse_pos)
                 if old_mouse_over != thumb.mouse_over:
                     refresh_needed = True
+        
         if refresh_needed:
-            
             self.Refresh()
 
     def OnMouseEnter(self, evt):
@@ -2156,191 +2166,191 @@ class RangeSlider(BufferedWindow):
 
 
 
-class RangeSlider2(wx.Slider):
-    def __init__(self, left_gap, right_gap, *args, **kwargs):
-        wx.Slider.__init__(self, *args, **kwargs)
-        self.SetWindowStyle(wx.SL_SELRANGE)
-        self.left_gap = left_gap
-        self.right_gap = right_gap
-        self.Bind(wx.EVT_LEFT_UP, self.on_left_click)
-        self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
-        self.Bind(wx.EVT_SCROLL_PAGEUP, self.on_pageup)
-        self.Bind(wx.EVT_SCROLL_PAGEDOWN, self.on_pagedown)
-        self.Bind(wx.EVT_SCROLL_THUMBTRACK, self.on_slide)
-    
-        self.slider_value=self.Value
-        self.is_dragging=False
-    
-    def linapp(self, x1, x2, y1, y2, x):
-        proportion=float(x - x1) / (x2 - x1)
-        length = y2 - y1
-        return round(proportion*length + y1)
-    
-    # if left click set the start of selection
-    def on_left_click(self, e):
-    
-        if not self.is_dragging: #if this wasn't a dragging operation
-            position = self.get_position(e)
-            if position <= self.SelEnd:
-                self.SetSelection(position, self.SelEnd)
-            else:
-                self.SetSelection(self.SelEnd, position)
-        else:
-            self.is_dragging = False
-        e.Skip()
-    
-    # if right click set the end of selection
-    def on_right_click(self, e):
-        position = self.get_position(e)
-        if position >= self.SelStart:
-            self.SetSelection(self.SelStart, position)
-        else:
-            self.SetSelection(position, self.SelStart)
-        e.Skip()
-        
-        
-        wx.PostEvent(self, wx.PyCommandEvent(wx.EVT_SLIDER.typeId, self.GetId()))
-    
-    # drag the selection along when sliding
-    def on_slide(self, e):
-        self.is_dragging=True
-        delta_distance=self.Value-self.slider_value
-        self.SetSelection(self.SelStart+delta_distance, self.SelEnd+delta_distance)
-        self.slider_value=self.Value
-    
-    # disable pageup and pagedown using following functions
-    def on_pageup(self, e):
-        self.SetValue(self.Value+self.PageSize)
-    
-    def on_pagedown(self, e):
-        self.SetValue(self.Value-self.PageSize)
-    
-    # get click position on the slider scale
-    def get_position(self, e):
-        click_min = self.left_gap #standard size 9
-        click_max = self.GetSize()[0] - self.right_gap #standard size 55
-        click_position = e.GetX()
-        result_min = self.GetMin()
-        result_max = self.GetMax()
-        if click_position > click_min and click_position < click_max:
-            result = self.linapp(click_min, click_max,
-                                 result_min, result_max,
-                                 click_position)
-        elif click_position <= click_min:
-            result = result_min
-        else:
-            result = result_max
-    
-        return result
-
-    def GetRange(self):
-        return [self.SelStart, self.SelEnd]
-
-
-
-class RangeSlider3(wx.Panel):
-    def __init__ (self, parent, pos, minPos, maxPos, zones = [], h = 18):
-        super(RangeSlider, self).__init__(parent, wx.ID_ANY)
-
-        self.minPos = minPos
-        self.maxPos = maxPos
-        self.zones = zones
-        
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        
-        self.sldMax = wx.Slider(self, value=pos[1], minValue=minPos, maxValue=maxPos,
-                                size = (-1, h), 
-                                style=wx.SL_HORIZONTAL | wx.SL_TOP|wx.SL_SELRANGE)
-        self.sldMin = wx.Slider(self, value=pos[0], minValue=minPos, maxValue=maxPos,
-                                size = (-1, h),
-                                style =wx.SL_HORIZONTAL | wx.SL_BOTTOM|wx.SL_SELRANGE)
-        self.sldMax.SetMaxSize((-1, h))
-        self.sldMin.SetMaxSize((-1, h))
-        self.sldMax.Bind(wx.EVT_SCROLL, self.OnSliderScrollMax)
-        self.sldMin.Bind(wx.EVT_SCROLL, self.OnSliderScrollMin)
-        
-        sizer.Add (self.sldMin, 1, wx.EXPAND)
-        sizer.Add (self.sldMax, 1, wx.EXPAND)
-        
-        self.SetSizer (sizer)
-        
-        self.ShowRange()
-    
-    def GetRange(self):
-        return [self.sldMin.GetValue(), self.sldMax.GetValue()]
-
-
-    def SetValue(self, pos):
-        if pos[0] <= pos[1]:
-            self.sldMin.SetValue(pos[0])
-            self.sldMax.SetValue(pos[1])
-    
-    
-    def GetZone(self, slider):
-#         print("zones", self.zones)
-        for z in self.zones:
-            if slider.GetValue() >= z[0] and slider.GetValue() <= z[-1]:
-                return z
-        return 
-
-
-    def SetZone(self, slider):
-        if slider == self.sldMin:
-            zoneMin = self.GetZone(slider)
-            zoneMax = self.GetZone(self.sldMax)
-
-            if zoneMin is not None and zoneMin == zoneMax:
-                self.sldMin.SetValue(zoneMin[0])
-                self.sldMax.SetValue(zoneMin[-1])
-            elif zoneMin is not None and zoneMax is None:
-                self.sldMin.SetValue(zoneMin[0])
-                self.sldMax.SetValue(zoneMin[-1])
-            elif zoneMin is  None and zoneMax is not None:
-                self.sldMax.SetValue(self.sldMin.GetValue())
-        
-        else:
-            zoneMax = self.GetZone(slider)
-            zoneMin = self.GetZone(self.sldMin)
-
-            if zoneMax is not None and zoneMin == zoneMax:
-                self.sldMin.SetValue(zoneMax[0])
-                self.sldMax.SetValue(zoneMax[-1])
-            elif zoneMax is not None and zoneMin is None:
-                self.sldMin.SetValue(zoneMax[0])
-                self.sldMax.SetValue(zoneMax[-1])
-            elif zoneMax is  None and zoneMin is not None:
-                self.sldMin.SetValue(self.sldMax.GetValue())
-                
-    
-    def OnSliderScrollMax(self, e):
-        val = self.sldMax.GetValue()
-        valMin = self.sldMin.GetValue()
-        if valMin > val:
-            self.sldMin.SetValue(val)
-            
-        self.SetZone(self.sldMax)
-        self.ShowRange()
-        
-        e.Skip()
-
-    
-    def OnSliderScrollMin(self, e):
-        val = self.sldMin.GetValue()
-        valMax = self.sldMax.GetValue ()
-        if valMax < val:
-            self.sldMax.SetValue (val)
-        
-        self.SetZone(self.sldMin)
-        self.ShowRange()
-        e.Skip()
-
-    
-    def ShowRange(self):
-        r = self.GetRange()
-        self.sldMin.SetSelection(*r)
-        self.sldMax.SetSelection(*r)
-        self.Update()
-        self.Refresh()
+# class RangeSlider2(wx.Slider):
+#     def __init__(self, left_gap, right_gap, *args, **kwargs):
+#         wx.Slider.__init__(self, *args, **kwargs)
+#         self.SetWindowStyle(wx.SL_SELRANGE)
+#         self.left_gap = left_gap
+#         self.right_gap = right_gap
+#         self.Bind(wx.EVT_LEFT_UP, self.on_left_click)
+#         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
+#         self.Bind(wx.EVT_SCROLL_PAGEUP, self.on_pageup)
+#         self.Bind(wx.EVT_SCROLL_PAGEDOWN, self.on_pagedown)
+#         self.Bind(wx.EVT_SCROLL_THUMBTRACK, self.on_slide)
+#     
+#         self.slider_value=self.Value
+#         self.is_dragging=False
+#     
+#     def linapp(self, x1, x2, y1, y2, x):
+#         proportion=float(x - x1) / (x2 - x1)
+#         length = y2 - y1
+#         return round(proportion*length + y1)
+#     
+#     # if left click set the start of selection
+#     def on_left_click(self, e):
+#     
+#         if not self.is_dragging: #if this wasn't a dragging operation
+#             position = self.get_position(e)
+#             if position <= self.SelEnd:
+#                 self.SetSelection(position, self.SelEnd)
+#             else:
+#                 self.SetSelection(self.SelEnd, position)
+#         else:
+#             self.is_dragging = False
+#         e.Skip()
+#     
+#     # if right click set the end of selection
+#     def on_right_click(self, e):
+#         position = self.get_position(e)
+#         if position >= self.SelStart:
+#             self.SetSelection(self.SelStart, position)
+#         else:
+#             self.SetSelection(position, self.SelStart)
+#         e.Skip()
+#         
+#         
+#         wx.PostEvent(self, wx.PyCommandEvent(wx.EVT_SLIDER.typeId, self.GetId()))
+#     
+#     # drag the selection along when sliding
+#     def on_slide(self, e):
+#         self.is_dragging=True
+#         delta_distance=self.Value-self.slider_value
+#         self.SetSelection(self.SelStart+delta_distance, self.SelEnd+delta_distance)
+#         self.slider_value=self.Value
+#     
+#     # disable pageup and pagedown using following functions
+#     def on_pageup(self, e):
+#         self.SetValue(self.Value+self.PageSize)
+#     
+#     def on_pagedown(self, e):
+#         self.SetValue(self.Value-self.PageSize)
+#     
+#     # get click position on the slider scale
+#     def get_position(self, e):
+#         click_min = self.left_gap #standard size 9
+#         click_max = self.GetSize()[0] - self.right_gap #standard size 55
+#         click_position = e.GetX()
+#         result_min = self.GetMin()
+#         result_max = self.GetMax()
+#         if click_position > click_min and click_position < click_max:
+#             result = self.linapp(click_min, click_max,
+#                                  result_min, result_max,
+#                                  click_position)
+#         elif click_position <= click_min:
+#             result = result_min
+#         else:
+#             result = result_max
+#     
+#         return result
+# 
+#     def GetRange(self):
+#         return [self.SelStart, self.SelEnd]
+# 
+# 
+# 
+# class RangeSlider3(wx.Panel):
+#     def __init__ (self, parent, pos, minPos, maxPos, zones = [], h = 18):
+#         super(RangeSlider, self).__init__(parent, wx.ID_ANY)
+# 
+#         self.minPos = minPos
+#         self.maxPos = maxPos
+#         self.zones = zones
+#         
+#         sizer = wx.BoxSizer(wx.VERTICAL)
+#         
+#         self.sldMax = wx.Slider(self, value=pos[1], minValue=minPos, maxValue=maxPos,
+#                                 size = (-1, h), 
+#                                 style=wx.SL_HORIZONTAL | wx.SL_TOP|wx.SL_SELRANGE)
+#         self.sldMin = wx.Slider(self, value=pos[0], minValue=minPos, maxValue=maxPos,
+#                                 size = (-1, h),
+#                                 style =wx.SL_HORIZONTAL | wx.SL_BOTTOM|wx.SL_SELRANGE)
+#         self.sldMax.SetMaxSize((-1, h))
+#         self.sldMin.SetMaxSize((-1, h))
+#         self.sldMax.Bind(wx.EVT_SCROLL, self.OnSliderScrollMax)
+#         self.sldMin.Bind(wx.EVT_SCROLL, self.OnSliderScrollMin)
+#         
+#         sizer.Add (self.sldMin, 1, wx.EXPAND)
+#         sizer.Add (self.sldMax, 1, wx.EXPAND)
+#         
+#         self.SetSizer (sizer)
+#         
+#         self.ShowRange()
+#     
+#     def GetRange(self):
+#         return [self.sldMin.GetValue(), self.sldMax.GetValue()]
+# 
+# 
+#     def SetValue(self, pos):
+#         if pos[0] <= pos[1]:
+#             self.sldMin.SetValue(pos[0])
+#             self.sldMax.SetValue(pos[1])
+#     
+#     
+#     def GetZone(self, slider):
+# #         print("zones", self.zones)
+#         for z in self.zones:
+#             if slider.GetValue() >= z[0] and slider.GetValue() <= z[-1]:
+#                 return z
+#         return 
+# 
+# 
+#     def SetZone(self, slider):
+#         if slider == self.sldMin:
+#             zoneMin = self.GetZone(slider)
+#             zoneMax = self.GetZone(self.sldMax)
+# 
+#             if zoneMin is not None and zoneMin == zoneMax:
+#                 self.sldMin.SetValue(zoneMin[0])
+#                 self.sldMax.SetValue(zoneMin[-1])
+#             elif zoneMin is not None and zoneMax is None:
+#                 self.sldMin.SetValue(zoneMin[0])
+#                 self.sldMax.SetValue(zoneMin[-1])
+#             elif zoneMin is  None and zoneMax is not None:
+#                 self.sldMax.SetValue(self.sldMin.GetValue())
+#         
+#         else:
+#             zoneMax = self.GetZone(slider)
+#             zoneMin = self.GetZone(self.sldMin)
+# 
+#             if zoneMax is not None and zoneMin == zoneMax:
+#                 self.sldMin.SetValue(zoneMax[0])
+#                 self.sldMax.SetValue(zoneMax[-1])
+#             elif zoneMax is not None and zoneMin is None:
+#                 self.sldMin.SetValue(zoneMax[0])
+#                 self.sldMax.SetValue(zoneMax[-1])
+#             elif zoneMax is  None and zoneMin is not None:
+#                 self.sldMin.SetValue(self.sldMax.GetValue())
+#                 
+#     
+#     def OnSliderScrollMax(self, e):
+#         val = self.sldMax.GetValue()
+#         valMin = self.sldMin.GetValue()
+#         if valMin > val:
+#             self.sldMin.SetValue(val)
+#             
+#         self.SetZone(self.sldMax)
+#         self.ShowRange()
+#         
+#         e.Skip()
+# 
+#     
+#     def OnSliderScrollMin(self, e):
+#         val = self.sldMin.GetValue()
+#         valMax = self.sldMax.GetValue ()
+#         if valMax < val:
+#             self.sldMax.SetValue (val)
+#         
+#         self.SetZone(self.sldMin)
+#         self.ShowRange()
+#         e.Skip()
+# 
+#     
+#     def ShowRange(self):
+#         r = self.GetRange()
+#         self.sldMin.SetSelection(*r)
+#         self.sldMax.SetSelection(*r)
+#         self.Update()
+#         self.Refresh()
 
 
 
