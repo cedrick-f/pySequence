@@ -60,6 +60,7 @@ def img2bmp(nf, defaut = wx.NullBitmap):
 
 def pdf2bmp(nf, defaut = wx.NullBitmap):
     # source : https://pymupdf.readthedocs.io/en/latest/tutorial/
+#     print(nf)
     try:
         doc = fitz.open(nf)
         page = doc.loadPage(0)

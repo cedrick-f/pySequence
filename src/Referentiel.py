@@ -3371,7 +3371,7 @@ class Indicateur(XMLelem):
 #            return "S"
 
     
-    def getRevue(self, prj):
+    def getRevue(self):
 #        print self.getTypes(), self.revue
         return 'R'+str(self.revue[self.getTypes()[0]])
 

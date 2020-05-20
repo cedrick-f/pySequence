@@ -16077,7 +16077,8 @@ class ArbreCompetences(HTL.HyperTreeList):
 class ArbreCompetencesPrj(ArbreCompetences):
     """ Arbre des compétences abordées en projet lors d'une tâche <pptache>
         <revue> : vrai si la tâche est une revue
-        <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
+        <eleves> : vrai s'il faut afficher une colonne supplémentaire 
+                    pour distinguer les compétences pour chaque éleve
     """
     def __init__(self, parent, typ, dicComp, compRef,  pptache, revue = False, eleves = False, 
                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
@@ -16320,13 +16321,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 b = self.AppendItem(comp, indic.intitule, ct_type=1, 
                                                     data = codeIndic) # Avec case à cocher
                                 
-                                if codeIndic in tache.indicateursEleve[0]:
-                                    self.CheckItem2(b)
-                                else:
+#                                 if codeIndic in tache.indicateursEleve[0]:
+#                                     self.MiseAJourCheckbox(b)
+#                                 else:
+                                if not codeIndic in tache.indicateursEleve[0]:
                                     tous = False
                                 
-                                if indic.getRevue(prj) == tache.phase:
-                                    self.CheckItem2(b)
+                                if indic.getRevue() == tache.phase:
+                                    self.MiseAJourCheckbox(b)
                                     
                                 if debug: print("   indic", indic)
                                 
@@ -16352,6 +16354,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
     
     #                                cases.SetSize(cases.GetBestSize())
                                     self.SetItemWindow(b, cases, self.colEleves)
+                                    self.SetItem3State(b, True)
                                     
                                     for e in range(len(tache.projet.eleves)):
                                         tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, self.colEleves).EstCocheEleve(e+1)
@@ -16377,7 +16380,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     if b == None: # Désactivation si branche vide d'indicateurs
                         pass#self.SetItemType(br,0)
                     else:
-                        self.CheckItem2(br, tous)
+                        self.MiseAJourCheckbox(br, etat = tous)
 #                        if self.eleves:
 #                            self.SetItemWindow(c, ChoixCompetenceEleve(self, code, self.pptache.tache.projet, self.pptache.tache), 2)
 #                            for e in range(len(self.pptache.tache.projet.eleves)):
@@ -16402,41 +16405,54 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ###################################################################################
     def OnItemCheck(self, event, item = None):
-#        print "OnItemCheck"
+#         print("OnItemCheck")
         if event != None:
             item = event.GetItem()
             event.Skip()
- 
+        
+#         cases = self.GetItemWindow(item, self.colEleves)
+#         print("   ", cases)
+        
+        etat = self.GetItem3StateValue(item)
+        if etat == wx.CHK_UNDETERMINED:
+            etat = wx.CHK_UNCHECKED
+        self.MiseAJourCheckbox(item, etat = etat)        
+        
         self.AjouterEnleverCompetencesItem(item)
-         
+        
+        self.GetItemWindow(item, self.colEleves).Actualiser()
+        
+
+        
         wx.CallAfter(self.pp.SetCompetences)
-
-
-    
         
     
     #############################################################################
     def GetCasesEleves(self, codeIndic):
-        if codeIndic in list(self.items.keys()):
+        if codeIndic in self.items:
             return self.GetItemWindow(self.items[codeIndic], self.colEleves)
     
-#    #############################################################################
-#    def MiseAJourCases(self):
-#        """ Mise à jour des cases "élèves" de l'arbre des compétences
-#            > on cécoche tout et on recoche
-#        """
-#        tache = self.GetTache()
-#        print "MiseAJourCases", tache.phase, tache.intitule
-#        print "  ", tache.indicateursEleve
-#        
-#        self.UnselectAll()
-#            
-#        for codeIndic in tache.indicateursEleve[0]:
-#            cases = self.GetCasesEleves(codeIndic)
-#            if cases:
-#                cases.MiseAJour()
-#                cases.Actualiser()
-
+    #############################################################################
+    def MiseAJourCheckbox(self, item, casesEleves = None, etat = True):
+#         print("MiseAJourCheckbox", casesEleves, etat)
+        if self.IsItem3State(item):
+#             print("   3states")
+            if casesEleves:
+                if casesEleves.EstToutCoche():
+                    self.SetItem3StateValue(item, wx.CHK_CHECKED)
+                elif casesEleves.EstToutDecoche():
+                    self.SetItem3StateValue(item, wx.CHK_UNCHECKED)
+                else:
+                    self.SetItem3StateValue(item, wx.CHK_UNDETERMINED)
+            elif etat in [wx.CHK_CHECKED, wx.CHK_UNCHECKED, wx.CHK_UNDETERMINED]:
+                self.SetItem3StateValue(item, etat)
+        else:
+            if casesEleves: # Normalement, ça n'arrive pas
+                self.CheckItem2(item, casesEleves.EstToutCoche(), torefresh=True)
+            else:
+                self.CheckItem2(item, etat, torefresh=True)
+        
+        self.Refresh()
     
     
     #############################################################################
@@ -16448,13 +16464,10 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def MiseAJourCaseEleve(self, codeIndic, etat, eleve, propag = True):
         """ Mise à jour
         """
-#         print "MiseAJourCaseEleve", codeIndic, etat, eleve, propag
+#         print("MiseAJourCaseEleve", codeIndic, etat, eleve, propag)
         casesEleves = self.GetCasesEleves(codeIndic[1:])
         if casesEleves.EstCocheEleve(eleve) != etat:
             return
-        
-        estToutCoche = casesEleves.EstToutCoche()
-#         print "  estToutCoche =", estToutCoche
         
         comp = codeIndic.split("_")[0]
         
@@ -16476,9 +16489,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
             self.AjouterEnleverCompetencesEleve([item], eleve)
             
-            self.CheckItem2(item, estToutCoche, torefresh=True)
+            self.MiseAJourCheckbox(item, casesEleves)
             
-#            self.Refresh()
 #            self.AjouterEnleverCompetencesItem(item, propag = False)
             
         else: #Compétence complete (avec plusieurs indicateurs)
@@ -18364,7 +18376,7 @@ class ChoixCompetenceEleve(wx.Panel):
         """ Active/désactive les cases à cocher
             selon que les élèves ont à mobiliser cette compétence/indicateur
         """
-#         print "MiseAJour ChoixCompetenceEleve", self.tache, self.indic
+#         print("MiseAJour ChoixCompetenceEleve", self.tache, self.indic)
         for i, e in enumerate(self.projet.eleves): 
             dicIndic = e.GetDicIndicateursRevue(self.tache.phase)
 #            print "    ", dicIndic
@@ -18385,12 +18397,13 @@ class ChoixCompetenceEleve(wx.Panel):
         """ Coche/décoche les cases à cocher
             
         """
-#        print "Actualiser", self.tache
+#         print("Actualiser", self.tache)
 #        self.CocherTout(self.indic in self.tache.indicateurs)
         
         for i in range(len(self.projet.eleves)):
-            if self.cb[i].IsThisEnabled ():
-                if i+1 in list(self.tache.indicateursEleve.keys()):
+            if self.cb[i].IsThisEnabled():
+#                 print("  ", i, self.tache.indicateursEleve)
+                if i+1 in self.tache.indicateursEleve:
                     indicateurs = self.tache.indicateursEleve[i+1]
                     self.cb[i].SetValue(self.indic in indicateurs)
       
@@ -18434,6 +18447,13 @@ class ChoixCompetenceEleve(wx.Panel):
         t = True
         for cb in self.cb:
             t = t and cb.GetValue() 
+        return t
+    
+    #############################################################################
+    def EstToutDecoche(self):
+        t = True
+        for cb in self.cb:
+            t = t and not cb.GetValue() 
         return t
     
     #############################################################################

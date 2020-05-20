@@ -58,12 +58,12 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le choix des matériaux et/ou des matériels est justifié, des critères d'éco conception sont pris en compte">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="La  structure matérielle et/ou informationnelle est correctement justifiée ">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
               </l_indicateurs>
@@ -81,7 +81,7 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La justification des paramètres de confort et/ou la réponse apportée par le système aux contraintes de préservation de la santé et du respect de la sécurité sont explicitées">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -112,17 +112,17 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
                 <Indicateur_02 S_intitule="L'analyse globale d'une chaine (énergie, action, information) est correctement réalisée">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_02>
               </l_indicateurs>
@@ -140,12 +140,12 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué ">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
               </l_indicateurs>
@@ -323,7 +323,7 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La description du principe ou de la solution est synthétique et correcte">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -341,7 +341,7 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La description du fonctionnement ou de l'exploitation du système est synthétique et correcte">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
               </l_indicateurs>
@@ -359,12 +359,12 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le choix de la démarche retenue est argumentée">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="Les résultats sont présentés et commentés de manière claire et concise">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="25.0" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
               </l_indicateurs>
@@ -395,12 +395,12 @@
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les solutions techniques envisagées sont correctement analysées au regard des résultats d'expérimentations et/ou de tests et/ou de simulations">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="66.666667" />
+                  <d_poids I_S="2" />
                   <d_revue I_S="0" />
                 </Indicateur_00>
                 <Indicateur_01 S_intitule="L'origine des écarts entre les résultats obtenus et les exigences du cahier des charges est correctement identifiée">
                   <d_ligne I_S="0" />
-                  <d_poids F_S="33.333333" />
+                  <d_poids I_S="1" />
                   <d_revue I_S="0" />
                 </Indicateur_01>
               </l_indicateurs>

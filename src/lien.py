@@ -357,11 +357,14 @@ class LienImage(Lien):
     ######################################################################################  
     def getBranche(self, branche):
         Lien.getBranche(self, branche)
-        bmp = file2bmp(self.path)
-        if bmp is not None and bmp is not wx.NullBitmap:
-            branche.text = img2str(bmp.ConvertToImage())
-        elif self.image is not None and self.image is not wx.NullBitmap:
+#         print(self.lien.path)
+#         bmp = file2bmp(self.path)
+#         if bmp is not None and bmp is not wx.NullBitmap:
+        self.setBitmap()
+        if self.image is not None and self.image is not wx.NullBitmap:
             branche.text = img2str(self.image.ConvertToImage())
+#         elif self.image is not None and self.image is not wx.NullBitmap:
+#             branche.text = img2str(self.image.ConvertToImage())
     
     
     ######################################################################################  
@@ -376,6 +379,7 @@ class LienImage(Lien):
             self.image = bmp
             
         elif self.ok:
+            
             bmp = file2bmp(self.lien.path)
             if bmp is not None and bmp is not wx.NullBitmap:
                 self.image = bmp
