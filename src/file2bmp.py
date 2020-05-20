@@ -109,16 +109,6 @@ def file2bmp(nf, defaut = wx.NullBitmap):
 
 
 
-
-
-
-
-
-
-
-
-
-
 def pdf2imgfile(nf, defaut = wx.NullBitmap, ext = ".png"):
     # source : https://pymupdf.readthedocs.io/en/latest/tutorial/
     of = os.path.splitext(nf)[0]+ext
@@ -147,6 +137,15 @@ def html2imgfile(nf , defaut = wx.NullBitmap, ext = ".png"):
             return defaut
         
         
+        
+def wximg2file(img):
+    temp_name = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names()))
+#     print(temp_name)
+#     with tempfile.NamedTemporaryFile() as resultFile:
+    img.SaveFile(temp_name, wx.BITMAP_TYPE_PNG)
+    return temp_name, True
+    
+    
 #############################################################################
 def file2imgfile(nf, defaut = ""):
     """ Renvoie le noms du fichier image obtenu

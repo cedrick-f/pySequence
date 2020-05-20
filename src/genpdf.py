@@ -330,7 +330,8 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
         for i, _ in enumerate(prj.attributs['SML'][2]):
             code = "SML"+str(i)
             if code in projet.sysML:
-                nf = file2imgfile(os.path.abspath(projet.sysML[code].GetAbsPath(projet.GetPath())))
+#                 nf = file2imgfile(os.path.abspath(projet.sysML[code].GetAbsPath(projet.GetPath())))
+                nf = projet.sysML[code].getImageFile()
                 if nf[0] is not None:
                     img = image(nf[0])
 #                     sourceHtml = sourceHtml.replace("[[ML"+str(i+1)+"]]", img

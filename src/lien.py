@@ -407,7 +407,24 @@ class LienImage(Lien):
         else:
             return wx.NullBitmap
         
-    
+    ######################################################################################  
+    def getImageFile(self):
+        """ Renvoie le noms du fichier image obtenu
+            et un booléen indiquant s'il s'agit d'un fichier temporaire
+            
+            ATTENTION : les fichiers temporaires doivent être effacés
+        """
+        if self.image is not None and self.image is not wx.NullBitmap:
+            nf = wximg2file(self.image)
+            
+        elif self.ok:
+            nf = file2imgfile(self.lien.path)
+            
+        else:
+            return None, None
+        
+        return nf
+        
     ######################################################################################  
     def setPath(self, path):
         self.path = path
