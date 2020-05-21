@@ -11513,7 +11513,7 @@ class PanelPropriete_Tache(PanelPropriete):
             lstPhases = [prj.phases[k][1] for k in prj.listPhases if not k in prj.listPhasesEval]
             
             titre = wx.StaticText(pageGen, -1, "Phase : ")
-            c00.Add(titre, flag = wx.EXPAND)
+            c00.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL)
     #         pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
             
             if tache.phase in TOUTES_REVUES_SOUT:
@@ -11525,7 +11525,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 txtPhas = wx.StaticText(pageGen, -1, "")
     #             pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
                 self.txtPhas = txtPhas
-                c00.Add(txtPhas, flag = wx.EXPAND)
+                c00.Add(txtPhas, flag = wx.ALIGN_CENTER_VERTICAL)
                 
             else:
                 cbPhas = combo_adv.BitmapComboBox(pageGen, -1, "Sélectionner la phase",
@@ -11541,7 +11541,7 @@ class PanelPropriete_Tache(PanelPropriete):
                     cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap(), 24*SSCALE, 24*SSCALE))
                 pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
                 self.cbPhas = cbPhas
-                c00.Add(cbPhas, flag = wx.EXPAND)
+                c00.Add(cbPhas, flag = wx.ALIGN_CENTER_VERTICAL)
                 
     #             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
             c0.Add(c00, flag = wx.EXPAND)    
@@ -16412,15 +16412,17 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
 #         cases = self.GetItemWindow(item, self.colEleves)
 #         print("   ", cases)
-        
-        etat = self.GetItem3StateValue(item)
-        if etat == wx.CHK_UNDETERMINED:
-            etat = wx.CHK_UNCHECKED
-        self.MiseAJourCheckbox(item, etat = etat)        
+        if self.IsItem3State(item):
+            etat = self.GetItem3StateValue(item)
+            if etat == wx.CHK_UNDETERMINED:
+                etat = wx.CHK_UNCHECKED
+            self.MiseAJourCheckbox(item, etat = etat)        
         
         self.AjouterEnleverCompetencesItem(item)
         
-        self.GetItemWindow(item, self.colEleves).Actualiser()
+        cases = self.GetItemWindow(item, self.colEleves)
+        if cases is not None:
+            cases.Actualiser()
         
 
         

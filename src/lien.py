@@ -380,7 +380,7 @@ class LienImage(Lien):
             
         elif self.ok:
             
-            bmp = file2bmp(self.lien.path)
+            bmp = file2bmp(self.path)
             if bmp is not None and bmp is not wx.NullBitmap:
                 self.image = bmp
 
@@ -414,11 +414,12 @@ class LienImage(Lien):
             
             ATTENTION : les fichiers temporaires doivent être effacés
         """
-        if self.image is not None and self.image is not wx.NullBitmap:
-            nf = wximg2file(self.image)
             
-        elif self.ok:
-            nf = file2imgfile(self.lien.path)
+        if self.ok:
+            nf = file2imgfile(self.path)
+            
+        elif self.image is not None and self.image is not wx.NullBitmap:
+            nf = wximg2file(self.image)    
             
         else:
             return None, None

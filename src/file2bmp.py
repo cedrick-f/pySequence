@@ -143,7 +143,7 @@ def wximg2file(img):
 #     print(temp_name)
 #     with tempfile.NamedTemporaryFile() as resultFile:
     img.SaveFile(temp_name, wx.BITMAP_TYPE_PNG)
-    return temp_name, True
+    return temp_name
     
     
 #############################################################################
@@ -163,3 +163,5 @@ def file2imgfile(nf, defaut = ""):
     elif ext in file_types['html']:
         return html2imgfile(nf), True
     
+    else:
+        return None, False

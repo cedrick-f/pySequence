@@ -13742,6 +13742,8 @@ class Eleve(Personne):
         prj = self.GetProjetRef()
         ref = self.GetReferentiel()
 #         print(prj._dicoGrpIndicateur)
+#         print(prj._dicoCompetences)
+#         print(prj._dicoIndicateurs)
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
 #         print("   ", dicIndicateurs)
@@ -13837,8 +13839,6 @@ class Eleve(Personne):
                     tx = round(tx, 6)
                     ev[disc][part][grp] = [tx, tx >= seuil[disc][part]]
                     ev_tot[disc][part][1] = ev_tot[disc][part][1] and ev[disc][part][grp][1]
-        
-#         print("   ", ev, ev_tot, seuil)
         
 #         print(">>>", ev, ev_tot, seuil)
         

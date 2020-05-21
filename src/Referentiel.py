@@ -3267,8 +3267,10 @@ class Projet(XMLelem):
         #
         # Ajout des compétences du tronc commun
         #
+#         print("_dicoGrpIndicateur", self.code)
         self._dicoGrpIndicateur = {}
         for code, comp in self._dicoCompetences.items():
+#             print("   ", code)
             if ref.tr_com != []:
                 t = ref.tr_com[0]
     #            print "   ++", t, REFERENTIELS.keys()
@@ -3281,7 +3283,7 @@ class Projet(XMLelem):
             
     
             d = {}
-            for p in self.parties.keys():
+            for p in self.parties:
                 d[p] = []
     
             for comp, competence in self._dicoIndicateurs[code].items():
@@ -3289,11 +3291,11 @@ class Projet(XMLelem):
                     for part in indic.poids:
                         if part in d:
                             d[part].append(comp)
-    
-            for p in self.parties.keys():
+                            
+            for p in self.parties:
                 d[p] = list(set(d[p]))
-
-            if all(len(d[part]) > 0 for part in d):
+#             print("     ",d)
+            if any(len(d[part]) > 0 for part in d):
                 self._dicoGrpIndicateur[code] = d
 #        if self._parent.Code == "EE-SI":
 #            print "     ", self._dicoCompetences
