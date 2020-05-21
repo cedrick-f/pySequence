@@ -5763,7 +5763,7 @@ class PanelPropriete_Sequence(PanelPropriete):
                     
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (0,0), flag = wx.ALL|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
@@ -5780,7 +5780,7 @@ class PanelPropriete_Sequence(PanelPropriete):
                     
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
-        self.sizer.Add(sb, (0,2), (1,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (0,2), (1,1),  flag = wx.ALL|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, commctrl)
@@ -5802,13 +5802,13 @@ class PanelPropriete_Sequence(PanelPropriete):
         sb.Add(self.bmp, flag = wx.EXPAND)
         sb.Add(self.position, flag = wx.EXPAND)
         
-        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (1,0), flag = wx.ALL|wx.EXPAND, border = 2)
         
         #
         # Lien externe
         #
         lsizer = self.CreateLienSelect(self)
-        self.sizer.Add(lsizer, (1,2), (1,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(lsizer, (1,2), (1,1),  wx.ALL|wx.EXPAND, border = 2)
 
         
         self.sizer.SetEmptyCellSize((0, 0))
@@ -5888,7 +5888,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode())
         
-        for t, cb in list(self.cbD.items()):
+        for t, cb in self.cbD.items():
             cb.SetValue(t in self.sequence.domaine)
 
         self.Layout()
@@ -5900,9 +5900,9 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def CreerCBDomaine(self):
         if self.sizer.FindItemAtPosition((0,1)) is not None:
-            for cb in list(self.cbD.values()):
+            for cb in self.cbD.values():
                 cb.Destroy()
-            self.sizer.RemovePos(self.sb)
+            self.sizer.Remove(self.sb)
             
         self.cbD = {}
         if len(self.sequence.domaine) > 1:
@@ -5922,7 +5922,7 @@ class PanelPropriete_Sequence(PanelPropriete):
                     self.sb.Add(cb)
                     self.cbD[dom] = cb
                 
-                self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+                self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALL|wx.EXPAND, border = 2)
 
         
             

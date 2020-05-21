@@ -5130,7 +5130,7 @@ class Projet(BaseDoc, Grammaire):
 
     ######################################################################################  
     def AjouterGroupe(self, event = None):
-        print("AjouterGroupe", self.GetReferentiel().Code)
+#         print("AjouterGroupe", self.GetReferentiel().Code)
         if len(self.groupes) < self.GetProjetRef().maxGroupes:
             e = Groupe(self, self.GetNewIdGroupe())
             self.groupes.append(e)
@@ -14288,7 +14288,7 @@ class Groupe(Eleve):
         self.eleves = []
         
         self.image = None
-        print("g:", self.GetReferentiel().Code)
+#         print("g:", self.GetReferentiel().Code)
         self.typeEnseignement = self.GetReferentiel().Code
         self.specialite = []
 
