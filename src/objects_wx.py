@@ -2138,11 +2138,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.mgr.Update()
 
         self.definirNomFichierCourant(r'')
-    
+
         sizer = wx.BoxSizer()
         sizer.Add(self.pnl, 1, wx.EXPAND)
+
         self.SetSizer(sizer)
-        
+
         self.Layout()
         
         self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
@@ -2945,6 +2946,7 @@ class FenetreSequence(FenetreDocument):
     def __init__(self, parent, ouverture = False, sequence = None):
         self.typ = 'seq'
         FenetreDocument.__init__(self, parent)
+        self.Freeze() 
         
         if sequence is None:
             #
@@ -2978,13 +2980,12 @@ class FenetreSequence(FenetreDocument):
         # Permet d'ajouter automatiquement les systèmes des préférences (dans la Classe)
         #
         self.sequence.Initialise()
-       
+
         #
         # Zone graphique de la fiche de séquence (au centre)
         #
         self.fiche = FicheSequence(self.nb, self.sequence)
         self.nb.AddPage(self.fiche, "Fiche Séquence")
-        
         
         #
         # Détails
@@ -2999,11 +3000,15 @@ class FenetreSequence(FenetreDocument):
         self.pageBO = Panel_BO(self.nb)
         self.nb.AddPage(self.pageBO, "Bulletins Officiels")
         
-        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         self.miseEnPlace()
-        self.fiche.Redessiner()
+        
+        wx.CallAfter(self.Thaw)
+        
+#         self.fiche.Redessiner()
 
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
         if not ouverture:
             #
             # Mise en liste undo/redo
@@ -3012,6 +3017,7 @@ class FenetreSequence(FenetreDocument):
             self.sequence.undoStack.do("Nouvelle Séquence")
 #             self.parent.miseAJourUndo()
             
+        
             
 #     ###############################################################################################
 #     def ajouterOutils(self):
@@ -3499,9 +3505,6 @@ class FenetreProjet(FenetreDocument):
         #
         self.pageBO = Panel_BO(self.nb)
         self.nb.AddPage(self.pageBO, "Bulletins Officiels")
-        
-        
-     
         
         
         self.miseEnPlace()
