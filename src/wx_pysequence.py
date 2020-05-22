@@ -136,11 +136,13 @@ class SingleInstApp(wx.App):
             # Another instance so just send a message to
             # the instance that is already running.
             _, fichier = GetArgs()
-            
+#             wx.MessageBox(fichier, "Fichier")
             if os.path.isfile(fichier):
                 cmd = "OpenWindow.%s.%s" % (self.name, fichier)
+#                 wx.MessageBox(cmd, "Message")
                 if not SendMessage(cmd, port = self.PORT):
                     print("Failed to send message!")
+#                     wx.MessageBox(fichier, "Failed to send message!")
             else:
                 wx.MessageBox("pySéquence semble être déjà lancé !", "pySéquence")
                 
@@ -453,11 +455,12 @@ class IpcServer(threading.Thread):
                 # blocking up to 2 seconds at a time
                 ready = select.select([client,],[], [],2)
                 if ready[0]:
-                    recieved = client.recv(4096)
+                    recieved = client.recv(4096).decode()
                 if not self.keeprunning:
                     break
                 # If message ends with correct session
                 # ID then process it.
+                print(recieved)
                 r = recieved.split(".")
                 cmd = r[0]
                 ses = r[1]
@@ -544,10 +547,15 @@ def SendMessage(message, port):
         client = socket.socket(socket.AF_INET,
                                socket.SOCK_STREAM)
         client.connect(('127.0.0.1', port))
-        client.send(message)
+        client.send(bytes(message, "utf-8"))
         client.shutdown(socket.SHUT_RDWR)
         client.close()
     except Exception as msg:
+        if hasattr(msg, 'message'):
+            m = msg.message
+        else:
+            m = msg
+        wx.MessageBox(m, "Erreur")
         return False
     else:
         return True
