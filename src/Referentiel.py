@@ -1933,10 +1933,22 @@ class Referentiel(XMLelem):
             n += p[1]
         return n
 
+    #############################################################################
+    def estDansPeriode(self, position, periode):
+        """ Renvoie True si la position [début, fin]
+            est comprise dans la période [début, fin]
+        """
+        return all(periode[0] <= p <= periode[1] for p in position)
+#         if periode[0] <= position[0] <= periode[1] \
+#            and periode[0] <= position[1] <= periode[1]:
+#             return True
+#         
+#         return False
+    
     
     #############################################################################
     def getSpeHorsPeriode(self, periode):
-        """ Renvoie le liste des spécialités qui sont hors de la période
+        """ Renvoie la liste des spécialités qui sont hors de la période
             :periode: [début, fin], à partir de 0
             
         """

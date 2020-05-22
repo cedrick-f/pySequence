@@ -7285,7 +7285,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
 #         pageGen.sizer.Add(10, 1, (0,3))
         pageGen.sizer.AddGrowableRow(0)
-#         pageGen.sizer.AddGrowableCol(3)
+        pageGen.sizer.AddGrowableCol(1)
         
         
         #

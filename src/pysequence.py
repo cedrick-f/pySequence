@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from _operator import lt
 
 
 ##This file is part of pySequence
@@ -4243,9 +4244,24 @@ class Projet(BaseDoc, Grammaire):
         if len(sp) == 1:
             sp = [sp[0], sp[0]]
         self.position = [int(sp[0]), int(sp[1])]
+        
+        ref = self.GetReferentiel()
+        # Correction contradiction entre positions Projet et Périodes Classe
+        if not ref.estDansPeriode(self.position, ref.getPeriodeSpe(self.classe.specialite)):
+            print("!!!",self.position, ref.getPeriodeSpe(self.classe.specialite))
+            if self.GetProjetRef() is not None:
+                for p in ref.projets.values():
+                    per = [i-1 for i in p.periode]
+#                     print("   ?",per)
+                    if ref.estDansPeriode(per, ref.getPeriodeSpe(self.classe.specialite)):
+                        self.position = [min(per), max(per)]
+                        break
+#             print("   >>>",self.position)
+        
         self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
 #         print("___0", self.code)   
         prj = self.GetProjetRef()
+        
 #         print("  ", prj)
         if prj is not None: # Il existe un projet d'évaluation pour ce référentiel
             if self.version == "": # Enregistré avec une version de pySequence > 5.7
@@ -4263,14 +4279,14 @@ class Projet(BaseDoc, Grammaire):
 #                 self.nbrRevues = prj.getNbrRevuesDefaut()
             self.positionRevues = branche.get('PosRevues')
             
-            
+#             self.initRevues()
             # Correction en cas de problème pour éviter les incohérences
             if self.getNbrRevues() is None or self.positionRevues is None:
                 self.initRevues()
             else:
                 self.positionRevues = self.positionRevues.split("-")
             
-            
+            self.MiseAJourNbrRevues()
             
             if len(self.positionRevues) > self.getNbrRevues():
                 self.positionRevues = self.positionRevues[:self.getNbrRevues()]
@@ -4386,7 +4402,7 @@ class Projet(BaseDoc, Grammaire):
         #
         brancheTac = branche.find("Taches")
         tachesRevue = self.getTachesRevue()
-        
+#         print("tachesRevue", tachesRevue)
         self.taches = []
 #         adapterVersion = True
         
@@ -4403,8 +4419,8 @@ class Projet(BaseDoc, Grammaire):
                     err.extend(e)
                     if len(e) > 0:
                         err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, phase))
-                
-                    self.taches.append(tachesRevue[num])
+                    if not tachesRevue[num] in self.taches: # Pour corriger un bug 
+                        self.taches.append(tachesRevue[num])
 #                 adapterVersion = False
             else:
                 tache = Tache(self, branche = e)
@@ -4414,6 +4430,26 @@ class Projet(BaseDoc, Grammaire):
                     
 #                tache.setBranche(e)
                 self.taches.append(tache)
+        
+        #
+        # Correction de bug d'enregistrement (version < 8.4) ...
+        # ... suppression des doublons
+        lt = []
+        for t in self.taches:
+            if not t in lt:
+                lt.append(t)
+            else:
+                print(" ! Suppression", t)
+        self.taches = lt
+        # ... ajout des revues manquantes
+        lst_rev = [t for t in self.taches if t.phase in TOUTES_REVUES_EVAL]
+        for i, r in enumerate(tachesRevue):
+            if r.phase != 'S' and not r in lst_rev:
+                print(" ! Ajout", i, r)
+                self.taches.append(tachesRevue[i])
+                
+        
+#             print(id(self.taches[-1]))
 #         print("taches1", self.taches)
 #        self.CorrigerIndicateursEleve()
 #         print("taches:",self.taches)
@@ -4718,6 +4754,7 @@ class Projet(BaseDoc, Grammaire):
     
     ######################################################################################  
     def creerTachesRevue(self):
+#         print("creerTachesRevue", self.getNbrRevues())
         projet = self.GetProjetRef()
         if projet is None:
             return []
