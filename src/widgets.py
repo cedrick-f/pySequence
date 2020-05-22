@@ -1805,7 +1805,7 @@ class SliderThumb:
         pos = (fraction_to_value(fraction, min_x, max_x), parent_size[1] / 2 + 1)
         return pos
 
-    def SetPosition(self, pos):
+    def SetPosition(self, pos, minDelta = 0):
         pos_x = pos[0]
         # Limit movement by the position of the other thumb
         who_other, other_thumb = self.GetOtherThumb()
@@ -1821,7 +1821,9 @@ class SliderThumb:
 
         fraction = value_to_fraction(pos_x, min_x, max_x)
         last_value = self.value
-        self.value = fraction_to_value(fraction, self.parent.GetMin(), self.parent.GetMax())
+        new_value = fraction_to_value(fraction, self.parent.GetMin(), self.parent.GetMax())
+        if abs(other_thumb.value-new_value) >= minDelta:
+            self.value = new_value
         # Post event notifying that position changed
         if self.value != last_value:
             self.PostEvent()
@@ -1902,12 +1904,14 @@ class SliderThumb:
 
 
 class RangeSlider(BufferedWindow):
-    def __init__(self, parent, ID=wx.ID_ANY, lowValue=None, highValue=None, minValue=0, maxValue=100, zones = [],
+    def __init__(self, parent, ID=wx.ID_ANY, lowValue=None, highValue=None, minValue=0, maxValue=100, 
+                 minDelta = 0, zones = [],
                  pos=wx.DefaultPosition, size=wx.DefaultSize, 
                  style=wx.SL_HORIZONTAL| wx.NO_FULL_REPAINT_ON_RESIZE, validator=wx.DefaultValidator,
                  name='rangeSlider'):
         
         self.zones = zones
+        self.minDelta = minDelta
         
         if minValue > maxValue:
             minValue, maxValue = maxValue, minValue
@@ -1922,11 +1926,11 @@ class RangeSlider(BufferedWindow):
         lowValue = max(lowValue, self.min_value)
         highValue = min(highValue, self.max_value)
 
-        self.border_width = 8
+        self.border_width = 4
 
         self.thumbs = {
-            'low': SliderThumb(parent=self, value=lowValue, decal = -5),
-            'high': SliderThumb(parent=self, value=highValue, decal = 5)
+            'low': SliderThumb(parent=self, value=lowValue, decal = -2),
+            'high': SliderThumb(parent=self, value=highValue, decal = 2)
         }
         self.thumb_width = self.thumbs['low'].size[0]
 
@@ -1962,7 +1966,7 @@ class RangeSlider(BufferedWindow):
     def SetValueFromMousePosition(self, click_pos):
         for thumb in self.thumbs.values():
             if thumb.dragged:
-                changed = thumb.SetPosition(click_pos)
+                changed = thumb.SetPosition(click_pos, minDelta = self.minDelta)
                 if changed:
                     self.SetZone(thumb)
                 return changed
@@ -2024,6 +2028,7 @@ class RangeSlider(BufferedWindow):
         
         if refresh_needed:
             self.Refresh()
+            self.UpdateDrawing()
 
     def OnMouseEnter(self, evt):
 #         print("OnMouseEnter")
@@ -2090,40 +2095,46 @@ class RangeSlider(BufferedWindow):
 
     def GetZone(self, slider):
 #         print("zones", self.zones)
+        
         for z in self.zones:
-            if slider.value >= z[0] and slider.value <= z[-1]:
-                return z
+            if slider == self.thumbs['high']:
+                if slider.value > z[0] and slider.value <= z[-1]:
+                    return z
+            else:
+                if slider.value >= z[0] and slider.value < z[-1]:
+                    return z
         return
     
     def SetZone(self, slider):
+#         print("SetZone")
         if slider == self.thumbs['low']:
             zoneMin = self.GetZone(slider)
             zoneMax = self.GetZone(self.thumbs['high'])
-
+#             print("   l ", zoneMin, zoneMax)
             if zoneMin is not None and zoneMin == zoneMax:
                 self.thumbs['low'].SetValue(zoneMin[0])
                 self.thumbs['high'].SetValue(zoneMin[-1])
             elif zoneMin is not None and zoneMax is None:
                 self.thumbs['low'].SetValue(zoneMin[0])
                 self.thumbs['high'].SetValue(zoneMin[-1])
-            elif zoneMin is  None and zoneMax is not None:
-                self.thumbs['high'].SetValue(self.thumbs['low'].value)
+            elif zoneMin is None and zoneMax is not None:
+                self.thumbs['high'].SetValue(self.thumbs['low'].value + self.minDelta)
         
         else:
             zoneMax = self.GetZone(slider)
             zoneMin = self.GetZone(self.thumbs['low'])
-
+#             print("   h ", zoneMin, zoneMax)
             if zoneMax is not None and zoneMin == zoneMax:
                 self.thumbs['low'].SetValue(zoneMax[0])
                 self.thumbs['high'].SetValue(zoneMax[-1])
             elif zoneMax is not None and zoneMin is None:
                 self.thumbs['low'].SetValue(zoneMax[0])
                 self.thumbs['high'].SetValue(zoneMax[-1])
-            elif zoneMax is  None and zoneMin is not None:
-                self.thumbs['low'].SetValue(self.thumbs['high'].value)
+            elif zoneMax is None and zoneMin is not None:
+                self.thumbs['low'].SetValue(self.thumbs['high'].value - self.minDelta)
     
     def GetValues(self):
-        return self.thumbs['low'].value, self.thumbs['high'].value
+        return [self.thumbs['low'].value, self.thumbs['high'].value]
 
     def SetValues(self, lowValue, highValue):
         if lowValue > highValue:
@@ -2141,7 +2152,8 @@ class RangeSlider(BufferedWindow):
         return self.min_value
 
     def SetMax(self, maxValue):
-        if maxValue < self.min_value:
+        print("SetMin", maxValue , self.min_value)
+        if maxValue < self.min_value+self.minDelta:
             maxValue = self.min_value
         _, old_high = self.GetValues()
         if old_high > maxValue:
@@ -2150,7 +2162,8 @@ class RangeSlider(BufferedWindow):
         self.Refresh()
 
     def SetMin(self, minValue):
-        if minValue > self.max_value:
+        print("SetMin", minValue , self.max_value)
+        if minValue > self.max_value-self.minDelta:
             minValue = self.max_value
         old_low, _ = self.GetValues()
         if old_low < minValue:

@@ -6563,13 +6563,15 @@ class PositionCtrl(wx.Panel):
         self.position = position
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        projets = [[x-1 for x in p.periode] for p in projets.values()]
+#         projets = [[x-1 for x in p.periode] for p in projets.values()]
+        projets = [[p.periode[0]-1, p.periode[-1]] for p in projets.values()]
 #         print("projets", projets)
         mini, maxi = periodes[0], periodes[-1]#0, sum(p[1] for p in periodes)-1
         if totmax == None:
             totmax = maxi+1
             
-        self.sel = RangeSlider(self, -1, *position, mini, maxi, zones = projets, 
+        self.sel = RangeSlider(self, -1, lowValue=position[0], highValue=position[1]+1, 
+                               minValue=mini, maxValue=maxi+1, minDelta = 1, zones = projets, 
                                size = (-1, 18*SSCALE))
         
 #         w1, w2, w3 = 100*mini/totmax, 100*(maxi-mini+1)/totmax, 100*(totmax-maxi-1)/totmax
@@ -6589,11 +6591,13 @@ class PositionCtrl(wx.Panel):
 #         
 
     def SetValue(self, pos):
-        self.sel.SetValues(*pos)
+        
+        self.sel.SetValues(pos[0], pos[1]+1)
         
     
     def GetRange(self):
-        return self.sel.GetValues()
+        p = self.sel.GetValues()
+        return [p[0], p[1]-1]
         
         
     def MiseAJour(self, position = None):
