@@ -1545,7 +1545,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
-            
+                else:
+                    wx.EndBusyCursor()
+                    self.Thaw()
+                    return
+                
             if doc is None:
                 child.fermer()
                 
@@ -2611,7 +2615,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             
             dir, _ = os.path.splitext(path)
             if os.path.exists(dir):
-                dlg = wx.MessageDialog(self, "Le dossier suivant existe déja :\n\n%s\n\n"\
+                dlg = wx.MessageDialog(self, "Le dossier suivant existe déjà :\n\n%s\n\n"\
                                              "Si vous continuez, il sera effacé !\n\n"\
                                              "Voulez-vous continuer ?" %dir,
                                              "Dossier existant",
@@ -4289,7 +4293,7 @@ class FenetreProjet(FenetreDocument):
             except (IOError, RuntimeError):
                 messageErreur(self, "Erreur !",
                                   "Impossible d'enregistrer le fichier suivant :\n\n%s\n\nVérifier :\n" \
-                                  " - qu'aucun fichier portant le méme nom n'est déja ouvert\n" \
+                                  " - qu'aucun fichier portant le méme nom n'est déjà ouvert\n" \
                                   " - que le dossier choisi n'est pas protégé en écriture\n\n" %nomFichier)
                 try:
                     wx.EndBusyCursor()
@@ -4524,7 +4528,7 @@ class FenetreProgression(FenetreDocument):
             nomFichier = os.path.join(pathProg, nomFichier)
             
             if os.path.isfile(nomFichier):
-                dlg = wx.MessageDialog(self, "Un fichier %s portant ce nom existe déja.\n\n"\
+                dlg = wx.MessageDialog(self, "Un fichier %s portant ce nom existe déjà.\n\n"\
                                              "Voulez-vous :\n"\
                                              " - l'ouvrir comme %s %s de la Progression : OUI\n"\
                                              " - écraser le fichier existant (toutes les données seront perdues) : NON\n"\
@@ -12620,7 +12624,7 @@ class PanelPropriete_Systeme(PanelPropriete):
             self.textctrl.SetToolTip("Saisir le nom %s" %et2ou(ref._nomSystemes.du_()))
         else:
             self.textctrl.SetBackgroundColour("pink")
-            self.textctrl.SetToolTip("Un autre %s porte déja ce nom !" %et2ou(ref._nomSystemes.sing_()))
+            self.textctrl.SetToolTip("Un autre %s porte déjà ce nom !" %et2ou(ref._nomSystemes.sing_()))
         self.textctrl.Refresh()
         
         
@@ -13073,7 +13077,7 @@ class PanelPropriete_Personne(PanelPropriete):
         list_p = self.GetListProfs()
         
         if self.personne in list_p:
-            dlg = wx.MessageDialog(self, "Le professeur %s existe déja dans la liste\n\n" \
+            dlg = wx.MessageDialog(self, "Le professeur %s existe déjà dans la liste\n\n" \
                                            "Voulez-vous le remplacer ?" %(self.personne.GetNomPrenom()),
                                              "Professeur existant",
                                              wx.ICON_INFORMATION | wx.YES_NO

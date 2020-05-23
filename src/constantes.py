@@ -714,10 +714,10 @@ MESSAGE_ENR = {'seq' : "Enregistrer la séquence sous ...",
                'prg' : "Enregistrer la progression sous ...",
                'cla' : "Enregistrer la classe sous ..."}
 
-MESSAGE_DEJA = {'seq' : "La séquence est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
-                'prj' : "Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?",
-                'prg' : "La progression est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la progression ?",
-                'cla' : "La classe est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la classe ?"}
+MESSAGE_DEJA = {'seq' : "La séquence est déjà ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
+                'prj' : "Le projet est déjà ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?",
+                'prg' : "La progression est déjà ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la progression ?",
+                'cla' : "La classe est déjà ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la classe ?"}
 
 TITRE_DEFAUT = {'seq' : "Nouvelle séquence",
                 'prj' : "Nouveau projet",

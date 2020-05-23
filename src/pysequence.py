@@ -5786,11 +5786,11 @@ class Projet(BaseDoc, Grammaire):
 #             nf = [testRel(path, dirpath) for path in existe]
             nf = [Lien(path).GetRelPath(dirpath) for path in existe]
             if len(existe) == 1:
-                m = "La grille d'évaluation existe déja !\n\n" \
+                m = "La grille d'évaluation existe déjà !\n\n" \
                     "\t%s\n\n" \
                     "Voulez-vous la remplacer ?" %existe[0]
             else:
-                m = "Les grilles d'évaluation existent déja !\n\n" \
+                m = "Les grilles d'évaluation existent déjà !\n\n" \
                     "\t%s\n\n" \
                     "dans le dossier :\n" \
                     "\t%s\n\n" \
@@ -5825,11 +5825,11 @@ class Projet(BaseDoc, Grammaire):
 #             nf = [testRel(path, dirpath) for path in existe]
             nf = [Lien(path).GetRelPath(dirpath) for path in existe]
             if len(existe) == 1:
-                m = "Le fichier de description détaillée des tâches existe déja !\n\n" \
+                m = "Le fichier de description détaillée des tâches existe déjà !\n\n" \
                     "\t%s\n\n" \
                     "Voulez-vous le remplacer ?" %existe[0]
             else:
-                m = "Les fichiers de description détaillée des tâches existent déja !\n\n" \
+                m = "Les fichiers de description détaillée des tâches existent déjà !\n\n" \
                     "\t%s\n\n" \
                     "dans le dossier :\n" \
                     "\t%s\n\n" \
@@ -6770,7 +6770,9 @@ class Progression(BaseDoc, Grammaire):
         l = self.arbre.GetItemPyData(item)
         nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        l.sequence = self.GetApp().parent.ouvrirDoc(l.sequence, nomFichier)
+        s = self.GetApp().parent.ouvrirDoc(l.sequence, nomFichier)
+        if s is not None:
+            l.sequence = s
         
     
     ######################################################################################  
@@ -13658,7 +13660,7 @@ class Eleve(Personne):
                     except IOError :
                         messageErreur(win, "Erreur !",
                                       "Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-                                      " - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                      " - qu'aucun fichier portant le même nom n'est déjà ouvert\n" \
                                       " - que le dossier choisi n'est pas protégé en écriture" %f)
                     else:
                         tableaux[f] = (parts, grilles.getTableau(win, f))
@@ -13701,7 +13703,7 @@ class Eleve(Personne):
             except:
                 messageErreur(win, "Erreur !",
                               "Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-                              " - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                              " - qu'aucun fichier portant le même nom n'est déjà ouvert\n" \
                               " - que le dossier choisi n'est pas protégé en écriture" %f)
             try:
                 t.close()
