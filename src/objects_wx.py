@@ -9344,7 +9344,7 @@ class Panel_Cible(wx.Panel):
 ####################################################################################
 class PanelPropriete_LienSequence(PanelPropriete):
     def __init__(self, parent, lien):
-        self.lien = lien
+        self.lien = lien # type LienSequence
         PanelPropriete.__init__(self, parent, objet = self.lien)
         
         self.maxX = 800*SSCALE # Largeur de l'image "aperçu" zoomée

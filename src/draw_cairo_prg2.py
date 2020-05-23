@@ -1552,7 +1552,7 @@ class Progression(Base_Fiche_Doc):
             if len(doc.intitule.strip()) > 0:
                 intit = doc.intitule
             else:
-                intit = lienDoc.path
+                intit = lienDoc.GetNomFichier()
             show_text_rect(self.ctx, intit, rect, 
                            ha = 'g', b = 0.02,
                            fontsizeMinMax = (minFont, 0.015 * COEF))

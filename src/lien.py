@@ -315,6 +315,9 @@ class Lien():
             t = ""
         return Grammaire(t)
     
+    ###############################################################################################
+    def getNomFichier(self):
+        return os.path.splitext(os.path.basename(self.path))[0]
     
     ######################################################################################  
     def getBranche(self, branche):

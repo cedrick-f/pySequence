@@ -2739,7 +2739,7 @@ def safeParse(nomFichier, toplevelwnd, silencieux = False):
                               "%s\n\n" \
                               "Il est probablement tronqué suite à un echec d'enregistrement." %util_path.toSystemEncoding(nomFichier))
         fichier.close()
-        if DEBUG: raise
+#         if DEBUG: raise
 
 
 

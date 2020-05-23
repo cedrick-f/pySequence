@@ -6967,11 +6967,14 @@ class Progression(BaseDoc, Grammaire):
             self.GetApp().sendEvent(modif = "Ajout d'un nouveau Projet à la Progression")
             self.arbre.SelectItem(ps.branche)
             
+            
+            
     ######################################################################################  
     def AjouterSequence(self, event = None):
         """ Ajoute une Séquence
             parmi une liste de Séquences compatibles recherchées dans le dossier de la progression
         """
+#         print("AjouterSequence",self.GetPath())
         if not self.DossierDefini():
             return
         
@@ -6983,7 +6986,9 @@ class Progression(BaseDoc, Grammaire):
         
         fichiers, sequences = list(zip(*fichiers_sequences))
 #         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-        fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
+#         fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
+#         fichiers = [os.path.relpath(f, start = self.GetPath()) for f in fichiers]
+#         print("  ", fichiers)
         dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
                                     "Fichiers Séquences disponibles",
                                     [toSystemEncoding(f) for f in fichiers], 
@@ -7015,7 +7020,8 @@ class Progression(BaseDoc, Grammaire):
         
         fichiers, projets = list(zip(*fichiers_projets))
 #         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-        fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
+#         fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
+#         fichiers = [os.path.relpath(f, start = self.GetPath()) for f in fichiers]
         dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
                                     "Fichiers Projets disponibles",
                                     [toSystemEncoding(f) for f in fichiers], 
@@ -7383,14 +7389,15 @@ class Progression(BaseDoc, Grammaire):
         fichiers_sequences = []
         count = 0
         for f in l:
-            dlg.Update(count, toSystemEncoding(f))
+            rf = os.path.relpath(f, start = self.GetPath())
+            dlg.Update(count, toSystemEncoding(rf))
       
             classe, sequence = self.OuvrirFichierSeq(f, silencieux = True)
 #                print classe.typeEnseignement ,  self.referentiel.Code
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
 #                lienSequence = LienSequence(self,  testRel(f, self.GetPath()))
 #                lienSequence.sequence = sequence
-                fichiers_sequences.append((f, sequence))
+                fichiers_sequences.append((rf, sequence))
             count += 1
 
         dlg.Update(count, "Terminé")
@@ -7447,12 +7454,13 @@ class Progression(BaseDoc, Grammaire):
         fichiers_projets = []
         count = 0
         for f in l:
-            dlg.Update(count, toSystemEncoding(f))
+            rf = os.path.relpath(f, start = self.GetPath())
+            dlg.Update(count, toSystemEncoding(rf))
       
             classe, projet = self.OuvrirFichierPrj(f, silencieux = True)
 
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
-                fichiers_projets.append((f, projet))
+                fichiers_projets.append((rf, projet))
             count += 1
 
         dlg.Update(count, "Terminé")
