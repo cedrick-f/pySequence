@@ -473,7 +473,7 @@ class Sequence(Base_Fiche_Doc):
 
 
     ######################################################################################  
-    def draw(self, ctx, surRect = None):
+    def draw(self, ctx, surRect = None, surObj = None):
         """ Dessine une fiche de séquence de la séquence <seq>
             dans un contexte cairo <ctx>
             
@@ -1205,7 +1205,7 @@ class Sequence(Base_Fiche_Doc):
         if not self.entete:
             self.info(self.ctx)
         
-        self.surBrillance(ctx)
+        self.surBrillance(ctx, surObj)
                     
                 
 

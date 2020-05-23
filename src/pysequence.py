@@ -6981,7 +6981,7 @@ class Progression(BaseDoc, Grammaire):
         fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
         if len(fichiers_sequences) == 0:
             messageInfo(None, "Aucune Séquence trouvée", 
-                        "Aucune Séquence compatible à la progression n'a été trouvée.\n\n")
+                        "Aucune Séquence compatible avec la progression n'a été trouvée.\n\n")
             return
         
         fichiers, sequences = list(zip(*fichiers_sequences))
@@ -7015,7 +7015,7 @@ class Progression(BaseDoc, Grammaire):
         fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
         if len(fichiers_projets) == 0:
             messageInfo(None, "Aucun Projet trouvé", 
-                        "Aucun Projet compatible à la progression n'a été trouvé.\n\n")
+                        "Aucun Projet compatible avec la progression n'a été trouvé.\n\n")
             return
         
         fichiers, projets = list(zip(*fichiers_projets))

@@ -3070,8 +3070,10 @@ class FenetreSequence(FenetreDocument):
             
         if event.GetVerif():
             self.sequence.VerifPb()
+            
         if event.GetDraw():
             wx.CallAfter(self.fiche.Redessiner)
+            
         self.MarquerFichierCourantModifie()
             
             
@@ -4979,7 +4981,8 @@ class FicheDoc(BaseFiche):
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
         
-        self.surRect = None
+#         self.surRect = None     # Liste des rectangles en surbrillance
+        self.surObj = None      # Objet en surbrillance
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
@@ -5040,40 +5043,36 @@ class FicheDoc(BaseFiche):
 
 
 
-    #############################################################################            
-    def MiseAJourSur(self, obj):
-        """ Met l'objet <obj> en surbrillance
-        """
-        self.surRect = obj
-#         self.surRect = None
-#         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
-#             self.surRect = obj.rect
+#     #############################################################################            
+#     def MiseAJourSur(self, obj):
+#         """ Met l'objet <obj> en surbrillance
+#         """
+#         self.surRect = self.getRects(obj)
+# #         self.surRect = None
+# #         if hasattr(obj, 'rect') and hasattr(self, "ctx"):
+# #             self.surRect = obj.rect
+#     
     
-    #############################################################################            
-    def getRects(self, obj):
-        """ Renvoie la liste des rectangles encadrant l'objet <obj>
-        """
-        r = []
-        for z in self.GetDoc().zones_sens:
-            if z.obj == obj:
-                r.extend(z.rect)
-        return r
     
     
     #############################################################################            
-    def Surbrillance(self, obj):
+    def Surbrillance(self, obj = None):
         """ Met l'objet <obj> en surbrillance
             et redessine
         """
 #         print("Surbrillance", obj)
-        self.surRect = self.getRects(obj)
+#         if obj is None:
+#             self.surRect = []
+#         else:
+#             self.surRect = self.getRects(obj)
+        self.surObj = obj
 #         print("   ", self.surRect)
         self.Redessiner()
         
     
     #############################################################################            
     def CentrerSur(self, obj):
-        rect = self.getRects(obj)
+        rect = self.fiche.getRects(obj)
         if len(rect) > 0:
             y0 = min([r[1] for r in rect])
             y1 = max([r[1]+r[3] for r in rect])
@@ -5181,7 +5180,7 @@ class FicheDoc(BaseFiche):
     #############################################################################            
     def Draw(self, ctx):
 #         print("Draw", self.fiche)
-        self.fiche.draw(ctx, surRect = self.surRect)
+        self.fiche.draw(ctx, surObj = self.surObj)
 #         self.GetDoc().DefinirCouleurs()
 #         self.GetDoc().draw.Draw(ctx, self.GetDoc(), surRect = self.surRect)
 
@@ -9482,6 +9481,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.sizer.Add(sbsp, (1,2), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.AddGrowableCol(2)
+        self.sizer.AddGrowableRow(0)
         self.sizer.Layout()
     
 #         locale2def()
@@ -11082,7 +11082,8 @@ class PanelPropriete_Seance(PanelPropriete):
         t = ""
         if hasattr(self, 'vcDuree') and event.GetId() == self.vcDuree.GetId():
             self.seance.SetDuree(event.GetVar().v[0])
-            self.seance.GetFiche().MiseAJourSur(self.seance)
+#             self.seance.GetFiche().Surbrillance(self.seance)
+#             self.seance.GetFiche().MiseAJourSur(self.seance)
             t = "Modification de la durée %s" %ref._nomActivites.du_()
         
         elif hasattr(self, 'vcNombre') and event.GetId() == self.vcNombre.GetId():

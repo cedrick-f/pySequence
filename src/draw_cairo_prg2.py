@@ -559,7 +559,7 @@ class Progression(Base_Fiche_Doc):
 
         
     ######################################################################################  
-    def draw(self, ctx, surRect = None):
+    def draw(self, ctx, surRect = None, surObj = None):
         """ Dessine une fiche de progression <prg>
             dans un contexte cairo <ctx>
         """
@@ -1146,7 +1146,7 @@ class Progression(Base_Fiche_Doc):
         
     
                 
-        self.surBrillance(ctx)
+        self.surBrillance(ctx, surObj)
         
 
     ######################################################################################  

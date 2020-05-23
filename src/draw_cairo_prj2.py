@@ -463,7 +463,7 @@ class Projet(Base_Fiche_Doc):
     
         
     ######################################################################################  
-    def draw(self, ctx, surRect = None):
+    def draw(self, ctx, surRect = None, surObj = None):
         """ Dessine une fiche de projet du projet <prj>
             dans un contexte cairo <ctx>
         """
@@ -991,7 +991,7 @@ class Projet(Base_Fiche_Doc):
             self.info(ctx)
         
         
-        self.surBrillance(ctx)
+        self.surBrillance(ctx, surObj)
         
 
     

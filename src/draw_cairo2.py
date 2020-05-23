@@ -905,9 +905,19 @@ class Base_Fiche_Doc():
                                                  self.getSSGroupes())
 
         
-        
+    #############################################################################            
+    def getRects(self, obj):
+        """ Renvoie la liste des rectangles encadrant l'objet <obj>
+        """
+        r = []
+        for z in self.getDocument().zones_sens:
+            if z.obj == obj:
+                r.extend(z.rect)
+        return r
+    
+    
     ##########################################################################################
-    def surBrillance(self, ctx):
+    def surBrillance(self, ctx, surObj):
         
         def surbrillance(rect = None):
             if rect is not None:
@@ -917,7 +927,9 @@ class Base_Fiche_Doc():
                 ctx.set_source_rgba (1,1,0.3, 1)
                 ctx.stroke ()
                 
-                
+        if surObj is not None:
+            self.surRect = self.getRects(surObj)
+            
         if self.surRect is not None:
 #             print("Surbrillance", self.surRect)
             if type(self.surRect) == list:
