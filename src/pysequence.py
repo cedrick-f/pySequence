@@ -6805,7 +6805,7 @@ class Progression(BaseDoc, Grammaire):
                         if len(fichiers_sequences) > 0:
                             fichiers, sequences = list(zip(*fichiers_sequences))
 #                             fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-                            fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
+#                             fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
                             dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                        "celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
                                                         "Fichiers Séquences disponibles",
@@ -6864,7 +6864,7 @@ class Progression(BaseDoc, Grammaire):
                         fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
                         fichiers, projets = list(zip(*fichiers_projets))
 #                         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-                        fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
+#                         fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
                         dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                    "celui qui doit remplacer %s." %toSystemEncoding(lienPrj.path), 
                                                     "Fichiers Projet disponibles",
@@ -8072,15 +8072,20 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
         if itemArbre == self.branche:
             doc = self.parent
             if isinstance(doc, Progression):
-                doc.app.AfficherMenuContextuel([["Supprimer", 
-                                                 functools.partial(doc.SupprimerLien, item = itemArbre), 
-                                                 scaleImage(images.Icone_suppr_seq.GetBitmap()),
-                                                 True],
-                                                ["Ouvrir", 
-                                                 functools.partial(doc.OuvrirSequence, item = itemArbre), 
-                                                 scaleImage(images.Icone_open.GetBitmap()),
-                                                 True]
-                                                ])
+                m = [["Supprimer", 
+                     functools.partial(doc.SupprimerLien, item = itemArbre), 
+                     scaleImage(images.Icone_suppr_seq.GetBitmap()),
+                     True]
+                    ]
+                fichiers = self.GetApp().parent.GetNomsFichiers()
+                fichiers = [os.path.relpath(f, start = doc.GetPath()) for f in fichiers]
+                if not self.path in fichiers:
+                    m.append(["Ouvrir", 
+                             functools.partial(doc.OuvrirSequence, item = itemArbre), 
+                             scaleImage(images.Icone_open.GetBitmap()),
+                             True]) 
+                doc.app.AfficherMenuContextuel(m)
+                
             else:
                 doc.app.AfficherMenuContextuel([["Supprimer", 
                                                  functools.partial(doc.SupprimerLienSequence, item = itemArbre), 
