@@ -1513,8 +1513,9 @@ class Progression(Base_Fiche_Doc):
         lienDoc.pts_caract = [(x, y)]
             
         self.ctx.set_line_width(e)
+        wd = self.ecartX/5  # Largeur du doigt
     #    print "BcoulPos", BcoulPos
-        Rectangle_plein_doigt(self, (x, y, w, h), self.ecartX/5, yl-y, 
+        Rectangle_plein_doigt(self, (x, y, w, h), wd, yl-y, 
                               self.BcoulPos[doc.position[0]], 
                               self.IcoulPos[doc.position[0]], 
                               0.9).draw()
@@ -1552,7 +1553,7 @@ class Progression(Base_Fiche_Doc):
         self.ctx.set_source_rgb (0,0,0)
         
         # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
-        rect = (x + self.hTacheMini, y, w - self.hTacheMini, h)
+        rect = (x + self.hTacheMini, y, w - self.hTacheMini - wd, h)
         if rect[2] > 0:
     #         print("intit", doc, len(doc.intitule.strip()) > 0)
             if len(doc.intitule.strip()) > 0:
@@ -1565,7 +1566,7 @@ class Progression(Base_Fiche_Doc):
         
         
 #         lienDoc.rect.append([x, y, self.tailleZTaches[0], h])
-        
+        rect = (x, y, w - wd, h)
         self.prg.zones_sens.append(Zone_sens([rect], obj = lienDoc))
     #     lienDoc.pt_caract = [(rect[:2], "Seq")]
         
