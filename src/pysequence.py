@@ -6365,8 +6365,8 @@ class Progression(BaseDoc, Grammaire):
         h_lig = [0]*l   # hauteur des lignes de la grille
         for sp, r in enumerate(rect):
             h = self.sequences_projets[sp].GetDuree() / r[2] * nc
-            for l in range(r[1], r[1]+r[3]+1):
-                h_lig[l] += h / (r[1]+r[3])
+            for i in range(r[1], r[1]+r[3]+1):
+                h_lig[i] += h / (r[1]+r[3])
         
 #         print("h_lig", h_lig)
 #         for l in range(len(h_lig)):
@@ -7147,7 +7147,7 @@ class Progression(BaseDoc, Grammaire):
              - conflits de Prérequis de séquence (en termes de Savoirs)
              - anomalies de répartition des Séquences et Projets
         """
-        print("VerifPb Progression")
+#         print("VerifPb Progression")
         obj = []
         for lienseq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             pb = []
