@@ -6746,7 +6746,7 @@ class Progression(BaseDoc, Grammaire):
                     self.AjouterNouvelleSequence, 
                     scaleImage(images.Icone_ajout_seq.GetBitmap()),
                     True],
-                   ["Importer une Séquence existante", 
+                   ["Importer une ou plusieurs Séquence existante(s)", 
                      self.AjouterSequence, 
                      scaleImage(images.Icone_import_seq.GetBitmap()),
                     True],
@@ -6761,7 +6761,7 @@ class Progression(BaseDoc, Grammaire):
                              self.AjouterNouveauProjet, 
                              scaleImage(images.Icone_ajout_prj.GetBitmap()),
                              True],
-                            ["Importer un Projet existant", 
+                            ["Importer un ou plusieurs Projet existant(s)", 
                               self.AjouterProjet, 
                               scaleImage(images.Icone_import_prj.GetBitmap()),
                               True],
@@ -7187,10 +7187,10 @@ class Progression(BaseDoc, Grammaire):
                 self.SetToolTip(message + "\n".join([" - "+p for p in pb]))
   
   
-  
+    
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier, reparer = False,
-                         silencieux = False):
+                         silencieux = False, refCode = None):
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
 #        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
@@ -7208,16 +7208,34 @@ class Progression(BaseDoc, Grammaire):
         if root is None:
             return None,  None
         
+        #
+        # La classe
+        #
         classe = Classe(self.GetApp())
+        try:
+            rclasse = root.find("Classe")
+            if rclasse is not None:
+                classe.setBranche(rclasse, reparer = reparer)
+            
+        except:
+#             print("Le fichier n'a pas pu être ouvert :", nomFichier)
+            if DEBUG:
+                raise
+            return None, None
+        
+        
+        if refCode is not None and classe.typeEnseignement != refCode:
+            # Pas bon référentiel
+            return None, None
+        
+        #
+        # La séquence
+        #
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
         try:
-        
             rsequence = root.find("Sequence")
-            rclasse = root.find("Classe")
-            if rclasse is not None:
-                classe.setBranche(rclasse, reparer = reparer)
             if rsequence is not None:
                 sequence.setBranche(rsequence)
             else:   # Ancienne version , forcément STI2D-ETT !!
@@ -7234,7 +7252,7 @@ class Progression(BaseDoc, Grammaire):
     
     ########################################################################################################
     def OuvrirFichierPrj(self, nomFichier, reparer = False,
-                         silencieux = False):
+                         silencieux = False, refCode = None):
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
         for prj in self.GetApp().parent.GetDocumentsOuverts('prj'):
@@ -7250,16 +7268,36 @@ class Progression(BaseDoc, Grammaire):
         if root is None:
             return None,  None
         
+        #
+        # La classe
+        #
         classe = Classe(self.GetApp())
+        try:
+            rclasse = root.find("Classe")
+            if rclasse is not None:
+                classe.setBranche(rclasse, reparer = reparer)
+            
+        except:
+#             print("Le fichier n'a pas pu être ouvert :", nomFichier)
+            if DEBUG:
+                raise
+            return None, None
+        
+        
+        if refCode is not None and classe.typeEnseignement != refCode:
+            # Pas bon référentiel
+            return None, None
+        
+        
+        #
+        # Le projet
+        #
         projet = Projet(self.GetApp(), classe, ouverture = True)
         projet.code = self.GetReferentiel().getCodeProjetDefaut()
         classe.SetDocument(projet)
 #         print("___-1", projet.code)   
         try:
             rprojet = root.find("Projet")
-            rclasse = root.find("Classe")
-            if rclasse is not None:
-                classe.setBranche(rclasse, reparer = reparer)
             if rprojet is not None:
                 projet.setBranche(rprojet)
             else:   # Ancienne version (?), forcément STI2D-ETT !!
