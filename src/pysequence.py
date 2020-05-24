@@ -1714,7 +1714,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
         :type intitule: str
     """
     
-    def __init__(self, app, classe = None, intitule = ""):
+    def __init__(self, app, classe = None, intitule = "", mini = False):
         self.app = app  # de type FenentreDocument
         ElementBase.__init__(self)
         ElementAvecLien.__init__(self)
@@ -1739,21 +1739,23 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.dependants = [] # Liste de documents dépendants (à enregistrer aussi)
 
         # Gestion des Undo/Redo
-        self.undoStack = UndoStack(self, self.GetApp().miseAJourUndo)
+        if not mini:
+            self.undoStack = UndoStack(self, self.GetApp().miseAJourUndo)
 #         wx.CallAfter(self.undoStack.do, "Création "+self.du_())
         
         # Chemin du fichier
         self.path = ""
-        
-        self.proprietes = proprietes.ProprietesDoc(self)
+        if not mini:
+            self.proprietes = proprietes.ProprietesDoc(self)
         
 #         print("   proprietes1", self.proprietes.proprietes)
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, width = 600*SSCALE)
-        self.zoneMove = None
-        self.curTip = None
+        if not mini:
+            self.tip = PopupInfo(self.GetApp().parent, width = 600*SSCALE)
+            self.zoneMove = None
+            self.curTip = None
         
         
     ######################################################################################  
@@ -2210,7 +2212,7 @@ class Sequence(BaseDoc, Grammaire):
         
 
         Grammaire.__init__(self, "Séquence(s)$f")
-        BaseDoc.__init__(self, app, classe, intitule)
+        BaseDoc.__init__(self, app, classe, intitule, ouverture)
         
         self.prerequisSeance = []
         
@@ -7021,21 +7023,22 @@ class Progression(BaseDoc, Grammaire):
 #         fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
 #         fichiers = [os.path.relpath(f, start = self.GetPath()) for f in fichiers]
 #         print("  ", fichiers)
-        dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
+        dlg = wx.MultiChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
                                     "Fichiers Séquences disponibles",
                                     [toSystemEncoding(f) for f in fichiers], 
                                     wx.CHOICEDLG_STYLE
                                     )
         
         if dlg.ShowModal() == wx.ID_OK:
-            i = dlg.GetSelection() 
-            lienSeq = LienSequence(self)
-            lienSeq.path = fichiers[i]
-            lienSeq.sequence = sequences[i]
-            self.sequences_projets.append(lienSeq)
-            self.Ordonner()
-            self.GetApp().sendEvent(modif = "Ajout d'une Séquence à la Progression")
-            self.arbre.SelectItem(lienSeq.branche)
+            for i in dlg.GetSelections():
+                lienSeq = LienSequence(self)
+                lienSeq.path = fichiers[i]
+                lienSeq.sequence = sequences[i]
+                self.sequences_projets.append(lienSeq)
+            if len(dlg.GetSelections()) > 0:
+                self.Ordonner()
+                self.GetApp().sendEvent(modif = "Ajout d'une Séquence à la Progression")
+                self.arbre.SelectItem(lienSeq.branche)
         
         dlg.Destroy()
         
@@ -7421,13 +7424,14 @@ class Progression(BaseDoc, Grammaire):
         #
         fichiers_sequences = []
         count = 0
+        ref = self.GetReferentiel()
         for f in l:
             rf = os.path.relpath(f, start = self.GetPath())
             dlg.Update(count, toSystemEncoding(rf))
       
             classe, sequence = self.OuvrirFichierSeq(f, silencieux = True)
 #                print classe.typeEnseignement ,  self.referentiel.Code
-            if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
+            if classe != None and classe.typeEnseignement == ref.Code:
 #                lienSequence = LienSequence(self,  testRel(f, self.GetPath()))
 #                lienSequence.sequence = sequence
                 fichiers_sequences.append((rf, sequence))
