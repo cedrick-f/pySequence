@@ -4975,7 +4975,7 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 
 
         
-BaseFiche = BaseFiche2 # Décommenter pour mod debug
+# BaseFiche = BaseFiche2 # Décommenter pour mod debug
 
 class FicheDoc(BaseFiche):
     def __init__(self, parent, threaded = False):
@@ -5175,7 +5175,8 @@ class FicheDoc(BaseFiche):
             
     #############################################################################            
     def normalize(self, cr):
-        h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
+#         h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
+        h = float(self.h)/ draw_cairo.COEF
         if h <= 0:
             h = 1.0
         cr.scale(h, h) 

@@ -132,7 +132,9 @@ def getBitmapFromImageSurface(imagesurface):
     # On fait une copie sinon ça s'efface ...
 #     bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
 #     return bmp.GetSubBitmap(wx.Rect(0, 0, bmp.GetWidth(), bmp.GetHeight()))
-    return wx.lib.wxcairo.BitmapFromImageSurface(imagesurface).ConvertToImage().ConvertToBitmap()
+    bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface).ConvertToImage().ConvertToBitmap()
+#     print('getBitmapFromImageSurface', bmp.GetSize())
+    return bmp
 
 
 ##########################################################################################
@@ -803,11 +805,12 @@ class Base_Fiche_Doc():
             sous la forme d'une cairo.ImageSurface
         
         """
-    #    print "get_apercu", larg, prop
+#         print("getImageSurface", larg, prop)
         w, h = 0.04*prop * COEF, 0.04 * COEF
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  int(larg), int(1.0*larg/prop))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
-        s = 1.0*larg/prop/COEF
+        s = 1.0*larg*29/21/COEF
+
         ctx.scale(s, s) 
     #    ctx.scale(mult, mult) 
 #         doc.DefinirCouleurs()

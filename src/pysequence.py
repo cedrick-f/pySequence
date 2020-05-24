@@ -1865,7 +1865,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ######################################################################################  
     def GetApercu(self, w = 210, h = -1, entete = False):
         if h == -1:
-            prop = 0.7
+            prop = 21/29 # A4
         else:
             prop = w/h
         if isinstance(self, Sequence):
@@ -6821,7 +6821,7 @@ class Progression(BaseDoc, Grammaire):
 
     ######################################################################################  
     def ChargerSequences(self, parent, reparer = False):
-        print("ChargerSequences", self.sequences_projets)
+#         print("ChargerSequences", self.sequences_projets)
         aSupprimer = []
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence is None:
