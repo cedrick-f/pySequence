@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from _operator import lt
 
 
 ##This file is part of pySequence
@@ -62,7 +61,6 @@ import version
 from version import DEBUG
 
 import textwrap
-import base64
 
 from couleur import Str2Couleur, Couleur2Str, CouleurFloat2CSS
 import couleur
@@ -125,6 +123,7 @@ from richtext import XMLtoHTML, XMLtoTXT
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
+# élément xml pour le presse-papier
 Element = type(ET.Element(None))
 
 from xml.dom.minidom import parseString
@@ -1260,6 +1259,11 @@ class Classe(ElementBase):
                 systeme.append(sy.getBranche())
         
         return classe
+    
+    
+    
+    
+    
     
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
@@ -6817,7 +6821,7 @@ class Progression(BaseDoc, Grammaire):
 
     ######################################################################################  
     def ChargerSequences(self, parent, reparer = False):
-#         print("ChargerSequences", self.sequences_projets)
+        print("ChargerSequences", self.sequences_projets)
         aSupprimer = []
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence is None:
@@ -6866,6 +6870,7 @@ class Progression(BaseDoc, Grammaire):
                         continue
                 else: 
                     lienSeq.ChargerSequence(reparer = reparer)
+                    
         
         #
         # On supprime les lienSequences à supprimer
@@ -7187,10 +7192,35 @@ class Progression(BaseDoc, Grammaire):
                 self.SetToolTip(message + "\n".join([" - "+p for p in pb]))
   
   
-    
+  
+  
+    ########################################################################################################
+    def brancheCompatibleClasse(self, root, refCode):
+        try:
+            rclasse = root.find("Classe")
+            if rclasse is not None:
+                typeEnseignement = rclasse.get("Type", "")
+            else:
+                return False
+        except:
+#             print("Le fichier n'a pas pu être ouvert :", nomFichier)
+#             if DEBUG:
+#             raise
+            return False
+        
+#         print("  ", typeEnseignement, refCode)
+        if refCode is not None and typeEnseignement != refCode:
+            # Pas bon référentiel
+            return False
+        
+        return rclasse
+        
+        
+        
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier, reparer = False,
                          silencieux = False, refCode = None):
+#         print("OuvrirFichierSeq", nomFichier, refCode)
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
 #        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
@@ -7203,39 +7233,28 @@ class Progression(BaseDoc, Grammaire):
                 classe = sequence.classe
                 return classe, sequence
         
-#        print "///", nomFichier
+       
         root = safeParse(nomFichier, None, silencieux = silencieux)
         if root is None:
             return None,  None
         
         #
-        # La classe
+        # La classe (vérification type enseignement)
         #
-        classe = Classe(self.GetApp())
-        try:
-            rclasse = root.find("Classe")
-            if rclasse is not None:
-                classe.setBranche(rclasse, reparer = reparer)
-            
-        except:
-#             print("Le fichier n'a pas pu être ouvert :", nomFichier)
-            if DEBUG:
-                raise
-            return None, None
-        
-        
-        if refCode is not None and classe.typeEnseignement != refCode:
-            # Pas bon référentiel
+        rclasse = self.brancheCompatibleClasse(root, refCode)
+        if not rclasse:
             return None, None
         
         #
         # La séquence
         #
+        classe = Classe(self.GetApp())
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
         try:
             rsequence = root.find("Sequence")
+            classe.setBranche(rclasse, reparer = reparer)
             if rsequence is not None:
                 sequence.setBranche(rsequence)
             else:   # Ancienne version , forcément STI2D-ETT !!
@@ -7269,35 +7288,24 @@ class Progression(BaseDoc, Grammaire):
             return None,  None
         
         #
-        # La classe
+        # La classe (vérification type enseignement)
         #
-        classe = Classe(self.GetApp())
-        try:
-            rclasse = root.find("Classe")
-            if rclasse is not None:
-                classe.setBranche(rclasse, reparer = reparer)
-            
-        except:
-#             print("Le fichier n'a pas pu être ouvert :", nomFichier)
-            if DEBUG:
-                raise
-            return None, None
-        
-        
-        if refCode is not None and classe.typeEnseignement != refCode:
-            # Pas bon référentiel
+        rclasse = self.brancheCompatibleClasse(root, refCode)
+        if not rclasse:
             return None, None
         
         
         #
         # Le projet
         #
+        classe = Classe(self.GetApp())
         projet = Projet(self.GetApp(), classe, ouverture = True)
         projet.code = self.GetReferentiel().getCodeProjetDefaut()
         classe.SetDocument(projet)
 #         print("___-1", projet.code)   
         try:
             rprojet = root.find("Projet")
+            classe.setBranche(rclasse, reparer = reparer)
             if rprojet is not None:
                 projet.setBranche(rprojet)
             else:   # Ancienne version (?), forcément STI2D-ETT !!
