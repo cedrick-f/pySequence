@@ -7057,21 +7057,22 @@ class Progression(BaseDoc, Grammaire):
 #         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
 #         fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
 #         fichiers = [os.path.relpath(f, start = self.GetPath()) for f in fichiers]
-        dlg = wx.SingleChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
+        dlg = wx.MultiChoiceDialog(self.GetApp(), "Choisir parmi les fichiers ci-dessous\n", 
                                     "Fichiers Projets disponibles",
                                     [toSystemEncoding(f) for f in fichiers], 
                                     wx.CHOICEDLG_STYLE
                                     )
         
         if dlg.ShowModal() == wx.ID_OK:
-            i = dlg.GetSelection() 
-            lienPrj = LienProjet(self)
-            lienPrj.path = fichiers[i]
-            lienPrj.projet = projets[i]
-            self.sequences_projets.append(lienPrj)
-            self.Ordonner()
-            self.GetApp().sendEvent(modif = "Ajout d'un Projet à la Progression")
-            self.arbre.SelectItem(lienPrj.branche)
+            for i in dlg.GetSelections():
+                lienPrj = LienProjet(self)
+                lienPrj.path = fichiers[i]
+                lienPrj.projet = projets[i]
+                self.sequences_projets.append(lienPrj)
+            if len(dlg.GetSelections()) > 0:
+                self.Ordonner()   
+                self.GetApp().sendEvent(modif = "Ajout d'un Projet à la Progression")
+                self.arbre.SelectItem(lienPrj.branche)
         
         dlg.Destroy()
 
@@ -7429,7 +7430,7 @@ class Progression(BaseDoc, Grammaire):
             rf = os.path.relpath(f, start = self.GetPath())
             dlg.Update(count, toSystemEncoding(rf))
       
-            classe, sequence = self.OuvrirFichierSeq(f, silencieux = True)
+            classe, sequence = self.OuvrirFichierSeq(f, silencieux = True, refCode = ref.Code)
 #                print classe.typeEnseignement ,  self.referentiel.Code
             if classe != None and classe.typeEnseignement == ref.Code:
 #                lienSequence = LienSequence(self,  testRel(f, self.GetPath()))
