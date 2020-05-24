@@ -1774,8 +1774,11 @@ class SliderThumb:
         self.decal = decal
         self.dragged = False
         self.mouse_over = False
-        self.thumb_poly = ((0, 0), (0, 13), (5, 18), (10, 13), (10, 0))
-        self.thumb_shadow_poly = ((0, 14), (4, 18), (6, 18), (10, 14))
+#         self.thumb_poly = ((0, 0), (0, 13), (5, 18), (10, 13), (10, 0))
+#         self.thumb_shadow_poly = ((0, 14), (4, 18), (6, 18), (10, 14))
+        self.thumb_poly = ((0, 5), (5, 0), (10, 5), (10, 18), (0, 18))
+        self.thumb_shadow_poly = ((0, 4), (4, 0), (6, 0), (10, 4))
+        
         min_coords = [float('Inf'), float('Inf')]
         max_coords = [-float('Inf'), -float('Inf')]
         for pt in list(self.thumb_poly) + list(self.thumb_shadow_poly):
@@ -1929,8 +1932,8 @@ class RangeSlider(BufferedWindow):
         self.border_width = 4
 
         self.thumbs = {
-            'low': SliderThumb(parent=self, value=lowValue, decal = -2),
-            'high': SliderThumb(parent=self, value=highValue, decal = 2)
+            'low': SliderThumb(parent=self, value=lowValue, decal = -0),
+            'high': SliderThumb(parent=self, value=highValue, decal = 0)
         }
         self.thumb_width = self.thumbs['low'].size[0]
 
