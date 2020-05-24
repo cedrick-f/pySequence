@@ -266,7 +266,7 @@ class Progression(Base_Fiche_Doc):
         
         
         # Zone des tâches
-        self.posZTaches = [self.posZDeroul[0] + self.wPhases + self.wDuree + self.ecartX*3/6, None]
+        self.posZTaches = [self.posZDeroul[0] + self.wPhases + self.ecartX*3/6, None]
         self.tailleZTaches = [None, None]
         self.hTacheMini = self.ecartY
         self.hRevue = self.ecartY/3
@@ -789,7 +789,7 @@ class Progression(Base_Fiche_Doc):
             # Titre
             htitre = 0.017 * COEF
             show_text_rect(ctx, ref.dicoCompetences["S"]._nom.Plur_(),
-                           (self.posZComp[0], self.posZOrganis[1] + self.ecartY/2,
+                           (self.posZComp[0], self.posZOrganis[1], # + self.ecartY/2,
                             self.tailleZComp[0], htitre), 
                            va = 'c', ha = 'c', b = 0, orient = 'h', 
                            fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = False, couper = False,
@@ -857,8 +857,8 @@ class Progression(Base_Fiche_Doc):
             # Bilan des compétences abordées
             #
             dicComp, nbrComp = self.prg.GetCompetencesAbordees()
-            self.DrawBoutonCompetence(None, dicComp, self.posZOrganis[1] + htitre, 
-                                 h = self.posZComp[1] - self.posZOrganis[1] - self.ecartY*3/2 - htitre, 
+            self.DrawBoutonCompetence(None, dicComp, self.posZOrganis[1] + htitre + self.ecartY/2, 
+                                 h = self.posZComp[1] - self.posZOrganis[1] - self.ecartY - htitre, 
                                  nbr = nbrComp)
             
             
@@ -874,7 +874,7 @@ class Progression(Base_Fiche_Doc):
             # Titre
             htitre = 0.017 * COEF
             show_text_rect(ctx, ref.dicoSavoirs["S"]._nom.Plur_(),
-                           (self.posZComp[0], self.posZOrganis[1] + self.ecartY/2,
+                           (self.posZComp[0], self.posZOrganis[1],
                             self.tailleZComp[0], htitre), 
                            va = 'c', ha = 'c', b = 0, orient = 'h', 
                            fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = False, couper = False,
@@ -942,7 +942,7 @@ class Progression(Base_Fiche_Doc):
             # Bilan des Savoirs abordés
             #
             dicSav, nbrSav = self.prg.GetSavoirsAbordes()
-            self.DrawBoutonSavoir(ctx, self.prg, None, dicSav, self.posZOrganis[1] + htitre, 
+            self.DrawBoutonSavoir(ctx, self.prg, None, dicSav, self.posZOrganis[1] + htitre + self.ecartY*3/2, 
                                  h = self.posZComp[1] - self.posZOrganis[1] - self.ecartY*3/2 - htitre, 
                                  nbr = nbrSav)
                 
