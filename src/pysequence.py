@@ -6239,7 +6239,7 @@ class Progression(BaseDoc, Grammaire):
         
     
     ######################################################################################  
-    def GetRectangles(self):
+    def GetRectangles(self, verif = True):
         """Calcule l'arrangement des rectangles représentant les Séquences et les Projets
             Renvoie la liste des rectangles x, y, w, h
             Dans une grille : Période-Lignes-Colonnes
@@ -6262,7 +6262,8 @@ class Progression(BaseDoc, Grammaire):
             les positions "horaire" des lignes
             un code d'erreur (anomalie détectée)
         """
-        err = 0
+#         print("GetRectangles")
+        
 #         print "GetRectangles", 
         
         ref = self.classe.referentiel
@@ -6307,7 +6308,7 @@ class Progression(BaseDoc, Grammaire):
             lig2 = list(zip(*lig2))
             grilles_p.append([l for l in lig2]) 
 
-#         print "grilles_p", grilles_p
+#         print("grilles_p", grilles_p)
         
         # Compactage de la grille
         for g in grilles_p:
@@ -6320,18 +6321,10 @@ class Progression(BaseDoc, Grammaire):
                 else:
                     l+=1
 
-#         print "grilles_p", grilles_p
+#         print("grilles_p", grilles_p)
         
         
-        # Détection d'anomalie
-        for p in grilles_p:
-            for lig in p:
-                if None in lig:
-                    err |= 1
-                    break
-            else:
-                continue
-            break
+        
         
         
         # Rectangles des sequences_projets
@@ -6352,52 +6345,89 @@ class Progression(BaseDoc, Grammaire):
                         rect[sp][3] = l - rect[sp][1] + 1
                 l += 1
             
-#         print "rect", rect
+#         print("rect", rect)
+        
+            
+        
+#         # Calcul des positions "horaire" des lignes
+#         h_lig = [0]*(l+1)                                   # Positions en "y" des lignes
+#         for sp, r in enumerate(rect):
+#             h = self.sequences_projets[sp].GetDuree() / r[2] * nc
+#             suiv = r[1] + r[3]
+#             m = max(h_lig[r[1]]+h, h_lig[suiv])     # Position suivante
+#             for i in range(suiv, len(h_lig)-1):     # On "repousse" les lignes suivantes
+#                 h_lig[i] = m
+#             h_lig[-1] = max(m, h_lig[-1])
+
+
+
+        
+        h_lig = [0]*l   # hauteur des lignes de la grille
+        for sp, r in enumerate(rect):
+            h = self.sequences_projets[sp].GetDuree() / r[2] * nc
+            for l in range(r[1], r[1]+r[3]+1):
+                h_lig[l] += h / (r[1]+r[3])
+        
+#         print("h_lig", h_lig)
+#         for l in range(len(h_lig)):
+#             for i in range(1, len(h_lig)-l-1):
+#                 h_lig[l+i] += h_lig[l]
+                
+                
+        for i in range(len(h_lig)-1,0,-1):
+            h_lig[i] += sum(h_lig[:i])
+        
+        h_lig.insert(0,0)
+#         print("h_lig", h_lig)
+            
+#         print "h_lig", h_lig
         
         
-        # Détection d'anomalie : croisement
-        gr = [[0 for _ in range(nc)] for _ in range(l)]
-        for r in rect:
-            for lg in range(r[1], r[1]+r[3]):
-                for cl in range(r[0], r[0]+r[2]):
-                    gr[lg][cl] += 1
-                    if gr[lg][cl] > 1:
-                        err |= 2
+        
+        #
+        # Vérification des anomalies
+        #
+        err = 0
+        if verif :
+            
+            # Détection d'anomalie : crénaux non utilisés
+            for p in grilles_p:
+                for lig in p:
+                    if None in lig:
+                        err |= 1
                         break
                 else:
                     continue
                 break
-            else:
-                continue
-            break
-                
             
+            # Détection d'anomalie : croisement
+            gr = [[0 for _ in range(nc)] for _ in range(l)]
+            for r in rect:
+                for lg in range(r[1], r[1]+r[3]):
+                    for cl in range(r[0], r[0]+r[2]):
+                        gr[lg][cl] += 1
+                        if gr[lg][cl] > 1:
+                            err |= 2
+                            break
+                    else:
+                        continue
+                    break
+                else:
+                    continue
+                break
             
-            
-        
-        # Calcul des positions "horaire" des lignes
-        h_lig = [0]*(l+1)                                   # Positions en "y" des lignes
-        for sp, r in enumerate(rect):
-            h = self.sequences_projets[sp].GetDuree() / r[2] * nc
-            suiv = r[1] + r[3]
-            m = max(h_lig[r[1]]+h, h_lig[suiv])     # Position suivante
-            for i in range(suiv, len(h_lig)-1):     # On "repousse" les lignes suivantes
-                h_lig[i] = m
-            h_lig[-1] = max(m, h_lig[-1])
-
-#         print "h_lig", h_lig
-            
-        # Détection d'anomalie
-        l = 0
-        h_per = [h_lig[l] for l in l_per]+[h_lig[-1]]
-        d_per = [h-h_per[i] for i, h in enumerate(h_per[1:])]
-        m = mean(d_per)
-        if m > 0:
-#             print d_per, " >> ", pstdev(d_per) / m
-            if pstdev(d_per) / m > 0.5:
-                err |= 4
+            # Détection d'anomalie : disproportion
+            l = 0
+            h_per = [h_lig[l] for l in l_per]+[h_lig[-1]]
+            d_per = [h-h_per[i] for i, h in enumerate(h_per[1:])]
+            m = mean(d_per)
+            if m > 0:
+    #             print d_per, " >> ", pstdev(d_per) / m
+                if pstdev(d_per) / m > 0.5:
+                    err |= 4
             
         
+#         print(rect, l_per, h_lig, err)
         
         return rect, l_per, h_lig, err
         
@@ -7117,6 +7147,7 @@ class Progression(BaseDoc, Grammaire):
              - conflits de Prérequis de séquence (en termes de Savoirs)
              - anomalies de répartition des Séquences et Projets
         """
+        print("VerifPb Progression")
         obj = []
         for lienseq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             pb = []

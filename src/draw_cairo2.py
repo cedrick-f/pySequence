@@ -2289,12 +2289,15 @@ class Rectangle_plein_doigt(Elem_Dessin):
         
     def _draw(self, ctx = None):
         x, y, w, h = self.rect
+        
         if self.b > h:
             self.b = h
+        
         if self.yd < self.b:
             self.yd = self.b
         elif self.yd > h-self.b:
             self.yd = h-self.b
+        
         ctx.move_to(x,     y)
         ctx.line_to(x+w-self.b, y)
         ctx.line_to(x+w-self.b, y+self.yd-self.b)
