@@ -942,8 +942,8 @@ class Progression(Base_Fiche_Doc):
             # Bilan des Savoirs abordés
             #
             dicSav, nbrSav = self.prg.GetSavoirsAbordes()
-            self.DrawBoutonSavoir(ctx, self.prg, None, dicSav, self.posZOrganis[1] + htitre + self.ecartY*3/2, 
-                                 h = self.posZComp[1] - self.posZOrganis[1] - self.ecartY*3/2 - htitre, 
+            self.DrawBoutonSavoir(ctx, self.prg, None, dicSav, self.posZOrganis[1] + htitre + self.ecartY/2, 
+                                 h = self.posZComp[1] - self.posZOrganis[1] - self.ecartY - htitre, 
                                  nbr = nbrSav)
                 
           
