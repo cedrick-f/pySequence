@@ -1749,8 +1749,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
         
         # Chemin du fichier
         self.path = ""
-        if not mini:
-            self.proprietes = proprietes.ProprietesDoc(self)
+        self.proprietes = proprietes.ProprietesDoc(self)
         
 #         print("   proprietes1", self.proprietes.proprietes)
         #
@@ -3779,13 +3778,15 @@ class Sequence(BaseDoc, Grammaire):
         self.GetApp().fiche.fiche.associerParametres()
         sequence = self.getBranche()
         classe = self.classe.getBranche()
-        proprietes = self.proprietes.getBranche()
+        if hasattr(self, 'proprietes'):
+            proprietes = self.proprietes.getBranche()
         
         # La racine
         root = ET.Element('Sequence_Classe')
         root.append(sequence)
         root.append(classe)
-        root.append(proprietes)
+        if hasattr(self, 'proprietes'):
+            root.append(proprietes)
         constantes.indent(root)
         
         return enregistrer_root(root, nomFichier, dialog = dialog)
@@ -7637,9 +7638,10 @@ class Progression(BaseDoc, Grammaire):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        bitmap = draw_cairo.getBitmapPeriode(larg, self.GetPositions(),
-                                                       self.GetReferentiel().periodes, 
-                                                       prop = 7)
+        bitmap = draw_cairo.getBitmapPeriode(self.GetPositions(),
+                                             self.GetReferentiel().periodes,
+                                             larg = larg, 
+                                             prop = 7)
         return bitmap
 
 
