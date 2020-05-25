@@ -4495,7 +4495,35 @@ class FenetreProgression(FenetreDocument):
 #         self.parent.miseAJourUndo()
 
    
-    
+    ###############################################################################################
+    def restaurer(self):
+        """ Restaure l'arbre de construction
+            et redessine la fiche
+            (après undo ou redo)
+        """
+
+        #
+        # Réinitialisation de l'arbre
+        #
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+
+        self.progression.ChargerSequences(self)
+        self.progression.ChargerProjets(self)
+        
+        self.classe.ConstruireArbre(self.arbre, root)
+
+        self.progression.ConstruireArbre(self.arbre, root)
+
+
+        self.progression.Ordonner()
+
+        self.progression.VerifPb()
+        
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
+        wx.CallAfter(self.arbre.SelectItem, self.classe.branche)
 
 
     ###############################################################################################
@@ -9749,8 +9777,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
                                      )
 #         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         self.Bind(wx.EVT_SLIDER, self.onChanged)
-        sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
-        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.bmp, flag = wx.EXPAND)
+        sb.Add(self.position, flag = wx.EXPAND)
         
         
         

@@ -6271,8 +6271,6 @@ class Progression(BaseDoc, Grammaire):
         """
 #         print("GetRectangles")
         
-#         print "GetRectangles", 
-        
         ref = self.classe.referentiel
         
         # Nombre de creneaux utilisés dans la progression
@@ -6341,7 +6339,6 @@ class Progression(BaseDoc, Grammaire):
         for p in grilles_p:
             l_per.append(l) 
             for lig in p:
-               
                 for c, sp in enumerate(lig):
                     if sp is not None:
                         if rect[sp][0] is None:      # X
@@ -6367,12 +6364,15 @@ class Progression(BaseDoc, Grammaire):
 #             h_lig[-1] = max(m, h_lig[-1])
 
 
-
+#         print("l", l)
         
         h_lig = [0]*l   # hauteur des lignes de la grille
+        
         for sp, r in enumerate(rect):
+#             print("  ", sp, r)
             h = self.sequences_projets[sp].GetDuree() / r[2] * nc
-            for i in range(r[1], r[1]+r[3]+1):
+            for i in range(r[1], r[1]+r[3]):
+#                 print("    ", i, h_lig)
                 h_lig[i] += h / (r[1]+r[3])
         
 #         print("h_lig", h_lig)
