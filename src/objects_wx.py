@@ -2022,7 +2022,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.parent, width = 600*SSCALE)
+        self.tip = PopupInfo(self.parent, width = 500*SSCALE)
         self.zoneMove = None
         self.curTip = None
         
@@ -2064,10 +2064,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             
             
     ######################################################################################  
-    def ShowTip(self, x, y):
+    def ShowTip(self, x, y, width):
         if self.curTip is None: 
             return
         
+        self.curTip.SetWidth(width)
         _, _, W, H = getDisplaysPosSize()[0]
         w, h = self.curTip.GetSize()
         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
@@ -2096,7 +2097,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
 #         print("   ", self.curTip)
         if self.curTip != None:
-            self.ShowTip(x, y)
+            self.ShowTip(x, y, zone.getWidth())
 #             X, Y, W, H = getDisplayPosSize()
 #  
 # #             print "  tip", x, y, tip.GetSize()
@@ -2128,7 +2129,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             self.call = wx.CallLater(500, self.SetAndShowTip, zone, x, y)
             
         else:
-            self.call = wx.CallLater(500, self.ShowTip, x, y)
+            self.call = wx.CallLater(500, self.ShowTip, x, y, zone.getWidth())
     
 #     #########################################################################################################
 #     def GetLargPnlArbre(self):
@@ -19399,6 +19400,9 @@ class PopupInfo(wx.PopupWindow):
                 self.html.ReleaseMouse()
         event.Skip()
         
+    #####################################################################################
+    def SetWidth(self, w):
+        self.w = w
         
 #    ##########################################################################################
 #    def SetBranche(self, branche):

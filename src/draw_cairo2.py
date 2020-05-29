@@ -3499,6 +3499,24 @@ class Zone_sens():
             
         return False
     
+    ######################################################################################  
+    def getWidth(self):
+#         print("getWidth", self.param)
+        if self.obj is not None:
+            return 500
+                        
+        elif self.param is not None:
+            if len(self.param) >= 3 and self.param[:3] == "POS" :
+                return 300
+            
+            elif self.param == "PB":
+                return 400
+            
+            elif self.param == "EQU":
+                return 300
+            
+        return 500
+    
 # ##########################################################################################
 # #
 # #  Une zone du dessin
