@@ -3501,13 +3501,13 @@ class Zone_sens():
     
     ######################################################################################  
     def getWidth(self):
-#         print("getWidth", self.param)
+#         print("getWidth", self.param, self.obj)
         if self.obj is not None:
             return 500
                         
         elif self.param is not None:
             if len(self.param) >= 3 and self.param[:3] == "POS" :
-                return 300
+                return 350
             
             elif self.param == "PB":
                 return 400

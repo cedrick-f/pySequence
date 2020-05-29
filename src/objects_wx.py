@@ -2026,7 +2026,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.zoneMove = None
         self.curTip = None
         
-        # Les tip pour les différents éléments
+        # Les tip pour les différents objets
         self.tips = {}
 
 
@@ -2064,11 +2064,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             
             
     ######################################################################################  
-    def ShowTip(self, x, y, width):
+    def ShowTip(self, x, y):
         if self.curTip is None: 
             return
         
-        self.curTip.SetWidth(width)
+#         self.curTip.SetWidth(width)
+#         print("ShowTip", self.curTip.w)
         _, _, W, H = getDisplaysPosSize()[0]
         w, h = self.curTip.GetSize()
         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
@@ -2092,12 +2093,13 @@ class FenetreDocument(aui.AuiMDIChildFrame):
          
         else:
 #             print "    zone", zone.param
+            self.tip.SetWidth(zone.getWidth())
             self.GetDocument().SetTip(zone.param, zone.obj)
             self.curTip = self.tip
         
 #         print("   ", self.curTip)
         if self.curTip != None:
-            self.ShowTip(x, y, zone.getWidth())
+            self.ShowTip(x, y)
 #             X, Y, W, H = getDisplayPosSize()
 #  
 # #             print "  tip", x, y, tip.GetSize()
@@ -2111,9 +2113,16 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #########################################################################################################
     def createTip(self, code, page, width):
+        """ Création (une seule fois) du Tip de l'objet désigné par un code
+        
+            :code: str
+            :page: str = contenu par défaut du Tip
+            :width: int largeur en pixel
+        """
         self.tips[code] = PopupInfo(self.parent, page, width = width)
         return self.tips[code]
-        
+    
+    
     #########################################################################################################
     def delTip(self, code):
         del self.tips[code]
@@ -2129,7 +2138,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             self.call = wx.CallLater(500, self.SetAndShowTip, zone, x, y)
             
         else:
-            self.call = wx.CallLater(500, self.ShowTip, x, y, zone.getWidth())
+            self.call = wx.CallLater(500, self.ShowTip, x, y)
     
 #     #########################################################################################################
 #     def GetLargPnlArbre(self):
@@ -19340,10 +19349,12 @@ class PopupInfo(wx.PopupWindow):
             self.SetClientSize(size)
         
         self.SetHTML(page)
+
+#         self.SetMinSize(size)
+#         self.html.SetSize(size)
+        
         self.SetPage()
         
-        self.SetMinSize(size)
-        self.html.SetSize(size)
         
         self.SetAutoLayout(True)
         
@@ -19403,6 +19414,10 @@ class PopupInfo(wx.PopupWindow):
     #####################################################################################
     def SetWidth(self, w):
         self.w = w
+        size = (self.w, -1)
+        self.html.SetSize(size)
+        self.SetClientSize(size)
+        
         
 #    ##########################################################################################
 #    def SetBranche(self, branche):
@@ -19855,14 +19870,15 @@ class PopupInfo(wx.PopupWindow):
 
     ##########################################################################################
     def SetPage(self):
-#         print("SetPage")
+        print("SetPage")
 #        self.SetSize((10,1000))
 #        self.SetClientSize((100,1000))
 #        self.html.SetSize( (100, 100) )
 #        self.SetClientSize(self.html.GetSize())
-        
-        
-#        print self.GetClientSize()
+#         size = (self.w, -1)
+#         self.SetClientSize(size)
+#         self.html.SetClientSize(size)
+
 #        print self.html.GetSize()
 #        print self.html.GetClientSize()
         
@@ -19870,7 +19886,7 @@ class PopupInfo(wx.PopupWindow):
 #        self.Fit()
 
         if self.mode == "H":
-#             print id(self), self.GetMinSize()
+#             print(self.GetClientSize())
 #             self.html.SetPage("")
             
 #             print self.soup.prettify()
@@ -19885,8 +19901,9 @@ class PopupInfo(wx.PopupWindow):
 #             self.html.SetSize( (ir.GetWidth()+25, ir.GetHeight()+25) )
 #             self.SetClientSize(self.html.GetSize()) 
 #             print ir.GetWidth(), ir.GetHeight()
-            self.SetClientSize((ir.GetWidth()+10*SSCALE, ir.GetHeight()+5*SSCALE))
-            self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
+            self.SetClientSize((ir.GetWidth() + 10*SSCALE, 
+                                ir.GetHeight()+  5*SSCALE))
+            self.html.SetClientSize((ir.GetWidth(), ir.GetHeight()))
         else:
             self.html.SetPage(self.soup.prettify(), "")
 
