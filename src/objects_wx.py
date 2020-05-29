@@ -181,7 +181,7 @@ import draw_cairo_prg2 as draw_cairo_prg
 # import widgets
 from widgets import Variable, VariableCtrl, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
-                    isstring, EditableListCtrl, Grammaire, \
+                    isstring, EditableListCtrl, Grammaire, getAncreFenetre, \
                     et2ou, FullScreenWin, safeParse, dansRectangle, \
                     TextCtrl_Help, CloseFenHelp, DelayedResult, \
                     messageInfo, messageWarning, rognerImage, enregistrer_root, \
@@ -1395,6 +1395,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None, ouverture = False):
+        """ Création d'un nouveau document dans une fenêtre
+        
+            :ext: extension de fichier pour déterminer le type de document
+                    (si None, ouvre un dialogue)
+            :ouverture: True si la création doit être suivie d'une ouverture de fichier
+        """
 #         print "commandeNouveau"
         if ext == None:
             dlg = DialogChoixDoc(self)
@@ -1421,12 +1427,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         else:
             child = None
 
-        
 #         if not ouverture: # Si c'est vraiment pour un document vide
         self.OnDocChanged(None)
          
         if child != None:
             wx.CallAfter(child.Activate)
+            
         return child
 
 
@@ -1440,8 +1446,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def ouvrirDoc(self, doc, nomFichier):
         """ Ouvre un document à partir de sa version "pySequence"
             <nomFichier> encodé en FileEncoding
-            
-            note : pour l'instant, que pour des Séquences
+
         """
 #         print("ouvrirDoc", doc)
         return self.ouvrir(nomFichier)
@@ -1866,6 +1871,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 for k in m.GetChildren():
                     if isinstance(k, FenetreSequence):
                         lst.append(k.fichierCourant)
+                    elif isinstance(k, FenetreProjet):
+                        lst.append(k.fichierCourant)
 
         return lst
     
@@ -2012,6 +2019,18 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         #
         self.nb = wx.Notebook(self.pnl, -1)
 
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.tip = PopupInfo(self.parent, width = 600*SSCALE)
+        self.zoneMove = None
+        self.curTip = None
+        
+        # Les tip pour les différents éléments
+        self.tips = {}
+
+
+
 
 #     ######################################################################################################
 #     def OnClose(self, evt):
@@ -2023,11 +2042,93 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         return
 
 
-    #########################################################################################################
-    def HideTip(self, event = None):
-#         print("HideTip document")
-        self.GetDocument().HideTip()
+#     #########################################################################################################
+#     def HideTip(self, event = None):
+# #         print("HideTip document")
+#         self.GetDocument().HideTip()
     
+    ######################################################################################  
+    def HideTip(self, pos = None):
+        if hasattr(self, 'call'):
+            self.call.Stop()
+            
+        if self.curTip is not None:#hasattr(self, 'curTip'):
+            if pos is not None:
+                x, y = pos
+#                 print x, y
+                X, Y, W, H = self.curTip.GetRect()
+#                 print X, Y, W, H
+                if x > X and x < X+W and y > Y and y < Y+H:
+                    return
+            self.curTip.Show(False)
+            
+            
+    ######################################################################################  
+    def ShowTip(self, x, y):
+        if self.curTip is None: 
+            return
+        
+        _, _, W, H = getDisplaysPosSize()[0]
+        w, h = self.curTip.GetSize()
+        self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+        self.curTip.Show()
+    
+        
+    ######################################################################################  
+    def SetAndShowTip(self, zone, x, y):
+#         print("SetAndShowTip", x, y, zone)
+             
+#         self.HideTip()
+        self.zoneMove = zone
+        
+        self.curTip = None 
+        if zone.obj is not None and zone.param is None:
+#             print "    elem :", zone.obj
+            if type(zone.obj) != list:
+                self.curTip = zone.obj.SetTip()
+            else:
+                self.curTip = zone.obj[0].SetTip()
+         
+        else:
+#             print "    zone", zone.param
+            self.GetDocument().SetTip(zone.param, zone.obj)
+            self.curTip = self.tip
+        
+#         print("   ", self.curTip)
+        if self.curTip != None:
+            self.ShowTip(x, y)
+#             X, Y, W, H = getDisplayPosSize()
+#  
+# #             print "  tip", x, y, tip.GetSize()
+#  
+#             w, h = tip.GetSize()
+#             tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+# #             self.call = wx.CallLater(500, tip.Show, True)
+#             tip.Show()
+
+
+    
+    #########################################################################################################
+    def createTip(self, code, page, width):
+        self.tips[code] = PopupInfo(self.parent, page, width = width)
+        return self.tips[code]
+        
+    #########################################################################################################
+    def delTip(self, code):
+        del self.tips[code]
+    
+    
+    ######################################################################################  
+    def Move(self, zone, x, y):
+#         print("Move", x, y, zone)
+            
+        self.HideTip()
+        
+        if self.zoneMove != zone:
+            self.call = wx.CallLater(500, self.SetAndShowTip, zone, x, y)
+            
+        else:
+            self.call = wx.CallLater(500, self.ShowTip, x, y)
     
 #     #########################################################################################################
 #     def GetLargPnlArbre(self):
@@ -3013,12 +3114,14 @@ class FenetreSequence(FenetreDocument):
 
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
-        if not ouverture:
-            #
-            # Mise en liste undo/redo
-            #    
-#             self.classe.undoStack.do("Nouvelle Classe")
-            self.sequence.undoStack.do("Nouvelle Séquence")
+        
+        
+            
+            
+        #
+        # Mise en liste undo/redo
+        #    
+        self.sequence.undoStack.do("Nouvelle Séquence")
 #             self.parent.miseAJourUndo()
             
         
@@ -5032,12 +5135,22 @@ class FicheDoc(BaseFiche):
         self.Bind(wx.EVT_MOTION, self.OnMove)
         
         
-        
+    ######################################################################################  
+    def HideTip(self, pos = None):
+        self.GetDoc().GetApp().HideTip(pos)
+    
+    
+    ######################################################################################  
+    def Move(self, zone, x, y):
+        self.GetDoc().GetApp().Move(zone, x, y)
+    
+    
     ######################################################################################################
     def OnLeave(self, evt = None):
         x, y = evt.GetPosition()
         x, y = self.ClientToScreen((x, y))
-        self.GetDoc().HideTip((x, y))
+        self.HideTip((x, y))
+#         self.GetDoc().HideTip((x, y))
         
 
     ######################################################################################################
@@ -5060,19 +5173,20 @@ class FicheDoc(BaseFiche):
         # Cas général
         #
         if zone is not None:
-            self.GetDoc().Move(zone, x, y)
+            self.Move(zone, x, y)
             if zone.estClicable(): 
                 self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
             else:
                 self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         else:
-            self.GetDoc().HideTip()
+            self.HideTip()
             self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
 
             
         evt.Skip()
 
+    
 
 
 #     #############################################################################            
@@ -5148,7 +5262,7 @@ class FicheDoc(BaseFiche):
         if not hasattr(self, 'ctx'):
             evt.Skip()
             return
-        self.GetDoc().HideTip()
+        self.HideTip()
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
         x, y = self.ClientToScreen((x, y))
@@ -5178,7 +5292,7 @@ class FicheDoc(BaseFiche):
             self.GetDoc().Click(zone, x, y)
             obj = zone.obj
         else:
-            self.GetDoc().HideTip()
+            self.HideTip()
             obj = None
         evt.Skip()
         return obj
@@ -19459,6 +19573,7 @@ class PopupInfo(wx.PopupWindow):
             self.tfname.append(tempfile.mktemp()+".png")
             bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
         except:
+            print("err")
             return
         img = self.soup.find(id = item)
 #        print "img", img

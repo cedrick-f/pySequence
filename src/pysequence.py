@@ -112,7 +112,7 @@ from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
                     Grammaire, et2ou, img2str, str2img, safeParse, b64,\
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
-                    getAncreFenetre, tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
+                    tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
                     
 from Referentiel import REFERENTIELS, ACTIVITES
 import Referentiel
@@ -128,7 +128,7 @@ Element = type(ET.Element(None))
 
 from xml.dom.minidom import parseString
 
-from objects_wx import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
+from objects_wx import CodeBranche, getIconeFileSave, getIconeCopy, \
                             getIconePaste, \
                             PanelPropriete_Progression, \
                             PanelPropriete_CI, PanelPropriete_LienSequence,\
@@ -614,12 +614,14 @@ def GetObjectFromClipBoard(instance):
 class ElementBase(Grammaire):
     def __init__(self, tipWidth = 400*SSCALE):
         
-                
+        self.tipWidth = tipWidth        
         
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, "", width = tipWidth)
+#         self.tip = PopupInfo(self.GetApp().parent, "", width = tipWidth)
+        
+        
         
         self.toolTip = None
 
@@ -630,8 +632,10 @@ class ElementBase(Grammaire):
 #        titre = titre.encode('utf-8') 
 #        titre = titre.replace(u"\n", u"<br>")
 #        self.elem.setAttribute("xlink:title", titre)
+
+
     
-        
+    
     ######################################################################################  
     def GetFiche(self):
         return self.GetApp().fiche
@@ -1009,11 +1013,23 @@ class ElementBase(Grammaire):
     def GetProjetRef(self):
         return self.GetDocument().GetProjetRef()
 
+
     ######################################################################################  
     def GetTip(self):
-        if hasattr(self, 'tip'):
+        if hasattr(self, 'tip') and self.tip is not None:
             return self.tip
+        else:
+            return self.createTip()
         
+    
+    ######################################################################################  
+    def createTip(self):
+#         print("createTip",self.tipWidth)
+        fen = self.GetApp()
+        if fen is not None:
+            return fen.createTip(self.GetCodeTip(), "", width = self.tipWidth)
+    
+    
     ######################################################################################  
     def GetFicheHTML(self, param = None):
         if param is None:
@@ -1682,23 +1698,39 @@ class Classe(ElementBase):
             self.codeBranche.SetToolTip(message)
             self.codeBranche.Refresh()
 
+
     ######################################################################################  
     def GetFicheHTML(self, param = None):
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CLASSE)
     
+    
+    ######################################################################################  
+    def GetCodeTip(self):
+        """ Un code UNIQUE par fenêtre pour désigner le popup
+        
+        """
+        return "classe"
     
     
     ######################################################################################  
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
+        
+        tip = self.GetTip()
+        print("SetTip Classe", tip)
+        if tip is None:
+            return
+        
         bmp = self.getBitmapEffectifs(800, 400)
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip.SetHTML(self.GetFicheHTML())
 
-        self.tip.AjouterImg("eff", bmp)
+        tip.AjouterImg("eff", bmp)
             
-        self.tip.SetPage()
-
+        tip.SetPage()
+        return tip
+    
+    
 
 ####################################################################################################
 #
@@ -1743,22 +1775,24 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.dependants = [] # Liste de documents dépendants (à enregistrer aussi)
 
         # Gestion des Undo/Redo
-        if not mini:
-            self.undoStack = UndoStack(self, self.GetApp().miseAJourUndo)
+        self.undoStack = UndoStack(self, self.GetApp().miseAJourUndo)
+        
 #         wx.CallAfter(self.undoStack.do, "Création "+self.du_())
         
         # Chemin du fichier
         self.path = ""
         self.proprietes = proprietes.ProprietesDoc(self)
         
+        
+        
 #         print("   proprietes1", self.proprietes.proprietes)
-        #
-        # Création du Tip (PopupInfo)
-        #
-        if not mini:
-            self.tip = PopupInfo(self.GetApp().parent, width = 600*SSCALE)
-            self.zoneMove = None
-            self.curTip = None
+#         #
+#         # Création du Tip (PopupInfo)
+#         #
+#         if not mini:
+#             self.tip = PopupInfo(self.GetApp().parent, width = 600*SSCALE)
+#             self.zoneMove = None
+#             self.curTip = None
         
         
     ######################################################################################  
@@ -1769,7 +1803,15 @@ class BaseDoc(ElementBase, ElementAvecLien):
             return dp0 < dp1
         else:
             return self.GetPosition()[0] < doc.GetPosition()[0]
+    
+    
+    ######################################################################################  
+    def GetCodeTip(self):
+        """ Un code UNIQUE par fenêtre pour désigner le popup
         
+        """
+        return self.GetCode()
+    
     
     ######################################################################################  
     def GetCode(self, num = None):
@@ -1781,6 +1823,12 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ######################################################################################  
     def GetApp(self):
         return self.app  # de type FenentreDocument
+    
+    
+    ######################################################################################  
+    def GetTip(self):
+        return self.GetApp().tip
+    
     
     ######################################################################################  
     def SetPath(self, path):
@@ -1914,20 +1962,20 @@ class BaseDoc(ElementBase, ElementAvecLien):
         self.arbre.SelectItem(branche) 
 
     
-    ######################################################################################  
-    def HideTip(self, pos = None):
-        if hasattr(self, 'call'):
-            self.call.Stop()
-            
-        if self.curTip is not None:#hasattr(self, 'curTip'):
-            if pos is not None:
-                x, y = pos
-#                 print x, y
-                X, Y, W, H = self.curTip.GetRect()
-#                 print X, Y, W, H
-                if x > X and x < X+W and y > Y and y < Y+H:
-                    return
-            self.curTip.Show(False)
+#     ######################################################################################  
+#     def HideTip(self, pos = None):
+#         if hasattr(self, 'call'):
+#             self.call.Stop()
+#             
+#         if self.curTip is not None:#hasattr(self, 'curTip'):
+#             if pos is not None:
+#                 x, y = pos
+# #                 print x, y
+#                 X, Y, W, H = self.curTip.GetRect()
+# #                 print X, Y, W, H
+#                 if x > X and x < X+W and y > Y and y < Y+H:
+#                     return
+#             self.curTip.Show(False)
         
         
             
@@ -1961,7 +2009,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ######################################################################################  
     def Click(self, zone, x, y):
 #         print("Click", zone)
-        self.HideTip()
+        self.GetApp().HideTip()
         
         if zone.obj is not None:
             if zone.param is None:
@@ -2041,64 +2089,64 @@ class BaseDoc(ElementBase, ElementAvecLien):
 #             self.tip = tip
         
     
-    ######################################################################################  
-    def Move(self, zone, x, y):
-#         print "Move", x, y, zone
-            
-        self.HideTip()
-        
-        if self.zoneMove != zone:
-            self.call = wx.CallLater(500, self.SetAndShowTip, zone, x, y)
-            
-        else:
-            self.call = wx.CallLater(500, self.ShowTip, x, y)
-
-
-    ######################################################################################  
-    def ShowTip(self, x, y):
-        if self.curTip is None: return
-        
-        _, _, W, H = getDisplaysPosSize()[0]
-        w, h = self.curTip.GetSize()
-        self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
-        self.curTip.Show()
-    
-        
-    ######################################################################################  
-    def SetAndShowTip(self, zone, x, y):
-#         print "SetAndShowTip", x, y
-             
+#     ######################################################################################  
+#     def Move(self, zone, x, y):
+# #         print "Move", x, y, zone
+#             
 #         self.HideTip()
-        self.zoneMove = zone
-        
-        self.curTip = None 
-        if zone.obj is not None and zone.param is None:
-#             print "    elem :", zone.obj
-            if type(zone.obj) != list:
-             
-                if hasattr(zone.obj, 'tip'):
-                    zone.obj.SetTip()
-                    self.curTip = zone.obj.tip
-            else:
-                if hasattr(zone.obj[0], 'tip'):
-                    zone.obj[0].SetTip()
-                    self.curTip = zone.obj[0].tip
-         
-        else:
-#             print "    zone", zone.param
-            self.SetTip(zone.param, zone.obj)
-            self.curTip = self.tip
-             
-        if self.curTip != None:
-            self.ShowTip(x, y)
-#             X, Y, W, H = getDisplayPosSize()
-#  
-# #             print "  tip", x, y, tip.GetSize()
-#  
-#             w, h = tip.GetSize()
-#             tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
-# #             self.call = wx.CallLater(500, tip.Show, True)
-#             tip.Show()
+#         
+#         if self.zoneMove != zone:
+#             self.call = wx.CallLater(500, self.SetAndShowTip, zone, x, y)
+#             
+#         else:
+#             self.call = wx.CallLater(500, self.ShowTip, x, y)
+
+
+#     ######################################################################################  
+#     def ShowTip(self, x, y):
+#         if self.curTip is None: return
+#         
+#         _, _, W, H = getDisplaysPosSize()[0]
+#         w, h = self.curTip.GetSize()
+#         self.curTip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+#         self.curTip.Show()
+#     
+#         
+#     ######################################################################################  
+#     def SetAndShowTip(self, zone, x, y):
+# #         print "SetAndShowTip", x, y
+#              
+# #         self.HideTip()
+#         self.zoneMove = zone
+#         
+#         self.curTip = None 
+#         if zone.obj is not None and zone.param is None:
+# #             print "    elem :", zone.obj
+#             if type(zone.obj) != list:
+#              
+#                 if hasattr(zone.obj, 'tip'):
+#                     zone.obj.SetTip()
+#                     self.curTip = zone.obj.tip
+#             else:
+#                 if hasattr(zone.obj[0], 'tip'):
+#                     zone.obj[0].SetTip()
+#                     self.curTip = zone.obj[0].tip
+#          
+#         else:
+# #             print "    zone", zone.param
+#             self.SetTip(zone.param, zone.obj)
+#             self.curTip = self.tip
+#              
+#         if self.curTip != None:
+#             self.ShowTip(x, y)
+# #             X, Y, W, H = getDisplayPosSize()
+# #  
+# # #             print "  tip", x, y, tip.GetSize()
+# #  
+# #             w, h = tip.GetSize()
+# #             tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
+# # #             self.call = wx.CallLater(500, tip.Show, True)
+# #             tip.Show()
             
 #             
             
@@ -2165,21 +2213,28 @@ class BaseDoc(ElementBase, ElementAvecLien):
 
     ##################################################################################################    
     def Tip_POS(self, p = None):
+        tip = self.GetTip()
+        if tip is None:
+            return 
+        
         if p == None or type(p) == str:
-            self.tip.SetWholeText("titre", "Découpage de la formation en périodes")
-            self.tip.SetWholeText("txt", "Périodes occupées pendant "+p)
-            self.tip.AjouterImg("img", self.getBitmapPeriode(300))
+            tip.SetWholeText("titre", "Découpage de la formation en périodes")
+            tip.SetWholeText("txt", "Périodes occupées pendant "+p)
+            tip.AjouterImg("img", self.getBitmapPeriode(300))
         else:
             ref = self.GetReferentiel()
-            self.tip.SetWholeText("titre", "Période de formation")
-            self.tip.SetWholeText("txt", ref.getPeriodesListe()[p] + " - " + str(p+1))
-            self.tip.Supprime('img')
+            tip.SetWholeText("titre", "Période de formation")
+            tip.SetWholeText("txt", ref.getPeriodesListe()[p] + " - " + str(p+1))
+            tip.Supprime('img')
 
 
     ##################################################################################################    
     def Tip_EQU(self, typeDoc):
-        self.tip.SetWholeText("titre", "Équipe pédagogique impliquée dans " + typeDoc)
-        self.tip.Supprime('img')
+        tip = self.GetTip()
+        if tip is None:
+            return
+        tip.SetWholeText("titre", "Équipe pédagogique impliquée dans " + typeDoc)
+        tip.Supprime('img')
     
         
     
@@ -2628,13 +2683,16 @@ class Sequence(BaseDoc, Grammaire):
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
+        tip = self.GetTip()
+        if tip is None:
+            return
         
         if param is None:   # la Séquence elle-même
-            self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ))
-            self.tip.SetWholeText("int", self.intitule)
+            tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ))
+            tip.SetWholeText("int", self.intitule)
         
         else:               # Un autre élément de la Séquence
-            self.tip.SetHTML(self.GetFicheHTML(param = param))
+            tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "POS":
                 self.Tip_POS("la Séquence")
                 
@@ -2653,8 +2711,8 @@ class Sequence(BaseDoc, Grammaire):
             else:
                 pass
                 
-        self.tip.SetPage()
-        return self.tip
+        tip.SetPage()
+        return tip
 
     ######################################################################################  
     def VerifPb(self):
@@ -4653,17 +4711,20 @@ class Projet(BaseDoc, Grammaire):
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
+        tip = self.GetTip()
+        if tip is None:
+            return
         
         if param is None:   
             if obj is None:
                 # le Projet lui-même
-                self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROJET))
-                self.tip.SetWholeText("int", self.intitule, size = 4)
-                self.tip.SetWholeText("ori", self.origine)
-                self.tip.SetWholeText("con", self.contraintes)
-                self.tip.SetWholeText("pro", self.production)
-                self.tip.SetWholeText("dec", self.besoinParties)
-                self.tip.SetWholeText("par", self.intituleParties)
+                tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROJET))
+                tip.SetWholeText("int", self.intitule, size = 4)
+                tip.SetWholeText("ori", self.origine)
+                tip.SetWholeText("con", self.contraintes)
+                tip.SetWholeText("pro", self.production)
+                tip.SetWholeText("dec", self.besoinParties)
+                tip.SetWholeText("par", self.intituleParties)
             else:
                 pass
             
@@ -4671,11 +4732,11 @@ class Projet(BaseDoc, Grammaire):
         else:               # Un autre élément du Projet
 #            print "  *** ", param
             prj = self.GetProjetRef()
-            self.tip.SetHTML(self.GetFicheHTML(param = param))
+            tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "PB":
 #                self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROB)
-                self.tip.SetWholeText( "titre", prj.attributs['PB'][0])
-                self.tip.SetWholeText("txt", self.problematique)
+                tip.SetWholeText( "titre", prj.attributs['PB'][0])
+                tip.SetWholeText("txt", self.problematique)
             
             elif param == "POS":
                 self.Tip_POS("le Projet")
@@ -4694,7 +4755,7 @@ class Projet(BaseDoc, Grammaire):
                 competence = prj.getCompetence(param[0], param[1:])
                 if competence is not None:
 #                     print "TIP", param, competence.indicateurs, competence.sousComp
-                    self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
+                    tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
                     
                     k = param[1:].split("\n")
                     titre = self.GetReferentiel().dicoCompetences["S"]._nom
@@ -4707,27 +4768,27 @@ class Projet(BaseDoc, Grammaire):
                         titre += " - ".join(k)
                     else:
                         titre += " " + k[0]
-                    self.tip.SetWholeText("titre", titre)
+                    tip.SetWholeText("titre", titre)
                     
 #                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence.intitule.split(u"\n")]) 
-                    self.tip.SetWholeText( "int", competence.intitule)
+                    tip.SetWholeText( "int", competence.intitule)
                     
                     if competence.sousComp != {}: #type(competence[1]) == dict:  
                         code = None
-                        self.tip.Construire(competence.sousComp, obj, prj, code = code, 
+                        tip.Construire(competence.sousComp, obj, prj, code = code, 
                                         check = isinstance(obj, Tache))
 #                         indicEleve = obj.GetDicIndicateurs()
                     else:
                         code = param
-                        self.tip.Construire(competence.indicateurs, obj, prj, code = code, 
+                        tip.Construire(competence.indicateurs, obj, prj, code = code, 
                                         check = isinstance(obj, Tache))
 #                         indicEleve = obj.GetDicIndicateurs()#[param]
 #                     print "indicEleve", indicEleve
 #                     print "competence.indicateurs", competence.indicateurs
                     
                 
-        self.tip.SetPage()
-        return
+        tip.SetPage()
+        return tip
         
         
         
@@ -4831,7 +4892,8 @@ class Projet(BaseDoc, Grammaire):
             
         elif self.getNbrRevues() == 2 and _R3 in lstPhasesTaches:
             t = self.getTachesRevue()[2]
-            self.SupprimerTache(item = t.branche)
+            
+            self.SupprimerTache(tache = t)
 #            revue2 = self.getTachesRevue()[1]
 #            revue2.panelPropriete = PanelPropriete_Tache(self.panelParent, revue2, revue = True)
 #         print("   ", self.getNbrRevues(), self.positionRevues)
@@ -4994,10 +5056,15 @@ class Projet(BaseDoc, Grammaire):
 
 
     ######################################################################################  
-    def SupprimerTache(self, event = None, item = None, verrouiller = True, doUndo = True):
-        tache = self.arbre.GetItemPyData(item)
+    def SupprimerTache(self, event = None, item = None, tache = None, 
+                       verrouiller = True, doUndo = True):
+        if item is not None:
+            tache = self.arbre.GetItemPyData(item)
+        
         self.taches.remove(tache)
-        self.arbre.Delete(item)
+        if item is not None:
+            self.arbre.Delete(item)
+        
         self.SetOrdresTaches()
         if doUndo:
             modif = "Suppression d'une Tâche"
@@ -6803,22 +6870,23 @@ class Progression(BaseDoc, Grammaire):
         
 
     ######################################################################################  
-    def OuvrirSequence(self, event = None, item = None):
-        l = self.arbre.GetItemPyData(item)
+    def OuvrirDoc(self, event = None, item = None):
+        l = self.arbre.GetItemPyData(item)   # ElementProgression
         nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        s = self.GetApp().parent.ouvrirDoc(l.sequence, nomFichier)
+        
+        s = self.GetApp().parent.ouvrirDoc(l.GetDoc(), nomFichier)
         if s is not None:
-            l.sequence = s
+            l.SetDoc(s)
         
     
-    ######################################################################################  
-    def OuvrirProjet(self, event = None, item = None):
-        l = self.arbre.GetItemPyData(item) # lienProjet de la Progression
-        nomFichier = os.path.join(self.GetPath(), l.path)
-#        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        l.projet = self.GetApp().parent.ouvrirDoc(l.projet, nomFichier)
-#         l.projet.app = app.GetApp()
+#     ######################################################################################  
+#     def OuvrirProjet(self, event = None, item = None):
+#         l = self.arbre.GetItemPyData(item) # lienProjet de la Progression
+#         nomFichier = os.path.join(self.GetPath(), l.path)
+# #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
+#         l.projet = self.GetApp().parent.ouvrirDoc(l.projet, nomFichier)
+# #         l.projet.app = app.GetApp()
 
     ######################################################################################  
     def ChargerSequences(self, parent, reparer = False):
@@ -6884,13 +6952,13 @@ class Progression(BaseDoc, Grammaire):
     
     ######################################################################################  
     def ChargerProjets(self, parent, reparer = False):
-#        print "ChargerProjets", self.sequences_projets
+#         print("ChargerProjets")#, self.sequences_projets)
         aSupprimer = []
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
             if lienPrj.projet is None:
-#                print "   ", lienSeq.path
+#                 print("   ", lienPrj.path)
                 path = os.path.join(self.GetPath(), lienPrj.path)
-#                print "   ", path
+
                 if not os.path.isfile(path):
                     dlg = wx.MessageDialog(parent, "Le fichier Projet suivant n'a pas été trouvé.\n\n"\
                                                  "\t%s\n\n"
@@ -6903,8 +6971,6 @@ class Progression(BaseDoc, Grammaire):
                     if res == wx.ID_YES:
                         fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
                         fichiers, projets = list(zip(*fichiers_projets))
-#                         fichiers = [testRel(f, self.GetPath()) for f in fichiers]
-#                         fichiers = [Lien(f).GetRelPath(self.GetPath()) for f in fichiers]
                         dlg = wx.SingleChoiceDialog(parent, "Choisir parmi les fichiers ci-dessous\n"\
                                                                    "celui qui doit remplacer %s." %toSystemEncoding(lienPrj.path), 
                                                     "Fichiers Projet disponibles",
@@ -7273,6 +7339,7 @@ class Progression(BaseDoc, Grammaire):
     ########################################################################################################
     def OuvrirFichierPrj(self, nomFichier, reparer = False,
                          silencieux = False, refCode = None):
+#         print("OuvrirFichierPrj", nomFichier)
 #        print "///", nomFichier
         nomFichier = os.path.join(self.GetPath(), nomFichier)
         for prj in self.GetApp().parent.GetDocumentsOuverts('prj'):
@@ -7287,14 +7354,14 @@ class Progression(BaseDoc, Grammaire):
         root = safeParse(nomFichier, None, silencieux = silencieux)
         if root is None:
             return None,  None
-        
+#         print("   root ok")
         #
         # La classe (vérification type enseignement)
         #
         rclasse = self.brancheCompatibleClasse(root, refCode)
         if not rclasse:
             return None, None
-        
+#         print("    classe ok")
         
         #
         # Le projet
@@ -7559,21 +7626,24 @@ class Progression(BaseDoc, Grammaire):
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
+        tip = self.GetTip()
+        if tip is None:
+            return
         
         if param is None:   # la Progression elle-même
-            self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML))
+            tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML))
             
         
         else:               # Un autre élément de la Progression
-            self.tip.SetHTML(self.GetFicheHTML(param = param))
+            tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "CAL":
-                self.tip.SetWholeText("titre", "Calendrier de la Progression")
-                self.tip.AjouterImg("img", self.getBitmapCalendrier(1000))
+                tip.SetWholeText("titre", "Calendrier de la Progression")
+                tip.AjouterImg("img", self.getBitmapCalendrier(1000))
                 
             elif param == "ANN":
-                self.tip.SetWholeText("titre", "Années scolaires de la Progression")
-                self.tip.SetWholeText("txt", self.GetAnnees())
-                self.tip.Supprime('img')
+                tip.SetWholeText("titre", "Années scolaires de la Progression")
+                tip.SetWholeText("txt", self.GetAnnees())
+                tip.Supprime('img')
                 
             elif param == "POS":
                 self.Tip_POS("la Progression") 
@@ -7587,19 +7657,19 @@ class Progression(BaseDoc, Grammaire):
             
             elif param[:2] == "CI":
                 ref = self.GetReferentiel()
-                self.tip.SetWholeText("titre", ref._nomCI.Sing_())  
+                tip.SetWholeText("titre", ref._nomCI.Sing_())  
                 numCI = int(param[2:])
                 code = ref.abrevCI+str(numCI+1)
 #                 intit = ref.CentresInterets[numCI]
              
-                self.tip.AjouterElemListeDL("ci", code, 
+                tip.AjouterElemListeDL("ci", code, 
                                             self.GetListeCI()[numCI])
                 if len(ref.listProblematiques) > numCI and len(ref.listProblematiques[numCI]) > 0:
-                    self.tip.SetWholeText("nomPb", ref._nomPb.Plur_() + " envisageables")  
+                    tip.SetWholeText("nomPb", ref._nomPb.Plur_() + " envisageables")  
                     for pb in ref.listProblematiques[numCI]:
-                        self.tip.AjouterElemListeUL("pb", pb)
+                        tip.AjouterElemListeUL("pb", pb)
                 else:
-                    self.tip.Supprime('pb')
+                    tip.Supprime('pb')
                               
             elif param[:3] == "CMP":
 #                 print param
@@ -7608,21 +7678,21 @@ class Progression(BaseDoc, Grammaire):
                 groupe, competence = competences[0], competences[-1]
                 
                 if len(competences) > 0:
-                    self.tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
+                    tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
                     k = param[3:]
                     code, groupe = competences[0]
                     nc = ref.dicoCompetences["S"]._nom.Sing_()
-                    self.tip.SetWholeText("titre", nc + " " + k)
-                    self.tip.SetWholeText("grp", code + "  " + groupe.intitule)
+                    tip.SetWholeText("titre", nc + " " + k)
+                    tip.SetWholeText("grp", code + "  " + groupe.intitule)
 #                     print "***", competences
                     if len(competences) >= 2:
                         codec, competence = competences[1]
-                        self.tip.SetWholeText("int", codec + " " + competence.intitule)
+                        tip.SetWholeText("int", codec + " " + competence.intitule)
                         if len(competence.sousComp) > 0:
 #                             print competence.sousComp.items()
                             lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
                             for k, v in lc:
-                                self.tip.AjouterElemListeDL('list', k, v.intitule)                 
+                                tip.AjouterElemListeDL('list', k, v.intitule)                 
 
             
             elif type(obj) == list:
@@ -7631,8 +7701,8 @@ class Progression(BaseDoc, Grammaire):
             else:
                 pass
             
-        self.tip.SetPage()
-        return self.tip
+        tip.SetPage()
+        return tip
 
     
     
@@ -7903,7 +7973,10 @@ class ElementProgression():
 #         """
 #         """
 #         return self.GetDoc().position[0] > lienSeq.GetDoc().position[0]
-
+    ######################################################################################  
+    def GetCodeTip(self):
+        return self.GetCode()
+        
     ######################################################################################  
     def GetCode(self, num = None):
         parent = self.GetDocument()
@@ -7994,7 +8067,34 @@ class ElementProgression():
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
-    
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+#         print("AfficherMenuContextuel", self.parent.GetPath())
+        if itemArbre == self.branche:
+            doc = self.parent
+            if isinstance(doc, Progression):
+                m = [["Supprimer", 
+                     functools.partial(doc.SupprimerLien, item = itemArbre), 
+                     scaleImage(self.GetLogoSupprimer()),
+                     True]
+                    ]
+                fichiers = self.GetApp().parent.GetNomsFichiers()
+#                 print(self.path, fichiers)
+                fichiers = [os.path.relpath(f, start = doc.GetPath()) for f in fichiers]
+                
+                if not self.path in fichiers:
+                    m.append(["Ouvrir", 
+                             functools.partial(self.parent.OuvrirDoc, item = itemArbre), 
+                             scaleImage(images.Icone_open.GetBitmap()),
+                             True]) 
+                doc.app.AfficherMenuContextuel(m)
+                
+            else:
+                doc.app.AfficherMenuContextuel([["Supprimer", 
+                                                 functools.partial(self.Supprimer, item = itemArbre), 
+                                                 scaleImage(self.GetLogoSupprimer()),
+                                                 True],
+                                                ])
     
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False):
@@ -8087,6 +8187,24 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     def GetDoc(self):
         return self.sequence
     
+    ######################################################################################  
+    def SetDoc(self, doc):
+        self.sequence = doc
+        
+    ######################################################################################  
+    def GetLogoSupprimer(self):
+        return images.Icone_suppr_seq.GetBitmap()
+    
+    
+#     ######################################################################################  
+#     def Ouvrir(self, event = None, item = None):
+#         self.parent.OuvrirSequence(item)
+    
+    
+    ######################################################################################  
+    def Supprimer(self, item = None):
+        self.parent.SupprimerLienSequence(item)
+        
     
     ######################################################################################  
     def GetPosition(self):
@@ -8153,31 +8271,7 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
                 self.SetToolTip(message + " - ".join(pb))
                 
             
-    ######################################################################################  
-    def AfficherMenuContextuel(self, itemArbre):
-        if itemArbre == self.branche:
-            doc = self.parent
-            if isinstance(doc, Progression):
-                m = [["Supprimer", 
-                     functools.partial(doc.SupprimerLien, item = itemArbre), 
-                     scaleImage(images.Icone_suppr_seq.GetBitmap()),
-                     True]
-                    ]
-                fichiers = self.GetApp().parent.GetNomsFichiers()
-                fichiers = [os.path.relpath(f, start = doc.GetPath()) for f in fichiers]
-                if not self.path in fichiers:
-                    m.append(["Ouvrir", 
-                             functools.partial(doc.OuvrirSequence, item = itemArbre), 
-                             scaleImage(images.Icone_open.GetBitmap()),
-                             True]) 
-                doc.app.AfficherMenuContextuel(m)
-                
-            else:
-                doc.app.AfficherMenuContextuel([["Supprimer", 
-                                                 functools.partial(doc.SupprimerLienSequence, item = itemArbre), 
-                                                 scaleImage(images.Icone_suppr_seq.GetBitmap()),
-                                                 True],
-                                                ])
+    
 
 
     ######################################################################################  
@@ -8200,21 +8294,25 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
     def GetFicheHTML(self, param = None):
         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ)
 
-
+    
     ######################################################################################  
     def SetTip(self):
         # Tip
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
         seq = self.sequence
         
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip.SetHTML(self.GetFicheHTML())
         if seq is None:
-            self.tip.SetWholeText("nom", "Séquence non trouvée")
+            tip.SetWholeText("nom", "Séquence non trouvée")
         else:
-            self.tip.SetWholeText("nom", seq.intitule)
-            self.tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
+            tip.SetWholeText("nom", seq.intitule)
+            tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
         
-        self.tip.SetPage()
-
+        tip.SetPage()
+        return tip
 
 
 
@@ -8247,9 +8345,9 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
         
-    ######################################################################################  
-    def __repr__(self):
-        return "LienPrj :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+#     ######################################################################################  
+#     def __repr__(self):
+#         return "LienPrj :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
     ####################################################################################
     def EstMovable(self):
@@ -8265,6 +8363,24 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
         return self.projet
     
     
+    ######################################################################################  
+    def SetDoc(self, doc):
+        self.projet = doc
+        
+        
+#     ######################################################################################  
+#     def Ouvrir(self, item = None):
+#         self.parent.OuvrirProjet(item)
+        
+    ######################################################################################  
+    def Supprimer(self, item = None):
+        self.parent.SupprimerLienProjet(item)
+        
+            
+    ######################################################################################  
+    def GetLogoSupprimer(self):
+        return images.Icone_suppr_prj.GetBitmap()
+            
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_LienProjet(parent, self)
@@ -8330,19 +8446,19 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
                 self.SetToolTip(message + " - ".join(pb))
                 
             
-    ######################################################################################  
-    def AfficherMenuContextuel(self, itemArbre):
-#        print "AfficherMenuContextuel"
-        if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([["Supprimer", 
-                                                     functools.partial(self.parent.SupprimerLien, item = itemArbre), 
-                                                     scaleImage(images.Icone_suppr_prj.GetBitmap()),
-                                                     True],
-                                                    ["Ouvrir", 
-                                                     functools.partial(self.parent.OuvrirProjet, item = itemArbre), 
-                                                     scaleImage(images.Icone_open.GetBitmap()),
-                                                     True]
-                                                    ])
+#     ######################################################################################  
+#     def AfficherMenuContextuel(self, itemArbre):
+# #        print "AfficherMenuContextuel"
+#         if itemArbre == self.branche:
+#             self.parent.app.AfficherMenuContextuel([["Supprimer", 
+#                                                      functools.partial(self.parent.SupprimerLien, item = itemArbre), 
+#                                                      scaleImage(images.Icone_suppr_prj.GetBitmap()),
+#                                                      True],
+#                                                     ["Ouvrir", 
+#                                                      functools.partial(self.parent.OuvrirProjet, item = itemArbre), 
+#                                                      scaleImage(images.Icone_open.GetBitmap()),
+#                                                      True]
+#                                                     ])
 
 
     ######################################################################################  
@@ -8364,13 +8480,17 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
     ######################################################################################  
     def SetTip(self):
         # Tip
-        seq = self.projet
-        self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.AjouterImg("ap", seq.GetApercu(600, 200 , entete = True)) 
+        tip = self.GetTip()
+        if tip is None:
+            return
         
-        self.tip.SetPage()
-
+        seq = self.projet
+        tip.SetHTML(self.GetFicheHTML())
+        tip.SetWholeText("nom", seq.intitule)
+        tip.AjouterImg("ap", seq.GetApercu(600, 200 , entete = True)) 
+        
+        tip.SetPage()
+        return tip
 
 
 
@@ -8632,11 +8752,17 @@ class CentreInteret(ElementBase):
 
 
     ######################################################################################  
+    def GetCodeTip(self):
+        return self.GetCode()
+    
+    
+    ######################################################################################  
     def GetCode(self, num = None, sep = " - "):
         """ Renvoie le code du CI à partir de son num'
             Si num est None : renvoie une chaîne avec tous les codes
         """
 #         print("GetCode", num, self.numCI)
+
         if num == None:
             return sep.join([self.GetCode(n) for n in range(len(self.numCI)+len(self.CI_perso))])
         
@@ -8751,30 +8877,34 @@ class CentreInteret(ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
+        tip.SetHTML(self.GetFicheHTML())
         
         ref = self.GetReferentiel()
         if len(self.numCI)+len(self.CI_perso) > 1:
             t = ref._nomCI.Plur_()
         else:
             t = ref._nomCI.Sing_()
-        self.tip.SetWholeText("titre", t)
+        tip.SetWholeText("titre", t)
         
         for i, c in enumerate(self.numCI):
-            self.tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
+            tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
         
         for i, c in enumerate(self.CI_perso):
-            self.tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
+            tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
         
         if len(self.Pb + self.Pb_perso) > 0:
-            self.tip.SetWholeText("nomPb", ref._nomPb.Sing_())
+            tip.SetWholeText("nomPb", ref._nomPb.Sing_())
             for pb in self.Pb + self.Pb_perso:
-                self.tip.AjouterElemListeUL("pb", pb)
+                tip.AjouterElemListeUL("pb", pb)
         else:
-            self.tip.SupprimerTag("pb")             
+            tip.SupprimerTag("pb")             
                         
-        self.tip.SetPage()
-        
+        tip.SetPage()
+        return tip
 
 
 
@@ -8788,7 +8918,7 @@ class CentreInteret(ElementBase):
 class Competences(ElementBase):
     def __init__(self, parent, numComp = None, prerequis = False):
         self.parent = parent
-        ElementBase.__init__(self, tipWidth = 600*SSCALE)
+        ElementBase.__init__(self, tipWidth = 500*SSCALE)
         
         self.num = numComp
         self.competences = []       # Liste des compétences (prérequis ou objectif) de la Séquence
@@ -8999,7 +9129,12 @@ class Competences(ElementBase):
             else:
                 t[d[0]] = [d[1:]]
         return t
-        
+    
+    ######################################################################################  
+    def GetCodeTip(self):
+        return "comp"+self.GetCode()
+    
+    
     ######################################################################################  
     def GetCode(self, num = None, cod = None, sep = " - "):
         """ Renvoie le code de la Compétence à partir de son num'
@@ -9262,9 +9397,14 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetBulleHTML())
-        self.tip.SetPage()
+        tip = self.GetTip()
+        if tip is None:
+            return
         
+        tip.SetHTML(self.GetBulleHTML())
+        tip.SetPage()
+        return tip
+    
 # #         print "SetTip Comp"
 #         self.tip.SetHTML(self.GetBHTML())
 #         nc = self.GetNomGenerique()
@@ -9386,6 +9526,10 @@ class Savoirs(ElementBase):
                         
         return t
     
+    
+    ######################################################################################  
+    def GetCodeTip(self):
+        return "sav"+self.GetCode()
     
     
     ######################################################################################  
@@ -9623,9 +9767,14 @@ class Savoirs(ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetBulleHTML())
-        self.tip.SetPage()
+        tip = self.GetTip()
+        if tip is None:
+            return
         
+        tip.SetHTML(self.GetBulleHTML())
+        tip.SetPage()
+        return tip
+    
 #         self.tip.SetHTML(self.GetFicheHTML())
 #         nc = self.GetNomGenerique()
 #         self.tip.SetWholeText("titre", nc)
@@ -10017,7 +10166,12 @@ class Seance(ElementAvecLien, ElementBase):
         return lst
     
     ######################################################################################  
-    def GetCode(self, num):
+    def GetCodeTip(self):
+        return "seance"+self.GetCode()
+    
+    
+    ######################################################################################  
+    def GetCode(self, num = None):
         return self.code
     
     ######################################################################################  
@@ -10890,7 +11044,7 @@ class Seance(ElementAvecLien, ElementBase):
                 if css:
                     icon_dem = b64(constantes.imagesDemarches[d].GetData())
                 else:
-                    icon_dem = self.tip.GetImgURL(constantes.imagesDemarches[d].GetBitmap(), width = 60*SSCALE)
+                    icon_dem = self.GetTip().GetImgURL(constantes.imagesDemarches[d].GetBitmap(), width = 60*SSCALE)
                 lst_dem.append((icon_dem,
                                 ref.demarches[d][1])
                               )
@@ -10913,8 +11067,8 @@ class Seance(ElementAvecLien, ElementBase):
                 image = None
             
         else:
-            icon_type = self.tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap())
-            image = self.tip.GetImgURL(self.image, width = 200)
+            icon_type = self.GetTip().GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap())
+            image = self.GetTip().GetImgURL(self.image, width = 200)
             
 #         print(lst_ensSpe)    
 #         print("   self.compVisees", self.compVisees)
@@ -11012,9 +11166,13 @@ class Seance(ElementAvecLien, ElementBase):
         """ Construction du toolTip (format HTMLwindow)
             qui apparait dans pySéquence
         """
-        self.tip.SetHTML(self.GetBulleHTML())
-        self.tip.SetPage()
+        tip = self.GetTip()
+        if tip is None:
+            return
         
+        tip.SetHTML(self.GetBulleHTML())
+        tip.SetPage()
+        return tip
     
     
     
@@ -11145,7 +11303,11 @@ class FonctionService(ElementAvecLien, ElementBase):
         except:
             return len(self.projet.fct_serv) # En dernier !!
         
-         
+    ######################################################################################  
+    def GetCodeTip(self):
+        return "FS"+self.GetCode()
+    
+    
     ######################################################################################  
     def GetCode(self):
         if self.type == 0:
@@ -11793,8 +11955,14 @@ class Tache(ElementAvecLien, ElementBase):
         
         return lst
     
+    
     ######################################################################################  
-    def GetCode(self, num):
+    def GetCodeTip(self):
+        return "tache"+self.GetCode()
+    
+    
+    ######################################################################################  
+    def GetCode(self, num = None):
         return self.code
     
     
@@ -12222,7 +12390,11 @@ class Tache(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
+        tip.SetHTML(self.GetFicheHTML())
         
         prj = self.GetProjetRef()
         
@@ -12243,21 +12415,21 @@ class Tache(ElementAvecLien, ElementBase):
                 t = ""
             texte = t
 
-        self.tip.SetWholeText("titre", titre, fcoul=self.GetCoul())
+        tip.SetWholeText("titre", titre, fcoul=self.GetCoul())
         
         # Phase
         if self.phase != "":
-            self.tip.AjouterImg("icon", scaleImage(constantes.imagesTaches[self.phase].GetBitmap(),50,50))
+            tip.AjouterImg("icon", scaleImage(constantes.imagesTaches[self.phase].GetBitmap(),50,50))
             
         else:
-            self.tip.Supprime('icon')
-        self.tip.SetWholeText("txt", texte, italic = True, size = 3)
+            tip.Supprime('icon')
+        tip.SetWholeText("txt", texte, italic = True, size = 3)
         
         # Icône
         if self.icone is not None:
-            self.tip.AjouterImg("icon2", self.icone, width = 64)
+            tip.AjouterImg("icon2", self.icone, width = 64)
         else:
-            self.tip.Supprime('icon2')
+            tip.Supprime('icon2')
             
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
@@ -12268,17 +12440,17 @@ class Tache(ElementAvecLien, ElementBase):
                     t = self.intitule
             else:
                 t = ""
-            self.tip.AjouterTxt("int", t, size = 4)
+            tip.AjouterTxt("int", t, size = 4)
         
         if hasattr(self, 'description'):
-            self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
+            tip.AjouterHTML("des", XMLtoHTML(self.description))    
         else:
-            self.tip.Supprime('ldes')
+            tip.Supprime('ldes')
         
-        self.tip.AjouterLien('lien', self.lien, self)
+        tip.AjouterLien('lien', self.lien, self)
         
-        self.tip.SetPage()
-        
+        tip.SetPage()
+        return tip
         
         
         
@@ -12463,6 +12635,12 @@ class Systeme(ElementAvecLien, ElementBase):
         ref = self.GetDocument().GetReferentiel()
         return ref.getIconeSysteme(self.typ, 24*SSCALE)
          
+        
+    ######################################################################################  
+    def GetCodeTip(self):
+        return "systeme"+self.GetNom()
+    
+    
     ######################################################################################  
     def SetCode(self):
         if hasattr(self, 'codeBranche'):
@@ -12523,15 +12701,19 @@ class Systeme(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip = self.GetTip()
+        if tip is None:
+            return
         
-        self.tip.SetWholeText("nom", self.nom)
-        self.tip.SetWholeText("nbr", "Nombre disponible : " + str(self.nbrDispo.v[0]))
+        tip.SetHTML(self.GetFicheHTML())
         
-        self.tip.AjouterImg("img", self.image) 
+        tip.SetWholeText("nom", self.nom)
+        tip.SetWholeText("nbr", "Nombre disponible : " + str(self.nbrDispo.v[0]))
         
-        self.tip.SetPage()
+        tip.AjouterImg("img", self.image) 
         
+        tip.SetPage()
+        return tip
                
                
                
@@ -12838,7 +13020,11 @@ class Support(ElementAvecLien, ElementBase):
         else:
             return "Support"
     
-            
+    ######################################################################################  
+    def GetCodeTip(self):
+        return self.GetCode()
+    
+    
     ######################################################################################  
     def GetCode(self, i = None):
         return "Support"
@@ -12962,26 +13148,30 @@ class Support(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip = self.GetTip()
+        if tip is None:
+            return
         
-        self.tip.SetWholeText("tit", self.Sing_())
+        tip.SetHTML(self.GetFicheHTML())
         
-        self.tip.SetWholeText("nom", self.nom, size=5)
-        self.tip.AjouterHTML("des", XMLtoHTML(self.description))      
+        tip.SetWholeText("tit", self.Sing_())
+        
+        tip.SetWholeText("nom", self.nom, size=5)
+        tip.AjouterHTML("des", XMLtoHTML(self.description))      
         if self.image is not None:
-            self.tip.AjouterImg("img", self.image, width = 300)
+            tip.AjouterImg("img", self.image, width = 300)
         else:
-            self.tip.Supprime('img')
+            tip.Supprime('img')
             
         
         if len(self.modeles) == 0:
-            self.tip.Supprime("mod")
+            tip.Supprime("mod")
         for m in self.modeles:
             m.SetTip()
-            self.tip.InsererSoup("mod", m.tip.soup)
+            tip.InsererSoup("mod", m.tip.soup)
         
-        self.tip.SetPage()
-    
+        tip.SetPage()
+        return tip
 
 
 
@@ -13103,6 +13293,11 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
     
     
     ######################################################################################  
+    def GetCodeTip(self):
+        return "modele"+self.GetNom()
+    
+    
+    ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
@@ -13178,22 +13373,26 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
     
     ######################################################################################  
     def SetTip(self):
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
 #         print "SetTip", self
-        self.tip.SetHTML(self.GetFicheHTML(), "html.parser")
+        tip.SetHTML(self.GetFicheHTML(), "html.parser")
         
         
         
-        self.tip.SetWholeText("int", self.intitule, size=4)
-        self.tip.AjouterHTML("des", XMLtoHTML(self.description))      
+        tip.SetWholeText("int", self.intitule, size=4)
+        tip.AjouterHTML("des", XMLtoHTML(self.description))      
         if self.image is not None:
-            self.tip.AjouterImg("img", self.image, width = 200)
+            tip.AjouterImg("img", self.image, width = 200)
         else:
-            self.tip.Supprime('img')
+            tip.Supprime('img')
             
-        self.tip.AjouterListe("log", self.GetArbreLogiciels())
+        tip.AjouterListe("log", self.GetArbreLogiciels())
         
-        self.tip.SetPage()
-        
+        tip.SetPage()
+        return tip
         
         
 ####################################################################################
@@ -13202,9 +13401,9 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
 #
 ####################################################################################
 class Personne(ElementBase):
-    def __init__(self, doc, Id = 0, nom = "", prenom = "", width = 400*SSCALE):
+    def __init__(self, doc, Id = 0, nom = "", prenom = "", width = 300*SSCALE):
         self.doc = doc
-        ElementBase.__init__(self, width)
+        ElementBase.__init__(self, tipWidth = width)
 
         self.nom = nom
         self.prenom = prenom
@@ -13367,7 +13566,13 @@ class Personne(ElementBase):
 #        if nom != u"":
         if hasattr(self, 'arbre'):
             self.SetCode()
-
+            
+        
+    ######################################################################################  
+    def GetCodeTip(self):
+        return "personne"+self.GetNomPrenom()
+    
+    
     ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
@@ -13390,19 +13595,23 @@ class Personne(ElementBase):
 
     ######################################################################################  
     def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
+        tip.SetHTML(self.GetFicheHTML())
         tit = self.Sing_()
 #         self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").Sing_(), bold = True, size=4)
-        self.tip.SetWholeText("tit", tit)#, bold = False, size=4)
+        tip.SetWholeText("tit", tit)#, bold = False, size=4)
         
         if hasattr(self, 'referent'):
             bold = self.referent
         else:
             bold = True
-        self.tip.SetWholeText("nom", self.GetNomPrenom(), bold = bold, size=5)
-        self.tip.AjouterImg("av", self.GetAvatar()) 
+        tip.SetWholeText("nom", self.GetNomPrenom(), bold = bold, size=5)
+        tip.AjouterImg("av", self.GetAvatar()) 
         
-        self.SetTip2()
+        return self.SetTip2(tip)
         
         # Tip
 #        if hasattr(self, 'tip'):
@@ -13978,7 +14187,7 @@ class Eleve(Personne):
         
 #         print(">>>", ev, ev_tot, seuil)
         
-        if compil:
+        if compil and 'S' in ev:
             ev = ev["S"]
             ev_tot = ev_tot["S"]
             seuil = seuil["S"]
@@ -14256,102 +14465,103 @@ class Eleve(Personne):
 
 
     ######################################################################################  
-    def SetTip2(self):
+    def SetTip2(self, tip):
 #         print("SetTip2", self)
         # Tip
-        if hasattr(self, 'tip'):
+        
+        
             
 #            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-            coulOK = couleur.GetCouleurHTML(COUL_OK)
-            coulNON = couleur.GetCouleurHTML(COUL_NON)
-            
-            #
-            # Durée
-            #
-            duree = self.GetDuree()
-            v = self.getValiditeDuree(duree)
-            lab = draw_cairo.getHoraireTxt(duree)
-            if v == 0:
-                coul = coulOK
-            elif v == 1:
-                coul = couleur.GetCouleurHTML(COUL_BOF)
-            else:
-                coul = coulNON
-            self.tip.AjouterCol("ld", lab, coul, bold = True)
+        coulOK = couleur.GetCouleurHTML(COUL_OK)
+        coulNON = couleur.GetCouleurHTML(COUL_NON)
+        
+        #
+        # Durée
+        #
+        duree = self.GetDuree()
+        v = self.getValiditeDuree(duree)
+        lab = draw_cairo.getHoraireTxt(duree)
+        if v == 0:
+            coul = coulOK
+        elif v == 1:
+            coul = couleur.GetCouleurHTML(COUL_BOF)
+        else:
+            coul = coulNON
+        tip.AjouterCol("ld", lab, coul, bold = True)
 
-            
-            #
-            # Evaluabilité
-            #
-            ev, ev_tot, _ = self.GetEvaluabilite()
-            prj = self.GetProjetRef()
-            keys = {}
-            for disc, dic in prj._dicoIndicateurs.items():
+        
+        #
+        # Evaluabilité
+        #
+        ev, ev_tot, _ = self.GetEvaluabilite()
+        prj = self.GetProjetRef()
+        keys = {}
+        for disc, dic in prj._dicoIndicateurs.items():
 #                 print("   ", dic)
-                keys[disc] = sorted(dic.keys())
+            keys[disc] = sorted(dic.keys())
 #            if "O8s" in keys:
 #                keys.remove("O8s")
 #             print(">>>keys", keys)
-            
-            lab = {}
-            for disc, dic in prj._dicoGrpIndicateur.items():
+        
+        lab = {}
+        for disc, dic in prj._dicoGrpIndicateur.items():
 #                 print("   ", disc, dic)
-                lab[disc] = {}
-                for part in dic:
-                    lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
-        #            totalOk = True
-                    for k in keys[disc]:
-                        if k in prj._dicoGrpIndicateur[disc][part]:
-                            if k in ev[disc][part]:
-                                
-        #                        totalOk = totalOk and (ler[k] >= 0.5)
-                                lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
-                            else:
-        #                        totalOk = False
-                                lab[disc][part].append([pourCent2(0, True), False]) 
+            lab[disc] = {}
+            for part in dic:
+                lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
+    #            totalOk = True
+                for k in keys[disc]:
+                    if k in prj._dicoGrpIndicateur[disc][part]:
+                        if k in ev[disc][part]:
+                            
+    #                        totalOk = totalOk and (ler[k] >= 0.5)
+                            lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
                         else:
-                            lab[disc][part].append(["", True])
-                    lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
- 
-#             print(">>>lab", lab)
-            for disc, dic in prj._dicoGrpIndicateur.items():
-                for part in dic:
-    #                print "   ", part
-                    for i, lo in enumerate(lab[disc][part]):
-    #                    print "      ", i, lo
-                        l, o = lo
-                        if i == 0:
-                            size = None
-                            bold = True
-                            if o:
-                                coul = coulOK
-                            else:
-                                coul = coulNON
-                        else:
-                            size = 2
-                            bold = False
-                            if not o:
-                                coul = coulNON
-                            else:
-                                coul = None
-                        self.tip.AjouterCol("le"+part, l, coul,
-                                       couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
+    #                        totalOk = False
+                            lab[disc][part].append([pourCent2(0, True), False]) 
+                    else:
+                        lab[disc][part].append(["", True])
+                lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
 
-            for disc in prj._dicoIndicateurs:
-                if disc in lab:
-                    for t in keys[disc]:
-                        self.tip.AjouterCol("le", t, size = 2) 
+#             print(">>>lab", lab)
+        for disc, dic in prj._dicoGrpIndicateur.items():
+            for part in dic:
+#                print "   ", part
+                for i, lo in enumerate(lab[disc][part]):
+#                    print "      ", i, lo
+                    l, o = lo
+                    if i == 0:
+                        size = None
+                        bold = True
+                        if o:
+                            coul = coulOK
+                        else:
+                            coul = coulNON
+                    else:
+                        size = 2
+                        bold = False
+                        if not o:
+                            coul = coulNON
+                        else:
+                            coul = None
+                    tip.AjouterCol("le"+part, l, coul,
+                                   couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
+
+        for disc in prj._dicoIndicateurs:
+            if disc in lab:
+                for t in keys[disc]:
+                    tip.AjouterCol("le", t, size = 2) 
+        
+        #
+        # Modèles
+        #
+        lst_modeles = self.GetModeles()
+        if len(lst_modeles) == 0:
+            tip.Supprime("mod")
+        for m in lst_modeles:
+            m.SetTip()
+            tip.InsererSoup("mod", m.tip.soup)
             
-            #
-            # Modèles
-            #
-            lst_modeles = self.GetModeles()
-            if len(lst_modeles) == 0:
-                self.tip.Supprime("mod")
-            for m in lst_modeles:
-                m.SetTip()
-                self.tip.InsererSoup("mod", m.tip.soup)
-                
 #             for i, m in enumerate(self.GetModeles()):
 # #                 print "mod", m
 #                 for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
@@ -14361,9 +14571,11 @@ class Eleve(Personne):
 # #                     print "   ", h
 #                     self.tip.AjouterHTML('mod', h)
 #                     self.tip.AjouterImg(idx, bmp)
-            
-            self.tip.SetPage()
-            
+        
+        tip.SetPage()
+        return tip
+    
+    
 
     ######################################################################################  
     def initCodeBranche(self):
@@ -14660,34 +14872,30 @@ class Groupe(Eleve):
 
 
     ######################################################################################  
-    def SetTip2(self):
+    def SetTip2(self, tip):
 #        print "SetTip2", self
         # Tip
-        if hasattr(self, 'tip'):
-            
-#            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-            coulOK = couleur.GetCouleurHTML(COUL_OK)
-            coulNON = couleur.GetCouleurHTML(COUL_NON)
-            
-            #
-            # Durée
-            #
-            duree = self.GetDuree()
-            v = self.getValiditeDuree(duree)
-            lab = draw_cairo.getHoraireTxt(duree)
-            if v == 0:
-                coul = coulOK
-            elif v == 1:
-                coul = couleur.GetCouleurHTML(COUL_BOF)
-            else:
-                coul = coulNON
-            self.tip.AjouterCol("ld", lab, coul, bold = True)
+ 
+        
+        coulOK = couleur.GetCouleurHTML(COUL_OK)
+        coulNON = couleur.GetCouleurHTML(COUL_NON)
+        
+        #
+        # Durée
+        #
+        duree = self.GetDuree()
+        v = self.getValiditeDuree(duree)
+        lab = draw_cairo.getHoraireTxt(duree)
+        if v == 0:
+            coul = coulOK
+        elif v == 1:
+            coul = couleur.GetCouleurHTML(COUL_BOF)
+        else:
+            coul = coulNON
+        tip.AjouterCol("ld", lab, coul, bold = True)
 
-            
-            
-
-            self.tip.SetPage()
-            
+        tip.SetPage()
+        return tip
 
             
     ######################################################################################  
@@ -14775,17 +14983,18 @@ class Prof(Personne):
         self.codeBranche.LayoutFit()
     
     ######################################################################################  
-    def SetTip2(self):
-        if hasattr(self, 'tip'):
-            if self.discipline != 'Tec':
-                coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
-            else:
-                coul = None
-            self.tip.SetWholeText("spe", constantes.NOM_DISCIPLINES[self.discipline], fcoul = coul)
-            
-#            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
-            self.tip.SetPage()
+    def SetTip2(self, tip):
+
+        if self.discipline != 'Tec':
+            coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
+        else:
+            coul = None
+        tip.SetWholeText("spe", constantes.NOM_DISCIPLINES[self.discipline], fcoul = coul)
         
+#            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
+        tip.SetPage()
+        return tip
+    
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
