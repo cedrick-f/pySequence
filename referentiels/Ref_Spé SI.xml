@@ -5,7 +5,7 @@
   <l_BO_dossier />
   <l_CentresInterets S_00="Les territoires et les produits intelligents, la mobilité des personnes et des biens" S_01="L’homme assisté, réparé, augmenté : les produits d’assistance pour la santé et la sécurité" S_02="Le design responsable et le prototypage de produits innovants" />
   <l_Enseignement S_00="Spé SI" S_01="Baccalauréat Général : Spécialité Sciences de l'ingénieur" S_02="Spé SI" S_03="Sciences de l'ingénieur" />
-  <d_aColNon B_C="True" />
+  <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
       <l_03 I_00="0" I_01="0" I_02="0" />
@@ -47,7 +47,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_S="30" />
+          <d_poids I_C="10" />
           <d_sousComp>
             <Competence_A1 S_intitule="Rompre avec l’existant--Améliorer l’existant">
               <l_domaines />
@@ -55,7 +55,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="16.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -67,7 +73,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="16.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -79,7 +91,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="16.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -91,7 +109,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="16.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -103,7 +127,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="16.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -115,7 +145,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="16.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -132,7 +168,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C="40" />
+          <d_poids I_C="20" />
           <d_sousComp>
             <Competence_B1 S_intitule="Analyser le besoin, l’organisation matérielle et fonctionnelle d’un produit par une démarche d’ingénierie système">
               <l_domaines />
@@ -140,7 +176,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -152,7 +194,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -164,7 +212,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -176,7 +230,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -188,7 +248,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -200,7 +266,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -212,7 +284,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -224,7 +302,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -236,7 +320,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -248,7 +338,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -260,7 +356,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -272,7 +374,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -284,7 +392,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -296,7 +410,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -308,7 +428,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="6.666667" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -325,7 +451,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C="50" I_S="30" />
+          <d_poids I_C="30" />
           <d_sousComp>
             <Competence_C1 S_intitule="Proposer et justifier des hypothèses ou simplification en vue d’une modélisation">
               <l_domaines />
@@ -333,7 +459,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -345,7 +477,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -357,7 +495,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -369,7 +513,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -381,7 +531,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -393,7 +549,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -405,7 +567,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -417,7 +585,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -429,7 +603,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -441,7 +621,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -453,7 +639,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -465,7 +657,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -477,7 +675,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -489,7 +693,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -501,7 +711,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -513,7 +729,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -525,7 +747,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="5.882353" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -542,7 +770,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C="10" I_S="40" />
+          <d_poids I_C="20" />
           <d_sousComp>
             <Competence_D1 S_intitule="Prévoir l’ordre de grandeur de la mesure">
               <l_domaines />
@@ -550,7 +778,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -562,7 +796,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -574,7 +814,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -586,7 +832,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -598,7 +850,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -610,7 +868,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -622,7 +886,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -634,7 +904,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -646,7 +922,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -658,7 +940,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -675,7 +963,7 @@
           </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
-          <d_poids I_C="10" I_S="40" />
+          <d_poids I_C="20" />
           <d_sousComp>
             <Competence_E1 S_intitule="Présenter un protocole, une démarche, une solution en réponse à un besoin">
               <l_domaines />
@@ -683,7 +971,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -695,7 +989,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -707,7 +1007,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -719,7 +1025,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -731,7 +1043,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -743,7 +1061,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -755,7 +1079,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -767,7 +1097,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -779,7 +1115,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -791,7 +1133,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -803,7 +1151,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -815,7 +1169,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -827,7 +1187,13 @@
                 <l_00 />
                 <l_01 />
               </l_elemAssocies>
-              <l_indicateurs />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="x">
+                  <d_ligne I_C="0" />
+                  <d_poids F_C="7.692308" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_indicateurs>
               <l_infos />
               <d_poids />
               <d_sousComp />
@@ -6680,7 +7046,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="48" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de terminale">
+    <Projet_PRJ1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ1" S_ficheValid="" S_intitule="Projet de première">
       <d_attributs>
         <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="L’intitulé du projet se résume à son **nom**, celui-ci doit permettre une identification rapide et dans la mesure du possible être accrocheur.----_À titre d’exemples, parmi les projets de la session 2016, nous avons eu : Travelling 100 m low cost, Ballon captif pour mesures expérimentales._" />
         <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="L’expression du besoin par la **méthode APTE** doit permettre de répondre aux questions suivantes :----* **à qui** (**à quoi**) le produit rend-il service ?--* **sur qui** (sur quoi) le produit agit-il ?--* **dans quel but** le produit existe-t-il ?----Nous pouvons également nous appuyer sur la **démarche d’ingénierie système** en exprimant le besoin initial et le complétant par les questions suivantes :----* pourquoi veut-on faire le système ? Cela spécifie la **finalité** ;--* qui est concerné / impacté ? Cela spécifie les **parties prenantes** et en particulier le client ;--* quelles sont les frontières du système ? Cela spécifie le **contexte** du projet et peut pour partie répondre à « l’origine de la proposition » ;--* comment cela s'envisage-t-il ? Cela spécifie les **cas d’utilisation**." />
@@ -6696,13 +7062,218 @@
         <l_FIC S_00="Description détaillées des tâches" S_01="" S_02="" S_03="" />
         <l_ S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
-      <d_cellulesInfo />
-      <d_grilles />
+      <d_cellulesInfo>
+        <d_C>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_NON>
+            <l_00 S_00="Conduite de projet" S_02="">
+              <l_01 I_00="5" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="2" I_02="1" />
+            </l_00>
+          </l_Prof>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
+          <l_EtabPrf>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="3" I_02="1" />
+            </l_00>
+          </l_EtabPrf>
+        </d_C>
+        <d_S>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille-conduite de projet-S-SI.xlsx" S_01="I" />
+      </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listTaches />
-      <l_listeParties />
-      <d_parties />
+      <l_listeParties S_00="C" S_01="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="5" />
+      <d_phases>
+        <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" S_03="" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" S_03="" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" S_03="" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" S_03="" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" S_03="" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" S_03="" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" S_03="" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" S_03="" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Ana" S_01="Rea" />
+        <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
+      </d_posRevues>
+      <d_seuilEval F_C="0.0" F_S="0.0" />
+      <d_taches />
+    </Projet_PRJ1>
+    <Projet_PRJ2 B_tachesOnce="False" I_duree="48" I_maxEleves="5" I_maxGroupes="3" I_minEleves="3" S_code="PRJ2" S_ficheValid="" S_intitule="Projet de terminale">
+      <d_attributs>
+        <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="L’intitulé du projet se résume à son **nom**, celui-ci doit permettre une identification rapide et dans la mesure du possible être accrocheur.----_À titre d’exemples, parmi les projets de la session 2016, nous avons eu : Travelling 100 m low cost, Ballon captif pour mesures expérimentales._" />
+        <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="L’expression du besoin par la **méthode APTE** doit permettre de répondre aux questions suivantes :----* **à qui** (**à quoi**) le produit rend-il service ?--* **sur qui** (sur quoi) le produit agit-il ?--* **dans quel but** le produit existe-t-il ?----Nous pouvons également nous appuyer sur la **démarche d’ingénierie système** en exprimant le besoin initial et le complétant par les questions suivantes :----* pourquoi veut-on faire le système ? Cela spécifie la **finalité** ;--* qui est concerné / impacté ? Cela spécifie les **parties prenantes** et en particulier le client ;--* quelles sont les frontières du système ? Cela spécifie le **contexte** du projet et peut pour partie répondre à « l’origine de la proposition » ;--* comment cela s'envisage-t-il ? Cela spécifie les **cas d’utilisation**." />
+        <l_ORI S_00="Origine" S_01="Partenariat, thématique, concours…" S_02="" S_03="L’origine de la proposition permet d’identifier le **client** (donneur d’ordre) ou le **contexte** ayant permis de faire émerger le projet.----À titre d’exemples :----* _« Les professeurs d’éducation physique et sportive souhaitent, dans le cadre de l’entrainement des élèves de S-SI de la section sport-étude, analyser les départs des sprinters de 100 m. Cette analyse doit être réalisée à partir de vidéo de l’athlète sans modification de l’angle de prise de vue. »_--* _« Les professeurs de technologie et sciences physiques du collège Jules Ferry souhaitent pouvoir mettre en évidence par une expérience l’influence de l’altitude sur la pression. L’utilisation d’un ballon captif est demandée »_" />
+        <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="Nous pouvons distinguer deux types de contraintes :----* celles liées aux **moyens matériels, logiciels et financiers** de l’établissement. *Il peut par exemple être imposé pour le prototypage de la commande d’un système d’utiliser des cartes Arduino si celles-ci sont déjà présentes dans l’établissement.*----   Ces indications doivent obligatoirement être présentes sur la fiche de validation ;--* celles liées aux **cahiers des charges** et aux **performances attendues** par le client.----Les contraintes liées aux cahiers des charges peuvent être déduites à l’aide de la **méthode APTE** en s’appuyant sur les **fonctions de service**, les **critères de performance**, les **niveaux** visés et la flexibilité. Il est donc impératif de faire apparaitre les fonctions attendues du système et les indicateurs associés.----L’utilisation de l’**ingénierie système** permet également de renseigner correctement cet item. Les questions suivantes sont posées :----* quels services sont attendus ? Cela spécifie les **limites** et les **critères** de performances attendus pour chacun des scénarios ;--* quels sont mes besoins pour répondre à tout cela ? Cela spécifie les **besoins** et en particulier celui de toutes les parties prenantes (élèves)." />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="La **production finale attendue** décrite dans la fiche de validation constitue un minimum, les productions fournies par les élèves peuvent (et cela est souhaitable) aller au-delà de ce minimum.----Des sous-ensembles fonctionnels d’un prototype et éléments d’une maquette réelle ou virtuelle peuvent être demandés, mais dans l’objectif de réaliser une mesure d’écart. Il ne s’agit en aucun cas d’effectuer un démonstrateur de solutions technologiques (cela n’est pas évalué dans le cadre du baccalauréat S-SI)." />
+        <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Découpage du projet" S_01="Cette partie est complétée si le projet confié au groupe ne représente qu’une partie détaillée dans l’énoncé général du besoin." S_02="" S_03="###Intitulés des différentes parties--Cette partie est complétée si le projet confié au groupe ne représente qu’une partie détaillée dans l’énoncé général du besoin.--###Enoncés du besoin des différentes parties du projet--Cette partie est dédiée aux projets qui mettent en relation plusieurs équipes (ou groupes) d’élèves, elle reprend les points énoncés ci-dessus." />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Description détaillées des tâches" S_01="" S_02="" S_03="" />
+        <l_ S_00="" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_NON>
+            <l_00 S_00="Conduite de projet" S_02="">
+              <l_01 I_00="5" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="2" I_02="1" />
+            </l_00>
+          </l_Prof>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
+          <l_EtabPrf>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="3" I_02="1" />
+            </l_00>
+          </l_EtabPrf>
+        </d_C>
+        <d_S>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_S S_00="Grille-présentation du projet-S-SI.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties S_00="C" S_01="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="7" I_01="10" />
       <d_phases>
         <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" S_03="" />
@@ -6718,9 +7289,9 @@
         <l__02 S_00="Ana" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
       </d_posRevues>
-      <d_seuilEval />
+      <d_seuilEval F_C="0.0" F_S="0.0" />
       <d_taches />
-    </Projet_PRJ>
+    </Projet_PRJ2>
   </d_projets>
   <d_seances>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
