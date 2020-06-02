@@ -125,7 +125,7 @@ class Lien():
             <pathref> = chemin de l'application pour déterminer le chemin absolu
         """
         t = self.getTexte()
-#         print "Afficher", self.type, self.path
+        print("Afficher", self.type, self.path)
         path = self.GetAbsPath(pathref)
 #         print "   ", path
 #         print "   ", path.decode("unicode-escape")

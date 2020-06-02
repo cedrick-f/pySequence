@@ -110,7 +110,7 @@ from pathvalidate import sanitize_filepath
 from widgets import Variable, VAR_REEL_POS, VAR_ENTIER_POS, sublist, \
                     messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, XMLelem, \
-                    Grammaire, et2ou, img2str, str2img, safeParse, b64,\
+                    Grammaire, et2ou, img2str, str2img, img2b64, safeParse, b64,\
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
                     tronquer, getHoraireTxt, scaleImage, locale2def, locale2EN#, chronometrer
                     
@@ -581,7 +581,43 @@ class ElementAvecLien():
         
         
 
+    ######################################################################################  
+    def GetBulleHTMLLien(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        if css:
+            t = Template(constantes.TEMPLATE_LIEN_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_LIEN)
+        
+        if self.lien.type == 'u':
+            icone = images.Icone_web
+        elif self.lien.type == 'd':
+            icone = images.Icone_folder
+        elif self.lien.type == 'd':
+            icone = images.Icone_fichier
+        else:
+            icone = None
+            
+        if icone is not None:   
+            if css:
+                icone = b64(icone.GetData())
+            else:
+                icone = tip.GetImgURL(scaleImage(icone.GetBitmap(), 20*SSCALE))
 
+        
+        html = t.render(lien = self.lien,
+                        label = self.lien.getNomFichier(),
+                        icone = icone)
+        
+        return html
+    
+    
+    
+    
 
 #########################################################################################
 def GetObjectFromClipBoard(instance):
@@ -769,7 +805,10 @@ class ElementBase(Grammaire):
             
 #            self.tip.SetRichTexte()
 
-
+    ######################################################################################  
+    def getIdHTML(self, i):
+        return self.GetCode(i).replace('.', '_').replace(' ', '_')
+    
     
     ######################################################################################  
     def EnrichiHTML(self, doc, seance = False):
@@ -784,9 +823,10 @@ class ElementBase(Grammaire):
         for i, (p, f, c) in enumerate(self.cadre):
             div = doc.new_tag('div')
             div['class'] = "mouse tooltip"
-            div['id'] = self.GetCode(i).replace('.', '_').replace(' ', '_')
-            bulle = BeautifulSoup(self.GetBulleHTML(f, css = True), "html5lib").body
-            div.extend(bulle.findChildren())
+            div['id'] = self.getIdHTML(i)
+            bulle = BeautifulSoup(self.GetBulleHTML(f, css = True), "html5lib")#.body
+#             div.extend(bulle.findChildren())
+            div.append(bulle)
 #             div.append(bulle)
             
 #             c = bulle.body
@@ -798,8 +838,9 @@ class ElementBase(Grammaire):
             
             doc.body.insert(0, div)
             
+            # Le "path" SVG :
             p['class'] = "sensible"
-            p['id'] = self.GetCode(i).replace('.', '_').replace(' ', '_')
+            p['id'] = self.getIdHTML(i)
             p['x'] = c[0]
             p['y'] = c[1]
         
@@ -958,8 +999,8 @@ class ElementBase(Grammaire):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
-#         print("GetBulleHTML", self, i)
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        print("GetBulleHTML", self, i)
         return  ""
     
     
@@ -1021,6 +1062,18 @@ class ElementBase(Grammaire):
         else:
             return self.createTip()
         
+        
+    ######################################################################################  
+    def SetTip(self):
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
+        html = self.GetBulleHTML(tip = tip)
+        tip.SetHTML(html)
+        tip.SetPage()
+        return tip
+    
     
     ######################################################################################  
     def createTip(self):
@@ -1028,6 +1081,22 @@ class ElementBase(Grammaire):
         fen = self.GetApp()
         if fen is not None:
             return fen.createTip(self.GetCodeTip(), "", width = self.tipWidth)
+    
+    
+    ######################################################################################  
+    def getImageSrc(self, css, tip = None, width = 100):
+        """
+        """
+        if hasattr(self, 'image'):
+            if self.image is not None:
+                if css:
+                    image = img2b64(self.image.ConvertToImage())
+                else:
+                    image = tip.GetImgURL(scaleImage(self.image, width))
+            else:
+                image = None
+                
+        return image
     
     
     ######################################################################################  
@@ -3852,7 +3921,7 @@ class Sequence(BaseDoc, Grammaire):
 
 
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
@@ -3880,7 +3949,7 @@ class Sequence(BaseDoc, Grammaire):
                     image = None
                 
             else:
-                image = self.tip.GetImgURL(image, width = 200)
+                image = tip.GetImgURL(image, width = 200)
             
 
             html = t.render(titre = "Découpage de la classe",
@@ -5428,7 +5497,8 @@ class Projet(BaseDoc, Grammaire):
                                         image = self.arbre.images["Prj"])
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
-            
+        ref = self.GetReferentiel()
+        
         #
         # Le support
         #
@@ -5445,7 +5515,7 @@ class Projet(BaseDoc, Grammaire):
         # Les élèves
         #
 #         print(self.GetReferentiel().labels["ELEVES"][2])
-        self.brancheElv = arbre.AppendItem(self.branche, self.GetReferentiel().getLabel("ELEVES").Plur_(), 
+        self.brancheElv = arbre.AppendItem(self.branche, ref.getLabel("ELEVES").Plur_(), 
                                            data = "Ele",
                                            image = self.arbre.images["Grp"])
         for e in self.eleves:
@@ -5454,7 +5524,7 @@ class Projet(BaseDoc, Grammaire):
         #
         # Les fonctions de service
         #
-        self.brancheFS = arbre.AppendItem(self.branche, self.GetReferentiel().getLabel("EXIG").Plur_(), 
+        self.brancheFS = arbre.AppendItem(self.branche, ref.getLabel("EXIG").Plur_(), 
                                            data = "FS",
                                            image = self.arbre.images["FS"])
         for e in self.fct_serv:
@@ -5471,7 +5541,7 @@ class Projet(BaseDoc, Grammaire):
         #
         # Les tâches
         #
-        self.brancheTac = arbre.AppendItem(self.branche, self.GetReferentiel()._nomTaches.Plur_(), #Titres[8], 
+        self.brancheTac = arbre.AppendItem(self.branche, ref._nomTaches.Plur_(), #Titres[8], 
                                            data = "Tac",
                                            image = self.arbre.images["Tac"])
         for t in self.taches:
@@ -6115,7 +6185,44 @@ class Projet(BaseDoc, Grammaire):
         return enregistrer_root(root, nomFichier, dialog = dialog)
 #                        
 
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+            :i:  code pour différentier ...
+        """
+#         print("GetBulleHTML Seq", self, i)
+#         ref = self.GetReferentiel()
+        
+        
+        if i == "Eff":
+            if css:
+                t = Template(constantes.TEMPLATE_EFF_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_EFF)
+            
+            image = draw_cairo_seq.Sequence(self).getBase64PNG(larg = 400)
+       
+#             image = draw_cairo.getBase64PNG(draw_cairo.getBitmapClasse(400, 200, self.GetClasse()))
+#             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
+            if css:
+                if image is not None:
+                    image = b64(image)
+                else:
+                    image = None
+                
+            else:
+                image = tip.GetImgURL(image, width = 200)
+            
 
+            html = t.render(titre = "Découpage de la classe",
+                            image = image,
+                            )
+    
+            return html
+        return  ""
 
         
 
@@ -7755,7 +7862,7 @@ class Progression(BaseDoc, Grammaire):
 
 
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
@@ -7876,7 +7983,7 @@ class Progression(BaseDoc, Grammaire):
                     image = None
                 
             else:
-                image = self.tip.GetImgURL(image, width = 200)
+                image = tip.GetImgURL(image, width = 200)
             
             
             html = t.render(titre = "Calendrier de la formation",
@@ -8097,7 +8204,7 @@ class ElementProgression():
                                                 ])
     
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
@@ -8135,7 +8242,7 @@ class ElementProgression():
                     image = None
                 
             else:
-                image = self.tip.GetImgURL(image, width = 200)
+                image = tip.GetImgURL(image, width = 200)
             
             
             html = t.render(titre = self.Sing_(),
@@ -8839,7 +8946,7 @@ class CentreInteret(ElementBase):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
 #         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         
@@ -8868,6 +8975,7 @@ class CentreInteret(ElementBase):
             t = Template(constantes.TEMPLATE_CI_CSS)
         else:
             t = Template(constantes.TEMPLATE_CI)
+        
         html = t.render(titre = titre,
                         lst_CI = lst_CI,
                         lst_pb = lst_pb,
@@ -9376,7 +9484,7 @@ class Competences(ElementBase):
         return t
     
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
 #         print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         if css:
@@ -9730,7 +9838,7 @@ class Savoirs(ElementBase):
     
     
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
 #         print("GetBulleHTML", self, i)
 #         ref = self.GetReferentiel()
         if css:
@@ -9811,7 +9919,7 @@ class Seance(ElementAvecLien, ElementBase):
         
         self.parent = parent
         ElementAvecLien.__init__(self)
-        ElementBase.__init__(self, tipWidth = 800*SSCALE)
+        ElementBase.__init__(self, tipWidth = 600*SSCALE)
         
         
         ref = self.GetReferentiel()
@@ -11016,14 +11124,14 @@ class Seance(ElementAvecLien, ElementBase):
 
 
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SEANCE
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.BASE_FICHE_HTML_SEANCE
 #         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEANCE)
 
 
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
@@ -11039,12 +11147,12 @@ class Seance(ElementAvecLien, ElementBase):
             t = Template(constantes.TEMPLATE_SEANCE)
         
         lst_dem = []
-        if self.typeSeance in ref.activites.keys():
+        if self.typeSeance in ref.activites:
             for d in self.demarche.split():
                 if css:
                     icon_dem = b64(constantes.imagesDemarches[d].GetData())
                 else:
-                    icon_dem = self.GetTip().GetImgURL(constantes.imagesDemarches[d].GetBitmap(), width = 60*SSCALE)
+                    icon_dem = tip.GetImgURL(constantes.imagesDemarches[d].GetBitmap(), width = 60*SSCALE)
                 lst_dem.append((icon_dem,
                                 ref.demarches[d][1])
                               )
@@ -11058,18 +11166,15 @@ class Seance(ElementAvecLien, ElementBase):
     
         
         
+        image = self.getImageSrc(css, tip, 100)
+                    
         
         if css:
             icon_type = b64(constantes.imagesSeance[self.typeSeance].GetData())
-            if self.image is not None:
-                image = b64(self.image.GetData())
-            else:
-                image = None
-            
         else:
-            icon_type = self.GetTip().GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap())
-            image = self.GetTip().GetImgURL(self.image, width = 200)
-            
+            icon_type = tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap())
+                  
+                
 #         print(lst_ensSpe)    
 #         print("   self.compVisees", self.compVisees)
         lstCompVisees = []
@@ -11111,7 +11216,7 @@ class Seance(ElementAvecLien, ElementBase):
                         effectif = self.GetDocument().classe.GetStrEffectifComplet(self.effectif),
                         coul_eff = couleur.GetCouleurHTML(ref.effectifs[self.effectif][3]),
                         decription = XMLtoHTML(self.description),
-                        lien = self.lien,
+                        lien = self.GetBulleHTMLLien(css = css),
                         nom_du_activite = ref._nomActivites.du_(),
                         compVisees = lstCompVisees,
                         nomCompVisees = comp.GetNomGenerique(),
@@ -11161,18 +11266,18 @@ class Seance(ElementAvecLien, ElementBase):
         return t#.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
     
-    ######################################################################################  
-    def SetTip(self):
-        """ Construction du toolTip (format HTMLwindow)
-            qui apparait dans pySéquence
-        """
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetBulleHTML())
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         """ Construction du toolTip (format HTMLwindow)
+#             qui apparait dans pySéquence
+#         """
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetBulleHTML())
+#         tip.SetPage()
+#         return tip
     
     
     
@@ -11737,7 +11842,7 @@ class Tache(ElementAvecLien, ElementBase):
         
         brancheElv = branche.find("ImplicationEleves")
         impEleves = []
-        if brancheElv != None: ## cas pour Version <= 7.1.12
+        if brancheElv is not None: ## cas pour Version <= 7.1.12
             prj = self.GetDocument()
             for i, e in enumerate(brancheElv.keys()):
                 if i < len(prj.eleves) + len(prj.groupes):
@@ -11940,20 +12045,6 @@ class Tache(ElementAvecLien, ElementBase):
 #            self.panelPropriete.MiseAJourPoidsCompetences()
         
         return err
-
-    ######################################################################################  
-    def GetPtCaract(self): 
-        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
-        """
-        lst = []
-        if hasattr(self, 'pts_caract' ):
-            for i, pt in enumerate(self.pts_caract):
-                lst.append((pt, self, i))
-                
-        self.cadre = []
-        
-        return lst
     
     
     ######################################################################################  
@@ -12093,7 +12184,7 @@ class Tache(ElementAvecLien, ElementBase):
         
         if self.phase != "":
             if self.phase in TOUTES_REVUES_EVAL_SOUT:
-                self.code = self.phase
+                self.code = "_"+self.phase
             elif prj is not None:
                 self.code = prj.phases[self.phase][2]+num     #constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
             else:
@@ -12364,9 +12455,9 @@ class Tache(ElementAvecLien, ElementBase):
        
         
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_TACHE)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_TACHE)
     
     
     ######################################################################################  
@@ -12378,30 +12469,20 @@ class Tache(ElementAvecLien, ElementBase):
         return ""
     
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
             
         """
-        # A FAIRE !!
-        return ""
-    
-    
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetFicheHTML())
-        
         prj = self.GetProjetRef()
+        
         
         if self.phase in TOUTES_REVUES_SOUT and prj is not None:
             titre = prj.phases[self.phase][1]
-            texte = draw_cairo.getHoraireTxt(self.GetDelai())
-
+            delai = draw_cairo.getHoraireTxt(self.GetDelai())
+            phase = None
+            duree = None
         else:
             if self.estPredeterminee():
                 p = self.intitule
@@ -12410,47 +12491,146 @@ class Tache(ElementAvecLien, ElementBase):
                     
             titre = "Tâche "+ p
             if self.phase != "" and prj is not None:
-                t = prj.phases[self.phase][1]
+                phase = prj.phases[self.phase][1]
             else:
-                t = ""
-            texte = t
+                phase = ""
+            delai = None
+            duree = getHoraireTxt(self.GetDuree())
 
-        tip.SetWholeText("titre", titre, fcoul=self.GetCoul())
         
         # Phase
-        if self.phase != "":
-            tip.AjouterImg("icon", scaleImage(constantes.imagesTaches[self.phase].GetBitmap(),50,50))
-            
+        if phase != "":
+            img = constantes.imagesTaches[self.phase]
+            if css:
+                icon_phase = b64(img.GetData())
+            else:
+                icon_phase = tip.GetImgURL(scaleImage(img.GetBitmap(), 60))
         else:
-            tip.Supprime('icon')
-        tip.SetWholeText("txt", texte, italic = True, size = 3)
+            icon_phase = None
+        
         
         # Icône
         if self.icone is not None:
-            tip.AjouterImg("icon2", self.icone, width = 64)
+            if css:
+                icon = img2b64(self.icone.ConvertToImage())
+            else:
+                icon = tip.GetImgURL(scaleImage(self.icone, 64))
         else:
-            tip.Supprime('icon2')
-            
+            icon = None
+        
+        
+        # Image
+        image = self.getImageSrc(css, tip, 100)
+        
+        
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
                 if self.estPredeterminee():
-                    t = textwrap.fill(self.GetProjetRef().taches[self.intitule][1], 50)
-                    t = self.GetProjetRef().taches[self.intitule][1]
+                    intitule = prj.taches[self.intitule][1]
                 else:
-                    t = self.intitule
+                    intitule = self.intitule
             else:
-                t = ""
-            tip.AjouterTxt("int", t, size = 4)
-        
-        if hasattr(self, 'description'):
-            tip.AjouterHTML("des", XMLtoHTML(self.description))    
+                intitule = None
         else:
-            tip.Supprime('ldes')
+            intitule = None    
+
+
+        if hasattr(self, 'description'):
+            description = self.description
+        else:
+            description = None
         
-        tip.AjouterLien('lien', self.lien, self)
+        if css:
+            t = Template(constantes.TEMPLATE_TACHE_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_TACHE)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        titre = titre,
+                        phase = phase,
+                        coul_phase = self.GetCoul(),
+                        icon_phase = icon_phase,
+                        icon = icon,
+                        image = image,
+                        delai = delai, 
+                        intitule = intitule,
+                        nom_tache = self.du_(),
+                        duree = duree,
+                        decription = XMLtoHTML(description),
+                        lien = self.GetBulleHTMLLien(css = css),
+                        )
+    
+
+        return html
+    
+    
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         tip.SetHTML(self.GetBulleHTML(tip = tip))
+#         tip.SetPage()
+#         return tip
         
-        tip.SetPage()
-        return tip
+#         tip.SetHTML(self.GetFicheHTML())
+#         
+#         prj = self.GetProjetRef()
+#         
+#         if self.phase in TOUTES_REVUES_SOUT and prj is not None:
+#             titre = prj.phases[self.phase][1]
+#             texte = draw_cairo.getHoraireTxt(self.GetDelai())
+# 
+#         else:
+#             if self.estPredeterminee():
+#                 p = self.intitule
+#             else:
+#                 p = self.code
+#                     
+#             titre = "Tâche "+ p
+#             if self.phase != "" and prj is not None:
+#                 t = prj.phases[self.phase][1]
+#             else:
+#                 t = ""
+#             texte = t
+# 
+#         tip.SetWholeText("titre", titre, fcoul=self.GetCoul())
+#         
+#         # Phase
+#         if self.phase != "":
+#             tip.AjouterImg("icon", scaleImage(constantes.imagesTaches[self.phase].GetBitmap(),50,50))
+#             
+#         else:
+#             tip.Supprime('icon')
+#         tip.SetWholeText("txt", texte, italic = True, size = 3)
+#         
+#         # Icône
+#         if self.icone is not None:
+#             tip.AjouterImg("icon2", self.icone, width = 64)
+#         else:
+#             tip.Supprime('icon2')
+#             
+#         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
+#             if self.intitule != "":
+#                 if self.estPredeterminee():
+#                     t = textwrap.fill(self.GetProjetRef().taches[self.intitule][1], 50)
+#                     t = self.GetProjetRef().taches[self.intitule][1]
+#                 else:
+#                     t = self.intitule
+#             else:
+#                 t = ""
+#             tip.AjouterTxt("int", t, size = 4)
+#         
+#         if hasattr(self, 'description'):
+#             tip.AjouterHTML("des", XMLtoHTML(self.description))    
+#         else:
+#             tip.Supprime('ldes')
+#         
+#         tip.AjouterLien('lien', self.lien, self)
+#         
+#         tip.SetPage()
+#         return tip
         
         
         
@@ -12694,26 +12874,71 @@ class Systeme(ElementAvecLien, ElementBase):
         ref = self.GetReferentiel()
         self.SetNomCode(ref.nomSystemes)
         
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SYSTEME)
+    
     ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SYSTEME)
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        # Image
+        image = self.getImageSrc(css, tip, 100)
+ 
+        
+        if hasattr(self, 'description'):
+            description = self.description
+        else:
+            description = None
+        
+        # Icône
+        if css:
+            icon_type = img2b64(constantes.imagesSystemes[self.typ].GetData())
+        else:
+            icon_type = tip.GetImgURL(scaleImage(constantes.imagesSystemes[self.typ].GetBitmap(), 64))
+
+        
+        
+        
+        if css:
+            t = Template(constantes.TEMPLATE_SYS_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_SYS)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        nom = self.nom,
+                        nbr = str(self.nbrDispo.v[0]),
+                        typ = self.GetReferentiel().systemes[self.typ][1],
+                        icon_type = icon_type,
+                        image = image,
+                        nom_sys = self.du_(),
+                        decription = XMLtoHTML(description),
+                        lien = self.GetBulleHTMLLien(css = css),
+                        )
+    
+
+        return html
     
     
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetFicheHTML())
-        
-        tip.SetWholeText("nom", self.nom)
-        tip.SetWholeText("nbr", "Nombre disponible : " + str(self.nbrDispo.v[0]))
-        
-        tip.AjouterImg("img", self.image) 
-        
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetFicheHTML())
+#         
+#         tip.SetWholeText("nom", self.nom)
+#         tip.SetWholeText("nbr", "Nombre disponible : " + str(self.nbrDispo.v[0]))
+#         
+#         tip.AjouterImg("img", self.image) 
+#         
+#         tip.SetPage()
+#         return tip
                
                
                
@@ -12947,9 +13172,9 @@ class Support(ElementAvecLien, ElementBase):
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Support(parent, self)
     
-    ######################################################################################  
-    def __repr__(self):
-        return self.nom
+#     ######################################################################################  
+#     def __repr__(self):
+#         return self.nom
         
     ######################################################################################  
     def getBranche(self):
@@ -12990,20 +13215,6 @@ class Support(ElementAvecLien, ElementBase):
                 self.modeles.append(m)
             
         return Ok
-    
-    ######################################################################################  
-    def GetPtCaract(self): 
-        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
-        """
-        lst = []
-        if hasattr(self, 'pts_caract' ):
-            for i, pt in enumerate(self.pts_caract):
-                lst.append((pt, self, i))
-                
-        self.cadre = []
-        
-        return lst
     
     
     ######################################################################################  
@@ -13141,37 +13352,77 @@ class Support(ElementAvecLien, ElementBase):
 #             
             
             
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SUPPORT)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SUPPORT)
 
-    
+
     ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetFicheHTML())
-        
-        tip.SetWholeText("tit", self.Sing_())
-        
-        tip.SetWholeText("nom", self.nom, size=5)
-        tip.AjouterHTML("des", XMLtoHTML(self.description))      
-        if self.image is not None:
-            tip.AjouterImg("img", self.image, width = 300)
-        else:
-            tip.Supprime('img')
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
             
+        """
+        # Image
+        image = self.getImageSrc(css, tip, 100)
+ 
         
-        if len(self.modeles) == 0:
-            tip.Supprime("mod")
+        if hasattr(self, 'description'):
+            description = self.description
+        else:
+            description = None
+        
+        lst_modeles = []
         for m in self.modeles:
-            m.SetTip()
-            tip.InsererSoup("mod", m.tip.soup)
+            lst_modeles.append(m.GetBulleHTML(css = css, tip = tip))
         
-        tip.SetPage()
-        return tip
+        
+        if css:
+            t = Template(constantes.TEMPLATE_SUPPORT_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_SUPPORT)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        nom = self.nom,
+                        lst_modeles = lst_modeles,
+                        image = image,
+                        nom_sup = self.du_(),
+                        decription = XMLtoHTML(description),
+                        lien = self.GetBulleHTMLLien(css = css),
+                        )
+    
+
+        return html
+    
+    
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetFicheHTML())
+#         
+#         tip.SetWholeText("tit", self.Sing_())
+#         
+#         tip.SetWholeText("nom", self.nom, size=5)
+#         tip.AjouterHTML("des", XMLtoHTML(self.description))      
+#         if self.image is not None:
+#             tip.AjouterImg("img", self.image, width = 300)
+#         else:
+#             tip.Supprime('img')
+#             
+#         
+#         if len(self.modeles) == 0:
+#             tip.Supprime("mod")
+#         for m in self.modeles:
+#             m.SetTip()
+#             tip.InsererSoup("mod", m.tip.soup)
+#         
+#         tip.SetPage()
+#         return tip
 
 
 
@@ -13242,7 +13493,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
     
     ######################################################################################  
     def GetLogosLogiciels(self):
-        return {l : constantes.IMG_LOGICIELS[l].GetBitmap() for l in self.logiciels if l in constantes.IMG_LOGICIELS.keys()}
+        return {l : constantes.IMG_LOGICIELS[l].GetBitmap() for l in self.logiciels if l in constantes.IMG_LOGICIELS}
     
     
     ######################################################################################  
@@ -13266,6 +13517,29 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
         self.getBrancheImage(root)
 
         return root
+    
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+        Ok = True
+        self.id  = eval(branche.get("Id", "0"))
+        self.intitule  = branche.get("Intitule", "")
+        self.description = branche.get("Description", None)
+
+        brancheLog = branche.find("Logiciels")
+        self.logiciels = []
+        if brancheLog is not None:
+#             print(brancheLog)
+            for i, l in enumerate(brancheLog.keys()):
+#                 print("  ", i)
+                self.logiciels.append(brancheLog.get("Log"+str(i)))
+#         print self.id, self.logiciels
+#         print("logiciels", self.logiciels)
+        Ok = Ok and self.lien.setBranche(branche, self.GetPath())
+
+        Ok = Ok and self.setBrancheImage(branche)
+        return Ok
+    
     
     ######################################################################################  
     def SetNom(self, nom):
@@ -13309,24 +13583,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
             self.arbre.SetItemImage(self.branche, self.GetIcone())
             
             
-    ######################################################################################  
-    def setBranche(self, branche):
-        Ok = True
-        self.id  = eval(branche.get("Id", "0"))
-        self.intitule  = branche.get("Intitule", "")
-        self.description = branche.get("Description", None)
-
-        brancheLog = branche.find("Logiciels")
-        self.logiciels = []
-        if brancheLog is not None:
-            for i in range(len(brancheLog)):
-                self.logiciels.append(brancheLog.get("Log"+str(i)))
-#         print self.id, self.logiciels
-        
-        Ok = Ok and self.lien.setBranche(branche, self.GetPath())
-
-        Ok = Ok and self.setBrancheImage(branche)
-        return Ok
+    
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -13365,34 +13622,81 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
         
         self.SetCode()
         
-    
     ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_MODELE
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        # Image
+        image = self.getImageSrc(css, tip, 300)
+ 
+        
+        if hasattr(self, 'description'):
+            description = self.description
+        else:
+            description = None
+        
+        # Logiciels
+        lst_log = []
+        logos = self.GetLogosLogiciels()
+        for l in self.logiciels:
+            if l in logos:
+                if css:
+                    i = img2b64(logos[l].ConvertToImage())
+                else:
+                    i = tip.GetImgURL(scaleImage(logos[l], 20))
+            else:
+                i = None
+            lst_log.append((l, i))
+        
+        if css:
+            t = Template(constantes.TEMPLATE_MODELE_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_MODELE)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        intitule = self.intitule,
+                        lst_log = lst_log, 
+                        image = image,
+                        nom_mod = self.du_(),
+                        decription = XMLtoHTML(description),
+                        lien = self.GetBulleHTMLLien(css = css, tip = tip),
+                        )
+    
+
+        return html
+    
+    
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.BASE_FICHE_HTML_MODELE
 
     
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-#         print "SetTip", self
-        tip.SetHTML(self.GetFicheHTML(), "html.parser")
-        
-        
-        
-        tip.SetWholeText("int", self.intitule, size=4)
-        tip.AjouterHTML("des", XMLtoHTML(self.description))      
-        if self.image is not None:
-            tip.AjouterImg("img", self.image, width = 200)
-        else:
-            tip.Supprime('img')
-            
-        tip.AjouterListe("log", self.GetArbreLogiciels())
-        
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+# #         print "SetTip", self
+#         tip.SetHTML(self.GetFicheHTML(), "html.parser")
+#         
+#         
+#         
+#         tip.SetWholeText("int", self.intitule, size=4)
+#         tip.AjouterHTML("des", XMLtoHTML(self.description))      
+#         if self.image is not None:
+#             tip.AjouterImg("img", self.image, width = 200)
+#         else:
+#             tip.Supprime('img')
+#             
+#         tip.AjouterListe("log", self.GetArbreLogiciels())
+#         
+#         tip.SetPage()
+#         return tip
         
         
 ####################################################################################
@@ -13520,19 +13824,7 @@ class Personne(ElementBase):
                 
         return Ok
 
-    ######################################################################################  
-    def GetPtCaract(self): 
-        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
-        """
-        lst = []
-        if hasattr(self, 'pts_caract' ):
-            for i, pt in enumerate(self.pts_caract):
-                lst.append((pt, self, i))
-                
-        self.cadre = []
-        
-        return lst
+    
     
     ######################################################################################  
     def GetNom(self):

@@ -3503,7 +3503,7 @@ class Zone_sens():
     def getWidth(self):
 #         print("getWidth", self.param, self.obj)
         if self.obj is not None:
-            return 500
+            return 600
                         
         elif self.param is not None:
             if len(self.param) >= 3 and self.param[:3] == "POS" :

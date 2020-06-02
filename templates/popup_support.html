@@ -1,0 +1,50 @@
+﻿<table width="100%">
+	<tbody>
+	<tr>
+		<td valign="top" align="left"><font size="4"><b><h1>{{ nom }}</h1></b></font></td>
+	</tr>
+	</tbody>
+</table>
+
+<table bgcolor="#DDD" border="0" width="100%">
+	<tbody>
+	{% if decription is not none %}
+	<tr  align="left">
+		<td colspan="2" valign="top" >
+			<b>Description détaillée {{ nom_sup }}</b>
+		</td>
+	</tr>
+	<tr valign="top"  align="left">
+		<td colspan="{% if image is none %}2{% else %}1{% endif %}">
+			{{ decription }}
+		</td>
+		{% if image is not none %}
+		<td>
+		<img src="{{ image }}" alt=" ">
+		</td>
+		{% endif %}
+	</tr>
+	{% endif %}
+	<tr>
+		<td colspan="2">
+		{{ lien }}
+		</td>
+	</tr>
+	</tbody>
+</table>
+
+<br/>
+{% if lst_modeles|length > 0 %}
+<table bgcolor="#BBE" width="100%">
+	<tr valign="top" align="left" >
+		<th><b>Modèles numériques :</b></th>
+	</tr>
+	{% for m in lst_modeles %}
+	<tr><td>
+		{{ m }}
+	</td></tr>
+	{% endfor %}
+</table>
+{% endif %}
+
+

@@ -983,38 +983,38 @@ BASE_FICHE_HTML_CLASSE = """
     
 """
 
-BASE_FICHE_HTML_SEANCE = """
-<font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
-    <table border="0" width="500">
-        <tbody>
-        <tr valign="top">
-            <td><img id="icon" src="" alt=" "></td>
-            <td><p id="txt"> </p></td>
-            <td rowspan="2"><img id="icon2" src="" alt=" "></td>
-            <td><p id="dem"> </p></td>
-        </tr>
-        
-        <tr>
-            <td colspan=4><p id="dur">Durée : </p><p id="eff">Effectif : </p></td>
-        </tr>
-        
-        <tr align="left" valign="top">
-            <td><p id="int"> </p></td>
-            <td><img id="img" src="" alt=" "></td>
-        </tr>
-        
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=4>
-                <b>Description détaillée de la séance</b>
-                <span id="des"> </span>
-            </td>
-        </tr>
-        
-        </tbody>
-    </table>
-    <center id="lien">
-    </center>
-"""
+# BASE_FICHE_HTML_SEANCE = """
+# <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
+#     <table border="0" width="500">
+#         <tbody>
+#         <tr valign="top">
+#             <td><img id="icon" src="" alt=" "></td>
+#             <td><p id="txt"> </p></td>
+#             <td rowspan="2"><img id="icon2" src="" alt=" "></td>
+#             <td><p id="dem"> </p></td>
+#         </tr>
+#         
+#         <tr>
+#             <td colspan=4><p id="dur">Durée : </p><p id="eff">Effectif : </p></td>
+#         </tr>
+#         
+#         <tr align="left" valign="top">
+#             <td><p id="int"> </p></td>
+#             <td><img id="img" src="" alt=" "></td>
+#         </tr>
+#         
+#         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+#             <td colspan=4>
+#                 <b>Description détaillée de la séance</b>
+#                 <span id="des"> </span>
+#             </td>
+#         </tr>
+#         
+#         </tbody>
+#     </table>
+#     <center id="lien">
+#     </center>
+# """
 
 
 TEMPLATE_SEANCE = ""
@@ -1244,55 +1244,55 @@ BASE_FICHE_HTML_SAV = """
     </dl> 
 """
 
-BASE_FICHE_HTML_SYSTEME = """
-    <p style="color:blue;text-align: left;font-size: 8">Système</p>
-    <p id="nom">_</p>
-    <p id="nbr">_</p>
-    <img id="img">
-
-"""
-
-
-BASE_FICHE_HTML_SUPPORT = BASE_FICHE_HTML_TITRE + """
-    <table border="0" width="100%">
-        <tr valign="top">
-            <td id="nom" align="left"> </td>
-        </tr>
-    </table>
-    
-    <table border="0" width="100%">
-        <tbody>
-        <tr  valign="top">
-            <td align="left" valign="top" width="300"><div id="des"> </div></td>
-            <td alig="right" valign="top"><img id="img" src=" " alt=" " width="300"></td>
-        </tr>
-        
-        </tbody>
-    </table>
-    
-    <table border="0" width = "100%">
-        <tbody id = "mod">
-            <tr align="left" valign="top">
-                <td colspan = "2"><h3 style="text-decoration: underline;">Modèles :</h3></td>
-            </tr>
-        </tbody>
-    </table>
-
-"""
+# BASE_FICHE_HTML_SYSTEME = """
+#     <p style="color:blue;text-align: left;font-size: 8">Système</p>
+#     <p id="nom">_</p>
+#     <p id="nbr">_</p>
+#     <img id="img">
+# 
+# """
 
 
-BASE_FICHE_HTML_MODELE = """
-        <tr  valign="top">
-            <td id = "int" align="left"></td>
-            <td rowspan = "3" alig="right" valign="top"><img id="img" src=" " alt=" "></td>
-        </tr>
-        <tr align="left">
-            <td id = "des" valign="top"></td>
-        </tr>
-        <tr align="left">
-            <td id = "log" valign="top"></td>
-        </tr>
-"""
+# BASE_FICHE_HTML_SUPPORT = BASE_FICHE_HTML_TITRE + """
+#     <table border="0" width="100%">
+#         <tr valign="top">
+#             <td id="nom" align="left"> </td>
+#         </tr>
+#     </table>
+#     
+#     <table border="0" width="100%">
+#         <tbody>
+#         <tr  valign="top">
+#             <td align="left" valign="top" width="300"><div id="des"> </div></td>
+#             <td alig="right" valign="top"><img id="img" src=" " alt=" " width="300"></td>
+#         </tr>
+#         
+#         </tbody>
+#     </table>
+#     
+#     <table border="0" width = "100%">
+#         <tbody id = "mod">
+#             <tr align="left" valign="top">
+#                 <td colspan = "2"><h3 style="text-decoration: underline;">Modèles :</h3></td>
+#             </tr>
+#         </tbody>
+#     </table>
+# 
+# """
+
+
+# BASE_FICHE_HTML_MODELE = """
+#         <tr  valign="top">
+#             <td id = "int" align="left"></td>
+#             <td rowspan = "3" alig="right" valign="top"><img id="img" src=" " alt=" "></td>
+#         </tr>
+#         <tr align="left">
+#             <td id = "des" valign="top"></td>
+#         </tr>
+#         <tr align="left">
+#             <td id = "log" valign="top"></td>
+#         </tr>
+# """
 
 
 BASE_FICHE_HTML_PROB = """
@@ -1350,30 +1350,30 @@ BASE_FICHE_HTML_PROJET = """
 """
 
 
-BASE_FICHE_HTML_TACHE = """
-    <table border="0" width="100%">
-        <tbody>
-        <tr>
-            <td valign="top"><span id="titre" style="font-size: 30pt; font-style: italic; font-weight: bold;"> </span></td>
-            <td width = "20" valign="top"><img id="icon" src="" alt=" "></td>
-            <td id="txt" valign="top"> </td>
-            
-        </tr>
-
-        <tr align="left" valign="top">
-            <td colspan=2><p id="int"> </p></td>
-            <td width = "64" valign="top"><img id="icon2" src="" alt=" "></td>
-        </tr>
-        
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=3>
-                <b>Description détaillée de la tâche</b>
-                <span id="des"> </span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-"""
+# BASE_FICHE_HTML_TACHE = """
+#     <table border="0" width="100%">
+#         <tbody>
+#         <tr>
+#             <td valign="top"><span id="titre" style="font-size: 30pt; font-style: italic; font-weight: bold;"> </span></td>
+#             <td width = "20" valign="top"><img id="icon" src="" alt=" "></td>
+#             <td id="txt" valign="top"> </td>
+#             
+#         </tr>
+# 
+#         <tr align="left" valign="top">
+#             <td colspan=2><p id="int"> </p></td>
+#             <td width = "64" valign="top"><img id="icon2" src="" alt=" "></td>
+#         </tr>
+#         
+#         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+#             <td colspan=3>
+#                 <b>Description détaillée de la tâche</b>
+#                 <span id="des"> </span>
+#             </td>
+#         </tr>
+#         </tbody>
+#     </table>
+# """
 
 
 BASE_FICHE_HTML_SEQ = """
@@ -1925,34 +1925,68 @@ TEMPLATE_ELEVE = ""
 TEMPLATE_LIENDOC_CSS = ""
 TEMPLATE_LIENDOC = ""
 
+TEMPLATE_TACHE_CSS = ""
+TEMPLATE_TACHE = ""
+
+TEMPLATE_SYS_CSS = ""
+TEMPLATE_SYS = ""
+
+TEMPLATE_SUPPORT_CSS = ""
+TEMPLATE_SUPPORT = ""
+
+TEMPLATE_MODELE_CSS = ""
+TEMPLATE_MODELE = ""
+
+TEMPLATE_LIEN_CSS = ""
+TEMPLATE_LIEN = ""
+
+
 
 def charger_templates():
-    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, TEMPLATE_CI_CSS, \
+    global TEMPLATE_SEANCE_CSS, TEMPLATE_SEANCE, \
+           TEMPLATE_CI_CSS, TEMPLATE_CI, \
            TEMPLATE_CMP_SAV_CSS, TEMPLATE_CMP_SAV, \
            TEMPLATE_EFF_CSS, TEMPLATE_EFF, \
            TEMPLATE_PROF_CSS, TEMPLATE_PROF, \
            TEMPLATE_ELEVE_CSS, TEMPLATE_ELEVE, \
-           TEMPLATE_LIENDOC_CSS, TEMPLATE_LIENDOC
+           TEMPLATE_LIENDOC_CSS, TEMPLATE_LIENDOC, \
+           TEMPLATE_TACHE_CSS, TEMPLATE_TACHE, \
+           TEMPLATE_SYS_CSS, TEMPLATE_SYS, \
+           TEMPLATE_SUPPORT_CSS, TEMPLATE_SUPPORT, \
+           TEMPLATE_MODELE_CSS, TEMPLATE_MODELE, \
+           TEMPLATE_LIEN_CSS, TEMPLATE_LIEN
     
     def charge(nf):
-        f = open(nf, encoding = "utf-8")
+        f = open(os.path.join(TEMPLATE_PATH, nf), encoding = "utf-8")
         h = f.read()
         f.close()
         return h
     
-    TEMPLATE_SEANCE_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_activite_css.html"))
-    TEMPLATE_SEANCE = charge(os.path.join(TEMPLATE_PATH, "popup_activite.html"))
-    TEMPLATE_CI_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_ci_css.html"))
-    TEMPLATE_CMP_SAV_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp_css.html"))
-    TEMPLATE_CMP_SAV = charge(os.path.join(TEMPLATE_PATH, "popup_sav_cmp.html"))
-    TEMPLATE_EFF_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_effectif_css.html"))
-    TEMPLATE_EFF = charge(os.path.join(TEMPLATE_PATH, "popup_effectif.html"))
-    TEMPLATE_PROF_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_prof_css.html"))
-    TEMPLATE_PROF = charge(os.path.join(TEMPLATE_PATH, "popup_prof.html"))
-    TEMPLATE_ELEVE_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_eleve_css.html"))
-    TEMPLATE_ELEVE = charge(os.path.join(TEMPLATE_PATH, "popup_eleve.html"))
-    TEMPLATE_LIENDOC_CSS = charge(os.path.join(TEMPLATE_PATH, "popup_liendoc_css.html"))
-    TEMPLATE_LIENDOC = charge(os.path.join(TEMPLATE_PATH, "popup_liendoc.html"))
+    TEMPLATE_SEANCE_CSS = charge("popup_activite_css.html")
+    TEMPLATE_SEANCE = charge("popup_activite.html")
+    TEMPLATE_CI_CSS = charge("popup_ci_css.html")
+    TEMPLATE_CI = charge("popup_ci.html")
+    TEMPLATE_CMP_SAV_CSS = charge("popup_sav_cmp_css.html")
+    TEMPLATE_CMP_SAV = charge("popup_sav_cmp.html")
+    TEMPLATE_EFF_CSS = charge("popup_effectif_css.html")
+    TEMPLATE_EFF = charge("popup_effectif.html")
+    TEMPLATE_PROF_CSS = charge("popup_prof_css.html")
+    TEMPLATE_PROF = charge("popup_prof.html")
+    TEMPLATE_ELEVE_CSS = charge("popup_eleve_css.html")
+    TEMPLATE_ELEVE = charge("popup_eleve.html")
+    TEMPLATE_LIENDOC_CSS = charge("popup_liendoc_css.html")
+    TEMPLATE_LIENDOC = charge("popup_liendoc.html")
+    TEMPLATE_TACHE_CSS = charge("popup_tache_css.html")
+    TEMPLATE_TACHE = charge("popup_tache.html")
+    TEMPLATE_SYS_CSS = charge("popup_sys_css.html")
+    TEMPLATE_SYS = charge("popup_sys.html")
+    TEMPLATE_SUPPORT_CSS = charge("popup_support_css.html")
+    TEMPLATE_SUPPORT = charge("popup_support.html")
+    TEMPLATE_MODELE_CSS = charge("popup_modele_css.html")
+    TEMPLATE_MODELE = charge("popup_modele.html")
+    
+    TEMPLATE_LIEN_CSS = charge("lien_css.html")
+    TEMPLATE_LIEN = charge("lien.html")
     
 #import array
 #from ctypes import *

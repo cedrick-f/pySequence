@@ -75,6 +75,10 @@ except:
    
 from wx.lib.expando import ExpandoTextCtrl
 
+import wx.lib.wxpTag
+
+from wx.lib.ClickableHtmlWindow import PyClickableHtmlWindow
+
 
 import version
 
@@ -1839,6 +1843,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     if isinstance(k, FenetreSequence):
                         if k.fichierCourant == nomFichier:
                             return k
+                    elif isinstance(k, FenetreProjet):
+                        if k.fichierCourant == nomFichier:
+                            return k
+                    elif isinstance(k, FenetreProgression):
+                        if k.fichierCourant == nomFichier:
+                            return k
         return
     
     
@@ -2078,13 +2088,14 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
     ######################################################################################  
     def SetAndShowTip(self, zone, x, y):
-#         print("SetAndShowTip", x, y, zone)
+#         print("SetAndShowTip", x, y, zone.param, zone.obj)
              
 #         self.HideTip()
         self.zoneMove = zone
         
         self.curTip = None 
         if zone.obj is not None and zone.param is None:
+            self.tip.SetWidth(zone.getWidth())
 #             print "    elem :", zone.obj
             if type(zone.obj) != list:
                 self.curTip = zone.obj.SetTip()
@@ -2592,7 +2603,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
             pourDossierValidation : concerne uniquement les Projet = pour anonymiser la fiche
         """
-        print('exporterFicheHTML')
+#         print('exporterFicheHTML')
         # On passe par un fichier temporaire en ascii car cairo ne supporte pas (encore) utf-8
         tf = tempfile.mkstemp()[1]+".svg"
         SVGsurface = cairo.SVGSurface(tf, 707, 1000)
@@ -2944,7 +2955,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         pts_caract = self.GetDocument().GetPtCaract()
         # Identification des items correspondants sur le doc SVG
         for p in soup.body.svg.find_all("path"):
-#             print(p)
+#             print("  ", p)
             a = p.get("d")
             a = str(a).translate(str.maketrans(dict.fromkeys('MCLZ')))  # Supprime les  lettres
             l = a.split()
@@ -2959,6 +2970,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                         if type(flag) != str:
                             break
         
+#         print(">>", obj.cadre)
         
         # On lance la procédure d'enrichissement ...
         self.GetDocument().EnrichiHTMLdoc(soup)
@@ -19342,7 +19354,9 @@ class PopupInfo(wx.PopupWindow):
         #
         self.mode = mode
         if mode == "H":
-            self.html = myHtmlWindow(self, -1, size = size,
+#             self.html = myHtmlWindow(self, -1, size = size,
+#                                      style = wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_AUTO)#html.HW_SCROLLBAR_NEVER)
+            self.html = PyClickableHtmlWindow(self, -1, size = size,
                                      style = wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_AUTO)#html.HW_SCROLLBAR_NEVER)
         else:
             self.html = webview.WebView.New(self, size = size)
@@ -19501,7 +19515,10 @@ class PopupInfo(wx.PopupWindow):
                 br = self.soup.new_tag('br')
                 tag.append(br)
 
-
+#     ##########################################################################################
+#     def setLien(self, Id, lien, elem):
+        
+        
     ##########################################################################################
     def AjouterLien(self, Id, lien, elem):
 
@@ -19576,11 +19593,11 @@ class PopupInfo(wx.PopupWindow):
 
     ##########################################################################################
     def GetImgURL(self, bmp, width = None):
-        try:
-            self.tfname.append(tempfile.mktemp()+".png")
-            bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
-        except:
-            return
+#         try:
+        self.tfname.append(tempfile.mktemp()+".png")
+        bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
+#         except:
+#             return
         
         return self.tfname[-1]
 
@@ -19853,10 +19870,19 @@ class PopupInfo(wx.PopupWindow):
     
     ##########################################################################################
     def OnClick(self, evt):
+        btn = evt.GetEventObject()
+#         doc = btn.Parent.Parent.parent.GetDocument()
+        print("OnClick")
+        obj = None
+        try:
+            obj = ctypes.cast(int(btn.GetName()), ctypes.py_object).value
+        except:
+            print("Objet inconnu :", btn.GetName())
+            return
 #         b = evt.GetEventObject()
 #         n = b.GetName()
 #         print "OnCheck", cb.GetValue(), cb.GetName()
-        self.elem.lien.Afficher(self.elem.GetDocument().GetPath())
+        obj.lien.Afficher(obj.GetDocument().GetPath())
 
         
     ##########################################################################################
@@ -19870,7 +19896,7 @@ class PopupInfo(wx.PopupWindow):
 
     ##########################################################################################
     def SetPage(self):
-        print("SetPage")
+#         print("SetPage")
 #        self.SetSize((10,1000))
 #        self.SetClientSize((100,1000))
 #        self.html.SetSize( (100, 100) )

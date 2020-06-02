@@ -640,12 +640,11 @@ class Projet(Base_Fiche_Doc):
         #
         #  Support
         #
-        self.prj.support.pt_caract = []
         rectSup = self.posSup+self.tailleSup
 #         print("rectSup", rectSup)
         pt = Curve_rect_titre(self, rectSup, self.prj.support.GetCode(),  
                               self.Bcoul_Sup, self.Icoul_Sup, self.fontSup).draw()
-        self.prj.support.pt_caract.append((pt, "Sup"))
+  
         ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, self.prj.support.GetNom(), 
@@ -653,6 +652,7 @@ class Projet(Base_Fiche_Doc):
                        fontsizeMinMax = (-1, 0.016 * COEF))
 #         print("rectSup >>", rectSup)
         self.prj.zones_sens.append(Zone_sens([rectSup], obj = self.prj.support))
+        self.prj.support.pts_caract.append(pt)
     #     prj.support.pts_caract.append(posSup)
     
     

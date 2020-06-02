@@ -1,0 +1,53 @@
+﻿<table style="width:{{width}}px">
+	<tbody>
+	<tr>
+		<td style="vertical-align: top;"><h1 style="text-align: left; color:{{ coul_phase }}">{{ titre }}</h1></td>
+		<td rowspan="2" style=""><img class="icon_phase" src="{{ icon_phase }}" alt=" "></td>
+		{% if phase is not none %}
+		<td rowspan="2" style="color:{{ coul_phase }}; vertical-align: top; width: 100px;">{{ phase }}</td>
+		{% endif %}
+	</tr>
+	<tr>
+		<td style="font-style:italic;">
+		{% if delai is not none %}
+		Délai : {{delai}}
+		{% endif %}
+		{% if duree is not none %}
+		Durée : {{duree}}
+		{% endif %}
+		</td>
+	</tr>
+	
+	</tbody>
+</table>
+
+<table border="0" style="width:{{width}}px;">
+	<tr align="left" valign="top">
+		{% if intitule is not none %}
+		<td colspan={% if image is none %}3{% else %}2{% endif %}><p><b><font size="5" color="{{ coul_phase }}">{{ intitule }}</font></b></p></td>
+		{% endif %}
+		<td>
+		{% if icon is not none %}
+		<img src="{{ icon }}" alt=" " style="width: 100px;">
+		{% endif %}
+		</td>
+	</tr>
+	
+	{% if decription is not none %}
+	<tr class="description">
+		<td colspan=3>
+			<b>Description détaillée {{ nom_tache }}</b>
+			<div>{{ decription }}</div>
+		</td>
+		<td>
+		{% if image is not none %}
+		<img src="{{ image }}" alt=" " style="width: 30%;">
+		{% endif %}
+		</td>
+	</tr>
+	{% endif %}
+	
+	</tbody>
+</table>
+
+{{ lien }}

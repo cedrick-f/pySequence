@@ -1,0 +1,37 @@
+﻿<table>
+	<tbody>
+	<tr>
+		<td valign="top" align="left"><font size="12"><b><h1>{{ nom }}</h1></b></font></td>
+		<td rowspan="2"><img src="{{ icon_type }}" alt=" "></td>
+		<td rowspan="2" valign="top"><font >{{ typ }}</font></td>
+	</tr>
+	<tr>
+		<td><em>Nombre d'exemplaires disponibles : {{nbr}}</em>
+		</td>
+	</tr>
+	
+	</tbody>
+</table>
+
+<table border="0">
+	{% if decription is not none %}
+	<tr bgcolor="#CCC">
+		<td colspan="{% if image is none %}3{% else %}2{% endif %}">
+			<b>Description détaillée {{ nom_sys }}</b>
+			<div>{{ decription }}</div>
+		</td>
+		
+		{% if image is not none %}
+		<td>
+		<img src="{{ image }}" alt=" ">
+		</td>
+		{% endif %}
+		
+	</tr>
+	{% endif %}
+	
+	</tbody>
+</table>
+
+{{ lien }}
+

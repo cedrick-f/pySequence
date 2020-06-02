@@ -1,0 +1,45 @@
+﻿<table width="100%">
+	<tbody>
+	<tr>
+		<td valign="top" align="left"><font size="+1"><b>{{ intitule }}</b></font></td>
+	</tr>
+	</tbody>
+</table>
+
+<table bgcolor="#BBE" border="0" width="100%">
+	<tbody>
+	{% if decription is not none or image is not none%}
+	<tr valign="top" align="left">
+		{% if decription is not none %}
+		<td colspan="{% if image is none %}2{% else %}1{% endif %}">
+			<b>Description détaillée {{ nom_mod }}</b>
+			<div>{{ decription }}</div>
+		</td>
+		{% endif %}
+		{% if image is not none %}
+		<td colspan="{% if decription is none %}2{% else %}1{% endif %}">
+			<img src="{{ image }}" alt=" ">
+		</td>
+		{% endif %}
+	</tr>
+	{% endif %}
+	{% if lst_log|length > 0 %}
+	<tr valign="top" align="left">
+		<td colspan="2"><b>Logiciel{% if lst_log|length > 1 %}s{% endif %} :</b>
+		<ul>
+			{% for n, i in lst_log %}
+			<li>{% if i is not none %}<img src="{{ i }}" alt=" ">{% endif %}{{ n }}</li>
+			{% endfor %}
+		</ul>
+		</td>
+	</tr>
+	
+	{% endif %}
+	<tr valign="center" align="left">
+		<td colspan="2">{{ lien }}</td>
+	</tr>
+	</tbody>
+</table>
+
+
+

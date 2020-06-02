@@ -1,0 +1,37 @@
+﻿<table style="width:{{width}}px">
+	<tbody>
+	<tr>
+		<td style="vertical-align: top;"><h1 style="text-align: left; ">{{ nom }}</h1></td>
+		<td rowspan="2" style=""><img class="icon_type" src="{{ icon_type }}" alt=" "></td>
+		<td rowspan="2" style="vertical-align: top; width: 60px;">{{ typ }}</td>
+	</tr>
+	<tr>
+		<td style="font-style:italic;">
+		Nombre d'exemplaires disponibles : {{nbr}}
+		</td>
+	</tr>
+	
+	</tbody>
+</table>
+
+<table border="0" style="width:{{width}}px;">
+	
+	<tr class="description">
+		{% if decription is not none %}
+		<td colspan=3>
+			<b>Description détaillée {{ nom_sys }}</b>
+			<div>{{ decription }}</div>
+		</td>
+		{% endif %}
+		{% if image is not none %}
+		<td>
+			<img src="{{ image }}" alt=" " style="width: 30%;">
+		</td>
+		{% endif %}
+	</tr>
+	
+	
+	</tbody>
+</table>
+
+{{ lien }}

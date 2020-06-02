@@ -53,14 +53,7 @@
 	</tbody>
 </table>
 
-{% if lien.type == 'u' %}
-<a href="{{ lien.path }}">{{ lien.path }}</a>
-{% elif lien.type in ['f', 'd'] %}
-<wxp module="wx" class="Button">
-	<param name="id" value="-1">
-	<param name="label" value="lien.path">
-</wxp>
-{% endif %}
+{{ lien}}
 
 {% if compVisees|length > 0 %}
 <h2>{{ nomCompVisees }}</h2>

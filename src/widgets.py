@@ -68,6 +68,20 @@ except AttributeError:
     
 # import tempfile
 
+def img2b64(img):
+    """
+    """
+    # Ca ne marche pas : pas en PNG, str trop longue !
+    #return b64encode(img.GetData())
+    
+    # Version BytesIO : plus rapide que la version fichier (-20%)
+    s = io.BytesIO()
+    img.SaveFile(s, wx.BITMAP_TYPE_PNG)
+    s.seek(0)
+#     str(img2str(self.icone.ConvertToImage()), 'utf-8')
+
+    return str(b"data:image/png;base64,"+base64.b64encode(s.read()), 'utf-8')
+
 def img2str(img):
     """
     """
@@ -2810,9 +2824,13 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
 
 #############################################################################################################
 def scaleImage(image, wf = 24 , hf = None):
+    if isinstance(image, wx.Bitmap):
+        image = image.ConvertToImage()
+        
+    w, h = image.GetSize()
     if hf is None:
-        hf = wf
-    return image.ConvertToImage().Scale(int(wf), int(hf), quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
+        hf = h * wf/w
+    return image.Scale(int(wf), int(hf), quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
 
 
 #############################################################################################################
