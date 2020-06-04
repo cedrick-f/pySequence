@@ -824,11 +824,14 @@ class ElementBase(Grammaire):
             div = doc.new_tag('div')
             div['class'] = "mouse tooltip"
             div['id'] = self.getIdHTML(i)
-            bulle = BeautifulSoup(self.GetBulleHTML(f, css = True), "html5lib")#.body
-#             div.extend(bulle.findChildren())
+            bulle = BeautifulSoup(self.GetBulleHTML(f, css = True), "html5lib").body
+# #             div.extend(bulle.findChildren())
+# #             div.extend(bulle.body.children)
+#             for t in bulle.children:
+#                 print(t.prettify())
+#                 div.append(t)
             div.append(bulle)
-#             div.append(bulle)
-            
+#             div.append(self.GetBulleHTML(f, css = True))
 #             c = bulle.body
 #             print(c)
 #             for t in bulle.findChildren():
@@ -7729,87 +7732,87 @@ class Progression(BaseDoc, Grammaire):
         return fichiers_projets
 
 
-    ######################################################################################  
-    def SetTip(self, param = None, obj = None):
-        """ Mise à jour du TIP (popup)
-        """
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        if param is None:   # la Progression elle-même
-            tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML))
-            
-        
-        else:               # Un autre élément de la Progression
-            tip.SetHTML(self.GetFicheHTML(param = param))
-            if param == "CAL":
-                tip.SetWholeText("titre", "Calendrier de la Progression")
-                tip.AjouterImg("img", self.getBitmapCalendrier(1000))
-                
-            elif param == "ANN":
-                tip.SetWholeText("titre", "Années scolaires de la Progression")
-                tip.SetWholeText("txt", self.GetAnnees())
-                tip.Supprime('img')
-                
-            elif param == "POS":
-                self.Tip_POS("la Progression") 
-                
-            elif param[:3] == "POS":
-                self.Tip_POS(int(param[3])) 
-                            
-            elif param[:3] == "EQU":
-                self.Tip_EQU("la Progression")
-                
-            
-            elif param[:2] == "CI":
-                ref = self.GetReferentiel()
-                tip.SetWholeText("titre", ref._nomCI.Sing_())  
-                numCI = int(param[2:])
-                code = ref.abrevCI+str(numCI+1)
-#                 intit = ref.CentresInterets[numCI]
-             
-                tip.AjouterElemListeDL("ci", code, 
-                                            self.GetListeCI()[numCI])
-                if len(ref.listProblematiques) > numCI and len(ref.listProblematiques[numCI]) > 0:
-                    tip.SetWholeText("nomPb", ref._nomPb.Plur_() + " envisageables")  
-                    for pb in ref.listProblematiques[numCI]:
-                        tip.AjouterElemListeUL("pb", pb)
-                else:
-                    tip.Supprime('pb')
-                              
-            elif param[:3] == "CMP":
-#                 print param
-                ref = self.GetReferentiel()
-                competences = ref.getCompetenceEtGroupe("S"+param[3:])
-                groupe, competence = competences[0], competences[-1]
-                
-                if len(competences) > 0:
-                    tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
-                    k = param[3:]
-                    code, groupe = competences[0]
-                    nc = ref.dicoCompetences["S"]._nom.Sing_()
-                    tip.SetWholeText("titre", nc + " " + k)
-                    tip.SetWholeText("grp", code + "  " + groupe.intitule)
-#                     print "***", competences
-                    if len(competences) >= 2:
-                        codec, competence = competences[1]
-                        tip.SetWholeText("int", codec + " " + competence.intitule)
-                        if len(competence.sousComp) > 0:
-#                             print competence.sousComp.items()
-                            lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
-                            for k, v in lc:
-                                tip.AjouterElemListeDL('list', k, v.intitule)                 
-
-            
-            elif type(obj) == list:
-                pass
-                
-            else:
-                pass
-            
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self, param = None, obj = None):
+#         """ Mise à jour du TIP (popup)
+#         """
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         if param is None:   # la Progression elle-même
+#             tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML))
+#             
+#         
+#         else:               # Un autre élément de la Progression
+#             tip.SetHTML(self.GetFicheHTML(param = param))
+#             if param == "CAL":
+#                 tip.SetWholeText("titre", "Calendrier de la Progression")
+#                 tip.AjouterImg("img", self.getBitmapCalendrier(1000))
+#                 
+#             elif param == "ANN":
+#                 tip.SetWholeText("titre", "Années scolaires de la Progression")
+#                 tip.SetWholeText("txt", self.GetAnnees())
+#                 tip.Supprime('img')
+#                 
+#             elif param == "POS":
+#                 self.Tip_POS("la Progression") 
+#                 
+#             elif param[:3] == "POS":
+#                 self.Tip_POS(int(param[3])) 
+#                             
+#             elif param[:3] == "EQU":
+#                 self.Tip_EQU("la Progression")
+#                 
+#             
+#             elif param[:2] == "CI":
+#                 ref = self.GetReferentiel()
+#                 tip.SetWholeText("titre", ref._nomCI.Sing_())  
+#                 numCI = int(param[2:])
+#                 code = ref.abrevCI+str(numCI+1)
+# #                 intit = ref.CentresInterets[numCI]
+#              
+#                 tip.AjouterElemListeDL("ci", code, 
+#                                             self.GetListeCI()[numCI])
+#                 if len(ref.listProblematiques) > numCI and len(ref.listProblematiques[numCI]) > 0:
+#                     tip.SetWholeText("nomPb", ref._nomPb.Plur_() + " envisageables")  
+#                     for pb in ref.listProblematiques[numCI]:
+#                         tip.AjouterElemListeUL("pb", pb)
+#                 else:
+#                     tip.Supprime('pb')
+#                               
+#             elif param[:3] == "CMP":
+# #                 print param
+#                 ref = self.GetReferentiel()
+#                 competences = ref.getCompetenceEtGroupe("S"+param[3:])
+#                 groupe, competence = competences[0], competences[-1]
+#                 
+#                 if len(competences) > 0:
+#                     tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
+#                     k = param[3:]
+#                     code, groupe = competences[0]
+#                     nc = ref.dicoCompetences["S"]._nom.Sing_()
+#                     tip.SetWholeText("titre", nc + " " + k)
+#                     tip.SetWholeText("grp", code + "  " + groupe.intitule)
+# #                     print "***", competences
+#                     if len(competences) >= 2:
+#                         codec, competence = competences[1]
+#                         tip.SetWholeText("int", codec + " " + competence.intitule)
+#                         if len(competence.sousComp) > 0:
+# #                             print competence.sousComp.items()
+#                             lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
+#                             for k, v in lc:
+#                                 tip.AjouterElemListeDL('list', k, v.intitule)                 
+# 
+#             
+#             elif type(obj) == list:
+#                 pass
+#                 
+#             else:
+#                 pass
+#             
+#         tip.SetPage()
+#         return tip
 
     
     
@@ -7859,6 +7862,15 @@ class Progression(BaseDoc, Grammaire):
         del self.dependants[:]
 
         return ok
+
+
+    ######################################################################################  
+    def SetTip(self, param = None, obj = None):
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
+        return tip
 
 
     ######################################################################################  
@@ -13885,25 +13897,25 @@ class Personne(ElementBase):
             return self.image
 
 
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetFicheHTML())
-        tit = self.Sing_()
-#         self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").Sing_(), bold = True, size=4)
-        tip.SetWholeText("tit", tit)#, bold = False, size=4)
-        
-        if hasattr(self, 'referent'):
-            bold = self.referent
-        else:
-            bold = True
-        tip.SetWholeText("nom", self.GetNomPrenom(), bold = bold, size=5)
-        tip.AjouterImg("av", self.GetAvatar()) 
-        
-        return self.SetTip2(tip)
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetFicheHTML())
+#         tit = self.Sing_()
+# #         self.tip.SetWholeText("tit", self.GetReferentiel().getLabel("ELEVES").Sing_(), bold = True, size=4)
+#         tip.SetWholeText("tit", tit)#, bold = False, size=4)
+#         
+#         if hasattr(self, 'referent'):
+#             bold = self.referent
+#         else:
+#             bold = True
+#         tip.SetWholeText("nom", self.GetNomPrenom(), bold = bold, size=5)
+#         tip.AjouterImg("av", self.GetAvatar()) 
+#         
+#         return self.SetTip2(tip)
         
         # Tip
 #        if hasattr(self, 'tip'):
@@ -14728,144 +14740,144 @@ class Eleve(Personne):
 #         self.SetTip()
 
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-#        print "GetFicheHTML"
-#        print self.GetProjetRef().listeParties
-        dic = {}
-        ligne = []
-        for ph in self.GetProjetRef().listeParties:
-            dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
-            dic['nom'] = self.GetProjetRef().parties[ph]
-            dic['id'] = ph
-            ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
-<td><font color = "%(coul)s"><em>%(nom)s</em></font></td>
-</tr>""" %dic)
-
-        ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_ELEVE)
-        
-        
-        t = ""
-        for l in ligne:
-            t += l+"\n"
-
-        ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
-        
-        return ficheHTML
-
-
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+# #        print "GetFicheHTML"
+# #        print self.GetProjetRef().listeParties
+#         dic = {}
+#         ligne = []
+#         for ph in self.GetProjetRef().listeParties:
+#             dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
+#             dic['nom'] = self.GetProjetRef().parties[ph]
+#             dic['id'] = ph
+#             ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
+# <td><font color = "%(coul)s"><em>%(nom)s</em></font></td>
+# </tr>""" %dic)
+# 
+#         ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_ELEVE)
+#         
+#         
+#         t = ""
+#         for l in ligne:
+#             t += l+"\n"
+# 
+#         ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
+#         
+#         return ficheHTML
 
 
-    ######################################################################################  
-    def SetTip2(self, tip):
-#         print("SetTip2", self)
-        # Tip
-        
-        
-            
-#            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-        coulOK = couleur.GetCouleurHTML(COUL_OK)
-        coulNON = couleur.GetCouleurHTML(COUL_NON)
-        
-        #
-        # Durée
-        #
-        duree = self.GetDuree()
-        v = self.getValiditeDuree(duree)
-        lab = draw_cairo.getHoraireTxt(duree)
-        if v == 0:
-            coul = coulOK
-        elif v == 1:
-            coul = couleur.GetCouleurHTML(COUL_BOF)
-        else:
-            coul = coulNON
-        tip.AjouterCol("ld", lab, coul, bold = True)
 
-        
-        #
-        # Evaluabilité
-        #
-        ev, ev_tot, _ = self.GetEvaluabilite()
-        prj = self.GetProjetRef()
-        keys = {}
-        for disc, dic in prj._dicoIndicateurs.items():
-#                 print("   ", dic)
-            keys[disc] = sorted(dic.keys())
-#            if "O8s" in keys:
-#                keys.remove("O8s")
-#             print(">>>keys", keys)
-        
-        lab = {}
-        for disc, dic in prj._dicoGrpIndicateur.items():
-#                 print("   ", disc, dic)
-            lab[disc] = {}
-            for part in dic:
-                lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
-    #            totalOk = True
-                for k in keys[disc]:
-                    if k in prj._dicoGrpIndicateur[disc][part]:
-                        if k in ev[disc][part]:
-                            
-    #                        totalOk = totalOk and (ler[k] >= 0.5)
-                            lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
-                        else:
-    #                        totalOk = False
-                            lab[disc][part].append([pourCent2(0, True), False]) 
-                    else:
-                        lab[disc][part].append(["", True])
-                lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
 
-#             print(">>>lab", lab)
-        for disc, dic in prj._dicoGrpIndicateur.items():
-            for part in dic:
-#                print "   ", part
-                for i, lo in enumerate(lab[disc][part]):
-#                    print "      ", i, lo
-                    l, o = lo
-                    if i == 0:
-                        size = None
-                        bold = True
-                        if o:
-                            coul = coulOK
-                        else:
-                            coul = coulNON
-                    else:
-                        size = 2
-                        bold = False
-                        if not o:
-                            coul = coulNON
-                        else:
-                            coul = None
-                    tip.AjouterCol("le"+part, l, coul,
-                                   couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
-
-        for disc in prj._dicoIndicateurs:
-            if disc in lab:
-                for t in keys[disc]:
-                    tip.AjouterCol("le", t, size = 2) 
-        
-        #
-        # Modèles
-        #
-        lst_modeles = self.GetModeles()
-        if len(lst_modeles) == 0:
-            tip.Supprime("mod")
-        for m in lst_modeles:
-            m.SetTip()
-            tip.InsererSoup("mod", m.tip.soup)
-            
-#             for i, m in enumerate(self.GetModeles()):
-# #                 print "mod", m
-#                 for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
-#                     h = u"<p>" + l + u"</p>"
-#                     idx = "log"+str(i)+"."+str(j)
-#                     h +=u'<img id="%s" src="" alt="">' %idx
-# #                     print "   ", h
-#                     self.tip.AjouterHTML('mod', h)
-#                     self.tip.AjouterImg(idx, bmp)
-        
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip2(self, tip):
+# #         print("SetTip2", self)
+#         # Tip
+#         
+#         
+#             
+# #            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+#         coulOK = couleur.GetCouleurHTML(COUL_OK)
+#         coulNON = couleur.GetCouleurHTML(COUL_NON)
+#         
+#         #
+#         # Durée
+#         #
+#         duree = self.GetDuree()
+#         v = self.getValiditeDuree(duree)
+#         lab = draw_cairo.getHoraireTxt(duree)
+#         if v == 0:
+#             coul = coulOK
+#         elif v == 1:
+#             coul = couleur.GetCouleurHTML(COUL_BOF)
+#         else:
+#             coul = coulNON
+#         tip.AjouterCol("ld", lab, coul, bold = True)
+# 
+#         
+#         #
+#         # Evaluabilité
+#         #
+#         ev, ev_tot, _ = self.GetEvaluabilite()
+#         prj = self.GetProjetRef()
+#         keys = {}
+#         for disc, dic in prj._dicoIndicateurs.items():
+# #                 print("   ", dic)
+#             keys[disc] = sorted(dic.keys())
+# #            if "O8s" in keys:
+# #                keys.remove("O8s")
+# #             print(">>>keys", keys)
+#         
+#         lab = {}
+#         for disc, dic in prj._dicoGrpIndicateur.items():
+# #                 print("   ", disc, dic)
+#             lab[disc] = {}
+#             for part in dic:
+#                 lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
+#     #            totalOk = True
+#                 for k in keys[disc]:
+#                     if k in prj._dicoGrpIndicateur[disc][part]:
+#                         if k in ev[disc][part]:
+#                             
+#     #                        totalOk = totalOk and (ler[k] >= 0.5)
+#                             lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
+#                         else:
+#     #                        totalOk = False
+#                             lab[disc][part].append([pourCent2(0, True), False]) 
+#                     else:
+#                         lab[disc][part].append(["", True])
+#                 lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
+# 
+# #             print(">>>lab", lab)
+#         for disc, dic in prj._dicoGrpIndicateur.items():
+#             for part in dic:
+# #                print "   ", part
+#                 for i, lo in enumerate(lab[disc][part]):
+# #                    print "      ", i, lo
+#                     l, o = lo
+#                     if i == 0:
+#                         size = None
+#                         bold = True
+#                         if o:
+#                             coul = coulOK
+#                         else:
+#                             coul = coulNON
+#                     else:
+#                         size = 2
+#                         bold = False
+#                         if not o:
+#                             coul = coulNON
+#                         else:
+#                             coul = None
+#                     tip.AjouterCol("le"+part, l, coul,
+#                                    couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
+# 
+#         for disc in prj._dicoIndicateurs:
+#             if disc in lab:
+#                 for t in keys[disc]:
+#                     tip.AjouterCol("le", t, size = 2) 
+#         
+#         #
+#         # Modèles
+#         #
+#         lst_modeles = self.GetModeles()
+#         if len(lst_modeles) == 0:
+#             tip.Supprime("mod")
+#         for m in lst_modeles:
+#             m.SetTip()
+#             tip.InsererSoup("mod", m.tip.soup)
+#             
+# #             for i, m in enumerate(self.GetModeles()):
+# # #                 print "mod", m
+# #                 for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
+# #                     h = u"<p>" + l + u"</p>"
+# #                     idx = "log"+str(i)+"."+str(j)
+# #                     h +=u'<img id="%s" src="" alt="">' %idx
+# # #                     print "   ", h
+# #                     self.tip.AjouterHTML('mod', h)
+# #                     self.tip.AjouterImg(idx, bmp)
+#         
+#         tip.SetPage()
+#         return tip
     
     
 
@@ -14906,7 +14918,172 @@ class Eleve(Personne):
         
         self.SetCode()
         
+    ######################################################################################  
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        tit = self.Sing_()
         
+        nom = self.GetNomPrenom()
+        coulOK = couleur.GetCouleurHTML(COUL_OK)
+        coulNON = couleur.GetCouleurHTML(COUL_NON)
+        
+        #
+        # Durée
+        #
+        duree = self.GetDuree()
+        v = self.getValiditeDuree(duree)
+        duree = draw_cairo.getHoraireTxt(duree)
+        if v == 0:
+            coul_duree = coulOK
+        elif v == 1:
+            coul_duree = couleur.GetCouleurHTML(COUL_BOF)
+        else:
+            coul_duree = coulNON
+      
+
+        #
+        # Evaluabilité
+        #
+        ev, ev_tot, _ = self.GetEvaluabilite()
+        prj = self.GetProjetRef()
+        keys = {}
+        for disc, dic in prj._dicoIndicateurs.items():
+#                 print("   ", dic)
+            keys[disc] = sorted(dic.keys())
+#            if "O8s" in keys:
+#                keys.remove("O8s")
+#             print(">>>keys", keys)
+        
+        lab = {}
+        for disc, dic in prj._dicoGrpIndicateur.items():
+#                 print("   ", disc, dic)
+            lab[disc] = {}
+            for part in dic:
+                lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
+    #            totalOk = True
+                for k in keys[disc]:
+                    if k in prj._dicoGrpIndicateur[disc][part]:
+                        if k in ev[disc][part]:
+                            
+    #                        totalOk = totalOk and (ler[k] >= 0.5)
+                            lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
+                        else:
+    #                        totalOk = False
+                            lab[disc][part].append([pourCent2(0, True), False]) 
+                    else:
+                        lab[disc][part].append(["", True])
+                lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
+
+
+#         print("lab", lab)
+        
+        # Une ligne d'évaluabilité par partie
+        
+        parties = []
+        for ph in prj.listeParties:
+            dic = {}
+            dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
+            dic['nom'] = prj.parties[ph]
+            parties.append(dic)
+            
+        
+        lig_eval = []
+        for disc, dic in prj._dicoGrpIndicateur.items():
+#             for part in dic:
+            for part in prj.listeParties:
+#                print "   ", part
+                col_eval = []
+                for i, lo in enumerate(lab[disc][part]):
+#                    print "      ", i, lo
+                    l, o = lo
+                    if i == 0:
+                        size = None
+                        bold = True
+                        if o:
+                            coul = coulOK
+                        else:
+                            coul = coulNON
+                    else:
+                        size = 2
+                        bold = False
+                        if not o:
+                            coul = coulNON
+                        else:
+                            coul = None
+                    col_eval.append({"val" : l,
+                                     "bcoul": coul,
+                                     "fcoul": couleur.GetCouleurHTML(getCoulPartie(part)),
+                                     "size" : size,
+                                     "bold" : bold})
+                lig_eval.append(col_eval)
+#                     tip.AjouterCol("le"+part, l, coul,
+#                                    couleur.GetCouleurHTML(getCoulPartie(part)), 
+#                                    size, bold)
+
+        # Entetes
+        h_eval = []
+        for disc in prj._dicoIndicateurs:
+            if disc in lab:
+                for t in keys[disc]:
+                    h_eval.append(t)
+#                     tip.AjouterCol("le", t, size = 2) 
+
+
+
+        #
+        # Modèles
+        #
+        lst_modeles = []
+        for m in self.modeles:
+            lst_modeles.append(m.GetBulleHTML(css = css, tip = tip))
+            
+#         lst_modeles = self.GetModeles()
+#         if len(lst_modeles) == 0:
+#             tip.Supprime("mod")
+#         for m in lst_modeles:
+#             m.SetTip()
+#             tip.InsererSoup("mod", m.tip.soup)
+            
+            
+#         print("parties", parties)
+#         print("lig_eval", lig_eval)
+#         print("h_eval", h_eval)
+            
+        # Image
+        image = self.GetAvatar()
+        if image is not None:
+            if css:
+                image = img2b64(image.ConvertToImage())
+            else:
+                image = tip.GetImgURL(scaleImage(image, 100))
+        else:
+            image = None
+
+
+        if css:
+            t = Template(constantes.TEMPLATE_ELEVE_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_ELEVE)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        nom = nom,
+                        coul_duree = coul_duree, 
+                        duree = duree,
+                        image = image,
+                        parties = parties,
+                        lig_eval = lig_eval,
+                        h_eval = h_eval,
+                        titre = tit,
+                        lst_modeles = lst_modeles
+                        )
+    
+
+        return html
 
 
 
@@ -14919,6 +15096,7 @@ class Groupe(Eleve):
     def __init__(self, doc, ident = 0):
         
         Eleve.__init__(self, doc, ident)
+        Grammaire.__init__(self, "Groupe(s)$m")
         
         self.doc = doc
         self.nom = ""
@@ -14932,9 +15110,10 @@ class Groupe(Eleve):
         self.typeEnseignement = self.GetReferentiel().Code
         self.specialite = []
 
-        self.academie = self.GetDocument().classe.academie
-        self.ville = self.GetDocument().classe.ville
-        self.etablissement = self.GetDocument().classe.etablissement
+        classe = self.GetDocument().classe
+        self.academie = classe.academie
+        self.ville = classe.ville
+        self.etablissement = classe.etablissement
         
 #         print self.academie, self.ville, self.etablissement
         
@@ -15135,61 +15314,234 @@ class Groupe(Eleve):
             self.arbre.SetItemText(self.branche, t)
         
         
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+# #        print "GetFicheHTML"
+# #        print self.GetProjetRef().listeParties
+#         dic = {}
+#         ligne = []
+#         for ph in self.GetProjetRef().listeParties:
+#             dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
+#             dic['nom'] = self.GetProjetRef().parties[ph]
+#             dic['id'] = ph
+#             ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
+# <td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
+# </tr>""" %dic)
+# 
+#         ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_GROUPE)
+#         
+#         
+#         t = ""
+#         for l in ligne:
+#             t += l+"\n"
+# 
+#         ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
+#         
+#         return ficheHTML
+
+
+
+
+#     ######################################################################################  
+#     def SetTip2(self, tip):
+# #        print "SetTip2", self
+#         # Tip
+#  
+#         
+#         coulOK = couleur.GetCouleurHTML(COUL_OK)
+#         coulNON = couleur.GetCouleurHTML(COUL_NON)
+#         
+#         #
+#         # Durée
+#         #
+#         duree = self.GetDuree()
+#         v = self.getValiditeDuree(duree)
+#         lab = draw_cairo.getHoraireTxt(duree)
+#         if v == 0:
+#             coul = coulOK
+#         elif v == 1:
+#             coul = couleur.GetCouleurHTML(COUL_BOF)
+#         else:
+#             coul = coulNON
+#         tip.AjouterCol("ld", lab, coul, bold = True)
+# 
+#         tip.SetPage()
+#         return tip
+
+    
     ######################################################################################  
-    def GetFicheHTML(self, param = None):
-#        print "GetFicheHTML"
-#        print self.GetProjetRef().listeParties
-        dic = {}
-        ligne = []
-        for ph in self.GetProjetRef().listeParties:
-            dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
-            dic['nom'] = self.GetProjetRef().parties[ph]
-            dic['id'] = ph
-            ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
-<td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
-</tr>""" %dic)
-
-        ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_GROUPE)
-        
-        
-        t = ""
-        for l in ligne:
-            t += l+"\n"
-
-        ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
-        
-        return ficheHTML
-
-
-
-
-    ######################################################################################  
-    def SetTip2(self, tip):
-#        print "SetTip2", self
-        # Tip
- 
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        tit = self.Sing_()
         
         coulOK = couleur.GetCouleurHTML(COUL_OK)
         coulNON = couleur.GetCouleurHTML(COUL_NON)
+        
+        
         
         #
         # Durée
         #
         duree = self.GetDuree()
         v = self.getValiditeDuree(duree)
-        lab = draw_cairo.getHoraireTxt(duree)
+        duree = draw_cairo.getHoraireTxt(duree)
         if v == 0:
-            coul = coulOK
+            coul_duree = coulOK
         elif v == 1:
-            coul = couleur.GetCouleurHTML(COUL_BOF)
+            coul_duree = couleur.GetCouleurHTML(COUL_BOF)
         else:
-            coul = coulNON
-        tip.AjouterCol("ld", lab, coul, bold = True)
+            coul_duree = coulNON
+      
 
-        tip.SetPage()
-        return tip
+        #
+        # Evaluabilité
+        #
+        ev, ev_tot, _ = self.GetEvaluabilite()
+        prj = self.GetProjetRef()
+        keys = {}
+        for disc, dic in prj._dicoIndicateurs.items():
+#                 print("   ", dic)
+            keys[disc] = sorted(dic.keys())
+#            if "O8s" in keys:
+#                keys.remove("O8s")
+#             print(">>>keys", keys)
+        
+        lab = {}
+        for disc, dic in prj._dicoGrpIndicateur.items():
+#                 print("   ", disc, dic)
+            lab[disc] = {}
+            for part in dic:
+                lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
+    #            totalOk = True
+                for k in keys[disc]:
+                    if k in prj._dicoGrpIndicateur[disc][part]:
+                        if k in ev[disc][part]:
+                            
+    #                        totalOk = totalOk and (ler[k] >= 0.5)
+                            lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
+                        else:
+    #                        totalOk = False
+                            lab[disc][part].append([pourCent2(0, True), False]) 
+                    else:
+                        lab[disc][part].append(["", True])
+                lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
 
+
+#         print("lab", lab)
+        
+        # Une ligne d'évaluabilité par partie
+        
+        parties = []
+        for ph in prj.listeParties:
+            dic = {}
+            dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
+            dic['nom'] = prj.parties[ph]
+            parties.append(dic)
             
+        
+        lig_eval = []
+        for disc, dic in prj._dicoGrpIndicateur.items():
+#             for part in dic:
+            for part in prj.listeParties:
+#                print "   ", part
+                col_eval = []
+                for i, lo in enumerate(lab[disc][part]):
+#                    print "      ", i, lo
+                    l, o = lo
+                    if i == 0:
+                        size = None
+                        bold = True
+                        if o:
+                            coul = coulOK
+                        else:
+                            coul = coulNON
+                    else:
+                        size = 2
+                        bold = False
+                        if not o:
+                            coul = coulNON
+                        else:
+                            coul = None
+                    col_eval.append({"val" : l,
+                                     "bcoul": coul,
+                                     "fcoul": couleur.GetCouleurHTML(getCoulPartie(part)),
+                                     "size" : size,
+                                     "bold" : bold})
+                lig_eval.append(col_eval)
+#                     tip.AjouterCol("le"+part, l, coul,
+#                                    couleur.GetCouleurHTML(getCoulPartie(part)), 
+#                                    size, bold)
+
+        # Entetes
+        h_eval = []
+        for disc in prj._dicoIndicateurs:
+            if disc in lab:
+                for t in keys[disc]:
+                    h_eval.append(t)
+#                     tip.AjouterCol("le", t, size = 2) 
+
+
+
+        
+        #
+        # Origine
+        #
+        classe = self.GetDocument().classe
+        if classe.academie != self.academie:
+            academie = self.academie
+        else:
+            academie = None
+        if classe.ville != self.ville:
+            ville = self.ville
+        else:
+            ville = None
+        if classe.etablissement != self.etablissement:
+            etablissement = self.etablissement
+        else:
+            etablissement = None
+        
+        
+        
+        nom = self.GetNom()
+            
+        # Image
+        image = self.GetAvatar()
+        if image is not None:
+            if css:
+                image = img2b64(image.ConvertToImage())
+            else:
+                image = tip.GetImgURL(scaleImage(image, 100))
+        else:
+            image = None
+
+
+        if css:
+            t = Template(constantes.TEMPLATE_GROUPE_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_GROUPE)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        nom = nom,
+                        duree = duree,
+                        image = image,
+                        parties = parties,
+                        lig_eval = lig_eval,
+                        h_eval = h_eval,
+                        titre = tit,
+                        academie = academie,
+                        ville = ville,
+                        etablissement = etablissement
+                        )
+    
+
+        return html
+    
+    
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
@@ -15275,17 +15627,69 @@ class Prof(Personne):
         self.codeBranche.LayoutFit()
     
     ######################################################################################  
-    def SetTip2(self, tip):
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+        """
+        # Image
+        image = self.GetAvatar()
+        if image is not None:
+            if css:
+                image = img2b64(image.ConvertToImage())
+            else:
+                image = tip.GetImgURL(scaleImage(image, 100))
+        else:
+            image = None
+        
+        tit = self.Sing_()
 
+        if hasattr(self, 'referent'):
+            bold = self.referent
+        else:
+            bold = True
+        
+        nom = self.GetNomPrenom()
+        
         if self.discipline != 'Tec':
             coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
         else:
             coul = None
-        tip.SetWholeText("spe", constantes.NOM_DISCIPLINES[self.discipline], fcoul = coul)
-        
-#            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
-        tip.SetPage()
-        return tip
+            
+        nom_disc = constantes.NOM_DISCIPLINES[self.discipline]
+
+        if css:
+            t = Template(constantes.TEMPLATE_PROF_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_PROF)
+            
+            
+        html = t.render(width = str(self.tipWidth),
+                        nom = nom,
+                        coul = coul, 
+                        image = image,
+                        bold = bold,
+                        nom_disc = nom_disc,
+                        titre = tit
+                        )
+    
+
+        return html
+    
+    
+#     ######################################################################################  
+#     def SetTip2(self, tip):
+# 
+#         if self.discipline != 'Tec':
+#             coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
+#         else:
+#             coul = None
+#         tip.SetWholeText("spe", constantes.NOM_DISCIPLINES[self.discipline], fcoul = coul)
+#         
+# #            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
+#         tip.SetPage()
+#         return tip
     
         
     ######################################################################################  

@@ -1,8 +1,53 @@
-﻿<h1>{{ titre }}</h1>
-{% if lst_elv|length > 0 %}
-<ul>
-{% for i in lst_elv %}
-	<li>{{ i }}</li>
-{% endfor %}
-</ul> 
+﻿<p class="entete">{{ titre }}</p>
+<table border="0" width = "{{ width }}">
+	<tbody>
+	<tr>
+		<td><h2>{{ nom }}</h2></td>
+		{% if image is not none %}
+		<td align="right"><img src="{{ image }}" alt=" "></td>
+		{% endif %}
+	</tr>
+	</tbody>
+</table>
+
+<table border="0" width = "100%">
+	<tbody>
+		<tr align="right" valign="middle">
+			<td width="120px"><span style="text-decoration: underline;">Durée d'activité</span></td>
+			<td bgcolor="{{ coul_duree }}"><b>{{ duree }}</b></td>
+		</tr>
+		
+		<tr  id = "le" align="right" valign="middle">
+			<td><span style="text-decoration: underline;">Évaluabilité</span></td>
+			<td></td>
+			{% for comp in h_eval %}
+			<td>{{ comp }}</td>
+			{% endfor %}
+		
+		
+		</tr>
+		{% for part in parties %}
+		<tr align="right" valign="middle" >
+			<td><font color = "{{ part['coul'] }}"><em>{{ part['nom'] }}</em></font></td>
+			{% for eval in lig_eval[loop.index0] %}
+				<td bgcolor = "{{ eval['bcoul'] }}"><font size="{{ eval['size'] }}">{% if eval['bold'] %}<b>{% endif %}{{ eval['val'] }}{% if eval['bold'] %}</b>{% endif %}</font></td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% if lst_modeles|length > 0 %}
+<table bgcolor="#BBE" width = "{{ width }}">
+	<tbody>
+		<tr align="left" valign="top">
+			<th><span style="text-decoration: underline;">Modèles numériques :</span></th>
+		</tr>
+		{% for m in lst_modeles %}
+		<tr><td>
+			{{ m }}
+		</td></tr>
+		{% endfor %}
+	</tbody>
+</table>
 {% endif %}

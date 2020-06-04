@@ -930,52 +930,52 @@ BASE_FICHE_HTML_TITRE = """
 <p style="text-align: left;"><span id = "tit" style="font-size: 8pt; font-style: italic;"> </span></p>
 """
 
-BASE_FICHE_HTML_ELEVE = BASE_FICHE_HTML_TITRE + """
-    <table border="0" width = "100%">
-        <tbody>
-            <tr>
-            <td><p id="nom"></p></td>
-            <td align="right"><img id="av" src="" alt=" "></td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <table border="0" width = "100%">
-        <tbody>
-            <tr id = "ld" align="right" valign="middle">
-            <td width="120px"><span style="text-decoration: underline;">Durée d'activité</span></td>
-            </tr>
-            
-            <tr  id = "le" align="right" valign="middle">
-            <td><span style="text-decoration: underline;">Évaluabilité</span></td>
-            <td></td>
-            </tr>
-            {{tab_eval}}
-        </tbody>
-    </table>
-    
-    
-    <table border="0" width = "100%">
-        <tbody id = "mod">
-            <tr align="left" valign="top">
-                <td colspan = "2"><h3 style="text-decoration: underline;">Modèles :</h3></td>
-            </tr>
-        </tbody>
-    </table>
-    
-"""
+# BASE_FICHE_HTML_ELEVE = BASE_FICHE_HTML_TITRE + """
+#     <table border="0" width = "100%">
+#         <tbody>
+#             <tr>
+#             <td><p id="nom"></p></td>
+#             <td align="right"><img id="av" src="" alt=" "></td>
+#             </tr>
+#         </tbody>
+#     </table>
+#     
+#     <table border="0" width = "100%">
+#         <tbody>
+#             <tr id = "ld" align="right" valign="middle">
+#             <td width="120px"><span style="text-decoration: underline;">Durée d'activité</span></td>
+#             </tr>
+#             
+#             <tr  id = "le" align="right" valign="middle">
+#             <td><span style="text-decoration: underline;">Évaluabilité</span></td>
+#             <td></td>
+#             </tr>
+#             {{tab_eval}}
+#         </tbody>
+#     </table>
+#     
+#     
+#     <table border="0" width = "100%">
+#         <tbody id = "mod">
+#             <tr align="left" valign="top">
+#                 <td colspan = "2"><h3 style="text-decoration: underline;">Modèles :</h3></td>
+#             </tr>
+#         </tbody>
+#     </table>
+#     
+# """
 
-BASE_FICHE_HTML_GROUPE = BASE_FICHE_HTML_TITRE + """
-    <p id="nom">Nom-Prénom</p>
-    <img id="av" src="" alt=" ">
-    <table border="0">
-        <tbody>
-            <tr id = "ld" align="right" valign="middle">
-            <td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
-            </tr>
-        </tbody>
-    </table>
-"""
+# BASE_FICHE_HTML_GROUPE = BASE_FICHE_HTML_TITRE + """
+#     <p id="nom">Nom-Prénom</p>
+#     <img id="av" src="" alt=" ">
+#     <table border="0">
+#         <tbody>
+#             <tr id = "ld" align="right" valign="middle">
+#             <td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+#             </tr>
+#         </tbody>
+#     </table>
+# """
 
 
 BASE_FICHE_HTML_CLASSE = """
@@ -1389,19 +1389,19 @@ BASE_FICHE_HTML_PRJ = """
     <img id="ap" src=" " alt=" "> 
 """
 
-BASE_FICHE_HTML_PROF = BASE_FICHE_HTML_TITRE + """ 
-    <table border="0" width="100%">
-        <tbody>
-        <tr align="right" valign="top">
-            <td width="200"><p id="nom"></p></td>
-            <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
-        </tr>
-        <tr align="right" valign="top">
-            <td><p id="spe"> </p></td>
-        </tr>
-        </tbody>
-    </table>
-"""
+# BASE_FICHE_HTML_PROF = BASE_FICHE_HTML_TITRE + """ 
+#     <table border="0" width="100%">
+#         <tbody>
+#         <tr align="right" valign="top">
+#             <td width="200"><p id="nom"></p></td>
+#             <td rowspan=2 align="right"><img id="av" src=" " alt=" "></td>
+#         </tr>
+#         <tr align="right" valign="top">
+#             <td><p id="spe"> </p></td>
+#         </tr>
+#         </tbody>
+#     </table>
+# """
 
 TEMPLATE_PROF_CSS = ""
 TEMPLATE_PROF = ""
@@ -1922,6 +1922,9 @@ TEMPLATE_EFF = ""
 TEMPLATE_ELEVE_CSS = ""
 TEMPLATE_ELEVE = ""
 
+TEMPLATE_GROUPE_CSS = ""
+TEMPLATE_GROUPE = ""
+
 TEMPLATE_LIENDOC_CSS = ""
 TEMPLATE_LIENDOC = ""
 
@@ -1949,6 +1952,7 @@ def charger_templates():
            TEMPLATE_EFF_CSS, TEMPLATE_EFF, \
            TEMPLATE_PROF_CSS, TEMPLATE_PROF, \
            TEMPLATE_ELEVE_CSS, TEMPLATE_ELEVE, \
+           TEMPLATE_GROUPE_CSS, TEMPLATE_GROUPE, \
            TEMPLATE_LIENDOC_CSS, TEMPLATE_LIENDOC, \
            TEMPLATE_TACHE_CSS, TEMPLATE_TACHE, \
            TEMPLATE_SYS_CSS, TEMPLATE_SYS, \
@@ -1974,6 +1978,8 @@ def charger_templates():
     TEMPLATE_PROF = charge("popup_prof.html")
     TEMPLATE_ELEVE_CSS = charge("popup_eleve_css.html")
     TEMPLATE_ELEVE = charge("popup_eleve.html")
+    TEMPLATE_GROUPE_CSS = charge("popup_groupe_css.html")
+    TEMPLATE_GROUPE = charge("popup_groupe.html")
     TEMPLATE_LIENDOC_CSS = charge("popup_liendoc_css.html")
     TEMPLATE_LIENDOC = charge("popup_liendoc.html")
     TEMPLATE_TACHE_CSS = charge("popup_tache_css.html")

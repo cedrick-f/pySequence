@@ -1,12 +1,17 @@
-﻿<p align="left"><span style="font-size: 8pt; font-style: italic;">{{ titre }}</span></p>
-<table border="0" width = "100%">
+﻿<p class="entete">{{ titre }}</p>
+<table border="0" width = "{{ width }}">
 	<tbody>
 	<tr>
 		<td><h2>{{ nom }}</h2></td>
 		{% if image is not none %}
-		<td align="right"><img src="{{ image }}" alt=" "></td>
+		<td align="right" {% if etablissement is not none %}rowspan="2"{% endif %}><img src="{{ image }}" alt=" "></td>
 		{% endif %}
 	</tr>
+	{% if etablissement is not none %}
+	<tr>
+		<td>{{ etablissement }}{% if ville is not none %} ({{ ville }}){% if academie is not none %} - acadédie de {{ academie }}{% endif %}{% endif %}</td>
+	</tr>
+	{% endif %}
 	</tbody>
 </table>
 
@@ -38,7 +43,7 @@
 </table>
 
 {% if lst_modeles|length > 0 %}
-<table bgcolor="#BBE" width = "100%">
+<table bgcolor="#BBE" width = "{{ width }}">
 	<tbody>
 		<tr align="left" valign="top">
 			<th><span style="text-decoration: underline;">Modèles numériques :</span></th>
