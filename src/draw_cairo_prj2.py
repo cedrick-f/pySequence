@@ -533,10 +533,10 @@ class Projet(Base_Fiche_Doc):
                          self.prj.getRangePeriode(), self.prj.classe.referentiel.periodes,
                          self.prj.classe.referentiel.projets).draw()
         
+        
+        self.prj.zones_sens.append(Zone_sens([r], param = "POS"))
         for i, re in enumerate(rects):
             self.prj.zones_sens.append(Zone_sens([re], param = "POS"+str(i)))
-        self.prj.zones_sens.append(Zone_sens([r], param = "POS"))
-    
     
     
         #
@@ -594,12 +594,10 @@ class Projet(Base_Fiche_Doc):
                                  lstCodes, lstTexte, 
                                  0.1*self.tailleEqu[1]+0.0001 * COEF, 0.1,
                                  gras = g, lstCoul = c, va = 'c').draw()
-    
         
+        self.prj.zones_sens.append(Zone_sens([rectEqu], param = "EQU"))
         for i, p in enumerate(self.prj.equipe):
             self.prj.zones_sens.append(Zone_sens([r[i]], obj = p))
-        self.prj.zones_sens.append(Zone_sens([rectEqu], param = "EQU"))
-        
     
         #
         #  Problématique
@@ -993,7 +991,7 @@ class Projet(Base_Fiche_Doc):
         
         self.surBrillance(ctx, surObj)
         
-
+        self.prj.zones_sens.reverse()
     
 
 

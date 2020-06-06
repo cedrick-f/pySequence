@@ -644,9 +644,10 @@ class Progression(Base_Fiche_Doc):
         rects = Periodes(self, r, self.prg.GetPositions(), ref.periodes).draw()
     #    prg.rect.append(posPos+taillePos)
         
+        
+        self.prg.zones_sens.append(Zone_sens([r], param = "POS"))
         for i, re in enumerate(rects):
             self.prg.zones_sens.append(Zone_sens([re], param = "POS"+str(i)))
-        self.prg.zones_sens.append(Zone_sens([r], param = "POS"))
         
     
     
@@ -727,9 +728,10 @@ class Progression(Base_Fiche_Doc):
                                  0.1*self.tailleEqu[1]+0.0001 * COEF, 0.1,
                                  gras = g, lstCoul = c, va = 'c').draw()
     
+        
+        self.prg.zones_sens.append(Zone_sens([rectEqu], param = "EQU"))
         for i, p in enumerate(self.prg.equipe):
             self.prg.zones_sens.append(Zone_sens([r[i]], obj = p))
-        self.prg.zones_sens.append(Zone_sens([rectEqu], param = "EQU"))
     #        p.rect = [r[i]]
     #        prj.pts_caract.append(getPts(r))
     
@@ -1135,18 +1137,15 @@ class Progression(Base_Fiche_Doc):
                        orient = 'h', b = 0.03, couper = False)
     
     
-    
-    
-    
-    
         #
         # Informations
         #
         self.info(ctx)
-        
-    
                 
         self.surBrillance(ctx, surObj)
+        
+        self.prg.zones_sens.reverse()
+        
         
 
 #     ######################################################################################  

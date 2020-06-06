@@ -1,2 +1,2 @@
-<a href="{{ lien.path }}" title="{{ lien.path }}" download>{% if icone is not none %}<img src="{{ icone }}" alt=" ">{% endif %}{{ label }}</a>
+{%- if lien.ok and lien.path != "" %}<a href="{{ lien.path }}" title="{{ lien.path }}" download>{%- if icone is not none %}<img src="{{ icone }}" alt=" ">{%- endif %}{{ label }}</a>{%- endif %}
 

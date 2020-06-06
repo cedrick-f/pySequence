@@ -978,10 +978,10 @@ BASE_FICHE_HTML_TITRE = """
 # """
 
 
-BASE_FICHE_HTML_CLASSE = """
-    <img id="eff" src="" alt=" ">
-    
-"""
+# BASE_FICHE_HTML_CLASSE = """
+#     <img id="eff" src="" alt=" ">
+#     
+# """
 
 # BASE_FICHE_HTML_SEANCE = """
 # <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
@@ -1017,7 +1017,7 @@ BASE_FICHE_HTML_CLASSE = """
 # """
 
 
-TEMPLATE_SEANCE = ""
+
 # <font size="12" color="{{ coul_type }}"><b><h1 style="text-align: center;">{{ titre }}</h1></b></font>
 #     <table border="0" width="500">
 #         <tbody>
@@ -1084,7 +1084,7 @@ TEMPLATE_SEANCE = ""
 #     
 # """
 
-TEMPLATE_SEANCE_CSS = ""
+
 # <h1 style="text-align: center; color:{{ coul_type }}">{{ titre }}</h1>
 #     <table>
 #         <tbody>
@@ -1157,7 +1157,7 @@ BASE_FICHE_HTML_CALENDRIER = """
     <img id="img" src="" alt=""> 
 """
 
-TEMPLATE_CI_CSS = ""
+
 #     <h1>{{ titre }}</h1>
 #     <dl>
 #     {% for i, n in lst_CI %}
@@ -1175,21 +1175,19 @@ TEMPLATE_CI_CSS = ""
 # """
 
 
-BASE_FICHE_HTML_CI = """
-    <font size=8><font color="red"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font></font>
-    <dl id = "ci">
-        <dt> </dt> <dd> </dd>
-    </dl>
-    <font size=8 color="dark red"><b><p id="nomPb"> </p></b></font>
-    <ul id = "pb">
-        <li> </li>
-    </ul>
-"""
+# BASE_FICHE_HTML_CI = """
+#     <font size=8><font color="red"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font></font>
+#     <dl id = "ci">
+#         <dt> </dt> <dd> </dd>
+#     </dl>
+#     <font size=8 color="dark red"><b><p id="nomPb"> </p></b></font>
+#     <ul id = "pb">
+#         <li> </li>
+#     </ul>
+# """
 
 
-TEMPLATE_CMP_SAV_CSS = ""
 
-TEMPLATE_CMP_SAV = ""
 
 
 #     <h1>{{ titre }}</h1>
@@ -1200,34 +1198,34 @@ TEMPLATE_CMP_SAV = ""
 #     </dl> 
 # """
 
-BASE_FICHE_HTML_COMP = """
-    <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
-    <dl id = "list">
-        <dt> </dt> <dd> </dd>
-    </dl> 
-"""
+# BASE_FICHE_HTML_COMP = """
+#     <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
+#     <dl id = "list">
+#         <dt> </dt> <dd> </dd>
+#     </dl> 
+# """
 
-BASE_FICHE_HTML_COMP_PRJ = """
-    <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
-    <h2 style="font-size:11px" id="grp"> </h2>
-    <h4 style="font-size:10px" id="int"> </h4>
-    <ul id = "comp">
-    </ul>
-    <dl id = "list">
-        <dt> </dt> <dd> </dd>
-    </dl> 
-"""
+# BASE_FICHE_HTML_COMP_PRJ = """
+#     <font size="8" color="green"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
+#     <h2 style="font-size:11px" id="grp"> </h2>
+#     <h4 style="font-size:10px" id="int"> </h4>
+#     <ul id = "comp">
+#     </ul>
+#     <dl id = "list">
+#         <dt> </dt> <dd> </dd>
+#     </dl> 
+# """
 
-BASE_FICHE_HTML_DOM = """
-    <font size="8" color="GRAY"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
-    <h4 style="font-size:11px" id="int"> </h4>
-    <ul id = "dom">
-    <li> </li>
-    </ul>
-"""
+# BASE_FICHE_HTML_DOM = """
+#     <font size="8" color="GRAY"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
+#     <h4 style="font-size:11px" id="int"> </h4>
+#     <ul id = "dom">
+#     <li> </li>
+#     </ul>
+# """
 
 
-TEMPLATE_SAV_CSS = ""
+
 #     <h1>{{ titre }}</h1>
 #     <dl>
 #     {% for i, n in lst_sav %}
@@ -1237,12 +1235,12 @@ TEMPLATE_SAV_CSS = ""
 # """
 
 
-BASE_FICHE_HTML_SAV = """
-    <font size="8" color="blue"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
-    <dl id = "list">
-        <dt> </dt> <dd> </dd>
-    </dl> 
-"""
+# BASE_FICHE_HTML_SAV = """
+#     <font size="8" color="blue"><b><h1 id = "titre" style="text-align: left;"> </h1></b></font>
+#     <dl id = "list">
+#         <dt> </dt> <dd> </dd>
+#     </dl> 
+# """
 
 # BASE_FICHE_HTML_SYSTEME = """
 #     <p style="color:blue;text-align: left;font-size: 8">Système</p>
@@ -1294,60 +1292,60 @@ BASE_FICHE_HTML_SAV = """
 #         </tr>
 # """
 
+# 
+# BASE_FICHE_HTML_PROB = """
+# <font size="12" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
+# 
+# <p id="txt"> </p>
+# <p id="int"> </p>
+# 
+# """
 
-BASE_FICHE_HTML_PROB = """
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
-
-<p id="txt"> </p>
-<p id="int"> </p>
-
-"""
-
-
-BASE_FICHE_HTML_PROJET = """
-<font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
-    <table border="0">
-        <tbody>
-        
-        <tr align="center" valign="top">
-            <td colspan=2><p id="int"> </p></td>
-        </tr>
-        
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=2>
-                <b>Origine</b>
-                <p id="ori"> </p>
-            </td>
-        </tr>
-        
-        <tr id = "ldes" align="left" valign="top" bgcolor="#e0f0f0">
-            <td colspan=2>
-                <b>Contraintes imposées</b>
-                <p id="con"> </p>
-            </td>
-        </tr>
-        
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0e0f0">
-            <td colspan=2>
-                <b>Production finale attendue</b>
-                <p id="pro"> </p>
-            </td>
-        </tr>
-        
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0e0">
-            <td>
-                <b>Parties</b>
-                <p id="par"> </p>
-            </td>
-            <td>
-                <b>Enoncé du besoin</b>
-                <p id="dec"> </p>
-            </td>
-        </tr>
-        
-        </tbody>
-    </table>
-"""
+# 
+# BASE_FICHE_HTML_PROJET = """
+# <font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
+#     <table border="0">
+#         <tbody>
+#         
+#         <tr align="center" valign="top">
+#             <td colspan=2><p id="int"> </p></td>
+#         </tr>
+#         
+#         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+#             <td colspan=2>
+#                 <b>Origine</b>
+#                 <p id="ori"> </p>
+#             </td>
+#         </tr>
+#         
+#         <tr id = "ldes" align="left" valign="top" bgcolor="#e0f0f0">
+#             <td colspan=2>
+#                 <b>Contraintes imposées</b>
+#                 <p id="con"> </p>
+#             </td>
+#         </tr>
+#         
+#         <tr id = "ldes" align="left" valign="top" bgcolor="#f0e0f0">
+#             <td colspan=2>
+#                 <b>Production finale attendue</b>
+#                 <p id="pro"> </p>
+#             </td>
+#         </tr>
+#         
+#         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0e0">
+#             <td>
+#                 <b>Parties</b>
+#                 <p id="par"> </p>
+#             </td>
+#             <td>
+#                 <b>Enoncé du besoin</b>
+#                 <p id="dec"> </p>
+#             </td>
+#         </tr>
+#         
+#         </tbody>
+#     </table>
+# """
 
 
 # BASE_FICHE_HTML_TACHE = """
@@ -1376,18 +1374,18 @@ BASE_FICHE_HTML_PROJET = """
 # """
 
 
-BASE_FICHE_HTML_SEQ = """
-    <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
-    <p id="nom">Intitulé : </p>
-    <img id="ap" src="" alt=" "> 
-"""
+# BASE_FICHE_HTML_SEQ = """
+#     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
+#     <p id="nom">Intitulé : </p>
+#     <img id="ap" src="" alt=" "> 
+# """
 
 
-BASE_FICHE_HTML_PRJ = """
-    <p style="text-align: center;"><font size="12"><b>Projet</b></font></p>
-    <p id="nom">Intitulé</p>
-    <img id="ap" src=" " alt=" "> 
-"""
+# BASE_FICHE_HTML_PRJ = """
+#     <p style="text-align: center;"><font size="12"><b>Projet</b></font></p>
+#     <p id="nom">Intitulé</p>
+#     <img id="ap" src=" " alt=" "> 
+# """
 
 # BASE_FICHE_HTML_PROF = BASE_FICHE_HTML_TITRE + """ 
 #     <table border="0" width="100%">
@@ -1403,22 +1401,21 @@ BASE_FICHE_HTML_PRJ = """
 #     </table>
 # """
 
-TEMPLATE_PROF_CSS = ""
-TEMPLATE_PROF = ""
 
-BASE_FICHE_HTML_PERIODES = """
-    <font size=11><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
-    <table border="0" width="100%">
-    <tbody>
-        <tr align="left" valign="top">
-            <td id="txt"> </td>
-        </tr>
-        <tr align="left" valign="top">
-            <td><img id="img" src=" " alt=" "></td>
-        </tr>
-    </tbody>
-    </table>
-"""
+
+# BASE_FICHE_HTML_PERIODES = """
+#     <font size=11><b><h1 id = "titre" style="text-align: left;"></h1></b></font>
+#     <table border="0" width="100%">
+#     <tbody>
+#         <tr align="left" valign="top">
+#             <td id="txt"> </td>
+#         </tr>
+#         <tr align="left" valign="top">
+#             <td><img id="img" src=" " alt=" "></td>
+#         </tr>
+#     </tbody>
+#     </table>
+# """
 
 
 BASE_FICHE_HTML = """
@@ -1925,6 +1922,12 @@ TEMPLATE_ELEVE = ""
 TEMPLATE_GROUPE_CSS = ""
 TEMPLATE_GROUPE = ""
 
+TEMPLATE_PROF_CSS = ""
+TEMPLATE_PROF = ""
+
+TEMPLATE_EQUIPE_CSS = ""
+TEMPLATE_EQUIPE = ""
+
 TEMPLATE_LIENDOC_CSS = ""
 TEMPLATE_LIENDOC = ""
 
@@ -1943,6 +1946,39 @@ TEMPLATE_MODELE = ""
 TEMPLATE_LIEN_CSS = ""
 TEMPLATE_LIEN = ""
 
+TEMPLATE_PERIODE_CSS = ""
+TEMPLATE_PERIODE = ""
+
+TEMPLATE_CLASSE_CSS = ""
+TEMPLATE_CLASSE = ""
+
+TEMPLATE_PROJET_CSS = ""
+TEMPLATE_PROJET = ""
+
+TEMPLATE_PB_CSS = ""
+TEMPLATE_PB = ""
+
+TEMPLATE_PRJ_COMP_CSS = ""
+TEMPLATE_PRJ_COMP = ""
+
+TEMPLATE_DOMAINE_CSS = ""
+TEMPLATE_DOMAINE = ""
+
+TEMPLATE_SEQUENCE_CSS = ""
+TEMPLATE_SEQUENCE = ""
+
+TEMPLATE_SEANCE_CSS = ""
+TEMPLATE_SEANCE = ""
+
+TEMPLATE_CMP_SAV_CSS = ""
+TEMPLATE_CMP_SAV = ""
+
+TEMPLATE_CI_CSS = ""
+TEMPLATE_CI = ""
+
+TEMPLATE_PROG_CSS = ""
+TEMPLATE_PROG = ""
+
 
 
 def charger_templates():
@@ -1950,7 +1986,9 @@ def charger_templates():
            TEMPLATE_CI_CSS, TEMPLATE_CI, \
            TEMPLATE_CMP_SAV_CSS, TEMPLATE_CMP_SAV, \
            TEMPLATE_EFF_CSS, TEMPLATE_EFF, \
+           TEMPLATE_CLASSE_CSS, TEMPLATE_CLASSE, \
            TEMPLATE_PROF_CSS, TEMPLATE_PROF, \
+           TEMPLATE_EQUIPE_CSS, TEMPLATE_EQUIPE, \
            TEMPLATE_ELEVE_CSS, TEMPLATE_ELEVE, \
            TEMPLATE_GROUPE_CSS, TEMPLATE_GROUPE, \
            TEMPLATE_LIENDOC_CSS, TEMPLATE_LIENDOC, \
@@ -1958,7 +1996,14 @@ def charger_templates():
            TEMPLATE_SYS_CSS, TEMPLATE_SYS, \
            TEMPLATE_SUPPORT_CSS, TEMPLATE_SUPPORT, \
            TEMPLATE_MODELE_CSS, TEMPLATE_MODELE, \
-           TEMPLATE_LIEN_CSS, TEMPLATE_LIEN
+           TEMPLATE_LIEN_CSS, TEMPLATE_LIEN, \
+           TEMPLATE_PERIODE_CSS, TEMPLATE_PERIODE, \
+           TEMPLATE_PB_CSS, TEMPLATE_PB, \
+           TEMPLATE_PROJET_CSS, TEMPLATE_PROJET, \
+           TEMPLATE_PRJ_COMP_CSS, TEMPLATE_PRJ_COMP, \
+           TEMPLATE_SEQUENCE_CSS, TEMPLATE_SEQUENCE, \
+           TEMPLATE_PROG_CSS, TEMPLATE_PROG, \
+           TEMPLATE_DOMAINE_CSS, TEMPLATE_DOMAINE
     
     def charge(nf):
         f = open(os.path.join(TEMPLATE_PATH, nf), encoding = "utf-8")
@@ -1970,12 +2015,30 @@ def charger_templates():
     TEMPLATE_SEANCE = charge("popup_activite.html")
     TEMPLATE_CI_CSS = charge("popup_ci_css.html")
     TEMPLATE_CI = charge("popup_ci.html")
+    TEMPLATE_PERIODE_CSS = charge("popup_periode_css.html")
+    TEMPLATE_PERIODE = charge("popup_periode.html")
+    TEMPLATE_CLASSE_CSS = charge("popup_classe_css.html")
+    TEMPLATE_CLASSE = charge("popup_classe.html")
+    TEMPLATE_PROJET_CSS = charge("popup_projet_css.html")
+    TEMPLATE_PROJET = charge("popup_projet.html")
+    TEMPLATE_SEQUENCE_CSS = charge("popup_sequence_css.html")
+    TEMPLATE_SEQUENCE = charge("popup_sequence.html")
+    TEMPLATE_PROG_CSS = charge("popup_prog_css.html")
+    TEMPLATE_PROG = charge("popup_prog.html")
+    TEMPLATE_DOMAINE_CSS = charge("popup_domaine_css.html")
+    TEMPLATE_DOMAINE = charge("popup_domaine.html")
+    TEMPLATE_PB_CSS = charge("popup_pb_css.html")
+    TEMPLATE_PB = charge("popup_pb.html")
+    TEMPLATE_PRJ_COMP_CSS = charge("popup_prj_comp_css.html")
+    TEMPLATE_PRJ_COMP = charge("popup_prj_comp.html")
     TEMPLATE_CMP_SAV_CSS = charge("popup_sav_cmp_css.html")
     TEMPLATE_CMP_SAV = charge("popup_sav_cmp.html")
     TEMPLATE_EFF_CSS = charge("popup_effectif_css.html")
     TEMPLATE_EFF = charge("popup_effectif.html")
     TEMPLATE_PROF_CSS = charge("popup_prof_css.html")
     TEMPLATE_PROF = charge("popup_prof.html")
+    TEMPLATE_EQUIPE_CSS = charge("popup_equipe_css.html")
+    TEMPLATE_EQUIPE = charge("popup_equipe.html")
     TEMPLATE_ELEVE_CSS = charge("popup_eleve_css.html")
     TEMPLATE_ELEVE = charge("popup_eleve.html")
     TEMPLATE_GROUPE_CSS = charge("popup_groupe_css.html")

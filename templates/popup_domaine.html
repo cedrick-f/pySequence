@@ -1,0 +1,9 @@
+﻿<span style="font-size: 8pt; font-style: italic;">{{ titre }}</span>
+
+{% if lst_dom|length > 0 %}
+<ul>
+{% for i in lst_dom %}
+	<li>{{ i }}</li>
+{% endfor %}
+</ul> 
+{% endif %}

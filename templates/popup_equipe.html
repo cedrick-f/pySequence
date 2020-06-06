@@ -1,0 +1,11 @@
+﻿<span style="font-size: 8pt; font-style: italic;">{{ titre }}</span>
+<table border="0" width="100%">
+	<tbody>
+	{% for prof in lst_prf %}
+	<tr align="right" valign="top">
+		<td><font size="2" color="{{ prof['coul'] }}" style="font-weight:bold;">{% if prof['bold'] %}<b>{% endif %}{{ prof['nom'] }}{% if prof['bold'] %}</b>{% endif %}</font>
+		</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>

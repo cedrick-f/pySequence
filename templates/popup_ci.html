@@ -1,9 +1,10 @@
-﻿<h1>{{ titre }}</h1>
+﻿<span style="font-size: 8pt; font-style: italic;">{{ titre }}</span>
 <dl>
 {% for i, n in lst_CI %}
 	<dt>{{ i }}</dt> <dd>{{ n }}</dd>
 {% endfor %}
-</dl> 
+</dl>
+
 {% if lst_pb|length > 0 %}
 <h2>{{ nomPb }}</h2>
 <ul>

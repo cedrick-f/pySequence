@@ -527,16 +527,17 @@ class Sequence(Base_Fiche_Doc):
         if not self.entete:
             rect = (self.x_Org-self.p_mrg_Org, self.p_y_Org, 
                     self.siz_Org[0]+self.p_mrg_Org*2, self.siz_Org[1]+self.p_mrg_Org)
-        #    seq.zones_sens.append(Zone_sens([rect], param = "INT"))
+            self.seq.zones_sens.append(Zone_sens([rect], obj = self.seq))
             if len(self.seq.intitule) == 0:
                 t = "Séquence sans nom"
             else:
                 t = self.seq.intitule
-            self.seq.pt_caract.append((Curve_rect_titre(self, rect, t,  
-                                                        self.p_Bcol_Int, 
-                                                        self.p_Icol_Int, 
-                                                        self.p_font_Int).draw(),
-                                      "Seq"))
+            pt = Curve_rect_titre(self, rect, t,  
+                                  self.p_Bcol_Int, 
+                                  self.p_Icol_Int, 
+                                  self.p_font_Int).draw()
+            self.seq.pt_caract.append((pt, "Seq"))
+    
     
         #####################################################################################
         # Domaines
@@ -584,10 +585,10 @@ class Sequence(Base_Fiche_Doc):
         rects = Periodes(self, r, self.seq.getRangePeriode(), 
                          self.seq.classe.referentiel.periodes).draw()
         
+        
+        self.seq.zones_sens.append(Zone_sens([r], param = "POS"))
         for i, re in enumerate(rects):
             self.seq.zones_sens.append(Zone_sens([re], param = "POS"+str(i)))
-        self.seq.zones_sens.append(Zone_sens([r], param = "POS"))
-    
     
     
         #####################################################################################
@@ -610,10 +611,12 @@ class Sequence(Base_Fiche_Doc):
         
         # Affichage du Logo
     #     print(seq.classe.referentiel.getLogo())
-        Image(self, 
-              (*self.pos_Cib, *self.siz_Cib),
+        rect = (*self.pos_Cib, *self.siz_Cib)
+        Image(self, rect,
               self.seq.classe.referentiel.getLogo()).draw()
-    
+        self.seq.zones_sens.append(Zone_sens([rect], obj = self.seq))
+        self.seq.pt_caract.append((self.pos_Cib, "Seq"))
+              
         # Affichage des CI sur la cible
         if self.seq.classe.referentiel.CI_cible:
             self.seq.zones_sens.append(Zone_sens([self.pos_Cib+self.siz_Cib], obj = self.seq.CI))
@@ -678,7 +681,10 @@ class Sequence(Base_Fiche_Doc):
                             r_ = 0.01 * COEF
                             Image(self, (pos[0]-r_/2, pos[1]-r_/2, r_, r_),
                                   constantes.images.impact.GetBitmap()).draw()
-    
+
+
+
+
         #####################################################################################
         # Durée de la séquence
         #
@@ -739,7 +745,7 @@ class Sequence(Base_Fiche_Doc):
                 r.extend(v)
             for v in r:
                 self.seq.pt_caract.append((v[:2], "Eff"))
-            self.seq.zones_sens.append(Zone_sens(r, obj = self.seq.classe))
+            self.seq.zones_sens.append(Zone_sens(r, param = "EFF", obj = self.seq.classe))
     #         seq.pt_caract.append((r[0][:2], "Eff"))
             
             # Lignes verticales
@@ -1207,6 +1213,7 @@ class Sequence(Base_Fiche_Doc):
         
         self.surBrillance(ctx, surObj)
                     
+        self.seq.zones_sens.reverse()
                 
 
     ######################################################################################  

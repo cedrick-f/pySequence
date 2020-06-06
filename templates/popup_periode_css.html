@@ -1,0 +1,13 @@
+﻿<p class="entete">{{ titre }}</p>
+<font size=11><b><h1 style="text-align: left;">{{ txt }}</h1></b></font>
+    <table border="0" width="100%">
+    <tbody>
+        <tr align="left" valign="top">
+            {% if image is not none %}
+			<td>
+			<img src="{{ image }}" alt=" ">
+			</td>
+			{% endif %}
+        </tr>
+    </tbody>
+    </table>

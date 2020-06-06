@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
+
 ##This file is part of pySequence
 #############################################################################
 #############################################################################
@@ -96,7 +97,7 @@ from constantes import calculerEffectifs, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, \
-                        COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
+                        COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, COUL_ABS, \
                         toList, COUL_COMPETENCES, COUL_DISCIPLINES, NBR_SYSTEMES_MAXI
 import constantes
 
@@ -1001,11 +1002,11 @@ class ElementBase(Grammaire):
         return t#.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
     
-    ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False, tip = None):
-        print("GetBulleHTML", self, i)
-        return  ""
-    
+#     ######################################################################################  
+#     def GetBulleHTML(self, i = None, css = False, tip = None):
+#         print("GetBulleHTML", self, i)
+#         return  ""
+#     
     
     
     
@@ -1073,6 +1074,7 @@ class ElementBase(Grammaire):
             return
         
         html = self.GetBulleHTML(tip = tip)
+        
         tip.SetHTML(html)
         tip.SetPage()
         return tip
@@ -1784,25 +1786,51 @@ class Classe(ElementBase):
         return "classe"
     
     
+#     ######################################################################################  
+#     def SetTip(self, param = None, obj = None):
+#         """ Mise à jour du TIP (popup)
+#         """
+#         
+#         tip = self.GetTip()
+#         print("SetTip Classe", tip)
+#         if tip is None:
+#             return
+#         
+#         bmp = self.getBitmapEffectifs(800, 400)
+#         tip.SetHTML(self.GetFicheHTML())
+# 
+#         tip.AjouterImg("eff", bmp)
+#             
+#         tip.SetPage()
+#         return tip
+    
+    
     ######################################################################################  
-    def SetTip(self, param = None, obj = None):
-        """ Mise à jour du TIP (popup)
-        """
-        
-        tip = self.GetTip()
-        print("SetTip Classe", tip)
-        if tip is None:
-            return
-        
-        bmp = self.getBitmapEffectifs(800, 400)
-        tip.SetHTML(self.GetFicheHTML())
-
-        tip.AjouterImg("eff", bmp)
+    def GetBulleHTML(self, i = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
             
-        tip.SetPage()
-        return tip
-    
-    
+            :i:  code pour différentier ...
+        """
+        print("GetBulleHTML Classe :", self, i)
+#         ref = self.GetReferentiel()
+        
+
+        if css:
+            t = Template(constantes.TEMPLATE_CLASSE_CSS)
+        else:
+            t = Template(constantes.TEMPLATE_CLASSE)
+            
+        html = t.render(titre = "Classe",
+                        ref = self.referentiel,
+                        )
+
+        return html
+
+
+
+
 
 ####################################################################################################
 #
@@ -2280,33 +2308,137 @@ class BaseDoc(ElementBase, ElementAvecLien):
             
             
     
+    ######################################################################################  
+    def GetBulleHTMLDoc(self, param = None, css = False, tip = None):
+        """ Renvoie le tootTip sous la forme HTML
+            pour affichage sur la fiche HTML (template "_CSS")
+            ou sur la fiche pySéquence (template par défaut)
+            
+            :i:  code pour différentier ...
+        """
+        ref = self.GetReferentiel()
         
-
-
-    ##################################################################################################    
-    def Tip_POS(self, p = None):
-        tip = self.GetTip()
-        if tip is None:
-            return 
+        html = ""
         
-        if p == None or type(p) == str:
-            tip.SetWholeText("titre", "Découpage de la formation en périodes")
-            tip.SetWholeText("txt", "Périodes occupées pendant "+p)
-            tip.AjouterImg("img", self.getBitmapPeriode(300))
-        else:
-            ref = self.GetReferentiel()
-            tip.SetWholeText("titre", "Période de formation")
-            tip.SetWholeText("txt", ref.getPeriodesListe()[p] + " - " + str(p+1))
-            tip.Supprime('img')
+        ##### Équipe #####
+        if param == "EQU":
+            if css:
+                t = Template(constantes.TEMPLATE_EQUIPE_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_EQUIPE)
+            
+            lst_prf = []
+            for p in self.equipe:
+                lst_prf.append({'nom' : p.GetNomPrenom(),
+                                'coul': couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[p.discipline]),
+                                'bold': p.referent})
+            
+            html = t.render(titre = "Équipe pédagogique impliquée dans "+self.le_(),
+                            lst_prf = lst_prf,
+                            )
+
+        ##### Période #####
+        elif param == "POS":
+            if css:
+                t = Template(constantes.TEMPLATE_PERIODE_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PERIODE)
+                
+            # Image
+            image = self.getBitmapPeriode(300)
+            if image is not None:
+                if css:
+                    image = img2b64(image.ConvertToImage())
+                else:
+                    image = tip.GetImgURL(image, 300)
+            else:
+                image = None
+            
+            
+            html = t.render(titre = "Découpage de la formation en périodes",
+                            txt = "Périodes occupées pendant %s" %self.le_(),
+                            image = image
+                            )
+            
+                 
+        elif param[:3] == "POS":
+            if css:
+                t = Template(constantes.TEMPLATE_PERIODE_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PERIODE)
+            
+            
+            p = int(param[3])
+            annee = ref.getPeriodesListe()[p] 
+            annee = annee.split("_")
+            if len(annee) > 1: # Exposant
+                txt = annee[0] + "<sup>"+ annee[1] +"</sup>"
+            else:
+                txt = annee[0]
+                
+            txt += " - période n° " + str(p+1)
+                
+            html = t.render(titre = "Période de formation",
+                            txt = txt,
+                            image = None
+                            )
+            
+        
+        
+        elif param == "CI":
+            if css:
+                t = Template(constantes.TEMPLATE_CI_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_CI)
+                
+            html = t.render(titre = ref._nomCI.Plur_(),
+                            lst_pb = [],
+                            nomPb = "",
+                            lst_CI = [(ref.abrevCI+str(i+1), ci) for i, ci in enumerate(self.GetListeCI())],
+                            )
+            
+        
+        elif param is not None and param[:2] == "CI":
+            if css:
+                t = Template(constantes.TEMPLATE_CI_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_CI)
+            c = int(param[2:])
+            ci = self.GetListeCI()[c]
+            lst_CI = [(ref.abrevCI+str(c+1), ci)]
+
+            html = t.render(titre = ref._nomCI.Sing_(),
+                            lst_CI = lst_CI)
+            
+            
+        return html
+             
 
 
-    ##################################################################################################    
-    def Tip_EQU(self, typeDoc):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        tip.SetWholeText("titre", "Équipe pédagogique impliquée dans " + typeDoc)
-        tip.Supprime('img')
+#     ##################################################################################################    
+#     def Tip_POS(self, p = None):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return 
+#         
+#         if p == None or type(p) == str:
+#             tip.SetWholeText("titre", "Découpage de la formation en périodes")
+#             tip.SetWholeText("txt", "Périodes occupées pendant "+p)
+#             tip.AjouterImg("img", self.getBitmapPeriode(300))
+#         else:
+#             ref = self.GetReferentiel()
+#             tip.SetWholeText("titre", "Période de formation")
+#             tip.SetWholeText("txt", ref.getPeriodesListe()[p] + " - " + str(p+1))
+#             tip.Supprime('img')
+
+
+#     ##################################################################################################    
+#     def Tip_EQU(self, typeDoc):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         tip.SetWholeText("titre", "Équipe pédagogique impliquée dans " + typeDoc)
+#         tip.Supprime('img')
     
         
     
@@ -2735,57 +2867,23 @@ class Sequence(BaseDoc, Grammaire):
             sy.SetLien()  
 
 
-    ######################################################################################  
-    def Tip_DOM(self, p = None):
-#         print "Tip_DOM", self.domaine
-        ref = self.GetReferentiel()
-        if len(self.domaine)>1:
-            t = ref._nomDom.Plur_()
-        else:
-            t = ref._nomDom.Sing_()
-        self.tip.SetWholeText("titre", t)
-        ld = [ref.domaines[d][1] for d in self.domaine]
-
-        for d in ld:
-            self.tip.AjouterElemListeUL("dom", d)
+#     ######################################################################################  
+#     def Tip_DOM(self, p = None):
+# #         print "Tip_DOM", self.domaine
+#         ref = self.GetReferentiel()
+#         if len(self.domaine)>1:
+#             t = ref._nomDom.Plur_()
+#         else:
+#             t = ref._nomDom.Sing_()
+#         self.tip.SetWholeText("titre", t)
+#         ld = [ref.domaines[d][1] for d in self.domaine]
+# 
+#         for d in ld:
+#             self.tip.AjouterElemListeUL("dom", d)
         
     
     
-    ######################################################################################  
-    def SetTip(self, param = None, obj = None):
-        """ Mise à jour du TIP (popup)
-        """
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        if param is None:   # la Séquence elle-même
-            tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ))
-            tip.SetWholeText("int", self.intitule)
-        
-        else:               # Un autre élément de la Séquence
-            tip.SetHTML(self.GetFicheHTML(param = param))
-            if param == "POS":
-                self.Tip_POS("la Séquence")
-                
-            elif param[:3] == "POS":
-                self.Tip_POS(int(param[3])) 
-                
-            elif param[:3] == "EQU":
-                self.Tip_EQU("la Séquence")
-                
-            elif param[:3] == "DOM":
-                self.Tip_DOM()
-                
-            elif type(obj) == list:
-                pass
-                
-            else:
-                pass
-                
-        tip.SetPage()
-        return tip
-
+    
     ######################################################################################  
     def VerifPb(self):
 #         print("\nVerifPb Seq")
@@ -3921,6 +4019,74 @@ class Sequence(BaseDoc, Grammaire):
         
         return enregistrer_root(root, nomFichier, dialog = dialog)
 
+#     ######################################################################################  
+#     def SetTip(self, param = None, obj = None):
+#         """ Mise à jour du TIP (popup)
+#         """
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         if param is None:   # la Séquence elle-même
+#             tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ))
+#             tip.SetWholeText("int", self.intitule)
+#         
+#         else:               # Un autre élément de la Séquence
+#             tip.SetHTML(self.GetFicheHTML(param = param))
+#             if param == "POS":
+#                 self.Tip_POS("la Séquence")
+#                 
+#             elif param[:3] == "POS":
+#                 self.Tip_POS(int(param[3])) 
+#                 
+#             elif param[:3] == "EQU":
+#                 self.Tip_EQU("la Séquence")
+#                 
+#             elif param[:3] == "DOM":
+#                 self.Tip_DOM()
+#                 
+#             elif type(obj) == list:
+#                 pass
+#                 
+#             else:
+#                 pass
+#                 
+#         tip.SetPage()
+#         return tip
+
+
+
+    ######################################################################################  
+    def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
+        print("SetTip Séquence :", param, obj)
+        
+        tip = self.GetTip()
+        if tip is None:
+            return
+         
+        if param is None and obj is None:  # Le projet 
+            html = self.GetBulleHTML(css = False, tip = tip)
+        
+        elif param == "EFF":
+            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+            
+        elif param[:3] == "DOM":
+            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+        
+        elif param[:2] == "CI":
+            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+            
+        elif param is not None and obj is None: # Un autre élément du Projet, commun à tous les documents
+            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+
+        else:
+            html = ""
+            
+        tip.SetHTML(html)
+        tip.SetPage()
+        return tip
 
 
     ######################################################################################  
@@ -3932,19 +4098,15 @@ class Sequence(BaseDoc, Grammaire):
             :i:  code pour différentier ...
         """
 #         print("GetBulleHTML Seq", self, i)
-#         ref = self.GetReferentiel()
+        ref = self.GetReferentiel()
         
-        
-        if i == "Eff":
+        if i == "EFF":
             if css:
                 t = Template(constantes.TEMPLATE_EFF_CSS)
             else:
                 t = Template(constantes.TEMPLATE_EFF)
             
-            image = draw_cairo_seq.Sequence(self).getBase64PNG(larg = 400)
-       
-#             image = draw_cairo.getBase64PNG(draw_cairo.getBitmapClasse(400, 200, self.GetClasse()))
-#             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
+            image = self.classe.getBitmapEffectifs(500, 250)
             if css:
                 if image is not None:
                     image = b64(image)
@@ -3959,10 +4121,58 @@ class Sequence(BaseDoc, Grammaire):
                             image = image,
                             )
     
-            return html
-        return  ""
+        
+        
+            
+        
+        
+        elif i is not None and i[:3] == "DOM":
+            if css:
+                t = Template(constantes.TEMPLATE_DOMAINE_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_DOMAINE)
+                
+            if len(self.domaine)>1:
+                tit_dom = ref._nomDom.Plur_()
+            else:
+                tit_dom = ref._nomDom.Sing_()
+            
+            ld = [ref.domaines[d][1] for d in self.domaine]
     
+            for d in ld:
+                self.tip.AjouterElemListeUL("dom", d)
+        
+            html = t.render(titre = t,
+                            tit_dom = tit_dom,
+                            lst_dom = ld
+                            )
+        
+        else:
+            if css:
+                t = Template(constantes.TEMPLATE_SEQUENCE_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_SEQUENCE)
+            
+            if len(self.domaine)>1:
+                tit_dom = ref._nomDom.Plur_()
+            else:
+                tit_dom = ref._nomDom.Sing_()
+            
+            ld = [ref.domaines[d][1] for d in self.domaine]
+            
+            
+            html = t.render(titre = self.Sing_(),
+                            intitule = self.intitule,
+                            tit_dom = tit_dom,
+                            commentaire = self.commentaires,
+                            lst_dom = ld,
+                            lien = self.GetBulleHTMLLien(css = css, tip = tip)
+                            )
+        
+        return  html
     
+
+
 ####################################################################################################
 #
 #        Projet
@@ -4779,89 +4989,8 @@ class Projet(BaseDoc, Grammaire):
 #        return constantes.BASE_FICHE_HTML_PROJET
 
 
-    ######################################################################################  
-    def SetTip(self, param = None, obj = None):
-        """ Mise à jour du TIP (popup)
-        """
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        if param is None:   
-            if obj is None:
-                # le Projet lui-même
-                tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROJET))
-                tip.SetWholeText("int", self.intitule, size = 4)
-                tip.SetWholeText("ori", self.origine)
-                tip.SetWholeText("con", self.contraintes)
-                tip.SetWholeText("pro", self.production)
-                tip.SetWholeText("dec", self.besoinParties)
-                tip.SetWholeText("par", self.intituleParties)
-            else:
-                pass
-            
-        
-        else:               # Un autre élément du Projet
-#            print "  *** ", param
-            prj = self.GetProjetRef()
-            tip.SetHTML(self.GetFicheHTML(param = param))
-            if param == "PB":
-#                self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROB)
-                tip.SetWholeText( "titre", prj.attributs['PB'][0])
-                tip.SetWholeText("txt", self.problematique)
-            
-            elif param == "POS":
-                self.Tip_POS("le Projet")
-                
-            elif param[:3] == "POS":
-                self.Tip_POS(int(param[3])) 
-                
-            elif param[:3] == "EQU":
-                self.Tip_EQU("le Projet")
-                
-            elif type(obj) == list:
-                pass
-                
-            else:
-                
-                competence = prj.getCompetence(param[0], param[1:])
-                if competence is not None:
-#                     print "TIP", param, competence.indicateurs, competence.sousComp
-                    tip.SetHTML(constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP_PRJ))
-                    
-                    k = param[1:].split("\n")
-                    titre = self.GetReferentiel().dicoCompetences["S"]._nom
-                    if len(competence.sousComp) > 1:
-                        titre = titre.Plur_()
-                    else:
-                        titre = titre.Sing_()
-                    
-                    if len(k) > 1:
-                        titre += " - ".join(k)
-                    else:
-                        titre += " " + k[0]
-                    tip.SetWholeText("titre", titre)
-                    
-#                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence.intitule.split(u"\n")]) 
-                    tip.SetWholeText( "int", competence.intitule)
-                    
-                    if competence.sousComp != {}: #type(competence[1]) == dict:  
-                        code = None
-                        tip.Construire(competence.sousComp, obj, prj, code = code, 
-                                        check = isinstance(obj, Tache))
-#                         indicEleve = obj.GetDicIndicateurs()
-                    else:
-                        code = param
-                        tip.Construire(competence.indicateurs, obj, prj, code = code, 
-                                        check = isinstance(obj, Tache))
-#                         indicEleve = obj.GetDicIndicateurs()#[param]
-#                     print "indicEleve", indicEleve
-#                     print "competence.indicateurs", competence.indicateurs
-                    
-                
-        tip.SetPage()
-        return tip
-        
+    
+         
         
         
     ######################################################################################  
@@ -6187,7 +6316,48 @@ class Projet(BaseDoc, Grammaire):
         
         return enregistrer_root(root, nomFichier, dialog = dialog)
 #                        
+    
+    ######################################################################################  
+    def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
+        print("SetTip Projet :", param, obj)
+        
+        tip = self.GetTip()
+        if tip is None:
+            return
+        
+        prj = self.GetProjetRef()
+         
+        if param is None and obj is None:  # Le projet 
+            html = self.GetBulleHTML(css = False, tip = tip)
 
+
+        elif param == "PB":
+            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+
+
+        elif param is not None and obj is None: # Un autre élément du Projet, commun à tous les documents
+            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+            
+            
+        elif param is not None and isinstance(obj, Tache):
+            html = self.GetBulleHTML((param, obj), css = False, tip = tip)
+      
+        elif param is not None and isinstance(obj, Eleve):
+            html = self.GetBulleHTML((param, obj), css = False, tip = tip)
+        
+        elif param is not None and isinstance(obj, Groupe):
+            html = self.GetBulleHTML((param, obj), css = False, tip = tip)
+            
+        else:
+            html = ""
+            
+        tip.SetHTML(html)
+        tip.SetPage()
+        return tip
+    
+    
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
@@ -6198,34 +6368,217 @@ class Projet(BaseDoc, Grammaire):
         """
 #         print("GetBulleHTML Seq", self, i)
 #         ref = self.GetReferentiel()
+        prj = self.GetProjetRef()
         
-        
-        if i == "Eff":
+        if i == "PB":
             if css:
-                t = Template(constantes.TEMPLATE_EFF_CSS)
+                t = Template(constantes.TEMPLATE_PB_CSS)
             else:
-                t = Template(constantes.TEMPLATE_EFF)
-            
-            image = draw_cairo_seq.Sequence(self).getBase64PNG(larg = 400)
-       
-#             image = draw_cairo.getBase64PNG(draw_cairo.getBitmapClasse(400, 200, self.GetClasse()))
-#             self.image = self.getBitmapPeriode(400).ConvertToImage().GetData()
-            if css:
-                if image is not None:
-                    image = b64(image)
-                else:
-                    image = None
+                t = Template(constantes.TEMPLATE_PB)
                 
-            else:
-                image = tip.GetImgURL(image, width = 200)
             
-
-            html = t.render(titre = "Découpage de la classe",
-                            image = image,
+            html = t.render(titre = prj.attributs['PB'][0],
+                            problematique = self.problematique
                             )
+            
+        
+        elif type(i) == tuple:   # Code Compétence + Tâche
+            param, tache = i
+            
+            if css:
+                t = Template(constantes.TEMPLATE_PRJ_COMP_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PRJ_COMP)
+            
+            competence = prj.getCompetence(param[0], param[1:])
+            if competence is not None:
+                 
+                k = param[1:].split("\n")
+                titre = self.GetReferentiel().dicoCompetences["S"]._nom
+                if len(competence.sousComp) > 1:
+                    titre = titre.Plur_()
+                else:
+                    titre = titre.Sing_()
+                 
+#                 if len(k) > 1:
+#                     titre += " - ".join(k)
+#                 else:
+#                     titre += " " + k[0]
+                
+                
+#                 intitule = competence.intitule
+                
+                dicIndicateurs = tache.GetDicIndicateurs()
+                
+                def const(comp, k):
+                    """ comp : Type Competence
+                        renvoie : dictionnaire
+                    """
+                    d = {}
+                    if comp.sousComp != {}:
+                        ks = sorted(list(comp.sousComp.keys()))
+                        print("ks", ks)
+                        
+                        for k in ks:
+                            c = comp.sousComp[k]  # Type Competence
+                            d[k] = {'intitule' : textwrap.fill(k+" "+comp.intitule, 50),
+                                    'souscomp' : const(c, k)}
+                        return d
+                    
+                    
+                    else:   # Indicateur
+                        code = k[1:]
+                        cc = [cd+ " " + it for cd, it in zip(code.split("\n"), comp.intitule.split("\n"))] 
+                        
+                        indicateurs = constIndic(comp.indicateurs, k)
+      
+                        d[k] = { 'code' : code,
+                                 'intitule' : comp.intitule,
+                                 'souscomp' : indicateurs}
+                        return d
+                    
+#                     ks = list(dic.keys())
+#                     ks.sort()
+#                     print("ks", ks)
+#                     
+#                     for k in ks:
+#                         comp = dic[k]
+#                         
+#                         if comp.sousComp != {}: # Il y a des sous-compétences
+#                             
+#                             hdic[k] = { 'intitule' : textwrap.fill(k+" "+comp.intitule, 50),
+#                                         'souscomp' : const(comp.sousComp, {})}
+#                             
+#                         
+#                         else:   # Indicateur
+#                             code = "S"+k
+#                             cc = [cd+ " " + it for cd, it in zip(k.split("\n"), comp.intitule.split("\n"))] 
+#                             
+#                             indicateurs, c, chk = constIndic(comp.indicateurs, code)
+#                             
+#                             hdic[k] = { 'intitule' : textwrap.fill("\n ".join(cc), 50),
+#                                         'coul' : couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX),
+#                                         'check' : chk,
+#                                         'souscomp' : indicateurs}
+#                         
+#                     return
+                
+                def constIndic(listIndic, code):
+                    if code in dicIndicateurs:
+                        listIndicUtil = dicIndicateurs[code]
+                    else:
+                        listIndicUtil = None
+#                     print("listIndicUtil", listIndicUtil)
+                    
+                    indicateurs = []
+                    for i, indic in enumerate(listIndic):
+                        codeIndic = code+"_"+str(i+1)
+                        coche = isinstance(tache, Tache) and tache.estACocherIndic(codeIndic)
+                        chk = ""
+                        for part in prj.parties:
+                            if part in indic.poids:
+                                if listIndicUtil == None or not listIndicUtil[i]:
+                                    c = COUL_ABS
+                                    chk = "False"
+                                else:
+                                    c = getCoulPartie(part)
+                                    chk = "True"
+                        
+                        if coche:
+                            tip.tache = tache
+                            
+                        indicateurs.append({'intitule' : textwrap.fill(indic.intitule, 50),
+                                            'coul' : couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX),
+                                            'coche' : coche,
+                                            'c_id' : str(100+i),
+                                            'c_check' : chk,
+                                            'c_name' : codeIndic
+                                            })
+                        
+                    return indicateurs
+                
+                competences = const(competence, param)
+                    
+#                 print('  ', competences)
+                
+                
+#                 if competence.sousComp != {}: 
+# #                     tip.Construire(competence.sousComp, obj, prj, code = None, 
+# #                                     check = isinstance(obj, Tache))
+# #                         indicEleve = obj.GetDicIndicateurs()
+#                 else:
+# #                     tip.Construire(competence.indicateurs, obj, prj, code = param, 
+# #                                     check = isinstance(obj, Tache))
+# #                         indicEleve = obj.GetDicIndicateurs()#[param]
+# #                     print "indicEleve", indicEleve
+# #                     print "competence.indicateurs", competence.indicateurs
+                    
+            html = t.render(titre = titre,
+                            competences = competences
+                            
+                            )
+            
+#             print(html)
+            
+        
+        
+        
+        
+        else:
+            if css:
+                t = Template(constantes.TEMPLATE_PROJET_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PROJET)
+            
+            origine = self.origine
+            contraintes = self.contraintes
+            production = self.production
+            parties = self.intituleParties
+            besoinParties = self.besoinParties
+            
+            synoptique = self.synoptique
+            
+            # Prtie "Partenariat ('PAR')
+            partenariat = self.partenariat
+            montant = self.montant
+            src_finance = self.src_finance
+        
+        
+        
+            html = t.render(titre = self.Sing_(),
+                            intitule = self.intitule,
+                            tit_ori = prj.attributs['ORI'][0],
+                            origine = origine,
+                            
+                            tit_contr = prj.attributs['CCF'][0],
+                            contraintes = contraintes,
+                            
+                            tit_obj = prj.attributs['OBJ'][0],
+                            production = production,
+                            
+                            tit_dec = prj.attributs['DEC'][0],
+                            parties = parties,
+                            tit_bes = prj.attributs['DEC'][3],
+                            besoinParties = besoinParties,
+                            
+                            tit_syn = prj.attributs['SYN'][0],
+                            synoptique = synoptique,
+                            
+                            tit_typ = prj.attributs['TYP'][0],
+                            typologie = self.typologie,
+                            
+                            tit_par = prj.attributs['PAR'][0],
+                            partenariat = partenariat,
+                            tit_prx = prj.attributs['PRX'][0],
+                            montant = montant,
+                            tit_src = prj.attributs['SRC'][0],
+                            src_finance = src_finance,
+                            )
+
+        return html
     
-            return html
-        return  ""
+        
+        
 
         
 
@@ -7864,14 +8217,51 @@ class Progression(BaseDoc, Grammaire):
         return ok
 
 
+#     ######################################################################################  
+#     def SetTip(self, param = None, obj = None):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         return tip
+
     ######################################################################################  
     def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
+        print("SetTip Progression :", param, obj)
+        
         tip = self.GetTip()
         if tip is None:
             return
+         
+        if param is None and obj is None:  # La Progression
+            html = self.GetBulleHTML(css = False, tip = tip)
         
-        return tip
+        elif param[:3] == "CMP":
+            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+            
+        elif param[:3] == "ANN":
+            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+        
+        elif param[:3] == "CAL":
+            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+            
+        elif param[:2] == "CI":
+            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+            
+        elif param[:3] == "EQU":
+            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+            
+        elif param is not None and obj is None: # Un autre élément du Projet, commun à tous les documents
+            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
 
+        else:
+            html = ""
+            
+        tip.SetHTML(html)
+        tip.SetPage()
+        return tip
 
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False, tip = None):
@@ -7884,110 +8274,44 @@ class Progression(BaseDoc, Grammaire):
 #         print("GetBulleHTML Prg", self, i)
         ref = self.GetReferentiel()
         
-        if i == "Equ":
-            if css:
-                t = Template(constantes.TEMPLATE_PROF_CSS)
-            else:
-                t = Template(constantes.TEMPLATE_PROF)
-            
-            lst_prf = [p.GetNomPrenom() for p in self.equipe]
-            
-            html = t.render(titre = "Équipe pédagogique",
-                            lst_prf = lst_prf,
-                            )
-    
-            return html
-        
-        
-        elif i == "Elv":
-            if css:
-                t = Template(constantes.TEMPLATE_ELEVE_CSS)
-            else:
-                t = Template(constantes.TEMPLATE_ELEVE)
-            
-            lst_elv = [p.GetNomPrenom() for p in self.eleves]
-            
-            html = t.render(titre = ref.getLabel("ELEVES").Plur_(),
-                            lst_elv = lst_elv,
-                            )
-    
-            return html
-        
-        
-        
-        elif i == "CI":
-        
-            if css:
-                t = Template(constantes.TEMPLATE_CI_CSS)
-            else:
-                t = Template(constantes.TEMPLATE_CI_CSS)
-                
-                
-            html = t.render(titre = ref._nomCI.Plur_(),
-                            lst_pb = [],
-                            nomPb = "",
-                            lst_CI = [("CI"+str(i+1), ci) for i, ci in enumerate(self.GetListeCI())],
-                            )
-            return html
-        
-        
-        
-        
-        
-        elif i[:2] == "CI":  
-        
-            c = int(i[2:])
-#             ref._dicoCompetences
+        if i[:3] == "CMP":
+            code = i[3:]
             
             if css:
                 t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
             else:
                 t = Template(constantes.TEMPLATE_CMP_SAV)
-            
-            
-            dic = {}
-            dic[ref._nomCI.Sing_()] = [(i, self.GetListeCI()[c])]
-           
-            
-            html = t.render(dic = dic)
-            return html
-        
-        
-        
-        
-        
-        elif i[:2] == "C_":
-            c = i[2:]
-#             ref._dicoCompetences
-            
-            if css:
-                t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
+
+            titre = "Objectif"
+    
+            if self.mode == "C":
+                o = ref.getCompetence("S"+code)
+                dic = ref.getDicToutesCompetences()
             else:
-                t = Template(constantes.TEMPLATE_CMP_SAV)
+                o = ref.getSavoir("S"+code)
+                dic = ref.getDicTousSavoirs()
+
+            nom = dic["S"]._nom.Plur_()  + " ("+ dic["S"].abrDiscipline+ ")"
             
             
-#             for i, c in enumerate(sorted(self.competences)):
-            dic = ref.getDicToutesCompetences()
-            titre = dic['S']._nom.sing_()  + " ("+ dic['S'].abrDiscipline+ ")"
-            
-            dic = {}
-            dic[titre] = [(c, ref.getCompetence('S'+c).intitule)]
-           
-            
-            html = t.render(dic = dic)
+            if o is not None:
+                intitule = o.intitule
+                
+            dic = {nom : [(code, intitule)]}
+            html = t.render(titre = titre,
+                            dic = dic)
             return html
         
         
-        
-        elif i == "Cal":
+        elif i == "CAL":
             if css:
                 t = Template(constantes.TEMPLATE_EFF_CSS)
             else:
                 t = Template(constantes.TEMPLATE_EFF)
             
             
-            image = draw_cairo.getBase64PNG(draw_cairo.getBitmapCalendrier(400, self.calendrier))
-
+#             image = draw_cairo.getBase64PNG(draw_cairo.getBitmapCalendrier(self.calendrier, 400))
+            image = self.getBitmapCalendrier(400)
             if css:
                 if image is not None:
                     image = b64(image)
@@ -8003,6 +8327,24 @@ class Progression(BaseDoc, Grammaire):
                             )
     
             return html
+        
+        else:
+            if css:
+                t = Template(constantes.TEMPLATE_PROG_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PROG)
+            
+            image = self.getImageSrc(css, tip, 100)
+            
+            html = t.render(titre = self.Sing_(),
+                            intitule = self.intitule,
+                            scol = "Années scolaires " + self.GetAnnees(),
+                            image = image,
+                            lien = self.GetBulleHTMLLien(css = css, tip = tip)
+                            )
+    
+            return html
+        
         
         return  ""
 
@@ -8223,11 +8565,8 @@ class ElementProgression():
             
             :i:  code pour différentier ...
         """
-#         print("GetBulleHTML liendoc", self, i)
+        print("GetBulleHTML liendoc :", self, i, self.GetDoc())
 #         ref = self.GetReferentiel()
-        
-        
-
         doc = self.GetDoc()
         
         if doc is None:
@@ -8241,11 +8580,9 @@ class ElementProgression():
                 t = Template(constantes.TEMPLATE_LIENDOC)
             
             if isinstance(doc, Sequence):
-                image = draw_cairo_seq.Sequence(doc, entete = True).getBase64PNG(larg = 600)
+                image = draw_cairo_seq.Sequence(doc, entete = True).getBitmap(larg = 600, prop = 2.2)
             else:
-                image = draw_cairo_prj.Projet(doc, entete = True).getBase64PNG(larg = 600)
-#             image = draw_cairo.getBase64PNG(draw_cairo.get_apercu(doc, 600,
-#                                                                   entete = True))
+                image = draw_cairo_prj.Projet(doc, entete = True).getBitmap(larg = 600, prop = 2.2)
            
             if css:
                 if image is not None:
@@ -8284,9 +8621,9 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
         self.sequence = None
         
 
-    ######################################################################################  
-    def __repr__(self):
-        return "LienSeq : "+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+#     ######################################################################################  
+#     def __repr__(self):
+#         return "LienSeq : "+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
     ####################################################################################
     def EstMovable(self):
@@ -8409,29 +8746,29 @@ class LienSequence(ElementBase, ElementProgression, Grammaire):
         return os.path.splitext(os.path.basename(self.path))[0]
 
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SEQ)
 
     
-    ######################################################################################  
-    def SetTip(self):
-        # Tip
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        seq = self.sequence
-        
-        tip.SetHTML(self.GetFicheHTML())
-        if seq is None:
-            tip.SetWholeText("nom", "Séquence non trouvée")
-        else:
-            tip.SetWholeText("nom", seq.intitule)
-            tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
-        
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         # Tip
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         seq = self.sequence
+#         
+#         tip.SetHTML(self.GetFicheHTML())
+#         if seq is None:
+#             tip.SetWholeText("nom", "Séquence non trouvée")
+#         else:
+#             tip.SetWholeText("nom", seq.intitule)
+#             tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
+#         
+#         tip.SetPage()
+#         return tip
 
 
 
@@ -8591,25 +8928,13 @@ class LienProjet(ElementBase, ElementProgression, Grammaire):
         return os.path.splitext(os.path.basename(self.path))[0]
 
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PRJ)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PRJ)
 
 
-    ######################################################################################  
-    def SetTip(self):
-        # Tip
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        seq = self.projet
-        tip.SetHTML(self.GetFicheHTML())
-        tip.SetWholeText("nom", seq.intitule)
-        tip.AjouterImg("ap", seq.GetApercu(600, 200 , entete = True)) 
-        
-        tip.SetPage()
-        return tip
+    
+
 
 
 
@@ -8952,9 +9277,9 @@ class CentreInteret(ElementBase):
 #        self.GetPanelPropriete().construire()
 
     
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CI)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CI)
     
     
     ######################################################################################  
@@ -8995,36 +9320,36 @@ class CentreInteret(ElementBase):
         return html
     
     
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetFicheHTML())
-        
-        ref = self.GetReferentiel()
-        if len(self.numCI)+len(self.CI_perso) > 1:
-            t = ref._nomCI.Plur_()
-        else:
-            t = ref._nomCI.Sing_()
-        tip.SetWholeText("titre", t)
-        
-        for i, c in enumerate(self.numCI):
-            tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
-        
-        for i, c in enumerate(self.CI_perso):
-            tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
-        
-        if len(self.Pb + self.Pb_perso) > 0:
-            tip.SetWholeText("nomPb", ref._nomPb.Sing_())
-            for pb in self.Pb + self.Pb_perso:
-                tip.AjouterElemListeUL("pb", pb)
-        else:
-            tip.SupprimerTag("pb")             
-                        
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetFicheHTML())
+#         
+#         ref = self.GetReferentiel()
+#         if len(self.numCI)+len(self.CI_perso) > 1:
+#             t = ref._nomCI.Plur_()
+#         else:
+#             t = ref._nomCI.Sing_()
+#         tip.SetWholeText("titre", t)
+#         
+#         for i, c in enumerate(self.numCI):
+#             tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
+#         
+#         for i, c in enumerate(self.CI_perso):
+#             tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
+#         
+#         if len(self.Pb + self.Pb_perso) > 0:
+#             tip.SetWholeText("nomPb", ref._nomPb.Sing_())
+#             for pb in self.Pb + self.Pb_perso:
+#                 tip.AjouterElemListeUL("pb", pb)
+#         else:
+#             tip.SupprimerTag("pb")             
+#                         
+#         tip.SetPage()
+#         return tip
 
 
 
@@ -9479,9 +9804,9 @@ class Competences(ElementBase):
 #            self.panelPropriete.construire()
     
     
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_COMP)
 
     
     ######################################################################################  
@@ -9511,19 +9836,28 @@ class Competences(ElementBase):
                 dic[titre] = []
             dic[titre].append((c[1:], ref.getCompetence(c).intitule))
         
-        html = t.render(dic = dic)
+        if self.prerequis:
+            titre = "Prérequis"
+        else:
+            titre = "Objectif"
+            if len(dic) > 1:
+                titre += "s"
+        
+        
+        html = t.render(titre = titre,
+                        dic = dic)
         
         return html
     
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetBulleHTML())
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetBulleHTML())
+#         tip.SetPage()
+#         return tip
     
 # #         print "SetTip Comp"
 #         self.tip.SetHTML(self.GetBHTML())
@@ -9832,9 +10166,9 @@ class Savoirs(ElementBase):
     
 
     
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SAV)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_SAV)
 
     
     ######################################################################################  
@@ -9865,7 +10199,15 @@ class Savoirs(ElementBase):
                 dic[titre] = []
             dic[titre].append((self.GetTypCode(i)[1], self.GetIntit(i)))
         
-        html = t.render(dic = dic)
+        if self.prerequis:
+            titre = "Prérequis"
+        else:
+            titre = "Objectif"
+            if len(dic) > 1:
+                titre += "s"
+                
+        html = t.render(titre = titre,
+                        dic = dic)
         
         return html
     
@@ -9885,15 +10227,15 @@ class Savoirs(ElementBase):
 #         return html
     
     
-    ######################################################################################  
-    def SetTip(self):
-        tip = self.GetTip()
-        if tip is None:
-            return
-        
-        tip.SetHTML(self.GetBulleHTML())
-        tip.SetPage()
-        return tip
+#     ######################################################################################  
+#     def SetTip(self):
+#         tip = self.GetTip()
+#         if tip is None:
+#             return
+#         
+#         tip.SetHTML(self.GetBulleHTML())
+#         tip.SetPage()
+#         return tip
     
 #         self.tip.SetHTML(self.GetFicheHTML())
 #         nc = self.GetNomGenerique()
@@ -11149,7 +11491,7 @@ class Seance(ElementAvecLien, ElementBase):
             ou sur la fiche pySéquence (template par défaut)
             
         """
-#         print("GetBulleHTML séance", self, i)
+#         print("GetBulleHTML séance :", self, i)
         ref = self.GetReferentiel()
 
         
@@ -11164,7 +11506,7 @@ class Seance(ElementAvecLien, ElementBase):
                 if css:
                     icon_dem = b64(constantes.imagesDemarches[d].GetData())
                 else:
-                    icon_dem = tip.GetImgURL(constantes.imagesDemarches[d].GetBitmap(), width = 60*SSCALE)
+                    icon_dem = tip.GetImgURL(scaleImage(constantes.imagesDemarches[d].GetBitmap(), 60))
                 lst_dem.append((icon_dem,
                                 ref.demarches[d][1])
                               )
@@ -11184,7 +11526,7 @@ class Seance(ElementAvecLien, ElementBase):
         if css:
             icon_type = b64(constantes.imagesSeance[self.typeSeance].GetData())
         else:
-            icon_type = tip.GetImgURL(constantes.imagesSeance[self.typeSeance].GetBitmap())
+            icon_type = tip.GetImgURL(scaleImage(constantes.imagesSeance[self.typeSeance].GetBitmap(), 64))
                   
                 
 #         print(lst_ensSpe)    
@@ -11228,7 +11570,7 @@ class Seance(ElementAvecLien, ElementBase):
                         effectif = self.GetDocument().classe.GetStrEffectifComplet(self.effectif),
                         coul_eff = couleur.GetCouleurHTML(ref.effectifs[self.effectif][3]),
                         decription = XMLtoHTML(self.description),
-                        lien = self.GetBulleHTMLLien(css = css),
+                        lien = self.GetBulleHTMLLien(css = css, tip = tip),
                         nom_du_activite = ref._nomActivites.du_(),
                         compVisees = lstCompVisees,
                         nomCompVisees = comp.GetNomGenerique(),
@@ -12570,7 +12912,7 @@ class Tache(ElementAvecLien, ElementBase):
                         nom_tache = self.du_(),
                         duree = duree,
                         decription = XMLtoHTML(description),
-                        lien = self.GetBulleHTMLLien(css = css),
+                        lien = self.GetBulleHTMLLien(css = css, tip = tip),
                         )
     
 
@@ -12922,6 +13264,7 @@ class Systeme(ElementAvecLien, ElementBase):
             
             
         html = t.render(width = str(self.tipWidth),
+                        titre = self.Sing_(),
                         nom = self.nom,
                         nbr = str(self.nbrDispo.v[0]),
                         typ = self.GetReferentiel().systemes[self.typ][1],
@@ -12929,7 +13272,7 @@ class Systeme(ElementAvecLien, ElementBase):
                         image = image,
                         nom_sys = self.du_(),
                         decription = XMLtoHTML(description),
-                        lien = self.GetBulleHTMLLien(css = css),
+                        lien = self.GetBulleHTMLLien(css = css, tip = tip),
                         )
     
 
@@ -13397,12 +13740,13 @@ class Support(ElementAvecLien, ElementBase):
             
             
         html = t.render(width = str(self.tipWidth),
+                        titre = self.Sing_(),
                         nom = self.nom,
                         lst_modeles = lst_modeles,
                         image = image,
                         nom_sup = self.du_(),
                         decription = XMLtoHTML(description),
-                        lien = self.GetBulleHTMLLien(css = css),
+                        lien = self.GetBulleHTMLLien(css = css, tip = tip),
                         )
     
 

@@ -2088,7 +2088,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
     ######################################################################################  
     def SetAndShowTip(self, zone, x, y):
-#         print("SetAndShowTip", x, y, zone.param, zone.obj)
+        print("SetAndShowTip", (x, y), zone.param, zone.obj)
              
 #         self.HideTip()
         self.zoneMove = zone
@@ -2096,14 +2096,14 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.curTip = None 
         if zone.obj is not None and zone.param is None:
             self.tip.SetWidth(zone.getWidth())
-#             print "    elem :", zone.obj
+#             print("    elem :", zone.obj)
             if type(zone.obj) != list:
                 self.curTip = zone.obj.SetTip()
             else:
                 self.curTip = zone.obj[0].SetTip()
          
         else:
-#             print "    zone", zone.param
+#             print("    zone", zone.param)
             self.tip.SetWidth(zone.getWidth())
             self.GetDocument().SetTip(zone.param, zone.obj)
             self.curTip = self.tip
@@ -5188,7 +5188,8 @@ class FicheDoc(BaseFiche):
     ######################################################################################################
     def OnMove(self, evt):
         c = self.getCoordZone(evt)
-        if c is None: return
+        if c is None: 
+            return
         x, y, zone = c
         
         #
@@ -9517,6 +9518,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.maxX = 800*SSCALE # Largeur de l'image "aperçu" zoomée
         self.sequence = self.lien.sequence
+        print("PanelPropriete_LienSequence", self.lien, "---", self.lien.sequence)
         self.classe = None
         self.construire()
         self.parent = parent
@@ -19447,10 +19449,10 @@ class PopupInfo(wx.PopupWindow):
 #.encode('utf-8', errors="ignore"), from_encoding="utf-8"
 
 
-    #####################################################################################
-    def Supprime(self, Id):
-        tag = self.soup.find(id=Id)
-        tag.extract()
+#     #####################################################################################
+#     def Supprime(self, Id):
+#         tag = self.soup.find(id=Id)
+#         tag.extract()
 
 
 #     #####################################################################################
@@ -19479,115 +19481,115 @@ class PopupInfo(wx.PopupWindow):
         tag.append(soup)
     
     
-    #####################################################################################
-    def SetWholeText(self, Id, text, bcoul = None, fcoul = "black", 
-                     bold = False, italic = False, size = 0):
-        """ 
-        """
-#        print "SetWholeText", text
-        if text is None:
-            return
-        
-#         text = text.replace("\n", "<br/>")
-        tag = self.soup.find(id=Id)
-        if tag is None:
-            return
-        
-        li = text.split("\n")
-        for i, t in enumerate(li):
-            f = self.soup.new_tag("font")
-            f.string = t
-            
-            if fcoul != "black":
-                f["color"] = fcoul
-                
-            if size != 0:
-                f["size"] = size
-                
-            if bold:   
-                f.string.wrap(self.soup.new_tag("b"))
-    
-            if italic:     
-                f.string.wrap(self.soup.new_tag("i"))
-            
-            tag.append(f)
-            if i < len(li) -1:
-                br = self.soup.new_tag('br')
-                tag.append(br)
+#     #####################################################################################
+#     def SetWholeText(self, Id, text, bcoul = None, fcoul = "black", 
+#                      bold = False, italic = False, size = 0):
+#         """ 
+#         """
+# #        print "SetWholeText", text
+#         if text is None:
+#             return
+#         
+# #         text = text.replace("\n", "<br/>")
+#         tag = self.soup.find(id=Id)
+#         if tag is None:
+#             return
+#         
+#         li = text.split("\n")
+#         for i, t in enumerate(li):
+#             f = self.soup.new_tag("font")
+#             f.string = t
+#             
+#             if fcoul != "black":
+#                 f["color"] = fcoul
+#                 
+#             if size != 0:
+#                 f["size"] = size
+#                 
+#             if bold:   
+#                 f.string.wrap(self.soup.new_tag("b"))
+#     
+#             if italic:     
+#                 f.string.wrap(self.soup.new_tag("i"))
+#             
+#             tag.append(f)
+#             if i < len(li) -1:
+#                 br = self.soup.new_tag('br')
+#                 tag.append(br)
 
 #     ##########################################################################################
 #     def setLien(self, Id, lien, elem):
         
         
-    ##########################################################################################
-    def AjouterLien(self, Id, lien, elem):
-
-        tag = self.soup.find(id = Id)
-        if tag is None: return
-        
-        if lien.type == 'u':
-            a = self.soup.new_tag("a")
-            a.string = lien.path
-            a["href"] = lien.path
-            tag.append(a)
-            
-        elif lien.type in ["f", "d"]:
-            self.elem = elem
-            b = self.soup.new_tag("wxp")
-            b["module"] = "wx"
-            b["class"] = "Button"
-            
-            param  = self.soup.new_tag("param")
-            param["name"] = "id"
-            param["value"] = "-1"
-            b.append(param)
-            
-            param  = self.soup.new_tag("param")
-            param["name"] = "label"
-            param["value"] = os.path.split(lien.path)[1]
-            b.append(param)
-            
+#     ##########################################################################################
+#     def AjouterLien(self, Id, lien, elem):
+# 
+#         tag = self.soup.find(id = Id)
+#         if tag is None: return
+#         
+#         if lien.type == 'u':
+#             a = self.soup.new_tag("a")
+#             a.string = lien.path
+#             a["href"] = lien.path
+#             tag.append(a)
+#             
+#         elif lien.type in ["f", "d"]:
+#             self.elem = elem
+#             b = self.soup.new_tag("wxp")
+#             b["module"] = "wx"
+#             b["class"] = "Button"
+#             
 #             param  = self.soup.new_tag("param")
-#             param["name"] = "name"
-#             param["value"] = "Bouton"
+#             param["name"] = "id"
+#             param["value"] = "-1"
 #             b.append(param)
-            
-            tag.append(b)
+#             
+#             param  = self.soup.new_tag("param")
+#             param["name"] = "label"
+#             param["value"] = os.path.split(lien.path)[1]
+#             b.append(param)
+#             
+# #             param  = self.soup.new_tag("param")
+# #             param["name"] = "name"
+# #             param["value"] = "Bouton"
+# #             b.append(param)
+#             
+#             tag.append(b)
             
         
     
-    ##########################################################################################
-    def AjouterTxt(self, Id, texte, bcoul = None, fcoul = "black", 
-                     bold = False, italic = False, size = 0):
-#        print "AjouterTxt", texte
-        tag = self.soup.find(id = Id)
-        
-        if fcoul != None or size != 0:     
-            f = self.soup.new_tag("font")
-            if fcoul != None:
-                f["color"] = fcoul
-            if size != 0:
-                f["size"] = size
-
-            tag.append(f)
-            tag = f
-            
-        if bold:   
-            b = self.soup.new_tag("b")
-            tag.append(b)
-            tag = b
-
-        if italic:     
-            i = self.soup.new_tag("i")
-            tag.append(i)
-            tag = i
-            
-        lignes = texte.split("\n")
-        for i, l in enumerate(lignes):
-            if i > 0:
-                br = self.soup.new_tag('br')
-                tag.append(br)
-            tag.append(NavigableString(l))
+#     ##########################################################################################
+#     def AjouterTxt(self, Id, texte, bcoul = None, fcoul = "black", 
+#                      bold = False, italic = False, size = 0):
+# #        print "AjouterTxt", texte
+#         tag = self.soup.find(id = Id)
+#         
+#         if fcoul != None or size != 0:     
+#             f = self.soup.new_tag("font")
+#             if fcoul != None:
+#                 f["color"] = fcoul
+#             if size != 0:
+#                 f["size"] = size
+# 
+#             tag.append(f)
+#             tag = f
+#             
+#         if bold:   
+#             b = self.soup.new_tag("b")
+#             tag.append(b)
+#             tag = b
+# 
+#         if italic:     
+#             i = self.soup.new_tag("i")
+#             tag.append(i)
+#             tag = i
+#             
+#         lignes = texte.split("\n")
+#         for i, l in enumerate(lignes):
+#             if i > 0:
+#                 br = self.soup.new_tag('br')
+#                 tag.append(br)
+#             tag.append(NavigableString(l))
 #        print tag
 
 
@@ -19603,21 +19605,21 @@ class PopupInfo(wx.PopupWindow):
 
 
 
-    ##########################################################################################
-    def AjouterImg(self, item, bmp, width = None):
-        try:
-            self.tfname.append(tempfile.mktemp()+".png")
-            bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
-        except:
-            print("err")
-            return
-        img = self.soup.find(id = item)
-#        print "img", img
-        img['src'] = self.tfname[-1]
-        
-        if width is not None:
-            img['width'] = str(width)
-            img['height'] = str(int(width*bmp.GetHeight()/bmp.GetWidth()))
+#     ##########################################################################################
+#     def AjouterImg(self, item, bmp, width = None):
+#         try:
+#             self.tfname.append(tempfile.mktemp()+".png")
+#             bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
+#         except:
+#             print("err")
+#             return
+#         img = self.soup.find(id = item)
+# #        print "img", img
+#         img['src'] = self.tfname[-1]
+#         
+#         if width is not None:
+#             img['width'] = str(width)
+#             img['height'] = str(int(width*bmp.GetHeight()/bmp.GetWidth()))
 
 #        img = node.getElementById(item)
 #        if img != None:
@@ -19626,28 +19628,28 @@ class PopupInfo(wx.PopupWindow):
 #            td.setAttribute("src", self.tfname)
 
 
-    #####################################################################################
-    def AjouterListe(self, idListe, lst_log):
-        t = ['disc', 'square', 'circle']
-
-        liste = self.soup.find(id = idListe)
-        
-        def Liste(l, l_log, i):
-            ul = self.soup.new_tag("ul")
-            l.append(ul)
-            ul['type'] = t[i]
-            for log in l_log:
-                li = self.soup.new_tag("li")
-                
-                if type(log) == tuple:
-                    li.append(log[0][1:])
-                    Liste(li, log[1], (i+1) % 3)
-                else:
-                    li.append(log[1:])    
-                ul.append(li)
-
-        Liste(liste, lst_log, 0)
-        
+#     #####################################################################################
+#     def AjouterListe(self, idListe, lst_log):
+#         t = ['disc', 'square', 'circle']
+# 
+#         liste = self.soup.find(id = idListe)
+#         
+#         def Liste(l, l_log, i):
+#             ul = self.soup.new_tag("ul")
+#             l.append(ul)
+#             ul['type'] = t[i]
+#             for log in l_log:
+#                 li = self.soup.new_tag("li")
+#                 
+#                 if type(log) == tuple:
+#                     li.append(log[0][1:])
+#                     Liste(li, log[1], (i+1) % 3)
+#                 else:
+#                     li.append(log[1:])    
+#                 ul.append(li)
+# 
+#         Liste(liste, lst_log, 0)
+#         
         
     #####################################################################################
     def AjouterElemListeUL(self, idListe, li):
@@ -19708,113 +19710,113 @@ class PopupInfo(wx.PopupWindow):
         tag.decompose()
 
 
-    ####################################################################################
-    def Construire(self, dic , tache, prj, code = None, check = False):
-        """ Construit l'arborescence des Compétences et Indicateurs.
-            Deux formats possibles pour <dicIndicateurs> :
-            
-        """
-#        print "Construire", dicIndicateurs
-#        print dic
-        self.tache = tache
-        self.dic = dic
-        self.prj = prj
-        self.code = code
-        dicIndicateurs = tache.GetDicIndicateurs()
-        def const(d, ul):
-            ks = list(d.keys())
-            ks.sort()
-            for k in ks:
-#                print "  k:", k
-                competence = d[k]
-                li = self.soup.new_tag("li")
-                ul.append(li)
-                
-                if competence.sousComp != {}: #len(v) > 1 and type(v[1]) == dict:
-#                    font = self.soup.new_tag("font")
-                    nul = self.soup.new_tag("ul")
-                    li.append(textwrap.fill(k+" "+competence.intitule, 50))
-                    const(competence.sousComp, nul)
-                    li.append(nul)
-                    
-                else:   # Indicateur
-                    nul = self.soup.new_tag("ul")
-                    cc = [cd+ " " + it for cd, it in zip(k.split("\n"), competence.intitule.split("\n"))] 
-                    nul['type']="1"
-                    li.append(textwrap.fill("\n ".join(cc), 50))
-
-                    ajouteIndic(nul, competence.indicateurs, "S"+k, )
-                
-                    li.append(nul)
-                
-            return
-
-        
-                
-                
-        def ajouteIndic(fm, listIndic, code):
-            if code in list(dicIndicateurs.keys()):
-                listIndicUtil = dicIndicateurs[code]
-            else:
-                listIndicUtil = None
-
-            for i, indic in enumerate(listIndic):
-                
-                if i > 0:
-                    br = self.soup.new_tag("br")   
-                    fm.append(br)
-                
-                codeIndic = code+"_"+str(i+1)
-                
-                coche = check and tache.estACocherIndic(codeIndic)
-                if coche:
-                    li = self.soup.new_tag("wxp")
-                    li["module"] = "widgets"
-                    li["class"] = "CheckBoxValue"
-                    param  = self.soup.new_tag("param")
-                    param["name"] = "id"
-                    param["value"] = str(100+i)
-                    li.append(param)
-                    
-                    param  = self.soup.new_tag("param")
-                    param["name"] = "name"
-                    param["value"] = codeIndic
-                    li.append(param)
-                    
-                    param  = self.soup.new_tag("param")
-                    param["name"] = "value"
-                    li.append(param)
-                    
-                    fm.append(li)
-                    
-                font = self.soup.new_tag("font")    
-#                 li.append(font)
-                font.append(textwrap.fill(indic.intitule, 50))
-                
-                
-                
-                fm.append(font)
-#                 li['type']="1"
-                
-                for part in list(prj.parties.keys()):
-                    if part in list(indic.poids.keys()):
-                        if listIndicUtil == None or not listIndicUtil[i]:
-                            c = COUL_ABS
-                            if coche:
-                                param["value"] = "False"
-                        else:
-                            c = getCoulPartie(part)
-                            if coche:
-                                param["value"] = "True"
-
-                font['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
-        
-        if type(dic) == dict:
-            ul = self.soup.find(id = "comp")
-            const(dic, ul)
-        else:
-            fm = self.soup.find(id = "comp")
-            ajouteIndic(fm, dic, code)
+#     ####################################################################################
+#     def Construire(self, dic , tache, prj, code = None, check = False):
+#         """ Construit l'arborescence des Compétences et Indicateurs.
+#             Deux formats possibles pour <dicIndicateurs> :
+#             
+#         """
+# #        print "Construire", dicIndicateurs
+# #        print dic
+#         self.tache = tache
+#         self.dic = dic
+#         self.prj = prj
+#         self.code = code
+#         dicIndicateurs = tache.GetDicIndicateurs()
+#         def const(d, ul):
+#             ks = list(d.keys())
+#             ks.sort()
+#             for k in ks:
+# #                print "  k:", k
+#                 competence = d[k]
+#                 li = self.soup.new_tag("li")
+#                 ul.append(li)
+#                 
+#                 if competence.sousComp != {}: #len(v) > 1 and type(v[1]) == dict:
+# #                    font = self.soup.new_tag("font")
+#                     nul = self.soup.new_tag("ul")
+#                     li.append(textwrap.fill(k+" "+competence.intitule, 50))
+#                     const(competence.sousComp, nul)
+#                     li.append(nul)
+#                     
+#                 else:   # Indicateur
+#                     nul = self.soup.new_tag("ul")
+#                     cc = [cd+ " " + it for cd, it in zip(k.split("\n"), competence.intitule.split("\n"))] 
+#                     nul['type']="1"
+#                     li.append(textwrap.fill("\n ".join(cc), 50))
+# 
+#                     ajouteIndic(nul, competence.indicateurs, "S"+k, )
+#                 
+#                     li.append(nul)
+#                 
+#             return
+# 
+#         
+#                 
+#                 
+#         def ajouteIndic(fm, listIndic, code):
+#             if code in list(dicIndicateurs.keys()):
+#                 listIndicUtil = dicIndicateurs[code]
+#             else:
+#                 listIndicUtil = None
+# 
+#             for i, indic in enumerate(listIndic):
+#                 
+#                 if i > 0:
+#                     br = self.soup.new_tag("br")   
+#                     fm.append(br)
+#                 
+#                 codeIndic = code+"_"+str(i+1)
+#                 
+#                 coche = check and tache.estACocherIndic(codeIndic)
+#                 if coche:
+#                     li = self.soup.new_tag("wxp")
+#                     li["module"] = "widgets"
+#                     li["class"] = "CheckBoxValue"
+#                     param  = self.soup.new_tag("param")
+#                     param["name"] = "id"
+#                     param["value"] = str(100+i)
+#                     li.append(param)
+#                     
+#                     param  = self.soup.new_tag("param")
+#                     param["name"] = "name"
+#                     param["value"] = codeIndic
+#                     li.append(param)
+#                     
+#                     param  = self.soup.new_tag("param")
+#                     param["name"] = "value"
+#                     li.append(param)
+#                     
+#                     fm.append(li)
+#                     
+#                 font = self.soup.new_tag("font")    
+# #                 li.append(font)
+#                 font.append(textwrap.fill(indic.intitule, 50))
+#                 
+#                 
+#                 
+#                 fm.append(font)
+# #                 li['type']="1"
+#                 
+#                 for part in list(prj.parties.keys()):
+#                     if part in list(indic.poids.keys()):
+#                         if listIndicUtil == None or not listIndicUtil[i]:
+#                             c = COUL_ABS
+#                             if coche:
+#                                 param["value"] = "False"
+#                         else:
+#                             c = getCoulPartie(part)
+#                             if coche:
+#                                 param["value"] = "True"
+# 
+#                 font['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
+#         
+#         if type(dic) == dict:
+#             ul = self.soup.find(id = "comp")
+#             const(dic, ul)
+#         else:
+#             fm = self.soup.find(id = "comp")
+#             ajouteIndic(fm, dic, code)
     
     
     #########################################################################################################
@@ -19849,9 +19851,9 @@ class PopupInfo(wx.PopupWindow):
             wx.CallAfter(self.sendEvent, modif = modif, draw = True, verif = True)
         self.tache.projet.Verrouiller()
         
-        ul = self.soup.find(id = "comp")
-        ul.clear()
-        self.Construire(self.dic , self.tache, self.prj, self.code, check = True)
+#         ul = self.soup.find(id = "comp")
+#         ul.clear()
+#         self.Construire(self.dic , self.tache, self.prj, self.code, check = True)
         self.SetPage()
         self.Update()
         

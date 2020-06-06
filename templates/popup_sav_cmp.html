@@ -1,9 +1,10 @@
-﻿{% for t, l in dic.items() %}
+﻿<span style="font-size: 8pt; font-style: italic;">{{ titre }}</span>
+{%- for t, l in dic.items() %}
 <font size="6" color="green"><b><h1>{{ t }}</h1></b></font>
 <dl>
-{% for i, n in l %}
+	{%- for i, n in l %}
 	<dt><b>{{ i }}</b></dt>
 	<dd>{{ n }}</dd>
-{% endfor %}
+	{%- endfor %}
 </dl> 
-{% endfor %}
+{%- endfor %}

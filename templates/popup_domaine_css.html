@@ -1,0 +1,8 @@
+﻿<p class="entete">{{ titre }}</p>
+{% if lst_dom|length > 0 %}
+<ul>
+{% for i in lst_dom %}
+	<li>{{ i }}</li>
+{% endfor %}
+</ul> 
+{% endif %}

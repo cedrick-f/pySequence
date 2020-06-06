@@ -1,0 +1,85 @@
+﻿<p class="entete">{{ titre }}</p>
+<font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">{{ intitule }}</h1></b></font>
+    <table border="0">
+        <tbody>
+		{%- if origine != "" %}
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=2>
+                <b>{{ tit_ori }}</b>
+                <p>{{ origine }}</p>
+            </td>
+        </tr>
+		{%- endif %}
+        {%- if contraintes != "" %}
+        <tr id = "ldes" align="left" valign="top" bgcolor="#e0f0f0">
+            <td colspan=2>
+                <b>{{ tit_contr }}</b>
+                <p>{{ contraintes }}</p>
+            </td>
+        </tr>
+		{%- endif %}
+        {%- if production != "" %}
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0e0f0">
+            <td colspan=2>
+                <b>{{ tit_obj }}</b>
+                <p>{{ production }}</p>
+            </td>
+        </tr>
+		{%- endif %}
+        {%- if parties != "" or besoinParties != "" %}
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0e0">
+			{%- if parties != "" %}
+            <td>
+                <b>{{ tit_dec }}</b>
+                <p>{{ parties }}</p>
+            </td>
+			{%- endif %}
+			{%- if besoinParties != "" %}
+            <td>
+                <b>{{ tit_bes }}</b>
+                <p>{{ besoinParties }}</p>
+            </td>
+			{%- endif %}
+        </tr>
+		{%- endif %}
+		{%- if synoptique != "" %}
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=2>
+                <b>{{ tit_syn }}</b>
+                <p>{{ synoptique }}</p>
+            </td>
+        </tr>
+		{%- endif %}
+		{%- if partenariat != "" or montant != "" or src_finance != "" %}
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0e0">
+			{%- if partenariat != "" %}
+            <td>
+                <b>{{ tit_par }}</b>
+                <p>{{ partenariat }}</p>
+            </td>
+			{%- endif %}
+			{%- if montant != "" %}
+            <td>
+                <b>{{ tit_prx }}</b>
+                <p>{{ montant }}</p>
+            </td>
+			{%- endif %}
+			{%- if src_finance != "" %}
+			<td>
+                <b>{{ tit_src }}</b>
+                <p>{{ src_finance }}</p>
+            </td>
+			{%- endif %}
+        </tr>
+		{%- endif %}
+		{%- if typologie|length > 0 %}
+		<tr id = "ldes" align="left" valign="top" bgcolor="#f0f0e0">
+			<td><ul>
+				{%- for m in typologie %}
+				<li>{{ m }}</li>
+				{%- endfor %}
+			</ul></td>
+        </tr>
+		{%- endif %}
+        </tbody>
+    </table>

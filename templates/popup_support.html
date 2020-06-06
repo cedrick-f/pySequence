@@ -1,14 +1,15 @@
-﻿<table width="100%">
+﻿<span style="font-size: 8pt; font-style: italic;">{{ titre }}</span>
+<table width="100%">
 	<tbody>
 	<tr>
-		<td valign="top" align="left"><font size="4"><b><h1>{{ nom }}</h1></b></font></td>
+		<td valign="top" align="left"><font size="2"><b><h1>{{ nom }}</h1></b></font></td>
 	</tr>
 	</tbody>
 </table>
 
 <table bgcolor="#DDD" border="0" width="100%">
 	<tbody>
-	{% if decription is not none %}
+	{%- if decription is not none %}
 	<tr  align="left">
 		<td colspan="2" valign="top" >
 			<b>Description détaillée {{ nom_sup }}</b>
@@ -18,13 +19,13 @@
 		<td colspan="{% if image is none %}2{% else %}1{% endif %}">
 			{{ decription }}
 		</td>
-		{% if image is not none %}
+		{%- if image is not none %}
 		<td>
 		<img src="{{ image }}" alt=" ">
 		</td>
-		{% endif %}
+		{%- endif %}
 	</tr>
-	{% endif %}
+	{%- endif %}
 	<tr>
 		<td colspan="2">
 		{{ lien }}
@@ -34,17 +35,17 @@
 </table>
 
 <br/>
-{% if lst_modeles|length > 0 %}
+{%- if lst_modeles|length > 0 %}
 <table bgcolor="#BBE" width="100%">
 	<tr valign="top" align="left" >
 		<th><span style="text-decoration: underline;">Modèles numériques :</span></th>
 	</tr>
-	{% for m in lst_modeles %}
+	{%- for m in lst_modeles %}
 	<tr><td>
 		{{ m }}
 	</td></tr>
-	{% endfor %}
+	{%- endfor %}
 </table>
-{% endif %}
+{%- endif %}
 
 

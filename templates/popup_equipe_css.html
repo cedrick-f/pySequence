@@ -1,0 +1,15 @@
+﻿<p class="entete">{{ titre }}</p>
+<table border="0" width="{{ width }}">
+	<tbody>
+	<tr align="right" valign="top">
+		<td width="200"><h2>{{ nom }}</h2>
+		{% if bold %}<p>Professeur référent</p>{% endif %}</td>
+		{% if image is not none%}
+		<td rowspan=2 align="right"><img src="{{ image }}" alt=" "></td>
+		{% endif %}
+	</tr>
+	<tr align="right" valign="top">
+		<td style="color:{{ coul }};" >{{ nom_disc }}</td>
+	</tr>
+	</tbody>
+</table>

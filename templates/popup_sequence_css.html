@@ -1,0 +1,27 @@
+﻿<p class="entete">{{ titre }}</p>
+<font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">{{ intitule }}</h1></b></font>
+<table border="0">
+	<tbody>
+	{%- if commentaire != "" %}
+	<tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+		<td>
+			<b>Commentaires</b>
+			<p>{{ commentaire }}</p>
+		</td>
+	</tr>
+	{%- endif %}
+	{%- if lst_dom|length > 0 %}
+	<tr id = "ldes" align="left" valign="top" bgcolor="#e0f0f0">
+		<td>
+		{{ tit_dom }}
+		<ul>
+		{%- for i in lst_dom %}
+			<li>{{ i }}</li>
+		{%- endfor %}
+		</ul>
+		</td>
+	</tr>
+	{%- endif %}
+	</tbody>
+</table>
+{{ lien }}

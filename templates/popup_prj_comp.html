@@ -1,0 +1,31 @@
+﻿<span style="font-size: 8pt; font-style: italic;">{{ titre }}</span>
+
+<ul type="">
+{%- for key, value in competences.items() recursive %}                       
+  <li>
+    <font size="+2" color="green"style="text-align: left;"><b>{{ value['code'] }}</b> {{ value['intitule'] }}</font>
+    {%- if value['souscomp'] is mapping %}                         
+      <ul>
+		{{ loop(value['souscomp'].items())}}
+	  </ul>  
+	{%- else %}
+	  <ul>
+		{%- for indic in value['souscomp'] %}
+		<li>
+		{%- if indic['coche'] %}  
+		<wxp module="widgets" class="CheckBoxValue">
+			<param name="id" value="{{ indic['c_id'] }}">
+			<param name="name" value="{{ indic['c_name'] }}">
+			<param name="value" value="{{ indic['c_check'] }}">
+		</wxp>
+		{%- endif %} 
+		<font color="{{ indic['coul'] }}">{{ indic['intitule'] }}</font>
+		</li> 
+		{%- endfor %}
+	  </ul>
+    {%- endif %}                                                            
+  </li>                                                                     
+{%- endfor %} 
+</ul>
+
+
