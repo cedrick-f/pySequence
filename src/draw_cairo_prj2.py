@@ -1300,20 +1300,14 @@ class Projet(Base_Fiche_Doc):
         self.ctx.set_line_width (0.0004 * COEF)
         dicIndic, dictype = dicIndic
         prjeval = objet.GetProjetRef()
-        
+#         if objet.code == "Elv":
+#             print("drawBoutonCompetence", dicIndic, dictype)
         for s in dicIndic:
-            
-    #         if s in dicIndic.keys():
             x = self.xComp[s]-self.wColComp/2
             
             rect = (x, y-h/2, self.wColComp, h)
             
             objet.GetDocument().zones_sens.append(Zone_sens([rect], obj = objet, param = s))
-            
-    #        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
-    #            objet.GetDocument().rectComp[s].append(rect)
-    #        else:
-    #            objet.GetDocument().rectComp[s] = [rect]
             
             objet.pts_caract.append((x,y))
             
@@ -1323,23 +1317,16 @@ class Projet(Base_Fiche_Doc):
             for a, indic in enumerate(indics):
                 deja = False
                 for i, part in enumerate(prjeval.listeParties):
+#                     if objet.code == "Elv":
+#                         print(indic, part)
                     if part in dictype[s][a] \
-                      and (hasattr(objet, 'phaseCompatible') and objet.phaseCompatible(i)):
-                
-#                 for part in dictype[s][a]:
-#                     if part in prjeval.parties:
-                        if indic: # Rose ou bleu
-#                             typeIndic = indic.getType(prjeval, exclu = False)
-#                             
-#                             if 'C' in typeIndic:
-#                                 d = -1
-#                             elif 'S'
-                            
-                            if part == prjeval.listeParties[0]:  # Conduite
-                                d = -1
-                            else:               # Soutenance
-                                d = 1
+                      and (not hasattr(objet, 'phaseCompatible') or objet.phaseCompatible(i)):
                         
+                        if indic: # Rose ou bleu
+                            if part == prjeval.listeParties[0]:  
+                                d = -1  # Conduite
+                            else:               
+                                d = 1   # Soutenance
                             self.ctx.set_source_rgba (*self.getCoulComp(part))
                 
                         else:
@@ -1347,11 +1334,8 @@ class Projet(Base_Fiche_Doc):
                             self.ctx.set_source_rgba (1, 1, 1, 0)
                 
                         if d != 0:      # Un rectangle coloré
-                            if deja != 0:   # On a jéja mis un rectangle ici (position deja)
-                                if deja:
-                                    self.ctx.rectangle(x+a*dx, y, dx, h/2)
-#                                 else:
-#                                     self.ctx.rectangle(x+a*dx, y-h/2, dx, h/2-dh)
+                            if deja:   # On a déja mis un rectangle ici (position deja)
+                                self.ctx.rectangle(x+a*dx, y, dx, h/2)
                                 
                             else:
                                 self.ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)

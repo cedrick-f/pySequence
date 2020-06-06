@@ -19848,13 +19848,15 @@ class PopupInfo(wx.PopupWindow):
         if self.onUndoRedo():
             self.sendEvent(modif = modif, draw = True, verif = True)
         else:
-            wx.CallAfter(self.sendEvent, modif = modif, draw = True, verif = True)
+            self.sendEvent(modif = modif, draw = True, verif = True)
+#             wx.CallAfter(self.sendEvent, modif = modif, draw = True, verif = True)
+        
         self.tache.projet.Verrouiller()
         
 #         ul = self.soup.find(id = "comp")
 #         ul.clear()
 #         self.Construire(self.dic , self.tache, self.prj, self.code, check = True)
-        self.SetPage()
+#         self.SetPage()
         self.Update()
         
     
@@ -19867,8 +19869,9 @@ class PopupInfo(wx.PopupWindow):
             self.tache.AjouterCompetence(code)
         else:
             self.tache.EnleverCompetence(code)
-      
-        wx.CallAfter(self.SetCompetences)
+        evt.Skip()
+        self.SetCompetences()
+#         wx.CallAfter(self.SetCompetences)
     
     ##########################################################################################
     def OnClick(self, evt):
