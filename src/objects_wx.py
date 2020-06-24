@@ -2088,7 +2088,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
     ######################################################################################  
     def SetAndShowTip(self, zone, x, y):
-        print("SetAndShowTip", (x, y), zone.param, zone.obj)
+#         print("SetAndShowTip", (x, y), zone.param, zone.obj)
              
 #         self.HideTip()
         self.zoneMove = zone

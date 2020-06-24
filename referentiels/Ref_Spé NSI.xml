@@ -5363,7 +5363,7 @@
   </d_effectifs>
   <d_effectifsSeance>
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
-    <l_AP S_00="E" S_01="P" />
+    <l_AP S_00="C" S_01="E" S_02="P" S_03="I" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_HC S_00="I" S_01="P" />
     <l_C S_00="C" />

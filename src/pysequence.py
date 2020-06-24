@@ -4060,7 +4060,7 @@ class Sequence(BaseDoc, Grammaire):
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
-        print("SetTip Séquence :", param, obj)
+#         print("SetTip Séquence :", param, obj)
         
         tip = self.GetTip()
         if tip is None:
@@ -6901,9 +6901,11 @@ class Progression(BaseDoc, Grammaire):
         for sp, r in enumerate(rect):
 #             print("  ", sp, r)
             h = self.sequences_projets[sp].GetDuree() / r[2] * nc
+#             print("   ", h)
             for i in range(r[1], r[1]+r[3]):
 #                 print("    ", i, h_lig)
-                h_lig[i] += h / (r[1]+r[3])
+#                 h_lig[i] += h / (r[1]+r[3])
+                h_lig[i] += h / (r[3])
         
 #         print("h_lig", h_lig)
 #         for l in range(len(h_lig)):
@@ -6915,9 +6917,7 @@ class Progression(BaseDoc, Grammaire):
             h_lig[i] += sum(h_lig[:i])
         
         h_lig.insert(0,0)
-#         print("h_lig", h_lig)
-            
-#         print "h_lig", h_lig
+#         print("h_lig >>> ", h_lig)
         
         
         
@@ -8565,7 +8565,7 @@ class ElementProgression():
             
             :i:  code pour différentier ...
         """
-        print("GetBulleHTML liendoc :", self, i, self.GetDoc())
+#         print("GetBulleHTML liendoc :", self, i, self.GetDoc())
 #         ref = self.GetReferentiel()
         doc = self.GetDoc()
         
@@ -8586,7 +8586,7 @@ class ElementProgression():
            
             if css:
                 if image is not None:
-                    image = b64(image)
+                    image = img2b64(image.ConvertToImage())
                 else:
                     image = None
                 

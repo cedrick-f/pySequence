@@ -1779,7 +1779,7 @@ class Curve_rect_titre(Elem_Dessin):
         
         show_text_rect_fix(ctx, self.titre, 
                            (xc, yc, rect_width-2*self.rayon, fheight),
-                           self.taille_font, b = 0, ha = "g")
+                           self.taille_font*0.9, b = 0, ha = "g", va = "b")
         
         return c
 

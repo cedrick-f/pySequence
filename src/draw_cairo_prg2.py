@@ -1255,14 +1255,13 @@ class Progression(Base_Fiche_Doc):
                     y_per[j] = (n+1)*(y_per[l[-1]+1] - y_per[l[0]-1]) / (len(l)+1) + y_per[l[0]-1]
                 l = []
             i +=1
-            
-            
-    #     print "y_per", y_per        
-    #     print        
-        
+                   
+        tit = self.prg.intitule.split('\n')[0]
+        if len(tit) == 0:
+            tit = "Séquences et Projets"
         Curve_rect_titre(self, (self.posZDeroul[0], self.posZDeroul[1], 
-                          self.tailleZDeroul[0], self.tailleZDeroul[1]),
-                         "Séquences et Projets",
+                         self.tailleZDeroul[0], self.tailleZDeroul[1]),
+                         tit,
                          self.BcoulZDeroul, self.IcoulZDeroul, self.fontZDeroul).draw()
         
         

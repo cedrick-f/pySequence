@@ -112,7 +112,7 @@ class Sequence(Base_Fiche_Doc):
         self.siz_Obj = [None, None]
         self.p_Icol_Obj = (0.8, 0.9, 0.8, 0.85)
         self.p_Bcol_Obj = (0.25, 0.3, 0.2, 1)
-        self.p_font_Obj = 0.014 * COEF
+        self.p_font_Obj = 0.012 * COEF
         
         # Cible
         self.pos_Cib = [None, None]
@@ -140,7 +140,7 @@ class Sequence(Base_Fiche_Doc):
         # posIntitule = [(LargeurTotale-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
         self.p_Icol_Int = (0.98, 0.99, 0.98, 0.8)
         self.p_Bcol_Int = (0.2, 0.8, 0.2, 1)
-        self.p_font_Int = 0.02 * COEF
+        self.p_font_Int = 0.016 * COEF
         
         # Zone de découpage de la classe
         self.p_h_Cls = 0.06 * COEF
@@ -528,11 +528,13 @@ class Sequence(Base_Fiche_Doc):
             rect = (self.x_Org-self.p_mrg_Org, self.p_y_Org, 
                     self.siz_Org[0]+self.p_mrg_Org*2, self.siz_Org[1]+self.p_mrg_Org)
             self.seq.zones_sens.append(Zone_sens([rect], obj = self.seq))
-            if len(self.seq.intitule) == 0:
-                t = "Séquence sans nom"
+            
+            tit = self.seq.intitule.split('\n')[0]
+            if len(tit) == 0:
+                tit = "Séquence pédagogique"
             else:
-                t = self.seq.intitule
-            pt = Curve_rect_titre(self, rect, t,  
+                tit = self.seq.intitule
+            pt = Curve_rect_titre(self, rect, tit,  
                                   self.p_Bcol_Int, 
                                   self.p_Icol_Int, 
                                   self.p_font_Int).draw()
