@@ -57,11 +57,12 @@ def OnDestroy(self, event):
 
         :param `event`: a :class:`MouseEvent` or a :class:`FocusEvent` event to be processed.
         """
-        _event.Skip()_
+        event.Skip()
         if not isinstance(event, wx.MouseEvent):
            ...
 ```
 Rajouter la ligne `event.Skip()`.
+
 Supprimer le fichier `.pyc` correspondant dans le sous-dossier `__pycache__`.
 
 
