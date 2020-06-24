@@ -102,6 +102,6 @@ _**pySequence 8**_ existe :
 _**pySequence 8**_ est développé par _Cédrick FAURY_ et _Jean-Claude FRICOU_
 
 Toutes les bonnes volontés pour le développement de _**pySequence 8**_ sont les bienvenues.
-Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence/wiki/LangageEtDependances)
+Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence/blob/master/Installation_sources.md)
 
 

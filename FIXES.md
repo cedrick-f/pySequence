@@ -43,6 +43,7 @@ par
 
 
 # Problème de curseur dans les zones de description
+A chaque nouvelle installation de wxPython :
 
 ## Fix
 Modifier le fichier `{Python}\Lib\site-packages\wx\lib\agw\supertooltip.py` , ligne 499 :
@@ -61,3 +62,7 @@ def OnDestroy(self, event):
            ...
 ```
 Rajouter la ligne `event.Skip()`.
+
+Supprimer le fichier `.pyc` correspondant dans le sous-dossier `__pycache__`.
+
+
