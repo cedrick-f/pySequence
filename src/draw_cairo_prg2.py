@@ -707,9 +707,9 @@ class Progression(Base_Fiche_Doc):
         #  Equipe
         #
         rectEqu = self.posEqu + self.tailleEqu
-        self.prg.pt_caract.append((Curve_rect_titre(self, rectEqu, "Equipe pédagogique", 
+        self.prg.pt_caract.append((Curve_rect_titre(self, rectEqu, "Équipe pédagogique", 
                                               self.BcoulEqu, self.IcoulEqu, self.fontEqu).draw(),
-                            'Equ'))
+                            'EQU'))
         
         lstTexte = []
         g = None
@@ -733,7 +733,7 @@ class Progression(Base_Fiche_Doc):
         for i, p in enumerate(self.prg.equipe):
             self.prg.zones_sens.append(Zone_sens([r[i]], obj = p))
     #        p.rect = [r[i]]
-    #        prj.pts_caract.append(getPts(r))
+            p.pts_caract = getPts(r)
     
     
     
@@ -746,7 +746,7 @@ class Progression(Base_Fiche_Doc):
         rectPro = self.posPro + self.taillePro
         pt = Curve_rect_titre(self, rectPro, "Calendrier",  
                               self.BcoulPro, self.IcoulPro, self.fontPro).draw()
-        self.prg.pt_caract.append((pt, "Cal"))
+        self.prg.pt_caract.append((pt, "CAL"))
         ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, constantes.ellipsizer("", constantes.LONG_MAX_PROBLEMATIQUE), 
@@ -764,11 +764,10 @@ class Progression(Base_Fiche_Doc):
         #
         #  Années
         #
-    #    prg.pts_caract = []
         rectNom = self.posNom+self.tailleNom
         pt = Curve_rect_titre(self, rectNom, "Progression pédagogique",  
                               self.BcoulNom, self.IcoulNom, self.fontNom).draw()
-        self.prg.pt_caract.append((pt, 'Ann'))
+        self.prg.pt_caract.append((pt, 'ANN'))
         ctx.select_font_face(self.font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, "Années scolaires " + self.prg.GetAnnees(), 
@@ -827,7 +826,7 @@ class Progression(Base_Fiche_Doc):
                     ctx.set_source_rgba(*coul)
                     ctx.rectangle(*rect[:4])
                     ctx.fill()
-                    self.prg.pt_caract.append((rect[:2], "C_"+k2))
+                    self.prg.pt_caract.append((rect[:2], "CMP"+k2))
                     n += 1
                     _x += self.wColComp
                     

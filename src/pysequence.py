@@ -819,13 +819,17 @@ class ElementBase(Grammaire):
              - liens 
              - ...
         """
-#         print("EnrichiHTML", self, seance, self.cadre)
+#         print("EnrichiHTML", self)
         
         for i, (p, f, c) in enumerate(self.cadre):
             div = doc.new_tag('div')
             div['class'] = "mouse tooltip"
             div['id'] = self.getIdHTML(i)
-            bulle = BeautifulSoup(self.GetBulleHTML(f, css = True), "html5lib").body
+            html = self.GetBulleHTML(f, css = True)
+            if html == "":
+                html = self.GetBulleHTMLDoc(f, css = True)
+#             print("   ", f, html[:10])
+            bulle = BeautifulSoup(html, "html5lib").body
 # #             div.extend(bulle.findChildren())
 # #             div.extend(bulle.body.children)
 #             for t in bulle.children:
@@ -963,7 +967,7 @@ class ElementBase(Grammaire):
             Chaque point caractéristique est de la forme :
             ((x, y), element, code ou indice)
         """
-#         print("GetPtCaract base :", self)
+        print("GetPtCaract base :", self)
         lst = []
         
         # Points caractéristiques des rectangles (sans code)
@@ -979,6 +983,7 @@ class ElementBase(Grammaire):
                 lst.append((pt[0], self, pt[1]))
             
         self.cadre = [] # ???
+        print("   ",lst)
         return lst
     
     
@@ -1104,36 +1109,36 @@ class ElementBase(Grammaire):
         return image
     
     
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        if param is None:
-            return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
-        else:
-            if param == "CAL":
-                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CALENDRIER)
-            
-            elif param == "PB":
-                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROB)
-                
-            elif param == "ANN":
-                pass
-            
-            elif param == "DOM":
-                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_DOM)
-                
-            elif param[:3] == "POS":
-                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PERIODES)
-                
-            elif param[:3] == "EQU":
-                pass
-            
-            elif param[:2] == "CI":
-                return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CI)
-                
-            else:
-                pass
-            
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         if param is None:
+#             return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
+#         else:
+#             if param == "CAL":
+#                 return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CALENDRIER)
+#             
+#             elif param == "PB":
+#                 return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROB)
+#                 
+#             elif param == "ANN":
+#                 pass
+#             
+#             elif param == "DOM":
+#                 return constantes.encap_HTML(constantes.BASE_FICHE_HTML_DOM)
+#                 
+#             elif param[:3] == "POS":
+#                 return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PERIODES)
+#                 
+#             elif param[:3] == "EQU":
+#                 pass
+#             
+#             elif param[:2] == "CI":
+#                 return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CI)
+#                 
+#             else:
+#                 pass
+#             
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML)
 
     
 #     ######################################################################################  
@@ -1773,9 +1778,9 @@ class Classe(ElementBase):
             self.codeBranche.Refresh()
 
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CLASSE)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_CLASSE)
     
     
     ######################################################################################  
@@ -2316,6 +2321,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
             
             :i:  code pour différentier ...
         """
+        print("GetBulleHTMLDoc", param)
         ref = self.GetReferentiel()
         
         html = ""
@@ -6681,7 +6687,7 @@ class Progression(BaseDoc, Grammaire):
         lst = BaseDoc.GetPtCaract(self)
         ##################################### 
             
-        for s in self.sequences_projets + self.eleves:
+        for s in self.sequences_projets + self.equipe:
             lst.extend(s.GetPtCaract())
             
 #         print(">>>", lst)
@@ -8234,48 +8240,51 @@ class Progression(BaseDoc, Grammaire):
         tip = self.GetTip()
         if tip is None:
             return
-         
-        if param is None and obj is None:  # La Progression
-            html = self.GetBulleHTML(css = False, tip = tip)
         
-        elif param[:3] == "CMP":
-            html = self.GetBulleHTML(i = param, css = False, tip = tip)
-            
-        elif param[:3] == "ANN":
-            html = self.GetBulleHTML(i = param, css = False, tip = tip)
+        html = self.GetBulleHTML(param = param, css = False, tip = tip) 
         
-        elif param[:3] == "CAL":
-            html = self.GetBulleHTML(i = param, css = False, tip = tip)
-            
-        elif param[:2] == "CI":
-            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
-            
-        elif param[:3] == "EQU":
-            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
-            
-        elif param is not None and obj is None: # Un autre élément du Projet, commun à tous les documents
-            html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
-
-        else:
-            html = ""
+        
+#         if param is None and obj is None:  # La Progression
+#             html = self.GetBulleHTML(css = False, tip = tip)
+#          
+#         elif param[:3] == "CMP":
+#             html = self.GetBulleHTML(i = param, css = False, tip = tip)
+#              
+#         elif param[:3] == "ANN":
+#             html = self.GetBulleHTML(i = param, css = False, tip = tip)
+#          
+#         elif param[:3] == "CAL":
+#             html = self.GetBulleHTML(i = param, css = False, tip = tip)
+#              
+#         elif param[:2] == "CI":
+#             html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+#              
+#         elif param[:3] == "EQU":
+#             html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+#              
+#         elif param is not None and obj is None: # Un autre élément du Projet, commun à tous les documents
+#             html = self.GetBulleHTMLDoc(param, css = False, tip = tip)
+#  
+#         else:
+#             html = ""
             
         tip.SetHTML(html)
         tip.SetPage()
         return tip
 
     ######################################################################################  
-    def GetBulleHTML(self, i = None, css = False, tip = None):
+    def GetBulleHTML(self, param = None, css = False, tip = None):
         """ Renvoie le tootTip sous la forme HTML
             pour affichage sur la fiche HTML (template "_CSS")
             ou sur la fiche pySéquence (template par défaut)
             
-            :i:  code pour différentier ...
+            :param:  code pour différentier ...
         """
-#         print("GetBulleHTML Prg", self, i)
+#         print("GetBulleHTML Prg", param)
         ref = self.GetReferentiel()
         
-        if i[:3] == "CMP":
-            code = i[3:]
+        if param[:3] == "CMP":
+            code = param[3:]
             
             if css:
                 t = Template(constantes.TEMPLATE_CMP_SAV_CSS)
@@ -8303,7 +8312,9 @@ class Progression(BaseDoc, Grammaire):
             return html
         
         
-        elif i == "CAL":
+        
+        
+        elif param == "CAL":
             if css:
                 t = Template(constantes.TEMPLATE_EFF_CSS)
             else:
@@ -8314,7 +8325,8 @@ class Progression(BaseDoc, Grammaire):
             image = self.getBitmapCalendrier(400)
             if css:
                 if image is not None:
-                    image = b64(image)
+#                     image = b64(image)
+                    image = img2b64(image.ConvertToImage())
                 else:
                     image = None
                 
@@ -8327,6 +8339,44 @@ class Progression(BaseDoc, Grammaire):
                             )
     
             return html
+        
+        
+        
+        elif param[:2] == "CI":
+            html = self.GetBulleHTMLDoc(param, css = css, tip = tip)
+            return html
+        
+        
+        
+        elif param[:3] == "EQU":
+            html = self.GetBulleHTMLDoc(param, css = css, tip = tip)
+            return html
+        
+        
+        
+        elif param[:3] == "ANN":
+            if css:
+                t = Template(constantes.TEMPLATE_PROG_CSS)
+            else:
+                t = Template(constantes.TEMPLATE_PROG)
+            
+            image = self.getImageSrc(css, tip, 100)
+            
+            html = t.render(titre = self.Sing_(),
+                            intitule = self.intitule,
+                            scol = "Années scolaires " + self.GetAnnees(),
+                            image = image,
+                            lien = self.GetBulleHTMLLien(css = css, tip = tip)
+                            )
+    
+            return html
+        
+        
+        elif param is not None:# and obj is None: # Un autre élément du Projet, commun à tous les documents
+            html = self.GetBulleHTMLDoc(param, css = css, tip = tip)
+            return html
+        
+        
         
         else:
             if css:
@@ -8344,6 +8394,8 @@ class Progression(BaseDoc, Grammaire):
                             )
     
             return html
+        
+        
         
         
         return  ""
@@ -9284,7 +9336,7 @@ class CentreInteret(ElementBase):
     
     ######################################################################################  
     def GetBulleHTML(self, i = None, css = False, tip = None):
-#         print("GetBulleHTML", self, i)
+        print("GetBulleHTML", self, i)
         ref = self.GetReferentiel()
         
         if len(self.numCI)+len(self.CI_perso) > 1:
@@ -15932,9 +15984,9 @@ class Prof(Personne):
         else:
             return self.image
         
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROF)
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.encap_HTML(constantes.BASE_FICHE_HTML_PROF)
         
         
     ######################################################################################  

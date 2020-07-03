@@ -1,15 +1,12 @@
 ﻿<p class="entete">{{ titre }}</p>
 <table border="0" width="{{ width }}">
 	<tbody>
+	
+	{% for prof in lst_prf %}
 	<tr align="right" valign="top">
-		<td width="200"><h2>{{ nom }}</h2>
-		{% if bold %}<p>Professeur référent</p>{% endif %}</td>
-		{% if image is not none%}
-		<td rowspan=2 align="right"><img src="{{ image }}" alt=" "></td>
-		{% endif %}
+		<td><font size="2" color="{{ prof['coul'] }}" style="font-weight:bold;">{% if prof['bold'] %}<b>{% endif %}{{ prof['nom'] }}{% if prof['bold'] %}</b>{% endif %}</font>
+		</td>
 	</tr>
-	<tr align="right" valign="top">
-		<td style="color:{{ coul }};" >{{ nom_disc }}</td>
-	</tr>
+	{% endfor %}
 	</tbody>
 </table>

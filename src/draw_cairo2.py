@@ -2588,18 +2588,18 @@ class Liste_code_texte2(Elem_Dessin):
         ctx.select_font_face (self.font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         for i, t in enumerate(self.lstCodes):
-            if t.strip() != "":
+            
                 
-                # Un rectangle pour la séléction
-                rect = (x, y + sum(ht[:i]) + i*hc, w, hc+ht[i])
-                lstRect.append(rect)
-                ctx.set_line_width(0.0001 * COEF)
-                ctx.set_source_rgba (*self.coulFond[:3], 0.01)
-                ctx.rectangle(*rect)
-                ctx.fill_preserve()
-                ctx.stroke()
+            # Un rectangle pour la séléction
+            rect = (x, y + sum(ht[:i]) + i*hc, w, hc+ht[i])
+            lstRect.append(rect)
+            ctx.set_line_width(0.0001 * COEF)
+            ctx.set_source_rgba (*self.coulFond[:3], 0.01)
+            ctx.rectangle(*rect)
+            ctx.fill_preserve()
+            ctx.stroke()
                 
-                
+            if t.strip() != "":   
                 if self.lstCoul != None:
                     ctx.set_source_rgb (*self.lstCoul[i])
     #                else:
