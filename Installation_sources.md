@@ -117,5 +117,13 @@ Sous Windows :
 (source : https://github.com/jmcb/python-rsvg-dependencies)
 
 
+## Téléchargement des sources
+Choisir parmi les fichiers zip de la page des releases : [https://github.com/cedrick-f/pySequence/releases](https://github.com/cedrick-f/pySequence/releases)
+Dézipper
+
+## Exécution du programme
+Depuis le sous dossier `/bin`
+
+`python wxpysequence.py`
 
 
