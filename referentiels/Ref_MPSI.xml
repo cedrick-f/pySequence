@@ -6953,7 +6953,7 @@
       <l_listTaches />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
-      <l_periode I_00="7" I_01="10" />
+      <l_periode I_00="5" />
       <d_phases>
         <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" S_03="" />
         <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" S_03="" />
