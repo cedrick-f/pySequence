@@ -51,6 +51,7 @@ SSCALE = 1.0
 import os, sys
 import urllib.request
 import util_path
+import logiciels
 import shutil
 import uuid # Pour autosave
 
@@ -158,7 +159,7 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, DUREE_AUTOSAVE, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, WMIN_PROP, HMIN_PROP, \
-                        WMIN_STRUC, HMIN_STRUC, LOGICIELS, IMG_LOGICIELS, \
+                        WMIN_STRUC, HMIN_STRUC, LOGICIELS, \
                         IMG_SIZE_TB, IMG_SIZE_TREE, evaluer#, bmp
 import constantes
 constantes.charger_templates()
@@ -4960,6 +4961,7 @@ class BaseFiche2(wx.ScrolledWindow): # Ancienne version : NE PAS SUPPRIMER (peut
         w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 
+        self.w, self.h = self.GetVirtualSize()
         self.InitBuffer()
         if w > 0 and self.IsShown():
             self.Redessiner()
@@ -14873,7 +14875,9 @@ class ArbreProjet(ArbreDoc):
     def __init__(self, parent, projet, classe, panelProp):
 
         ArbreDoc.__init__(self, parent, classe, panelProp,
-                          imglst = list(constantes.imagesProjet.items()) + list(constantes.imagesTaches.items()) + list(constantes.IMG_LOGICIELS.items()))
+                        imglst =  list(constantes.imagesProjet.items()) \
+                                + list(constantes.imagesTaches.items()) \
+                                + list(constantes.IMG_LOGICIELS.items()))
         
         self.parent = parent
         
@@ -17585,10 +17589,23 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
                                    |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
         
         self.dic_img = {}
-        il = wx.ImageList(16*SSCALE, 16*SSCALE)
-        for i, (n, img) in enumerate(IMG_LOGICIELS.items()):
+        s = (16*SSCALE, 16*SSCALE)
+        il = wx.ImageList(*s)
+        for i, (n, img) in enumerate(constantes.IMG_LOGICIELS.items()):
             il.Add(scaleImage(img.GetBitmap(), 16*SSCALE,16*SSCALE))
             self.dic_img[n] = i
+#         i = 0
+#         for l in LOGICIELS:
+#             if l.image is not None:
+#                 il.Add(scaleImage(l.image.GetBitmap(),*s))
+#                 self.dic_img[l.nom] = i
+#                 i += 1
+#                 
+#             for m in l.modules:
+#                 if m.image is not None:
+#                     il.Add(scaleImage(m.image.GetBitmap(), *s))
+#                     self.dic_img[m.nom] = i
+#                     i += 1
         self.AssignImageList(il)
         
         
@@ -17611,6 +17628,69 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
     
     ######################################################################################  
     def Construire(self, racine):
+        """ Construction de l'arbre
+        """
+#         print "Construire ArbreLogiciel"
+    
+        self.lstItems = []
+        
+        def appendBranche(branche, l):
+            if l.type == 0:
+                ct = 2
+                wnd = None
+            elif l.type == 1:
+                ct = 1
+                wnd = None
+            if l.nom == "":
+                wnd = wx.TextCtrl(self, -1, "", name = str(len(self.lstItems)))
+                wnd.Enable(False)
+                self.Bind(wx.EVT_TEXT, self.OnText, wnd)
+
+            b = self.AppendItem(branche, l.nom, ct_type=ct, wnd = wnd)
+            self.lstItems.append(b)
+         
+            if l.nom in self.dic_img:
+                self.SetItemImage(b, self.dic_img[l.nom])
+                
+                
+#             self.branche.append(b)
+            return b
+            
+            
+        self.branche = []
+#        self.ExpandAll()
+        for l in LOGICIELS:
+            
+#             print "   ", t, st
+            
+#             if t[0] == "_":
+#                 branche = self.AppendItem(racine, t)
+#             else:
+            branche = appendBranche(racine, l)
+#                 branche = self.AppendItem(racine, t, ct_type=ct, image = self.arbre.images["Seq"])
+# #                 rb = wx.RadioButton(self, -1, t)
+# #                 self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
+# #                 self.SetItemWindow(branche, rb)
+# #                 rb.SetToolTip(t)
+#                 self.branche.append(branche)
+                
+            for m in l.modules:
+                appendBranche(branche, m)
+#                 sbranche = self.AppendItem(branche, u"")#, ct_type=2)
+#                 rb = wx.RadioButton(self, -1, sst)
+#                 self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
+#                 self.SetItemWindow(sbranche, rb)
+#                 rb.SetToolTip(sst)
+#                 self.branche.append(sbranche)
+        
+        self.ExpandAll()
+        self.CollapseAll()
+#         self.Layout()
+#         self.CalculatePositions()
+    
+    
+    ######################################################################################  
+    def Construire2(self, racine):
         """ Construction de l'arbre
         """
 #         print "Construire ArbreLogiciel"
@@ -17673,7 +17753,8 @@ class ArbreLogiciels(CT.CustomTreeCtrl):
         self.CollapseAll()
 #         self.Layout()
 #         self.CalculatePositions()
-        
+
+
     ######################################################################################              
     def GetLogName(self, item):
         if item.GetWindow() is None:

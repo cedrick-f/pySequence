@@ -1263,6 +1263,7 @@ class Classe(ElementBase):
             
             
         self.referentiel = REFERENTIELS[self.typeEnseignement]
+        self.referentiel.corrigerVersion()
         
         # On vérifie que c'est bien un type d'enseignement avec projet
         if pourProjet:

@@ -1256,7 +1256,7 @@ class Periodes(Elem_Dessin):
         
         # Toutes le périodes de projet
         periodes_prj = [p.periode for p in self.projets.values()]
-    #    print "   ", periodes, periodes_prj
+#         print("periodes_prj", periodes_prj)
         
         # Les noms des projets par période
         noms_prj = {}
@@ -1337,7 +1337,7 @@ class Periodes(Elem_Dessin):
             
             for c in range(np):
                 pa += 1
-                if pa in list(noms_prj.keys()):
+                if pa in noms_prj:
                     n = noms_prj[pa]
                 else:
                     n = ""

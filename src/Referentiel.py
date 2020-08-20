@@ -1003,7 +1003,7 @@ class Referentiel(XMLelem):
         
         
     ######################################################################################
-    def corrigerVersion(self, nomerr):
+    def corrigerVersion(self, nomerr = []):
         """ Correction d'erreur de lecture de la branche XML
             pour cause de changement de version
         """
@@ -2318,9 +2318,11 @@ class Referentiel(XMLelem):
         """ Retourne le "label" (type Grammaire) associé au code donné
         """
         if code in self.labels:
+            if len(self.labels[code]) == 2:
+                self.labels[code].append(Grammaire(self.labels[code][0]))
             return self.labels[code][2]
-        else:
-            return Grammaire(code)
+#         else:
+#             return Grammaire(code)
     
     #########################################################################
     def getLabelAide(self, code):

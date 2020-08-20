@@ -45,6 +45,9 @@ import wx
 # Les icones des branches de l'abre et un curseur perso
 import images
 
+# Les logiciels utilisables
+import logiciels
+
 import time
 
 import sys, os
@@ -839,38 +842,9 @@ def getLstDisciplines():
     return lst
 
 
-# Logiciels de modélisation
-# Caractère de préfixe :
-#   . = bouton radio
-#   x = case à cocher
-#   _ = texte libre (avec case à cocher)
-#   
-LOGICIELS = [(".Solidworks", [".Motion",
-                             ".Meca3D",
-                             "xFlowSim",
-                             "xSimulation",
-                             "_"],
-              ),
-             (".CATIA", []),
-             (".Inventor", []),
-             (".AutoCAD", []),
-             (".Top Solid", []),
-             (".Solidedge", []),
-             (".Pro Engineer", []),
-             (".FreeCAD", []),
-             (".Sketchup", []),
-             
-             (".MATLAB", ["xSimulink",
-                         "xStateflow",
-                         "xSimscape",
-                         "xSimElectronics",
-                         "xSimPowerSystems",
-                         "xSimMechanics",
-                         "_"]),
-             (".SciLAB", ["xXcos"]),
-             (".LabView", []),
-             ("_", [])
-             ]
+
+LOGICIELS = logiciels.charger_logiciels()
+IMG_LOGICIELS = logiciels.charger_images(LOGICIELS)
 
 IMG_LOGICIELS = {"Solidworks" : images.Logiciel_SW,
                  "MATLAB" : images.Logiciel_MATLAB,
@@ -884,6 +858,7 @@ IMG_LOGICIELS = {"Solidworks" : images.Logiciel_SW,
                  "FreeCAD" : images.Logiciel_FreeCAD,
                  "Sketchup" : images.Logiciel_Sketchup
                  }
+
 
 
 # Nombre de créneaux dans les Progressions

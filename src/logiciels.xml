@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<logiciels>
+	<logiciel nom="Solidworks" image="Logiciel_SW" type="0">
+		<module nom="Motion" type="0">
+		</module>
+		<module nom="Meca3D" type="0">
+		</module>
+		<module nom="FlowSim" type="1">
+		</module>
+		<module nom="Simulation" type="1">
+		</module>
+		<module type="1">
+		</module>
+	</logiciel>
+	<logiciel nom="CATIA" image="Logiciel_CATIA" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+	<logiciel nom="Inventor" image="Logiciel_Inventor" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+	<logiciel nom="AutoCAD" image="Logiciel_Autocad" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+	<logiciel nom="Top Solid" image="Logiciel_Topsolid" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+	<logiciel nom="Solidedge" image="Logiciel_SEdge" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="Pro Engineer" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="FreeCAD" image="Logiciel_FreeCAD" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="Sketchup" image="Logiciel_Sketchup" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="MATLAB" image="Logiciel_MATLAB" type="0">
+		<module nom="Simulink" type="1">
+		</module>
+		<module nom="Stateflow" type="1">
+		</module>
+		<module nom="Simscape" type="1">
+		</module>
+		<module nom="SimElectronics" type="1">
+		</module>
+		<module nom="SimPowerSystems" type="1">
+		</module>
+		<module nom="SimMechanics" type="1">
+		</module>
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="SciLAB" image="" type="0">
+		<module nom="Xcos" type="1">
+		</module>
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="LabView" image="Logiciel_LV" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="Python" image="Logiciel_Python" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="EasyEDA" image="Logiciel_easyeda" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+	<logiciel nom="FlowCode" image="Logiciel_Flowcode" type="0">
+	</logiciel>
+
+	<logiciel nom="Fritzing" image="Logiciel_Fritzing" type="0">
+	</logiciel>
+
+	<logiciel nom="KiCad" image="Logiciel_kicad" type="0">
+		<module type="1">
+		</module>
+	</logiciel>
+
+
+	<logiciel type="0">
+	</logiciel>
+</logiciels>
