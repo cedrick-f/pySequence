@@ -2321,8 +2321,8 @@ class Referentiel(XMLelem):
             if len(self.labels[code]) == 2:
                 self.labels[code].append(Grammaire(self.labels[code][0]))
             return self.labels[code][2]
-#         else:
-#             return Grammaire(code)
+        else:
+            return Grammaire(code)
     
     #########################################################################
     def getLabelAide(self, code):
