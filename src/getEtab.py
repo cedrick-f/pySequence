@@ -167,7 +167,7 @@ def GetFeries(win):
 import wx
 
 #############################################################################################
-def GetEtablissements(win):
+def GetEtablissements2(win):
     
     from bs4 import BeautifulSoup
     import urllib.request, urllib.error, urllib.parse
@@ -250,6 +250,8 @@ def GetEtablissements(win):
 #         dlg.Update(0, message)
         print("pas d'accès Internet")
         return   
+    except:
+        print("Erreur accès", urlAcad)
 
     acad_select = downloadPage.find(id="acad_select")
     liste_acad = [[o['label'], o['value']] for o in acad_select.find_all('option')]
@@ -398,7 +400,242 @@ def GetEtablissements(win):
     dlg.update(count, message)
 #    print liste_etab
     return liste_etab
+
+#############################################################################################
+
+def GetEtablissements(win = None):
+    
+    from bs4 import BeautifulSoup
+    import urllib.request, urllib.error, urllib.parse
+    if win is not None:
+        from objects_wx import myProgressDialog
+    
+    # titre, message, maximum, parent, style = 0, btnAnnul = True, msgAnnul = u"Annuler l'opération"
+    message = "Recherche des établissements\n\n"
+    
+    errmsg = ""
+    
+    tentatives = 0
+    
+    def getEtabVille(page, message):
+        lst = []
+        div_etab = page.find_all('div', attrs={'class':"etablissement--search__content__wrapper"}, limit=1)[0]
         
+        lst_etab = div_etab.find_all('div', recursive=False)
+        if len(lst_etab) == 0:
+            return None, message
+        
+        for ev in lst_etab:
+            e = ev.find_all('div', attrs={'class':"establishment--search_item__content"}, limit=1)[0]
+            etab = e.find_all('h2', limit=1)[0].string.strip()
+            if win is not None:
+                message += "     établissement : "+ etab + u"\n"
+                dlg.update(count, message)
+            else:
+                print("     établissement : "+ etab)
+#             print("  etab :", etab)
+            v = ev.find_all('div', attrs={'class':"establishment--search_item__address"}, limit=1)[0]
+            ville = v.find_all('p')[1].string.split(' - ')[-1].strip().split(' ', 1)[-1]
+            if win is not None:
+                message += "     ville : "+ ville + "\n"
+                dlg.update(count, message)
+            else:
+                print("     ville : "+ ville + "\n")
+            lst.append([etab, ville])
+        
+        return lst, message
+        
+    
+    
+        
+    def getNbrEtab(page):
+        """ Renvoie le nombre d'établissements dans les résultats de la recherche
+        """
+        try:
+            return str(page.find_all('div', attrs={'class':"annuaire-nb-results"})[0].contents[-2]).strip("<>b/")
+        except IndexError:
+            return "0"
+        
+    
+#     print "GetEtablissements"
+    urlEtab = 'http://www.education.gouv.fr/pid24302/annuaire-resultat-recherche.html'
+    urlAcad = 'http://www.education.gouv.fr/pid24301/annuaire-accueil-recherche.html'
+    
+    url = "https://www.education.gouv.fr/annuaire"
+    
+    
+    try:
+        downloadPage = BeautifulSoup(urllib.request.urlopen(url, timeout = 10), "html5lib")
+    except IOError:
+#         message += u"pas d'accès Internet"
+#         dlg.Update(0, message)
+        print("pas d'accès Internet")
+        return   
+    except:
+        print("Erreur accès", urlAcad)
+
+    acad_select = downloadPage.find(id="edit-academy")
+    liste_acad = [[o.string, o['value']] for o in acad_select.find_all('option')][1:]
+    liste_acad_txt = [l+"\t"+str(v) for l, v in liste_acad]
+#     message += u"Liste des académies :\n   "+ u"\n   ".join(liste_acad_txt)
+#     dlg.Update(0, message)
+#     print("list_acad", liste_acad)
+    
+     
+
+    liste_etab = {}
+    
+    if win is not None:
+        dlg = myProgressDialog("Recherche des établissements",
+                                   message,
+                                   len(liste_acad)*2,
+                                   parent=win
+                                    )
+        dlg.Show()
+        count = 1
+    
+    for acad, num in liste_acad:
+        if win is not None:
+            message += "Académie : "+ acad+ "\t" + str(num) + "\n"
+            dlg.update(count, message)
+        else:
+            print("Académie : "+ acad+ "\t" + str(num))
+
+        
+        liste_etab[num] = [acad, [], []]
+        
+        ###############################################################################################################
+        # Collèges
+        ###############################################################################################################
+
+        urlCol = url + '?academy='+num+'&establishment=2'
+        
+        if win is not None:
+            message += "  Collèges :\n  ----------\n"
+            dlg.update(count, message)
+        else:
+            print("  Collèges :\n  ----------")
+#         print "  ", urlCol
+        
+        continuer = True
+        n = 0
+        while continuer:
+            try:
+                page = BeautifulSoup(urllib.request.urlopen(urlCol+'&page='+str(n), timeout = 5), "html5lib")
+                tentatives = 0
+            except urllib.error.HTTPError:
+                time.sleep(1)
+                tentatives += 1
+                if win is not None:
+                    message += "+"
+                    dlg.update(count, message)
+                else:
+                    print("+", end="")
+                if tentatives > 10:
+                    break
+                else:
+                    continue
+            n += 1
+
+            l, message = getEtabVille(page, message)
+            if l is None:
+                continuer = False
+            else:
+                liste_etab[num][1].extend(l)
+
+        
+        r = len(liste_etab[num][1]) # Récupérés
+        t = int(getNbrEtab(page))        # Trouvés
+        if r < t:
+            errmsg += "Académie "+acad+" : manque "+str(t-r)+" Collèges !\n"
+        
+    
+        if win is not None:
+            count += 1
+            message += "  " + str(r) + " / " + str(t) + " collèges récupérés\n\n"
+            dlg.update(count, message)
+        else:
+            print("  " + str(r) + " / " + str(t) + " collèges récupérés\n\n")
+
+
+        ##############################################################################################################
+        # Lycées
+        ##############################################################################################################
+
+        urlLyc = url + '?academy='+num+'&establishment=3'
+        
+        if win is not None:
+            message += "  Lycées :\n  --------\n"
+            dlg.update(count, message)
+        else:
+            print("  Lycées :\n  --------")
+
+
+        continuer = True
+        n = 0
+        while continuer:
+            try:
+                page = BeautifulSoup(urllib.request.urlopen(urlLyc+'&page='+str(n), timeout = 5), "html5lib")
+                tentatives = 0
+            except urllib.error.HTTPError:
+                time.sleep(1)
+                tentatives += 1
+                if win is not None:
+                    message += "+"
+                    dlg.update(count, message)
+                else:
+                    print("+", end="")
+                if tentatives > 10:
+                    break
+                else:
+                    continue
+
+            n += 1
+
+            l, message = getEtabVille(page, message)
+            if l is None:
+                continuer = False
+            else:
+                liste_etab[num][2].extend(l)
+        
+        
+    
+        r = len(liste_etab[num][2]) # Récupérés
+        t = int(getNbrEtab(page))        # Trouvés
+        
+        if r < t:
+            errmsg += "Académie "+acad+" : manque "+str(t-r)+" Lycées !\n"
+        if win is not None:
+            count += 1
+            message += "  " + str(r) + " / " + str(t) + " lycées récupérés\n\n"
+            dlg.update(count, message)
+        else:
+            print("  " + str(r) + " / " + str(t) + " lycées récupérés\n\n")
+        
+        if win is not None:
+            wx.Yield()
+            if dlg.stop:
+                dlg.Destroy()
+                print("STOP")
+                return []
+        
+        
+
+    if win is not None:
+        message += "\nOpération Terminée !\n"
+        if errmsg != "":
+            message += "ERREURS de récupération :\n"
+            message += errmsg
+        dlg.update(count, message)
+    else:
+        print("\nOpération Terminée !")
+        if errmsg != "":
+            print("ERREURS de récupération :")
+            print(errmsg)
+#    print liste_etab
+    return liste_etab
+
+
 
 ######################################################################################  
 def insert_branche(branche, val, nom):
@@ -566,9 +803,9 @@ def SauvFeries(win, path):
     
     
 if __name__ == '__main__':
-    pass
+    GetEtablissements()
     
-#     liste_etab = GetEtablissements(None)
+#    liste_etab = GetEtablissements(None)
     
 #     
 #     fichier = file("JoursFeries.xml", 'w')

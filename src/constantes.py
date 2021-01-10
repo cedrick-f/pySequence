@@ -846,20 +846,6 @@ def getLstDisciplines():
 LOGICIELS = logiciels.charger_logiciels()
 IMG_LOGICIELS = logiciels.charger_images(LOGICIELS)
 
-IMG_LOGICIELS = {"Solidworks" : images.Logiciel_SW,
-                 "MATLAB" : images.Logiciel_MATLAB,
-                 "LabView" : images.Logiciel_LV,
-                 "CATIA" : images.Logiciel_CATIA,
-                 "AutoCAD" : images.Logiciel_Autocad,
-                 "Python" : images.Logiciel_Python,
-                 "Solidedge" : images.Logiciel_SEdge,
-                 "Inventor" : images.Logiciel_Inventor,
-                 "Top Solid" : images.Logiciel_Topsolid,
-                 "FreeCAD" : images.Logiciel_FreeCAD,
-                 "Sketchup" : images.Logiciel_Sketchup
-                 }
-
-
 
 # Nombre de créneaux dans les Progressions
 NBR_CRENEAUX_DEFAUT = 3
