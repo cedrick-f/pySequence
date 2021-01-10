@@ -750,12 +750,12 @@ class Projet(Base_Fiche_Doc):
         
                     
                     for j, part in enumerate(parties):
-                        
-                        BarreH(self, self.posZElevesH[0], y+(j+1)*hb, 
-                               self.tailleZElevesH[0], 
-                               ev[part][0], ev[part][1], hb, 
-                               (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                               self.getCoulComp(part)).draw()
+                        if part in ev:
+                            BarreH(self, self.posZElevesH[0], y+(j+1)*hb, 
+                                   self.tailleZElevesH[0], 
+                                   ev[part][0], ev[part][1], hb, 
+                                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
+                                   self.getCoulComp(part)).draw()
                     
         
                 rec = TableauH(self, l, self.posZElevesH[0], self.posZElevesH[1], 
