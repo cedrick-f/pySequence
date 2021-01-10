@@ -1,6 +1,6 @@
 <Referentiel B_CI_BO="False" B_CI_cible="False" B_champsInter="True" B_multiDemarches="False" I_maxCI="0" S_AnneeDebut="Sec5" S_Code="Enseignement de seconde" S_Famille="2nde" S_FichierLogo="logo_snt.jpg" S_abrevCI="Th " S_abrevPb="Pb" S_nomActivites="Activité(s)$f" S_nomCI="Thème(s)" S_nomDemarches="Démarche(s)$f" S_nomDom="Domaine(s) du socle" S_nomEnsSpecif="Enseignement(s) Spécifique(s)$m" S_nomNivTaxo="Niveau(x) Taxonomique(s)$m" S_nomPb="Problématique(s)$f" S_nomSeances="Séance(s)$f" S_nomSpe="Spécialité(s)$f" S_nomSystemes="Produit(s) et matériel(s)$m" S_nomTaches="Tâche(s)$f" S_nomTh="Thématique(s)">
   <l_BO_URL>
-    <l_00 S_00="Programme Snt" S_01="https://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=138143/spe641_annexe_1063085.pdf" />
+    <l_00 S_00="Programme Snt" S_01="https://cache.media.education.gouv.fr/file/SP1-MEN-22-1-2019/08/5/spe641_annexe_1063085.pdf" />
   </l_BO_URL>
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="Notions transversales de programmation" S_01="Internet" S_02="Le web" S_03="Les réseaux sociaux" S_04="les données structurées et leur traitement" S_05="Localisation  cartographie et mobilité" S_06="Informatique embarquée et objets connectés" S_07="La photographie numérique" />
