@@ -19,8 +19,8 @@
 
 [ISPP]
 #define AppName "pySequence"
-#define AppVersion "8.4"
-#define AppVersionInfo "8.4.16"
+#define AppVersion "8.5"
+#define AppVersionInfo "8.5.0"
 #define AppVersionBase "8"
 
 #define AppURL "https://github.com/cedrick-f/pySequence"
@@ -33,7 +33,7 @@ AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 
 AppPublisher=Cédrick Faury
-AppCopyright=Copyright © 2011-2020 Cédrick Faury
+AppCopyright=Copyright © 2011-2021 Cédrick Faury
 VersionInfoVersion = {#AppVersionInfo}
 
 ;Répertoire de base contenant les fichiers

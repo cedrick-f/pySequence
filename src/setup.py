@@ -60,17 +60,17 @@ from version import __version__, GetVersion_cxFreeze, __mail__, __appname__
 import shutil
 shutil.rmtree("build", ignore_errors=True)
 
-import enchant.utils
-le = []
-if sys.platform == "win32":
-    enchant_files = enchant.utils.win32_data_files() 
-    for d, s in enchant_files:
-        for f in s:
-            if d =='':
-                le.append((f, os.path.join(d, os.path.split(f)[1])))
-            else:
-                le.append((f, os.path.join('..',d, os.path.split(f)[1])))
-enchant_files = le
+# import enchant.utils
+# le = []
+# if sys.platform == "win32":
+#     enchant_files = enchant.utils.win32_data_files() 
+#     for d, s in enchant_files:
+#         for f in s:
+#             if d =='':
+#                 le.append((f, os.path.join(d, os.path.split(f)[1])))
+#             else:
+#                 le.append((f, os.path.join('..',d, os.path.split(f)[1])))
+# enchant_files = le
 
 #enchant_files = [([r.replace("\\", "/") for r in a], b.replace("\\", "/")) for b, a in enchant_files]
 #print enchant_files
@@ -84,6 +84,7 @@ includefiles = ['LICENSE.txt',
                      'fichier_prg.ico', 
                      'etablissements.xml',
                      'JoursFeries.xml',
+                     'logiciels.xml',
                      'd3.min.js',
 #                      'fiche.html',
                      'splash.png',
@@ -130,7 +131,7 @@ else:
 build_exe_options = {'build_exe': 'build/bin',
                      'include_msvcr': True,
                      'add_to_path': True,
-                     "packages": ["reportlab",'encodings', 'asyncio', '_cffi_backend'\
+                     "packages": ["reportlab",'encodings', 'asyncio', '_cffi_backend', "arabic_reshaper"\
                                   ],#,'cairocffi._generated.ffi' \#"os", "xhtml2pdf","html5lib", "enchant", , "wx.lib.pdfwin", "PIL"], 
 #                      "zip_includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                 
@@ -148,7 +149,7 @@ build_exe_options = {'build_exe': 'build/bin',
                                   'Tkconstants', 'pydoc', 'doctest', 'test', 'sqlite3',
                                   "PyQt4", "PyQt4.QtGui","PyQt4._qt",
                                   "matplotlib",
-                                  "numpy",
+                                  "numpy", 'distutils',
                                   ],
                      "include_files": includefiles,
                      "bin_path_includes": binpathincludes,
@@ -253,4 +254,5 @@ def supprimer(racine, nomFichier, parent = "", niveau = 0):
         print(abspath)
 supprimer('build/bin/lib', 'python36.dll')
 supprimer('build/bin/lib', 'VCRUNTIME140.dll')
+supprimer('build/bin/lib', 'mfc140u.dll')
             
