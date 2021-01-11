@@ -1862,7 +1862,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def HideTip(self, event = None):
 #         print "HideTip principal"
-        d = self.GetDocActif()
+        d = self.GetFenetreActive()
         if d is not None:
             d.HideTip()
         event.Skip()
@@ -5130,7 +5130,7 @@ class BaseFiche(wx.ScrolledWindow, DelayedResult):
 
 
         
-# BaseFiche = BaseFiche2 # Décommenter pour mod debug
+BaseFiche = BaseFiche2 # Décommenter pour mod debug
 
 class FicheDoc(BaseFiche):
     def __init__(self, parent, threaded = False):
@@ -7383,7 +7383,7 @@ class PanelPropriete_Classe(PanelPropriete):
         t = wx.StaticText(pageGen, -1, "Académie :")
         sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL)
         
-        lstAcad = sorted([a[0] for a in list(constantes.ETABLISSEMENTS.values())])
+        lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
         self.cba = wx.ComboBox(pageGen, -1, "sélectionner une académie ...", (-1,-1), 
                          (-1, -1), lstAcad+[""],
                          wx.CB_DROPDOWN
@@ -12393,7 +12393,7 @@ class PanelPropriete_Tache(PanelPropriete):
             if newPhase == "Rev":
                 self.tache.SetDuree(0)
             self.tache.SetPhase(newPhase)
-            for arbre in list(self.arbres.values()):
+            for arbre in self.arbres.values():
                 arbre.MiseAJourPhase(newPhase)
             self.pageGen.Layout()
             self.sendEvent(modif = "Changement de phase de la Tâche", draw = True, verif = True)
@@ -14099,10 +14099,14 @@ class PanelPropriete_Modele(PanelPropriete):
     def OnCheckModele(self):
 #         print "OnCheckModele"
         self.modele.logiciels = self.cb_type.GetAllChecked()
-#         print self.modele.logiciels
+        self.modele.SetLogiciel()
+#         print(self.modele.logiciels)
         self.sendEvent(modif = "Modification du logiciel du Modèle",
                        draw = False, verif = False)
         
+
+
+
 
 ####################################################################################
 #

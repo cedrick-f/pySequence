@@ -98,7 +98,8 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, COUL_ABS, \
-                        toList, COUL_COMPETENCES, COUL_DISCIPLINES, NBR_SYSTEMES_MAXI
+                        toList, COUL_COMPETENCES, COUL_DISCIPLINES, NBR_SYSTEMES_MAXI,\
+                        IMG_LOGICIELS
 import constantes
 
 import proprietes
@@ -2322,7 +2323,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
             
             :i:  code pour différentier ...
         """
-        print("GetBulleHTMLDoc", param)
+#         print("GetBulleHTMLDoc", param)
         ref = self.GetReferentiel()
         
         html = ""
@@ -4970,6 +4971,11 @@ class Projet(BaseDoc, Grammaire):
 
         self.support.SetLien()  
 
+    ######################################################################################  
+    def SetLogiciel(self):
+        for e in self.eleves:
+            pass
+        
 #    ######################################################################################  
 #    def GetFicheHTML(self, param = None):
 #        if param is None:
@@ -6328,7 +6334,7 @@ class Projet(BaseDoc, Grammaire):
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
-        print("SetTip Projet :", param, obj)
+#         print("SetTip Projet :", param, obj)
         
         tip = self.GetTip()
         if tip is None:
@@ -13956,6 +13962,11 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
         if hasattr(self, 'arbre'):
             self.SetCode()
 
+    ######################################################################################  
+    def SetLogiciel(self):
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        self.GetDocument().SetLogiciel()
 
     ######################################################################################  
     def GetNom(self):
@@ -13968,6 +13979,7 @@ class Modele(ElementAvecLien, ElementBase, Grammaire):
     
     ######################################################################################  
     def GetIcone(self):
+#         print("GetIcone", self.logiciels, self.arbre.images.keys() )
         if len(self.logiciels) > 0 and self.logiciels[0] in self.arbre.images.keys():
             image = self.arbre.images[self.logiciels[0]]
         else:
@@ -14755,8 +14767,8 @@ class Eleve(Personne):
     
     ######################################################################################  
     def GetModele(self, num):
-#         print "GetModele", num
-#         print "   ",self.GetDocument().support.modeles[num-1]
+#         print("GetModele", num)
+#         print("   ",self.GetDocument().support.modeles)
         return self.GetDocument().support.modeles[num]
     
     ######################################################################################  
@@ -15133,149 +15145,20 @@ class Eleve(Personne):
 
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
-            
-#         self.SetTip()
-
-
-#     ######################################################################################  
-#     def GetFicheHTML(self, param = None):
-# #        print "GetFicheHTML"
-# #        print self.GetProjetRef().listeParties
-#         dic = {}
-#         ligne = []
-#         for ph in self.GetProjetRef().listeParties:
-#             dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
-#             dic['nom'] = self.GetProjetRef().parties[ph]
-#             dic['id'] = ph
-#             ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
-# <td><font color = "%(coul)s"><em>%(nom)s</em></font></td>
-# </tr>""" %dic)
-# 
-#         ficheHTML = constantes.encap_HTML(constantes.BASE_FICHE_HTML_ELEVE)
-#         
-#         
-#         t = ""
-#         for l in ligne:
-#             t += l+"\n"
-# 
-#         ficheHTML = ficheHTML.replace('{{tab_eval}}', t)
-#         
-#         return ficheHTML
-
-
-
-
-#     ######################################################################################  
-#     def SetTip2(self, tip):
-# #         print("SetTip2", self)
-#         # Tip
-#         
-#         
-#             
-# #            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-#         coulOK = couleur.GetCouleurHTML(COUL_OK)
-#         coulNON = couleur.GetCouleurHTML(COUL_NON)
-#         
-#         #
-#         # Durée
-#         #
-#         duree = self.GetDuree()
-#         v = self.getValiditeDuree(duree)
-#         lab = draw_cairo.getHoraireTxt(duree)
-#         if v == 0:
-#             coul = coulOK
-#         elif v == 1:
-#             coul = couleur.GetCouleurHTML(COUL_BOF)
-#         else:
-#             coul = coulNON
-#         tip.AjouterCol("ld", lab, coul, bold = True)
-# 
-#         
-#         #
-#         # Evaluabilité
-#         #
-#         ev, ev_tot, _ = self.GetEvaluabilite()
-#         prj = self.GetProjetRef()
-#         keys = {}
-#         for disc, dic in prj._dicoIndicateurs.items():
-# #                 print("   ", dic)
-#             keys[disc] = sorted(dic.keys())
-# #            if "O8s" in keys:
-# #                keys.remove("O8s")
-# #             print(">>>keys", keys)
-#         
-#         lab = {}
-#         for disc, dic in prj._dicoGrpIndicateur.items():
-# #                 print("   ", disc, dic)
-#             lab[disc] = {}
-#             for part in dic:
-#                 lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
-#     #            totalOk = True
-#                 for k in keys[disc]:
-#                     if k in prj._dicoGrpIndicateur[disc][part]:
-#                         if k in ev[disc][part]:
-#                             
-#     #                        totalOk = totalOk and (ler[k] >= 0.5)
-#                             lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
-#                         else:
-#     #                        totalOk = False
-#                             lab[disc][part].append([pourCent2(0, True), False]) 
-#                     else:
-#                         lab[disc][part].append(["", True])
-#                 lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
-# 
-# #             print(">>>lab", lab)
-#         for disc, dic in prj._dicoGrpIndicateur.items():
-#             for part in dic:
-# #                print "   ", part
-#                 for i, lo in enumerate(lab[disc][part]):
-# #                    print "      ", i, lo
-#                     l, o = lo
-#                     if i == 0:
-#                         size = None
-#                         bold = True
-#                         if o:
-#                             coul = coulOK
-#                         else:
-#                             coul = coulNON
-#                     else:
-#                         size = 2
-#                         bold = False
-#                         if not o:
-#                             coul = coulNON
-#                         else:
-#                             coul = None
-#                     tip.AjouterCol("le"+part, l, coul,
-#                                    couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
-# 
-#         for disc in prj._dicoIndicateurs:
-#             if disc in lab:
-#                 for t in keys[disc]:
-#                     tip.AjouterCol("le", t, size = 2) 
-#         
-#         #
-#         # Modèles
-#         #
-#         lst_modeles = self.GetModeles()
-#         if len(lst_modeles) == 0:
-#             tip.Supprime("mod")
-#         for m in lst_modeles:
-#             m.SetTip()
-#             tip.InsererSoup("mod", m.tip.soup)
-#             
-# #             for i, m in enumerate(self.GetModeles()):
-# # #                 print "mod", m
-# #                 for j, (l,bmp) in enumerate(m.GetLogosLogiciels().items()):
-# #                     h = u"<p>" + l + u"</p>"
-# #                     idx = "log"+str(i)+"."+str(j)
-# #                     h +=u'<img id="%s" src="" alt="">' %idx
-# # #                     print "   ", h
-# #                     self.tip.AjouterHTML('mod', h)
-# #                     self.tip.AjouterImg(idx, bmp)
-#         
-#         tip.SetPage()
-#         return tip
+        
     
+        if self.HasModele():
+            l = self.GetModele(self.modeles[0]-1)
+#             print(self.modeles, l)
+#             print(IMG_LOGICIELS)
+            if l in IMG_LOGICIELS:
+#             self.codeBranche.SetImg(constantes.imagesProjet['Mod'].GetBitmap())
+                self.codeBranche.SetImg(IMG_LOGICIELS[self.GetModele(self.modeles[0]-1)].GetBitmap())
+            else:
+                self.codeBranche.DelImg()
+        else:
+            self.codeBranche.DelImg()
+#         self.SetTip()
     
 
     ######################################################################################  
@@ -15290,10 +15173,10 @@ class Eleve(Personne):
                 self.codeBranche.Add(disc+part)
         
         self.codeBranche.AddImg()
-        if self.HasModele():
-            self.codeBranche.SetImg(constantes.imagesProjet['Mod'].GetBitmap())
-        else:
-            self.codeBranche.DelImg()
+#         if self.HasModele():
+#             self.codeBranche.SetImg(IMG_LOGICIELS[self.modeles[0][0]].GetBitmap())
+#         else:
+#             self.codeBranche.DelImg()
                 
                 
             
@@ -15435,8 +15318,9 @@ class Eleve(Personne):
         # Modèles
         #
         lst_modeles = []
+#         print("modeles", self.modeles)
         for m in self.modeles:
-            lst_modeles.append(m.GetBulleHTML(css = css, tip = tip))
+            lst_modeles.append(self.GetModele(m-1).GetBulleHTML(css = css, tip = tip))
             
 #         lst_modeles = self.GetModeles()
 #         if len(lst_modeles) == 0:

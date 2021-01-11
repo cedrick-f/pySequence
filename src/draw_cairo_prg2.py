@@ -926,7 +926,7 @@ class Progression(Base_Fiche_Doc):
         #        ht = tailleZComp[1] / 4
         #        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
         
-                rects = TableauV(ctx, l1, _x0, self.posZComp[1], 
+                rects = TableauV(self, l1, _x0, self.posZComp[1], 
                                  _x-_x0, self.tailleZComp[1], 
                                  0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
                                  coul = self.ICoulComp[i], b = 0.03).draw()
@@ -943,7 +943,7 @@ class Progression(Base_Fiche_Doc):
             # Bilan des Savoirs abordés
             #
             dicSav, nbrSav = self.prg.GetSavoirsAbordes()
-            self.DrawBoutonSavoir(ctx, self.prg, None, dicSav, self.posZOrganis[1] + htitre + self.ecartY/2, 
+            self.DrawBoutonSavoir(self.prg, dicSav, self.posZOrganis[1] + htitre + self.ecartY/2, 
                                  h = self.posZComp[1] - self.posZOrganis[1] - self.ecartY - htitre, 
                                  nbr = nbrSav)
                 
