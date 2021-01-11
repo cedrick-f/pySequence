@@ -445,9 +445,7 @@ def GetEtablissements(win = None):
         
         return lst, message
         
-    
-    
-        
+      
     def getNbrEtab(page):
         """ Renvoie le nombre d'établissements dans les résultats de la recherche
         """
@@ -455,14 +453,8 @@ def GetEtablissements(win = None):
             return str(page.find_all('div', attrs={'class':"annuaire-nb-results"})[0].contents[-2]).strip("<>b/")
         except IndexError:
             return "0"
-        
-    
-#     print "GetEtablissements"
-    urlEtab = 'http://www.education.gouv.fr/pid24302/annuaire-resultat-recherche.html'
-    urlAcad = 'http://www.education.gouv.fr/pid24301/annuaire-accueil-recherche.html'
     
     url = "https://www.education.gouv.fr/annuaire"
-    
     
     try:
         downloadPage = BeautifulSoup(urllib.request.urlopen(url, timeout = 10), "html5lib")
@@ -472,7 +464,7 @@ def GetEtablissements(win = None):
         print("pas d'accès Internet")
         return   
     except:
-        print("Erreur accès", urlAcad)
+        print("Erreur accès", url)
 
     acad_select = downloadPage.find(id="edit-academy")
     liste_acad = [[o.string, o['value']] for o in acad_select.find_all('option')][1:]
@@ -500,9 +492,10 @@ def GetEtablissements(win = None):
             dlg.update(count, message)
         else:
             print("Académie : "+ acad+ "\t" + str(num))
+        
 
         
-        liste_etab[num] = [acad, [], []]
+        liste_etab[num] = [str(acad), [], []]
         
         ###############################################################################################################
         # Collèges

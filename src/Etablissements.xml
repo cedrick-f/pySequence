@@ -1,6 +1,6 @@
 <Etablissements>
   <d_Etablissement>
-    <l_2>
+    <l_2 S_200="Aix-Marseille">
       <l_201>
         <l_20100 S_2010000="Coll&#232;ge Gassendi" S_2010001="DIGNE LES BAINS" />
         <l_20101 S_2010100="Coll&#232;ge le Sacr&#233;-Coeur" S_2010101="DIGNE LES BAINS" />
@@ -516,7 +516,7 @@
         <l_202231 S_20223100="Section d'enseignement professionnel lyc&#233;e Alphonse Beno&#238;t" S_20223101="ISLE SUR LA SORGUE" />
       </l_202>
     </l_2>
-    <l_20>
+    <l_20 S_2000="Amiens">
       <l_2001>
         <l_200100 S_20010000="Coll&#232;ge Charlemagne" S_20010001="LAON" />
         <l_200101 S_20010100="Coll&#232;ge Jean Mermoz" S_20010101="LAON" />
@@ -891,7 +891,7 @@
         <l_2002149 S_200214900="Lyc&#233;e professionnel priv&#233; Henry Potez" S_200214901="MEAULTE" />
       </l_2002>
     </l_20>
-    <l_3>
+    <l_3 S_300="Besan&#231;on">
       <l_301>
         <l_30100 S_3010000="Coll&#232;ge Albert Camus" S_3010001="BESANCON" />
         <l_30101 S_3010100="Coll&#232;ge Diderot" S_3010101="BESANCON" />
@@ -1134,7 +1134,7 @@
         <l_30292 S_3029200="Lyc&#233;e professionnel Denis Diderot" S_3029201="BAVILLIERS" />
       </l_302>
     </l_3>
-    <l_4>
+    <l_4 S_400="Bordeaux">
       <l_401>
         <l_40100 S_4010000="Coll&#232;ge Anne Frank" S_4010001="PERIGUEUX" />
         <l_40101 S_4010100="Coll&#232;ge Bertran de Born" S_4010101="PERIGUEUX" />
@@ -1736,7 +1736,7 @@
         <l_402245 S_40224500="Lyc&#233;e technologique priv&#233; Nay-Baudreix" S_40224501="NAY BOURDETTES" />
       </l_402>
     </l_4>
-    <l_6>
+    <l_6 S_600="Clermont-Ferrand">
       <l_601>
         <l_60100 S_6010000="Coll&#232;ge Anne de Beaujeu" S_6010001="MOULINS" />
         <l_60101 S_6010100="Coll&#232;ge Charles P&#233;guy" S_6010101="MOULINS" />
@@ -2029,7 +2029,7 @@
         <l_60298 S_6029800="Lyc&#233;e g&#233;n&#233;ral et technologique Ren&#233; Descartes" S_6029801="COURNON D'AUVERGNE" />
       </l_602>
     </l_6>
-    <l_27>
+    <l_27 S_2700="Corse">
       <l_2701>
         <l_270100 S_27010000="Coll&#232;ge Arthur Giovoni" S_27010001="AJACCIO" />
         <l_270101 S_27010100="Coll&#232;ge de Baleone Sarrola Carcopino" S_27010101="AJACCIO" />
@@ -2090,7 +2090,7 @@
         <l_270222 S_27022200="Lyc&#233;e agricole Borgo-Marana" S_27022201="BORGO" />
       </l_2702>
     </l_27>
-    <l_24>
+    <l_24 S_2400="Cr&#233;teil">
       <l_2401>
         <l_240100 S_24010000="Coll&#232;ge Fr&#233;deric Chopin" S_24010001="MELUN" />
         <l_240101 S_24010100="Coll&#232;ge Jacques Amyot" S_24010101="MELUN" />
@@ -2843,7 +2843,7 @@
         <l_2402314 S_240231400="Lyc&#233;e professionnel Paul Bert" S_240231401="MAISONS ALFORT" />
       </l_2402>
     </l_24>
-    <l_7>
+    <l_7 S_700="Dijon">
       <l_701>
         <l_70100 S_7010000="Coll&#232;ge Andr&#233; Malraux" S_7010001="DIJON" />
         <l_70101 S_7010100="Coll&#232;ge Carnot" S_7010101="DIJON" />
@@ -3132,11 +3132,11 @@
         <l_70298 S_7029800="Lyc&#233;e Chevalier d'&#201;on" S_7029801="TONNERRE" />
       </l_702>
     </l_7>
-    <l_99>
+    <l_99 S_9900="Etranger">
       <l_9901 />
       <l_9902 />
     </l_99>
-    <l_8>
+    <l_8 S_800="Grenoble">
       <l_801>
         <l_80100 S_8010000="Coll&#232;ge Bernard de Ventadour" S_8010001="PRIVAS" />
         <l_80101 S_8010100="Coll&#232;ge priv&#233; Sacr&#233;-Coeur" S_8010101="PRIVAS" />
@@ -3694,7 +3694,7 @@
         <l_802225 S_80222500="Lyc&#233;e d'enseignement professionnel rural priv&#233; Jeanne Antide" S_80222501="REIGNIER" />
       </l_802>
     </l_8>
-    <l_32>
+    <l_32 S_3200="Guadeloupe">
       <l_3201>
         <l_320100 S_32010000="Coll&#232;ge Mireille Choisy" S_32010001="97098" />
         <l_320101 S_32010100="Coll&#232;ge Joseph Pitat" S_32010101="BASSE TERRE" />
@@ -3798,7 +3798,7 @@
         <l_320245 S_32024500="Section d'enseignement professionnel du lyc&#233;e des m&#233;tiers de l'h&#244;tellerie et du tourisme de la Guade" S_32024501="GOSIER" />
       </l_3202>
     </l_32>
-    <l_33>
+    <l_33 S_3300="Guyane">
       <l_3301>
         <l_330100 S_33010000="Coll&#232;ge Anne-Marie Javouhey" S_33010001="CAYENNE" />
         <l_330101 S_33010100="Coll&#232;ge Auxence Contout" S_33010101="CAYENNE" />
@@ -3867,7 +3867,7 @@
         <l_330226 S_33022600="Section d'enseignement professionnel du Lyc&#233;e polyvalent L&#233;opold Elfort" S_33022601="MANA" />
       </l_3302>
     </l_33>
-    <l_9>
+    <l_9 S_900="Lille">
       <l_901>
         <l_90100 S_9010000="Centre scolaire Saint Paul (Coll&#232;ge)" S_9010001="LILLE" />
         <l_90101 S_9010100="Coll&#232;ge Boris Vian" S_9010101="LILLE" />
@@ -4568,7 +4568,7 @@
         <l_902253 S_90225300="Lyc&#233;e professionnel Fran&#231;ois Hennebique" S_90225301="LIEVIN" />
       </l_902>
     </l_9>
-    <l_22>
+    <l_22 S_2200="Limoges">
       <l_2201>
         <l_220100 S_22010000="Coll&#232;ge Georges Clemenceau" S_22010001="TULLE" />
         <l_220101 S_22010100="Coll&#232;ge Victor Hugo" S_22010101="TULLE" />
@@ -4727,7 +4727,7 @@
         <l_220266 S_22026600="Lyc&#233;e professionnel Jean-Baptiste Darnet" S_22026601="SAINT YRIEIX LA PERCHE" />
       </l_2202>
     </l_22>
-    <l_10>
+    <l_10 S_1000="Lyon">
       <l_1001>
         <l_100100 S_10010000="Coll&#232;ge de Brou" S_10010001="BOURG EN BRESSE" />
         <l_100101 S_10010100="Coll&#232;ge du Revermont" S_10010101="BOURG EN BRESSE" />
@@ -5292,7 +5292,7 @@
         <l_1002250 S_100225000="Lyc&#233;e professionnel Fernand Forest" S_100225001="SAINT PRIEST" />
       </l_1002>
     </l_10>
-    <l_31>
+    <l_31 S_3100="Martinique">
       <l_3101>
         <l_310100 S_31010000="Coll&#232;ge Aim&#233; C&#233;saire de Fort de France" S_31010001="FORT DE FRANCE" />
         <l_310101 S_31010100="Coll&#232;ge Cassien Sainte Claire" S_31010101="FORT DE FRANCE" />
@@ -5392,7 +5392,7 @@
         <l_310242 S_31024200="Lyc&#233;e polyvalent Raymond Neris" S_31024201="MARIN" />
       </l_3102>
     </l_31>
-    <l_89>
+    <l_89 S_8900="Mayotte">
       <l_8901>
         <l_890100 S_89010000="Coll&#232;ge de Bandrel&#233;" S_89010001="BANDRELE" />
         <l_890101 S_89010100="Coll&#232;ge de Boueni" S_89010101="BOUENI" />
@@ -5439,7 +5439,7 @@
         <l_890217 S_89021700="Lyc&#233;e professionnel agricole de Coconi" S_89021701="COCONI" />
       </l_8902>
     </l_89>
-    <l_11>
+    <l_11 S_1100="Montpellier">
       <l_1101>
         <l_110100 S_11010000="Coll&#232;ge Comte de Foix" S_11010001="ANDORRE LA VELLA" />
         <l_110101 S_11010100="Coll&#232;ge Alain" S_11010101="CARCASSONNE" />
@@ -5902,7 +5902,7 @@
         <l_1102185 S_110218500="Lyc&#233;e professionnel agricole priv&#233; le Mas Blanc" S_110218501="BOURG MADAME" />
       </l_1102>
     </l_11>
-    <l_12>
+    <l_12 S_1200="Nancy-Metz">
       <l_1201>
         <l_120100 S_12010000="Coll&#232;ge Alfred M&#233;zi&#232;res" S_12010001="NANCY" />
         <l_120101 S_12010100="Coll&#232;ge Charles de Foucauld" S_12010101="NANCY" />
@@ -6354,7 +6354,7 @@
         <l_1202186 S_120218600="&#201;cole d'horticulture et du paysage" S_120218601="ROVILLE AUX CHENES" />
       </l_1202>
     </l_12>
-    <l_17>
+    <l_17 S_1700="Nantes">
       <l_1701>
         <l_170100 S_17010000="Coll&#232;ge Aristide Briand" S_17010001="NANTES" />
         <l_170101 S_17010100="Coll&#232;ge Blanche de Castille" S_17010101="NANTES" />
@@ -7011,7 +7011,7 @@
         <l_1702234 S_170223400="Lyc&#233;e Notre-Dame de la Tourteli&#232;re" S_170223401="POUZAUGES" />
       </l_1702>
     </l_17>
-    <l_23>
+    <l_23 S_2300="Nice">
       <l_2301>
         <l_230100 S_23010000="Coll&#232;ge Alphonse Daudet" S_23010001="NICE" />
         <l_230101 S_23010100="Coll&#232;ge Antoine Risso" S_23010101="NICE" />
@@ -7293,7 +7293,7 @@
         <l_230295 S_23029500="Lyc&#233;e technique et h&#244;telier de Monte-Carlo" S_23029501="MONACO" />
       </l_2302>
     </l_23>
-    <l_5>
+    <l_5 S_500="Normandie">
       <l_501>
         <l_50100 S_5010000="Coll&#232;ge Dunois" S_5010001="CAEN" />
         <l_50101 S_5010100="Coll&#232;ge Fernand Lechanteur" S_5010101="CAEN" />
@@ -7942,7 +7942,7 @@
         <l_502251 S_50225100="Section d'enseignement professionnel du lyc&#233;e Le Corbusier" S_50225101="SAINT ETIENNE DU ROUVRAY" />
       </l_502>
     </l_5>
-    <l_92>
+    <l_92 S_9200="Nouvelle Cal&#233;donie">
       <l_9201>
         <l_920100 S_92010000="Coll&#232;ge Alain Mermoud de Tuband" S_92010001="NOUMEA" />
         <l_920101 S_92010100="Coll&#232;ge de Magenta" S_92010101="NOUMEA" />
@@ -8039,7 +8039,7 @@
         <l_920231 S_92023100="Lyc&#233;e professionnel priv&#233; Marcellin Champagnat (DECC)" S_92023101="PAITA" />
       </l_9202>
     </l_92>
-    <l_18>
+    <l_18 S_1800="Orl&#233;ans-Tours">
       <l_1801>
         <l_180100 S_18010000="Coll&#232;ge Jean Renoir" S_18010001="BOURGES" />
         <l_180101 S_18010100="Coll&#232;ge Jules Verne" S_18010101="BOURGES" />
@@ -8503,7 +8503,7 @@
         <l_1802167 S_180216700="Section d'enseignement g&#233;n&#233;ral et technologique du LP Gaudier-Brzeska" S_180216701="SAINT JEAN DE BRAYE" />
       </l_1802>
     </l_18>
-    <l_1>
+    <l_1 S_100="Paris">
       <l_101>
         <l_10100 S_1010000="Coll&#232;ge Jean Baptiste Poquelin" S_1010001="PARIS 1ER ARRONDISSEMENT" />
         <l_10101 S_1010100="Coll&#232;ge C&#233;sar Franck" S_1010101="PARIS 2E  ARRONDISSEMENT" />
@@ -8881,7 +8881,7 @@
         <l_102194 S_10219400="Section d'enseignement professionnel du lyc&#233;e Martin Nadaud" S_10219401="PARIS 20E  ARRONDISSEMENT" />
       </l_102>
     </l_1>
-    <l_13>
+    <l_13 S_1300="Poitiers">
       <l_1301>
         <l_130100 S_13010000="Coll&#232;ge Anatole France" S_13010001="ANGOULEME" />
         <l_130101 S_13010100="Coll&#232;ge Jules Michelet" S_13010101="ANGOULEME" />
@@ -9211,7 +9211,7 @@
         <l_1302121 S_130212100="Lyc&#233;e professionnel agricole horticole Dani&#232;le Mathiron" S_130212101="THURE" />
       </l_1302>
     </l_13>
-    <l_93>
+    <l_93 S_9300="Polyn&#233;sie fran&#231;aise">
       <l_9301>
         <l_930100 S_93010000="Coll&#232;ge de Arue" S_93010001="ARUE" />
         <l_930101 S_93010100="Coll&#232;ge Henri Hiro de Faa'a" S_93010101="FAAA" />
@@ -9297,7 +9297,7 @@
         <l_930242 S_93024200="Centre catholique d'&#233;ducation au d&#233;veloppement de Rikitea" S_93024201="GAMBIER" />
       </l_9302>
     </l_93>
-    <l_19>
+    <l_19 S_1900="Reims">
       <l_1901>
         <l_190100 S_19010000="Coll&#232;ge Arthur Rimbaud" S_19010001="CHARLEVILLE MEZIERES" />
         <l_190101 S_19010100="Coll&#232;ge Bayard" S_19010101="CHARLEVILLE MEZIERES" />
@@ -9555,7 +9555,7 @@
         <l_190291 S_19029100="Lyc&#233;e professionnel agricole horticole Fayl Billot" S_19029101="FAYL BILLOT" />
       </l_1902>
     </l_19>
-    <l_14>
+    <l_14 S_1400="Rennes">
       <l_1401>
         <l_140100 S_14010000="Coll&#232;ge Anatole le Braz" S_14010001="SAINT BRIEUC" />
         <l_140101 S_14010100="Coll&#232;ge Beaufeuillage" S_14010101="SAINT BRIEUC" />
@@ -10180,7 +10180,7 @@
         <l_1402226 S_140222600="Lyc&#233;e et section d'enseignement professionnel La Mennais" S_140222601="PLOERMEL" />
       </l_1402>
     </l_14>
-    <l_28>
+    <l_28 S_2800="R&#233;union">
       <l_2801>
         <l_280100 S_28010000="Coll&#232;ge Bois de N&#232;fles" S_28010001="SAINT DENIS" />
         <l_280101 S_28010100="Coll&#232;ge Bourbon" S_28010101="SAINT DENIS" />
@@ -10344,7 +10344,7 @@
         <l_280272 S_28027200="Section d'enseignement professionnel du lyc&#233;e Jean Joly" S_28027201="SAINT LOUIS" />
       </l_2802>
     </l_28>
-    <l_94>
+    <l_94 S_9400="Saint-Pierre et Miquelon">
       <l_9401>
         <l_940100 S_94010000="Coll&#232;ge d'Etat du socle" S_94010001="MIQUELON" />
         <l_940101 S_94010100="Coll&#232;ge Emile Letournel" S_94010101="ST PIERRE ET MIQUELON" />
@@ -10355,7 +10355,7 @@
         <l_940201 S_94020100="Lyc&#233;e professionnel Emile Letournel" S_94020101="ST PIERRE ET MIQUELON" />
       </l_9402>
     </l_94>
-    <l_15>
+    <l_15 S_1500="Strasbourg">
       <l_1501>
         <l_150100 S_15010000="Coll&#232;ge Erasme" S_15010001="STRASBOURG" />
         <l_150101 S_15010100="Coll&#232;ge Foch" S_15010101="STRASBOURG" />
@@ -10660,11 +10660,11 @@
         <l_1502127 S_150212700="Lyc&#233;e agricole du Pflixbourg" S_150212701="WINTZENHEIM" />
       </l_1502>
     </l_15>
-    <l_97>
+    <l_97 S_9700="Terres australes et antarctiques">
       <l_9701 />
       <l_9702 />
     </l_97>
-    <l_16>
+    <l_16 S_1600="Toulouse">
       <l_1601>
         <l_160100 S_16010000="Coll&#232;ge Lakanal" S_16010001="FOIX" />
         <l_160101 S_16010100="Coll&#232;ge Jean XXIII" S_16010101="PAMIERS" />
@@ -11269,7 +11269,7 @@
         <l_1602280 S_160228000="Section d'enseignement professionnel du lyc&#233;e polyvalent Olympe de Gouge" S_160228001="MONTECH" />
       </l_1602>
     </l_16>
-    <l_25>
+    <l_25 S_2500="Versailles">
       <l_2501>
         <l_250100 S_25010000="Coll&#232;ge de Clagny" S_25010001="VERSAILLES" />
         <l_250101 S_25010100="Coll&#232;ge Hoche" S_25010101="VERSAILLES" />
@@ -12092,7 +12092,7 @@
         <l_2502289 S_250228900="Lyc&#233;e polyvalent Gustave Monod" S_250228901="ENGHIEN LES BAINS" />
       </l_2502>
     </l_25>
-    <l_96>
+    <l_96 S_9600="Wallis et Futuna">
       <l_9601>
         <l_960100 S_96010000="Coll&#232;ge Finemui de Teesi" S_96010001="WALLIS-ET-FUTUNA" />
         <l_960101 S_96010100="Coll&#232;ge Mataotama" S_96010101="WALLIS-ET-FUTUNA" />
