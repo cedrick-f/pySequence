@@ -1932,11 +1932,12 @@ class RapportRTF(rt.RichTextCtrl):
             handler = rt.RichTextHTMLHandler()
             handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
             handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-            stream = io.StringIO()
-            if handler.SaveStream(self.GetBuffer(), stream):
-                f = open(nomFichierDefaut, 'w')
-                f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
-                f.close()
+            handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
+#             stream = io.StringIO()
+#             if handler.SaveFile(self.GetBuffer(), stream):
+#                 f = open(nomFichierDefaut, 'w')
+#                 f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
+#                 f.close()
                 
         elif ext == 'rtf':
             # Use the custom RTF Handler
