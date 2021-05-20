@@ -1629,7 +1629,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def OnAppelOuvrir(self, evt):
-        print("OnAppelOuvrir")
+        #print("OnAppelOuvrir")
         wx.CallAfter(self.ouvrir, evt.GetFile())
         
         
@@ -1862,7 +1862,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def HideTip(self, event = None):
 #         print "HideTip principal"
+        
         d = self.GetFenetreActive()
+        print("HideTip", d)
         if d is not None:
             d.HideTip()
         event.Skip()
@@ -10994,7 +10996,7 @@ class PanelPropriete_Seance(PanelPropriete):
             if len(ref.listeEnsSpecif) > 0:
                 
                 self.titreSpe = wx.StaticText(self.pageGen, -1, "Enseignements Spécifiques :")
-                self.speSizer.Add(self.titreSpe, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
+                self.speSizer.Add(self.titreSpe, flag = wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM, border = 2)
                 
                 for s in ref.listeEnsSpecif:
                     cb = wx.CheckBox(self.pageGen, -1, ref.ensSpecif[s][1],
@@ -16369,7 +16371,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche = None, dic = None):
-#         print("Construire compétences prj", self.GetTache().intitule, self.eleves)
+        print("Construire compétences prj", self.GetTache().intitule, self.eleves)
 #        if competences == None:
 #            competences = self.competences
         
@@ -16454,7 +16456,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     
                     if not tache.estPredeterminee() \
                        or (tache.intitule in prj.taches and k in prj.taches[tache.intitule][2]):
-                        
+                        print("  ",competence.intitule[:10])
                         cc = [cd+ " " + it for cd, it in zip(k.split("\n"), competence.intitule.split("\n"))]
                         comp = self.AppendItem(br, "\n ".join(cc),
                                                 data = k)
@@ -16481,6 +16483,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                         #
                         for i, indic in enumerate(competence.indicateurs):
                             codeIndic = str(k+'_'+str(i+1))
+                            print("      ", codeIndic)
                             if debug:
     #                            print not tache.phase in [_R1, "Rev", tache.projet.getCodeLastRevue()]
     #                            print codeIndic , indic.revue,
