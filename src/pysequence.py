@@ -10925,7 +10925,8 @@ class Seance(ElementAvecLien, ElementBase):
         
         
     ######################################################################################  
-    def GetDuree(self):
+    def GetDuree(self, pourGraph = False):
+        print("GetDuree", self)
 #        print "GetDuree", self.GetListSousSeancesRot()
         duree = 0
         if self.typeSeance == "R":
@@ -10939,23 +10940,27 @@ class Seance(ElementAvecLien, ElementBase):
                 
             for ss in self.GetListSousSeancesRot():
 #                sce = self.seances[i]
-                duree += ss.GetDuree()
+                duree += ss.GetDuree(pourGraph = pourGraph)
 #                print "   ", duree
                 
 #            for sce in self.seances:
 #                duree += sce.GetDuree()
         elif self.typeSeance == "S":
+            print("   ", self.seances)
             if len(self.seances) > 0:
-                duree += self.seances[0].GetDuree()
+                duree += self.seances[0].GetDuree(pourGraph = pourGraph)
         elif self.typeSeance in self.GetReferentiel().listeTypeHorsClasse:
             duree = 0
         else:
             duree = self.duree.v[0]
+        if pourGraph and duree ==0 :
+            duree = 1
         return duree
 
 
     ######################################################################################  
     def GetDureeGraph(self):
+        print("GetDureeGraph", self, self.typeSeance)
         if self.typeSeance in self.GetReferentiel().listeTypeHorsClasse:
             return 1
         else:

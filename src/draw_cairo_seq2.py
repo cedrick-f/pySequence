@@ -1425,7 +1425,7 @@ class Sequence(Base_Fiche_Doc):
                     bloc.contenu.append([])
     #                bloc.contenu.append(getLigne(seance, h))
                     for j, ss in enumerate(seance.seances):
-                        bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree()/seance.GetDuree(), 
+                        bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree(pourGraph = True)/seance.GetDuree(pourGraph = True), 
                                                        decal = 1.0*(j+1)/(n+1),
                                                        nbr = n))
                     
